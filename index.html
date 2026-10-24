@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AYNA BOOK • UKHIYA ORIGIN • 150000 YEAR SEAL</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:'Rajdhani',sans-serif;overflow:hidden;height:100vh}
+canvas#stars{position:fixed;top:0;left:0;z-index:0}
+.hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.book-wrap{position:relative;width:160px;height:160px;display:flex;align-items:center;justify-content:center}
+.book-core{
+  width:140px;height:140px;
+  background: linear-gradient(135deg, #001a33 0%, #003366 50%, #00ffff 100%);
+  border-radius:32px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:72px;
+  box-shadow: 0 0 40px #00ffff, 0 0 80px #0088ff, inset 0 0 20px rgba(0,255,255,0.5);
+  animation: float 3s ease-in-out infinite, pulse 2s infinite alternate;
+  transform-style:preserve-3d;
+}
+.book-ring{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:220px;height:220px;border:1px dashed rgba(0,255,255,0.3);
+  border-radius:50%;animation: rotate 20s linear infinite;
+}
+.book-ring2{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:280px;height:280px;border:1px solid rgba(0,255,255,0.15);
+  border-radius:50%;animation: rotate 30s linear infinite reverse;
+}
+@keyframes float{0%,100%{transform:translateY(0) rotateY(-10deg)}50%{transform:translateY(-15px) rotateY(10deg)}}
+@keyframes pulse{from{box-shadow:0 0 40px #00ffff}to{box-shadow:0 0 80px #00ffff,0 0 120px #0088ff}}
+@keyframes rotate{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+h1{
+  margin-top:35px;
+  font-family:'Orbitron',sans-serif;
+  font-size:46px;letter-spacing:8px;font-weight:900;
+  background: linear-gradient(90deg,#fff,#00ffff,#0088ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow: 0 0 30px rgba(0,255,255,0.8);
+}
+.origin{
+  margin-top:8px;
+  font-size:13px;letter-spacing:6px;opacity:0.6;color:#00ffff;
+}
+.seal-box{
+  margin-top:22px;
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+}
+.seal-item{
+  border:1px solid rgba(0,255,255,0.4);
+  background: linear-gradient(180deg, rgba(0,255,255,0.15), rgba(0,0,0,0));
+  padding:8px 16px;border-radius:100px;
+  font-size:10px;letter-spacing:2px;color:#00ffff;
+  backdrop-filter: blur(10px);
+}
+.center-text{
+  margin-top:28px;
+  font-size:18px;letter-spacing:3px;opacity:0.8;
+  font-weight:700;
+}
+.btn-main{
+  margin-top:32px;
+  position:relative;
+  background: linear-gradient(90deg,#00ffff,#0088ff);
+  color:#000;padding:16px 50px;border-radius:100px;
+  text-decoration:none;font-family:'Orbitron';font-weight:900;
+  letter-spacing:2px;font-size:13px;
+  box-shadow: 0 0 40px #00ffff, 0 10px 30px rgba(0,255,255,0.4);
+  transition:0.3s;
+}
+.btn-main:hover{transform:scale(1.05);box-shadow:0 0 80px #00ffff}
+.version{margin-top:20px;font-size:10px;letter-spacing:3px;opacity:0.3}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<div class="hero">
+  <div class="book-wrap">
+    <div class="book-ring"></div>
+    <div class="book-ring2"></div>
+    <div class="book-core">📖</div>
+  </div>
+  
+  <h1>AYNA BOOK</h1>
+  <div class="origin">UKHIYA ORIGIN</div>
+  
+  <div class="seal-box">
+    <div class="seal-item">150000 YEAR SEAL</div>
+    <div class="seal-item">UNBREAKABLE</div>
+    <div class="seal-item">ORIGIN VERIFIED</div>
+  </div>
+  
+  <div class="center-text">CENTER OF ALL BOOKS</div>
+  <a class="btn-main" href="#">ENTER ETERNAL ARCHIVE</a>
+  <div class="version">AYNA-BOOK.GITHUB.IO • v1.0 • UKHIYA • COX'S BAZAR</div>
+</div>
+
+<script>
+// STARFIELD
+const c=document.getElementById('stars'),x=c.getContext('2d');
+function rs(){c.width=innerWidth;c.height=innerHeight}
+rs();addEventListener('resize',rs);
+let stars=[...Array(200)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5,s:Math.random()*0.5+0.2}));
+(function anim(){
+  x.clearRect(0,0,c.width,c.height);
+  stars.forEach(s=>{
+    x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);
+    x.fillStyle=`rgba(0,255,255,${s.s})`;x.fill();
+    s.y-=s.s;if(s.y<0){s.y=c.height;s.x=Math.random()*c.width}
+  });
+  requestAnimationFrame(anim);
+})();
+
+// PWA
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
