@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>V42 • AYNA BOOK • CRITICAL 100000Y</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#020210">
+<link rel="icon" href="icon.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#020210;color:#fff;font-family:'Hind Siliguri','Segoe UI',sans-serif;min-height:100vh}
+.bg{position:fixed;inset:0;z-index:-1;background:
+radial-gradient(900px at 20% 10%,rgba(0,245,255,.22),transparent),
+radial-gradient(700px at 90% 90%,rgba(122,0,255,.3),transparent),
+radial-gradient(500px at 50% 50%,rgba(255,0,170,.15),transparent)}
+.head{position:sticky;top:0;z-index:99;background:rgba(2,2,16,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,245,255,.18);padding:10px 14px;display:flex;gap:10px;align-items:center}
+.back{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;color:#fff;text-decoration:none;font-size:22px}
+.search{flex:1;position:relative}
+.search input{width:100%;padding:13px 14px 13px 42px;border-radius:50px;background:rgba(255,255,255,.07);border:1px solid rgba(0,245,255,.3);color:#fff;outline:none}
+.search input:focus{border-color:#00f5ff;box-shadow:0 0 25px rgba(0,245,255,.35)}
+.search i{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.6}
+.wrap{max-width:820px;margin:0 auto;padding:14px}
+.hero{background:linear-gradient(135deg,rgba(0,245,255,.16),rgba(122,0,255,.18));border:1px solid rgba(0,245,255,.3);border-radius:26px;padding:22px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.hero h1{font-size:26px;background:linear-gradient(90deg,#00f5ff,#ff00aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900}
+.hero p{opacity:.6;font-size:12px;letter-spacing:1px;margin-top:6px}
+.stats{display:flex;gap:8px;margin-top:14px}
+.stat{flex:1;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px}
+.stat b{color:#00f5ff;font-size:15px}
+.stat span{font-size:10px;opacity:.6;text-transform:uppercase;display:block}
+.tools{display:flex;gap:8px;margin:14px 0}
+.tool{flex:1;padding:10px;border-radius:50px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;font-size:12px;cursor:pointer}
+.tool.on{background:#00f5ff;color:#000;font-weight:800;border-color:#00f5ff}
+.list{display:grid;gap:10px}
+.book{background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:13px 14px;display:flex;gap:12px;align-items:center;cursor:pointer;transition:.18s}
+.book:hover{transform:translateY(-2px);border-color:rgba(0,245,255,.45);box-shadow:0 12px 32px rgba(0,245,255,.18)}
+.num{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#00f5ff,#7000ff);display:grid;place-items:center;font-weight:900;font-size:14px;flex-shrink:0}
+.info{flex:1;text-align:left}
+.info b{font-size:14px;display:block}
+.info s{font-size:11px;opacity:.55;text-decoration:none;display:block;margin-top:2px}
+.copy{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.08);border:none;color:#fff;display:grid;place-items:center;cursor:pointer}
+.fab{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:99}
+.fab button{padding:13px 18px;border-radius:50px;border:none;font-weight:800;cursor:pointer}
+.c1{background:linear-gradient(90deg,#00f5ff,#7000ff);color:#fff;box-shadow:0 10px 30px rgba(0,245,255,.4)}
+.c2{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);color:#fff;border:1px solid rgba(255,255,255,.15)!important}
+.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#00f5ff;color:#000;padding:11px 18px;border-radius:50px;font-weight:800;z-index:9999;box-shadow:0 10px 30px rgba(0,245,255,.5)}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="head">
+<a class="back" href="index.html">‹</a>
+<div class="search"><i>🔍</i><input id="q" placeholder="V42 Search - বই খুঁজুন..."></div>
+</div>
+
+<div class="wrap">
+<div class="hero">
+<h1>V42 • CRITICAL GOD • 100000Y</h1>
+<p>UKHIYA ORIGIN • 21.23° • BLACK HOLE PROOF</p>
+<div class="stats">
+<div class="stat"><b id="tot">42</b><span>Total Books</span></div>
+<div class="stat"><b>OFFLINE</b><span>100% PWA</span></div>
+<div class="stat"><b>V1000</b><span>Critical</span></div>
+</div>
+</div>
+
+<div class="tools">
+<div class="tool on" id="tAll" onclick="filterX('all')">সব</div>
+<div class="tool" id="tNew" onclick="filterX('new')">নতুন</div>
+<div class="tool" onclick="sortX()">A-Z</div>
+</div>
+
+<div class="list" id="list"></div>
+</div>
+
+<div class="fab">
+<button class="c2" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ TOP</button>
+<button class="c1" onclick="copyAllX()">📋 সব কপি</button>
+</div>
+
+<script>
+// CRITICAL DATA - এখানে আপনার 42 টা বইয়ের নাম বসান জনাব
+const DATA=[
+{name:"আয়না - মহাবিশ্বের কেন্দ্র",d:"Ukhiya Origin Main Book • 150000Y",tag:"new"},
+{name:"V42 - আল্ট্রা গড সিক্রেট",d:"Critical God Edition • 100000Y",tag:"new"},
+{name:"উখিয়া ২১.২৩° - পৃথিবীর কেন্দ্র",d:"Origin Story • Proof",tag:"new"},
+{name:"ব্ল্যাকহোল প্রুফ ১৫০০০০ বছর",d:"Black Hole Proof • Science",tag:"new"},
+{name:"নূরের সোশ্যাল প্ল্যাটফর্ম",d:"World First Nur Platform",tag:"new"},
+{name:"স্ক্রল করলে নূর আসে",d:"Scroll = Nur • Miracle",tag:"all"},
+{name:"সময় - ১০০০০০ বছর",d:"Time Travel Collection",tag:"all"},
+{name:"আলো - অন্ধকারের বাইরে",d:"Light & Shadow Ultra",tag:"all"},
+{name:"বইয়ের বই - সব বইয়ের মা",d:"Mother of All Books",tag:"all"},
+{name:"কোড - সৃষ্টির ভাষা",d:"Creation Language • OS",tag:"all"},
+{name:"AYNA OS V1000",d:"Operating System • God Level",tag:"new"},
+{name:"V32 • V41 • V42 • V1000",d:"Version History",tag:"all"},
+];
+for(let i=DATA.length;i<42;i++){DATA.push({name:`আয়না বুক - অতিরিক্ত বই ${i+1} • Ultra`,d:`Book No ${i+1} • Critical Collection`,tag:"all"})}
+
+const L=document.getElementById('list'), Q=document.getElementById('q'), T=document.getElementById('tot');
+function renderX(arr){
+ L.innerHTML=arr.map((b,i)=>`
+ <div class="book" data-n="${b.name.toLowerCase()} ${b.d.toLowerCase()}">
+  <div class="num">${i+1}</div>
+  <div class="info"><b>${b.name}</b><s>${b.d}</s></div>
+  <button class="copy" onclick="copyOneX('${b.name.replace(/'/g,"\\'")}')">⎙</button>
+ </div>`).join('');
+ T.innerText=arr.length;
+}
+renderX(DATA);
+Q.addEventListener('input',e=>{
+ const v=e.target.value.toLowerCase();
+ renderX(DATA.filter(x=>x.name.toLowerCase().includes(v)||x.d.toLowerCase().includes(v)));
+});
+function filterX(t){
+ document.querySelectorAll('.tool').forEach(x=>x.classList.remove('on'));
+ document.getElementById(t==='all'?'tAll':'tNew').classList.add('on');
+ renderX(t==='all'?DATA:DATA.filter(x=>x.tag==='new'));
+}
+function sortX(){ renderX([...DATA].sort((a,b)=>a.name.localeCompare(b.name,'bn'))); document.querySelectorAll('.tool').forEach(x=>x.classList.remove('on')); }
+function copyOneX(tx){navigator.clipboard.writeText(tx).then(()=>toastX('✅ কপি: '+tx.slice(0,20)+'...'))}
+function copyAllX(){navigator.clipboard.writeText(DATA.map(x=>x.name).join('\n')).then(()=>toastX(`✅ ${DATA.length} টা কপি হয়েছে!`))}
+function toastX(m){let d=document.createElement('div');d.className='toast';d.innerText=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2500)}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
+</script>
+</body>
+</html>
