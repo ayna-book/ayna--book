@@ -1,0 +1,17 @@
+<button id="copyAllBtn" style="position:fixed;bottom:20px;right:20px;padding:14px 22px;border-radius:50px;background:linear-gradient(90deg,#00f5ff,#7000ff);color:#fff;border:none;font-weight:bold;box-shadow:0 10px 30px rgba(0,245,255,0.5);z-index:9999">📋 সব নাম কপি</button>
+
+<script>
+document.getElementById('copyAllBtn').onclick = async () => {
+  let allText = document.body.innerText;
+  // অথবা শুধু বইয়ের লিস্ট থাকলে: document.querySelector('.book-list').innerText
+  
+  try {
+    await navigator.clipboard.writeText(allText);
+    let btn = document.getElementById('copyAllBtn');
+    btn.innerText = '✅ কপি হয়েছে!';
+    setTimeout(()=>btn.innerText='📋 সব নাম কপি',2000);
+  } catch(e) {
+    alert('Copy failed, manually select করুন');
+  }
+};
+</script>
