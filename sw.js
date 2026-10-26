@@ -1,133 +1,18 @@
-// AYNA BOOK • SW.JS • SUPER ULTRA GOD 1000Y • UKHIYA ORIGIN
-const VERSION = "v1000-super-ultra-ayna";
-const CACHE_STATIC = `static-${VERSION}`;
-const CACHE_DYNAMIC = `dynamic-${VERSION}`;
-const CACHE_IMMUTABLE = `immutable-${VERSION}`;
+// AYNA BOOK - 0MB SPACE SERVICE WORKER - WORLD RECORD - Owner Mohammad Mahabub Alam - Ukhiya 4700
+const CACHE_NAME = 'ayna-book-10-lakh-crore-v1-0mb-space';
+const FILES = ['/ayna--book/', '/ayna--book/index.html', '/ayna--book/manifest.json'];
 
-const CORE_ASSETS = [
-  "./",
-  "./index.html",
-  "./V42.html",
-  "./manifest.json",
-  "./icon.png"
-];
-
-const OFFLINE_PAGE = "./index.html";
-
-// INSTALL - Pre-cache Core
-self.addEventListener("install", (e) => {
-  console.log("[SW] INSTALL ULTRA");
-  e.waitUntil(
-    caches.open(CACHE_STATIC).then((cache) => {
-      return cache.addAll(CORE_ASSETS);
-    }).then(() => {
-      return self.skipWaiting(); // Immediately activate
-    })
-  );
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(FILES)));
+  self.skipWaiting();
 });
 
-// ACTIVATE - Clean Old Cache + Claim
-self.addEventListener("activate", (e) => {
-  console.log("[SW] ACTIVATE GOD MODE");
-  e.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (!key.includes(VERSION)) {
-            console.log("[SW] Deleting old:", key);
-            return caches.delete(key);
-          }
-        })
-      );
-    }).then(() => {
-      return self.clients.claim();
-    })
-  );
+self.addEventListener('fetch', e => {
+  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(f => {
+    return caches.open(CACHE_NAME).then(c => { c.put(e.request, f.clone()); return f; });
+  })));
 });
 
-// FETCH STRATEGY
-self.addEventListener("fetch", (e) => {
-  const req = e.request;
-  const url = new URL(req.url);
-
-  // 1. Skip non-GET & chrome-extension
-  if (req.method !== "GET" || url.protocol === "chrome-extension:") return;
-
-  // 2. For HTML - Network First, Fallback to Cache (Always Fresh)
-  if (req.headers.get("accept")?.includes("text/html")) {
-    e.respondWith(
-      fetch(req)
-        .then((res) => {
-          return caches.open(CACHE_STATIC).then((cache) => {
-            cache.put(req, res.clone());
-            return res;
-          });
-        })
-        .catch(() => {
-          return caches.match(req).then((cached) => {
-            return cached || caches.match(OFFLINE_PAGE);
-          });
-        })
-    );
-    return;
-  }
-
-  // 3. For CSS, JS, Images - Stale While Revalidate (SUPER FAST)
-  if (req.destination === "style" || req.destination === "script" || req.destination === "image" || req.destination === "font") {
-    e.respondWith(
-      caches.match(req).then((cached) => {
-        const networkFetch = fetch(req).then((res) => {
-          return caches.open(CACHE_DYNAMIC).then((cache) => {
-            cache.put(req, res.clone());
-            return res;
-          });
-        }).catch(()=>cached);
-        return cached || networkFetch;
-      })
-    );
-    return;
-  }
-
-  // 4. For Everything Else - Cache First, Network Fallback
-  e.respondWith(
-    caches.match(req).then((cached) => {
-      return cached || fetch(req).then((res) => {
-        return caches.open(CACHE_DYNAMIC).then((cache) => {
-          cache.put(req, res.clone());
-          return res;
-        });
-      }).catch(() => {
-        if (req.headers.get("accept")?.includes("image")) {
-          return caches.match("./icon.png");
-        }
-      });
-    })
-  );
-});
-
-// BACKGROUND SYNC - Future Feature
-self.addEventListener("sync", (e) => {
-  console.log("[SW] Background Sync:", e.tag);
-  if (e.tag === "sync-ayna") {
-    e.waitUntil(console.log("Syncing Ayna Data..."));
-  }
-});
-
-// PUSH NOTIFICATION - Future Feature
-self.addEventListener("push", (e) => {
-  const data = e.data ? e.data.json() : { title: "AYNA BOOK", body: "Ukhiya Origin থেকে নতুন আপডেট!" };
-  e.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: "./icon.png",
-      badge: "./icon.png",
-      vibrate: [100, 50, 100],
-      data: { url: "./" }
-    })
-  );
-});
-
-self.addEventListener("notificationclick", (e) => {
-  e.notification.close();
-  e.waitUntil(clients.openWindow(e.notification.data.url));
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(k => Promise.all(k.map(x => { if(x!==CACHE_NAME) return caches.delete(x); }))));
 });
