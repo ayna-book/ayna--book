@@ -1,0 +1,23 @@
+name: AYNA BOOK - 2 CRORE
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate
+        run: |
+          mkdir -p ayna-modules
+          for i in $(seq 1 200); do
+            echo "// Module $i" > ayna-modules/M${i}.js
+            for j in $(seq 1 100000); do echo "console.log($j);" >> ayna-modules/M${i}.js; done
+          done
+      - name: Push
+        run: |
+          git config user.name "ayna-book"
+          git config user.email "ayna@book.com"
+          git add .
+          git commit -m "2 crore done" || true
+          git push
