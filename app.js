@@ -22,10 +22,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
-/* =====================================
+/* ==================================
    1. FIREBASE CONFIGURATION
-   Firebase Console থেকে সঠিক তথ্য বসান।
-===================================== */
+   আপনার নিজের Firebase তথ্য বসাবেন।
+================================== */
 
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
@@ -37,9 +37,9 @@ const firebaseConfig = {
 };
 
 
-/* =====================================
+/* ==================================
    2. HTML ELEMENTS
-===================================== */
+================================== */
 
 const statusElement = document.getElementById("status");
 const messagesElement = document.getElementById("messages");
@@ -50,9 +50,12 @@ const translateButton = document.getElementById("translate");
 const translationResult = document.getElementById("translationResult");
 
 
-/* =====================================
-   3. CONNECTION VARIABLES
-===================================== */
+/* ==================================
+   3. APP VARIABLES
+================================== */
+
+const ROOM_ID = "general";
+const MAX_MESSAGES = 100;
 
 let auth = null;
 let db = null;
@@ -60,47 +63,45 @@ let currentUser = null;
 let unsubscribeMessages = null;
 let sending = false;
 
-const ROOM_ID = "general";
-const MAX_MESSAGES = 100;
 
+/* ==================================
+   4. STATUS MESSAGE
+================================== */
 
-/* =====================================
-   4. STATUS
-===================================== */
-
-function setStatus(message, isError = false) {
+function setStatus(message, error = false) {
   statusElement.textContent = message;
-  statusElement.style.color = isError
+  statusElement.style.color = error
     ? "#fca5a5"
     : "#fbbf24";
 }
 
 
-/* =====================================
+/* ==================================
    5. CHECK CONFIGURATION
-===================================== */
+================================== */
 
 function configIsReady() {
-  return (
+  return Boolean(
+    firebaseConfig.apiKey &&
+    firebaseConfig.projectId &&
+    firebaseConfig.appId &&
     firebaseConfig.apiKey !== "YOUR_API_KEY" &&
     firebaseConfig.projectId !== "YOUR_PROJECT_ID" &&
-    firebaseConfig.appId !== "YOUR_APP_ID" &&
-    firebaseConfig.apiKey.length > 0 &&
-    firebaseConfig.projectId.length > 0 &&
-    firebaseConfig.appId.length > 0
+    firebaseConfig.appId !== "YOUR_APP_ID"
   );
 }
 
 
-/* =====================================
-   6. DISPLAY MESSAGES SAFELY
-===================================== */
+/* ==================================
+   6. SHOW MESSAGES
+================================== */
 
 function displayMessages(list) {
   messagesElement.replaceChildren();
 
   if (list.length === 0) {
     const empty = document.createElement("p");
+
     empty.textContent =
       "এখনো কোনো মেসেজ নেই। প্রথম মেসেজটি পাঠান!";
 
@@ -116,39 +117,39 @@ function displayMessages(list) {
         ? "bubble mine"
         : "bubble";
 
-    const text = document.createElement("p");
-    text.textContent = item.text || "";
-
     const sender = document.createElement("small");
+
     sender.textContent =
       item.uid === currentUser?.uid
         ? "আপনি"
         : "AYNA BOOK ব্যবহারকারী";
 
+    const text = document.createElement("p");
+
+    // ব্যবহারকারীর লেখা HTML হিসেবে চালানো হবে না।
+    text.textContent = item.text || "";
+
     const time = document.createElement("small");
 
-    let dateText = "সময় পাওয়া যায়নি";
-
     if (item.createdAt?.toDate) {
-      dateText = item.createdAt
+      time.textContent = item.createdAt
         .toDate()
         .toLocaleString("bn-BD");
+    } else {
+      time.textContent = "সময় নির্ধারিত হচ্ছে...";
     }
-
-    time.textContent = dateText;
 
     bubble.append(sender, text, time);
     messagesElement.appendChild(bubble);
   }
 
-  messagesElement.scrollTop =
-    messagesElement.scrollHeight;
+  messagesElement.scrollTop = messagesElement.scrollHeight;
 }
 
 
-/* =====================================
-   7. LISTEN TO REAL-TIME MESSAGES
-===================================== */
+/* ==================================
+   7. LISTEN FOR LIVE MESSAGES
+================================== */
 
 function listenForMessages() {
   if (!db || !currentUser) return;
@@ -157,7 +158,7 @@ function listenForMessages() {
     unsubscribeMessages();
   }
 
-  setStatus("অনলাইন মেসেজ লোড হচ্ছে...");
+  setStatus("মেসেজ লোড হচ্ছে...");
 
   const messagesRef = collection(
     db,
@@ -176,22 +177,22 @@ function listenForMessages() {
     messagesQuery,
     snapshot => {
       const list = snapshot.docs
-        .map(doc => ({
-          id: doc.id,
-          ...doc.data()
+        .map(document => ({
+          id: document.id,
+          ...document.data()
         }))
         .reverse();
 
       displayMessages(list);
 
-      setStatus("Firebase সংযুক্ত — মেসেজিং প্রস্তুত");
+      setStatus("Firebase সংযুক্ত হয়েছে।");
       sendButton.disabled = false;
     },
     error => {
-      console.error("Message listener error:", error);
+      console.error("Message loading error:", error);
 
       setStatus(
-        "মেসেজ লোড হয়নি। Firestore Rules ও Database পরীক্ষা করুন।",
+        "মেসেজ লোড হয়নি। Firestore Database ও Rules পরীক্ষা করুন।",
         true
       );
 
@@ -201,15 +202,15 @@ function listenForMessages() {
 }
 
 
-/* =====================================
+/* ==================================
    8. SEND MESSAGE
-===================================== */
+================================== */
 
 form.addEventListener("submit", async event => {
   event.preventDefault();
 
   if (!db || !currentUser) {
-    setStatus("আগে Firebase সংযোগ সম্পন্ন করুন।", true);
+    setStatus("Firebase সংযোগ এখনো প্রস্তুত নয়।", true);
     return;
   }
 
@@ -220,7 +221,10 @@ form.addEventListener("submit", async event => {
   if (!text) return;
 
   if (text.length > 2000) {
-    setStatus("মেসেজ সর্বোচ্চ ২০০০ অক্ষরের হতে পারবে।", true);
+    setStatus(
+      "মেসেজ সর্বোচ্চ ২০০০ অক্ষরের হতে পারবে।",
+      true
+    );
     return;
   }
 
@@ -246,10 +250,10 @@ form.addEventListener("submit", async event => {
 
     setStatus("মেসেজ পাঠানো হয়েছে।");
   } catch (error) {
-    console.error("Send message error:", error);
+    console.error("Message sending error:", error);
 
     setStatus(
-      "মেসেজ পাঠানো যায়নি। Firebase Rules ও ইন্টারনেট পরীক্ষা করুন।",
+      "মেসেজ পাঠানো যায়নি। Firebase Rules ও সংযোগ পরীক্ষা করুন।",
       true
     );
   } finally {
@@ -259,36 +263,36 @@ form.addEventListener("submit", async event => {
 });
 
 
-/* =====================================
+/* ==================================
    9. TRANSLATION BUTTON
-   প্রকৃত অনুবাদ API এখনো সংযুক্ত নয়।
-===================================== */
+   প্রকৃত অনুবাদ সেবা পরে সংযুক্ত হবে।
+================================== */
 
 translateButton.addEventListener("click", () => {
   if (!messageInput.value.trim()) {
     translationResult.textContent =
-      "প্রথমে অনুবাদের জন্য একটি মেসেজ লিখুন।";
+      "প্রথমে অনুবাদের জন্য মেসেজ লিখুন।";
     return;
   }
 
   translationResult.textContent =
-    "স্বয়ংক্রিয় অনুবাদ চালু করতে একটি অনুবাদ API সংযুক্ত করতে হবে।";
+    "স্বয়ংক্রিয় অনুবাদ চালু করতে অনুবাদ API সংযুক্ত করতে হবে।";
 });
 
 
-/* =====================================
+/* ==================================
    10. START FIREBASE
-===================================== */
+================================== */
 
 async function startFirebase() {
   if (!configIsReady()) {
     setStatus(
-      "Firebase চালু হয়নি। প্রথমে firebaseConfig-এর তথ্য বসান।",
+      "Firebase Config এখনো বসানো হয়নি।",
       true
     );
 
     messagesElement.textContent =
-      "Firebase কনফিগারেশন যোগ করার পর অনলাইন মেসেজ দেখা যাবে।";
+      "অনলাইন মেসেজিং চালু করতে Firebase Config প্রয়োজন।";
 
     sendButton.disabled = true;
     return;
@@ -300,7 +304,7 @@ async function startFirebase() {
     auth = getAuth(app);
     db = getFirestore(app);
 
-    setStatus("Firebase-এ নিরাপদে সংযোগের চেষ্টা চলছে...");
+    setStatus("Firebase সংযোগ করা হচ্ছে...");
 
     onAuthStateChanged(auth, user => {
       if (user) {
@@ -316,10 +320,10 @@ async function startFirebase() {
         }
 
         signInAnonymously(auth).catch(error => {
-          console.error("Authentication error:", error);
+          console.error("Sign-in error:", error);
 
           setStatus(
-            "লগইন হয়নি। Firebase Anonymous Authentication চালু করুন।",
+            "লগইন ব্যর্থ। Anonymous Authentication চালু আছে কি না দেখুন।",
             true
           );
         });
@@ -327,18 +331,18 @@ async function startFirebase() {
     });
 
   } catch (error) {
-    console.error("Firebase initialization error:", error);
+    console.error("Firebase startup error:", error);
 
     setStatus(
-      "Firebase সংযোগ ব্যর্থ। কনফিগারেশন পরীক্ষা করুন।",
+      "Firebase চালু হয়নি। Config পরীক্ষা করুন।",
       true
     );
   }
 }
 
 
-/* =====================================
-   11. RUN
-===================================== */
+/* ==================================
+   11. RUN APP
+================================== */
 
 startFirebase();
