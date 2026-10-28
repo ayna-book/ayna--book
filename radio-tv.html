@@ -1,158 +1,351 @@
-
 <!DOCTYPE html>
-
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
-  <title>AYNA BOOK | রেডিও ও টিভি</title>
+
+  <title>AYNA BOOK | Radio & TV</title>
+
+  <meta name="description"
+        content="AYNA BOOK Radio and TV — Listen and watch online.">
+
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     :root {
-      color-scheme: light;
       --navy: #071b49;
-      --purple: #4b145f;
-      --purple-dark: #350d45;
-      --magenta: #8f004d;
-      --page-bg: #eef2f7;
-      --card-bg: #ffffff;
-      --muted: #334155;
-      --focus: #ffbf00;
+      --pink: #ff4fa3;
+      --cyan: #00cfd5;
+      --purple: #8b5cf6;
+      --white: #ffffff;
+      --background: #f0f4ff;
+      --muted: #526079;
+      --green: #15803d;
+      --red: #b91c1c;
     }
 
     body {
       margin: 0;
-      padding: 20px;
+      padding: 16px;
       font-family: Arial, sans-serif;
-      background: var(--page-bg);
+      background: var(--background);
       color: var(--navy);
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
-    main {
-      max-width: 700px;
-      margin: auto;
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
     }
 
     .card {
-      background: var(--card-bg);
-      border: 1px solid #cbd5e1;
-      border-radius: 18px;
       padding: 22px;
       margin-bottom: 18px;
-      box-shadow: 0 5px 20px rgb(7 27 73 / 12%);
+      background: var(--white);
+      border-radius: 20px;
+      border: 1px solid #dbe3f0;
+      box-shadow: 0 6px 22px rgba(7, 27, 73, 0.10);
     }
 
-    h1, h2 { margin-top: 0; }
+    .hero {
+      text-align: center;
+      color: white;
+      background: linear-gradient(
+        135deg,
+        var(--navy),
+        #432078,
+        #a51e75
+      );
+    }
 
-    .brand {
-      color: var(--magenta);
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(28px, 7vw, 42px);
+    }
+
+    .hero strong {
+      color: var(--cyan);
+    }
+
+    .hero p {
+      margin-bottom: 0;
+    }
+
+    .status {
+      padding: 12px;
+      margin-top: 16px;
+      border-radius: 12px;
+      background: #e5e7eb;
+      color: var(--navy);
       font-weight: bold;
+      text-align: center;
+    }
+
+    .status.online {
+      background: #dcfce7;
+      color: var(--green);
+    }
+
+    .status.offline {
+      background: #fee2e2;
+      color: var(--red);
+    }
+
+    h2 {
+      margin-top: 0;
     }
 
     .station {
       display: block;
-      padding: 15px;
+      padding: 14px 16px;
       margin: 12px 0;
-      border-radius: 12px;
-      color: #ffffff;
-      background: var(--purple);
+      border-radius: 13px;
+      background: var(--navy);
+      color: white;
       text-decoration: none;
       font-weight: bold;
+      text-align: center;
+      transition: transform 0.15s ease;
+    }
+
+    .station:nth-of-type(even) {
+      background: var(--purple);
     }
 
     .station:hover {
-      background: var(--purple-dark);
+      transform: translateY(-2px);
     }
 
     .station:focus-visible,
-    :focus-visible {
-      outline: 3px solid var(--focus);
-      outline-offset: 4px;
-      box-shadow: 0 0 0 5px #ffffff;
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--pink);
+      outline-offset: 3px;
+    }
+
+    .button {
+      width: 100%;
+      padding: 13px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--cyan);
+      color: var(--navy);
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
     .note {
       color: var(--muted);
       font-size: 14px;
-      line-height: 1.7;
     }
 
-    audio {
-      width: 100%;
-      margin-top: 10px;
+    .back {
+      display: block;
+      padding: 12px;
+      margin-bottom: 18px;
+      border-radius: 12px;
+      background: var(--pink);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 12px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .card {
+        padding: 17px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
       *::after {
-        scroll-behavior: auto !important;
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
+        transition: none !important;
       }
     }
   </style>
 </head>
 
 <body>
-<main id="main-content">
-  <header class="card" aria-labelledby="page-title">
-    <h1 id="page-title"><span class="brand">AYNA BOOK</span></h1>
-    <p>📻 AYNA রেডিও এবং 📺 AYNA টিভি</p>
-    <p>বাংলাদেশ ও বিশ্বের বৈধ অনলাইন সম্প্রচার উপভোগ করুন।</p>
-  </header>
+  <main class="container">
 
-  <section class="card" aria-labelledby="radio-heading">
-    <h2 id="radio-heading">📻 AYNA রেডিও</h2>
+    <header class="card hero">
+      <h1>AYNA <strong>BOOK</strong></h1>
+      <p>📻 AYNA RADIO | 📺 AYNA TV</p>
+      <p>Connect. Create. Share.</p>
+      <p>বিশ্বের বিনোদন এখন আপনার হাতের মুঠোয়!</p>
+    </header>
 
-    <a class="station"
-       href="https://radio.garden/"
-       target="_blank"
-       rel="noopener noreferrer"
-       aria-label="বিশ্বের বিভিন্ন দেশের রেডিও শুনুন; লিংকটি নতুন ট্যাবে খুলবে">
-      🌍 বিশ্বের বিভিন্ন দেশের রেডিও
+    <a class="back" href="./index.html">
+      🏠 AYNA BOOK হোমে ফিরে যান
     </a>
 
-    <a class="station"
-       href="https://www.betar.gov.bd/"
-       target="_blank"
-       rel="noopener noreferrer"
-       aria-label="বাংলাদেশ বেতারের অফিসিয়াল ওয়েবসাইট খুলুন; লিংকটি নতুন ট্যাবে খুলবে">
-      🇧🇩 বাংলাদেশ বেতার — অফিসিয়াল ওয়েবসাইট
-    </a>
+    <section class="card">
+      <h2>📶 ইন্টারনেট সংযোগ</h2>
 
-    <p class="note">
-      রেডিও শুনতে ইন্টারনেট সংযোগ প্রয়োজন। কিছু স্ট্রিম সব ব্রাউজারে
-      নাও চলতে পারে। FM বা AM তরঙ্গ ধরতে উপযুক্ত রিসিভার হার্ডওয়্যার
-      প্রয়োজন হতে পারে।
-    </p>
-  </section>
+      <div
+        id="connectionStatus"
+        class="status"
+        role="status"
+        aria-live="polite"
+      >
+        সংযোগ পরীক্ষা করা হচ্ছে...
+      </div>
 
-  <section class="card" aria-labelledby="tv-heading">
-    <h2 id="tv-heading">📺 AYNA টিভি</h2>
+      <p class="note">
+        ফোনে Wi-Fi অথবা মোবাইল ডেটা চালু রাখুন।
+        ইন্টারনেট সংযোগ পাওয়া গেলে অনলাইন রেডিও ও টিভির
+        লিংক ব্যবহার করতে পারবেন।
+      </p>
 
-    <a class="station"
-       href="https://www.btvlive.gov.bd/"
-       target="_blank"
-       rel="noopener noreferrer"
-       aria-label="বাংলাদেশ টেলিভিশনের লাইভ সম্প্রচার খুলুন; লিংকটি নতুন ট্যাবে খুলবে">
-      🇧🇩 বাংলাদেশ টেলিভিশন — লাইভ সম্প্রচার
-    </a>
+      <button
+        id="checkConnection"
+        class="button"
+        type="button"
+      >
+        🔄 সংযোগের অবস্থা পরীক্ষা করুন
+      </button>
+    </section>
 
-    <p class="note">
-      অফিসিয়াল সম্প্রচার লিংকে চাপ দিলে টেলিভিশন চ্যানেলের ওয়েবসাইট খুলবে।
-      সব চ্যানেল সব সময় সম্প্রচার নাও করতে পারে। অন্য চ্যানেল যুক্ত করার আগে
-      তাদের বৈধ ও বিনামূল্যের সম্প্রচার লিংক যাচাই করুন।
-    </p>
-  </section>
+    <section class="card">
+      <h2>📻 AYNA RADIO</h2>
 
-  <footer class="card" aria-label="ওয়েবসাইটের তথ্য">
-    <p>© AYNA BOOK</p>
-    <p>Connect. Create. Share.</p>
-  </footer>
-</main>
+      <p>
+        বিশ্বের বিভিন্ন দেশের রেডিও স্টেশন এবং বাংলাদেশের
+        রেডিও-সম্পর্কিত পরিষেবা ব্যবহার করুন।
+      </p>
+
+      <a
+        class="station"
+        href="https://radio.garden/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🌍 Radio Garden — বিশ্বের রেডিও শুনুন
+      </a>
+
+      <a
+        class="station"
+        href="https://www.betar.gov.bd/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🇧🇩 বাংলাদেশ বেতার — অফিসিয়াল ওয়েবসাইট
+      </a>
+
+      <p class="note">
+        নোট: সব রেডিও স্টেশনের সম্প্রচার সব সময় পাওয়া
+        নাও যেতে পারে। স্ট্রিম চালাতে ইন্টারনেট প্রয়োজন।
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>📺 AYNA TV</h2>
+
+      <p>
+        অফিসিয়াল ওয়েবসাইট থেকে উপলভ্য টেলিভিশন
+        সম্প্রচার দেখুন।
+      </p>
+
+      <a
+        class="station"
+        href="https://www.btvlive.gov.bd/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🇧🇩 বাংলাদেশ টেলিভিশন — লাইভ
+      </a>
+
+      <p class="note">
+        সম্প্রচার বন্ধ থাকলে অথবা ওয়েবসাইটে পরিবর্তন হলে
+        ভিডিও নাও চলতে পারে। সম্প্রচারের জন্য সংশ্লিষ্ট
+        চ্যানেলের নিজস্ব শর্ত প্রযোজ্য।
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>⚙️ স্বয়ংক্রিয় সংযোগ ব্যবস্থা</h2>
+
+      <p>
+        AYNA BOOK এই পেজে ব্রাউজারের নেটওয়ার্ক
+        সংযোগের অবস্থা পর্যবেক্ষণ করবে। সংযোগ ফিরে
+        এলে স্ট্যাটাস স্বয়ংক্রিয়ভাবে আপডেট হবে।
+      </p>
+
+      <p class="note">
+        গুরুত্বপূর্ণ: ওয়েবসাইট ফোনের Wi-Fi নিজে থেকে
+        চালু করতে বা নেটওয়ার্ক নির্বাচন করতে পারে না।
+        এটি Wi-Fi এবং মোবাইল ডেটার মধ্যে কোনটি চলছে,
+        তা সব ব্রাউজারে নির্ভরযোগ্যভাবে শনাক্তও করতে পারে না।
+      </p>
+    </section>
+
+    <footer>
+      © <span id="year"></span> AYNA BOOK
+      <br>
+      Connect. Create. Share.
+    </footer>
+
+  </main>
+
+  <script>
+    "use strict";
+
+    const statusBox =
+      document.getElementById("connectionStatus");
+
+    const checkButton =
+      document.getElementById("checkConnection");
+
+    function updateConnectionStatus() {
+      if (!navigator.onLine) {
+        statusBox.textContent =
+          "🔴 ব্রাউজার অফলাইন দেখাচ্ছে। Wi-Fi বা মোবাইল ডেটা পরীক্ষা করুন।";
+
+        statusBox.className = "status offline";
+        return;
+      }
+
+      statusBox.textContent =
+        "🟢 নেটওয়ার্ক সংযুক্ত দেখাচ্ছে। এখন রেডিও বা টিভি খুলতে পারেন।";
+
+      statusBox.className = "status online";
+    }
+
+    window.addEventListener(
+      "online",
+      updateConnectionStatus
+    );
+
+    window.addEventListener(
+      "offline",
+      updateConnectionStatus
+    );
+
+    checkButton.addEventListener(
+      "click",
+      updateConnectionStatus
+    );
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    updateConnectionStatus();
+  </script>
 </body>
 </html>
