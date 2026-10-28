@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
-
   <title>AYNA BOOK Messenger</title>
 
   <style>
@@ -19,25 +18,29 @@
       color: white;
     }
 
-    .header {
-      padding: 20px 15px;
+    header {
+      padding: 22px 12px;
       text-align: center;
-      background: linear-gradient(120deg, #ec4899, #7c3aed, #06b6d4);
+      background: linear-gradient(
+        120deg,
+        #ec4899,
+        #7c3aed,
+        #06b6d4
+      );
     }
 
-    .header h1 {
+    header h1 {
       margin: 0;
-      font-size: 25px;
+      font-size: 27px;
     }
 
-    .header p {
+    header p {
       margin-bottom: 0;
     }
 
-    .chat-wrap {
-      width: 100%;
+    main {
       max-width: 650px;
-      margin: 0 auto;
+      margin: auto;
       padding: 15px;
     }
 
@@ -50,12 +53,12 @@
     }
 
     #status {
-      font-size: 14px;
       color: #fbbf24;
+      overflow-wrap: anywhere;
     }
 
     #messages {
-      height: 48vh;
+      height: 45vh;
       min-height: 280px;
       overflow-y: auto;
       padding: 10px;
@@ -65,11 +68,11 @@
 
     .bubble {
       max-width: 90%;
-      padding: 11px 13px;
+      padding: 12px;
       margin: 10px 0;
       border-radius: 14px;
-      overflow-wrap: anywhere;
       background: #263d70;
+      overflow-wrap: anywhere;
     }
 
     .mine {
@@ -78,22 +81,22 @@
     }
 
     .bubble p {
-      margin: 0 0 7px;
       white-space: pre-wrap;
+      margin: 7px 0;
     }
 
     .bubble small {
       display: block;
       font-size: 11px;
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
-    .chat-input {
+    textarea {
       width: 100%;
-      min-height: 90px;
-      padding: 12px;
-      border-radius: 12px;
+      min-height: 100px;
+      padding: 13px;
       border: 1px solid #536b9a;
+      border-radius: 12px;
       background: #071b49;
       color: white;
       font-size: 16px;
@@ -102,28 +105,28 @@
 
     .buttons {
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
-      margin-top: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
     }
 
     button {
       flex: 1;
       min-width: 120px;
+      padding: 13px;
       border: 0;
       border-radius: 12px;
-      padding: 13px;
       font-size: 15px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    .send {
+    #sendButton {
       background: #06b6d4;
       color: #071b49;
     }
 
-    .translate {
+    #translate {
       background: #f472b6;
       color: #071b49;
     }
@@ -133,30 +136,31 @@
       cursor: not-allowed;
     }
 
-    #notice {
-      color: #c6d5f7;
+    #translationResult,
+    .note {
       font-size: 13px;
       line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
-    #translationResult {
-      overflow-wrap: anywhere;
+    .note {
+      color: #c6d5f7;
     }
   </style>
 </head>
 
 <body>
-  <header class="header">
+  <header>
     <h1>🪞 AYNA BOOK</h1>
     <p>Connect. Create. Share.</p>
-    <strong>AYNA BOOK Messenger</strong>
+    <strong>💬 AYNA BOOK Messenger</strong>
   </header>
 
-  <main class="chat-wrap">
+  <main>
     <section class="card">
-      <h2>💬 অনলাইন মেসেজিং</h2>
+      <h2>অনলাইন মেসেজিং</h2>
       <p id="status">সংযোগ পরীক্ষা করা হচ্ছে...</p>
-      <p>রুম: <strong>AYNA BOOK General Chat</strong></p>
+      <p>চ্যাট রুম: General Chat</p>
     </section>
 
     <section class="card">
@@ -171,27 +175,17 @@
 
         <textarea
           id="message"
-          class="chat-input"
           maxlength="2000"
           placeholder="বাংলা বা ইংরেজিতে লিখুন..."
           required
         ></textarea>
 
         <div class="buttons">
-          <button
-            id="sendButton"
-            class="send"
-            type="submit"
-            disabled
-          >
+          <button id="sendButton" type="submit" disabled>
             ➤ মেসেজ পাঠান
           </button>
 
-          <button
-            id="translate"
-            class="translate"
-            type="button"
-          >
+          <button id="translate" type="button">
             🌐 অনুবাদ
           </button>
         </div>
@@ -199,9 +193,8 @@
 
       <p id="translationResult"></p>
 
-      <p id="notice">
-        আপনার নিরাপত্তার জন্য অপ্রয়োজনীয় ব্যক্তিগত তথ্য
-        মেসেজে শেয়ার করবেন না।
+      <p class="note">
+        ব্যক্তিগত পাসওয়ার্ড বা গোপন তথ্য চ্যাটে শেয়ার করবেন না।
       </p>
     </section>
   </main>
