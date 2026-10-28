@@ -1,298 +1,344 @@
 "use strict";
 
-/* =========================================
-   AYNA BOOK — Main Application
-   Version: 1.1.0
-   ========================================= */
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
-const $ = (selector, parent = document) =>
-  parent.querySelector(selector);
+import {
+  getAuth,
+  signInAnonymously,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-const $$ = (selector, parent = document) =>
-  Array.from(parent.querySelectorAll(selector));
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-/* =========================================
-   1. নিরাপদভাবে স্থানীয় পোস্ট লোড করা
-   ========================================= */
 
-const STORAGE_KEY = "aynaBookPosts";
+/* =====================================
+   1. FIREBASE CONFIGURATION
+   Firebase Console থেকে সঠিক তথ্য বসান।
+===================================== */
 
-const postForm = $("#postForm");
-const postText = $("#postText");
-const postsContainer = $("#posts");
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
 
-let posts = [];
 
-function loadPosts() {
-  try {
-    const saved = JSON.parse(
-      localStorage.getItem(STORAGE_KEY) || "[]"
-    );
+/* =====================================
+   2. HTML ELEMENTS
+===================================== */
 
-    if (!Array.isArray(saved)) return [];
+const statusElement = document.getElementById("status");
+const messagesElement = document.getElementById("messages");
+const form = document.getElementById("chatForm");
+const messageInput = document.getElementById("message");
+const sendButton = document.getElementById("sendButton");
+const translateButton = document.getElementById("translate");
+const translationResult = document.getElementById("translationResult");
 
-    return saved
-      .filter((post) => post && typeof post === "object")
-      .map((post) => ({
-        id: String(post.id || (
-          Date.now() + Math.random()
-        )),
 
-        text: String(post.text || ""),
+/* =====================================
+   3. CONNECTION VARIABLES
+===================================== */
 
-        likes: Math.max(
-          0,
-          Number.isFinite(Number(post.likes))
-            ? Number(post.likes)
-            : 0
-        ),
+let auth = null;
+let db = null;
+let currentUser = null;
+let unsubscribeMessages = null;
+let sending = false;
 
-        comments: Array.isArray(post.comments)
-          ? post.comments
-              .filter(
-                (comment) =>
-                  comment &&
-                  typeof comment === "object"
-              )
-              .map((comment) => ({
-                text: String(comment.text || ""),
-                date: String(
-                  comment.date || ""
-                )
-              }))
-          : [],
+const ROOM_ID = "general";
+const MAX_MESSAGES = 100;
 
-        date: String(
-          post.date || new Date().toLocaleString()
-        )
-      }));
-  } catch (error) {
-    console.error("পোস্ট লোড করা যায়নি:", error);
-    return [];
-  }
+
+/* =====================================
+   4. STATUS
+===================================== */
+
+function setStatus(message, isError = false) {
+  statusElement.textContent = message;
+  statusElement.style.color = isError
+    ? "#fca5a5"
+    : "#fbbf24";
 }
 
-posts = loadPosts();
 
-function savePosts() {
-  try {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(posts)
-    );
+/* =====================================
+   5. CHECK CONFIGURATION
+===================================== */
 
-    return true;
-  } catch (error) {
-    console.error("পোস্ট সংরক্ষণ করা যায়নি:", error);
-
-    alert(
-      "পোস্ট সংরক্ষণ করা যায়নি। " +
-      "আপনার ফোনের স্টোরেজ পরীক্ষা করুন।"
-    );
-
-    return false;
-  }
+function configIsReady() {
+  return (
+    firebaseConfig.apiKey !== "YOUR_API_KEY" &&
+    firebaseConfig.projectId !== "YOUR_PROJECT_ID" &&
+    firebaseConfig.appId !== "YOUR_APP_ID" &&
+    firebaseConfig.apiKey.length > 0 &&
+    firebaseConfig.projectId.length > 0 &&
+    firebaseConfig.appId.length > 0
+  );
 }
 
-/* =========================================
-   2. বোতাম তৈরি
-   ========================================= */
 
-function createButton(label, action, className = "") {
-  const button = document.createElement("button");
+/* =====================================
+   6. DISPLAY MESSAGES SAFELY
+===================================== */
 
-  button.type = "button";
-  button.textContent = label;
+function displayMessages(list) {
+  messagesElement.replaceChildren();
 
-  if (className) {
-    button.className = className;
-  }
-
-  button.addEventListener("click", action);
-
-  return button;
-}
-
-/* =========================================
-   3. পোস্ট দেখানো
-   ========================================= */
-
-function renderPosts() {
-  if (!postsContainer) return;
-
-  postsContainer.replaceChildren();
-
-  if (posts.length === 0) {
+  if (list.length === 0) {
     const empty = document.createElement("p");
-
-    empty.className = "muted";
     empty.textContent =
-      "এখনো কোনো পোস্ট নেই। " +
-      "AYNA BOOK-এ প্রথম পোস্টটি আপনিই করুন!";
+      "এখনো কোনো মেসেজ নেই। প্রথম মেসেজটি পাঠান!";
 
-    postsContainer.appendChild(empty);
+    messagesElement.appendChild(empty);
     return;
   }
 
-  [...posts].reverse().forEach((post) => {
-    const article = document.createElement("article");
+  for (const item of list) {
+    const bubble = document.createElement("div");
 
-    article.className = "post";
+    bubble.className =
+      item.uid === currentUser?.uid
+        ? "bubble mine"
+        : "bubble";
 
-    const heading = document.createElement("h3");
+    const text = document.createElement("p");
+    text.textContent = item.text || "";
 
-    heading.textContent = "✨ AYNA BOOK পোস্ট";
+    const sender = document.createElement("small");
+    sender.textContent =
+      item.uid === currentUser?.uid
+        ? "আপনি"
+        : "AYNA BOOK ব্যবহারকারী";
 
-    const content = document.createElement("p");
+    const time = document.createElement("small");
 
-    // textContent ব্যবহার করায় পোস্টের লেখা HTML হিসেবে
-    // চালানো হবে না।
-    content.textContent = post.text;
-    content.style.whiteSpace = "pre-wrap";
-    content.style.overflowWrap = "anywhere";
+    let dateText = "সময় পাওয়া যায়নি";
 
-    const date = document.createElement("p");
+    if (item.createdAt?.toDate) {
+      dateText = item.createdAt
+        .toDate()
+        .toLocaleString("bn-BD");
+    }
 
-    date.className = "muted";
-    date.textContent = post.date;
+    time.textContent = dateText;
 
-    const actions = document.createElement("div");
+    bubble.append(sender, text, time);
+    messagesElement.appendChild(bubble);
+  }
 
-    actions.className = "post-actions";
+  messagesElement.scrollTop =
+    messagesElement.scrollHeight;
+}
 
-    /* লাইক */
 
-    const likeButton = createButton(
-      `👍 লাইক (${post.likes})`,
-      () => {
-        post.likes += 1;
+/* =====================================
+   7. LISTEN TO REAL-TIME MESSAGES
+===================================== */
 
-        if (savePosts()) {
-          renderPosts();
-        }
-      }
+function listenForMessages() {
+  if (!db || !currentUser) return;
+
+  if (unsubscribeMessages) {
+    unsubscribeMessages();
+  }
+
+  setStatus("অনলাইন মেসেজ লোড হচ্ছে...");
+
+  const messagesRef = collection(
+    db,
+    "rooms",
+    ROOM_ID,
+    "messages"
+  );
+
+  const messagesQuery = query(
+    messagesRef,
+    orderBy("createdAt", "desc"),
+    limit(MAX_MESSAGES)
+  );
+
+  unsubscribeMessages = onSnapshot(
+    messagesQuery,
+    snapshot => {
+      const list = snapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        .reverse();
+
+      displayMessages(list);
+
+      setStatus("Firebase সংযুক্ত — মেসেজিং প্রস্তুত");
+      sendButton.disabled = false;
+    },
+    error => {
+      console.error("Message listener error:", error);
+
+      setStatus(
+        "মেসেজ লোড হয়নি। Firestore Rules ও Database পরীক্ষা করুন।",
+        true
+      );
+
+      sendButton.disabled = true;
+    }
+  );
+}
+
+
+/* =====================================
+   8. SEND MESSAGE
+===================================== */
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!db || !currentUser) {
+    setStatus("আগে Firebase সংযোগ সম্পন্ন করুন।", true);
+    return;
+  }
+
+  if (sending) return;
+
+  const text = messageInput.value.trim();
+
+  if (!text) return;
+
+  if (text.length > 2000) {
+    setStatus("মেসেজ সর্বোচ্চ ২০০০ অক্ষরের হতে পারবে।", true);
+    return;
+  }
+
+  sending = true;
+  sendButton.disabled = true;
+
+  try {
+    const messagesRef = collection(
+      db,
+      "rooms",
+      ROOM_ID,
+      "messages"
     );
 
-    /* মন্তব্য */
+    await addDoc(messagesRef, {
+      text: text,
+      uid: currentUser.uid,
+      createdAt: serverTimestamp()
+    });
 
-    const commentButton = createButton(
-      `💬 মন্তব্য (${post.comments.length})`,
-      () => {
-        const comment = prompt(
-          "আপনার মন্তব্য লিখুন:"
-        );
+    messageInput.value = "";
+    translationResult.textContent = "";
 
-        if (comment === null) return;
+    setStatus("মেসেজ পাঠানো হয়েছে।");
+  } catch (error) {
+    console.error("Send message error:", error);
 
-        const cleanComment = comment.trim();
+    setStatus(
+      "মেসেজ পাঠানো যায়নি। Firebase Rules ও ইন্টারনেট পরীক্ষা করুন।",
+      true
+    );
+  } finally {
+    sending = false;
+    sendButton.disabled = !currentUser;
+  }
+});
 
-        if (!cleanComment) {
-          alert("মন্তব্যের ঘরে কিছু লিখুন।");
-          return;
+
+/* =====================================
+   9. TRANSLATION BUTTON
+   প্রকৃত অনুবাদ API এখনো সংযুক্ত নয়।
+===================================== */
+
+translateButton.addEventListener("click", () => {
+  if (!messageInput.value.trim()) {
+    translationResult.textContent =
+      "প্রথমে অনুবাদের জন্য একটি মেসেজ লিখুন।";
+    return;
+  }
+
+  translationResult.textContent =
+    "স্বয়ংক্রিয় অনুবাদ চালু করতে একটি অনুবাদ API সংযুক্ত করতে হবে।";
+});
+
+
+/* =====================================
+   10. START FIREBASE
+===================================== */
+
+async function startFirebase() {
+  if (!configIsReady()) {
+    setStatus(
+      "Firebase চালু হয়নি। প্রথমে firebaseConfig-এর তথ্য বসান।",
+      true
+    );
+
+    messagesElement.textContent =
+      "Firebase কনফিগারেশন যোগ করার পর অনলাইন মেসেজ দেখা যাবে।";
+
+    sendButton.disabled = true;
+    return;
+  }
+
+  try {
+    const app = initializeApp(firebaseConfig);
+
+    auth = getAuth(app);
+    db = getFirestore(app);
+
+    setStatus("Firebase-এ নিরাপদে সংযোগের চেষ্টা চলছে...");
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        currentUser = user;
+        listenForMessages();
+      } else {
+        currentUser = null;
+        sendButton.disabled = true;
+
+        if (unsubscribeMessages) {
+          unsubscribeMessages();
+          unsubscribeMessages = null;
         }
 
-        if (cleanComment.length > 1000) {
-          alert(
-            "মন্তব্য সর্বোচ্চ ১০০০ অক্ষরের মধ্যে লিখুন।"
+        signInAnonymously(auth).catch(error => {
+          console.error("Authentication error:", error);
+
+          setStatus(
+            "লগইন হয়নি। Firebase Anonymous Authentication চালু করুন।",
+            true
           );
-          return;
-        }
-
-        post.comments.push({
-          text: cleanComment,
-          date: new Date().toLocaleString()
         });
-
-        if (savePosts()) {
-          renderPosts();
-        }
       }
+    });
+
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+
+    setStatus(
+      "Firebase সংযোগ ব্যর্থ। কনফিগারেশন পরীক্ষা করুন।",
+      true
     );
+  }
+}
 
-    /* শেয়ার */
 
-    const shareButton = createButton(
-      "↗ শেয়ার",
-      async () => {
-        try {
-          if (navigator.share) {
-            await navigator.share({
-              title: "AYNA BOOK",
-              text: post.text
-            });
-          } else if (
-            navigator.clipboard &&
-            window.isSecureContext
-          ) {
-            await navigator.clipboard.writeText(
-              post.text
-            );
+/* =====================================
+   11. RUN
+===================================== */
 
-            alert("পোস্টের লেখা কপি হয়েছে।");
-          } else {
-            prompt(
-              "পোস্টের লেখা কপি করুন:",
-              post.text
-            );
-          }
-        } catch (error) {
-          if (error.name !== "AbortError") {
-            console.error("শেয়ার করা যায়নি:", error);
-
-            alert(
-              "শেয়ার করা যায়নি। লেখাটি কপি করে চেষ্টা করুন।"
-            );
-          }
-        }
-      }
-    );
-
-    /* পোস্ট মুছে ফেলা */
-
-    const deleteButton = createButton(
-      "🗑 মুছুন",
-      () => {
-        const confirmed = confirm(
-          "আপনি কি এই পোস্টটি মুছে ফেলতে চান?"
-        );
-
-        if (!confirmed) return;
-
-        const previousPosts = posts;
-
-        posts = posts.filter(
-          (item) => item.id !== post.id
-        );
-
-        if (savePosts()) {
-          renderPosts();
-        } else {
-          posts = previousPosts;
-        }
-      }
-    );
-
-    actions.append(
-      likeButton,
-      commentButton,
-      shareButton,
-      deleteButton
-    );
-
-    article.append(
-      heading,
-      content,
-      date,
-      actions
-    );
-
-    /* মন্তব্যের তালিকা */
-
-    if (post.comments.length > 0) {
-      const commentList =
-        document.createElement("div");
-
-      commentList.className = "post-comments";
-
-      const commentTitle =
-        document.createElement("h
+startFirebase();
