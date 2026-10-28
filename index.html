@@ -1,28 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AYNA BOOK - World Best</title>
-<link rel="manifest" href="manifest.json">
-<style>
-/* AYNA_ROOT_50_LAKH_CRORE - QAYAMAT TILL */
-:root{--ayna:#4f46e5;--bg:#fff}
-body{margin:0;font-family:system-ui;background:var(--bg)}
-/* QUANTUM UI */
-#app{display:flex;flex-direction:column;height:100vh}
-header{background:var(--ayna);color:#fff;padding:12px;text-align:center;font-weight:bold}
-nav{display:flex;justify-content:around;background:#eee;padding:8px}
-nav button{flex:1;margin:2px;padding:10px;border:0;background:var(--ayna);color:#fff;border-radius:8px}
-#feed{flex:1;overflow:auto;padding:10px}
-.post{background:#fff;border:1px solid #ddd;border-radius:12px;padding:12px;margin-bottom:10px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071b49">
+
+  <title>AYNA BOOK</title>
+
+  <meta name="description"
+        content="AYNA BOOK — Connect, Create and Share with the World.">
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
 </head>
+
 <body>
-<div id="app">
-<header>AYNA BOOK - Mohammad Mahabub Alam - Ukhiya 4750 - AYNA_ROOT_50_LAKH_CRORE</header>
-<nav>
-<button onclick="tab('feed')">Super Post</button>
-<button onclick="tab('msg')">Quantum Messaging</button>
-<button onclick="tab('live')">Quantum Live</button>
-<button onclick="tab('audio
+  <header class="topbar">
+    <a class="brand" href="./">
+      <img src="./icon-192.png" alt="AYNA BOOK Logo">
+      <span>AYNA <strong>BOOK</strong></span>
+    </a>
+
+    <button id="menuButton" aria-label="Open menu">☰</button>
+  </header>
+
+  <main class="container">
+    <section class="welcome card">
+      <p class="eyebrow">WELCOME TO</p>
+      <h1>AYNA BOOK</h1>
+      <p>Connect. Create. Share.</p>
+      <p>আপনার পৃথিবী, আপনার গল্প, আপনার AYNA BOOK.</p>
+    </section>
+
+    <nav class="navigation card" id="navigation">
+      <button data-target="home">🏠 হোম</button>
+      <button data-target="messaging">💬 মেসেজিং</button>
+      <button data-target="discover">🌍 আবিষ্কার</button>
+      <button data-target="media">🎬 মিডিয়া</button>
+      <button data-target="location">📍 লোকেশন</button>
+      <button data-target="settings">⚙️ সেটিংস</button>
+    </nav>
+
+    <section id="home" class="screen">
+      <div class="card">
+        <h2>নতুন পোস্ট তৈরি করুন</h2>
+
+        <form id="postForm">
+          <label for="postText">আপনার মনের কথা লিখুন</label>
+
+          <textarea
+            id="postText"
+            rows="4"
+            placeholder="আজ আপনি কী শেয়ার করতে চান?"
+            required></textarea>
+
+          <button class="primary" type="submit">পোস্ট করুন</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>সবার পোস্ট</h2>
+        <div id="posts">
+          <p class="muted">আপনার প্রথম পোস্ট তৈরি করুন!</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="messaging" class="screen hidden">
+      <div class="card">
+        <h2>💬 AYNA Messaging</h2>
+        <p>ভবিষ্যতে এখানে ব্যক্তিগত মেসেজ ও AI অনুবাদ যুক্ত করা হবে।</p>
+
+        <label for="messageText">পরীক্ষামূলক মেসেজ লিখুন</label>
+        <textarea id="messageText" rows="3"
+          placeholder="আপনার মেসেজ লিখুন"></textarea>
+
+        <button id="translateButton" class="primary" type="button">
+          অনুবাদ পরীক্ষা
+        </button>
+
+        <p id="translationResult" aria-live="polite"></p>
+        <p class="muted">
+          নোট: প্রকৃত AI অনুবাদের জন্য অনুবাদ API যুক্ত করতে হবে।
+        </p>
+      </div>
+    </section>
+
+    <section id="discover" class="screen hidden">
+      <div class="card">
+        <h2>🌍 Discover</h2>
+        <p>বিশ্বের মানুষের সঙ্গে যুক্ত হওয়ার জন্য এই অংশ তৈরি করা হয়েছে।</p>
+        <p class="muted">
+          প্রকৃত ব্যবহারকারী ও পোস্ট দেখাতে সার্ভার এবং ডেটাবেস প্রয়োজন।
+        </p>
+      </div>
+    </section>
+
+    <section id="media" class="screen hidden">
+      <div class="card">
+        <h2>🎬 ছবি, অডিও ও ভিডিও</h2>
+        <p>মিডিয়া ফিচারের প্রাথমিক জায়গা।</p>
+
+        <label for="mediaFile">একটি ছবি বা ভিডিও নির্বাচন করুন</label>
+        <input id="mediaFile" type="file" accept="image/*,video/*,audio/*">
+
+        <div id="mediaPreview"></div>
+
+        <p class="muted">
+          এটি শুধু স্থানীয় প্রিভিউ। অনলাইনে আপলোডের জন্য সার্ভার প্রয়োজন।
+        </p>
+      </div>
+    </section>
+
+    <section id="location" class="screen hidden">
+      <div class="card">
+        <h2>📍 আমার লোকেশন</h2>
+        <p>অনুমতি দিলে আপনার ডিভাইসের অবস্থান দেখানোর চেষ্টা করবে।</p>
+
+        <button id="locationButton" class="primary" type="button">
+          লোকেশন দেখুন
+        </button>
+
+        <p id="locationResult" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section id="settings" class="screen hidden">
+      <div class="card">
+        <h2>⚙️ সেটিংস</h2>
+        <p>অ্যাপের নাম: AYNA BOOK</p>
+        <p>ডিজাইন: Navy Blue + White</p>
+        <p>সংস্করণ: 1.0.0 Prototype</p>
+        <p class="muted">
