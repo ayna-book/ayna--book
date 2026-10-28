@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="theme-color" content="#071b49">
+  <title>AYNA BOOK | My Profile</title>
+
+  <link rel="icon" href="./icon-192.png">
+
+  <style>
+    :root {
+      --navy: #071b49;
+      --pink: #ff4fa3;
+      --cyan: #35d9ef;
+      --purple: #8b5cf6;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f1f4fa;
+      color: var(--navy);
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 18px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 8px 0;
+    }
+
+    .logo {
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    .card {
+      max-width: 520px;
+      margin: 22px auto;
+      padding: 22px;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 5px 20px #071b4914;
+    }
+
+    .avatar {
+      width: 110px;
+      height: 110px;
+      display: block;
+      margin: 0 auto 15px;
+      border-radius: 50%;
+      border: 4px solid var(--cyan);
+      object-fit: cover;
+      background: #e9edfa;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
+      font-weight: bold;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d5dbea;
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 13px;
+      border: 0;
+      border-radius: 11px;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      opacity: 0.8;
+    }
+
+    .secondary {
+      background: var(--purple);
+    }
+
+    .status {
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .back {
+      display: block;
+      margin-top: 18px;
+      text-align: center;
+      color: var(--navy);
+    }
+
+    .note {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #596579;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <img
+      class="logo"
+      src="./icon-192.png"
+      alt="AYNA BOOK Logo"
+    >
+    <h1>AYNA BOOK</h1>
+    <p>আপনার পরিচয়, আপনার আয়না</p>
+  </header>
+
+  <main class="card">
+    <h2>👤 আমার প্রোফাইল</h2>
+
+    <img
+      id="avatar"
+      class="avatar"
+      alt="প্রোফাইল ছবির প্রিভিউ"
+    >
+
+    <label for="photo">প্রোফাইল ছবি নির্বাচন করুন</label>
+    <input
+      id="photo"
+      type="file"
+      accept="image/*"
+    >
+
+    <form id="profileForm">
+
+      <label for="name">আপনার নাম</label>
+      <input
+        id="name"
+        type="text"
+        maxlength="80"
+        placeholder="আপনার নাম লিখুন"
+        required
+      >
+
+      <label for="username">ইউজারনেম</label>
+      <input
+        id="username"
+        type="text"
+        maxlength="30"
+        pattern="[A-Za-z0-9_]+"
+        placeholder="যেমন: mahbub123"
+        required
+      >
+
+      <label for="bio">আপনার পরিচিতি</label>
+      <textarea
+        id="bio"
+        rows="4"
+        maxlength="300"
+        placeholder="নিজের সম্পর্কে লিখুন"
+      ></textarea>
+
+      <label for="location">আপনার শহর বা অবস্থান</label>
+      <input
+        id="location"
+        type="text"
+        maxlength="100"
+        placeholder="শহরের নাম লিখুন"
+      >
+
+      <button type="submit">
+        💾 প্রোফাইল সংরক্ষণ করুন
+      </button>
+
+      <button
+        type="button"
+        class="secondary"
+        id="clearButton"
+      >
+        প্রোফাইল তথ্য মুছুন
+      </button>
+
+    </form>
+
+    <p id="status" class="status" aria-live="polite"></p>
+
+    <p class="note">
+      গুরুত্বপূর্ণ: এই সংস্করণে তথ্য আপনার বর্তমান ব্রাউজারে
+      সংরক্ষিত হবে। এটি অনলাইন অ্যাকাউন্ট বা নিরাপদ লগইন নয়।
+    </p>
+
+    <a class="back" href="./index.html">
+      ← AYNA BOOK হোম পেজে ফিরে যান
+    </a>
+  </main>
+
+  <script>
+    "use strict";
+
+    const form = document.getElementById("profileForm");
+    const photo = document.getElementById("photo");
+    const avatar = document.getElementById("avatar");
+    const status = document.getElementById("status");
+
+    const fields = [
+      "name",
+      "username",
+      "bio",
+      "location"
+    ];
+
+    let photoData = "";
+
+    function loadProfile() {
+      try {
+        const saved = JSON.parse(
+          localStorage.getItem("aynaBookProfile") || "{}"
+        );
+
+        fields.forEach((field) => {
+          document.getElementById(field).value =
+            saved[field] || "";
+        });
+
+        photoData = saved.photo || "";
+
+        if (photoData) {
+          avatar.src = photoData;
+        }
+      } catch {
+        status.textContent =
+          "সংরক্ষিত তথ্য পড়া যায়নি।";
+      }
+    }
+
+    photo.addEventListener("change", () => {
+      const file = photo.files[0];
+
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        status.textContent =
+          "অনুগ্রহ করে একটি ছবি নির্বাচন করুন।";
+        photo.value = "";
+        return;
+      }
+
+      if (file.size > 1024 * 1024) {
+        status.textContent =
+          "ছবির আকার ১ MB-এর মধ্যে রাখুন।";
+        photo.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        photoData = reader.result;
+        avatar.src = photoData;
+        status.textContent =
+          "ছবির প্রিভিউ তৈরি হয়েছে।";
+      };
+
+      reader.onerror = () => {
+        status.textContent =
+          "ছবি পড়া যায়নি। আবার চেষ্টা করুন।";
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const profile = {};
+
+      fields.forEach((field) => {
+        profile[field] =
+          document.getElementById(field).value.trim();
+      });
+
+      profile.username =
+        profile.username.toLowerCase();
+
+      profile.photo = photoData;
+
+      try {
+        localStorage.setItem(
+          "aynaBookProfile",
+          JSON.stringify(profile)
+        );
+
+        status.textContent =
+          "✅ আপনার প্রোফাইল এই ব্রাউজারে সংরক্ষিত হয়েছে।";
+      } catch {
+        status.textContent =
+          "সংরক্ষণ করা যায়নি। ছবির আকার কমিয়ে আবার চেষ্টা করুন।";
+      }
+    });
+
+    document
+      .getElementById("clearButton")
+      .addEventListener("click", () => {
+        if (!confirm("আপনার সংরক্ষিত প্রোফাইল মুছবেন?")) {
+          return;
+        }
+
+        localStorage.removeItem("aynaBookProfile");
+
+        form.reset();
+        photoData = "";
+        avatar.removeAttribute("src");
+
+        status.textContent =
+          "এই ব্রাউজারের প্রোফাইল তথ্য মুছে ফেলা হয়েছে।";
+      });
+
+    loadProfile();
+  </script>
+
+</body>
+</html>
