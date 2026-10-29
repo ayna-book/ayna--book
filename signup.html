@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <title>Join AYNA BOOK</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #071b49, #8b5cf6);
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      padding: 28px;
+      background: white;
+      border-radius: 20px;
+    }
+
+    h1 { color: #071b49; text-align: center; }
+    p { text-align: center; color: #555; }
+
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    input { border: 1px solid #ccc; }
+
+    button {
+      border: 0;
+      color: white;
+      background: #071b49;
+      font-weight: bold;
+    }
+
+    #status {
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+    }
+
+    a { color: #7138d9; }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <h1>AYNA BOOK</h1>
+    <p>My World. Your Story. My AYNA BOOK.</p>
+    <h2>Create Your Account</h2>
+
+    <form id="signupForm">
+      <input
+        id="name"
+        type="text"
+        placeholder="Your full name"
+        maxlength="80"
+        required
+      >
+
+      <input
+        id="email"
+        type="email"
+        placeholder="Your email address"
+        autocomplete="email"
+        required
+      >
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Password (at least 6 characters)"
+        minlength="6"
+        autocomplete="new-password"
+        required
+      >
+
+      <button id="signupButton" type="submit">
+        Create Account
+      </button>
+    </form>
+
+    <p id="status" role="status"></p>
+
+    <p>
+      Already registered?
+      <a href="./login.html">Log in</a>
+    </p>
+
+    <p><a href="./index.html">Back to AYNA BOOK</a></p>
+  </main>
+
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      updateProfile,
+      sendEmailVerification
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+      authDomain: "ayna-book.firebaseapp.com",
+      projectId: "ayna-book",
+      storageBucket: "ayna-book.firebasestorage.app",
+      messagingSenderId: "805601138500",
+      appId: "1:805601138500:web:47acdc90cb0cb521626911",
+      measurementId: "G-RKHHSKNB4B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const form = document.getElementById("signupForm");
+    const status = document.getElementById("status");
+    const button = document.getElementById("signupButton");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      button.disabled = true;
+      status.textContent = "Creating your account...";
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        const result = await createUserWithEmailAndPassword(
+          auth, email, password
+        );
+
+        await updateProfile(result.user, {
+          displayName: name
+        });
+
+        try {
+          await sendEmailVerification(result.user);
+          status.textContent =
+            "Account created! Please check your email to verify your account.";
+        } catch {
+          status.textContent =
+            "Account created, but verification email could not be sent. You can request it again later.";
+        }
+
+        form.reset();
+      } catch (error) {
+        const messages = {
+          "auth/email-already-in-use":
+            "This email is already registered. Please log in.",
+          "auth/invalid-email":
+            "Please enter a valid email address.",
+          "auth/weak-password":
+            "Please choose a stronger password.",
+          "auth/operation-not-allowed":
+            "Email/Password sign-in is not enabled in Firebase.",
+          "auth/network-request-failed":
+            "Network error. Check your internet connection."
+        };
+
+        status.textContent =
+          messages[error.code] ||
+          "Account creation failed: " + error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
