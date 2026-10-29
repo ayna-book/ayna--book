@@ -5,140 +5,301 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
-  <title>AYNA BOOK</title>
-  <meta name="description" content="AYNA BOOK — Connect. Create. Share.">
-  <link rel="manifest" href="./manifest.json">
+  <title>AYNA BOOK — My Profile</title>
   <link rel="icon" href="./icon-192.png">
-  <link rel="stylesheet" href="./styles.css">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #071b49, #512b81);
+      color: white;
+    }
+
+    .card {
+      max-width: 520px;
+      margin: 20px auto;
+      padding: 24px;
+      background: #ffffff12;
+      border: 1px solid #ffffff30;
+      border-radius: 20px;
+    }
+
+    h1, .subtitle { text-align: center; }
+    .subtitle { color: #35d9ef; }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 7px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ffffff40;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button, .back {
+      display: block;
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    #photoPreview {
+      display: block;
+      width: 120px;
+      height: 120px;
+      margin: 15px auto;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ffffff20;
+    }
+
+    #status {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .muted {
+      color: #ddd;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+  </style>
 </head>
+
 <body>
-  <header class="topbar">
-    <a class="brand" href="./">
-      <img src="./icon-192.png" alt="AYNA BOOK Logo">
-      <span>AYNA <strong>BOOK</strong></span>
-    </a>
-    <button id="menuButton" type="button" aria-label="মেনু খুলুন">☰</button>
-  </header>
+  <main class="card">
+    <h1>🌍 AYNA BOOK</h1>
+    <p class="subtitle">আপনার পরিচয়, আপনার আয়না</p>
 
-  <main class="container">
-    <section class="welcome card">
-      <p class="eyebrow">WELCOME TO</p>
-      <h1>AYNA BOOK</h1>
-      <p>Connect. Create. Share.</p>
-      <p>আপনার পৃথিবী, আপনার গল্প, আপনার AYNA BOOK.</p>
-      <a href="./profile.html">👤 আমার প্রোফাইল</a>
-    </section>
+    <h2>👤 আমার অনলাইন প্রোফাইল</h2>
 
-    <nav class="navigation card" id="navigation">
-      <button type="button" data-target="home">🏠 হোম</button>
-      <button type="button" data-target="messaging">💬 মেসেজিং</button>
-      <button type="button" data-target="discover">🌍 আবিষ্কার</button>
-      <button type="button" data-target="media">🎬 মিডিয়া</button>
-      <a href="./radio-tv.html">📻 Radio ও 📺 TV</a>
-      <a href="./global-alert.html">🚨 GLOBAL ALERT</a>
-      <button type="button" data-target="location">📍 লোকেশন</button>
-      <button type="button" data-target="settings">⚙️ সেটিংস</button>
-      <a href="./profile.html">👤 প্রোফাইল খুলুন</a>
-    </nav>
+    <img id="photoPreview" alt="প্রোফাইল ছবির প্রিভিউ">
 
-    <section id="home" class="screen">
-      <div class="card">
-        <h2>✨ নতুন পোস্ট তৈরি করুন</h2>
-        <form id="postForm">
-          <label for="postText">আপনার মনের কথা লিখুন</label>
-          <textarea id="postText" rows="4" maxlength="5000"
-            placeholder="আজ আপনি কী শেয়ার করতে চান?" required></textarea>
-          <button class="primary" type="submit">🚀 পোস্ট করুন</button>
-        </form>
-      </div>
-      <div class="card">
-        <h2>🌍 সবার পোস্ট</h2>
-        <div id="posts">
-          <p class="muted">পোস্ট ফিচার পরবর্তী ধাপে যুক্ত হবে।</p>
-        </div>
-      </div>
-    </section>
+    <p id="accountEmail" class="muted">অ্যাকাউন্ট যাচাই হচ্ছে...</p>
 
-    <section id="messaging" class="screen hidden">
-      <div class="card">
-        <h2>💬 AYNA BOOK Messaging</h2>
-        <p id="status" role="status" aria-live="polite">Firebase সংযোগ করা হচ্ছে...</p>
+    <form id="profileForm">
+      <label for="name">আপনার নাম</label>
+      <input id="name" maxlength="80" required>
 
-        <div id="messages" aria-live="polite"
-          style="max-height:350px;overflow-y:auto;">
-          <p>মেসেজ লোড হচ্ছে...</p>
-        </div>
+      <label for="username">ইউজারনেম</label>
+      <input id="username" maxlength="30" required>
 
-        <form id="chatForm">
-          <label for="message">আপনার মেসেজ লিখুন</label>
-          <textarea id="message" rows="3" maxlength="2000"
-            placeholder="মেসেজ লিখুন..." required></textarea>
-          <button id="sendButton" class="primary" type="submit" disabled>
-            📩 মেসেজ পাঠান
-          </button>
-        </form>
+      <label for="bio">আপনার পরিচিতি</label>
+      <textarea id="bio" rows="3" maxlength="300"></textarea>
 
-        <button id="translate" type="button">🌐 অনুবাদ পরীক্ষা</button>
-        <p id="translationResult" aria-live="polite"></p>
-        <p class="muted">প্রকৃত অনুবাদের জন্য Translation API প্রয়োজন।</p>
-      </div>
-    </section>
+      <label for="location">আপনার শহর বা অবস্থান</label>
+      <input id="location" maxlength="100">
 
-    <section id="discover" class="screen hidden">
-      <div class="card">
-        <h2>🌍 Discover</h2>
-        <p>নতুন মানুষ ও কনটেন্ট আবিষ্কার করুন।</p>
-        <p class="muted">অনলাইন কনটেন্ট দেখানোর জন্য ডেটাবেস প্রয়োজন।</p>
-      </div>
-    </section>
+      <label for="photo">প্রোফাইল ছবি (সর্বোচ্চ ২০০ KB)</label>
+      <input id="photo" type="file" accept="image/*">
 
-    <section id="media" class="screen hidden">
-      <div class="card">
-        <h2>🎬 ছবি, অডিও ও ভিডিও</h2>
-        <label for="mediaFile">মিডিয়া নির্বাচন করুন</label>
-        <input id="mediaFile" type="file" accept="image/*,video/*,audio/*">
-        <div id="mediaPreview"></div>
-        <p class="muted">অনলাইনে আপলোডের জন্য স্টোরেজ সুবিধা প্রয়োজন।</p>
-      </div>
-    </section>
+      <button type="submit">💾 অনলাইনে সংরক্ষণ করুন</button>
+    </form>
 
-    <section id="location" class="screen hidden">
-      <div class="card">
-        <h2>📍 আমার লোকেশন</h2>
-        <p>আপনার অনুমতি নিয়ে লোকেশন ফিচার যুক্ত করা হবে।</p>
-        <button id="locationButton" class="primary" type="button">লোকেশন দেখুন</button>
-        <p id="locationResult" aria-live="polite"></p>
-      </div>
-    </section>
+    <button id="logoutButton" type="button">🚪 লগআউট</button>
 
-    <section id="settings" class="screen hidden">
-      <div class="card">
-        <h2>⚙️ সেটিংস</h2>
-        <p>অ্যাপের নাম: AYNA BOOK</p>
-        <p>সংস্করণ: 1.0.0 Prototype</p>
-        <p>ডিজাইন: Navy Blue, Pink, Cyan ও Purple</p>
-        <a href="./profile.html">👤 প্রোফাইল সম্পাদনা করুন</a>
-      </div>
-    </section>
+    <p id="status" role="status" aria-live="polite"></p>
+
+    <a class="back" href="./index.html">🏠 হোম পেজে ফিরে যান</a>
+
+    <p class="muted">
+      আপনার প্রোফাইল Firebase-এ সংরক্ষিত হবে।
+      এটি কাজ করতে লগইন, Firestore Database ও সঠিক
+      নিরাপত্তা নিয়ম প্রয়োজন।
+    </p>
   </main>
 
-  <footer class="container">
-    <p style="text-align:center;padding:20px;">
-      © <span id="year"></span> AYNA BOOK
-      <br>Connect. Create. Share.
-    </p>
-  </footer>
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
-  <script type="module" src="./app.js"></script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("./offline.js")
-          .catch(function (error) {
-            console.error("Offline setup failed:", error);
-          });
-      });
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+      authDomain: "ayna-book.firebaseapp.com",
+      projectId: "ayna-book",
+      storageBucket: "ayna-book.firebasestorage.app",
+      messagingSenderId: "805601138500",
+      appId: "1:805601138500:web:47acdc90cb0cb521626911",
+      measurementId: "G-RKHHSKNB4B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const $ = id => document.getElementById(id);
+    const form = $("profileForm");
+    const photoInput = $("photo");
+    const preview = $("photoPreview");
+    const status = $("status");
+
+    let currentUser = null;
+    let photoData = "";
+
+    function showStatus(message) {
+      status.textContent = message;
     }
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        window.location.href = "./login.html";
+        return;
+      }
+
+      currentUser = user;
+      $("accountEmail").textContent =
+        "লগইন করা অ্যাকাউন্ট: " + (user.email || "ইমেইল নেই");
+
+      try {
+        const ref = doc(db, "users", user.uid);
+        const snapshot = await getDoc(ref);
+
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+
+          $("name").value = data.name || "";
+          $("username").value = data.username || "";
+          $("bio").value = data.bio || "";
+          $("location").value = data.location || "";
+
+          photoData = data.photo || "";
+
+          if (photoData) {
+            preview.src = photoData;
+          }
+        }
+
+        showStatus("প্রোফাইল প্রস্তুত।");
+      } catch (error) {
+        console.error(error);
+        showStatus(
+          "প্রোফাইল লোড হয়নি। Firebase সংযোগ ও Firestore Rules পরীক্ষা করুন।"
+        );
+      }
+    });
+
+    photoInput.addEventListener("change", () => {
+      const file = photoInput.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        showStatus("একটি সঠিক ছবি নির্বাচন করুন।");
+        photoInput.value = "";
+        return;
+      }
+
+      if (file.size > 200 * 1024) {
+        showStatus("ছবিটি ২০০ KB-এর চেয়ে ছোট করুন।");
+        photoInput.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        photoData = reader.result;
+        preview.src = photoData;
+        showStatus("ছবির প্রিভিউ তৈরি হয়েছে।");
+      };
+
+      reader.onerror = () => {
+        showStatus("ছবি পড়া যায়নি। আবার চেষ্টা করুন।");
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showStatus("আগে লগইন করুন।");
+        return;
+      }
+
+      const name = $("name").value.trim();
+      const username = $("username").value.trim()
+        .replace(/^@/, "").toLowerCase();
+      const bio = $("bio").value.trim();
+      const location = $("location").value.trim();
+
+      if (!name || !username) {
+        showStatus("নাম ও ইউজারনেম লিখুন।");
+        return;
+      }
+
+      if (!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)) {
+        showStatus(
+          "ইউজারনেম ৩–৩০ অক্ষরের হতে হবে; ইংরেজি অক্ষর, সংখ্যা, _, . বা - ব্যবহার করুন।"
+        );
+        return;
+      }
+
+      showStatus("Firebase-এ সংরক্ষণ হচ্ছে...");
+
+      try {
+        await setDoc(
+          doc(db, "users", currentUser.uid),
+          {
+            name,
+            username,
+            bio,
+            location,
+            photo: photoData,
+            email: currentUser.email || "",
+            updatedAt: new Date().toISOString()
+          },
+          { merge: true }
+        );
+
+        showStatus("✅ আপনার প্রোফাইল Firebase-এ সংরক্ষিত হয়েছে!");
+      } catch (error) {
+        console.error(error);
+        showStatus(
+          "সংরক্ষণ হয়নি। Authentication, Firestore Rules ও ইন্টারনেট পরীক্ষা করুন।"
+        );
+      }
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        window.location.href = "./login.html";
+      } catch (error) {
+        console.error(error);
+        showStatus("লগআউট করা যায়নি। আবার চেষ্টা করুন।");
+      }
+    });
   </script>
 </body>
 </html>
