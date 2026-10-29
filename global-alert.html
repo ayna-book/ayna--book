@@ -1,20 +1,26 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071b49">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10112b">
+
   <title>GLOBAL ALERT | AYNA BOOK</title>
-  <link rel="icon" href="./icon-192.png">
+
+  <meta name="description"
+        content="AYNA BOOK Global Alert — জরুরি সতর্কতা ও দুর্যোগ প্রস্তুতি।">
 
   <style>
     :root {
-      --navy: #071b49;
-      --pink: #ff4fa3;
-      --cyan: #00cfd5;
-      --purple: #8b5cf6;
-      --bg: #f3f6fc;
-      --muted: #64748b;
+      --bg: #10112b;
+      --card: #1b1d40;
+      --pink: #ff4da6;
+      --cyan: #38e8ff;
+      --purple: #a879ff;
+      --white: #ffffff;
+      --muted: #c9cbe3;
+      --border: rgba(255,255,255,.13);
     }
 
     * {
@@ -23,273 +29,359 @@
 
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--navy);
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
+      font-family: Arial, "Noto Sans Bengali", sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at top left, #35205e, transparent 40%),
+        var(--bg);
+      line-height: 1.7;
     }
 
     header {
-      background: var(--navy);
-      color: white;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      padding: 22px 16px;
+      text-align: center;
+      background: rgba(16,17,43,.94);
+      border-bottom: 1px solid var(--border);
     }
 
-    header img {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
+    .brand {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: 1px;
     }
 
-    header a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
+    .brand span {
+      color: var(--pink);
+    }
+
+    .subtitle {
+      color: var(--cyan);
+      font-size: 13px;
+      letter-spacing: 2px;
     }
 
     main {
-      max-width: 850px;
-      width: calc(100% - 24px);
-      margin: 20px auto;
+      width: min(100% - 28px, 1000px);
+      margin: 25px auto;
     }
 
     .hero {
-      padding: 26px 20px;
-      border-radius: 18px;
+      text-align: center;
+      padding: 28px 16px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
       background: linear-gradient(
         135deg,
-        var(--navy),
-        #243e82,
-        #6d28d9
+        rgba(255,77,166,.16),
+        rgba(56,232,255,.10),
+        rgba(168,121,255,.16)
       );
-      color: white;
-      text-align: center;
     }
 
     .hero h1 {
       margin: 0;
-      font-size: clamp(28px, 7vw, 42px);
+      font-size: clamp(30px, 7vw, 48px);
+      line-height: 1.2;
+    }
+
+    .hero h1 span {
+      color: var(--pink);
+    }
+
+    .hero p {
+      color: var(--muted);
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 7px 13px;
+      border: 1px solid var(--cyan);
+      border-radius: 20px;
+      color: var(--cyan);
+      font-size: 13px;
     }
 
     .notice {
-      padding: 14px 16px;
-      border-left: 5px solid #f59e0b;
-      background: #fff7e6;
-      border-radius: 10px;
-      margin: 16px 0;
+      margin: 20px 0;
+      padding: 16px;
+      border-left: 5px solid #ffc857;
+      border-radius: 12px;
+      background: rgba(255,200,87,.10);
+    }
+
+    .notice strong {
+      color: #ffd36e;
+    }
+
+    h2 {
+      font-size: 23px;
+      margin-top: 30px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin: 16px 0;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, 260px), 1fr)
+      );
+      gap: 15px;
     }
 
-    .tile,
-    .panel {
-      background: white;
-      border: 1px solid #dce3ef;
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 3px 12px #071b490b;
+    .card {
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: rgba(27,29,64,.88);
     }
 
-    .tile {
-      font-weight: bold;
+    .card .icon {
+      font-size: 34px;
     }
 
-    .tile span {
-      display: block;
-      font-size: 25px;
+    .card h3 {
+      margin: 5px 0;
+      color: var(--cyan);
+      font-size: 19px;
     }
 
-    .panel h2 {
-      margin-top: 0;
-    }
-
-    .muted {
+    .card p {
+      margin-bottom: 0;
       color: var(--muted);
       font-size: 14px;
     }
 
-    .pill {
-      display: inline-block;
-      background: #e9e7ff;
-      color: #4c1d95;
-      padding: 3px 9px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
     .emergency {
-      background: #fff0f4;
-      border: 1px solid #ffc6d9;
-      border-radius: 12px;
-      padding: 14px;
+      margin-top: 24px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--pink);
+      border-radius: 18px;
+      background: rgba(255,77,166,.08);
     }
 
-    ul {
-      padding-left: 22px;
-    }
-
-    .button {
+    .emergency a {
       display: inline-block;
-      padding: 10px 14px;
+      margin: 7px;
+      padding: 10px 17px;
+      color: #10112b;
+      background: var(--cyan);
       border-radius: 10px;
-      background: var(--pink);
-      color: white;
       text-decoration: none;
       font-weight: bold;
     }
 
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: var(--muted);
-      font-size: 13px;
+    .emergency .home {
+      color: white;
+      background: var(--pink);
     }
 
-    @media (max-width: 520px) {
-      .tile,
-      .panel {
-        padding: 12px;
-      }
+    .tips {
+      padding-left: 22px;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 24px 14px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer strong {
+      color: var(--pink);
     }
   </style>
 </head>
 
 <body>
+
   <header>
-    <img src="./icon-192.png" alt="AYNA BOOK logo">
-    <a href="./">AYNA BOOK</a>
-    <span style="margin-left:auto">🌍 GLOBAL ALERT</span>
+    <div class="brand">AYNA <span>BOOK</span></div>
+    <div class="subtitle">GLOBAL SAFETY & ALERT CENTER</div>
   </header>
 
   <main>
+
     <section class="hero">
-      <p>AYNA BOOK • GLOBAL SAFETY</p>
-      <h1>🌍 GLOBAL ALERT 🚨</h1>
-      <p>বিশ্বব্যাপী দুর্যোগ ও জরুরি নিরাপত্তা তথ্য</p>
-      <p>সতর্ক থাকুন • যাচাই করা তথ্য অনুসরণ করুন</p>
+      <h1>🌍 GLOBAL <span>ALERT</span></h1>
+      <p>
+        দুর্যোগ, দুর্ঘটনা ও জরুরি পরিস্থিতি সম্পর্কে সচেতন থাকুন।
+        নিজের ও অন্যের নিরাপত্তাকে গুরুত্ব দিন।
+      </p>
+      <div class="status">
+        ℹ️ তথ্য ও নিরাপত্তা নির্দেশিকা
+      </div>
     </section>
 
-    <div class="notice">
-      <strong>⚠️ গুরুত্বপূর্ণ:</strong>
-      এটি GLOBAL ALERT-এর প্রাথমিক সংস্করণ।
-      এখনো সরকারি লাইভ সতর্কবার্তার তথ্যসূত্র যুক্ত হয়নি।
-      নিচের বিভাগগুলো বর্তমান কোনো বিপদের ঘোষণা নয়।
-      জরুরি অবস্থায় স্থানীয় কর্তৃপক্ষের নির্দেশনা অনুসরণ করুন।
-    </div>
+    <section class="notice">
+      <strong>গুরুত্বপূর্ণ ঘোষণা:</strong>
+      এই পৃষ্ঠায় এখনো কোনো সরকারি লাইভ সতর্কতা-সেবা সংযুক্ত নেই।
+      এখানে দেখানো বিভাগগুলো সতর্কতার ধরন ও প্রস্তুতির নির্দেশিকা;
+      এগুলো বর্তমান কোনো দুর্যোগের নিশ্চিত খবর নয়।
+      জরুরি সিদ্ধান্তের আগে সরকারি ও নির্ভরযোগ্য সূত্র যাচাই করুন।
+    </section>
+
+    <h2>🚨 সতর্কতার বিভাগসমূহ</h2>
 
     <section class="grid">
-      <div class="tile">
-        <span>🌪️</span>
-        ঘূর্ণিঝড় ও ঝড়
-      </div>
 
-      <div class="tile">
-        <span>🌊</span>
-        বন্যা ও জলোচ্ছ্বাস
-      </div>
+      <article class="card">
+        <div class="icon">🌀</div>
+        <h3>ঘূর্ণিঝড় ও সামুদ্রিক ঝড়</h3>
+        <p>
+          আবহাওয়ার সরকারি বুলেটিন শুনুন।
+          নির্দেশ দিলে নিরাপদ আশ্রয়কেন্দ্রে যান।
+          উপকূল ও সমুদ্র থেকে দূরে থাকুন।
+        </p>
+      </article>
 
-      <div class="tile">
-        <span>🌧️</span>
-        অতিবৃষ্টি ও ভূমিধস
-      </div>
+      <article class="card">
+        <div class="icon">🌊</div>
+        <h3>বন্যা ও জলোচ্ছ্বাস</h3>
+        <p>
+          নিচু এলাকা থেকে নিরাপদ উঁচু স্থানে যান।
+          বন্যার পানিতে হাঁটবেন না এবং বিদ্যুতের তার এড়িয়ে চলুন।
+        </p>
+      </article>
 
-      <div class="tile">
-        <span>☀️</span>
-        খরা ও তাপপ্রবাহ
-      </div>
+      <article class="card">
+        <div class="icon">🌧️</div>
+        <h3>ভারী বৃষ্টি ও ভূমিধস</h3>
+        <p>
+          পাহাড়ের ঢাল ও ঝুঁকিপূর্ণ বসতি থেকে দূরে থাকুন।
+          বৃষ্টির সময় পাহাড়ি ঝুঁকিপূর্ণ পথে চলাচল এড়িয়ে চলুন।
+        </p>
+      </article>
 
-      <div class="tile">
-        <span>🌎</span>
-        ভূমিকম্প ও সুনামি
-      </div>
+      <article class="card">
+        <div class="icon">🔥</div>
+        <h3>আগুন ও অগ্নিকাণ্ড</h3>
+        <p>
+          আগুন লাগলে দ্রুত নিরাপদ স্থানে বেরিয়ে যান।
+          ধোঁয়ার মধ্যে নিচু হয়ে চলুন।
+          নিরাপদ না হলে আগুন নেভানোর চেষ্টা করবেন না।
+        </p>
+      </article>
 
-      <div class="tile">
-        <span>🔥</span>
-        আগুন ও দাবানল
-      </div>
+      <article class="card">
+        <div class="icon">⚡</div>
+        <h3>বৈদ্যুতিক দুর্ঘটনা</h3>
+        <p>
+          ছেঁড়া তার বা ভেজা বৈদ্যুতিক যন্ত্র স্পর্শ করবেন না।
+          বিদ্যুৎস্পৃষ্ট ব্যক্তিকে সরাসরি ধরবেন না;
+          নিরাপদ হলে বিদ্যুৎ বন্ধ করে জরুরি সাহায্য নিন।
+        </p>
+      </article>
 
-      <div class="tile">
-        <span>⚡</span>
-        বিদ্যুৎ ও শর্টসার্কিট
-      </div>
+      <article class="card">
+        <div class="icon">🌍</div>
+        <h3>ভূমিকম্প ও সুনামি</h3>
+        <p>
+          ভূমিকম্পে নিচু হয়ে মজবুত টেবিলের নিচে আশ্রয় নিন
+          এবং ধরে থাকুন।
+          উপকূলে শক্তিশালী ভূমিকম্প হলে নিরাপদ উঁচু স্থানে যান।
+        </p>
+      </article>
 
-      <div class="tile">
-        <span>✈️</span>
-        বিমান, সড়ক, রেল ও নৌ দুর্ঘটনা
-      </div>
+      <article class="card">
+        <div class="icon">🌡️</div>
+        <h3>খরা ও তাপপ্রবাহ</h3>
+        <p>
+          পর্যাপ্ত পানি পান করুন, রোদ এড়িয়ে চলুন
+          এবং শিশু ও বয়স্কদের বিশেষ যত্ন নিন।
+        </p>
+      </article>
 
-      <div class="tile">
-        <span>🛡️</span>
-        যুদ্ধ ও নিরাপত্তা
-      </div>
+      <article class="card">
+        <div class="icon">🚗</div>
+        <h3>সড়ক দুর্ঘটনা</h3>
+        <p>
+          দুর্ঘটনাস্থলে নিজের নিরাপত্তা নিশ্চিত করুন।
+          আহত ব্যক্তির জন্য জরুরি সহায়তা ডাকুন।
+          বিপজ্জনকভাবে যান চলাচল নিয়ন্ত্রণ করবেন না।
+        </p>
+      </article>
 
-      <div class="tile">
-        <span>🏥</span>
-        জনস্বাস্থ্য ও অন্যান্য জরুরি অবস্থা
-      </div>
+      <article class="card">
+        <div class="icon">✈️</div>
+        <h3>বিমান ও পরিবহন দুর্ঘটনা</h3>
+        <p>
+          বিমান বা অন্য পরিবহনে দুর্ঘটনার খবর পেলে
+          সংশ্লিষ্ট কর্তৃপক্ষের নির্দেশ অনুসরণ করুন।
+          যাচাই না করা খবর ছড়াবেন না।
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">⚠️</div>
+        <h3>যুদ্ধ ও নিরাপত্তা ঝুঁকি</h3>
+        <p>
+          সরকারি নির্দেশ ও নির্ভরযোগ্য সংবাদ অনুসরণ করুন।
+          সংঘর্ষস্থল থেকে দূরে থাকুন এবং নিরাপদ আশ্রয়ে যান।
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">🏥</div>
+        <h3>রোগ ও জনস্বাস্থ্য জরুরি অবস্থা</h3>
+        <p>
+          স্বাস্থ্য কর্তৃপক্ষের নির্দেশ মেনে চলুন।
+          প্রয়োজন হলে চিকিৎসা নিন এবং যাচাই করা স্বাস্থ্যতথ্য অনুসরণ করুন।
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">📢</div>
+        <h3>অন্যান্য জরুরি সতর্কতা</h3>
+        <p>
+          ভবন ধস, রাসায়নিক দুর্ঘটনা, নিখোঁজ ব্যক্তি
+          বা অন্য জরুরি ঘটনায় সংশ্লিষ্ট কর্তৃপক্ষকে জানান।
+        </p>
+      </article>
+
     </section>
 
-    <section class="panel">
-      <h2>📡 সতর্কবার্তার অবস্থা</h2>
+    <section class="emergency">
+      <h2>🆘 জরুরি সহায়তা</h2>
+      <p>
+        বাংলাদেশে তাৎক্ষণিক জরুরি সহায়তার জন্য
+        জাতীয় জরুরি সেবা ৯৯৯-এ যোগাযোগ করুন।
+      </p>
+
+      <a href="tel:999">📞 কল করুন: 999</a>
 
       <p>
-        <span class="pill">প্রাথমিক সংস্করণ</span>
+        অন্য দেশে থাকলে স্থানীয় জরুরি সেবার নম্বরে যোগাযোগ করুন।
       </p>
 
-      <p>
-        লাইভ সতর্কবার্তার জন্য সরকারি ও বিশ্বস্ত তথ্যসূত্র,
-        তথ্য যাচাই, সার্ভার সংযোগ এবং নোটিফিকেশন ব্যবস্থা
-        যুক্ত করতে হবে।
-      </p>
-
-      <p class="muted">
-        এই পৃষ্ঠায় বর্তমানে লাইভ সতর্কবার্তা বা অবস্থানভিত্তিক
-        বিপদ যাচাই করা হচ্ছে না।
-      </p>
+      <a class="home" href="./">🏠 AYNA BOOK হোমে ফিরুন</a>
     </section>
 
-    <section class="panel">
-      <h2>🆘 জরুরি অবস্থায় করণীয়</h2>
+    <section>
+      <h2>🛡️ জরুরি প্রস্তুতি</h2>
 
-      <ul>
-        <li>স্থানীয় জরুরি সেবা ও সরকারি নির্দেশনা অনুসরণ করুন।</li>
-        <li>যাচাই না করা সতর্কবার্তা শেয়ার করবেন না।</li>
-        <li>আগুন বা বৈদ্যুতিক দুর্ঘটনায় নিরাপদ দূরত্বে সরে যান।</li>
-        <li>যুদ্ধ, বন্যা বা ঘূর্ণিঝড়ে নির্দেশিত নিরাপদ স্থানে আশ্রয় নিন।</li>
+      <ul class="tips">
+        <li>পরিবারের সঙ্গে জরুরি যোগাযোগের পরিকল্পনা রাখুন।</li>
+        <li>পানি, শুকনো খাবার, ওষুধ ও টর্চ প্রস্তুত রাখুন।</li>
+        <li>পরিচয়পত্র ও প্রয়োজনীয় কাগজপত্র নিরাপদে রাখুন।</li>
+        <li>সরকারি সতর্কতা ও স্থানীয় প্রশাসনের নির্দেশ অনুসরণ করুন।</li>
+        <li>যাচাই না করা ছবি, ভিডিও বা দুর্যোগের খবর ছড়াবেন না।</li>
       </ul>
-
-      <div class="emergency">
-        <strong>বাংলাদেশে থাকলে:</strong>
-        জরুরি প্রয়োজনে জাতীয় জরুরি সেবা ৯৯৯-এ যোগাযোগ করুন।
-        অন্য দেশে স্থানীয় জরুরি নম্বর ব্যবহার করুন।
-      </div>
     </section>
 
-    <p>
-      <a class="button" href="./">
-        ← AYNA BOOK হোমে ফিরে যান
-      </a>
-    </p>
   </main>
 
   <footer>
-    © <span id="year"></span> AYNA BOOK • GLOBAL ALERT
+    <strong>AYNA BOOK GLOBAL ALERT</strong>
     <br>
-    যাচাই ছাড়া এই পৃষ্ঠাকে সরকারি সতর্কবার্তা হিসেবে বিবেচনা করবেন না।
+    সচেতন থাকুন • নিরাপদ থাকুন • অন্যকে সাহায্য করুন
+    <br>
+    © AYNA BOOK
+    <br>
+    এই পৃষ্ঠাটি নিজে থেকে লাইভ দুর্যোগের খবর যাচাই করে না।
   </footer>
 
-  <script>
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
-  </script>
 </body>
 </html>
