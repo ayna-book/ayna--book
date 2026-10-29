@@ -14,17 +14,7 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon-192.png">
   <link rel="stylesheet" href="./styles.css">
-</head><script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function () {
-      navigator.serviceWorker
-        .register("./offline.js")
-        .catch(function (error) {
-          console.error("AYNA BOOK offline setup failed:", error);
-        });
-    });
-  }
-</script>
+</head>
 
 <body>
   <header class="topbar">
@@ -59,7 +49,6 @@
       <button type="button" data-target="discover">🌍 আবিষ্কার</button>
       <button type="button" data-target="media">🎬 মিডিয়া</button>
 
-      <!-- নতুন Radio ও TV লিংক -->
       <a href="./radio-tv.html"
          style="display:block;padding:12px;margin:5px;
          text-align:center;background:#00cfd5;color:#071b49;
@@ -67,13 +56,22 @@
         📻 Radio ও 📺 TV
       </a>
 
+      <a href="./global-alert.html"
+         style="display:block;padding:12px;margin:5px;
+         text-align:center;
+         background:linear-gradient(90deg,#ff4fa3,#8b5cf6,#00cfd5);
+         color:white;border-radius:10px;
+         text-decoration:none;font-weight:bold;">
+        🚨 🌍 GLOBAL ALERT
+      </a>
+
       <button type="button" data-target="location">📍 লোকেশন</button>
       <button type="button" data-target="settings">⚙️ সেটিংস</button>
 
       <a href="./profile.html"
-         style="display:block;padding:12px;text-align:center;
-         background:#8b5cf6;color:white;border-radius:10px;
-         text-decoration:none;">
+         style="display:block;padding:12px;margin:5px;
+         text-align:center;background:#8b5cf6;color:white;
+         border-radius:10px;text-decoration:none;">
         👤 প্রোফাইল খুলুন
       </a>
     </nav>
@@ -106,7 +104,6 @@
     <section id="messaging" class="screen hidden">
       <div class="card">
         <h2>💬 AYNA Messaging</h2>
-
         <p>আপনার বার্তা লিখুন।</p>
 
         <label for="messageText">মেসেজ</label>
@@ -120,8 +117,8 @@
         <p id="translationResult" aria-live="polite"></p>
 
         <p class="muted">
-          প্রকৃত AI অনুবাদের জন্য অনুবাদ API সংযুক্ত করতে হবে।
-          এই পেজে এখনো অন্য ব্যবহারকারীর কাছে মেসেজ পাঠানো যায় না।
+          প্রকৃত AI অনুবাদের জন্য অনুবাদ API প্রয়োজন।
+          অন্য ব্যবহারকারীর কাছে মেসেজ পাঠাতে সার্ভার প্রয়োজন।
         </p>
       </div>
     </section>
@@ -131,7 +128,8 @@
         <h2>🌍 Discover</h2>
         <p>নতুন মানুষ ও কনটেন্ট আবিষ্কার করুন।</p>
         <p class="muted">
-          অনলাইনে সবার পোস্ট দেখানোর জন্য সার্ভার ও ডেটাবেস প্রয়োজন।
+          বিশ্বজুড়ে ব্যবহারকারীদের পোস্ট দেখানোর জন্য
+          সার্ভার ও ডেটাবেস সংযুক্ত করতে হবে।
         </p>
       </div>
     </section>
@@ -148,8 +146,8 @@
         <div id="mediaPreview"></div>
 
         <p class="muted">
-          এখানে নির্বাচিত মিডিয়ার প্রিভিউ দেখা যাবে।
-          অনলাইনে প্রকাশ করতে সার্ভার প্রয়োজন।
+          নির্বাচিত মিডিয়ার প্রিভিউ দেখানো যাবে।
+          অনলাইনে প্রকাশের জন্য সার্ভার প্রয়োজন।
         </p>
       </div>
     </section>
@@ -157,8 +155,7 @@
     <section id="location" class="screen hidden">
       <div class="card">
         <h2>📍 আমার লোকেশন</h2>
-
-        <p>আপনার অনুমতি নিয়ে অবস্থান দেখানো হবে।</p>
+        <p>আপনার অনুমতি নিয়ে অবস্থান দেখানো হবে।</p>
 
         <button id="locationButton" class="primary" type="button">
           লোকেশন দেখুন
@@ -171,7 +168,6 @@
     <section id="settings" class="screen hidden">
       <div class="card">
         <h2>⚙️ সেটিংস</h2>
-
         <p>অ্যাপের নাম: AYNA BOOK</p>
         <p>সংস্করণ: 1.0.0 Prototype</p>
         <p>ডিজাইন: Navy Blue, Pink, Cyan ও Purple</p>
@@ -179,8 +175,8 @@
         <a href="./profile.html">👤 প্রোফাইল সম্পাদনা করুন</a>
 
         <p class="muted">
-          এটি প্রাথমিক ওয়েব অ্যাপ। নিরাপদ অ্যাকাউন্ট,
-          অনলাইন মেসেজিং ও ডেটাবেস পরবর্তী ধাপে যুক্ত করতে হবে।
+          নিরাপদ অ্যাকাউন্ট, অনলাইন মেসেজিং ও ডেটাবেস
+          পরবর্তী ধাপে যুক্ত করতে হবে।
         </p>
       </div>
     </section>
@@ -195,5 +191,20 @@
   </footer>
 
   <script src="./app.js"></script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker
+          .register("./offline.js")
+          .catch(function (error) {
+            console.error(
+              "AYNA BOOK offline setup failed:",
+              error
+            );
+          });
+      });
+    }
+  </script>
 </body>
 </html>
