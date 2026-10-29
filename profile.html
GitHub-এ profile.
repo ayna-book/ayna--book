@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <title>AYNA BOOK | My Profile</title>
+  <link rel="icon" href="./icon-192.png">
+
+  <style>
+    :root {
+      --navy: #071b49;
+      --pink: #ff4fa3;
+      --cyan: #35d9ef;
+      --purple: #8b5cf6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      color: var(--navy);
+      background: #f1f4fa;
+    }
+
+    header {
+      max-width: 560px;
+      margin: auto;
+      padding: 24px 16px;
+      text-align: center;
+      color: white;
+      background: linear-gradient(135deg, var(--navy), #5427a8, #d93691);
+      border-radius: 20px;
+    }
+
+    .logo {
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      border-radius: 16px;
+    }
+
+    header h1 { margin: 10px 0; }
+    .slogan { font-weight: bold; line-height: 1.6; }
+
+    .card {
+      max-width: 560px;
+      margin: 22px auto;
+      padding: 22px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 5px 24px #071b4914;
+    }
+
+    .avatar {
+      display: block;
+      width: 120px;
+      height: 120px;
+      margin: 16px auto;
+      border: 4px solid var(--cyan);
+      border-radius: 50%;
+      object-fit: cover;
+      background: #edf0fa;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d5dbea;
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    textarea { resize: vertical; }
+
+    button {
+      width: 100%;
+      margin-top: 14px;
+      padding: 14px;
+      border: 0;
+      border-radius: 11px;
+      color: white;
+      background: var(--navy);
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .secondary { background: var(--purple); }
+    #status { overflow-wrap: anywhere; line-height: 1.5; }
+    .note { color: #596579; font-size: 13px; line-height: 1.6; }
+    .back { display: block; margin-top: 20px; text-align: center; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img class="logo" src="./icon-192.png" alt="AYNA BOOK Logo">
+    <h1>AYNA BOOK</h1>
+    <p class="slogan">My World. My Story. My AYNA BOOK.</p>
+  </header>
+
+  <main class="card">
+    <h2>👤 My Profile</h2>
+
+    <img id="avatar" class="avatar" alt="Profile photo preview">
+
+    <label for="photo">Choose Profile Photo</label>
+    <input id="photo" type="file" accept="image/*">
+
+    <form id="profileForm">
+      <label for="name">Your Name</label>
+      <input id="name" type="text" maxlength="80"
+             placeholder="Enter your name" required>
+
+      <label for="username">Username</label>
+      <input id="username" type="text" maxlength="30"
+             pattern="[A-Za-z0-9_]+"
+             placeholder="e.g. mahbubalam" required>
+
+      <label for="bio">About You</label>
+      <textarea id="bio" rows="4" maxlength="300"
+                placeholder="Write a short introduction"></textarea>
+
+      <label for="location">City or Location</label>
+      <input id="location" type="text" maxlength="100"
+             placeholder="Enter your city">
+
+      <button type="submit">💾 Save Profile</button>
+      <button type="button" class="secondary" id="clearButton">
+        Delete Profile Data
+      </button>
+    </form>
+
+    <p id="status" role="status" aria-live="polite"></p>
+
+    <p class="note">
+      This version saves your profile in this browser only.
+      It does not upload your profile to an online account.
+    </p>
+
+    <a class="back" href="./index.html">← Back to AYNA BOOK Home</a>
+  </main>
+
+  <script>
+    "use strict";
+
+    const $ = id => document.getElementById(id);
+    const form = $("profileForm");
+    const photo = $("photo");
+    const avatar = $("avatar");
+    const status = $("status");
+    const fields = ["name", "username", "bio", "location"];
+
+    let photoData = "";
+
+    function loadProfile() {
+      try {
+        const saved = JSON.parse(
+          localStorage.getItem("aynaBookProfile") || "{}"
+        );
+
+        fields.forEach(id => {
+          $(id).value = saved[id] || "";
+        });
+
+        photoData = saved.photo || "";
+
+        if (photoData) avatar.src = photoData;
+      } catch (error) {
+        status.textContent =
+          "Could not load saved profile. Please try again.";
+      }
+    }
+
+    photo.addEventListener("change", () => {
+      const file = photo.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        status.textContent = "Please choose a valid image.";
+        photo.value = "";
+        return;
+      }
+
+      if (file.size > 700 * 1024) {
+        status.textContent =
+          "Please choose a photo smaller than 700 KB.";
+        photo.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        photoData = reader.result;
+        avatar.src = photoData;
+        status.textContent =
+          "Photo preview ready. Press Save Profile to save it.";
+      };
+
+      reader.onerror = () => {
+        status.textContent = "Could not read photo. Try again.";
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const profile = {};
+
+      fields.forEach(id => {
+        profile[id] = $(id).value.trim();
+      });
+
+      profile.username = profile.username.toLowerCase();
+      profile.photo = photoData;
+
+      try {
+        localStorage.setItem(
+          "aynaBookProfile",
+          JSON.stringify(profile)
+        );
+
+        const check = JSON.parse(
+          localStorage.getItem("aynaBookProfile") || "{}"
+        );
+
+        if (check.username !== profile.username) {
+          throw new Error("Verification failed");
+        }
+
+        status.textContent =
+          "✅ Profile saved in this browser successfully.";
+      } catch (error) {
+        status.textContent =
+          "❌ Could not save. Try a smaller photo or free browser storage.";
+      }
+    });
+
+    $("clearButton").addEventListener("click", () => {
+      if (!confirm("Delete the saved profile from this browser?")) {
+        return;
+      }
+
+      localStorage.removeItem("aynaBookProfile");
+      form.reset();
+      photo.value = "";
+      photoData = "";
+      avatar.removeAttribute("src");
+      status.textContent = "Profile data deleted from this browser.";
+    });
+
+    loadProfile();
+  </script>
+</body>
+</html>
