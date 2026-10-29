@@ -5,42 +5,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
-
   <title>AYNA BOOK</title>
-
-  <meta name="description"
-        content="AYNA BOOK — Connect, Create and Share with the World.">
-
+  <meta name="description" content="AYNA BOOK — Connect. Create. Share.">
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon-192.png">
   <link rel="stylesheet" href="./styles.css">
 </head>
-
 <body>
   <header class="topbar">
     <a class="brand" href="./">
       <img src="./icon-192.png" alt="AYNA BOOK Logo">
       <span>AYNA <strong>BOOK</strong></span>
     </a>
-
-    <button id="menuButton" type="button"
-            aria-label="মেনু খুলুন">☰</button>
+    <button id="menuButton" type="button" aria-label="মেনু খুলুন">☰</button>
   </header>
 
   <main class="container">
-
     <section class="welcome card">
       <p class="eyebrow">WELCOME TO</p>
       <h1>AYNA BOOK</h1>
       <p>Connect. Create. Share.</p>
       <p>আপনার পৃথিবী, আপনার গল্প, আপনার AYNA BOOK.</p>
-
-      <a href="./profile.html"
-         style="display:inline-block;padding:12px 20px;
-         background:#ff4fa3;color:white;border-radius:12px;
-         text-decoration:none;font-weight:bold;">
-        👤 আমার প্রোফাইল
-      </a>
+      <a href="./profile.html">👤 আমার প্রোফাইল</a>
     </section>
 
     <nav class="navigation card" id="navigation">
@@ -48,78 +34,53 @@
       <button type="button" data-target="messaging">💬 মেসেজিং</button>
       <button type="button" data-target="discover">🌍 আবিষ্কার</button>
       <button type="button" data-target="media">🎬 মিডিয়া</button>
-
-      <a href="./radio-tv.html"
-         style="display:block;padding:12px;margin:5px;
-         text-align:center;background:#00cfd5;color:#071b49;
-         border-radius:10px;text-decoration:none;font-weight:bold;">
-        📻 Radio ও 📺 TV
-      </a>
-
-      <a href="./global-alert.html"
-         style="display:block;padding:12px;margin:5px;
-         text-align:center;
-         background:linear-gradient(90deg,#ff4fa3,#8b5cf6,#00cfd5);
-         color:white;border-radius:10px;
-         text-decoration:none;font-weight:bold;">
-        🚨 🌍 GLOBAL ALERT
-      </a>
-
+      <a href="./radio-tv.html">📻 Radio ও 📺 TV</a>
+      <a href="./global-alert.html">🚨 GLOBAL ALERT</a>
       <button type="button" data-target="location">📍 লোকেশন</button>
       <button type="button" data-target="settings">⚙️ সেটিংস</button>
-
-      <a href="./profile.html"
-         style="display:block;padding:12px;margin:5px;
-         text-align:center;background:#8b5cf6;color:white;
-         border-radius:10px;text-decoration:none;">
-        👤 প্রোফাইল খুলুন
-      </a>
+      <a href="./profile.html">👤 প্রোফাইল খুলুন</a>
     </nav>
 
     <section id="home" class="screen">
       <div class="card">
         <h2>✨ নতুন পোস্ট তৈরি করুন</h2>
-
         <form id="postForm">
           <label for="postText">আপনার মনের কথা লিখুন</label>
-
-          <textarea id="postText" rows="4"
-                    placeholder="আজ আপনি কী শেয়ার করতে চান?"
-                    required></textarea>
-
-          <button class="primary" type="submit">
-            🚀 পোস্ট করুন
-          </button>
+          <textarea id="postText" rows="4" maxlength="5000"
+            placeholder="আজ আপনি কী শেয়ার করতে চান?" required></textarea>
+          <button class="primary" type="submit">🚀 পোস্ট করুন</button>
         </form>
       </div>
-
       <div class="card">
         <h2>🌍 সবার পোস্ট</h2>
         <div id="posts">
-          <p class="muted">আপনার প্রথম পোস্ট তৈরি করুন!</p>
+          <p class="muted">পোস্ট ফিচার পরবর্তী ধাপে যুক্ত হবে।</p>
         </div>
       </div>
     </section>
 
     <section id="messaging" class="screen hidden">
       <div class="card">
-        <h2>💬 AYNA Messaging</h2>
-        <p>আপনার বার্তা লিখুন।</p>
+        <h2>💬 AYNA BOOK Messaging</h2>
+        <p id="status" role="status" aria-live="polite">Firebase সংযোগ করা হচ্ছে...</p>
 
-        <label for="messageText">মেসেজ</label>
-        <textarea id="messageText" rows="3"
-                  placeholder="আপনার মেসেজ লিখুন"></textarea>
+        <div id="messages" aria-live="polite"
+          style="max-height:350px;overflow-y:auto;">
+          <p>মেসেজ লোড হচ্ছে...</p>
+        </div>
 
-        <button id="translateButton" class="primary" type="button">
-          🌐 অনুবাদ পরীক্ষা
-        </button>
+        <form id="chatForm">
+          <label for="message">আপনার মেসেজ লিখুন</label>
+          <textarea id="message" rows="3" maxlength="2000"
+            placeholder="মেসেজ লিখুন..." required></textarea>
+          <button id="sendButton" class="primary" type="submit" disabled>
+            📩 মেসেজ পাঠান
+          </button>
+        </form>
 
+        <button id="translate" type="button">🌐 অনুবাদ পরীক্ষা</button>
         <p id="translationResult" aria-live="polite"></p>
-
-        <p class="muted">
-          প্রকৃত AI অনুবাদের জন্য অনুবাদ API প্রয়োজন।
-          অন্য ব্যবহারকারীর কাছে মেসেজ পাঠাতে সার্ভার প্রয়োজন।
-        </p>
+        <p class="muted">প্রকৃত অনুবাদের জন্য Translation API প্রয়োজন।</p>
       </div>
     </section>
 
@@ -127,40 +88,25 @@
       <div class="card">
         <h2>🌍 Discover</h2>
         <p>নতুন মানুষ ও কনটেন্ট আবিষ্কার করুন।</p>
-        <p class="muted">
-          বিশ্বজুড়ে ব্যবহারকারীদের পোস্ট দেখানোর জন্য
-          সার্ভার ও ডেটাবেস সংযুক্ত করতে হবে।
-        </p>
+        <p class="muted">অনলাইন কনটেন্ট দেখানোর জন্য ডেটাবেস প্রয়োজন।</p>
       </div>
     </section>
 
     <section id="media" class="screen hidden">
       <div class="card">
         <h2>🎬 ছবি, অডিও ও ভিডিও</h2>
-
         <label for="mediaFile">মিডিয়া নির্বাচন করুন</label>
-
-        <input id="mediaFile" type="file"
-               accept="image/*,video/*,audio/*">
-
+        <input id="mediaFile" type="file" accept="image/*,video/*,audio/*">
         <div id="mediaPreview"></div>
-
-        <p class="muted">
-          নির্বাচিত মিডিয়ার প্রিভিউ দেখানো যাবে।
-          অনলাইনে প্রকাশের জন্য সার্ভার প্রয়োজন।
-        </p>
+        <p class="muted">অনলাইনে আপলোডের জন্য স্টোরেজ সুবিধা প্রয়োজন।</p>
       </div>
     </section>
 
     <section id="location" class="screen hidden">
       <div class="card">
         <h2>📍 আমার লোকেশন</h2>
-        <p>আপনার অনুমতি নিয়ে অবস্থান দেখানো হবে।</p>
-
-        <button id="locationButton" class="primary" type="button">
-          লোকেশন দেখুন
-        </button>
-
+        <p>আপনার অনুমতি নিয়ে লোকেশন ফিচার যুক্ত করা হবে।</p>
+        <button id="locationButton" class="primary" type="button">লোকেশন দেখুন</button>
         <p id="locationResult" aria-live="polite"></p>
       </div>
     </section>
@@ -171,16 +117,9 @@
         <p>অ্যাপের নাম: AYNA BOOK</p>
         <p>সংস্করণ: 1.0.0 Prototype</p>
         <p>ডিজাইন: Navy Blue, Pink, Cyan ও Purple</p>
-
         <a href="./profile.html">👤 প্রোফাইল সম্পাদনা করুন</a>
-
-        <p class="muted">
-          নিরাপদ অ্যাকাউন্ট, অনলাইন মেসেজিং ও ডেটাবেস
-          পরবর্তী ধাপে যুক্ত করতে হবে।
-        </p>
       </div>
     </section>
-
   </main>
 
   <footer class="container">
@@ -190,18 +129,13 @@
     </p>
   </footer>
 
-  <script src="./app.js"></script>
-
+  <script type="module" src="./app.js"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
-        navigator.serviceWorker
-          .register("./offline.js")
+        navigator.serviceWorker.register("./offline.js")
           .catch(function (error) {
-            console.error(
-              "AYNA BOOK offline setup failed:",
-              error
-            );
+            console.error("Offline setup failed:", error);
           });
       });
     }
