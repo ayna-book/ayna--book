@@ -1,21 +1,28 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
+
   <title>AYNA BOOK — My Profile</title>
+
+  <meta name="description"
+        content="AYNA BOOK — My World. My Story. My AYNA BOOK.">
+
   <link rel="icon" href="./icon-192.png">
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       padding: 20px;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #071b49, #512b81);
-      color: white;
+      color: #ffffff;
     }
 
     .card {
@@ -27,8 +34,15 @@
       border-radius: 20px;
     }
 
-    h1, .subtitle { text-align: center; }
-    .subtitle { color: #35d9ef; }
+    h1,
+    .subtitle {
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #35d9ef;
+      line-height: 1.6;
+    }
 
     label {
       display: block;
@@ -36,27 +50,48 @@
       margin-bottom: 7px;
     }
 
-    input, textarea {
+    input,
+    textarea {
+      display: block;
       width: 100%;
       padding: 12px;
       border: 1px solid #ffffff40;
       border-radius: 10px;
       font-size: 16px;
+      font-family: inherit;
     }
 
-    button, .back {
+    input:focus,
+    textarea:focus {
+      outline: 2px solid #35d9ef;
+      outline-offset: 2px;
+    }
+
+    button,
+    .back {
       display: block;
       width: 100%;
       margin-top: 16px;
       padding: 12px;
       border: 0;
       border-radius: 10px;
-      background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
-      color: white;
+      background: linear-gradient(
+        90deg,
+        #ff4fa3,
+        #8b5cf6,
+        #35d9ef
+      );
+      color: #ffffff;
+      font-size: 16px;
       font-weight: bold;
       text-align: center;
       text-decoration: none;
       cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     #photoPreview {
@@ -70,59 +105,120 @@
     }
 
     #status {
+      min-height: 24px;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
+      line-height: 1.6;
     }
 
     .muted {
-      color: #ddd;
+      color: #dddddd;
       font-size: 13px;
       line-height: 1.6;
+    }
+
+    .tagline {
+      text-align: center;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
   <main class="card">
+
     <h1>🌍 AYNA BOOK</h1>
-    <p class="subtitle">আপনার পরিচয়, আপনার আয়না</p>
 
-    <h2>👤 আমার অনলাইন প্রোফাইল</h2>
+    <p class="subtitle tagline">
+      My World. My Story. My AYNA BOOK.
+    </p>
 
-    <img id="photoPreview" alt="প্রোফাইল ছবির প্রিভিউ">
+    <h2>👤 My Online Profile</h2>
 
-    <p id="accountEmail" class="muted">অ্যাকাউন্ট যাচাই হচ্ছে...</p>
+    <img
+      id="photoPreview"
+      alt="Profile photo preview"
+      hidden
+    >
+
+    <p id="accountEmail" class="muted" aria-live="polite">
+      Checking your account...
+    </p>
 
     <form id="profileForm">
-      <label for="name">আপনার নাম</label>
-      <input id="name" maxlength="80" required>
 
-      <label for="username">ইউজারনেম</label>
-      <input id="username" maxlength="30" required>
+      <label for="name">Full Name</label>
+      <input
+        id="name"
+        type="text"
+        maxlength="80"
+        autocomplete="name"
+        placeholder="Enter your full name"
+        required
+      >
 
-      <label for="bio">আপনার পরিচিতি</label>
-      <textarea id="bio" rows="3" maxlength="300"></textarea>
+      <label for="username">Username</label>
+      <input
+        id="username"
+        type="text"
+        maxlength="30"
+        autocomplete="username"
+        placeholder="Choose a username"
+        required
+      >
 
-      <label for="location">আপনার শহর বা অবস্থান</label>
-      <input id="location" maxlength="100">
+      <p class="muted">
+        Use 3–30 characters: English letters, numbers,
+        underscores, periods, or hyphens.
+      </p>
 
-      <label for="photo">প্রোফাইল ছবি (সর্বোচ্চ ২০০ KB)</label>
-      <input id="photo" type="file" accept="image/*">
+      <label for="bio">About Me</label>
+      <textarea
+        id="bio"
+        rows="3"
+        maxlength="300"
+        placeholder="Tell the world about yourself"
+      ></textarea>
 
-      <button type="submit">💾 অনলাইনে সংরক্ষণ করুন</button>
+      <label for="location">City or Location</label>
+      <input
+        id="location"
+        type="text"
+        maxlength="100"
+        autocomplete="address-level2"
+        placeholder="Enter your city or location"
+      >
+
+      <label for="photo">Profile Photo (Maximum 200 KB)</label>
+      <input
+        id="photo"
+        type="file"
+        accept="image/*"
+      >
+
+      <button id="saveButton" type="submit">
+        💾 Save Profile
+      </button>
+
     </form>
 
-    <button id="logoutButton" type="button">🚪 লগআউট</button>
+    <button id="logoutButton" type="button">
+      🚪 Log Out
+    </button>
 
     <p id="status" role="status" aria-live="polite"></p>
 
-    <a class="back" href="./index.html">🏠 হোম পেজে ফিরে যান</a>
+    <a class="back" href="./index.html">
+      🏠 Back to Home
+    </a>
 
     <p class="muted">
-      আপনার প্রোফাইল Firebase-এ সংরক্ষিত হবে।
-      এটি কাজ করতে লগইন, Firestore Database ও সঠিক
-      নিরাপত্তা নিয়ম প্রয়োজন।
+      Your profile information will be saved to Firebase.
+      You must be signed in, and your Firebase
+      Authentication, Firestore Database, and security
+      rules must be configured correctly.
     </p>
+
   </main>
 
   <script type="module">
@@ -157,31 +253,63 @@
     const db = getFirestore(app);
 
     const $ = id => document.getElementById(id);
+
     const form = $("profileForm");
     const photoInput = $("photo");
     const preview = $("photoPreview");
     const status = $("status");
+    const saveButton = $("saveButton");
+    const logoutButton = $("logoutButton");
 
     let currentUser = null;
     let photoData = "";
+    let authReady = false;
+    let saving = false;
 
     function showStatus(message) {
       status.textContent = message;
     }
 
+    function setFormEnabled(enabled) {
+      for (const element of form.elements) {
+        element.disabled = !enabled;
+      }
+
+      logoutButton.disabled = !enabled;
+    }
+
+    function showPhoto(dataUrl) {
+      if (dataUrl) {
+        preview.src = dataUrl;
+        preview.hidden = false;
+      } else {
+        preview.removeAttribute("src");
+        preview.hidden = true;
+      }
+    }
+
+    setFormEnabled(false);
+
     onAuthStateChanged(auth, async user => {
+      if (authReady) return;
+
+      authReady = true;
+
       if (!user) {
-        window.location.href = "./login.html";
+        window.location.replace("./login.html");
         return;
       }
 
       currentUser = user;
+
       $("accountEmail").textContent =
-        "লগইন করা অ্যাকাউন্ট: " + (user.email || "ইমেইল নেই");
+        "Signed in as: " + (user.email || "Email unavailable");
+
+      showStatus("Loading your profile...");
 
       try {
-        const ref = doc(db, "users", user.uid);
-        const snapshot = await getDoc(ref);
+        const profileRef = doc(db, "users", user.uid);
+        const snapshot = await getDoc(profileRef);
 
         if (snapshot.exists()) {
           const data = snapshot.data();
@@ -192,33 +320,38 @@
           $("location").value = data.location || "";
 
           photoData = data.photo || "";
-
-          if (photoData) {
-            preview.src = photoData;
-          }
+          showPhoto(photoData);
         }
 
-        showStatus("প্রোফাইল প্রস্তুত।");
+        setFormEnabled(true);
+        showStatus("Your profile is ready.");
       } catch (error) {
-        console.error(error);
+        console.error("Profile loading error:", error);
+
+        setFormEnabled(true);
+
         showStatus(
-          "প্রোফাইল লোড হয়নি। Firebase সংযোগ ও Firestore Rules পরীক্ষা করুন।"
+          "Could not load your profile. Check your internet connection, Firebase setup, and Firestore security rules."
         );
       }
     });
 
     photoInput.addEventListener("change", () => {
-      const file = photoInput.files[0];
+      const file = photoInput.files?.[0];
+
       if (!file) return;
 
       if (!file.type.startsWith("image/")) {
-        showStatus("একটি সঠিক ছবি নির্বাচন করুন।");
+        showStatus("Please select a valid image file.");
         photoInput.value = "";
         return;
       }
 
       if (file.size > 200 * 1024) {
-        showStatus("ছবিটি ২০০ KB-এর চেয়ে ছোট করুন।");
+        showStatus(
+          "Your photo must be smaller than 200 KB. Please choose a smaller image."
+        );
+
         photoInput.value = "";
         return;
       }
@@ -226,13 +359,19 @@
       const reader = new FileReader();
 
       reader.onload = () => {
+        if (typeof reader.result !== "string") {
+          showStatus("Could not process the photo. Please try again.");
+          return;
+        }
+
         photoData = reader.result;
-        preview.src = photoData;
-        showStatus("ছবির প্রিভিউ তৈরি হয়েছে।");
+        showPhoto(photoData);
+
+        showStatus("Photo preview is ready.");
       };
 
       reader.onerror = () => {
-        showStatus("ছবি পড়া যায়নি। আবার চেষ্টা করুন।");
+        showStatus("Could not read the photo. Please try again.");
       };
 
       reader.readAsDataURL(file);
@@ -242,29 +381,39 @@
       event.preventDefault();
 
       if (!currentUser) {
-        showStatus("আগে লগইন করুন।");
+        showStatus("Please sign in before saving your profile.");
         return;
       }
 
+      if (saving) return;
+
       const name = $("name").value.trim();
-      const username = $("username").value.trim()
-        .replace(/^@/, "").toLowerCase();
+
+      const username = $("username").value
+        .trim()
+        .replace(/^@/, "")
+        .toLowerCase();
+
       const bio = $("bio").value.trim();
       const location = $("location").value.trim();
 
       if (!name || !username) {
-        showStatus("নাম ও ইউজারনেম লিখুন।");
+        showStatus("Please enter your name and username.");
         return;
       }
 
       if (!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)) {
         showStatus(
-          "ইউজারনেম ৩–৩০ অক্ষরের হতে হবে; ইংরেজি অক্ষর, সংখ্যা, _, . বা - ব্যবহার করুন।"
+          "Username must contain 3–30 characters using English letters, numbers, underscores, periods, or hyphens."
         );
         return;
       }
 
-      showStatus("Firebase-এ সংরক্ষণ হচ্ছে...");
+      saving = true;
+      saveButton.disabled = true;
+      logoutButton.disabled = true;
+
+      showStatus("Saving your profile to Firebase...");
 
       try {
         await setDoc(
@@ -281,22 +430,32 @@
           { merge: true }
         );
 
-        showStatus("✅ আপনার প্রোফাইল Firebase-এ সংরক্ষিত হয়েছে!");
+        showStatus("✅ Your profile has been saved to Firebase!");
       } catch (error) {
-        console.error(error);
+        console.error("Profile saving error:", error);
+
         showStatus(
-          "সংরক্ষণ হয়নি। Authentication, Firestore Rules ও ইন্টারনেট পরীক্ষা করুন।"
+          "Could not save your profile. Check your internet connection, Firebase Authentication, and Firestore security rules."
         );
+      } finally {
+        saving = false;
+        saveButton.disabled = false;
+        logoutButton.disabled = false;
       }
     });
 
-    $("logoutButton").addEventListener("click", async () => {
+    logoutButton.addEventListener("click", async () => {
+      logoutButton.disabled = true;
+      showStatus("Signing out...");
+
       try {
         await signOut(auth);
-        window.location.href = "./login.html";
+        window.location.replace("./login.html");
       } catch (error) {
-        console.error(error);
-        showStatus("লগআউট করা যায়নি। আবার চেষ্টা করুন।");
+        console.error("Sign-out error:", error);
+
+        showStatus("Could not sign out. Please try again.");
+        logoutButton.disabled = false;
       }
     });
   </script>
