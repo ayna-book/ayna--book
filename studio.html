@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <title>AYNA BOOK Video & Audio Studio</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: Arial, sans-serif;
+      color: white;
+      background: linear-gradient(145deg, #071b49, #251052, #071b49);
+    }
+
+    .container {
+      max-width: 760px;
+      margin: auto;
+    }
+
+    .card {
+      padding: 20px;
+      margin: 16px 0;
+      border: 1px solid #6255a8;
+      border-radius: 20px;
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 8px 28px rgba(0,0,0,.2);
+    }
+
+    h1 {
+      color: #ff75c8;
+      text-align: center;
+    }
+
+    h2 { color: #55f2f2; }
+
+    p { line-height: 1.7; }
+
+    input[type="file"] {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 12px;
+      background: white;
+      color: #071b49;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      max-height: 440px;
+      margin-top: 16px;
+      border-radius: 14px;
+      background: #000;
+    }
+
+    button, .back {
+      display: inline-block;
+      padding: 12px 16px;
+      margin: 5px 3px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #ff4fa3, #8b5cf6);
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: .45; }
+
+    input[type="range"] { width: 100%; }
+
+    .muted {
+      color: #d7d9f5;
+      font-size: 14px;
+    }
+
+    #status {
+      overflow-wrap: anywhere;
+      color: #55f2f2;
+    }
+
+    .meter {
+      height: 12px;
+      overflow: hidden;
+      background: #11152e;
+      border-radius: 20px;
+    }
+
+    #meterBar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #55f2f2, #ff4fa3);
+      transition: width .1s;
+    }
+
+    footer {
+      padding: 20px 0;
+      text-align: center;
+      color: #d7d9f5;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+
+    <section class="card">
+      <h1>🌈 AYNA BOOK</h1>
+      <h2 style="text-align:center">
+        🎬 Video & Audio Studio
+      </h2>
+
+      <p style="text-align:center">
+        আপনার ভিডিও চালান, শব্দ শুনুন এবং প্লেব্যাক পরীক্ষা করুন।
+      </p>
+
+      <a class="back" href="./index.html">🏠 AYNA BOOK Home</a>
+    </section>
+
+    <section class="card">
+      <h2>📂 ১. ভিডিও নির্বাচন করুন</h2>
+
+      <label for="videoFile">
+        ফোনের গ্যালারি থেকে ভিডিও নির্বাচন করুন
+      </label>
+
+      <input
+        id="videoFile"
+        type="file"
+        accept="video/*,audio/*"
+      >
+
+      <p class="muted">
+        পরীক্ষার জন্য প্রথমে ছোট একটি ভিডিও বেছে নিন।
+        ফাইলটি আপনার ব্রাউজারেই চালানো হবে।
+      </p>
+
+      <p id="status" aria-live="polite">
+        এখনো কোনো ফাইল নির্বাচন করা হয়নি।
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>▶️ ২. ভিডিও ও সাউন্ড</h2>
+
+      <video
+        id="player"
+        controls
+        playsinline
+        preload="metadata"
+      >
+        আপনার ব্রাউজার ভিডিও প্লেব্যাক সমর্থন করে না।
+      </video>
+
+      <p id="fileInfo" class="muted">
+        ফাইল নির্বাচন করলে তার তথ্য এখানে দেখাবে।
+      </p>
+
+      <button id="playBtn" type="button">▶ Play</button>
+      <button id="pauseBtn" type="button">⏸ Pause</button>
+      <button id="muteBtn" type="button">🔊 Mute</button>
+      <button id="fullBtn" type="button">⛶ Full Screen</button>
+    </section>
+
+    <section class="card">
+      <h2>🎚️ ৩. Sound Control</h2>
+
+      <label for="volume">
+        শব্দের মাত্রা:
+        <span id="volumeValue">80%</span>
+      </label>
+
+      <input
+        id="volume"
+        type="range"
+        min="0"
+        max="100"
+        value="80"
+      >
+
+      <br><br>
+
+      <label for="speed">ভিডিও চালানোর গতি:</label>
+
+      <select id="speed"
+        style="width:100%;padding:12px;border-radius:10px">
+        <option value="0.5">0.5× ধীর গতি</option>
+        <option value="0.75">0.75×</option>
+        <option value="1" selected>1× স্বাভাবিক</option>
+        <option value="1.25">1.25×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2× দ্রুত</option>
+      </select>
+
+      <p class="muted">
+        ভালো সাউন্ড পেতে পরিষ্কার মূল অডিও এবং ভালো
+        হেডফোন বা স্পিকার ব্যবহার করুন।
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>📊 ৪. প্লেব্যাক পরীক্ষা</h2>
+
+      <p>প্লেয়ার চলছে কি না:</p>
+      <p id="playStatus">পরীক্ষা শুরু হয়নি।</p>
+
+      <p>বর্তমান সময়:</p>
+      <p id="timeStatus">00:00 / 00:00</p>
+
+      <p>অডিও সিগন্যালের আনুমানিক মাত্রা:</p>
+
+      <div class="meter">
+        <div id="meterBar"></div>
+      </div>
+
+      <p class="muted">
+        অডিও মিটার ব্রাউজারের অনুমতি ও সমর্থনের ওপর নির্ভরশীল।
+        মিটার না চললেও ভিডিওর শব্দ স্বাভাবিকভাবে চলতে পারে।
+      </p>
+    </section>
+
+    <footer>
+      © <span id="year"></span> AYNA BOOK
+      <br>Connect. Create. Share.
+    </footer>
+
+  </main>
+
+  <script>
+    "use strict";
+
+    const fileInput = document.getElementById("videoFile");
+    const player = document.getElementById("player");
+    const status = document.getElementById("status");
+    const fileInfo = document.getElementById("fileInfo");
+    const volume = document.getElementById("volume");
+    const volumeValue = document.getElementById("volumeValue");
+    const speed = document.getElementById("speed");
+    const playStatus = document.getElementById("playStatus");
+    const timeStatus = document.getElementById("timeStatus");
+    const meterBar = document.getElementById("meterBar");
+
+    let currentObjectURL = null;
+    let audioContext = null;
+    let analyser = null;
+    let audioSource = null;
+    let animationFrame = null;
+
+    player.volume = 0.8;
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    function formatTime(seconds) {
+      if (!Number.isFinite(seconds)) return "00:00";
+
+      const minutes = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+
+      return String(minutes).padStart(2, "0") +
+        ":" + String(secs).padStart(2, "0");
+    }
+
+    fileInput.addEventListener("change", function () {
+      const file = fileInput.files[0];
+
+      if (!file) return;
+
+      if (
+        !file.type.startsWith("video/") &&
+        !file.type.startsWith("audio/")
+      ) {
+        status.textContent =
+          "একটি সমর্থিত ভিডিও বা অডিও ফাইল নির্বাচন করুন।";
+        return;
+      }
+
+      if (currentObjectURL) {
+        URL.revokeObjectURL(currentObjectURL);
+      }
+
+      currentObjectURL = URL.createObjectURL(file);
+      player.src = currentObjectURL;
+      player.load();
+
+      status.textContent =
+        "ফাইল প্রস্তুত। Play চাপুন।";
+
+      fileInfo.textContent =
+        "ফাইল: " + file.name +
+        " | আকার: " + (file.size / (1024 * 1024)).toFixed(2) +
+        " MB";
+
+      playStatus.textContent = "ভিডিও চালানোর অপেক্ষায়।";
+    });
+
+    document.getElementById("playBtn")
+      .addEventListener("click", async function () {
+        if (!player.src) {
+          status.textContent = "প্রথমে একটি ফাইল নির্বাচন করুন।";
+          return;
+        }
+
+        try {
+          await player.play();
+          playStatus.textContent = "▶ ভিডিও চলছে।";
+        } catch (error) {
+          status.textContent =
+            "প্লে হয়নি। আবার Play চাপুন অথবা ফাইলের ফরম্যাট পরীক্ষা করুন।";
+        }
+      });
+
+    document.getElementById("pauseBtn")
+      .addEventListener("click", function () {
+        player.pause();
+        playStatus.textContent = "⏸ ভিডিও থামানো হয়েছে।";
+      });
+
+    document.getElementById("muteBtn")
+      .addEventListener("click", function () {
+        player.muted = !player.muted;
+
+        this.textContent = player.muted
+          ? "🔇 Unmute"
+          : "🔊 Mute";
+      });
+
+    document.getElementById("fullBtn")
+      .addEventListener("click", async function () {
+        try {
+          if (player.requestFullscreen) {
+            await player.requestFullscreen();
+          } else if (player.webkitEnterFullscreen) {
+            player.webkitEnterFullscreen();
+          }
+        } catch (error) {
+          status.textContent =
+            "এই ব্রাউজারে Full Screen চালু করা যায়নি।";
+        }
+      });
+
+    volume.addEventListener("input", function () {
+      player.volume = Number(volume.value) / 100;
+      volumeValue.textContent = volume.value + "%";
+    });
+
+    speed.addEventListener("change", function () {
+      player.playbackRate = Number(speed.value);
+    });
+
+    player.addEventListener("play", function () {
+      playStatus.textContent = "▶ ভিডিও চলছে।";
+    });
+
+    player.addEventListener("pause", function () {
+      playStatus.textContent = player.ended
+        ? "ভিডিও শেষ হয়েছে।"
+        : "⏸ ভিডিও থেমে আছে।";
+    });
+
+    player.addEventListener("timeupdate", function () {
+      timeStatus.textContent =
+        formatTime(player.currentTime) +
+        " / " + formatTime(player.duration);
+    });
+
+    player.addEventListener("error", function () {
+      status.textContent =
+        "ফাইলটি চালানো যায়নি। অন্য ভিডিও বা সমর্থিত ফরম্যাট পরীক্ষা করুন।";
+    });
+
+    player.addEventListener("loadedmetadata", function () {
+      status.textContent =
+        "ফাইল প্রস্তুত। এখন Play চাপুন।";
+
+      timeStatus.textContent =
+        formatTime(0) + " / " + formatTime(player.duration);
+    });
+
+    async function startAudioMeter() {
+      if (audioContext) {
+        if (audioContext.state === "suspended") {
+          await audioContext.resume();
+        }
+        return;
+      }
+
+      const AudioContextClass =
+        window.AudioContext || window.webkitAudioContext;
+
+      if (!AudioContextClass) {
+        status.textContent +=
+          " | এই ব্রাউজারে Audio Meter সমর্থিত নয়।";
+        return;
+      }
+
+      try {
+        audioContext = new AudioContextClass();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+
+        audioSource =
+          audioContext.createMediaElementSource(player);
+
+        audioSource.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        const data = new Uint8Array(analyser.frequencyBinCount);
+
+        function drawMeter() {
+          if (!analyser) return;
+
+          analyser.getByteFrequencyData(data);
+
+          let sum = 0;
+
+          for (const value of data) {
+            sum += value;
+          }
+
+          const average = sum / data.length;
+          const percent = Math.min(100, average * 1.5);
+
+          meterBar.style.width = percent + "%";
+
+          animationFrame =
+            requestAnimationFrame(drawMeter);
+        }
+
+        drawMeter();
+
+      } catch (error) {
+        status.textContent +=
+          " | Audio Meter চালু করা যায়নি।";
+      }
+    }
+
+    player.addEventListener("play", startAudioMeter);
+
+    window.addEventListener("beforeunload", function () {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+
+      if (currentObjectURL) {
+        URL.revokeObjectURL(currentObjectURL);
+      }
+    });
+  </script>
+</body>
+</html>
