@@ -1,141 +1,329 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
-
-  <title>AYNA BOOK — Login</title>
-
-  <link rel="stylesheet" href="./styles.css">
+  <meta name="description"
+        content="Create your AYNA BOOK account using email or phone.">
+  <title>AYNA BOOK — Create Account</title>
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
+      margin: 0;
+      padding: 18px;
       min-height: 100vh;
-      padding: 20px;
-      background: linear-gradient(135deg, #071b49, #512b81);
-      color: white;
       font-family: Arial, sans-serif;
+      color: white;
+      background: linear-gradient(135deg, #071b49, #512b81);
     }
 
-    .login-card {
-      max-width: 450px;
-      margin: 45px auto;
-      padding: 25px;
-      background: #ffffff12;
+    .card {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 22px;
       border: 1px solid #ffffff35;
       border-radius: 20px;
+      background: #ffffff12;
     }
 
-    .login-card h1,
-    .subtitle {
-      text-align: center;
-    }
+    h1, .subtitle { text-align: center; }
 
     .subtitle {
       color: #35d9ef;
       line-height: 1.6;
     }
 
-    label {
-      display: block;
-      margin: 17px 0 7px;
-    }
-
-    input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 16px;
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 20px 0;
     }
 
     button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 13px;
+      padding: 12px;
       border: 0;
       border-radius: 10px;
-      background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
-      color: white;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
+    .tabs button {
+      flex: 1;
+      color: white;
+      background: #34466d;
     }
 
-    #loginStatus {
-      min-height: 24px;
-      line-height: 1.6;
+    .tabs button.active {
+      background: linear-gradient(90deg, #ff4fa3, #8b5cf6);
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 7px;
+      font-weight: bold;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d5dbea;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .password-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .password-row input { flex: 1; min-width: 0; }
+
+    .toggle {
+      color: #071b49;
+      background: #35d9ef;
+    }
+
+    .primary {
+      width: 100%;
+      margin-top: 20px;
+      color: white;
+      background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .note {
+      color: #e1e5f0;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    #status {
+      min-height: 25px;
+      line-height: 1.7;
       overflow-wrap: anywhere;
     }
 
     .links {
-      text-align: center;
       margin-top: 20px;
+      text-align: center;
       line-height: 2;
     }
 
-    .links a {
-      color: #35d9ef;
-    }
+    a { color: #35d9ef; }
+
+    [hidden] { display: none !important; }
   </style>
 </head>
 
 <body>
-  <main class="login-card">
-
+  <main class="card">
     <h1>🌍 AYNA BOOK</h1>
 
     <p class="subtitle">
       My World. My Story. My AYNA BOOK.
     </p>
 
-    <h2>🔐 লগইন করুন</h2>
+    <h2>✨ নতুন অ্যাকাউন্ট তৈরি করুন</h2>
 
-    <form id="loginForm">
-
-      <label for="email">ইমেইল ঠিকানা</label>
-      <input
-        id="email"
-        type="email"
-        autocomplete="email"
-        placeholder="আপনার ইমেইল লিখুন"
-        required
-      >
-
-      <label for="password">পাসওয়ার্ড</label>
-      <input
-        id="password"
-        type="password"
-        autocomplete="current-password"
-        placeholder="আপনার পাসওয়ার্ড লিখুন"
-        required
-      >
-
-      <button id="loginButton" type="submit">
-        🚀 Login to AYNA BOOK
+    <div class="tabs">
+      <button id="emailTab" class="active" type="button">
+        📧 Gmail
       </button>
 
-    </form>
-
-    <p id="loginStatus" role="status" aria-live="polite"></p>
-
-    <div class="links">
-      অ্যাকাউন্ট নেই?
-      <a href="./signup.html">নতুন অ্যাকাউন্ট তৈরি করুন</a>
-      <br>
-      <a href="./index.html">← হোম পেজে ফিরে যান</a>
+      <button id="phoneTab" type="button">
+        📱 ফোন নম্বর
+      </button>
     </div>
 
+    <!-- Gmail Registration -->
+    <form id="emailForm">
+      <label for="emailName">আপনার পূর্ণ নাম</label>
+      <input
+        id="emailName"
+        type="text"
+        maxlength="80"
+        autocomplete="name"
+        required
+      >
+
+      <label for="emailUsername">ইউজারনেম</label>
+      <input
+        id="emailUsername"
+        type="text"
+        minlength="3"
+        maxlength="30"
+        pattern="[A-Za-z0-9_.-]+"
+        autocomplete="username"
+        placeholder="যেমন: mahbub123"
+        required
+      >
+
+      <label for="emailAddress">Gmail বা ইমেইল</label>
+      <input
+        id="emailAddress"
+        type="email"
+        maxlength="254"
+        autocomplete="email"
+        placeholder="name@gmail.com"
+        required
+      >
+
+      <label for="emailPassword">পাসওয়ার্ড</label>
+      <div class="password-row">
+        <input
+          id="emailPassword"
+          type="password"
+          minlength="8"
+          autocomplete="new-password"
+          required
+        >
+
+        <button class="toggle" type="button"
+                data-show="emailPassword">
+          দেখুন
+        </button>
+      </div>
+
+      <label for="emailPasswordConfirm">
+        পাসওয়ার্ড আবার লিখুন
+      </label>
+      <input
+        id="emailPasswordConfirm"
+        type="password"
+        minlength="8"
+        autocomplete="new-password"
+        required
+      >
+
+      <button id="emailSubmit" class="primary" type="submit">
+        🚀 Gmail দিয়ে অ্যাকাউন্ট খুলুন
+      </button>
+
+      <p class="note">
+        অ্যাকাউন্ট তৈরির পর আপনার ইমেইলে যাচাইকরণ লিংক পাঠানো হবে।
+        লিংকে চাপ দিয়ে ইমেইল যাচাই করুন।
+      </p>
+    </form>
+
+    <!-- Phone Registration -->
+    <form id="phoneForm" hidden>
+      <label for="phoneName">আপনার পূর্ণ নাম</label>
+      <input
+        id="phoneName"
+        type="text"
+        maxlength="80"
+        autocomplete="name"
+        required
+      >
+
+      <label for="phoneUsername">ইউজারনেম</label>
+      <input
+        id="phoneUsername"
+        type="text"
+        minlength="3"
+        maxlength="30"
+        pattern="[A-Za-z0-9_.-]+"
+        autocomplete="username"
+        required
+      >
+
+      <label for="phoneNumber">
+        ফোন নম্বর (দেশের কোডসহ)
+      </label>
+      <input
+        id="phoneNumber"
+        type="tel"
+        inputmode="tel"
+        autocomplete="tel"
+        placeholder="+8801XXXXXXXXX"
+        required
+      >
+
+      <p class="note">
+        বাংলাদেশের নম্বর হলে +880 দিয়ে লিখুন।
+        যেমন: +8801812345678
+      </p>
+
+      <div id="recaptcha-container"></div>
+
+      <button id="sendOtpButton" class="primary" type="button">
+        📩 SMS OTP পাঠান
+      </button>
+
+      <div id="otpSection" hidden>
+        <label for="otpCode">SMS-এ পাওয়া OTP</label>
+        <input
+          id="otpCode"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="10"
+          placeholder="যাচাইকরণ কোড লিখুন"
+        >
+
+        <button id="verifyOtpButton" class="primary"
+                type="button">
+          ✅ OTP যাচাই করে অ্যাকাউন্ট খুলুন
+        </button>
+      </div>
+
+      <p class="note">
+        ফোন নম্বর যাচাইয়ের জন্য SMS খরচ হতে পারে।
+        আপনার OTP কারও সঙ্গে শেয়ার করবেন না।
+      </p>
+    </form>
+
+    <p id="status" role="status" aria-live="polite"></p>
+
+    <div class="links">
+      আগে অ্যাকাউন্ট আছে?
+      <a href="./login.html">লগইন করুন</a>
+      <br>
+      <a href="./index.html">🏠 হোম পেজে ফিরে যান</a>
+    </div>
   </main>
 
-  <script type="module" src="./js/login.js"></script>
+  <script>
+    "use strict";
 
+    const emailTab = document.getElementById("emailTab");
+    const phoneTab = document.getElementById("phoneTab");
+    const emailForm = document.getElementById("emailForm");
+    const phoneForm = document.getElementById("phoneForm");
+
+    function chooseTab(type) {
+      const useEmail = type === "email";
+
+      emailForm.hidden = !useEmail;
+      phoneForm.hidden = useEmail;
+
+      emailTab.classList.toggle("active", useEmail);
+      phoneTab.classList.toggle("active", !useEmail);
+    }
+
+    emailTab.addEventListener("click", () => chooseTab("email"));
+    phoneTab.addEventListener("click", () => chooseTab("phone"));
+
+    document.querySelectorAll("[data-show]").forEach(button => {
+      button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.show);
+        const showing = input.type === "text";
+
+        input.type = showing ? "password" : "text";
+        button.textContent = showing ? "দেখুন" : "লুকান";
+      });
+    });
+  </script>
+
+  <script type="module" src="./js/signup.js"></script>
 </body>
 </html>
