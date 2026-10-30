@@ -1,64 +1,74 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
   <title>AYNA BOOK — My Profile</title>
-  <link rel="icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
 
   <style>
-    * { box-sizing: border-box; }
-
     body {
-      margin: 0;
-      padding: 16px;
-      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      padding: 20px;
       background: linear-gradient(135deg, #071b49, #512b81);
       color: white;
+      font-family: Arial, sans-serif;
     }
 
-    .card {
-      max-width: 560px;
-      margin: 20px auto;
+    .profile-card {
+      max-width: 520px;
+      margin: 25px auto;
       padding: 24px;
       background: #ffffff12;
       border: 1px solid #ffffff35;
-      border-radius: 22px;
+      border-radius: 20px;
     }
 
-    h1, h2, .tagline { text-align: center; }
+    .profile-card h1,
+    .subtitle {
+      text-align: center;
+    }
 
-    .tagline {
+    .subtitle {
       color: #35d9ef;
-      font-weight: bold;
+    }
+
+    #photoPreview {
+      display: block;
+      width: 120px;
+      height: 120px;
+      margin: 20px auto;
+      border: 3px solid #35d9ef;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ffffff20;
     }
 
     label {
       display: block;
-      margin: 18px 0 8px;
+      margin: 16px 0 7px;
     }
 
-    input, textarea {
+    input,
+    textarea {
+      display: block;
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       border: 1px solid #ddd;
-      border-radius: 12px;
-      font-size: 16px;
+      border-radius: 10px;
+      font: inherit;
     }
 
-    input[type="file"] {
-      background: transparent;
-      color: white;
-    }
-
-    button, .back {
+    button,
+    .back-link {
       display: block;
       width: 100%;
       margin-top: 16px;
-      padding: 15px;
+      padding: 13px;
       border: 0;
-      border-radius: 12px;
+      border-radius: 10px;
       background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
       color: white;
       font-size: 16px;
@@ -68,293 +78,104 @@
       cursor: pointer;
     }
 
-    button:disabled { opacity: .55; }
-
-    #photoPreview {
-      display: block;
-      width: 120px;
-      height: 120px;
-      margin: 16px auto;
-      border-radius: 50%;
-      object-fit: cover;
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
     }
 
-    #status {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+    #profileStatus {
+      min-height: 24px;
       line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
     .muted {
+      color: #ddd;
       font-size: 13px;
       line-height: 1.6;
-      overflow-wrap: anywhere;
     }
   </style>
 </head>
 
 <body>
-  <main class="card">
-    <h1>AYNA BOOK</h1>
-    <p class="tagline">My World. My Story. My AYNA BOOK.</p>
-    <h2>My Online Profile</h2>
+  <main class="profile-card">
+    <h1>🌍 AYNA BOOK</h1>
+    <p class="subtitle">My World. My Story. My AYNA BOOK.</p>
 
-    <p id="accountEmail">Checking your account...</p>
-    <img id="photoPreview" alt="Profile photo" hidden>
+    <h2>👤 আমার প্রোফাইল</h2>
+
+    <p id="accountEmail" class="muted">
+      অ্যাকাউন্ট যাচাই হচ্ছে...
+    </p>
+
+    <img
+      id="photoPreview"
+      alt="প্রোফাইল ছবির প্রিভিউ"
+      hidden
+    >
 
     <form id="profileForm">
-      <label for="name">Full Name</label>
-      <input id="name" maxlength="80" required
-             placeholder="Enter your full name">
+      <label for="name">আপনার পূর্ণ নাম</label>
+      <input
+        id="name"
+        type="text"
+        maxlength="80"
+        autocomplete="name"
+        required
+      >
 
-      <label for="username">Username</label>
-      <input id="username" maxlength="30" required
-             placeholder="Choose a username">
+      <label for="username">ইউজারনেম</label>
+      <input
+        id="username"
+        type="text"
+        maxlength="30"
+        required
+      >
 
-      <label for="bio">About Me</label>
-      <textarea id="bio" rows="4" maxlength="300"
-                placeholder="Tell the world about yourself"></textarea>
+      <label for="bio">আপনার পরিচিতি</label>
+      <textarea
+        id="bio"
+        rows="4"
+        maxlength="300"
+        placeholder="নিজের সম্পর্কে লিখুন"
+      ></textarea>
 
-      <label for="location">City or Location</label>
-      <input id="location" maxlength="100"
-             placeholder="Cox's Bazar">
+      <label for="location">আপনার শহর বা অবস্থান</label>
+      <input
+        id="location"
+        type="text"
+        maxlength="100"
+        placeholder="শহরের নাম লিখুন"
+      >
 
-      <label for="photo">Profile Photo (Maximum 200 KB)</label>
-      <input id="photo" type="file" accept="image/*">
+      <label for="photo">প্রোফাইল ছবি (সর্বোচ্চ ২ MB)</label>
+      <input
+        id="photo"
+        type="file"
+        accept="image/*"
+      >
 
-      <button id="saveButton" type="submit" disabled>
-        Save Profile
+      <button id="saveButton" type="submit">
+        💾 প্রোফাইল সংরক্ষণ করুন
       </button>
     </form>
 
-    <button id="logoutButton" type="button" disabled>
-      Log Out
+    <button id="logoutButton" type="button">
+      🚪 লগআউট
     </button>
 
-    <p id="status" role="status" aria-live="polite">
-      Connecting to Firebase...
-    </p>
+    <p id="profileStatus" role="status" aria-live="polite"></p>
 
-    <a class="back" href="./index.html">Back to Home</a>
+    <a class="back-link" href="./index.html">
+      🏠 হোম পেজে ফিরে যান
+    </a>
 
     <p class="muted">
-      Your profile information will be saved to Firebase.
-      You must be signed in, and your Firebase Authentication,
-      Firestore Database, and security rules must be configured correctly.
+      আপনার ব্যক্তিগত প্রোফাইল তথ্য Firebase-এ সংরক্ষিত হবে।
+      ছবি Firebase Storage-এ আপলোড হবে।
     </p>
   </main>
 
-  <script type="module">
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-
-    import {
-      getAuth, onAuthStateChanged, signOut
-    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-    import {
-      getFirestore, doc, getDoc, setDoc
-    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-      authDomain: "ayna-book.firebaseapp.com",
-      projectId: "ayna-book",
-      storageBucket: "ayna-book.firebasestorage.app",
-      messagingSenderId: "805601138500",
-      appId: "1:805601138500:web:47acdc90cb0cb521626911",
-      measurementId: "G-RKHHSKNB4B"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const $ = id => document.getElementById(id);
-
-    const form = $("profileForm");
-    const saveButton = $("saveButton");
-    const logoutButton = $("logoutButton");
-    const status = $("status");
-    const photoInput = $("photo");
-    const preview = $("photoPreview");
-
-    let currentUser = null;
-    let photoData = "";
-    let saving = false;
-
-    function showStatus(message) {
-      status.textContent = message;
-    }
-
-    function timeout(promise, ms = 15000) {
-      let timer;
-
-      return Promise.race([
-        promise,
-        new Promise((_, reject) => {
-          timer = setTimeout(
-            () => reject(new Error(
-              "Request timed out. Check internet and Firestore Rules."
-            )),
-            ms
-          );
-        })
-      ]).finally(() => clearTimeout(timer));
-    }
-
-    function setEnabled(enabled) {
-      for (const el of form.elements) {
-        el.disabled = !enabled;
-      }
-      logoutButton.disabled = !enabled;
-    }
-
-    function errorText(error) {
-      if (error.code === "permission-denied") {
-        return "Permission denied. Check Firestore security rules.";
-      }
-      return (error.message || "Unknown error") +
-        (error.code ? " (Code: " + error.code + ")" : "");
-    }
-
-    setEnabled(false);
-
-    onAuthStateChanged(auth, async user => {
-      if (!user) {
-        showStatus("Please sign in. Redirecting to login...");
-        window.location.replace("./login.html");
-        return;
-      }
-
-      currentUser = user;
-      $("accountEmail").textContent =
-        "Signed in as: " + (user.email || "Anonymous account");
-
-      showStatus("Loading your profile...");
-
-      try {
-        const ref = doc(db, "users", user.uid);
-        const snap = await timeout(getDoc(ref));
-
-        if (snap.exists()) {
-          const data = snap.data();
-          $("name").value = data.name || "";
-          $("username").value = data.username || "";
-          $("bio").value = data.bio || "";
-          $("location").value = data.location || "";
-          photoData = data.photo || "";
-
-          if (photoData) {
-            preview.src = photoData;
-            preview.hidden = false;
-          }
-        }
-
-        setEnabled(true);
-        showStatus("Your profile is ready.");
-      } catch (error) {
-        console.error(error);
-        setEnabled(true);
-        showStatus("Could not load profile: " + errorText(error));
-      }
-    });
-
-    photoInput.addEventListener("change", () => {
-      const file = photoInput.files[0];
-      if (!file) return;
-
-      if (!file.type.startsWith("image/")) {
-        showStatus("Please select an image file.");
-        photoInput.value = "";
-        return;
-      }
-
-      if (file.size > 200 * 1024) {
-        showStatus("Photo must be 200 KB or smaller.");
-        photoInput.value = "";
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        photoData = reader.result;
-        preview.src = photoData;
-        preview.hidden = false;
-        showStatus("Photo preview is ready.");
-      };
-
-      reader.onerror = () => showStatus("Could not read the photo.");
-      reader.readAsDataURL(file);
-    });
-
-    form.addEventListener("submit", async event => {
-      event.preventDefault();
-
-      if (!currentUser) {
-        showStatus("Please sign in before saving.");
-        return;
-      }
-
-      if (saving) return;
-
-      const name = $("name").value.trim();
-      const username = $("username").value.trim()
-        .replace(/^@/, "").toLowerCase();
-
-      if (!name || !username) {
-        showStatus("Please enter your name and username.");
-        return;
-      }
-
-      if (!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)) {
-        showStatus("Username must be 3–30 valid characters.");
-        return;
-      }
-
-      saving = true;
-      saveButton.disabled = true;
-      logoutButton.disabled = true;
-      showStatus("Saving your profile to Firebase...");
-
-      try {
-        await timeout(setDoc(
-          doc(db, "users", currentUser.uid),
-          {
-            name,
-            username,
-            bio: $("bio").value.trim(),
-            location: $("location").value.trim(),
-            photo: photoData,
-            email: currentUser.email || "",
-            updatedAt: new Date().toISOString()
-          },
-          { merge: true }
-        ));
-
-        showStatus("SUCCESS: Your profile has been saved to Firebase!");
-      } catch (error) {
-        console.error("Save error:", error);
-        showStatus("SAVE FAILED: " + errorText(error));
-      } finally {
-        saving = false;
-        saveButton.disabled = !currentUser;
-        logoutButton.disabled = !currentUser;
-      }
-    });
-
-    logoutButton.addEventListener("click", async () => {
-      logoutButton.disabled = true;
-      showStatus("Signing out...");
-
-      try {
-        await signOut(auth);
-        window.location.replace("./login.html");
-      } catch (error) {
-        showStatus("Could not sign out: " + errorText(error));
-        logoutButton.disabled = !currentUser;
-      }
-    });
-  </script>
+  <script type="module" src="./js/profile.js"></script>
 </body>
 </html>
