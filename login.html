@@ -3,175 +3,460 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#17112f">
+  <meta name="theme-color" content="#071b49">
+
   <title>Login | AYNA BOOK</title>
 
+  <meta name="description"
+        content="Sign in securely to AYNA BOOK. Connect, Create, Share.">
+
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --navy: #071b49;
+      --pink: #ff4fa3;
+      --purple: #8b5cf6;
+      --cyan: #00cfd5;
+      --white: #ffffff;
+      --muted: #64748b;
+      --border: #dbe3f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 20px;
+      padding: 22px 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: Arial, sans-serif;
-      color: white;
-      background: linear-gradient(135deg, #17112f, #512b81, #087eae);
+      font-family: Arial, "Noto Sans Bengali", sans-serif;
+      color: var(--navy);
+      background:
+        radial-gradient(circle at top left, #ff4fa344, transparent 36%),
+        radial-gradient(circle at bottom right, #00cfd544, transparent 38%),
+        linear-gradient(135deg, #071b49, #172554 55%, #312e81);
     }
 
-    .card {
+    .login-card {
       width: 100%;
-      max-width: 430px;
-      padding: 28px 24px;
-      border: 1px solid #ffffff40;
+      max-width: 440px;
+      padding: 28px 23px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: 24px;
-      background: #ffffff12;
-      box-shadow: 0 15px 45px #0005;
+      box-shadow: 0 22px 65px #00000045;
     }
 
-    h1 {
+    .brand {
       text-align: center;
-      color: #ff72d2;
-      font-size: 32px;
+      margin-bottom: 22px;
+    }
+
+    .brand-icon {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 23px;
+      color: white;
+      font-size: 29px;
+      font-weight: 900;
+      background: linear-gradient(
+        135deg,
+        var(--pink),
+        var(--purple),
+        var(--cyan)
+      );
+      box-shadow: 0 8px 24px #8b5cf655;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 29px;
+      letter-spacing: 1px;
+    }
+
+    .brand h1 span {
+      color: var(--purple);
+    }
+
+    .tagline {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
     }
 
     h2 {
+      margin: 0 0 8px;
       text-align: center;
-      font-size: 21px;
+      font-size: 23px;
     }
 
     .subtitle {
+      margin: 0 0 22px;
       text-align: center;
-      line-height: 1.7;
-      color: #e5dcff;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
     }
 
-    label {
+    .account-types {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .account-option {
+      position: relative;
+    }
+
+    .account-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .account-option label {
       display: block;
-      margin: 18px 0 7px;
+      padding: 14px 8px;
+      text-align: center;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s;
     }
 
-    input {
+    .account-option input:checked + label {
+      border-color: var(--purple);
+      background: #8b5cf610;
+      box-shadow: 0 0 0 2px #8b5cf620;
+    }
+
+    .account-option input:focus-visible + label {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .field input {
       width: 100%;
-      padding: 13px;
-      border: 1px solid #b8a6e8;
+      min-height: 48px;
+      padding: 12px 13px;
+      border: 1.5px solid var(--border);
       border-radius: 12px;
-      font-size: 16px;
+      outline: none;
+      background: #ffffff;
+      color: var(--navy);
+      font-size: 15px;
     }
 
-    .password-row {
+    .field input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px #8b5cf622;
+    }
+
+    .password-wrap {
       display: flex;
-      gap: 8px;
+      gap: 7px;
     }
 
-    .password-row input {
+    .password-wrap input {
       flex: 1;
       min-width: 0;
     }
 
     .show-button {
-      width: auto;
-      margin: 0;
-      padding: 0 12px;
-      background: #ffffff;
-      color: #17112f;
-      font-size: 14px;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 18px;
-      padding: 14px;
-      border: 0;
+      flex-shrink: 0;
+      padding: 0 11px;
+      border: 1px solid var(--border);
       border-radius: 12px;
-      background: linear-gradient(90deg, #ff4fbd, #00d5e9);
-      color: #17112f;
-      font-size: 16px;
-      font-weight: bold;
+      background: #f8fafc;
+      color: var(--navy);
+      font-weight: 700;
       cursor: pointer;
     }
 
-    button:disabled {
-      opacity: .6;
+    .forgot-row {
+      display: flex;
+      justify-content: flex-end;
+      margin: -5px 0 19px;
+    }
+
+    a {
+      color: #6d28d9;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .primary-button {
+      width: 100%;
+      min-height: 50px;
+      padding: 13px;
+      border: 0;
+      border-radius: 13px;
+      color: white;
+      background: linear-gradient(
+        90deg,
+        var(--pink),
+        var(--purple),
+        #5145cd
+      );
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 7px 18px #8b5cf633;
+    }
+
+    .primary-button:hover {
+      filter: brightness(1.04);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.65;
       cursor: wait;
     }
 
-    .links {
-      margin-top: 18px;
-      text-align: center;
-      line-height: 2.1;
+    .status {
+      display: none;
+      margin: 15px 0 0;
+      padding: 12px;
+      border-radius: 11px;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
-    a { color: #80f4ff; }
+    .status.show {
+      display: block;
+    }
 
-    #message {
-      overflow-wrap: anywhere;
-      line-height: 1.6;
+    .status.error {
+      color: #991b1b;
+      background: #fee2e2;
+    }
+
+    .status.success {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .status.info {
+      color: #1e40af;
+      background: #dbeafe;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 22px 0;
+      background: var(--border);
+    }
+
+    .register-link {
       text-align: center;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .security-note {
+      margin: 18px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .back-home {
+      display: block;
+      margin-top: 18px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      color: #e2e8f0;
+      font-size: 12px;
+    }
+
+    @media (max-width: 360px) {
+      .login-card {
+        padding: 23px 16px;
+      }
+
+      .brand h1 {
+        font-size: 25px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <main class="card">
-    <h1>🌍 AYNA BOOK</h1>
-    <h2>আপনার অ্যাকাউন্টে প্রবেশ করুন</h2>
+
+  <main class="login-card">
+
+    <header class="brand">
+      <div class="brand-icon" aria-hidden="true">A</div>
+
+      <h1>AYNA <span>BOOK</span></h1>
+
+      <p class="tagline">Connect. Create. Share.</p>
+    </header>
+
+    <h2>স্বাগতম! 👋</h2>
 
     <p class="subtitle">
-      My World. My Story. My AYNA BOOK.
-      <br>Connect. Create. Share.
+      আপনার AYNA BOOK অ্যাকাউন্টে লগইন করুন।
     </p>
 
     <form id="loginForm">
-      <label for="email">Gmail / ইমেইল</label>
-      <input
-        id="email"
-        type="email"
-        autocomplete="username"
-        placeholder="আপনার ইমেইল লিখুন"
-        required
-      >
 
-      <label for="password">পাসওয়ার্ড</label>
+      <div class="account-types">
+        <div class="account-option">
+          <input
+            type="radio"
+            id="personalAccount"
+            name="accountType"
+            value="personal"
+            checked
+          >
 
-      <div class="password-row">
-        <input
-          id="password"
-          type="password"
-          autocomplete="current-password"
-          placeholder="আপনার পাসওয়ার্ড"
-          required
-        >
+          <label for="personalAccount">
+            👤 Personal<br>
+            <small>ব্যক্তিগত</small>
+          </label>
+        </div>
 
-        <button
-          class="show-button"
-          id="showPassword"
-          type="button"
-          aria-label="পাসওয়ার্ড দেখান"
-        >দেখুন</button>
+        <div class="account-option">
+          <input
+            type="radio"
+            id="businessAccount"
+            name="accountType"
+            value="business"
+          >
+
+          <label for="businessAccount">
+            🏢 Business<br>
+            <small>ব্যবসায়িক</small>
+          </label>
+        </div>
       </div>
 
-      <button id="loginButton" type="submit">
-        🔐 লগইন করুন
+      <div class="field">
+        <label for="email">📧 ইমেইল ঠিকানা</label>
+
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="আপনার ইমেইল লিখুন"
+          autocomplete="username"
+          maxlength="254"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="password">🔑 পাসওয়ার্ড</label>
+
+        <div class="password-wrap">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="আপনার পাসওয়ার্ড লিখুন"
+            autocomplete="current-password"
+            required
+          >
+
+          <button
+            class="show-button"
+            type="button"
+            id="togglePassword"
+            aria-label="পাসওয়ার্ড দেখুন"
+            aria-pressed="false"
+          >
+            দেখুন
+          </button>
+        </div>
+      </div>
+
+      <div class="forgot-row">
+        <a href="#" id="forgotPassword">
+          পাসওয়ার্ড ভুলে গেছেন?
+        </a>
+      </div>
+
+      <button
+        class="primary-button"
+        type="submit"
+        id="loginButton"
+      >
+        🔐 নিরাপদে লগইন করুন
       </button>
+
+      <p
+        class="status"
+        id="statusMessage"
+        role="status"
+        aria-live="polite"
+      ></p>
+
     </form>
 
-    <p id="message" role="status" aria-live="polite"></p>
+    <div class="divider"></div>
 
-    <div class="links">
-      <a href="#" id="forgotPassword">🔄 পাসওয়ার্ড ভুলে গেছেন?</a>
-      <br>
+    <div class="register-link">
       নতুন ব্যবহারকারী?
-      <br>
-      <a href="./signup.html">🆕 নতুন অ্যাকাউন্ট তৈরি করুন</a>
+
+      <a href="./signup.html">
+        নতুন অ্যাকাউন্ট তৈরি করুন
+      </a>
     </div>
+
+    <p class="security-note">
+      🛡️ আপনার অ্যাকাউন্ট সুরক্ষিত রাখতে
+      পাসওয়ার্ড অন্য কারও সঙ্গে শেয়ার করবেন না।
+      <br>
+      AYNA BOOK — My World. My Story.
+    </p>
+
+    <a class="back-home" href="./index.html">
+      ← হোমপেজে ফিরে যান
+    </a>
+
   </main>
 
+  <footer>
+    © <span id="year"></span> AYNA BOOK
+  </footer>
+
   <script type="module">
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
     import {
       getAuth,
@@ -190,121 +475,212 @@
       measurementId: "G-RKHHSKNB4B"
     };
 
-    const $ = id => document.getElementById(id);
+    const form = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loginButton = document.getElementById("loginButton");
+    const togglePassword = document.getElementById("togglePassword");
+    const forgotPassword = document.getElementById("forgotPassword");
+    const statusMessage = document.getElementById("statusMessage");
 
-    const form = $("loginForm");
-    const email = $("email");
-    const password = $("password");
-    const loginButton = $("loginButton");
-    const message = $("message");
-    const forgot = $("forgotPassword");
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
 
     let auth;
 
-    function showMessage(text, error = false) {
-      message.textContent = text;
-      message.style.color = error ? "#ffb4b4" : "#a7ffcf";
+    function showStatus(message, type = "info") {
+      statusMessage.textContent = message;
+      statusMessage.className = "status show " + type;
+    }
+
+    function clearStatus() {
+      statusMessage.textContent = "";
+      statusMessage.className = "status";
+    }
+
+    function friendlyError(error) {
+      switch (error.code) {
+        case "auth/invalid-email":
+          return "ইমেইল ঠিকানাটি সঠিক নয়।";
+
+        case "auth/user-not-found":
+        case "auth/invalid-credential":
+        case "auth/wrong-password":
+          return "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়। আবার চেষ্টা করুন।";
+
+        case "auth/too-many-requests":
+          return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+
+        case "auth/network-request-failed":
+          return "ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।";
+
+        case "auth/user-disabled":
+          return "এই অ্যাকাউন্টটি বর্তমানে নিষ্ক্রিয়। সহায়তা নিন।";
+
+        case "auth/operation-not-allowed":
+          return "Firebase-এ Email/Password লগইন চালু নেই।";
+
+        default:
+          console.error("AYNA BOOK authentication error:", error);
+          return "লগইন করা যায়নি। Firebase সেটিংস ও ইন্টারনেট সংযোগ পরীক্ষা করুন।";
+      }
     }
 
     try {
       const app = initializeApp(firebaseConfig);
       auth = getAuth(app);
-    } catch (error) {
-      console.error(error);
-      showMessage("Firebase চালু হয়নি। কনফিগারেশন পরীক্ষা করুন।", true);
-      loginButton.disabled = true;
-    }
 
-    $("showPassword").addEventListener("click", () => {
-      const visible = password.type === "password";
-      password.type = visible ? "text" : "password";
-      $("showPassword").textContent = visible ? "লুকান" : "দেখুন";
-    });
-
-    // আগে থেকেই লগইন করা থাকলে হোমপেজে পাঠান।
-    if (auth) {
-      onAuthStateChanged(auth, user => {
-        if (user) {
+      onAuthStateChanged(auth, (user) => {
+        if (user && user.emailVerified) {
+          // আগে থেকেই যাচাইকৃত ব্যবহারকারী লগইন থাকলে হোমপেজে যান।
           window.location.replace("./index.html");
         }
       });
+
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+
+      showStatus(
+        "Firebase চালু করা যায়নি। Config পরীক্ষা করুন।",
+        "error"
+      );
+
+      loginButton.disabled = true;
     }
 
-    form.addEventListener("submit", async event => {
+    togglePassword.addEventListener("click", () => {
+      const showing = passwordInput.type === "text";
+
+      passwordInput.type = showing ? "password" : "text";
+      togglePassword.textContent = showing ? "দেখুন" : "লুকান";
+      togglePassword.setAttribute("aria-pressed", String(!showing));
+      togglePassword.setAttribute(
+        "aria-label",
+        showing ? "পাসওয়ার্ড দেখুন" : "পাসওয়ার্ড লুকান"
+      );
+    });
+
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      clearStatus();
 
       if (!auth) {
-        showMessage("Firebase সংযোগ পাওয়া যায়নি।", true);
+        showStatus("Firebase সংযোগ প্রস্তুত নয়।", "error");
+        return;
+      }
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showStatus("ইমেইল ও পাসওয়ার্ড লিখুন।", "error");
         return;
       }
 
       loginButton.disabled = true;
-      showMessage("লগইন হচ্ছে...");
+      loginButton.textContent = "লগইন হচ্ছে...";
 
       try {
-        await signInWithEmailAndPassword(
+        const credential = await signInWithEmailAndPassword(
           auth,
-          email.value.trim(),
-          password.value
+          email,
+          password
         );
 
-        showMessage("লগইন সফল! হোমপেজ খুলছে...");
+        const user = credential.user;
+
+        if (!user.emailVerified) {
+          showStatus(
+            "আপনার ইমেইল এখনো যাচাই করা হয়নি। আপনার ইমেইলে পাঠানো verification link খুলুন।",
+            "error"
+          );
+
+          // যাচাই না হওয়া অ্যাকাউন্টের জন্য লগইন সেশন বন্ধ করুন।
+          const { signOut } = await import(
+            "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js"
+          );
+
+          await signOut(auth);
+          return;
+        }
+
+        // Account type নির্বাচনটি UI-র জন্য।
+        // প্রকৃত অ্যাকাউন্টের ধরন সার্ভারে যাচাই করতে হবে।
+        const accountType = document.querySelector(
+          'input[name="accountType"]:checked'
+        ).value;
+
+        sessionStorage.setItem("aynaLoginType", accountType);
+
+        showStatus("লগইন সফল! হোমপেজে নেওয়া হচ্ছে...", "success");
 
         window.location.replace("./index.html");
+
       } catch (error) {
-        console.error("Login error:", error);
+        showStatus(friendlyError(error), "error");
 
-        const errors = {
-          "auth/invalid-email": "ইমেইল ঠিকানা সঠিক নয়।",
-          "auth/invalid-credential": "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।",
-          "auth/user-not-found": "অ্যাকাউন্ট পাওয়া যায়নি।",
-          "auth/wrong-password": "পাসওয়ার্ড সঠিক নয়।",
-          "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। পরে চেষ্টা করুন।",
-          "auth/network-request-failed": "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
-          "auth/operation-not-allowed":
-            "Firebase-এ Email/Password চালু করুন।"
-        };
-
-        showMessage(
-          errors[error.code] || "লগইন ব্যর্থ: " + error.code,
-          true
-        );
       } finally {
         loginButton.disabled = false;
+        loginButton.textContent = "🔐 নিরাপদে লগইন করুন";
       }
     });
 
-    forgot.addEventListener("click", async event => {
+    forgotPassword.addEventListener("click", async (event) => {
       event.preventDefault();
+      clearStatus();
 
       if (!auth) {
-        showMessage("Firebase সংযোগ পাওয়া যায়নি।", true);
+        showStatus("Firebase সংযোগ প্রস্তুত নয়।", "error");
         return;
       }
 
-      const address = email.value.trim();
+      const email = emailInput.value.trim();
 
-      if (!address) {
-        showMessage("প্রথমে আপনার ইমেইল লিখুন।", true);
-        email.focus();
+      if (!email) {
+        showStatus(
+          "পাসওয়ার্ড রিসেট লিংক পেতে আগে ইমেইল ঠিকানা লিখুন।",
+          "info"
+        );
+
+        emailInput.focus();
         return;
       }
+
+      forgotPassword.style.pointerEvents = "none";
 
       try {
-        await sendPasswordResetEmail(auth, address);
+        await sendPasswordResetEmail(auth, email);
 
-        showMessage(
-          "যদি এই অ্যাকাউন্টের জন্য রিসেট অনুমোদিত হয়, " +
-          "ইমেইলে নির্দেশনা পাবেন। Inbox ও Spam পরীক্ষা করুন।"
+        showStatus(
+          "যদি এই ইমেইলের জন্য অ্যাকাউন্ট থাকে, তাহলে পাসওয়ার্ড রিসেটের নির্দেশনা পাঠানো হয়েছে। Inbox ও Spam ফোল্ডার দেখুন।",
+          "success"
         );
+
       } catch (error) {
-        console.error(error);
-        showMessage(
-          "রিসেট ইমেইল পাঠানো যায়নি। ইন্টারনেট ও Firebase সেটিংস পরীক্ষা করুন।",
-          true
-        );
+        if (
+          error.code === "auth/invalid-email" ||
+          error.code === "auth/missing-email"
+        ) {
+          showStatus("সঠিক ইমেইল ঠিকানা লিখুন।", "error");
+        } else if (error.code === "auth/too-many-requests") {
+          showStatus(
+            "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+            "error"
+          );
+        } else {
+          console.error("Password reset error:", error);
+
+          showStatus(
+            "রিসেট অনুরোধ সম্পন্ন করা যায়নি। ইমেইল ও Firebase সেটিংস পরীক্ষা করুন।",
+            "error"
+          );
+        }
+
+      } finally {
+        forgotPassword.style.pointerEvents = "";
       }
     });
   </script>
+
 </body>
 </html>
