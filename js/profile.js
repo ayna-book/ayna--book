@@ -1,252 +1,196 @@
-
-import { auth, db, storage } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 
 import {
-  onAuthStateChanged,
-  signOut
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 import {
   doc,
-  getDoc,
   setDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
-
-const $ = (id) => document.getElementById(id);
-
-const form = $("profileForm");
-const photoInput = $("photo");
-const preview = $("photoPreview");
-const statusElement = $("profileStatus");
-const saveButton = $("saveButton");
-const logoutButton = $("logoutButton");
-
-let currentUser = null;
-let photoFile = null;
-let loading = true;
-let saving = false;
+const form = document.getElementById("signupForm");
+const statusElement = document.getElementById("signupStatus");
+const signupButton = document.getElementById("signupButton");
 
 function showStatus(message) {
-  statusElement.textContent = message;
-}
-
-function setFormEnabled(enabled) {
-  for (const element of form.elements) {
-    element.disabled = !enabled;
-  }
-
-  logoutButton.disabled = !enabled;
-}
-
-function showPhoto(url) {
-  if (url) {
-    preview.src = url;
-    preview.hidden = false;
-  } else {
-    preview.removeAttribute("src");
-    preview.hidden = true;
+  if (statusElement) {
+    statusElement.textContent = message;
   }
 }
 
-// Load profile after authentication
-setFormEnabled(false);
+if (form) {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.replace("./login.html");
-    return;
-  }
+    const fullName =
+      document.getElementById("fullName").value.trim();
 
-  currentUser = user;
-  $("accountEmail").textContent =
-    "লগইন করা অ্যাকাউন্ট: " + (user.email || "Email unavailable");
+    const username = document.getElementById("username")
+      .value.trim()
+      .replace(/^@/, "")
+      .toLowerCase();
 
-  showStatus("প্রোফাইল লোড হচ্ছে...");
+    const email = document.getElementById("email")
+      .value.trim()
+      .toLowerCase();
 
-  try {
-    const profileRef = doc(db, "users", user.uid);
-    const snapshot = await getDoc(profileRef);
+    const password =
+      document.getElementById("password").value;
 
-    if (snapshot.exists()) {
-      const data = snapshot.data();
+    const confirmPassword =
+      document.getElementById("confirmPassword").value;
 
-      $("name").value = data.name || "";
-      $("username").value = data.username || "";
-      $("bio").value = data.bio || "";
-      $("location").value = data.location || "";
+    const accountTypeInput =
+      form.querySelector('input[name="accountType"]:checked');
 
-      showPhoto(data.photo || "");
-    } else {
-      $("name").value = user.displayName || "";
+    const accountType = accountTypeInput
+      ? accountTypeInput.value
+      : "personal";
+
+    const allowedAccountTypes = [
+      "personal",
+      "business",
+      "vip",
+      "vvip"
+    ];
+
+    if (!fullName || !username || !email || !password) {
+      showStatus("সব প্রয়োজনীয় ঘর পূরণ করুন।");
+      return;
     }
 
-    showStatus("আপনার প্রোফাইল প্রস্তুত।");
-  } catch (error) {
-    console.error("Profile loading error:", error);
-    showStatus("প্রোফাইল লোড হয়নি। Firebase Rules পরীক্ষা করুন।");
-  } finally {
-    loading = false;
-    setFormEnabled(true);
-  }
-});
-
-// Select and preview photo
-photoInput.addEventListener("change", () => {
-  const file = photoInput.files?.[0];
-
-  if (!file) {
-    photoFile = null;
-    return;
-  }
-
-  if (!file.type.startsWith("image/")) {
-    showStatus("একটি বৈধ ছবি নির্বাচন করুন।");
-    photoInput.value = "";
-    photoFile = null;
-    return;
-  }
-
-  if (file.size > 2 * 1024 * 1024) {
-    showStatus("ছবির আকার সর্বোচ্চ ২ MB হতে পারবে।");
-    photoInput.value = "";
-    photoFile = null;
-    return;
-  }
-
-  photoFile = file;
-
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    if (typeof reader.result === "string") {
-      preview.src = reader.result;
-      preview.hidden = false;
-      showStatus("ছবির প্রিভিউ তৈরি হয়েছে। সংরক্ষণ করতে Save চাপুন।");
-    }
-  };
-
-  reader.onerror = () => {
-    showStatus("ছবি পড়া যায়নি। আবার চেষ্টা করুন।");
-  };
-
-  reader.readAsDataURL(file);
-});
-
-// Save profile
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  if (!currentUser || loading || saving) {
-    showStatus("অ্যাকাউন্ট প্রস্তুত হলে আবার চেষ্টা করুন।");
-    return;
-  }
-
-  const name = $("name").value.trim();
-
-  const username = $("username")
-    .value.trim()
-    .replace(/^@/, "")
-    .toLowerCase();
-
-  const bio = $("bio").value.trim();
-  const location = $("location").value.trim();
-
-  if (!name || !username) {
-    showStatus("নাম ও ইউজারনেম লিখুন।");
-    return;
-  }
-
-  if (!/^[a-z0-9_.-]{3,30}$/.test(username)) {
-    showStatus(
-      "ইউজারনেম ৩–৩০ অক্ষরের হতে হবে। ইংরেজি অক্ষর, সংখ্যা, _, . অথবা - ব্যবহার করুন।"
-    );
-    return;
-  }
-
-  saving = true;
-  saveButton.disabled = true;
-  logoutButton.disabled = true;
-
-  showStatus("প্রোফাইল সংরক্ষণ হচ্ছে...");
-
-  try {
-    const profileRef = doc(db, "users", currentUser.uid);
-    const oldSnapshot = await getDoc(profileRef);
-
-    let photoUrl = "";
-
-    if (oldSnapshot.exists()) {
-      photoUrl = oldSnapshot.data().photo || "";
+    if (!/^[a-z0-9_.-]{3,30}$/.test(username)) {
+      showStatus(
+        "ইউজারনেম ৩–৩০ অক্ষরের হতে হবে। ইংরেজি অক্ষর, সংখ্যা, _, . অথবা - ব্যবহার করুন।"
+      );
+      return;
     }
 
-    // Upload a new photo only when one is selected
-    if (photoFile) {
-      const safeName = photoFile.name.replace(
-        /[^a-zA-Z0-9._-]/g,
-        "_"
+    if (password.length < 8) {
+      showStatus("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      showStatus("দুটি পাসওয়ার্ড মিলছে না।");
+      return;
+    }
+
+    if (!allowedAccountTypes.includes(accountType)) {
+      showStatus("সঠিক অ্যাকাউন্টের ধরন নির্বাচন করুন।");
+      return;
+    }
+
+    if (signupButton) {
+      signupButton.disabled = true;
+    }
+
+    showStatus("আপনার AYNA BOOK অ্যাকাউন্ট তৈরি হচ্ছে...");
+
+    let createdUser = null;
+
+    try {
+      // 1. Create Firebase Authentication account.
+      const credential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
 
-      const photoRef = ref(
-        storage,
-        `profilePhotos/${currentUser.uid}/${Date.now()}_${safeName}`
-      );
+      createdUser = credential.user;
 
-      await uploadBytes(photoRef, photoFile);
-      photoUrl = await getDownloadURL(photoRef);
-    }
+      // 2. Set account display name.
+      await updateProfile(createdUser, {
+        displayName: fullName
+      });
 
-    await setDoc(
-      profileRef,
-      {
-        name,
+      // 3. VIP/VVIP must not grant themselves privileged access.
+      // Their selected type is saved as a request.
+      const requestedAccountType =
+        accountType === "vip" || accountType === "vvip"
+          ? accountType
+          : null;
+
+      // 4. Save the user's profile.
+      await setDoc(doc(db, "users", createdUser.uid), {
+        uid: createdUser.uid,
+        name: fullName,
         username,
-        bio,
-        location,
-        photo: photoUrl,
-        email: currentUser.email || "",
+        email,
+        accountType:
+          accountType === "vip" || accountType === "vvip"
+            ? "personal"
+            : accountType,
+        requestedAccountType,
+        accountStatus:
+          requestedAccountType ? "pending_review" : "active",
+        bio: "",
+        location: "",
+        photo: "",
+        createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
-      },
-      { merge: true }
-    );
+      });
 
-    photoFile = null;
-    photoInput.value = "";
+      // 5. Send email verification.
+      await sendEmailVerification(createdUser);
 
-    showPhoto(photoUrl);
-    showStatus("✅ আপনার AYNA BOOK প্রোফাইল সংরক্ষিত হয়েছে!");
+      if (requestedAccountType) {
+        showStatus(
+          "✅ অ্যাকাউন্ট তৈরি হয়েছে! আপনার ইমেইল যাচাই করুন। VIP/VVIP অনুরোধটি অনুমোদনের অপেক্ষায় থাকবে।"
+        );
+      } else {
+        showStatus(
+          "✅ অ্যাকাউন্ট তৈরি হয়েছে! আপনার ইমেইলের Inbox খুলে verification link-এ চাপ দিন। তারপর লগইন করুন।"
+        );
+      }
 
-  } catch (error) {
-    console.error("Profile saving error:", error);
+      form.reset();
 
-    showStatus(
-      "প্রোফাইল সংরক্ষণ হয়নি। Firestore Rules, Storage Rules ও ইন্টারনেট পরীক্ষা করুন।"
-    );
+    } catch (error) {
+      console.error("AYNA BOOK signup error:", error);
 
-  } finally {
-    saving = false;
-    saveButton.disabled = false;
-    logoutButton.disabled = false;
-  }
-});
+      const messages = {
+        "auth/email-already-in-use":
+          "এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট আছে। লগইন করুন।",
 
-// Log out
-logoutButton.addEventListener("click", async () => {
-  logoutButton.disabled = true;
-  showStatus("লগআউট হচ্ছে...");
+        "auth/invalid-email":
+          "সঠিক ইমেইল ঠিকানা লিখুন।",
 
-  try {
-    await signOut(auth);
-    window.location.replace("./login.html");
-  } catch (error) {
-    console.error("Logout error:", error);
-    showStatus("লগআউট করা যায়নি। আবার চেষ্টা করুন।");
-    logoutButton.disabled = false;
-  }
-});
+        "auth/weak-password":
+          "আরও শক্তিশালী পাসওয়ার্ড ব্যবহার করুন।",
+
+        "auth/network-request-failed":
+          "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
+
+        "auth/operation-not-allowed":
+          "Firebase Console-এ Email/Password Authentication চালু করুন।",
+
+        "permission-denied":
+          "Firestore Rules আপনার অনুরোধ অনুমোদন করেনি। Rules পরীক্ষা করুন।",
+
+        "firestore/permission-denied":
+          "Firestore Rules আপনার অনুরোধ অনুমোদন করেনি।"
+      };
+
+      if (createdUser) {
+        showStatus(
+          "Firebase Authentication অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু পরের ধাপে সমস্যা হয়েছে। একই ইমেইল দিয়ে আবার Signup করবেন না। Firebase Console-এ Authentication ও Firestore পরীক্ষা করুন।"
+        );
+      } else {
+        showStatus(
+          messages[error.code] ||
+          "অ্যাকাউন্ট তৈরি হয়নি। ইন্টারনেট, Firebase Authentication এবং Firestore সেটিংস পরীক্ষা করুন।"
+        );
+      }
+
+    } finally {
+      if (signupButton) {
+        signupButton.disabled = false;
+      }
+    }
+  });
+}
