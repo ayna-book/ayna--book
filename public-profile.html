@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <title>AYNA BOOK | Public Profile</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 18px;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg,#071b49,#512b81,#087f91);
+      color: white;
+    }
+    .card {
+      max-width: 520px; margin: 25px auto;
+      padding: 25px; border-radius: 22px;
+      background: #ffffff15; border: 1px solid #ffffff40;
+      text-align: center;
+    }
+    #photo {
+      width: 125px; height: 125px;
+      border-radius: 50%; object-fit: cover;
+      border: 4px solid #35d9ef;
+      background: #ffffff20;
+    }
+    .muted { color: #e2e8f0; line-height: 1.7; }
+    button,a {
+      display: block; width: 100%;
+      margin-top: 14px; padding: 14px;
+      border: 0; border-radius: 11px;
+      background: linear-gradient(90deg,#ff4fa3,#8b5cf6,#35d9ef);
+      color: white; font-weight: bold;
+      text-decoration: none; cursor: pointer;
+    }
+    #status { overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>🌍 AYNA BOOK</h1>
+    <p class="muted">My World. My Story. My AYNA BOOK.</p>
+
+    <img id="photo" alt="Profile photo" hidden>
+    <h2 id="name">প্রোফাইল লোড হচ্ছে...</h2>
+    <p id="username" class="muted"></p>
+    <p id="bio" class="muted"></p>
+    <p id="status" role="status" aria-live="polite"></p>
+
+    <button id="copyButton" hidden>🔗 Copy Profile Link</button>
+    <button id="shareButton" hidden>📤 Share Profile</button>
+    <a href="./signup.html">AYNA BOOK-এ যোগ দিন</a>
+    <a href="./index.html">হোম পেজ</a>
+  </main>
+
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+    import {
+      getAuth, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+    import {
+      getFirestore, doc, getDoc
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+      authDomain: "ayna-book.firebaseapp.com",
+      projectId: "ayna-book",
+      storageBucket: "ayna-book.firebasestorage.app",
+      messagingSenderId: "805601138500",
+      appId: "1:805601138500:web:47acdc90cb0cb521626911",
+      measurementId: "G-RKHHSKNB4B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const $ = id => document.getElementById(id);
+
+    const params = new URLSearchParams(location.search);
+    const uid = params.get("uid");
+
+    let profileLink = location.href;
+
+    function showError(message) {
+      $("name").textContent = "প্রোফাইল পাওয়া যায়নি";
+      $("status").textContent = message;
+    }
+
+    async function loadPublicProfile() {
+      if (!uid) {
+        showError("প্রোফাইল লিংকে ব্যবহারকারীর ID নেই।");
+        return;
+      }
+
+      try {
+        const snapshot = await getDoc(doc(db, "users", uid));
+
+        if (!snapshot.exists()) {
+          showError("এই প্রোফাইলটি পাওয়া যায়নি।");
+          return;
+        }
+
+        const data = snapshot.data();
+
+        if (data.publicProfile !== true) {
+          showError("এই ব্যবহারকারীর প্রোফাইল প্রকাশ্য নয়।");
+          return;
+        }
+
+        $("name").textContent = data.fullName || "AYNA BOOK User";
+        $("username").textContent = data.username
+          ? "@" + data.username : "";
+
+        $("bio").textContent = data.bio || "";
+
+        if (data.photo) {
+          $("photo").src = data.photo;
+          $("photo").hidden = false;
+        }
+
+        const ownProfile = auth.currentUser?.uid === uid;
+        if (ownProfile) {
+          $("copyButton").hidden = false;
+          $("shareButton").hidden = false;
+        }
+
+        $("status").textContent = "AYNA BOOK Public Profile";
+      } catch (error) {
+        console.error(error);
+        showError(
+          "প্রোফাইল লোড হয়নি। Firestore-এর Public Read Rules পরীক্ষা করুন।"
+        );
+      }
+    }
+
+    onAuthStateChanged(auth, () => {
+      loadPublicProfile();
+    });
+
+    $("copyButton").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(profileLink);
+        $("status").textContent = "প্রোফাইল লিংক কপি হয়েছে।";
+      } catch {
+        $("status").textContent =
+          "লিংক কপি হয়নি। ব্রাউজারের Share অপশন ব্যবহার করুন।";
+      }
+    });
+
+    $("shareButton").addEventListener("click", async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "My AYNA BOOK Profile",
+            url: profileLink
+          });
+        } catch (error) {
+          if (error.name !== "AbortError") {
+            $("status").textContent = "শেয়ার করা যায়নি।";
+          }
+        }
+      } else {
+        $("status").textContent =
+          "আপনার ব্রাউজারে Share সুবিধা নেই। Copy Link ব্যবহার করুন।";
+      }
+    });
+  </script>
+</body>
+</html>
