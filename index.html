@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -6,16 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
 
-  <title>AYNA BOOK | Global Social Platform</title>
+  <title>AYNA BOOK — My World, My Story</title>
 
   <meta name="description"
-        content="AYNA BOOK — My World. My Story. My AYNA BOOK.">
+        content="AYNA BOOK — Connect, Create, Share. Your world, your story.">
 
   <meta name="application-name" content="AYNA BOOK">
-  <meta name="apple-mobile-web-app-capable" content="yes">
 
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./assets/icon-192.png">
+  <link rel="icon" href="./icon-192.png">
   <link rel="stylesheet" href="./styles.css">
 
   <style>
@@ -24,6 +22,9 @@
       --pink: #ff4fa3;
       --purple: #8b5cf6;
       --cyan: #35d9ef;
+      --white: #ffffff;
+      --surface: #ffffff12;
+      --border: #ffffff30;
     }
 
     * {
@@ -33,18 +34,24 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: system-ui, Arial, sans-serif;
-      background: linear-gradient(140deg, #061638, #24114d, #071b49);
-      color: white;
-    }
-
-    button, input, textarea {
-      font: inherit;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #071b49, #26165d, #512b81);
+      color: var(--white);
     }
 
     a {
       color: inherit;
-      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
     }
 
     .topbar {
@@ -52,532 +59,653 @@
       top: 0;
       z-index: 100;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 12px 4%;
-      background: #071b49ed;
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid #ffffff25;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 5%;
+      background: #071b49f2;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-weight: 900;
-      letter-spacing: 1px;
+      text-decoration: none;
+      font-size: 21px;
+      font-weight: 800;
     }
 
     .brand img {
       width: 42px;
       height: 42px;
       object-fit: contain;
+      border-radius: 10px;
     }
 
     .brand strong {
-      color: var(--cyan);
-    }
-
-    .nav {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .nav a {
-      padding: 9px;
-      border-radius: 9px;
-    }
-
-    .nav a:hover {
-      background: #ffffff20;
+      color: var(--pink);
     }
 
     .menu-button {
-      display: none;
+      padding: 8px 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
       color: white;
-      background: transparent;
-      border: 0;
-      font-size: 25px;
+      font-size: 23px;
+      cursor: pointer;
     }
 
     .container {
-      max-width: 1150px;
-      margin: auto;
-      padding: 22px 16px;
+      width: min(1100px, 92%);
+      margin: 22px auto;
     }
 
     .panel {
-      padding: 22px;
       margin-bottom: 20px;
-      border: 1px solid #ffffff25;
+      padding: 22px;
+      border: 1px solid var(--border);
       border-radius: 20px;
-      background: #ffffff12;
-      box-shadow: 0 12px 35px #0003;
+      background: var(--surface);
+      box-shadow: 0 8px 30px #00000012;
     }
 
     .hero {
-      padding: clamp(30px, 7vw, 75px);
-      background:
-        radial-gradient(circle at 80% 20%, #35d9ef35, transparent 35%),
-        linear-gradient(120deg, #ff4fa330, #8b5cf640);
-    }
-
-    .hero h1 {
-      font-size: clamp(36px, 7vw, 70px);
-      line-height: 1.08;
-      margin: 14px 0;
-    }
-
-    .hero h1 span {
-      color: #ff83bd;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 38px 20px;
+      background: linear-gradient(
+        120deg,
+        #ff4fa328,
+        #8b5cf633,
+        #35d9ef22
+      );
     }
 
     .eyebrow {
       color: var(--cyan);
-      font-weight: 800;
+      font-weight: bold;
       letter-spacing: 2px;
     }
 
-    .hero p {
-      max-width: 700px;
-      line-height: 1.8;
-      color: #e5e7eb;
+    .hero h1 {
+      margin: 12px 0;
+      font-size: clamp(35px, 7vw, 62px);
+      overflow-wrap: anywhere;
+    }
+
+    .gradient-text {
+      background: linear-gradient(
+        90deg,
+        #ff4fa3,
+        #c4a5ff,
+        #35d9ef
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .tagline {
+      font-size: 18px;
+      line-height: 1.7;
     }
 
     .actions {
       display: flex;
-      gap: 12px;
+      justify-content: center;
       flex-wrap: wrap;
+      gap: 10px;
       margin-top: 20px;
     }
 
     .btn {
+      display: inline-block;
       padding: 12px 18px;
       border: 0;
-      border-radius: 11px;
-      cursor: pointer;
-      font-weight: 800;
-    }
-
-    .primary {
-      color: white;
+      border-radius: 12px;
       background: linear-gradient(
-        90deg, var(--pink), var(--purple), var(--cyan)
+        90deg,
+        var(--pink),
+        var(--purple),
+        var(--cyan)
       );
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .secondary {
-      color: white;
-      background: #ffffff20;
-      border: 1px solid #ffffff55;
+      background: #ffffff18;
+      border: 1px solid var(--border);
     }
 
-    .toolbar {
+    .navigation {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
       flex-wrap: wrap;
+      gap: 9px;
     }
 
-    .search {
-      flex: 1;
-      min-width: 180px;
+    .navigation a,
+    .navigation button {
+      flex: 1 1 130px;
+      min-width: 0;
       padding: 12px;
+      border: 1px solid var(--border);
       border-radius: 10px;
-      border: 1px solid #ffffff40;
-      background: white;
-      color: #071b49;
+      background: #ffffff0d;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .navigation a:hover,
+    .navigation button:hover {
+      background: #ff4fa32b;
+    }
+
+    .navigation .alert-link {
+      background: linear-gradient(
+        90deg,
+        var(--pink),
+        var(--purple),
+        var(--cyan)
+      );
+      font-weight: bold;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
     }
 
     .feature {
+      min-width: 0;
       padding: 20px;
-      border: 1px solid #ffffff25;
+      border: 1px solid var(--border);
       border-radius: 16px;
-      background: #ffffff10;
+      background: #ffffff0c;
     }
 
     .feature h3 {
-      color: var(--cyan);
+      margin-top: 0;
     }
 
-    textarea {
+    .feature p {
+      line-height: 1.7;
+    }
+
+    .form-label {
+      display: block;
+      margin: 14px 0 7px;
+      font-weight: bold;
+    }
+
+    .field {
       width: 100%;
-      min-height: 110px;
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid #ffffff40;
+      padding: 13px;
+      border: 1px solid #ffffff45;
+      border-radius: 10px;
+      background: #071b4950;
+      color: white;
+    }
+
+    .field::placeholder {
+      color: #ddd;
+    }
+
+    textarea.field {
       resize: vertical;
     }
 
     .posts {
       display: grid;
-      gap: 14px;
-      margin-top: 18px;
+      gap: 13px;
+      margin-top: 15px;
     }
 
     .post {
-      padding: 16px;
+      padding: 17px;
+      border: 1px solid var(--border);
       border-radius: 14px;
-      background: #ffffff12;
-      border: 1px solid #ffffff25;
+      background: #071b4940;
       overflow-wrap: anywhere;
     }
 
-    .post img, .post video {
+    .post p {
+      white-space: pre-wrap;
+      line-height: 1.7;
+    }
+
+    .post-media {
       display: block;
-      max-width: 100%;
+      width: 100%;
       max-height: 450px;
       margin-top: 12px;
       border-radius: 12px;
+      object-fit: contain;
+      background: #00000030;
     }
 
     .muted {
-      color: #cbd5e1;
-      line-height: 1.6;
+      color: #dedbea;
+      font-size: 13px;
+      line-height: 1.7;
     }
 
     .status {
       min-height: 22px;
+      line-height: 1.6;
       overflow-wrap: anywhere;
     }
 
-    .theme-light {
-      background: #edf2ff;
+    .footer {
+      padding: 25px 10px;
+      color: #ddd;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    body.theme-light {
+      background: #f1f4fa;
       color: #071b49;
     }
 
-    .theme-light .topbar {
+    body.theme-light .topbar {
       background: #ffffffed;
     }
 
-    .theme-light .panel,
-    .theme-light .feature,
-    .theme-light .post {
-      background: white;
-      border-color: #d9e0ef;
+    body.theme-light .panel,
+    body.theme-light .feature,
+    body.theme-light .post {
+      background: #ffffff;
+      border-color: #d5dbea;
     }
 
-    .theme-light .muted {
+    body.theme-light .navigation a,
+    body.theme-light .navigation button {
+      background: #ffffff;
+      color: #071b49;
+      border-color: #d5dbea;
+    }
+
+    body.theme-light .field {
+      background: #ffffff;
+      color: #071b49;
+      border-color: #ccd4e5;
+    }
+
+    body.theme-light .field::placeholder,
+    body.theme-light .muted,
+    body.theme-light .footer {
       color: #596579;
     }
 
-    footer {
-      padding: 28px;
-      text-align: center;
-      color: #cbd5e1;
+    body.theme-light .secondary {
+      color: #071b49;
+      background: #ffffff;
     }
 
-    @media(max-width: 760px) {
-      .menu-button {
-        display: block;
+    @media (max-width: 650px) {
+      .container {
+        width: 94%;
+        margin-top: 14px;
       }
 
-      .nav {
-        display: none;
-        position: absolute;
-        top: 65px;
-        left: 0;
-        right: 0;
-        padding: 18px;
-        background: #071b49;
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .nav.open {
-        display: flex;
+      .panel {
+        padding: 16px;
       }
 
       .grid {
         grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 30px 15px;
+      }
+
+      .brand {
+        font-size: 18px;
+      }
+
+      .navigation a,
+      .navigation button {
+        flex-basis: 42%;
       }
     }
   </style>
 </head>
 
 <body>
-
-  <!-- GLOBAL HEADER -->
   <header class="topbar">
-
-    <a href="./index.html" class="brand">
-      <img src="./assets/icon-192.png" alt="AYNA BOOK">
+    <a class="brand" href="./index.html" aria-label="AYNA BOOK Home">
+      <img src="./icon-192.png" alt="AYNA BOOK Logo">
       <span>AYNA <strong>BOOK</strong></span>
     </a>
 
     <button
       id="menuButton"
       class="menu-button"
-      aria-label="Open navigation">
-      ☰
-    </button>
-
-    <nav id="navigation" class="nav">
-      <a href="#home">🏠 Home</a>
-      <a href="#feed">🌍 Feed</a>
-      <a href="./messages.html">💬 Messages</a>
-      <a href="./profile.html">👤 Profile</a>
-      <a href="./login.html">Login</a>
-      <a href="./signup.html">Join</a>
-    </nav>
-
+      type="button"
+      aria-label="মেনু খুলুন"
+      aria-expanded="false"
+      aria-controls="navigation"
+    >☰</button>
   </header>
 
   <main class="container">
 
-    <!-- HERO -->
-    <section id="home" class="panel hero">
-
-      <p class="eyebrow">
-        THE NEXT GENERATION SOCIAL EXPERIENCE
-      </p>
+    <!-- Welcome -->
+    <section class="panel hero">
+      <p class="eyebrow">WELCOME TO YOUR WORLD</p>
 
       <h1>
-        My World. My Story.
-        <br>
-        <span>My AYNA BOOK.</span>
+        <span class="gradient-text">AYNA BOOK</span>
       </h1>
 
+      <p class="tagline">
+        My World. My Story. My AYNA BOOK.
+        <br>
+        Connect. Create. Share.
+      </p>
+
       <p>
-        A creative digital community designed to
-        connect people, share ideas and inspire
-        the world.
+        আপনার গল্প, আপনার প্রতিভা, আপনার পৃথিবী।
+        <br>
+        একসঙ্গে তৈরি করি আরও সংযুক্ত একটি ডিজিটাল বিশ্ব।
       </p>
 
       <div class="actions">
-        <a href="./signup.html" class="btn primary">
-          🚀 Create Account
+        <a class="btn" href="./signup.html">
+          ✨ Join AYNA BOOK
         </a>
 
-        <a href="./login.html" class="btn secondary">
-          🔐 Sign In
+        <a class="btn secondary" href="./login.html">
+          🔐 Login
+        </a>
+
+        <a class="btn secondary" href="./profile.html">
+          👤 My Profile
         </a>
       </div>
-
     </section>
 
-    <!-- SMART TOOLBAR -->
+    <!-- Navigation -->
+    <nav id="navigation" class="panel navigation">
+
+      <a href="./index.html">🏠 Home</a>
+
+      <a href="./messages.html">💬 Messaging</a>
+
+      <a href="./profile.html">👤 Profile</a>
+
+      <a href="./signup.html">✨ Sign Up</a>
+
+      <a href="./login.html">🔐 Login</a>
+
+      <a class="alert-link" href="./global-alert.html">
+        🚨 GLOBAL ALERT
+      </a>
+
+      <a href="./radio-tv.html">📻 Radio & TV</a>
+
+      <button id="themeButton" type="button">
+        🌙 Theme
+      </button>
+
+      <button id="languageButton" type="button">
+        🌐 Language
+      </button>
+
+    </nav>
+
+    <!-- Founder -->
     <section class="panel">
+      <p class="eyebrow">OUR VISION</p>
 
-      <div class="toolbar">
+      <h2>🌍 একটি নতুন ডিজিটাল অভিজ্ঞতা</h2>
 
-        <input
-          id="searchInput"
-          class="search"
-          type="search"
-          placeholder="Search AYNA BOOK...">
+      <p>
+        AYNA BOOK-এর প্রতিষ্ঠাতা Mohammed Mahbub Alam।
+        তাঁর স্বপ্ন—মানুষ যেন নিজের গল্প, চিন্তা, সৃজনশীলতা
+        ও প্রতিভা বিশ্বের সঙ্গে ভাগ করে নিতে পারে।
+      </p>
 
-        <button id="languageButton" class="btn secondary">
-          🌐 বাংলা / English
-        </button>
-
-        <button id="themeButton" class="btn secondary">
-          🌙 Theme
-        </button>
-
-      </div>
-
+      <p class="tagline">
+        My World. My Story. My AYNA BOOK.
+      </p>
     </section>
 
-    <!-- FEED -->
-    <section id="feed" class="panel">
+    <!-- Features -->
+    <section class="panel">
+      <h2>✨ AYNA BOOK Features</h2>
 
-      <h2>🌍 Global Community Feed</h2>
+      <div class="grid">
+
+        <article class="feature">
+          <h3>💬 Community Messaging</h3>
+          <p>
+            কমিউনিটি চ্যাটের মাধ্যমে অন্য ব্যবহারকারীদের
+            সঙ্গে যোগাযোগ করুন।
+          </p>
+          <a class="btn" href="./messages.html">
+            Open Messaging
+          </a>
+        </article>
+
+        <article class="feature">
+          <h3>👤 Personal Profile</h3>
+          <p>
+            নিজের নাম, ইউজারনেম, পরিচিতি ও প্রোফাইল ছবি
+            সংরক্ষণ করুন।
+          </p>
+          <a class="btn" href="./profile.html">
+            Open Profile
+          </a>
+        </article>
+
+        <article class="feature">
+          <h3>🎬 Multimedia</h3>
+          <p>
+            পোস্ট তৈরির সময় ছবি, ভিডিও অথবা অডিও ফাইল
+            নির্বাচন করার ব্যবস্থা।
+          </p>
+        </article>
+
+        <article class="feature">
+          <h3>🌐 Global Community</h3>
+          <p>
+            ভবিষ্যতে একাধিক ভাষা, উন্নত অনুবাদ এবং
+            আন্তর্জাতিক কমিউনিটি সুবিধা যুক্ত করা যাবে।
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Create post -->
+    <section class="panel" id="createPostSection">
+      <h2>✍️ Create a Post</h2>
+
+      <p class="muted">
+        পোস্ট প্রকাশ করতে প্রথমে লগইন করুন।
+      </p>
 
       <form id="postForm">
 
+        <label class="form-label" for="postText">
+          আপনার মনের কথা লিখুন
+        </label>
+
         <textarea
+          class="field"
           id="postText"
-          maxlength="3000"
-          placeholder="Share your story with the world..."
-          required>
-        </textarea>
+          rows="5"
+          maxlength="5000"
+          placeholder="আজ আপনি কী শেয়ার করতে চান?"
+        ></textarea>
 
-        <div class="actions">
+        <label class="form-label" for="postMedia">
+          ছবি, ভিডিও অথবা অডিও নির্বাচন করুন
+        </label>
 
-          <input
-            id="postMedia"
-            type="file"
-            accept="image/*,video/*">
+        <input
+          class="field"
+          id="postMedia"
+          type="file"
+          accept="image/*,video/*,audio/*"
+        >
 
-          <button class="btn primary" type="submit">
-            🚀 Publish Post
-          </button>
+        <p class="muted">
+          সর্বোচ্চ ফাইলের আকার ২০ MB।
+          এই সীমা কোডে নির্ধারিত; এটি সার্ভারের নিরাপত্তার
+          বিকল্প নয়।
+        </p>
 
-        </div>
+        <button class="btn" type="submit">
+          🚀 Publish Post
+        </button>
 
       </form>
 
-      <p id="feedStatus" class="status muted">
-        Connecting to AYNA BOOK...
-      </p>
-
-      <div id="posts" class="posts"></div>
-
+      <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>
 
-    <!-- ADVANCED FEATURES -->
-    <section class="grid">
-
-      <article class="feature">
-        <h3>🤖 AI Technology</h3>
-        <p class="muted">
-          AI assistance and translation integration
-          can be added through secure APIs.
-        </p>
-      </article>
-
-      <article class="feature">
-        <h3>💬 Real-time Messaging</h3>
-        <p class="muted">
-          Real-time communication using Firebase.
-        </p>
-        <a href="./messages.html">Open Messages →</a>
-      </article>
-
-      <article class="feature">
-        <h3>🎥 Live Experience</h3>
-        <p class="muted">
-          Future WebRTC-based audio and video
-          communication.
-        </p>
-      </article>
-
-      <article class="feature">
-        <h3>🌐 Multilingual World</h3>
-        <p class="muted">
-          Designed for a multilingual global community.
-        </p>
-      </article>
-
-      <article class="feature">
-        <h3>📱 Mobile Technology</h3>
-        <p class="muted">
-          Responsive interface and installable PWA foundation.
-        </p>
-      </article>
-
-      <article class="feature">
-        <h3>🔐 Security First</h3>
-        <p class="muted">
-          Firebase Authentication and database security
-          rules are required.
-        </p>
-      </article>
-
-    </section>
-
-    <!-- AI ASSISTANT PLACEHOLDER -->
+    <!-- Community posts -->
     <section class="panel">
-
-      <h2>🤖 AYNA AI Assistant</h2>
+      <h2>🌍 Community Posts</h2>
 
       <p class="muted">
-        AI-powered writing, translation and smart
-        assistance are planned for a future release.
+        Firebase সংযোগ ও নিরাপত্তা Rules ঠিক থাকলে
+        প্রকাশিত পোস্ট এখানে দেখা যাবে।
       </p>
 
-      <button
-        id="aiButton"
-        class="btn primary"
-        type="button">
-        Explore AI Features
-      </button>
-
-      <p id="aiStatus" class="status"></p>
-
+      <div id="posts" class="posts" aria-live="polite">
+        <p>পোস্ট লোড হচ্ছে...</p>
+      </div>
     </section>
 
-    <!-- FOUNDER -->
+    <!-- App information -->
     <section class="panel">
+      <h2>🚀 AYNA BOOK Roadmap</h2>
 
-      <h2>🌟 Founder’s Vision</h2>
+      <ul>
+        <li>Firebase account registration and login</li>
+        <li>Personal profiles</li>
+        <li>Community posts and media uploads</li>
+        <li>Community messaging</li>
+        <li>Improved mobile and PWA experience</li>
+        <li>Future development: comments, reactions, translation and private messaging</li>
+      </ul>
 
-      <p>
-        AYNA BOOK is founded by Mohammed Mahbub Alam
-        with a vision to create a connected,
-        creative and inclusive digital community.
+      <p class="muted">
+        নোট: AI অনুবাদ, ব্যক্তিগত এনক্রিপ্টেড চ্যাট,
+        ভয়েস/ভিডিও কল এবং স্যাটেলাইট সংযোগ এখনো
+        এই কোডে বাস্তবায়িত হয়নি।
       </p>
-
-      <h3>My World. My Story. My AYNA BOOK.</h3>
-
-      <p class="muted">Connect. Create. Share.</p>
-
     </section>
 
   </main>
 
-  <footer>
-    © <span id="year"></span> AYNA BOOK.
-    All rights reserved.
+  <footer class="footer">
+    <strong>AYNA BOOK</strong>
+    <br>
+    My World. My Story. My AYNA BOOK.
+    <br>
+    Connect. Create. Share.
+    <br>
+    © <span id="currentYear"></span> AYNA BOOK
   </footer>
 
-  <!-- APPLICATION LOGIC -->
   <script type="module" src="./js/app.js"></script>
 
   <script>
-    const menuButton =
-      document.getElementById("menuButton");
-
-    const navigation =
-      document.getElementById("navigation");
-
-    menuButton.addEventListener("click", () => {
-      navigation.classList.toggle("open");
-    });
-
-    navigation.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
-        navigation.classList.remove("open");
-      });
-    });
-
-    document.getElementById("year").textContent =
+    // Current year
+    document.getElementById("currentYear").textContent =
       new Date().getFullYear();
 
-    document.getElementById("themeButton")
-      .addEventListener("click", () => {
-        document.body.classList.toggle("theme-light");
-      });
+    // Mobile navigation toggle
+    const menuButton = document.getElementById("menuButton");
+    const navigation = document.getElementById("navigation");
 
-    document.getElementById("languageButton")
-      .addEventListener("click", () => {
-        alert(
-          "বাংলা ও English ভাষার পূর্ণ অনুবাদ ব্যবস্থা পরবর্তী ধাপে যুক্ত হবে।"
-        );
-      });
+    menuButton.addEventListener("click", () => {
+      const isHidden = navigation.classList.toggle("hidden");
 
-    document.getElementById("aiButton")
-      .addEventListener("click", () => {
-        document.getElementById("aiStatus").textContent =
-          "AI API সংযুক্ত হলে এই সুবিধা চালু হবে।";
-      });
-
-    const searchInput =
-      document.getElementById("searchInput");
-
-    searchInput.addEventListener("input", () => {
-      const term = searchInput.value.toLowerCase();
-
-      document.querySelectorAll(".post").forEach(post => {
-        post.hidden =
-          !post.textContent.toLowerCase().includes(term);
-      });
+      menuButton.setAttribute("aria-expanded", String(!isHidden));
     });
 
+    // Theme toggle
+    const themeButton = document.getElementById("themeButton");
+
+    themeButton.addEventListener("click", () => {
+      document.body.classList.toggle("theme-light");
+
+      const isLight =
+        document.body.classList.contains("theme-light");
+
+      themeButton.textContent =
+        isLight ? "🌙 Dark Theme" : "☀️ Light Theme";
+
+      try {
+        localStorage.setItem(
+          "ayna-book-theme",
+          isLight ? "light" : "dark"
+        );
+      } catch (error) {
+        console.warn("Theme preference could not be saved.");
+      }
+    });
+
+    // Restore saved theme
+    try {
+      if (localStorage.getItem("ayna-book-theme") === "light") {
+        document.body.classList.add("theme-light");
+        themeButton.textContent = "🌙 Dark Theme";
+      }
+    } catch (error) {
+      console.warn("Theme preference could not be restored.");
+    }
+
+    // Language feature placeholder
+    document.getElementById("languageButton").addEventListener(
+      "click",
+      () => {
+        alert(
+          "AYNA BOOK-এর বহুভাষিক সুবিধা পরবর্তী ধাপে অনুবাদ API দিয়ে যুক্ত করতে হবে।"
+        );
+      }
+    );
+
+    // Hide navigation on small screens until opened
+    if (window.matchMedia("(max-width: 650px)").matches) {
+      navigation.classList.add("hidden");
+      menuButton.setAttribute("aria-expanded", "false");
+    }
+  </script>
+
+  <script>
+    // Register the service worker
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker
           .register("./service-worker.js")
-          .catch(error => console.error(error));
+          .catch((error) => {
+            console.error(
+              "AYNA BOOK Service Worker registration failed:",
+              error
+            );
+          });
       });
     }
   </script>
