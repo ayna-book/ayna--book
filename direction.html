@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <title>AYNA BOOK — Direction Finder</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 18px;
+      background: linear-gradient(145deg, #071b49, #512b81);
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    main {
+      max-width: 520px;
+      margin: auto;
+    }
+
+    .card {
+      padding: 20px;
+      margin-bottom: 18px;
+      border: 1px solid #ffffff30;
+      border-radius: 20px;
+      background: #ffffff12;
+      text-align: center;
+    }
+
+    .compass {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      max-width: 100%;
+      margin: 20px auto;
+      border: 5px solid #35d9ef;
+      border-radius: 50%;
+      background: radial-gradient(circle, #172d66, #071b49);
+      box-shadow: 0 0 25px #35d9ef50;
+    }
+
+    .label {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .north { top: 10px; left: 50%; transform: translateX(-50%); color: #ff4fa3; }
+    .south { bottom: 10px; left: 50%; transform: translateX(-50%); }
+    .east { right: 13px; top: 50%; transform: translateY(-50%); }
+    .west { left: 13px; top: 50%; transform: translateY(-50%); }
+
+    .needle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 145px;
+      transform: translate(-50%, -50%) rotate(0deg);
+      transform-origin: center;
+      transition: transform .25s ease;
+    }
+
+    .needle::before,
+    .needle::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+    }
+
+    .needle::before {
+      top: 0;
+      border-bottom: 65px solid #ff4fa3;
+    }
+
+    .needle::after {
+      bottom: 0;
+      border-top: 65px solid #35d9ef;
+    }
+
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      transform: translate(-50%, -50%);
+    }
+
+    button, .link {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border: 0;
+      border-radius: 11px;
+      background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    #status {
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #e0e5f5;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <section class="card">
+      <h1>🧭 AYNA BOOK</h1>
+      <p>SMART DIRECTION FINDER</p>
+
+      <div class="compass" aria-label="কম্পাস">
+        <span class="label north">উ</span>
+        <span class="label south">দ</span>
+        <span class="label east">পূ</span>
+        <span class="label west">প</span>
+        <div id="needle" class="needle"></div>
+        <div class="center"></div>
+      </div>
+
+      <h2 id="heading">দিক: --°</h2>
+      <p id="directionName">কম্পাস চালু করুন</p>
+
+      <button id="startCompass">
+        🧭 কম্পাস চালু করুন
+      </button>
+
+      <button id="getLocation">
+        📍 আমার অবস্থান দেখুন
+      </button>
+
+      <p id="status" role="status" aria-live="polite">
+        কম্পাসের সেন্সর ও লোকেশন ব্যবহারের জন্য অনুমতি লাগতে পারে।
+      </p>
+
+      <a id="mapLink" class="link" href="#" target="_blank"
+         rel="noopener noreferrer" hidden>
+        🗺️ Google Maps খুলুন
+      </a>
+    </section>
+
+    <section class="card">
+      <h2>দিক চেনার নিয়ম</h2>
+      <p>উ = উত্তর | দ = দক্ষিণ</p>
+      <p>পূ = পূর্ব | প = পশ্চিম</p>
+
+      <p class="note">
+        মোবাইলে উপযুক্ত কম্পাস সেন্সর থাকতে হবে।
+        ধাতব বস্তু, চুম্বক বা ইলেকট্রনিক যন্ত্রের কারণে
+        কম্পাস ভুল দিক দেখাতে পারে। প্রয়োজনে কম্পাস
+        ক্যালিব্রেট করুন।
+      </p>
+
+      <a class="link" href="./index.html">
+        🏠 AYNA BOOK হোম পেজ
+      </a>
+    </section>
+  </main>
+
+  <script>
+    const needle = document.getElementById("needle");
+    const heading = document.getElementById("heading");
+    const directionName = document.getElementById("directionName");
+    const status = document.getElementById("status");
+
+    let compassStarted = false;
+
+    function getDirection(degrees) {
+      const directions = [
+        "উত্তর", "উত্তর-পূর্ব", "পূর্ব", "দক্ষিণ-পূর্ব",
+        "দক্ষিণ", "দক্ষিণ-পশ্চিম", "পশ্চিম", "উত্তর-পশ্চিম"
+      ];
+
+      return directions[
+        Math.round(degrees / 45) % 8
+      ];
+    }
+
+    function handleOrientation(event) {
+      let angle = null;
+
+      if (typeof event.webkitCompassHeading === "number") {
+        angle = event.webkitCompassHeading;
+      } else if (typeof event.alpha === "number") {
+        angle = (360 - event.alpha) % 360;
+      }
+
+      if (angle === null || !Number.isFinite(angle)) {
+        status.textContent =
+          "এই ডিভাইস থেকে কম্পাসের দিক পাওয়া যাচ্ছে না।";
+        return;
+      }
+
+      angle = (angle + 360) % 360;
+
+      needle.style.transform =
+        "translate(-50%, -50%) rotate(" + angle + "deg)";
+
+      heading.textContent = "দিক: " + Math.round(angle) + "°";
+      directionName.textContent = getDirection(angle);
+      status.textContent = "কম্পাস সেন্সর থেকে তথ্য পাওয়া যাচ্ছে।";
+    }
+
+    document.getElementById("startCompass")
+      .addEventListener("click", async () => {
+        if (compassStarted) return;
+
+        if (!("DeviceOrientationEvent" in window)) {
+          status.textContent =
+            "এই ব্রাউজার বা ডিভাইসে কম্পাস সেন্সর সমর্থিত নয়।";
+          return;
+        }
+
+        try {
+          if (
+            typeof DeviceOrientationEvent.requestPermission === "function"
+          ) {
+            const permission =
+              await DeviceOrientationEvent.requestPermission();
+
+            if (permission !== "granted") {
+              status.textContent = "কম্পাস ব্যবহারের অনুমতি দেওয়া হয়নি।";
+              return;
+            }
+          }
+
+          window.addEventListener(
+            "deviceorientation",
+            handleOrientation,
+            true
+          );
+
+          compassStarted = true;
+          status.textContent = "কম্পাস চালু হচ্ছে...";
+        } catch (error) {
+          status.textContent =
+            "কম্পাস চালু করা যায়নি। HTTPS ও সেন্সর অনুমতি পরীক্ষা করুন।";
+        }
+      });
+
+    document.getElementById("getLocation")
+      .addEventListener("click", () => {
+        if (!navigator.geolocation) {
+          status.textContent = "এই ব্রাউজারে লোকেশন সুবিধা নেই।";
+          return;
+        }
+
+        if (!window.isSecureContext) {
+          status.textContent = "লোকেশন ব্যবহারের জন্য HTTPS প্রয়োজন।";
+          return;
+        }
+
+        status.textContent = "আপনার অনুমতি নিয়ে লোকেশন খোঁজা হচ্ছে...";
+
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            const mapLink = document.getElementById("mapLink");
+
+            mapLink.href =
+              "https://www.google.com/maps?q=" + lat + "," + lon;
+
+            mapLink.hidden = false;
+
+            status.textContent =
+              "অক্ষাংশ: " + lat.toFixed(6) +
+              "\nদ্রাঘিমাংশ: " + lon.toFixed(6) +
+              "\nনির্ভুলতা: আনুমানিক " +
+              Math.round(position.coords.accuracy) + " মিটার";
+          },
+          error => {
+            status.textContent =
+              error.code === 1
+                ? "লোকেশনের অনুমতি দেওয়া হয়নি।"
+                : "লোকেশন পাওয়া যায়নি। GPS চালু করে আবার চেষ্টা করুন।",
+            { enableHighAccuracy: true, timeout: 20000 };
+          }
+        );
+      });
+  </script>
+</body>
+</html>
