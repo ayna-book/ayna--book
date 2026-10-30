@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+
+  <title>AYNA BOOK — Location Alert</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 18px;
+      background: linear-gradient(145deg, #071b49, #512b81);
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 560px;
+      margin: auto;
+    }
+
+    .card {
+      padding: 20px;
+      margin-bottom: 18px;
+      border: 1px solid #ffffff30;
+      border-radius: 18px;
+      background: #ffffff12;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #35d9ef;
+      text-align: center;
+    }
+
+    button, .link-button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border: 0;
+      border-radius: 11px;
+      background: linear-gradient(
+        90deg, #ff4fa3, #8b5cf6, #35d9ef
+      );
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .danger {
+      background: #d62839;
+    }
+
+    input, textarea {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #ffffff50;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    #status {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.7;
+    }
+
+    .note {
+      color: #e0e5f5;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .coordinates {
+      padding: 12px;
+      border-radius: 10px;
+      background: #00000025;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+
+    <section class="card">
+      <h1>🌍 AYNA BOOK</h1>
+      <p class="subtitle">📍 LOCATION & EMERGENCY ALERT</p>
+
+      <p>
+        আপনার নিরাপত্তা, আপনার নিয়ন্ত্রণ।
+        লোকেশন শেয়ার করার আগে আপনার অনুমতি নেওয়া হবে।
+      </p>
+
+      <button id="getLocation">
+        📍 আমার বর্তমান লোকেশন দেখুন
+      </button>
+
+      <button id="startTracking">
+        🧭 লোকেশন আপডেট চালু করুন
+      </button>
+
+      <button id="stopTracking" class="danger">
+        ⏹️ লোকেশন আপডেট বন্ধ করুন
+      </button>
+
+      <p id="status" role="status" aria-live="polite">
+        লোকেশন এখন বন্ধ আছে।
+      </p>
+
+      <div id="coordinates" class="coordinates" hidden></div>
+
+      <a
+        id="mapLink"
+        class="link-button"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        hidden
+      >
+        🗺️ Google Maps-এ লোকেশন দেখুন
+      </a>
+    </section>
+
+    <section class="card">
+      <h2>🚨 জরুরি সতর্কতা</h2>
+
+      <p>
+        বিপদের সময় নিজের অবস্থানসহ একটি জরুরি বার্তা তৈরি করুন।
+      </p>
+
+      <label for="emergencyMessage">
+        জরুরি বার্তা
+      </label>
+
+      <textarea id="emergencyMessage" rows="4">আমি জরুরি অবস্থায় আছি। অনুগ্রহ করে আমার সঙ্গে যোগাযোগ করুন।</textarea>
+
+      <button id="prepareAlert" class="danger">
+        🚨 জরুরি বার্তা তৈরি করুন
+      </button>
+
+      <button id="shareWhatsApp">
+        💬 WhatsApp-এ শেয়ার করুন
+      </button>
+
+      <p class="note">
+        এই ব্যবস্থা নিজে থেকে পুলিশ, অ্যাম্বুলেন্স বা
+        জরুরি পরিষেবায় খবর পাঠায় না। WhatsApp-এ বার্তা
+        পাঠানোর আগে প্রাপক নির্বাচন করে আপনাকে নিজে
+        Send চাপতে হবে।
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>🔐 গোপনীয়তা</h2>
+
+      <p class="note">
+        • লোকেশন দেখতে ব্রাউজারের অনুমতি লাগবে।<br>
+        • এই পেজ লোকেশন Firebase-এ আপলোড করে না।<br>
+        • আপডেট বন্ধ করলে লোকেশন ট্র্যাকিং বন্ধ হবে।<br>
+        • WhatsApp-এ পাঠালে আপনার শেয়ার করা তথ্য
+        প্রাপক দেখতে পারবেন।
+      </p>
+
+      <a class="link-button" href="./index.html">
+        🏠 AYNA BOOK হোম পেজ
+      </a>
+    </section>
+
+  </main>
+
+  <script>
+    "use strict";
+
+    const statusElement = document.getElementById("status");
+    const coordinatesElement =
+      document.getElementById("coordinates");
+    const mapLink = document.getElementById("mapLink");
+
+    const getLocationButton =
+      document.getElementById("getLocation");
+
+    const startTrackingButton =
+      document.getElementById("startTracking");
+
+    const stopTrackingButton =
+      document.getElementById("stopTracking");
+
+    let currentLocation = null;
+    let watchId = null;
+    let emergencyText = "";
+
+    function setStatus(message) {
+      statusElement.textContent = message;
+    }
+
+    function showLocation(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const accuracy = Math.round(position.coords.accuracy);
+
+      currentLocation = {
+        latitude,
+        longitude,
+        accuracy
+      };
+
+      coordinatesElement.hidden = false;
+      coordinatesElement.textContent =
+        "অক্ষাংশ: " + latitude +
+        "\nদ্রাঘিমাংশ: " + longitude +
+        "\nআনুমানিক নির্ভুলতা: " + accuracy + " মিটার";
+
+      mapLink.href =
+        "https://www.google.com/maps?q=" +
+        latitude + "," + longitude;
+
+      mapLink.hidden = false;
+
+      setStatus("✅ লোকেশন পাওয়া গেছে।");
+    }
+
+    function locationError(error) {
+      const messages = {
+        1: "লোকেশনের অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংস পরীক্ষা করুন।",
+        2: "বর্তমান লোকেশন পাওয়া যায়নি। GPS চালু করে আবার চেষ্টা করুন।",
+        3: "লোকেশন পেতে সময় শেষ হয়েছে। আবার চেষ্টা করুন।"
+      };
+
+      setStatus(
+        messages[error.code] ||
+        "লোকেশন পেতে সমস্যা হয়েছে। আবার চেষ্টা করুন।"
+      );
+    }
+
+    function requestLocation() {
+      if (!("geolocation" in navigator)) {
+        setStatus("আপনার ব্রাউজারে লোকেশন সুবিধা নেই।");
+        return;
+      }
+
+      if (!window.isSecureContext) {
+        setStatus(
+          "নিরাপদ HTTPS ওয়েবসাইটে খুলে আবার চেষ্টা করুন।"
+        );
+        return;
+      }
+
+      setStatus(
+        "লোকেশন পাওয়ার চেষ্টা চলছে। অনুমতি চাইলে Allow চাপুন।"
+      );
+
+      navigator.geolocation.getCurrentPosition(
+        showLocation,
+        locationError,
+        {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 0
+        }
+      );
+    }
+
+    getLocationButton.addEventListener(
+      "click",
+      requestLocation
+    );
+
+    startTrackingButton.addEventListener("click", () => {
+      if (watchId !== null) {
+        setStatus("লোকেশন আপডেট ইতিমধ্যে চালু আছে।");
+        return;
+      }
+
+      if (!("geolocation" in navigator)) {
+        setStatus("এই ব্রাউজারে লোকেশন সুবিধা নেই।");
+        return;
+      }
+
+      if (!window.isSecureContext) {
+        setStatus("লোকেশন আপডেটের জন্য HTTPS প্রয়োজন।");
+        return;
+      }
+
+      setStatus("লোকেশন আপডেট চালু করার চেষ্টা চলছে...");
+
+      watchId = navigator.geolocation.watchPosition(
+        showLocation,
+        locationError,
+        {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 5000
+        }
+      );
+    });
+
+    stopTrackingButton.addEventListener("click", () => {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+      }
+
+      setStatus("লোকেশন আপডেট বন্ধ করা হয়েছে।");
+    });
+
+    document.getElementById("prepareAlert")
+      .addEventListener("click", () => {
+        const message =
+          document.getElementById("emergencyMessage")
+            .value.trim();
+
+        if (!message) {
+          setStatus("আগে জরুরি বার্তা লিখুন।");
+          return;
+        }
+
+        if (!currentLocation) {
+          setStatus(
+            "বার্তার সঙ্গে লোকেশন যোগ করতে আগে " +
+            "‘আমার বর্তমান লোকেশন দেখুন’ চাপুন।"
+          );
+          return;
+        }
+
+        emergencyText =
+          "🚨 AYNA BOOK EMERGENCY ALERT\n\n" +
+          message +
+          "\n\nআমার লোকেশন:\n" +
+          "https://www.google.com/maps?q=" +
+          currentLocation.latitude + "," +
+          currentLocation.longitude +
+          "\n\nলোকেশনের আনুমানিক নির্ভুলতা: " +
+          currentLocation.accuracy + " মিটার";
+
+        setStatus(
+          "জরুরি বার্তা তৈরি হয়েছে। WhatsApp-এ শেয়ার করতে নিচের বোতাম চাপুন।"
+        );
+      });
+
+    document.getElementById("shareWhatsApp")
+      .addEventListener("click", () => {
+        if (!emergencyText) {
+          setStatus(
+            "আগে জরুরি বার্তা তৈরি করুন।"
+          );
+          return;
+        }
+
+        const url =
+          "https://wa.me/?text=" +
+          encodeURIComponent(emergencyText);
+
+        window.open(url, "_blank", "noopener,noreferrer");
+      });
+  </script>
+</body>
+</html>
