@@ -1,118 +1,370 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
-  <title>Join AYNA BOOK</title>
+
+  <title>AYNA BOOK | Create Account</title>
 
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --navy: #071b49;
+      --pink: #ff4fa3;
+      --purple: #8b5cf6;
+      --cyan: #35d9ef;
+      --white: #ffffff;
+      --muted: #65718a;
+      --border: #dce2ef;
+      --danger: #c62828;
+      --success: #16834a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      padding: 20px;
+      padding: 20px 12px;
       min-height: 100vh;
-      display: grid;
-      place-items: center;
+      background: linear-gradient(135deg, #071b49, #32216c, #087f91);
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #071b49, #8b5cf6);
+      color: var(--navy);
     }
 
-    .card {
+    .container {
       width: 100%;
-      max-width: 420px;
-      padding: 28px;
-      background: white;
-      border-radius: 20px;
+      max-width: 520px;
+      margin: 20px auto;
+      padding: 25px;
+      background: var(--white);
+      border-radius: 22px;
+      box-shadow: 0 12px 35px #00000035;
     }
 
-    h1 { color: #071b49; text-align: center; }
-    p { text-align: center; color: #555; }
-
-    input, button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 14px;
-      border-radius: 10px;
-      font-size: 16px;
+    .brand {
+      text-align: center;
+      margin-bottom: 24px;
     }
 
-    input { border: 1px solid #ccc; }
+    .brand h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 30px;
+      letter-spacing: 1px;
+    }
 
-    button {
-      border: 0;
-      color: white;
-      background: #071b49;
+    .brand strong {
+      color: var(--pink);
+    }
+
+    .brand p {
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
       font-weight: bold;
     }
 
-    #status {
-      overflow-wrap: anywhere;
-      line-height: 1.5;
+    input,
+    select {
+      width: 100%;
+      min-height: 47px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
     }
 
-    a { color: #7138d9; }
+    input:focus,
+    select:focus {
+      outline: 2px solid var(--cyan);
+      border-color: var(--cyan);
+    }
+
+    .password-wrap {
+      display: flex;
+      gap: 7px;
+    }
+
+    .password-wrap input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .show-button {
+      width: 78px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--purple);
+      color: white;
+      font-weight: bold;
+    }
+
+    .hint {
+      margin: 7px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .rules {
+      margin-top: 12px;
+      padding: 13px;
+      background: #f1f5ff;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .rules p {
+      margin: 0;
+    }
+
+    .notice {
+      margin-top: 15px;
+      padding: 13px;
+      background: #fff2f8;
+      border-left: 4px solid var(--pink);
+      border-radius: 9px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 18px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .check-row input {
+      width: 18px;
+      min-height: 18px;
+      margin-top: 2px;
+    }
+
+    .primary {
+      width: 100%;
+      margin-top: 22px;
+      padding: 15px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(90deg, var(--pink), var(--purple), #00aebe);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .primary:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .status {
+      margin-top: 17px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .login-link {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    a {
+      color: #6541c8;
+      font-weight: bold;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 22px;
+    }
   </style>
 </head>
 
 <body>
-  <main class="card">
-    <h1>AYNA BOOK</h1>
-    <p>My World. Your Story. My AYNA BOOK.</p>
-    <h2>Create Your Account</h2>
+
+  <main class="container">
+
+    <header class="brand">
+      <h1>AYNA <strong>BOOK</strong></h1>
+      <p>Connect. Create. Share.</p>
+    </header>
+
+    <h2>🌍 নতুন অ্যাকাউন্ট তৈরি করুন</h2>
 
     <form id="signupForm">
+
+      <label for="fullName">আপনার পূর্ণ নাম</label>
       <input
-        id="name"
+        id="fullName"
         type="text"
-        placeholder="Your full name"
         maxlength="80"
+        autocomplete="name"
+        placeholder="আপনার নাম লিখুন"
         required
       >
 
+      <label for="email">ইমেইল ঠিকানা</label>
       <input
         id="email"
         type="email"
-        placeholder="Your email address"
         autocomplete="email"
+        placeholder="আপনার ইমেইল লিখুন"
         required
       >
 
-      <input
-        id="password"
-        type="password"
-        placeholder="Password (at least 6 characters)"
-        minlength="6"
-        autocomplete="new-password"
-        required
-      >
+      <label for="accountType">অ্যাকাউন্টের ধরন নির্বাচন করুন</label>
+      <select id="accountType" required>
+        <option value="personal">Personal Account</option>
+        <option value="business">Business Account</option>
+        <option value="vvip_verified">VVIP Verified</option>
+        <option value="global_vip">Global VIP</option>
+      </select>
 
-      <button id="signupButton" type="submit">
-        Create Account
+      <p class="hint" id="accountHint">
+        Personal Account-এর জন্য কমপক্ষে ১১ অক্ষরের পাসওয়ার্ড প্রয়োজন।
+      </p>
+
+      <label for="password">নতুন পাসওয়ার্ড</label>
+
+      <div class="password-wrap">
+        <input
+          id="password"
+          type="password"
+          autocomplete="new-password"
+          placeholder="শক্তিশালী পাসওয়ার্ড দিন"
+          required
+        >
+
+        <button
+          class="show-button"
+          id="showPassword"
+          type="button"
+        >
+          দেখুন
+        </button>
+      </div>
+
+      <label for="confirmPassword">পাসওয়ার্ড নিশ্চিত করুন</label>
+
+      <div class="password-wrap">
+        <input
+          id="confirmPassword"
+          type="password"
+          autocomplete="new-password"
+          placeholder="আবার পাসওয়ার্ড লিখুন"
+          required
+        >
+
+        <button
+          class="show-button"
+          id="showConfirm"
+          type="button"
+        >
+          দেখুন
+        </button>
+      </div>
+
+      <div class="rules">
+        <strong>🔐 পাসওয়ার্ডের নিয়ম</strong>
+        <p>✓ কমপক্ষে নির্ধারিত অক্ষর থাকতে হবে</p>
+        <p>✓ একটি বড় হাতের ইংরেজি অক্ষর (A–Z)</p>
+        <p>✓ একটি ছোট হাতের ইংরেজি অক্ষর (a–z)</p>
+        <p>✓ একটি সংখ্যা (0–9)</p>
+        <p>✓ একটি বিশেষ চিহ্ন (! @ # $ ইত্যাদি)</p>
+      </div>
+
+      <div class="notice" id="vipNotice" hidden>
+        <strong>VVIP যাচাইকরণ নোটিশ</strong>
+        <br>
+        VVIP Verified বা Global VIP নির্বাচন করলে
+        স্বয়ংক্রিয়ভাবে VVIP মর্যাদা পাওয়া যাবে না।
+        পরিচয় যাচাই ও AYNA BOOK প্রশাসকের অনুমোদন প্রয়োজন।
+        অনুমোদনের আগে অ্যাকাউন্টে সাধারণ ব্যবহারকারীর
+        নিরাপত্তা ও সুবিধাই কার্যকর থাকবে।
+      </div>
+
+      <label class="check-row">
+        <input id="terms" type="checkbox" required>
+        <span>
+          আমি AYNA BOOK-এর নিয়মাবলি ও গোপনীয়তা নীতি মেনে চলতে সম্মত।
+        </span>
+      </label>
+
+      <button
+        class="primary"
+        id="signupButton"
+        type="submit"
+      >
+        🚀 অ্যাকাউন্ট তৈরি করুন
       </button>
+
+      <p
+        class="status"
+        id="status"
+        aria-live="polite"
+      ></p>
+
     </form>
 
-    <p id="status" role="status"></p>
+    <div class="login-link">
+      আগে থেকেই অ্যাকাউন্ট আছে?
+      <a href="./login.html">লগইন করুন</a>
+    </div>
 
-    <p>
-      Already registered?
-      <a href="./login.html">Log in</a>
-    </p>
+    <footer class="footer">
+      © <span id="year"></span> AYNA BOOK
+      <br>
+      My World. My Story. My AYNA BOOK.
+    </footer>
 
-    <p><a href="./index.html">Back to AYNA BOOK</a></p>
   </main>
 
   <script type="module">
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
     import {
       getAuth,
       createUserWithEmailAndPassword,
-      updateProfile,
-      sendEmailVerification
+      sendEmailVerification,
+      updateProfile
     } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+
+    // =====================================
+    // 1. FIREBASE CONFIGURATION
+    // =====================================
 
     const firebaseConfig = {
       apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
@@ -124,63 +376,358 @@
       measurementId: "G-RKHHSKNB4B"
     };
 
+
+    // =====================================
+    // 2. INITIALIZE FIREBASE
+    // =====================================
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
+
+
+    // =====================================
+    // 3. HTML ELEMENTS
+    // =====================================
 
     const form = document.getElementById("signupForm");
-    const status = document.getElementById("status");
-    const button = document.getElementById("signupButton");
+    const nameInput = document.getElementById("fullName");
+    const emailInput = document.getElementById("email");
+    const accountTypeInput = document.getElementById("accountType");
+    const passwordInput = document.getElementById("password");
+    const confirmInput = document.getElementById("confirmPassword");
+    const signupButton = document.getElementById("signupButton");
+    const statusElement = document.getElementById("status");
+    const accountHint = document.getElementById("accountHint");
+    const vipNotice = document.getElementById("vipNotice");
 
-    form.addEventListener("submit", async (event) => {
+
+    // =====================================
+    // 4. ACCOUNT PASSWORD RULES
+    // =====================================
+
+    const accountRules = {
+      personal: {
+        minLength: 11,
+        label: "Personal Account"
+      },
+
+      business: {
+        minLength: 14,
+        label: "Business Account"
+      },
+
+      vvip_verified: {
+        minLength: 16,
+        label: "VVIP Verified"
+      },
+
+      global_vip: {
+        minLength: 16,
+        label: "Global VIP"
+      }
+    };
+
+
+    // =====================================
+    // 5. STATUS MESSAGE
+    // =====================================
+
+    function showStatus(message, success = false) {
+      statusElement.textContent = message;
+
+      statusElement.style.color = success
+        ? "#16834a"
+        : "#c62828";
+    }
+
+
+    // =====================================
+    // 6. ACCOUNT TYPE CHANGE
+    // =====================================
+
+    function updateAccountInformation() {
+
+      const type = accountTypeInput.value;
+      const rule = accountRules[type];
+
+      accountHint.textContent =
+        rule.label +
+        " এর জন্য কমপক্ষে " +
+        rule.minLength +
+        " অক্ষরের পাসওয়ার্ড প্রয়োজন।";
+
+      vipNotice.hidden =
+        type !== "vvip_verified" &&
+        type !== "global_vip";
+    }
+
+    accountTypeInput.addEventListener(
+      "change",
+      updateAccountInformation
+    );
+
+    updateAccountInformation();
+
+
+    // =====================================
+    // 7. SHOW / HIDE PASSWORD
+    // =====================================
+
+    document.getElementById("showPassword")
+      .addEventListener("click", function () {
+
+        const hidden = passwordInput.type === "password";
+
+        passwordInput.type = hidden
+          ? "text"
+          : "password";
+
+        this.textContent = hidden
+          ? "লুকান"
+          : "দেখুন";
+      });
+
+
+    document.getElementById("showConfirm")
+      .addEventListener("click", function () {
+
+        const hidden = confirmInput.type === "password";
+
+        confirmInput.type = hidden
+          ? "text"
+          : "password";
+
+        this.textContent = hidden
+          ? "লুকান"
+          : "দেখুন";
+      });
+
+
+    // =====================================
+    // 8. PASSWORD VALIDATION
+    // =====================================
+
+    function validatePassword(password, accountType) {
+
+      const rule = accountRules[accountType];
+
+      if (!rule) {
+        return "সঠিক অ্যাকাউন্ট নির্বাচন করুন।";
+      }
+
+      if (password.length < rule.minLength) {
+        return "এই অ্যাকাউন্টের জন্য কমপক্ষে " +
+          rule.minLength +
+          " অক্ষরের পাসওয়ার্ড প্রয়োজন।";
+      }
+
+      if (!/[A-Z]/.test(password)) {
+        return "পাসওয়ার্ডে অন্তত একটি বড় হাতের অক্ষর দিন।";
+      }
+
+      if (!/[a-z]/.test(password)) {
+        return "পাসওয়ার্ডে অন্তত একটি ছোট হাতের অক্ষর দিন।";
+      }
+
+      if (!/[0-9]/.test(password)) {
+        return "পাসওয়ার্ডে অন্তত একটি সংখ্যা দিন।";
+      }
+
+      if (!/[^A-Za-z0-9]/.test(password)) {
+        return "পাসওয়ার্ডে অন্তত একটি বিশেষ চিহ্ন দিন।";
+      }
+
+      return "";
+    }
+
+
+    // =====================================
+    // 9. FIREBASE ERROR MESSAGES
+    // =====================================
+
+    function getErrorMessage(error) {
+
+      switch (error.code) {
+
+        case "auth/email-already-in-use":
+          return "এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট রয়েছে।";
+
+        case "auth/invalid-email":
+          return "সঠিক ইমেইল ঠিকানা লিখুন।";
+
+        case "auth/weak-password":
+          return "Firebase পাসওয়ার্ড গ্রহণ করেনি। আরও শক্তিশালী পাসওয়ার্ড দিন।";
+
+        case "auth/network-request-failed":
+          return "ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।";
+
+        case "auth/operation-not-allowed":
+          return "Firebase Console-এ Email/Password Authentication চালু করুন।";
+
+        case "auth/too-many-requests":
+          return "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+
+        default:
+          return "অ্যাকাউন্ট তৈরি হয়নি। Firebase সেটিংস পরীক্ষা করুন।";
+      }
+    }
+
+
+    // =====================================
+    // 10. CREATE ACCOUNT
+    // =====================================
+
+    form.addEventListener("submit", async function(event) {
+
       event.preventDefault();
 
-      button.disabled = true;
-      status.textContent = "Creating your account...";
+      if (signupButton.disabled) {
+        return;
+      }
 
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
+      const fullName = nameInput.value.trim();
+      const email = emailInput.value.trim().toLowerCase();
+      const accountType = accountTypeInput.value;
+      const password = passwordInput.value;
+      const confirmPassword = confirmInput.value;
+
+      if (!fullName || !email) {
+        showStatus("নাম ও ইমেইল লিখুন।");
+        return;
+      }
+
+      if (fullName.length < 2) {
+        showStatus("আপনার পূর্ণ নাম লিখুন।");
+        return;
+      }
+
+      const passwordError = validatePassword(
+        password,
+        accountType
+      );
+
+      if (passwordError) {
+        showStatus(passwordError);
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showStatus("দুটি পাসওয়ার্ড এক নয়।");
+        return;
+      }
+
+      if (!document.getElementById("terms").checked) {
+        showStatus("নিয়মাবলিতে সম্মতি দিন।");
+        return;
+      }
+
+      signupButton.disabled = true;
+      signupButton.textContent = "অ্যাকাউন্ট তৈরি হচ্ছে...";
 
       try {
-        const result = await createUserWithEmailAndPassword(
-          auth, email, password
-        );
 
-        await updateProfile(result.user, {
-          displayName: name
+        // Firebase Authentication account
+        const userCredential =
+          await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+        const user = userCredential.user;
+
+        // Set user's display name
+        await updateProfile(user, {
+          displayName: fullName
         });
 
-        try {
-          await sendEmailVerification(result.user);
-          status.textContent =
-            "Account created! Please check your email to verify your account.";
-        } catch {
-          status.textContent =
-            "Account created, but verification email could not be sent. You can request it again later.";
+        // VVIP requests do not grant VVIP privileges.
+        const isVipRequest =
+          accountType === "vvip_verified" ||
+          accountType === "global_vip";
+
+        const profileData = {
+
+          uid: user.uid,
+
+          fullName: fullName,
+
+          email: email,
+
+          requestedAccountType: accountType,
+
+          accountType: isVipRequest
+            ? "personal"
+            : accountType,
+
+          accountStatus: "active",
+
+          vvipStatus: isVipRequest
+            ? "pending"
+            : "not_requested",
+
+          role: "user",
+
+          verified: false,
+
+          createdAt: serverTimestamp()
+
+        };
+
+        // Save account profile
+        await setDoc(
+          doc(db, "users", user.uid),
+          profileData
+        );
+
+        // Send email verification
+        await sendEmailVerification(user);
+
+        if (isVipRequest) {
+
+          showStatus(
+            "অ্যাকাউন্ট তৈরি হয়েছে। ইমেইল যাচাই করুন। " +
+            "আপনার VVIP আবেদন প্রশাসনিক যাচাইয়ের অপেক্ষায় থাকবে।",
+            true
+          );
+
+        } else {
+
+          showStatus(
+            "অ্যাকাউন্ট তৈরি হয়েছে। আপনার ইমেইলে যাচাইকরণ লিংক পাঠানো হয়েছে।",
+            true
+          );
+
         }
 
         form.reset();
-      } catch (error) {
-        const messages = {
-          "auth/email-already-in-use":
-            "This email is already registered. Please log in.",
-          "auth/invalid-email":
-            "Please enter a valid email address.",
-          "auth/weak-password":
-            "Please choose a stronger password.",
-          "auth/operation-not-allowed":
-            "Email/Password sign-in is not enabled in Firebase.",
-          "auth/network-request-failed":
-            "Network error. Check your internet connection."
-        };
+        updateAccountInformation();
 
-        status.textContent =
-          messages[error.code] ||
-          "Account creation failed: " + error.message;
+      } catch (error) {
+
+        console.error("AYNA BOOK signup error:", error);
+
+        showStatus(getErrorMessage(error));
+
       } finally {
-        button.disabled = false;
+
+        signupButton.disabled = false;
+        signupButton.textContent = "🚀 অ্যাকাউন্ট তৈরি করুন";
+
       }
+
     });
+
+
+    // =====================================
+    // 11. FOOTER YEAR
+    // =====================================
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
   </script>
+
 </body>
 </html>
