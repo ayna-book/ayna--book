@@ -1,15 +1,18 @@
 /* AYNA BOOK - Offline Support */
 
-const AYNA_CACHE_NAME = "ayna-book-cache-v1";
+const AYNA_CACHE_NAME = "ayna-book-cache-v2";
 
 const AYNA_FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./styles.css",
-  "./manifest.json"
+  "./app.js",
+  "./manifest.webmanifest",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
-// Save essential files for offline use
+// Install and cache essential files
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(AYNA_CACHE_NAME)
@@ -22,24 +25,28 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// Remove old cache versions
+// Activate and remove old AYNA BOOK caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== AYNA_CACHE_NAME)
+          .filter((key) => key.startsWith("ayna-book-cache-")
+            && key !== AYNA_CACHE_NAME)
           .map((key) => caches.delete(key))
       )
-    )
+    ).then(() => self.clients.claim())
   );
-
-  self.clients.claim();
 });
 
-// Load cached files when offline
+// Network first, cached files when offline
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  const requestURL = new URL(event.request.url);
+
+  // Only handle requests from this website
+  if (requestURL.origin !== self.location.origin) return;
 
   event.respondWith(
     fetch(event.request)
@@ -62,7 +69,13 @@ self.addEventListener("fetch", (event) => {
         if (event.request.mode === "navigate") {
           return (
             await caches.match("./index.html")
-          ) || Response.error();
+          ) || new Response(
+            "আপনি অফলাইনে আছেন। AYNA BOOK-এর সংরক্ষিত পৃষ্ঠা খুলুন।",
+            {
+              status: 503,
+              headers: { "Content-Type": "text/plain; charset=utf-8" }
+            }
+          );
         }
 
         return Response.error();
