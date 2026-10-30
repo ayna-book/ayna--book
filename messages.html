@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+
+  <title>AYNA BOOK — Messaging</title>
+
+  <link rel="stylesheet" href="./styles.css">
+
+  <style>
+    body {
+      min-height: 100vh;
+      padding: 20px;
+      background: linear-gradient(135deg, #071b49, #512b81);
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .chat-card {
+      max-width: 650px;
+      margin: 25px auto;
+      padding: 22px;
+      background: #ffffff12;
+      border: 1px solid #ffffff35;
+      border-radius: 20px;
+    }
+
+    .chat-card h1,
+    .subtitle {
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #35d9ef;
+    }
+
+    #messages {
+      height: 380px;
+      overflow-y: auto;
+      padding: 12px;
+      margin: 20px 0;
+      background: #071b4970;
+      border-radius: 12px;
+    }
+
+    .bubble {
+      max-width: 85%;
+      margin: 10px 0;
+      padding: 12px;
+      background: #ffffff20;
+      border-radius: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .bubble.mine {
+      margin-left: auto;
+      background: #8b5cf6;
+    }
+
+    .bubble p {
+      white-space: pre-wrap;
+    }
+
+    .bubble small {
+      display: block;
+      font-size: 11px;
+      opacity: .8;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 7px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    button,
+    .back-link {
+      display: block;
+      width: 100%;
+      margin-top: 13px;
+      padding: 13px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    #chatStatus {
+      min-height: 24px;
+      overflow-wrap: anywhere;
+      line-height: 1.6;
+    }
+
+    .muted {
+      color: #ddd;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="chat-card">
+
+    <h1>💬 AYNA BOOK</h1>
+
+    <p class="subtitle">
+      Connect. Create. Share.
+    </p>
+
+    <h2>🌍 Global Community Chat</h2>
+
+    <p class="muted">
+      এটি একটি সাধারণ কমিউনিটি চ্যাট রুম।
+      এখানে পাঠানো বার্তা রুমের অন্য সদস্যরাও দেখতে পারবেন।
+    </p>
+
+    <div
+      id="messages"
+      role="log"
+      aria-live="polite"
+      aria-label="চ্যাট বার্তা"
+    >
+      <p>মেসেজ লোড হচ্ছে...</p>
+    </div>
+
+    <form id="chatForm">
+
+      <label for="message">আপনার মেসেজ লিখুন</label>
+
+      <textarea
+        id="message"
+        rows="3"
+        maxlength="2000"
+        placeholder="এখানে মেসেজ লিখুন..."
+        required
+      ></textarea>
+
+      <button id="sendButton" type="submit" disabled>
+        🚀 Send Message
+      </button>
+
+    </form>
+
+    <p id="chatStatus" role="status" aria-live="polite">
+      Firebase সংযোগের অপেক্ষায়...
+    </p>
+
+    <a class="back-link" href="./index.html">
+      🏠 হোম পেজে ফিরে যান
+    </a>
+
+    <p class="muted">
+      এই সংস্করণে ব্যক্তিগত চ্যাট, AI অনুবাদ, ভয়েস কল
+      এবং ভিডিও কল এখনো যুক্ত হয়নি।
+    </p>
+
+  </main>
+
+  <script type="module" src="./js/messages.js"></script>
+</body>
+</html>
