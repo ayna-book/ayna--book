@@ -12,30 +12,29 @@
     body {
       margin: 0;
       min-height: 100vh;
+      padding: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
       font-family: Arial, sans-serif;
       color: white;
-      background: linear-gradient(135deg, #17112f, #472078, #087eae);
+      background: linear-gradient(135deg, #17112f, #512b81, #087eae);
     }
 
     .card {
       width: 100%;
-      max-width: 420px;
+      max-width: 430px;
       padding: 28px 24px;
-      border: 1px solid rgba(255,255,255,.2);
+      border: 1px solid #ffffff40;
       border-radius: 24px;
-      background: rgba(255,255,255,.10);
-      box-shadow: 0 15px 45px rgba(0,0,0,.25);
+      background: #ffffff12;
+      box-shadow: 0 15px 45px #0005;
     }
 
     h1 {
-      margin: 0;
       text-align: center;
-      font-size: 32px;
       color: #ff72d2;
+      font-size: 32px;
     }
 
     h2 {
@@ -45,8 +44,8 @@
 
     .subtitle {
       text-align: center;
+      line-height: 1.7;
       color: #e5dcff;
-      line-height: 1.6;
     }
 
     label {
@@ -62,55 +61,62 @@
       font-size: 16px;
     }
 
-    input:focus {
-      outline: 2px solid #ff72d2;
+    .password-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .password-row input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .show-button {
+      width: auto;
+      margin: 0;
+      padding: 0 12px;
+      background: #ffffff;
+      color: #17112f;
+      font-size: 14px;
     }
 
     button {
       width: 100%;
-      margin-top: 20px;
+      margin-top: 18px;
       padding: 14px;
-      border: none;
+      border: 0;
       border-radius: 12px;
       background: linear-gradient(90deg, #ff4fbd, #00d5e9);
       color: #17112f;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
     }
 
     button:disabled {
-      opacity: .65;
+      opacity: .6;
       cursor: wait;
     }
 
     .links {
-      margin-top: 20px;
+      margin-top: 18px;
       text-align: center;
-      line-height: 2.2;
+      line-height: 2.1;
     }
 
     a { color: #80f4ff; }
 
     #message {
-      margin-top: 16px;
-      text-align: center;
-      line-height: 1.6;
       overflow-wrap: anywhere;
-    }
-
-    .home {
-      display: block;
-      margin-top: 20px;
+      line-height: 1.6;
       text-align: center;
-      color: white;
     }
   </style>
 </head>
 
 <body>
   <main class="card">
-    <h1>AYNA BOOK</h1>
+    <h1>🌍 AYNA BOOK</h1>
     <h2>আপনার অ্যাকাউন্টে প্রবেশ করুন</h2>
 
     <p class="subtitle">
@@ -119,56 +125,61 @@
     </p>
 
     <form id="loginForm">
-      <label for="email">Gmail / ইমেইল ঠিকানা</label>
+      <label for="email">Gmail / ইমেইল</label>
       <input
-        type="email"
         id="email"
-        autocomplete="email"
-        placeholder="আপনার Gmail লিখুন"
+        type="email"
+        autocomplete="username"
+        placeholder="আপনার ইমেইল লিখুন"
         required
       >
 
       <label for="password">পাসওয়ার্ড</label>
-      <input
-        type="password"
-        id="password"
-        autocomplete="current-password"
-        placeholder="আপনার পাসওয়ার্ড লিখুন"
-        required
-      >
 
-      <button type="submit" id="loginButton">
-        লগইন করুন
+      <div class="password-row">
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="আপনার পাসওয়ার্ড"
+          required
+        >
+
+        <button
+          class="show-button"
+          id="showPassword"
+          type="button"
+          aria-label="পাসওয়ার্ড দেখান"
+        >দেখুন</button>
+      </div>
+
+      <button id="loginButton" type="submit">
+        🔐 লগইন করুন
       </button>
     </form>
 
     <p id="message" role="status" aria-live="polite"></p>
 
     <div class="links">
+      <a href="#" id="forgotPassword">🔄 পাসওয়ার্ড ভুলে গেছেন?</a>
+      <br>
       নতুন ব্যবহারকারী?
       <br>
-      <a href="./signup.html">নতুন অ্যাকাউন্ট তৈরি করুন</a>
-      <br>
-      <a href="#" id="forgotPassword">পাসওয়ার্ড ভুলে গেছেন?</a>
+      <a href="./signup.html">🆕 নতুন অ্যাকাউন্ট তৈরি করুন</a>
     </div>
-
-    <a class="home" href="./index.html">
-      ← AYNA BOOK হোমপেজ
-    </a>
   </main>
 
   <script type="module">
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
     import {
       getAuth,
       signInWithEmailAndPassword,
-      sendPasswordResetEmail
+      sendPasswordResetEmail,
+      onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-    // AYNA BOOK Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
       authDomain: "ayna-book.firebaseapp.com",
@@ -179,78 +190,91 @@
       measurementId: "G-RKHHSKNB4B"
     };
 
-    const form = document.getElementById("loginForm");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const loginButton = document.getElementById("loginButton");
-    const message = document.getElementById("message");
-    const forgotPassword = document.getElementById("forgotPassword");
+    const $ = id => document.getElementById(id);
 
-    let auth = null;
+    const form = $("loginForm");
+    const email = $("email");
+    const password = $("password");
+    const loginButton = $("loginButton");
+    const message = $("message");
+    const forgot = $("forgotPassword");
 
-    function showMessage(text, isError = false) {
+    let auth;
+
+    function showMessage(text, error = false) {
       message.textContent = text;
-      message.style.color = isError ? "#ffb4b4" : "#a7ffcf";
+      message.style.color = error ? "#ffb4b4" : "#a7ffcf";
     }
 
     try {
       const app = initializeApp(firebaseConfig);
       auth = getAuth(app);
     } catch (error) {
-      console.error("Firebase initialization error:", error);
+      console.error(error);
       showMessage("Firebase চালু হয়নি। কনফিগারেশন পরীক্ষা করুন।", true);
       loginButton.disabled = true;
     }
 
-    // লগইন
-    form.addEventListener("submit", async function(event) {
+    $("showPassword").addEventListener("click", () => {
+      const visible = password.type === "password";
+      password.type = visible ? "text" : "password";
+      $("showPassword").textContent = visible ? "লুকান" : "দেখুন";
+    });
+
+    // আগে থেকেই লগইন করা থাকলে হোমপেজে পাঠান।
+    if (auth) {
+      onAuthStateChanged(auth, user => {
+        if (user) {
+          window.location.replace("./index.html");
+        }
+      });
+    }
+
+    form.addEventListener("submit", async event => {
       event.preventDefault();
 
       if (!auth) {
         showMessage("Firebase সংযোগ পাওয়া যায়নি।", true);
         return;
       }
-
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
 
       loginButton.disabled = true;
       showMessage("লগইন হচ্ছে...");
 
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(
+          auth,
+          email.value.trim(),
+          password.value
+        );
 
-        showMessage("লগইন সফল! হোমপেজে নেওয়া হচ্ছে...");
+        showMessage("লগইন সফল! হোমপেজ খুলছে...");
 
         window.location.replace("./index.html");
-
       } catch (error) {
         console.error("Login error:", error);
 
         const errors = {
           "auth/invalid-email": "ইমেইল ঠিকানা সঠিক নয়।",
-          "auth/user-not-found": "এই ইমেইলে অ্যাকাউন্ট পাওয়া যায়নি।",
-          "auth/wrong-password": "পাসওয়ার্ড সঠিক নয়।",
           "auth/invalid-credential": "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।",
-          "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। পরে আবার চেষ্টা করুন।",
+          "auth/user-not-found": "অ্যাকাউন্ট পাওয়া যায়নি।",
+          "auth/wrong-password": "পাসওয়ার্ড সঠিক নয়।",
+          "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। পরে চেষ্টা করুন।",
           "auth/network-request-failed": "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
-          "auth/operation-not-allowed": "Firebase-এ Email/Password লগইন চালু করুন।",
-          "auth/invalid-api-key": "Firebase API কনফিগারেশন পরীক্ষা করুন।"
+          "auth/operation-not-allowed":
+            "Firebase-এ Email/Password চালু করুন।"
         };
 
         showMessage(
-          errors[error.code] ||
-          "লগইন হয়নি। ত্রুটি: " + (error.code || "unknown"),
+          errors[error.code] || "লগইন ব্যর্থ: " + error.code,
           true
         );
-
       } finally {
         loginButton.disabled = false;
       }
     });
 
-    // পাসওয়ার্ড রিসেট
-    forgotPassword.addEventListener("click", async function(event) {
+    forgot.addEventListener("click", async event => {
       event.preventDefault();
 
       if (!auth) {
@@ -258,28 +282,25 @@
         return;
       }
 
-      const email = emailInput.value.trim();
+      const address = email.value.trim();
 
-      if (!email) {
-        showMessage("প্রথমে আপনার Gmail লিখুন।", true);
-        emailInput.focus();
+      if (!address) {
+        showMessage("প্রথমে আপনার ইমেইল লিখুন।", true);
+        email.focus();
         return;
       }
 
       try {
-        showMessage("রিসেট ইমেইল পাঠানো হচ্ছে...");
-
-        await sendPasswordResetEmail(auth, email);
+        await sendPasswordResetEmail(auth, address);
 
         showMessage(
-          "পাসওয়ার্ড রিসেটের নির্দেশনা পাঠানো হয়েছে। Inbox ও Spam পরীক্ষা করুন।"
+          "যদি এই অ্যাকাউন্টের জন্য রিসেট অনুমোদিত হয়, " +
+          "ইমেইলে নির্দেশনা পাবেন। Inbox ও Spam পরীক্ষা করুন।"
         );
-
       } catch (error) {
-        console.error("Password reset error:", error);
-
+        console.error(error);
         showMessage(
-          "রিসেট ইমেইল পাঠানো যায়নি। ইমেইল ও Firebase সেটিংস পরীক্ষা করুন।",
+          "রিসেট ইমেইল পাঠানো যায়নি। ইন্টারনেট ও Firebase সেটিংস পরীক্ষা করুন।",
           true
         );
       }
