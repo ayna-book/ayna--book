@@ -1,56 +1,136 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
+  <meta name="description" content="Create your AYNA BOOK account">
   <title>AYNA BOOK — Sign Up</title>
   <link rel="stylesheet" href="./styles.css">
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
       min-height: 100vh;
+      margin: 0;
+      padding: 20px;
       background: linear-gradient(135deg, #071b49, #512b81);
       color: white;
-      padding: 20px;
       font-family: Arial, sans-serif;
     }
 
     .signup-card {
       width: 100%;
-      max-width: 460px;
-      margin: 35px auto;
-      padding: 25px;
+      max-width: 480px;
+      margin: 25px auto;
+      padding: 24px;
       border: 1px solid #ffffff35;
       border-radius: 20px;
       background: #ffffff12;
+      box-shadow: 0 12px 35px #00000025;
     }
 
-    .signup-card h1,
-    .signup-card .subtitle {
-      text-align: center;
+    h1, .subtitle { text-align: center; }
+
+    .subtitle {
+      color: #35d9ef;
+      line-height: 1.6;
     }
 
-    .signup-card label {
+    label {
       display: block;
       margin: 16px 0 7px;
+      font-weight: bold;
     }
 
-    .signup-card input {
+    input, select, textarea {
       width: 100%;
       padding: 13px;
-      border-radius: 10px;
       border: 1px solid #ddd;
-      font-size: 16px;
+      border-radius: 10px;
+      font: inherit;
+      color: #071b49;
+      background: white;
     }
 
-    .signup-card button {
-      width: 100%;
-      margin-top: 20px;
+    input:focus, select:focus {
+      outline: 2px solid #35d9ef;
+      outline-offset: 2px;
+    }
+
+    .password-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .password-row input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .toggle-password {
+      width: auto !important;
+      min-width: 76px;
+      margin: 0 !important;
+      padding: 8px !important;
+      background: #35d9ef !important;
+      color: #071b49 !important;
+      font-size: 14px !important;
+    }
+
+    .photo-preview {
+      display: block;
+      width: 112px;
+      height: 112px;
+      margin: 15px auto;
+      border: 3px solid #35d9ef;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ffffff20;
+    }
+
+    .account-options {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .account-option {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
       padding: 13px;
+      border: 1px solid #ffffff45;
+      border-radius: 12px;
+      background: #ffffff0c;
+      cursor: pointer;
+    }
+
+    .account-option input {
+      width: 18px;
+      height: 18px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .account-option span {
+      line-height: 1.5;
+    }
+
+    .account-option small {
+      display: block;
+      color: #dddddd;
+      margin-top: 3px;
+    }
+
+    .main-button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
       border: 0;
-      border-radius: 10px;
+      border-radius: 11px;
       background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
       color: white;
       font-size: 16px;
@@ -58,7 +138,7 @@
       cursor: pointer;
     }
 
-    .signup-card button:disabled {
+    button:disabled {
       opacity: .6;
       cursor: wait;
     }
@@ -69,20 +149,27 @@
       overflow-wrap: anywhere;
     }
 
+    .note {
+      font-size: 13px;
+      color: #ddd;
+      line-height: 1.7;
+    }
+
     .signup-links {
       text-align: center;
       margin-top: 20px;
       line-height: 2;
     }
 
-    .signup-links a {
-      color: #35d9ef;
-    }
+    .signup-links a { color: #35d9ef; }
 
-    .note {
-      font-size: 13px;
-      color: #ddd;
-      line-height: 1.6;
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      margin-left: 5px;
+      border-radius: 20px;
+      background: #ff4fa3;
+      font-size: 11px;
     }
   </style>
 </head>
@@ -98,6 +185,7 @@
       <label for="fullName">আপনার পূর্ণ নাম</label>
       <input
         id="fullName"
+        name="fullName"
         type="text"
         maxlength="80"
         autocomplete="name"
@@ -108,43 +196,144 @@
       <label for="username">ইউজারনেম</label>
       <input
         id="username"
+        name="username"
         type="text"
+        minlength="3"
         maxlength="30"
+        pattern="[A-Za-z0-9_.-]+"
         autocomplete="username"
         placeholder="যেমন: mahbub123"
         required
       >
+      <p class="note">
+        ৩–৩০ অক্ষর। ইংরেজি অক্ষর, সংখ্যা, _, . অথবা - ব্যবহার করুন।
+      </p>
 
       <label for="email">ইমেইল ঠিকানা</label>
       <input
         id="email"
+        name="email"
         type="email"
+        maxlength="254"
         autocomplete="email"
         placeholder="আপনার ইমেইল লিখুন"
         required
       >
 
       <label for="password">পাসওয়ার্ড</label>
-      <input
-        id="password"
-        type="password"
-        minlength="8"
-        autocomplete="new-password"
-        placeholder="কমপক্ষে ৮ অক্ষর"
-        required
-      >
+      <div class="password-row">
+        <input
+          id="password"
+          name="password"
+          type="password"
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="কমপক্ষে ৮ অক্ষর"
+          required
+        >
+        <button
+          class="main-button toggle-password"
+          type="button"
+          data-toggle="password"
+          aria-pressed="false"
+        >দেখুন</button>
+      </div>
 
       <label for="confirmPassword">পাসওয়ার্ড আবার লিখুন</label>
+      <div class="password-row">
+        <input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="পাসওয়ার্ড নিশ্চিত করুন"
+          required
+        >
+        <button
+          class="main-button toggle-password"
+          type="button"
+          data-toggle="confirmPassword"
+          aria-pressed="false"
+        >দেখুন</button>
+      </div>
+
+      <label for="accountType">অ্যাকাউন্টের ধরন</label>
+      <div class="account-options">
+        <label class="account-option">
+          <input
+            type="radio"
+            name="accountType"
+            value="personal"
+            checked
+          >
+          <span>
+            👤 <strong>Personal Account</strong>
+            <small>ব্যক্তিগত ব্যবহার, বন্ধু ও পরিচিতদের সঙ্গে যোগাযোগ।</small>
+          </span>
+        </label>
+
+        <label class="account-option">
+          <input
+            type="radio"
+            name="accountType"
+            value="business"
+          >
+          <span>
+            💼 <strong>Business Account</strong>
+            <small>ব্যবসা, ব্র্যান্ড ও প্রতিষ্ঠানের পরিচিতির জন্য।</small>
+          </span>
+        </label>
+
+        <label class="account-option">
+          <input
+            type="radio"
+            name="accountType"
+            value="vip"
+          >
+          <span>
+            ⭐ <strong>VIP Account</strong>
+            <small>VIP সুবিধা আলাদাভাবে যাচাই ও অনুমোদনের মাধ্যমে চালু হবে।</small>
+            <span class="badge">Approval required</span>
+          </span>
+        </label>
+
+        <label class="account-option">
+          <input
+            type="radio"
+            name="accountType"
+            value="vvip"
+          >
+          <span>
+            👑 <strong>VVIP Account</strong>
+            <small>VVIP মর্যাদা ও বিশেষ সুবিধার জন্য প্রশাসনিক অনুমোদন প্রয়োজন।</small>
+            <span class="badge">Approval required</span>
+          </span>
+        </label>
+      </div>
+
+      <label for="profilePhoto">🖼️ প্রোফাইল ছবি নির্বাচন করুন</label>
       <input
-        id="confirmPassword"
-        type="password"
-        minlength="8"
-        autocomplete="new-password"
-        placeholder="পাসওয়ার্ড নিশ্চিত করুন"
-        required
+        id="profilePhoto"
+        name="profilePhoto"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
       >
 
-      <button id="signupButton" type="submit">
+      <img
+        id="photoPreview"
+        class="photo-preview"
+        alt="প্রোফাইল ছবির প্রিভিউ"
+        hidden
+      >
+
+      <p class="note">
+        ছবি নির্বাচন করলে প্রিভিউ দেখা যাবে। বর্তমানে অনলাইনে ছবিটি
+        সংরক্ষণের ব্যবস্থা যুক্ত না থাকলে এটি শুধু এই পেজেই থাকবে।
+        আপাতত সর্বোচ্চ ২০০ KB ছবি নির্বাচন করুন।
+      </p>
+
+      <button id="signupButton" class="main-button" type="submit">
         🚀 Create My AYNA BOOK Account
       </button>
     </form>
@@ -152,8 +341,8 @@
     <p id="signupStatus" role="status" aria-live="polite"></p>
 
     <p class="note">
-      অ্যাকাউন্ট তৈরি হলে আপনার ইমেইলে verification link পাঠানো হবে।
-      ইমেইল যাচাই না করা পর্যন্ত কিছু সুবিধা সীমিত থাকতে পারে।
+      অ্যাকাউন্ট তৈরির পর আপনার ইমেইলে verification link পাঠানো হবে।
+      VIP/VVIP নির্বাচন করলেই স্বয়ংক্রিয়ভাবে বিশেষ অনুমতি পাওয়া যাবে না।
     </p>
 
     <div class="signup-links">
@@ -163,6 +352,76 @@
       <a href="./index.html">← হোম পেজে ফিরে যান</a>
     </div>
   </main>
+
+  <script>
+    "use strict";
+
+    // পাসওয়ার্ড দেখা ও লুকানোর সুবিধা
+    document.querySelectorAll("[data-toggle]").forEach(button => {
+      button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.toggle);
+        const showing = input.type === "text";
+
+        input.type = showing ? "password" : "text";
+        button.textContent = showing ? "দেখুন" : "লুকান";
+        button.setAttribute("aria-pressed", String(!showing));
+      });
+    });
+
+    // প্রোফাইল ছবির স্থানীয় প্রিভিউ
+    const photoInput = document.getElementById("profilePhoto");
+    const photoPreview = document.getElementById("photoPreview");
+    let previewUrl = "";
+
+    photoInput.addEventListener("change", () => {
+      const file = photoInput.files && photoInput.files[0];
+
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+        previewUrl = "";
+      }
+
+      photoPreview.removeAttribute("src");
+      photoPreview.hidden = true;
+
+      if (!file) return;
+
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ];
+
+      if (!allowedTypes.includes(file.type)) {
+        photoInput.value = "";
+        alert("JPG, PNG অথবা WebP ছবি নির্বাচন করুন।");
+        return;
+      }
+
+      if (file.size > 200 * 1024) {
+        photoInput.value = "";
+        alert("ছবির আকার ২০০ KB-এর মধ্যে রাখুন।");
+        return;
+      }
+
+      previewUrl = URL.createObjectURL(file);
+      photoPreview.src = previewUrl;
+      photoPreview.hidden = false;
+    });
+
+    // পাসওয়ার্ড মিলছে কি না যাচাই
+    document.getElementById("signupForm").addEventListener("submit", event => {
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const status = document.getElementById("signupStatus");
+
+      if (password !== confirmPassword) {
+        event.preventDefault();
+        status.textContent = "দুটি পাসওয়ার্ড এক নয়। আবার পরীক্ষা করুন।";
+        document.getElementById("confirmPassword").focus();
+      }
+    });
+  </script>
 
   <script type="module" src="./js/signup.js"></script>
 </body>
