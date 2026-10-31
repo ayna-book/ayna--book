@@ -1,7 +1,8 @@
+
 // =============================================
-// AYNA BOOK — Enhanced Profile System
-// Photo limit: 500 KB
+// AYNA BOOK — SECURE PROFILE SYSTEM
 // Firebase Authentication + Firestore
+// Maximum profile photo preview: 500 KB
 // =============================================
 
 import { auth, db } from "./firebase.js";
@@ -21,6 +22,7 @@ import {
 
 "use strict";
 
+// HTML elements
 const $ = id => document.getElementById(id);
 
 const form = $("profileForm");
@@ -37,12 +39,14 @@ const logoutButton = $("logoutButton");
 const statusElement = $("profileStatus");
 const accountStatus = $("accountStatus");
 
+// Settings
 const MAX_PHOTO_SIZE = 500 * 1024;
 
 let currentUser = null;
 let saving = false;
 let localPhotoUrl = null;
 
+// Show status message
 function showStatus(message, type = "info") {
   if (!statusElement) return;
 
@@ -52,12 +56,14 @@ function showStatus(message, type = "info") {
   console.log("[AYNA BOOK]", message);
 }
 
+// Account status
 function setAccountStatus(message) {
   if (accountStatus) {
     accountStatus.textContent = message;
   }
 }
 
+// Enable or disable profile form
 function setFormEnabled(enabled) {
   if (form) {
     for (const element of form.elements) {
@@ -70,6 +76,7 @@ function setFormEnabled(enabled) {
   }
 }
 
+// Release previous photo preview
 function releasePhotoPreview() {
   if (localPhotoUrl) {
     URL.revokeObjectURL(localPhotoUrl);
@@ -77,6 +84,7 @@ function releasePhotoPreview() {
   }
 }
 
+// Clear photo preview
 function clearPhotoPreview() {
   releasePhotoPreview();
 
@@ -86,8 +94,9 @@ function clearPhotoPreview() {
   }
 }
 
+// Preview selected photo
 function previewPhoto(file) {
-  releasePhotoPreview();
+  clearPhotoPreview();
 
   localPhotoUrl = URL.createObjectURL(file);
 
@@ -96,22 +105,26 @@ function previewPhoto(file) {
 
   photoPreview.onerror = () => {
     clearPhotoPreview();
-    showStatus("ছবির প্রিভিউ তৈরি করা যায়নি। অন্য ছবি চেষ্টা করুন।", "error");
+
+    showStatus(
+      "ছবির প্রিভিউ তৈরি করা যায়নি। অন্য ছবি নির্বাচন করুন।",
+      "error"
+    );
   };
 }
 
-// কোনো JavaScript error হলে ব্যবহারকারীকে বার্তা দেখানো
+// Global error handling
 window.addEventListener("error", event => {
-  console.error("Profile page error:", event.error || event.message);
+  console.error("Profile error:", event.error || event.message);
 
   showStatus(
-    "পেজে একটি ত্রুটি হয়েছে। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।",
+    "পেজে একটি সমস্যা হয়েছে। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।",
     "error"
   );
 });
 
 window.addEventListener("unhandledrejection", event => {
-  console.error("Profile asynchronous error:", event.reason);
+  console.error("Profile async error:", event.reason);
 
   showStatus(
     "একটি কাজ সম্পন্ন হয়নি। ইন্টারনেট ও Firebase সংযোগ পরীক্ষা করুন।",
@@ -119,45 +132,90 @@ window.addEventListener("unhandledrejection", event => {
   );
 });
 
-// প্রয়োজনীয় HTML element আছে কি না পরীক্ষা
-if (
-  !form ||
-  !nameInput ||
-  !emailInput ||
-  !phoneInput ||
-  !locationInput ||
-  !bioInput ||
-  !photoInput ||
-  !photoPreview ||
-  !saveButton ||
-  !logoutButton ||
-  !statusElement ||
-  !accountStatus
-) {
-  console.error("AYNA BOOK: Profile HTML element missing.");
+// Check required HTML elements
+function checkElements() {
+  const required = [
+    form,
+    nameInput,
+    emailInput,
+    phoneInput,
+    locationInput,
+    bioInput,
+    photoInput,
+    photoPreview,
+    saveButton,
+    logoutButton,
+    statusElement,
+    accountStatus
+  ];
 
-  if (statusElement) {
-    showStatus(
-      "প্রোফাইল ফাইলে প্রয়োজনীয় HTML অংশ পাওয়া যায়নি। profile.html পরীক্ষা করুন।",
-      "error"
-    );
-  }
-} else {
-  startProfile();
+  return required.every(Boolean);
 }
 
+// =============================================
+// START PROFILE SYSTEM
+// =============================================
+
 function startProfile() {
+
   setFormEnabled(false);
+
   showStatus("আপনার অ্যাকাউন্ট যাচাই হচ্ছে...");
 
   onAuthStateChanged(
     auth,
+
     async user => {
+
+      // No logged-in account
       if (!user) {
         currentUser = null;
 
-        setAccountStatus("লগইন করা নেই। লগইন পেজ খোলা হচ্ছে...");
-        showStatus("প্রোফাইল দেখতে আগে লগইন করুন।");
+        setAccountStatus("লগইন করা নেই।");
+
+        showStatus(
+          "প্রোফাইল দেখতে আগে লগইন করুন।"
+        );
+
+        window.location.replace("./login.html");
+        return;
+      }
+
+      // Reject anonymous or email-less accounts
+      if (user.isAnonymous || !user.email) {
+
+        currentUser = null;
+
+        showStatus(
+          "সঠিক ইমেইল অ্যাকাউন্ট দিয়ে লগইন করুন।",
+          "error"
+        );
+
+        try {
+          await signOut(auth);
+        } catch (error) {
+          console.error("Sign out error:", error);
+        }
+
+        window.location.replace("./login.html");
+        return;
+      }
+
+      // Reject unverified email accounts
+      if (!user.emailVerified) {
+
+        currentUser = null;
+
+        showStatus(
+          "আপনার ইমেইল যাচাই করা হয়নি। Gmail যাচাই করুন।",
+          "error"
+        );
+
+        try {
+          await signOut(auth);
+        } catch (error) {
+          console.error("Sign out error:", error);
+        }
 
         window.location.replace("./login.html");
         return;
@@ -165,99 +223,95 @@ function startProfile() {
 
       currentUser = user;
 
-      emailInput.value = user.email || "";
+      emailInput.value = user.email;
 
       setAccountStatus(
-        "লগইন করা অ্যাকাউন্ট: " +
-        (user.email || "ইমেইল পাওয়া যায়নি")
+        "লগইন করা অ্যাকাউন্ট: " + user.email
       );
 
       await loadProfile(user);
     },
+
     error => {
-      console.error("Authentication listener error:", error);
+
+      console.error("Authentication error:", error);
+
+      currentUser = null;
 
       setAccountStatus("অ্যাকাউন্ট যাচাই করা যায়নি।");
 
       showStatus(
-        "Firebase Authentication-এ সমস্যা হয়েছে (" +
-        (error.code || "unknown") +
-        ")। আবার লগইন করুন।",
+        "Firebase Authentication সমস্যা: " +
+        (error.code || "unknown"),
         "error"
       );
     }
   );
 
-  // ছবি নির্বাচন: সর্বোচ্চ 500 KB
+  // Photo selection
   photoInput.addEventListener("change", () => {
-    try {
-      const file = photoInput.files?.[0];
 
-      if (!file) {
-        clearPhotoPreview();
-        showStatus("কোনো ছবি নির্বাচন করা হয়নি।");
-        return;
-      }
+    const file = photoInput.files?.[0];
 
-      const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-      ];
+    if (!file) {
+      clearPhotoPreview();
+      return;
+    }
 
-      if (!allowedTypes.includes(file.type)) {
-        photoInput.value = "";
-        clearPhotoPreview();
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
 
-        showStatus(
-          "JPG, PNG অথবা WebP ফরম্যাটের ছবি নির্বাচন করুন।",
-          "error"
-        );
-        return;
-      }
+    if (!allowedTypes.includes(file.type)) {
 
-      if (file.size > MAX_PHOTO_SIZE) {
-        photoInput.value = "";
-        clearPhotoPreview();
-
-        showStatus(
-          "ছবির আকার 500 KB-এর বেশি। ছোট ছবি নির্বাচন করুন।",
-          "error"
-        );
-        return;
-      }
-
-      previewPhoto(file);
-
-      const sizeKB = (file.size / 1024).toFixed(1);
-
-      showStatus(
-        "ছবি নির্বাচন সফল! আকার: " +
-        sizeKB +
-        " KB। প্রিভিউ দেখা যাচ্ছে।",
-        "success"
-      );
-
-    } catch (error) {
-      console.error("Photo preview error:", error);
-
+      photoInput.value = "";
       clearPhotoPreview();
 
       showStatus(
-        "ছবি নির্বাচন করতে সমস্যা হয়েছে। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।",
+        "শুধু JPG, PNG অথবা WEBP ছবি ব্যবহার করুন।",
         "error"
       );
+
+      return;
     }
+
+    if (file.size > MAX_PHOTO_SIZE) {
+
+      photoInput.value = "";
+      clearPhotoPreview();
+
+      showStatus(
+        "ছবির সাইজ 500 KB-এর বেশি। ছোট ছবি নির্বাচন করুন।",
+        "error"
+      );
+
+      return;
+    }
+
+    previewPhoto(file);
+
+    showStatus(
+      "ছবি নির্বাচিত হয়েছে। এটি শুধু প্রিভিউতে দেখা যাবে।",
+      "success"
+    );
   });
 
-  // প্রোফাইল সংরক্ষণ
+  // Save profile
   form.addEventListener("submit", async event => {
+
     event.preventDefault();
 
     if (saving) return;
 
-    if (!currentUser) {
-      showStatus("প্রথমে Gmail ও পাসওয়ার্ড দিয়ে লগইন করুন।", "error");
+    if (!currentUser || currentUser.isAnonymous || !currentUser.email) {
+
+      showStatus(
+        "প্রথমে ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন।",
+        "error"
+      );
+
       return;
     }
 
@@ -267,138 +321,203 @@ function startProfile() {
     const bio = bioInput.value.trim();
 
     if (!name) {
+
       showStatus("আপনার পূর্ণ নাম লিখুন।", "error");
+
       nameInput.focus();
+
       return;
     }
 
-    if (phone && !/^\+?[0-9 ()-]{7,20}$/.test(phone)) {
+    if (
+      phone &&
+      !/^\+?[0-9 ()-]{7,20}$/.test(phone)
+    ) {
+
       showStatus(
-        "ফোন নম্বর সঠিকভাবে লিখুন, যেমন +8801XXXXXXXXX।",
+        "সঠিক ফোন নম্বর লিখুন।",
         "error"
       );
+
       phoneInput.focus();
+
       return;
     }
 
     const selectedPhoto = photoInput.files?.[0];
 
     if (selectedPhoto && selectedPhoto.size > MAX_PHOTO_SIZE) {
-      showStatus("ছবির আকার 500 KB-এর মধ্যে রাখুন।", "error");
+
+      showStatus(
+        "ছবির সাইজ সর্বোচ্চ 500 KB হতে পারবে।",
+        "error"
+      );
+
       return;
     }
 
     saving = true;
+
     saveButton.disabled = true;
     logoutButton.disabled = true;
 
     showStatus("Firebase-এ প্রোফাইল সংরক্ষণ হচ্ছে...");
 
     try {
-      const profileRef = doc(db, "users", currentUser.uid);
+
+      const profileRef = doc(
+        db,
+        "users",
+        currentUser.uid
+      );
 
       await setDoc(
         profileRef,
         {
           uid: currentUser.uid,
-          name,
-          email: currentUser.email || "",
-          phone,
-          location,
-          bio,
+          name: name,
+          email: currentUser.email,
+          phone: phone,
+          location: location,
+          bio: bio,
           updatedAt: serverTimestamp()
         },
-        { merge: true }
+        {
+          merge: true
+        }
       );
 
+      // Update Firebase display name
       try {
+
         await updateProfile(currentUser, {
           displayName: name
         });
-      } catch (error) {
-        // Firestore-এ তথ্য সংরক্ষিত হলেও Auth displayName
-        // আপডেট ব্যর্থ হতে পারে। সেটি আলাদাভাবে লগ করা হবে।
-        console.warn("Display name update warning:", error);
+
+      } catch (profileError) {
+
+        console.warn(
+          "Display name update warning:",
+          profileError
+        );
       }
 
       showStatus(
-        "✅ আপনার নাম, Gmail, ফোন নম্বর, শহর ও পরিচিতি সংরক্ষিত হয়েছে। " +
-        "ছবি বর্তমানে শুধু প্রিভিউতে আছে; অনলাইনে সংরক্ষিত হয়নি।",
+        "✅ আপনার প্রোফাইল সফলভাবে সংরক্ষণ হয়েছে। ছবিটি অনলাইনে সংরক্ষিত হয়নি।",
         "success"
       );
 
     } catch (error) {
+
       console.error("Profile save error:", error);
 
-      const code = error?.code || "unknown";
-
       const messages = {
+
         "permission-denied":
-          "Firestore Rules সংরক্ষণের অনুমতি দেয়নি। Firebase Console-এর Rules পরীক্ষা করুন।",
+          "Firebase Firestore অনুমতি দেয়নি। Security Rules পরীক্ষা করুন।",
 
         "unavailable":
-          "Firebase সার্ভার পাওয়া যাচ্ছে না। ইন্টারনেট পরীক্ষা করুন।",
+          "Firebase সার্ভার পাওয়া যাচ্ছে না। পরে চেষ্টা করুন।",
+
+        "network-request-failed":
+          "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
 
         "unauthenticated":
-          "আপনার লগইন সেশন শেষ হয়েছে। আবার লগইন করুন।",
-
-        "resource-exhausted":
-          "Firebase-এর ব্যবহারসীমা অতিক্রম করেছে। পরে আবার চেষ্টা করুন।"
+          "আপনার লগইন সেশন শেষ হয়েছে। আবার লগইন করুন।"
       };
 
       showStatus(
-        "❌ সংরক্ষণ ব্যর্থ (" +
-        code +
-        "): " +
-        (messages[code] || "Firebase সেটিংস ও ইন্টারনেট পরীক্ষা করুন।"),
+        messages[error.code] ||
+        "প্রোফাইল সংরক্ষণ হয়নি। আবার চেষ্টা করুন।",
         "error"
       );
 
     } finally {
+
       saving = false;
+
       saveButton.disabled = false;
       logoutButton.disabled = false;
     }
   });
 
-  // লগআউট
+  // Logout
   logoutButton.addEventListener("click", async () => {
+
+    if (!currentUser) return;
+
     logoutButton.disabled = true;
-    showStatus("লগআউট হচ্ছে...");
+    saveButton.disabled = true;
+
+    showStatus("আপনার অ্যাকাউন্ট থেকে লগআউট হচ্ছে...");
 
     try {
+
       await signOut(auth);
+
+      currentUser = null;
+
       window.location.replace("./login.html");
 
     } catch (error) {
+
       console.error("Logout error:", error);
 
-      showStatus("লগআউট করা যায়নি। আবার চেষ্টা করুন।", "error");
+      showStatus(
+        "লগআউট করা যায়নি। আবার চেষ্টা করুন।",
+        "error"
+      );
 
       logoutButton.disabled = false;
+      saveButton.disabled = false;
     }
   });
 }
 
+// =============================================
+// LOAD PROFILE FROM FIRESTORE
+// =============================================
+
 async function loadProfile(user) {
+
   showStatus("আপনার প্রোফাইল লোড হচ্ছে...");
 
   try {
-    const profileRef = doc(db, "users", user.uid);
+
+    const profileRef = doc(
+      db,
+      "users",
+      user.uid
+    );
+
     const snapshot = await getDoc(profileRef);
 
     if (snapshot.exists()) {
+
       const data = snapshot.data();
 
-      nameInput.value = data.name || user.displayName || "";
-      phoneInput.value = data.phone || user.phoneNumber || "";
-      locationInput.value = data.location || "";
-      bioInput.value = data.bio || "";
+      nameInput.value =
+        data.name || user.displayName || "";
+
+      phoneInput.value =
+        data.phone || user.phoneNumber || "";
+
+      locationInput.value =
+        data.location || "";
+
+      bioInput.value =
+        data.bio || "";
 
     } else {
-      nameInput.value = user.displayName || "";
-      phoneInput.value = user.phoneNumber || "";
+
+      nameInput.value =
+        user.displayName || "";
+
+      phoneInput.value =
+        user.phoneNumber || "";
+
       locationInput.value = "";
+
       bioInput.value = "";
     }
 
@@ -412,17 +531,40 @@ async function loadProfile(user) {
     );
 
   } catch (error) {
-    console.error("Profile load error:", error);
+
+    console.error("Profile loading error:", error);
 
     setFormEnabled(true);
 
     showStatus(
-      "প্রোফাইল লোড হয়নি (" +
-      (error.code || "unknown") +
-      ")। Firebase Rules ও ইন্টারনেট পরীক্ষা করুন।",
+      "প্রোফাইল লোড হয়নি। Firebase Firestore Rules ও ইন্টারনেট পরীক্ষা করুন।",
       "error"
     );
   }
 }
 
-window.addEventListener("pagehide", releasePhotoPreview);
+// =============================================
+// INITIALIZE
+// =============================================
+
+if (checkElements()) {
+
+  startProfile();
+
+} else {
+
+  console.error(
+    "AYNA BOOK: Required profile HTML elements are missing."
+  );
+
+  showStatus(
+    "প্রোফাইল HTML-এর প্রয়োজনীয় অংশ পাওয়া যায়নি। profile.html পরীক্ষা করুন।",
+    "error"
+  );
+}
+
+// Clean up photo preview
+window.addEventListener(
+  "pagehide",
+  releasePhotoPreview
+);
