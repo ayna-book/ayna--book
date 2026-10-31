@@ -1,11 +1,11 @@
-
 "use strict";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
 import {
   getAuth,
-  signInAnonymously,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
@@ -69,6 +69,7 @@ const ROOM_ID = "general";
 const MAX_MESSAGES = 100;
 
 let db = null;
+let auth = null;
 let currentUser = null;
 let unsubscribeMessages = null;
 let sending = false;
@@ -82,7 +83,9 @@ function setStatus(message, isError = false) {
   if (!statusElement) return;
 
   statusElement.textContent = message;
-  statusElement.style.color = isError ? "#ff7777" : "#00cfd5";
+  statusElement.style.color = isError
+    ? "#ff7777"
+    : "#00cfd5";
 }
 
 /* =================================
@@ -92,7 +95,9 @@ function setStatus(message, isError = false) {
 function showScreen(targetId) {
   const target = $(targetId);
 
-  if (!target || !target.classList.contains("screen")) return;
+  if (!target || !target.classList.contains("screen")) {
+    return;
+  }
 
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.add("hidden");
@@ -157,7 +162,9 @@ function renderLocalPosts() {
       localStorage.getItem("aynaBookDemoPosts") || "[]"
     );
 
-    if (!Array.isArray(savedPosts)) savedPosts = [];
+    if (!Array.isArray(savedPosts)) {
+      savedPosts = [];
+    }
   } catch (error) {
     savedPosts = [];
   }
@@ -166,8 +173,11 @@ function renderLocalPosts() {
 
   if (savedPosts.length === 0) {
     const empty = document.createElement("p");
+
     empty.className = "muted";
-    empty.textContent = "এখনো কোনো পোস্ট নেই। প্রথম পোস্টটি লিখুন!";
+    empty.textContent =
+      "এখনো কোনো পোস্ট নেই। প্রথম পোস্টটি লিখুন!";
+
     postsElement.appendChild(empty);
     return;
   }
@@ -202,7 +212,9 @@ postForm?.addEventListener("submit", (event) => {
       localStorage.getItem("aynaBookDemoPosts") || "[]"
     );
 
-    const posts = Array.isArray(savedPosts) ? savedPosts : [];
+    const posts = Array.isArray(savedPosts)
+      ? savedPosts
+      : [];
 
     posts.unshift({
       text: text.slice(0, 5000),
@@ -216,8 +228,11 @@ postForm?.addEventListener("submit", (event) => {
 
     postInput.value = "";
     renderLocalPosts();
+
   } catch (error) {
-    alert("পোস্ট সংরক্ষণ করা যায়নি। ব্রাউজারের স্টোরেজ পরীক্ষা করুন।");
+    alert(
+      "পোস্ট সংরক্ষণ করা যায়নি। ব্রাউজারের স্টোরেজ পরীক্ষা করুন।"
+    );
   }
 });
 
@@ -248,7 +263,8 @@ mediaFile?.addEventListener("change", () => {
     file.type.startsWith("audio/");
 
   if (!allowedType) {
-    mediaPreview.textContent = "এই ফাইলের ধরন সমর্থিত নয়।";
+    mediaPreview.textContent =
+      "এই ফাইলের ধরন সমর্থিত নয়।";
     return;
   }
 
@@ -257,6 +273,7 @@ mediaFile?.addEventListener("change", () => {
   if (file.size > maxSize) {
     mediaPreview.textContent =
       "প্রিভিউয়ের জন্য সর্বোচ্চ ২৫ MB ফাইল নির্বাচন করুন।";
+
     mediaFile.value = "";
     return;
   }
@@ -270,10 +287,12 @@ mediaFile?.addEventListener("change", () => {
     media.alt = "নির্বাচিত ছবির প্রিভিউ";
     media.style.maxWidth = "100%";
     media.style.height = "auto";
+
   } else if (file.type.startsWith("video/")) {
     media = document.createElement("video");
     media.controls = true;
     media.style.maxWidth = "100%";
+
   } else {
     media = document.createElement("audio");
     media.controls = true;
@@ -296,7 +315,7 @@ locationButton?.addEventListener("click", () => {
 
   if (!navigator.geolocation) {
     locationResult.textContent =
-      "আপনার ব্রাউজারে লোকেশন সুবিধা নেই।";
+      "আপনার ব্রাউজারে লোকেশন সুবিধা নেই.";
     return;
   }
 
@@ -311,15 +330,18 @@ locationButton?.addEventListener("click", () => {
       locationResult.replaceChildren();
 
       const details = document.createElement("p");
+
       details.textContent =
         "Latitude: " + lat.toFixed(5) +
         " | Longitude: " + lon.toFixed(5);
 
       const mapLink = document.createElement("a");
+
       mapLink.href =
         "https://www.openstreetmap.org/?mlat=" +
         encodeURIComponent(lat) +
-        "&mlon=" + encodeURIComponent(lon);
+        "&mlon=" +
+        encodeURIComponent(lon);
 
       mapLink.target = "_blank";
       mapLink.rel = "noopener noreferrer";
@@ -327,10 +349,12 @@ locationButton?.addEventListener("click", () => {
 
       locationResult.append(details, mapLink);
     },
+
     () => {
       locationResult.textContent =
         "লোকেশন পাওয়া যায়নি। অনুমতি ও GPS সেটিংস পরীক্ষা করুন।";
     },
+
     {
       enableHighAccuracy: false,
       timeout: 15000,
@@ -350,7 +374,10 @@ function displayMessages(list) {
 
   if (list.length === 0) {
     const empty = document.createElement("p");
-    empty.textContent = "এখনো কোনো মেসেজ নেই। প্রথম মেসেজটি পাঠান!";
+
+    empty.textContent =
+      "এখনো কোনো মেসেজ নেই। প্রথম মেসেজটি পাঠান!";
+
     messagesElement.appendChild(empty);
     return;
   }
@@ -359,9 +386,12 @@ function displayMessages(list) {
     const bubble = document.createElement("div");
 
     bubble.className =
-      item.uid === currentUser?.uid ? "bubble mine" : "bubble";
+      item.uid === currentUser?.uid
+        ? "bubble mine"
+        : "bubble";
 
     const sender = document.createElement("small");
+
     sender.textContent =
       item.uid === currentUser?.uid
         ? "আপনি"
@@ -416,21 +446,25 @@ function listenForMessages() {
 
   unsubscribeMessages = onSnapshot(
     messagesQuery,
+
     (snapshot) => {
       const list = snapshot.docs
-        .map((doc) => ({
-          id: doc.id,
-          ...doc.data()
+        .map((document) => ({
+          id: document.id,
+          ...document.data()
         }))
         .reverse();
 
       displayMessages(list);
+
       setStatus("Firebase সংযুক্ত হয়েছে।");
 
       if (sendButton) {
-        sendButton.disabled = false;
+        sendButton.disabled = !currentUser ||
+          currentUser.isAnonymous;
       }
     },
+
     (error) => {
       console.error("Message loading error:", error);
 
@@ -439,7 +473,9 @@ function listenForMessages() {
         true
       );
 
-      if (sendButton) sendButton.disabled = true;
+      if (sendButton) {
+        sendButton.disabled = true;
+      }
     }
   );
 }
@@ -451,8 +487,11 @@ function listenForMessages() {
 chatForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  if (!db || !currentUser) {
-    setStatus("Firebase সংযোগ প্রস্তুত নয়।", true);
+  if (!db || !currentUser || currentUser.isAnonymous) {
+    setStatus(
+      "মেসেজ পাঠাতে আগে Gmail দিয়ে লগইন করুন।",
+      true
+    );
     return;
   }
 
@@ -463,13 +502,18 @@ chatForm?.addEventListener("submit", async (event) => {
   if (!text) return;
 
   if (text.length > 2000) {
-    setStatus("মেসেজ সর্বোচ্চ ২০০০ অক্ষরের হতে পারবে।", true);
+    setStatus(
+      "মেসেজ সর্বোচ্চ ২০০০ অক্ষরের হতে পারবে।",
+      true
+    );
     return;
   }
 
   sending = true;
 
-  if (sendButton) sendButton.disabled = true;
+  if (sendButton) {
+    sendButton.disabled = true;
+  }
 
   try {
     const messagesRef = collection(
@@ -492,6 +536,7 @@ chatForm?.addEventListener("submit", async (event) => {
     }
 
     setStatus("মেসেজ পাঠানো হয়েছে।");
+
   } catch (error) {
     console.error("Message sending error:", error);
 
@@ -499,11 +544,13 @@ chatForm?.addEventListener("submit", async (event) => {
       "মেসেজ পাঠানো যায়নি। Firebase Rules ও সংযোগ পরীক্ষা করুন।",
       true
     );
+
   } finally {
     sending = false;
 
     if (sendButton) {
-      sendButton.disabled = !currentUser;
+      sendButton.disabled =
+        !currentUser || currentUser.isAnonymous;
     }
   }
 });
@@ -525,42 +572,92 @@ translateButton?.addEventListener("click", () => {
 
 /* =================================
    14. START FIREBASE
+   Anonymous login is disabled.
 ================================= */
 
 async function startFirebase() {
   try {
     const app = initializeApp(firebaseConfig);
 
-    const auth = getAuth(app);
+    auth = getAuth(app);
     db = getFirestore(app);
 
     setStatus("Firebase সংযোগ করা হচ্ছে...");
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
+    if (sendButton) {
+      sendButton.disabled = true;
+    }
+
+    onAuthStateChanged(
+      auth,
+
+      (user) => {
         currentUser = user;
-        listenForMessages();
-        return;
-      }
 
-      currentUser = null;
+        if (!user) {
+          if (unsubscribeMessages) {
+            unsubscribeMessages();
+            unsubscribeMessages = null;
+          }
 
-      if (sendButton) sendButton.disabled = true;
+          if (sendButton) {
+            sendButton.disabled = true;
+          }
 
-      if (unsubscribeMessages) {
-        unsubscribeMessages();
-        unsubscribeMessages = null;
-      }
+          if (messagesElement) {
+            messagesElement.replaceChildren();
 
-      signInAnonymously(auth).catch((error) => {
-        console.error("Anonymous sign-in error:", error);
+            const notice = document.createElement("p");
+
+            notice.textContent =
+              "মেসেজ দেখতে ও পাঠাতে Gmail দিয়ে লগইন করুন।";
+
+            messagesElement.appendChild(notice);
+          }
+
+          setStatus("লগইন করা নেই।");
+
+          return;
+        }
+
+        if (user.isAnonymous || !user.email) {
+          if (unsubscribeMessages) {
+            unsubscribeMessages();
+            unsubscribeMessages = null;
+          }
+
+          if (sendButton) {
+            sendButton.disabled = true;
+          }
+
+          setStatus(
+            "বৈধ Gmail অ্যাকাউন্ট দিয়ে লগইন করুন।",
+            true
+          );
+
+          return;
+        }
 
         setStatus(
-          "লগইন ব্যর্থ। Firebase Anonymous Authentication চালু আছে কি না দেখুন।",
+          "লগইন সফল: " + user.email
+        );
+
+        listenForMessages();
+      },
+
+      (error) => {
+        console.error(
+          "Authentication state error:",
+          error
+        );
+
+        setStatus(
+          "অ্যাকাউন্ট যাচাই করা যায়নি। আবার লগইন করুন।",
           true
         );
-      });
-    });
+      }
+    );
+
   } catch (error) {
     console.error("Firebase startup error:", error);
 
@@ -572,3 +669,19 @@ async function startFirebase() {
 }
 
 startFirebase();
+
+/* =================================
+   15. CLEANUP
+================================= */
+
+window.addEventListener("pagehide", () => {
+  if (previewURL) {
+    URL.revokeObjectURL(previewURL);
+    previewURL = null;
+  }
+
+  if (unsubscribeMessages) {
+    unsubscribeMessages();
+    unsubscribeMessages = null;
+  }
+});
