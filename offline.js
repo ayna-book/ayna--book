@@ -1,84 +1,234 @@
-/* AYNA BOOK - Offline Support */
+"use strict";
 
-const AYNA_CACHE_NAME = "ayna-book-cache-v2";
+/* =========================================
+   AYNA BOOK — OFFLINE SERVICE WORKER
+   Version: 1.0.0
+   ========================================= */
 
-const AYNA_FILES_TO_CACHE = [
+const CACHE_NAME = "ayna-book-cache-v2";
+
+/* অ্যাপের প্রয়োজনীয় ফাইল */
+const APP_FILES = [
   "./",
   "./index.html",
+  "./login.html",
+  "./signup.html",
+  "./profile.html",
+  "./messages.html",
+  "./chat.html",
+  "./radio-tv.html",
+  "./global-alert.html",
   "./styles.css",
-  "./app.js",
   "./manifest.webmanifest",
+  "./manifest.json",
+  "./app.js",
+  "./js/app.js",
   "./icon-192.png",
   "./icon-512.png"
 ];
 
-// Install and cache essential files
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(AYNA_CACHE_NAME)
-      .then((cache) => cache.addAll(AYNA_FILES_TO_CACHE))
-      .catch((error) => {
-        console.error("AYNA BOOK cache error:", error);
-      })
-  );
+/* =========================================
+   1. INSTALL — প্রয়োজনীয় ফাইল ক্যাশে রাখা
+   ========================================= */
 
-  self.skipWaiting();
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(async cache => {
+        /*
+         * একটি ফাইল না পাওয়া গেলে পুরো install
+         * ব্যর্থ হওয়া এড়াতে প্রতিটি ফাইল আলাদাভাবে
+         * ক্যাশে করার চেষ্টা করা হচ্ছে।
+         */
+        await Promise.all(
+          APP_FILES.map(async file => {
+            try {
+              const response = await fetch(file, {
+                cache: "reload"
+              });
+
+              if (response.ok) {
+                await cache.put(file, response);
+              } else {
+                console.warn(
+                  "AYNA BOOK: ফাইল পাওয়া যায়নি:",
+                  file,
+                  response.status
+                );
+              }
+            } catch (error) {
+              console.warn(
+                "AYNA BOOK: ফাইল ক্যাশে করা যায়নি:",
+                file,
+                error
+              );
+            }
+          })
+        );
+      })
+      .then(() => self.skipWaiting())
+  );
 });
 
-// Activate and remove old AYNA BOOK caches
-self.addEventListener("activate", (event) => {
+/* =========================================
+   2. ACTIVATE — পুরোনো ক্যাশে পরিষ্কার
+   ========================================= */
+
+self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) => key.startsWith("ayna-book-cache-")
-            && key !== AYNA_CACHE_NAME)
-          .map((key) => caches.delete(key))
-      )
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            if (
+              cacheName.startsWith("ayna-book-cache-") &&
+              cacheName !== CACHE_NAME
+            ) {
+              return caches.delete(cacheName);
+            }
+
+            return Promise.resolve(false);
+          })
+        );
+      })
+      .then(() => self.clients.claim())
   );
 });
 
-// Network first, cached files when offline
-self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+/* =========================================
+   3. FETCH — ক্যাশে থেকে পেজ দেখানো
+   ========================================= */
 
-  const requestURL = new URL(event.request.url);
+self.addEventListener("fetch", event => {
+  const request = event.request;
 
-  // Only handle requests from this website
-  if (requestURL.origin !== self.location.origin) return;
+  /* শুধু GET অনুরোধ পরিচালনা করা হবে */
+  if (request.method !== "GET") {
+    return;
+  }
 
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        if (response && response.ok) {
-          const copy = response.clone();
+  const url = new URL(request.url);
 
-          caches.open(AYNA_CACHE_NAME)
-            .then((cache) => cache.put(event.request, copy))
-            .catch(() => {});
-        }
+  /*
+   * অন্য ওয়েবসাইটের অনুরোধ এই Service Worker
+   * পরিচালনা করবে না।
+   */
+  if (url.origin !== self.location.origin) {
+    return;
+  }
 
-        return response;
-      })
-      .catch(async () => {
-        const cached = await caches.match(event.request);
+  /*
+   * HTML পেজের জন্য Network First:
+   * ইন্টারনেট থাকলে নতুন পেজ, না থাকলে ক্যাশে।
+   */
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response && response.ok) {
+            const responseCopy = response.clone();
 
-        if (cached) return cached;
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                cache.put(request, responseCopy);
+              })
+              .catch(error => {
+                console.warn(
+                  "AYNA BOOK: পেজ ক্যাশে করা যায়নি:",
+                  error
+                );
+              });
+          }
 
-        if (event.request.mode === "navigate") {
-          return (
-            await caches.match("./index.html")
-          ) || new Response(
-            "আপনি অফলাইনে আছেন। AYNA BOOK-এর সংরক্ষিত পৃষ্ঠা খুলুন।",
+          return response;
+        })
+        .catch(async () => {
+          const cachedPage = await caches.match(request);
+
+          if (cachedPage) {
+            return cachedPage;
+          }
+
+          const cachedIndex =
+            await caches.match("./index.html");
+
+          if (cachedIndex) {
+            return cachedIndex;
+          }
+
+          return new Response(
+            `<!DOCTYPE html>
+            <html lang="bn">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport"
+                    content="width=device-width, initial-scale=1">
+              <title>AYNA BOOK — Offline</title>
+            </head>
+            <body>
+              <h1>🌍 AYNA BOOK</h1>
+              <p>আপনি এখন অফলাইনে আছেন।</p>
+              <p>ইন্টারনেট সংযোগ করে আবার চেষ্টা করুন।</p>
+            </body>
+            </html>`,
             {
-              status: 503,
-              headers: { "Content-Type": "text/plain; charset=utf-8" }
+              status: 200,
+              headers: {
+                "Content-Type": "text/html; charset=utf-8"
+              }
             }
           );
+        })
+    );
+
+    return;
+  }
+
+  /*
+   * CSS, JavaScript, আইকনসহ অন্যান্য GET ফাইলের
+   * জন্য Cache First; ক্যাশে না থাকলে নেটওয়ার্ক।
+   */
+  event.respondWith(
+    caches.match(request)
+      .then(cachedResponse => {
+        if (cachedResponse) {
+          return cachedResponse;
         }
 
-        return Response.error();
+        return fetch(request)
+          .then(response => {
+            if (
+              response &&
+              response.ok &&
+              response.type === "basic"
+            ) {
+              const responseCopy = response.clone();
+
+              caches.open(CACHE_NAME)
+                .then(cache => {
+                  cache.put(request, responseCopy);
+                })
+                .catch(error => {
+                  console.warn(
+                    "AYNA BOOK: রিসোর্স ক্যাশে করা যায়নি:",
+                    error
+                  );
+                });
+            }
+
+            return response;
+          });
+      })
+      .catch(() => {
+        return new Response(
+          "এই ফাইলটি অফলাইনে পাওয়া যাচ্ছে না।",
+          {
+            status: 503,
+            headers: {
+              "Content-Type": "text/plain; charset=utf-8"
+            }
+          }
+        );
       })
   );
 });
