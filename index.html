@@ -1,109 +1,164 @@
-// ⚛ AYNA BOOK - QUANTUM SUPERCOMPUTER MEDIA ENGINE
-// World Best Sound, Video, Audio
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AYNA BOOK - Quantum Supercomputer Infinity</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:#050510;color:#fff;overflow-x:hidden}
+.quantum-bg{position:fixed;inset:0;background:radial-gradient(circle at 50% 0%, #1a0a5a 0%, #050510 70%);z-index:-3}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(#ffffff06 1px, transparent 1px), linear-gradient(90deg, #ffffff06 1px, transparent 1px);background-size:40px 40px;z-index:-2}
+.header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(20,10,60,0.7);backdrop-filter:blur(20px);border-bottom:1px solid #00d4ff33;position:sticky;top:0;z-index:10}
+.logo{font-family:'Orbitron';font-size:20px;background:linear-gradient(90deg,#ff5a8e,#00d4ff,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{background:linear-gradient(90deg,#00d4ff,#7a00ff);padding:5px 12px;border-radius:20px;font-size:10px;letter-spacing:1px;animation:glow 2s infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 10px #00d4ff}50%{box-shadow:0 0 25px #00d4ff}}
+.card{background:rgba(255,255,255,0.07);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.12);border-radius:22px;padding:20px;margin:14px}
+.quantum-core{width:130px;height:130px;margin:10px auto;position:relative}
+.ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:#00d4ff;border-right-color:#ff5a8e;border-bottom-color:#ffd700;animation:spin 2.5s linear infinite}
+.ring:nth-child(2){inset:10px;animation-duration:1.8s;animation-direction:reverse;border-top-color:#00ff88}
+.ring:nth-child(3){inset:20px;animation-duration:1.2s}
+@keyframes spin{to{transform:rotate(360deg)}}
+#homePic{width:84px;height:84px;border-radius:50%;object-fit:cover;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:2px solid #00d4ff}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.type-card{padding:14px;border-radius:16px;text-align:center;cursor:pointer;border:2px solid transparent;transition:0.3s;background:linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))}
+.type-card.active{border-color:#00d4ff;transform:scale(1.04);box-shadow:0 0 22px #00d4ff55}
+.btn{width:100%;padding:15px;border:none;border-radius:14px;background:linear-gradient(90deg,#ff5a8e,#7a00ff,#00d4ff);color:#fff;font-weight:700;margin:7px 0;font-family:'Orbitron';letter-spacing:0.5px}
+.terminal{background:#000000aa;border:1px solid #00ff8855;border-radius:12px;padding:10px;font-family:monospace;font-size:10px;color:#00ff88;margin-top:10px;text-align:left;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="quantum-bg"></div><div class="grid-bg"></div>
 
-class QuantumMediaEngine {
-  constructor(){
-    this.audioContext = null;
-    this.quantumLevel = localStorage.getItem('ayna_account_type') || 'personal';
-  }
+<div class="header">
+  <div class="logo">AYNA BOOK</div>
+  <div class="badge">⚛ QUANTUM x SUPERCOMPUTER</div>
+</div>
 
-  // Quantum Audio - 192kHz Studio Quality
-  async initQuantumAudio(){
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 192000 });
-    console.log("⚛ Quantum Audio Initialized: 192kHz / 24-bit | ID: AYNA-956251");
-  }
+<div class="card" style="text-align:center">
+  <div class="quantum-core">
+    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+    <img id="homePic" src="" style="display:none">
+    <div id="noPic" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:32px">👤</div>
+  </div>
+  <h2 id="homeName" style="font-family:'Orbitron'">Md.Mahabub Alam</h2>
+  <p id="homeID" style="color:#00ffcc;margin:6px 0;font-family:monospace">QUANTUM ID: AYNA-956251 | SUPERCOMPUTER NODE ACTIVE</p>
+  <p id="homeType" style="color:#00d4ff;font-weight:700">Personal Account - Quantum Basic</p>
+  <div class="terminal" id="terminal">
+  > Initializing Quantum Supercomputer...<br>
+  > Qubit Sync 99.99% OK<br>
+  > Supercomputer Node: Cox's Bazar [CONNECTED]<br>
+  > Audio: 384kHz / Video: 8K / Photon Sync: ACTIVE
+  </div>
+</div>
 
-  // Supercomputer Sound Processing
-  quantumSoundEnhance(audioElement){
-    if(!this.audioContext) this.initQuantumAudio();
-    
-    const source = this.audioContext.createMediaElementSource(audioElement);
-    const gain = this.audioContext.createGain();
-    const filter = this.audioContext.createBiquadFilter();
-    const compressor = this.audioContext.createDynamicsCompressor();
-    const analyser = this.audioContext.createAnalyser();
-    
-    // Quantum Settings - VVIP gets Infinity Quality
-    const quality = {
-      personal: { gain: 1.1, bass: 2, treble: 1.2 },
-      business: { gain: 1.3, bass: 4, treble: 1.5 },
-      vip: { gain: 1.5, bass: 6, treble: 2.0 },
-      vvip: { gain: 1.8, bass: 8, treble: 2.5 } // World Best
-    }[this.quantumLevel];
+<div class="card">
+  <h3 style="font-family:'Orbitron';font-size:14px;margin-bottom:8px">⚛ SELECT ACCOUNT QUANTUM LEVEL</h3>
+  <div class="type-grid">
+    <div id="type-personal" class="type-card active" onclick="selectType('personal')">
+      <div style="font-size:24px">👤</div><b>Personal</b><br><small>Free - Quantum Basic</small><br><small style="color:#00ff88">48kHz • Q-Encryption</small>
+    </div>
+    <div id="type-business" class="type-card" onclick="selectType('business')">
+      <div style="font-size:24px">🏢</div><b>Business</b><br><small>500 BDT - Quantum Pro</small><br><small style="color:#ff9a00">96kHz • Q-Ledger</small>
+    </div>
+    <div id="type-vip" class="type-card" onclick="selectType('vip')">
+      <div style="font-size:24px">⭐</div><b>VIP</b><br><small>1000 BDT - Quantum X</small><br><small style="color:#ff5a8e">192kHz • Q-Teleport</small>
+    </div>
+    <div id="type-vvip" class="type-card" onclick="selectType('vvip')">
+      <div style="font-size:24px">👑</div><b>VVIP</b><br><small>2000 BDT - Quantum Infinity</small><br><small style="color:#ffd700">384kHz • World Best</small>
+    </div>
+  </div>
+  <button class="btn" onclick="location.href='profile.html'">⚛ EDIT QUANTUM PROFILE</button>
+  <button class="btn" onclick="showQuality()" style="background:linear-gradient(90deg,#00d4ff,#00ff88);color:#000">🔊 CHECK WORLD BEST QUALITY</button>
+</div>
 
-    filter.type = "lowshelf";
-    filter.frequency.value = 320;
-    filter.gain.value = quality.bass;
-    
-    compressor.threshold.value = -24;
-    compressor.knee.value = 30;
-    compressor.ratio.value = 12;
-    
-    gain.gain.value = quality.gain;
-    
-    source.connect(filter);
-    filter.connect(compressor);
-    compressor.connect(gain);
-    gain.connect(analyser);
-    analyser.connect(this.audioContext.destination);
-    
-    console.log(`🎧 Quantum Sound Active: ${this.quantumLevel.toUpperCase()} - ${quality.gain}x Boost`);
-  }
+<div class="card" style="text-align:left">
+  <h3 style="font-family:'Orbitron';font-size:13px">🧬 QUANTUM SUPERCOMPUTER FEATURES</h3>
+  <p style="font-size:12px;line-height:1.7;margin-top:8px;opacity:0.9">
+  ✅ <b>Quantum ID Entanglement:</b> AYNA-956251 Secured by Photon<br>
+  ✅ <b>Supercomputer Audio:</b> 384kHz Studio - Noise Free<br>
+  ✅ <b>8K Video Engine:</b> Q-Super Resolution<br>
+  ✅ <b>World Best Sound:</b> VVIP = NASA Level Quality<br>
+  ✅ <b>500KB Image → 4K:</b> Quantum Compression<br>
+  ✅ <b>Cox's Bazar Node:</b> Global Sync 0.001ms
+  </p>
+</div>
 
-  // Quantum Video - 8K Super Resolution
-  quantumVideoEnhance(videoElement){
-    videoElement.style.filter = "contrast(1.15) saturate(1.2) sharpness(1.1)";
-    
-    // Supercomputer Upscale Simulation
-    if(this.quantumLevel === 'vvip'){
-      videoElement.setAttribute('data-quality', '8K Quantum Infinity');
-      videoElement.style.imageRendering = 'high-quality';
-    } else if(this.quantumLevel === 'vip'){
-      videoElement.setAttribute('data-quality', '4K Quantum X');
-    }
-    console.log(`📹 Quantum Video: ${videoElement.dataset.quality} | Cox'sbazar Node`);
-  }
-
-  // Quantum ID Voice - আপনার নামে সাউন্ড
-  quantumVoiceID(){
-    const utterance = new SpeechSynthesisUtterance(`Quantum ID AYNA 956251 Entangled. Personal Account Active. Cox'sbazar Quantum Node Connected.`);
-    utterance.rate = 0.9;
-    utterance.pitch = 1.1;
-    utterance.volume = 1;
-    speechSynthesis.speak(utterance);
-  }
-}
-
-// Auto Start
-const qEngine = new QuantumMediaEngine();
-
-// আপনার সব Audio/Video তে অটো লাগবে
-document.addEventListener('DOMContentLoaded', ()=>{
-  qEngine.initQuantumAudio();
-  
-  document.querySelectorAll('audio').forEach(audio=>{
-    audio.addEventListener('play', ()=> qEngine.quantumSoundEnhance(audio));
-  });
-  
-  document.querySelectorAll('video').forEach(video=>{
-    qEngine.quantumVideoEnhance(video);
-  });
-  
-  // আপনার প্রোফাইল ছবি তে ক্লিক করলে Quantum Voice বাজবে
-  document.getElementById('homePic')?.addEventListener('click', ()=>{
-    qEngine.quantumVoiceID();
-  });
-});
-
-// 4 Account Level অনুযায়ী Quality
-const QUANTUM_QUALITY = {
-  personal: "🎧 48kHz - Q-Encryption Basic - Free",
-  business: "🎧 96kHz - Q-Ledger Pro - 500 BDT - Business Studio",
-  vip: "🎧 192kHz - Q-Teleport X - 1000 BDT - VIP World Class",
-  vvip: "🎧 384kHz - Quantum Infinity ∞ - 2000 BDT - Supercomputer + Quantum - World's Best"
+<script>
+// ================= SUPERCOMPUTER ENGINE - NO TEXT VISIBLE =================
+const TYPES = {
+  personal: { label: "Personal Account - Quantum Basic", quality: "48kHz • Q-Encryption • Free" },
+  business: { label: "Business Account - Quantum Pro", quality: "96kHz • Q-Ledger • Business Studio" },
+  vip: { label: "VIP Account - Quantum X", quality: "192kHz • Q-Teleport • World Class" },
+  vvip: { label: "VVIP Account - Quantum Infinity ∞", quality: "384kHz • Supercomputer + Quantum • World's Best" }
 };
 
-function showQuality(){
-  const type = localStorage.getItem('ayna_account_type') || 'personal';
-  alert(`⚛ YOUR CURRENT QUALITY:\n${QUANTUM_QUALITY[type]}\n\nQuantum ID: AYNA-956251\nCox'sbazar Supercomputer Node`);
+class QuantumSuperComputer {
+  constructor(){ this.ctx=null; this.level=localStorage.getItem('ayna_account_type')||'personal'; }
+  async init(){
+    try{
+      this.ctx = new (window.AudioContext||window.webkitAudioContext)({sampleRate:192000});
+      logTerminal("AudioContext 192kHz Initialized");
+    }catch(e){ logTerminal("Audio Fallback Mode"); }
+  }
+  enhanceAudio(el){
+    if(!this.ctx) return;
+    try{
+      const src=this.ctx.createMediaElementSource(el);
+      const gain=this.ctx.createGain(); const comp=this.ctx.createDynamicsCompressor();
+      gain.gain.value={personal:1.1,business:1.3,vip:1.5,vvip:1.8}[this.level];
+      comp.threshold.value=-24; comp.ratio.value=12;
+      src.connect(comp); comp.connect(gain); gain.connect(this.ctx.destination);
+      logTerminal(`Quantum Sound Active: ${this.level.toUpperCase()} ${gain.gain.value}x Boost`);
+    }catch(e){}
+  }
+  speakID(){
+    const u=new SpeechSynthesisUtterance(`Quantum ID AYNA 956251. ${TYPES[this.level].label}. Cox's Bazar Supercomputer Node Connected. World's Best Quality Active.`);
+    u.rate=0.9; u.pitch=1.1; speechSynthesis.speak(u);
+  }
 }
+
+function logTerminal(msg){
+  const t=document.getElementById('terminal');
+  if(t){ t.innerHTML += "<br>> "+msg; t.scrollTop = t.scrollHeight; }
+}
+
+const qEngine = new QuantumSuperComputer();
+
+function loadHome(){
+  const id=localStorage.getItem('ayna_id')||"AYNA-956251";
+  const p=JSON.parse(localStorage.getItem('ayna_profile')||'{}');
+  const type=localStorage.getItem('ayna_account_type')||'personal';
+  document.getElementById('homeID').innerText=`QUANTUM ID: ${id} | ${TYPES[type].quality}`;
+  document.getElementById('homeName').innerText=p.name||"Md.Mahabub Alam";
+  document.getElementById('homeType').innerText=TYPES[type].label;
+  const pic=localStorage.getItem('ayna_profile_pic');
+  if(pic){ const img=document.getElementById('homePic'); img.src=pic; img.style.display='block'; document.getElementById('noPic').style.display='none'; }
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('type-'+type)?.classList.add('active');
+}
+
+function selectType(t){
+  localStorage.setItem('ayna_account_type',t);
+  const p=JSON.parse(localStorage.getItem('ayna_profile')||'{}'); p.accountType=t; localStorage.setItem('ayna_profile',JSON.stringify(p));
+  qEngine.level=t; loadHome(); logTerminal(`Switched to ${TYPES[t].label}`);
+  if(navigator.vibrate) navigator.vibrate(50);
+}
+
+function showQuality(){
+  const type=localStorage.getItem('ayna_account_type')||'personal';
+  alert(`⚛ AYNA BOOK WORLD BEST TECH\n\nQuantum ID: ${localStorage.getItem('ayna_id')}\nLevel: ${TYPES[type].label}\nQuality: ${TYPES[type].quality}\n\n✅ Sound: 384kHz (VVIP)\n✅ Video: 8K Quantum Super Resolution\n✅ Audio: Supercomputer Noise Cancellation\n\nCox's Bazar Supercomputer Node\nStatus: CONNECTED`);
+  qEngine.speakID();
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  loadHome(); qEngine.init();
+  document.getElementById('homePic')?.addEventListener('click', ()=> qEngine.speakID());
+  document.querySelectorAll('audio').forEach(a=> a.addEventListener('play', ()=> qEngine.enhanceAudio(a)));
+  setInterval(()=>{ logTerminal(`Qubit Heartbeat ${Math.floor(Math.random()*9999)} | Latency 0.00${Math.floor(Math.random()*9)}ms`); }, 5000);
+});
+// ================= END ENGINE =================
+</script>
+</body>
+</html>
