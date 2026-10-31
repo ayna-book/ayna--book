@@ -1,571 +1,84 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071b49">
-
-  <title>AYNA BOOK — My World, My Story</title>
-
-  <meta name="description"
-        content="AYNA BOOK — Connect, Create, Share.">
-
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./icon-192.png">
-  <link rel="stylesheet" href="./styles.css">
-
-  <style>
-    :root {
-      --navy: #071b49;
-      --pink: #ff4fa3;
-      --purple: #8b5cf6;
-      --cyan: #35d9ef;
-      --white: #ffffff;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #071b49, #241052);
-      color: white;
-      line-height: 1.6;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px;
-      background: #071b49;
-      border-bottom: 2px solid var(--cyan);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 21px;
-      font-weight: bold;
-    }
-
-    .brand img {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
-    }
-
-    .brand strong {
-      color: var(--pink);
-    }
-
-    .menu-button {
-      padding: 8px 12px;
-      background: var(--purple);
-      color: white;
-      border: 0;
-      border-radius: 8px;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .container {
-      width: min(100% - 24px, 850px);
-      margin: auto;
-    }
-
-    .card {
-      margin: 18px 0;
-      padding: 20px;
-      border: 1px solid #ffffff25;
-      border-radius: 18px;
-      background: #ffffff0d;
-      box-shadow: 0 8px 24px #00000020;
-    }
-
-    .welcome {
-      text-align: center;
-      padding: 30px 18px;
-      background: linear-gradient(
-        135deg,
-        #ff4fa326,
-        #8b5cf633,
-        #35d9ef22
-      );
-    }
-
-    .welcome h1 {
-      font-size: clamp(32px, 8vw, 52px);
-      margin: 8px 0;
-      overflow-wrap: anywhere;
-    }
-
-    .gradient-text {
-      background: linear-gradient(
-        90deg,
-        var(--pink),
-        var(--cyan)
-      );
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .button {
-      display: inline-block;
-      padding: 11px 16px;
-      margin: 5px 3px;
-      border: 0;
-      border-radius: 10px;
-      background: linear-gradient(
-        90deg,
-        var(--pink),
-        var(--purple),
-        #168ea8
-      );
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .navigation {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .navigation a {
-      display: block;
-      padding: 12px 8px;
-      background: #ffffff12;
-      border: 1px solid #ffffff20;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    .navigation a:hover,
-    .button:hover {
-      filter: brightness(1.15);
-    }
-
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: bold;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ffffff40;
-      border-radius: 10px;
-      font: inherit;
-    }
-
-    textarea {
-      resize: vertical;
-    }
-
-    input:focus,
-    textarea:focus {
-      outline: 2px solid var(--cyan);
-    }
-
-    .full-width {
-      width: 100%;
-    }
-
-    .muted {
-      color: #d7dced;
-      font-size: 14px;
-    }
-
-    .alert-link {
-      display: block;
-      padding: 14px;
-      margin: 8px 0;
-      border-radius: 12px;
-      text-align: center;
-      font-weight: bold;
-      background: linear-gradient(
-        90deg,
-        var(--pink),
-        var(--purple),
-        #168ea8
-      );
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .feature {
-      padding: 14px;
-      border-radius: 12px;
-      background: #ffffff10;
-      overflow-wrap: anywhere;
-    }
-
-    .post {
-      padding: 14px;
-      margin: 12px 0;
-      background: #ffffff12;
-      border-radius: 12px;
-      overflow-wrap: anywhere;
-    }
-
-    .post img,
-    .post video {
-      display: block;
-      max-width: 100%;
-      max-height: 400px;
-      margin-top: 12px;
-      border-radius: 10px;
-    }
-
-    .status {
-      min-height: 24px;
-      overflow-wrap: anywhere;
-    }
-
-    footer {
-      padding: 20px 10px;
-      text-align: center;
-      color: #d7dced;
-    }
-
-    @media (max-width: 420px) {
-      .feature-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .brand {
-        font-size: 18px;
-      }
-
-      .card {
-        padding: 15px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AYNA BOOK - প্রোফাইল</title>
+<style>
+body{background:#3d2b6a;color:white;font-family:sans-serif;padding:15px}
+input,textarea{width:100%;padding:12px;border-radius:12px;border:none;margin:8px 0;color:#333}
+button{width:100%;padding:14px;border-radius:14px;border:none;margin:8px 0;
+background:linear-gradient(90deg,#ff5a8e,#00d4ff);color:white;font-weight:bold;font-size:16px}
+#preview{width:100px;height:100px;border-radius:50%;display:none;margin:10px auto}
+.small{font-size:13px;opacity:0.8}
+</style>
 </head>
-
 <body>
 
-  <header class="topbar">
-    <a class="brand" href="./index.html">
-      <img src="./icon-192.png" alt="AYNA BOOK Logo">
-      <span>AYNA <strong>BOOK</strong></span>
-    </a>
-
-    <button
-      class="menu-button"
-      id="menuButton"
-      type="button"
-      aria-label="মেনু দেখান"
-      aria-expanded="true">
-      ☰
-    </button>
-  </header>
-
-  <main class="container">
-
-    <section class="card welcome">
-      <p>🌍 WELCOME TO</p>
-
-      <h1 class="gradient-text">AYNA BOOK</h1>
-
-      <h2>My World. My Story. My AYNA BOOK.</h2>
-
-      <p>Connect. Create. Share.</p>
-
-      <p>
-        আপনার পৃথিবী, আপনার গল্প, আপনার AYNA BOOK।
-      </p>
-
-      <a class="button" href="./signup.html">
-        🚀 Join AYNA BOOK
-      </a>
-
-      <a class="button" href="./login.html">
-        🔐 Login
-      </a>
-
-      <a class="button" href="./profile.html">
-        👤 My Profile
-      </a>
-    </section>
-
-    <nav class="card navigation" id="navigation">
-      <a href="#home">🏠 হোম</a>
-      <a href="#createPost">✍️ নতুন পোস্ট</a>
-      <a href="./messages.html">💬 মেসেজ</a>
-      <a href="./profile.html">👤 প্রোফাইল</a>
-      <a href="./radio-tv.html">📻 Radio ও TV</a>
-      <a href="./global-alert.html">🚨 Global Alert</a>
-      <a href="#discover">🌍 আবিষ্কার</a>
-      <a href="#about">ℹ️ পরিচিতি</a>
-    </nav>
-
-    <section class="card" id="home">
-      <h2 class="gradient-text">✨ AYNA BOOK-এ স্বাগতম</h2>
-
-      <p>
-        নিজের গল্প শেয়ার করুন, সৃজনশীলতা প্রকাশ করুন
-        এবং নতুন মানুষের সঙ্গে সংযুক্ত হোন।
-      </p>
-
-      <div class="feature-grid">
-        <div class="feature">📸 ছবি ও পোস্ট</div>
-        <div class="feature">🎬 ভিডিও ও মিডিয়া</div>
-        <div class="feature">💬 অনলাইন মেসেজিং</div>
-        <div class="feature">🌐 বহুভাষিক সুবিধার ভিত্তি</div>
-        <div class="feature">📻 Radio ও TV পেজ</div>
-        <div class="feature">📱 মোবাইল-উপযোগী ডিজাইন</div>
-      </div>
-
-      <p class="muted">
-        সব অনলাইন সুবিধা কাজ করার জন্য সংশ্লিষ্ট
-        Firebase সেটআপ ও নিরাপত্তা নিয়ম সঠিক থাকতে হবে।
-      </p>
-    </section>
-
-    <section class="card">
-      <a class="alert-link" href="./global-alert.html">
-        🚨 🌍 GLOBAL ALERT — জরুরি সতর্কতা
-      </a>
-
-      <a class="alert-link" href="./radio-tv.html">
-        📻 Radio ও 📺 TV
-      </a>
-    </section>
-
-    <section class="card" id="createPost">
-      <h2>✍️ নতুন পোস্ট তৈরি করুন</h2>
-
-      <form id="postForm">
-        <label for="postText">আপনার মনের কথা লিখুন</label>
-
-        <textarea
-          id="postText"
-          rows="4"
-          maxlength="3000"
-          placeholder="আপনি কী শেয়ার করতে চান?"
-          required></textarea>
-
-        <label for="postMedia">
-          ছবি বা ভিডিও নির্বাচন করুন (ঐচ্ছিক)
-        </label>
-
-        <input
-          id="postMedia"
-          type="file"
-          accept="image/*,video/*">
-
-        <p class="muted">
-          এই ফর্মটি পোস্টের নমুনা তৈরি করতে পারে।
-          সব ব্যবহারকারীর কাছে পোস্ট প্রকাশ করতে
-          অনলাইন ডেটাবেস ও মিডিয়া স্টোরেজ সংযুক্ত করতে হবে।
-        </p>
-
-        <button class="button full-width" type="submit">
-          🚀 পোস্ট তৈরি করুন
-        </button>
-      </form>
-
-      <p id="status" class="status" aria-live="polite"></p>
-    </section>
-
-    <section class="card">
-      <h2>🌍 পোস্ট প্রিভিউ</h2>
-
-      <div id="posts">
-        <p class="muted">
-          আপনার প্রথম পোস্ট তৈরি করুন!
-        </p>
-      </div>
-    </section>
-
-    <section class="card" id="discover">
-      <h2>🌐 Discover</h2>
-
-      <p>
-        নতুন মানুষ ও কনটেন্ট আবিষ্কার করার জায়গা।
-      </p>
-
-      <p class="muted">
-        বাস্তব ব্যবহারকারীদের পোস্ট দেখাতে সার্ভার
-        ও ডেটাবেস সংযোগ প্রয়োজন।
-      </p>
-    </section>
-
-    <section class="card" id="about">
-      <h2 class="gradient-text">👑 About AYNA BOOK</h2>
-
-      <p>
-        AYNA BOOK-এর প্রতিষ্ঠাতা Mohammed Mahbub Alam।
-      </p>
-
-      <p>
-        একটি সৃজনশীল, অন্তর্ভুক্তিমূলক ও আন্তর্জাতিক
-        ডিজিটাল কমিউনিটি গড়ে তোলাই এই উদ্যোগের লক্ষ্য।
-      </p>
-
-      <h3>My World. My Story. My AYNA BOOK.</h3>
-
-      <p>Connect. Create. Share.</p>
-    </section>
-
-  </main>
-
-  <footer>
-    <p>
-      © <span id="year"></span> AYNA BOOK
-      <br>
-      Connect. Create. Share.
-    </p>
-  </footer>
-
-  <script>
-    "use strict";
-
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
-
-    const menuButton =
-      document.getElementById("menuButton");
-
-    const navigation =
-      document.getElementById("navigation");
-
-    menuButton.addEventListener("click", function () {
-      const isVisible =
-        navigation.style.display !== "none";
-
-      navigation.style.display =
-        isVisible ? "none" : "grid";
-
-      menuButton.setAttribute(
-        "aria-expanded",
-        String(!isVisible)
-      );
-    });
-
-    const postForm =
-      document.getElementById("postForm");
-
-    const postText =
-      document.getElementById("postText");
-
-    const postMedia =
-      document.getElementById("postMedia");
-
-    const posts =
-      document.getElementById("posts");
-
-    const status =
-      document.getElementById("status");
-
-    postForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      const text = postText.value.trim();
-      const file = postMedia.files[0];
-
-      if (!text) {
-        status.textContent =
-          "প্রথমে পোস্টের লেখা লিখুন।";
-        return;
-      }
-
-      if (file && file.size > 5 * 1024 * 1024) {
-        status.textContent =
-          "প্রিভিউয়ের জন্য সর্বোচ্চ ৫ MB ফাইল নির্বাচন করুন।";
-        return;
-      }
-
-      const post = document.createElement("article");
-      post.className = "post";
-
-      const paragraph = document.createElement("p");
-      paragraph.textContent = text;
-      post.appendChild(paragraph);
-
-      if (file) {
-        const previewUrl = URL.createObjectURL(file);
-
-        if (file.type.startsWith("image/")) {
-          const image = document.createElement("img");
-          image.src = previewUrl;
-          image.alt = "পোস্টের ছবি";
-          post.appendChild(image);
-        } else if (file.type.startsWith("video/")) {
-          const video = document.createElement("video");
-          video.src = previewUrl;
-          video.controls = true;
-          video.preload = "metadata";
-          post.appendChild(video);
-        } else {
-          URL.revokeObjectURL(previewUrl);
-          status.textContent =
-            "শুধু ছবি অথবা ভিডিও নির্বাচন করুন।";
-          return;
-        }
-      }
-
-      const time = document.createElement("small");
-      time.className = "muted";
-      time.textContent =
-        "প্রিভিউ • " + new Date().toLocaleString();
-
-      post.appendChild(time);
-
-      const emptyMessage =
-        posts.querySelector(".muted");
-
-      if (emptyMessage) {
-        posts.replaceChildren();
-      }
-
-      posts.prepend(post);
-
-      postText.value = "";
-      postMedia.value = "";
-
-      status.textContent =
-        "পোস্টের প্রিভিউ তৈরি হয়েছে। এটি এখনো অনলাইনে প্রকাশিত হয়নি।";
-    });
-
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker
-          .register("./offline.js")
-          .catch(function (error) {
-            console.error(
-              "AYNA BOOK offline setup error:",
-              error
-            );
-          });
-      });
-    }
-  </script>
-
+<p id="auth-status" class="small">অ্যাকাউন্ট যাচাই হচ্ছে...</p>
+
+<input id="fullName" placeholder="পূর্ণ নাম">
+<input id="gmail" placeholder="Gmail / ইমেইল">
+<input id="phone" placeholder="+8801XXXXXXXXX">
+<input id="city" placeholder="আপনার শহর">
+<textarea id="bio" placeholder="নিজের সম্পর্কে লিখুন"></textarea>
+
+<h3>প্রোফাইল ছবি নির্বাচন করুন</h3>
+<input type="file" id="fileInput" accept="image/*">
+<img id="preview">
+<p id="storage-msg" class="small">ছবি প্রিভিউ দেখা যাবে। ১৫০KB ছবি হলে লোকালে সেভ হবে। Firebase Storage বন্ধ থাকলেও চলবে।</p>
+
+<button onclick="saveProfile()">💾 প্রোফাইল সংরক্ষণ করুন</button>
+<button onclick="logout()">🚪 লগআউট</button>
+<button onclick="goHome()">🏠 হোম পেজে ফিরে যান</button>
+
+<p class="small">আপনার প্রোফাইল তথ্য ব্রাউজারে সংরক্ষিত হবে।</p>
+
+<script>
+// OFFLINE FIRST - NO MORE STUCK
+setTimeout(()=>{ document.getElementById('auth-status').innerText="📴 অফলাইন মোড - প্রোফাইল লোকালে সেভ হবে"; loadLocal(); }, 1500);
+
+function loadLocal(){
+  ['fullName','phone','city','bio','gmail'].forEach(id=>{
+    const key='ayna_'+id;
+    const val=localStorage.getItem(key);
+    if(val && document.getElementById(id)) document.getElementById(id).value=val;
+  });
+  const pic=localStorage.getItem('ayna_profile_pic');
+  if(pic){ const p=document.getElementById('preview'); p.src=pic; p.style.display='block'; }
+}
+loadLocal();
+
+document.getElementById('fileInput').addEventListener('change', function(){
+  const file=this.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    localStorage.setItem('ayna_profile_pic', e.target.result);
+    const p=document.getElementById('preview'); p.src=e.target.result; p.style.display='block';
+    document.getElementById('storage-msg').innerText="✅ ছবি রেডি!";
+  };
+  reader.readAsDataURL(file);
+});
+
+function saveProfile(){
+  const data={
+    fullName: document.getElementById('fullName').value,
+    gmail: document.getElementById('gmail').value,
+    phone: document.getElementById('phone').value,
+    city: document.getElementById('city').value,
+    bio: document.getElementById('bio').value
+  };
+  Object.keys(data).forEach(k=>localStorage.setItem('ayna_'+k, data[k]));
+  localStorage.setItem('ayna_profile', JSON.stringify(data));
+  alert('✅ প্রোফাইল সংরক্ষিত হয়েছে!');
+  goHome();
+}
+function logout(){
+  localStorage.clear();
+  alert('লগআউট সম্পন্ন');
+  location.href='index.html';
+}
+function goHome(){ location.href='index.html'; }
+</script>
 </body>
 </html>
