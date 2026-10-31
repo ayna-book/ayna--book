@@ -1,3 +1,9 @@
+// =============================================
+// AYNA BOOK — Enhanced Profile System
+// Photo limit: 500 KB
+// Firebase Authentication + Firestore
+// =============================================
+
 import { auth, db } from "./firebase.js";
 
 import {
@@ -13,22 +19,43 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
+"use strict";
+
 const $ = id => document.getElementById(id);
 
 const form = $("profileForm");
+const nameInput = $("name");
+const emailInput = $("email");
+const phoneInput = $("phone");
+const locationInput = $("location");
+const bioInput = $("bio");
 const photoInput = $("photo");
-const preview = $("photoPreview");
+const photoPreview = $("photoPreview");
+
 const saveButton = $("saveButton");
 const logoutButton = $("logoutButton");
-const status = $("profileStatus");
+const statusElement = $("profileStatus");
 const accountStatus = $("accountStatus");
 
-let currentUser = null;
-let previewUrl = "";
-let saving = false;
+const MAX_PHOTO_SIZE = 500 * 1024;
 
-function showStatus(message) {
-  if (status) status.textContent = message;
+let currentUser = null;
+let saving = false;
+let localPhotoUrl = null;
+
+function showStatus(message, type = "info") {
+  if (!statusElement) return;
+
+  statusElement.textContent = message;
+  statusElement.dataset.type = type;
+
+  console.log("[AYNA BOOK]", message);
+}
+
+function setAccountStatus(message) {
+  if (accountStatus) {
+    accountStatus.textContent = message;
+  }
 }
 
 function setFormEnabled(enabled) {
@@ -43,163 +70,221 @@ function setFormEnabled(enabled) {
   }
 }
 
-function showPhoto(file) {
-  if (previewUrl) {
-    URL.revokeObjectURL(previewUrl);
+function releasePhotoPreview() {
+  if (localPhotoUrl) {
+    URL.revokeObjectURL(localPhotoUrl);
+    localPhotoUrl = null;
   }
-
-  previewUrl = "";
-
-  if (preview) {
-    preview.removeAttribute("src");
-    preview.hidden = true;
-  }
-
-  if (!file || !preview) return;
-
-  previewUrl = URL.createObjectURL(file);
-  preview.src = previewUrl;
-  preview.hidden = false;
 }
 
+function clearPhotoPreview() {
+  releasePhotoPreview();
+
+  if (photoPreview) {
+    photoPreview.removeAttribute("src");
+    photoPreview.hidden = true;
+  }
+}
+
+function previewPhoto(file) {
+  releasePhotoPreview();
+
+  localPhotoUrl = URL.createObjectURL(file);
+
+  photoPreview.src = localPhotoUrl;
+  photoPreview.hidden = false;
+
+  photoPreview.onerror = () => {
+    clearPhotoPreview();
+    showStatus("ছবির প্রিভিউ তৈরি করা যায়নি। অন্য ছবি চেষ্টা করুন।", "error");
+  };
+}
+
+// কোনো JavaScript error হলে ব্যবহারকারীকে বার্তা দেখানো
 window.addEventListener("error", event => {
-  console.error("AYNA BOOK profile error:", event.error || event.message);
+  console.error("Profile page error:", event.error || event.message);
 
   showStatus(
-    "পেজে ত্রুটি হয়েছে। পেজটি রিফ্রেশ করুন এবং ত্রুটির বার্তাটি পরীক্ষা করুন।"
+    "পেজে একটি ত্রুটি হয়েছে। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।",
+    "error"
   );
 });
 
 window.addEventListener("unhandledrejection", event => {
-  console.error("AYNA BOOK Firebase error:", event.reason);
+  console.error("Profile asynchronous error:", event.reason);
 
   showStatus(
-    "Firebase সংযোগে সমস্যা হয়েছে। ইন্টারনেট ও Firebase সেটিংস পরীক্ষা করুন।"
+    "একটি কাজ সম্পন্ন হয়নি। ইন্টারনেট ও Firebase সংযোগ পরীক্ষা করুন।",
+    "error"
   );
 });
 
-if (!form || !status || !accountStatus) {
-  console.error("Profile HTML-এর প্রয়োজনীয় element পাওয়া যায়নি।");
+// প্রয়োজনীয় HTML element আছে কি না পরীক্ষা
+if (
+  !form ||
+  !nameInput ||
+  !emailInput ||
+  !phoneInput ||
+  !locationInput ||
+  !bioInput ||
+  !photoInput ||
+  !photoPreview ||
+  !saveButton ||
+  !logoutButton ||
+  !statusElement ||
+  !accountStatus
+) {
+  console.error("AYNA BOOK: Profile HTML element missing.");
+
+  if (statusElement) {
+    showStatus(
+      "প্রোফাইল ফাইলে প্রয়োজনীয় HTML অংশ পাওয়া যায়নি। profile.html পরীক্ষা করুন।",
+      "error"
+    );
+  }
 } else {
+  startProfile();
+}
+
+function startProfile() {
   setFormEnabled(false);
+  showStatus("আপনার অ্যাকাউন্ট যাচাই হচ্ছে...");
 
-  onAuthStateChanged(auth, async user => {
-    if (!user) {
-      accountStatus.textContent =
-        "লগইন করা নেই। লগইন পেজে নেওয়া হচ্ছে...";
+  onAuthStateChanged(
+    auth,
+    async user => {
+      if (!user) {
+        currentUser = null;
 
-      window.location.replace("./login.html");
-      return;
-    }
+        setAccountStatus("লগইন করা নেই। লগইন পেজ খোলা হচ্ছে...");
+        showStatus("প্রোফাইল দেখতে আগে লগইন করুন।");
 
-    currentUser = user;
-
-    $("email").value = user.email || "";
-
-    accountStatus.textContent =
-      "লগইন করা অ্যাকাউন্ট: " + (user.email || "ইমেইল নেই");
-
-    showStatus("প্রোফাইল লোড হচ্ছে...");
-
-    try {
-      const snapshot = await getDoc(
-        doc(db, "users", user.uid)
-      );
-
-      if (snapshot.exists()) {
-        const data = snapshot.data();
-
-        $("name").value = data.name || user.displayName || "";
-        $("phone").value = data.phone || user.phoneNumber || "";
-        $("location").value = data.location || "";
-        $("bio").value = data.bio || "";
-      } else {
-        $("name").value = user.displayName || "";
-        $("phone").value = user.phoneNumber || "";
+        window.location.replace("./login.html");
+        return;
       }
 
-      setFormEnabled(true);
+      currentUser = user;
+
+      emailInput.value = user.email || "";
+
+      setAccountStatus(
+        "লগইন করা অ্যাকাউন্ট: " +
+        (user.email || "ইমেইল পাওয়া যায়নি")
+      );
+
+      await loadProfile(user);
+    },
+    error => {
+      console.error("Authentication listener error:", error);
+
+      setAccountStatus("অ্যাকাউন্ট যাচাই করা যায়নি।");
 
       showStatus(
-        "প্রোফাইল প্রস্তুত। আপনার তথ্য লিখে সংরক্ষণ করুন।"
+        "Firebase Authentication-এ সমস্যা হয়েছে (" +
+        (error.code || "unknown") +
+        ")। আবার লগইন করুন।",
+        "error"
       );
+    }
+  );
+
+  // ছবি নির্বাচন: সর্বোচ্চ 500 KB
+  photoInput.addEventListener("change", () => {
+    try {
+      const file = photoInput.files?.[0];
+
+      if (!file) {
+        clearPhotoPreview();
+        showStatus("কোনো ছবি নির্বাচন করা হয়নি।");
+        return;
+      }
+
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ];
+
+      if (!allowedTypes.includes(file.type)) {
+        photoInput.value = "";
+        clearPhotoPreview();
+
+        showStatus(
+          "JPG, PNG অথবা WebP ফরম্যাটের ছবি নির্বাচন করুন।",
+          "error"
+        );
+        return;
+      }
+
+      if (file.size > MAX_PHOTO_SIZE) {
+        photoInput.value = "";
+        clearPhotoPreview();
+
+        showStatus(
+          "ছবির আকার 500 KB-এর বেশি। ছোট ছবি নির্বাচন করুন।",
+          "error"
+        );
+        return;
+      }
+
+      previewPhoto(file);
+
+      const sizeKB = (file.size / 1024).toFixed(1);
+
+      showStatus(
+        "ছবি নির্বাচন সফল! আকার: " +
+        sizeKB +
+        " KB। প্রিভিউ দেখা যাচ্ছে।",
+        "success"
+      );
+
     } catch (error) {
-      console.error("Profile loading error:", error);
+      console.error("Photo preview error:", error);
 
-      setFormEnabled(true);
+      clearPhotoPreview();
 
       showStatus(
-        "প্রোফাইল লোড হয়নি (" +
-        (error.code || "unknown error") +
-        ")। ইন্টারনেট ও Firestore Rules পরীক্ষা করুন।"
+        "ছবি নির্বাচন করতে সমস্যা হয়েছে। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।",
+        "error"
       );
     }
   });
 
-  photoInput?.addEventListener("change", () => {
-    const file = photoInput.files?.[0];
-
-    if (!file) {
-      showPhoto(null);
-      return;
-    }
-
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp"
-    ];
-
-    if (!allowedTypes.includes(file.type)) {
-      photoInput.value = "";
-      showPhoto(null);
-
-      showStatus("JPG, PNG অথবা WebP ছবি নির্বাচন করুন।");
-      return;
-    }
-
-    if (file.size > 200 * 1024) {
-      photoInput.value = "";
-      showPhoto(null);
-
-      showStatus("আপাতত ২০০ KB-এর ছোট ছবি নির্বাচন করুন।");
-      return;
-    }
-
-    showPhoto(file);
-
-    showStatus(
-      "ছবির প্রিভিউ তৈরি হয়েছে। Firebase Storage চালু না থাকায় ছবিটি অনলাইনে সংরক্ষণ হবে না।"
-    );
-  });
-
+  // প্রোফাইল সংরক্ষণ
   form.addEventListener("submit", async event => {
     event.preventDefault();
 
+    if (saving) return;
+
     if (!currentUser) {
-      showStatus("আগে লগইন করুন।");
+      showStatus("প্রথমে Gmail ও পাসওয়ার্ড দিয়ে লগইন করুন।", "error");
       return;
     }
 
-    if (saving) return;
-
-    const name = $("name").value.trim();
-    const phone = $("phone").value.trim();
-    const location = $("location").value.trim();
-    const bio = $("bio").value.trim();
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const location = locationInput.value.trim();
+    const bio = bioInput.value.trim();
 
     if (!name) {
-      showStatus("আপনার পূর্ণ নাম লিখুন।");
-      $("name").focus();
+      showStatus("আপনার পূর্ণ নাম লিখুন।", "error");
+      nameInput.focus();
       return;
     }
 
     if (phone && !/^\+?[0-9 ()-]{7,20}$/.test(phone)) {
       showStatus(
-        "ফোন নম্বর সঠিকভাবে লিখুন, যেমন +8801XXXXXXXXX।"
+        "ফোন নম্বর সঠিকভাবে লিখুন, যেমন +8801XXXXXXXXX।",
+        "error"
       );
+      phoneInput.focus();
+      return;
+    }
 
-      $("phone").focus();
+    const selectedPhoto = photoInput.files?.[0];
+
+    if (selectedPhoto && selectedPhoto.size > MAX_PHOTO_SIZE) {
+      showStatus("ছবির আকার 500 KB-এর মধ্যে রাখুন।", "error");
       return;
     }
 
@@ -207,18 +292,20 @@ if (!form || !status || !accountStatus) {
     saveButton.disabled = true;
     logoutButton.disabled = true;
 
-    showStatus("প্রোফাইল Firebase-এ সংরক্ষণ হচ্ছে...");
+    showStatus("Firebase-এ প্রোফাইল সংরক্ষণ হচ্ছে...");
 
     try {
+      const profileRef = doc(db, "users", currentUser.uid);
+
       await setDoc(
-        doc(db, "users", currentUser.uid),
+        profileRef,
         {
           uid: currentUser.uid,
-          name: name,
+          name,
           email: currentUser.email || "",
-          phone: phone,
-          location: location,
-          bio: bio,
+          phone,
+          location,
+          bio,
           updatedAt: serverTimestamp()
         },
         { merge: true }
@@ -228,39 +315,45 @@ if (!form || !status || !accountStatus) {
         await updateProfile(currentUser, {
           displayName: name
         });
-      } catch (profileError) {
-        console.warn(
-          "Display name update warning:",
-          profileError
-        );
+      } catch (error) {
+        // Firestore-এ তথ্য সংরক্ষিত হলেও Auth displayName
+        // আপডেট ব্যর্থ হতে পারে। সেটি আলাদাভাবে লগ করা হবে।
+        console.warn("Display name update warning:", error);
       }
 
       showStatus(
-        "✅ প্রোফাইলের নাম, ইমেইল, ফোন নম্বর ও অন্যান্য তথ্য সংরক্ষিত হয়েছে। " +
-        "ছবি অনলাইনে সংরক্ষণ হয়নি, কারণ Firebase Storage এখনো সেটআপ করা নেই।"
+        "✅ আপনার নাম, Gmail, ফোন নম্বর, শহর ও পরিচিতি সংরক্ষিত হয়েছে। " +
+        "ছবি বর্তমানে শুধু প্রিভিউতে আছে; অনলাইনে সংরক্ষিত হয়নি।",
+        "success"
       );
+
     } catch (error) {
-      console.error("Profile saving error:", error);
+      console.error("Profile save error:", error);
 
       const code = error?.code || "unknown";
 
       const messages = {
         "permission-denied":
-          "Firestore অনুমতি দেয়নি। Firebase Console-এর Firestore Rules পরীক্ষা করুন।",
+          "Firestore Rules সংরক্ষণের অনুমতি দেয়নি। Firebase Console-এর Rules পরীক্ষা করুন।",
 
         "unavailable":
-          "Firebase সার্ভার পাওয়া যাচ্ছে না। ইন্টারনেট পরীক্ষা করে আবার চেষ্টা করুন।",
+          "Firebase সার্ভার পাওয়া যাচ্ছে না। ইন্টারনেট পরীক্ষা করুন।",
 
         "unauthenticated":
-          "লগইন সেশন শেষ হয়েছে। আবার লগইন করুন।"
+          "আপনার লগইন সেশন শেষ হয়েছে। আবার লগইন করুন।",
+
+        "resource-exhausted":
+          "Firebase-এর ব্যবহারসীমা অতিক্রম করেছে। পরে আবার চেষ্টা করুন।"
       };
 
       showStatus(
-        "❌ সংরক্ষণ হয়নি (" +
+        "❌ সংরক্ষণ ব্যর্থ (" +
         code +
         "): " +
-        (messages[code] || "Firebase সেটিংস ও ইন্টারনেট পরীক্ষা করুন।")
+        (messages[code] || "Firebase সেটিংস ও ইন্টারনেট পরীক্ষা করুন।"),
+        "error"
       );
+
     } finally {
       saving = false;
       saveButton.disabled = false;
@@ -268,17 +361,68 @@ if (!form || !status || !accountStatus) {
     }
   });
 
-  logoutButton?.addEventListener("click", async () => {
+  // লগআউট
+  logoutButton.addEventListener("click", async () => {
     logoutButton.disabled = true;
+    showStatus("লগআউট হচ্ছে...");
 
     try {
       await signOut(auth);
       window.location.replace("./login.html");
+
     } catch (error) {
       console.error("Logout error:", error);
 
-      showStatus("লগআউট করা যায়নি। আবার চেষ্টা করুন।");
+      showStatus("লগআউট করা যায়নি। আবার চেষ্টা করুন।", "error");
+
       logoutButton.disabled = false;
     }
   });
 }
+
+async function loadProfile(user) {
+  showStatus("আপনার প্রোফাইল লোড হচ্ছে...");
+
+  try {
+    const profileRef = doc(db, "users", user.uid);
+    const snapshot = await getDoc(profileRef);
+
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+
+      nameInput.value = data.name || user.displayName || "";
+      phoneInput.value = data.phone || user.phoneNumber || "";
+      locationInput.value = data.location || "";
+      bioInput.value = data.bio || "";
+
+    } else {
+      nameInput.value = user.displayName || "";
+      phoneInput.value = user.phoneNumber || "";
+      locationInput.value = "";
+      bioInput.value = "";
+    }
+
+    emailInput.value = user.email || "";
+
+    setFormEnabled(true);
+
+    showStatus(
+      "প্রোফাইল প্রস্তুত। ছবি সর্বোচ্চ 500 KB হতে পারবে।",
+      "success"
+    );
+
+  } catch (error) {
+    console.error("Profile load error:", error);
+
+    setFormEnabled(true);
+
+    showStatus(
+      "প্রোফাইল লোড হয়নি (" +
+      (error.code || "unknown") +
+      ")। Firebase Rules ও ইন্টারনেট পরীক্ষা করুন।",
+      "error"
+    );
+  }
+}
+
+window.addEventListener("pagehide", releasePhotoPreview);
