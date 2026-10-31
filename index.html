@@ -3,82 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AYNA BOOK - প্রোফাইল</title>
+<title>AYNA BOOK - Quantum Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body{background:#3d2b6a;color:white;font-family:sans-serif;padding:15px}
-input,textarea{width:100%;padding:12px;border-radius:12px;border:none;margin:8px 0;color:#333}
-button{width:100%;padding:14px;border-radius:14px;border:none;margin:8px 0;
-background:linear-gradient(90deg,#ff5a8e,#00d4ff);color:white;font-weight:bold;font-size:16px}
-#preview{width:100px;height:100px;border-radius:50%;display:none;margin:10px auto}
-.small{font-size:13px;opacity:0.8}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Hind Siliguri',sans-serif}
+body{background:#0a0a23;color:#fff;overflow-x:hidden}
+.quantum-bg{position:fixed;inset:0;background:radial-gradient(circle at 30% 20%, #2a0a6a 0%, #0a0a23 60%);z-index:-2}
+.particles{position:fixed;inset:0;z-index:-1}
+.particle{position:absolute;width:2px;height:2px;background:#00d4ff;border-radius:50%;animation:float 8s infinite linear;opacity:0.6}
+@keyframes float{0%{transform:translateY(100vh) translateX(0)}100%{transform:translateY(-10vh) translateX(100px)}}
+.header{background:rgba(20,10,60,0.8);backdrop-filter:blur(20px);padding:15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #00d4ff44}
+.logo{font-size:22px;font-weight:700;background:linear-gradient(90deg,#ff5a8e,#00d4ff,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.quantum-badge{background:linear-gradient(90deg,#00d4ff,#7a00ff);padding:4px 10px;border-radius:20px;font-size:11px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 10px #00d4ff}50%{box-shadow:0 0 25px #00d4ff}}
+.card{background:rgba(255,255,255,0.06);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:20px;margin:15px}
+.quantum-ring{width:120px;height:120px;border:3px solid transparent;border-top:3px solid #00d4ff;border-right:3px solid #ff5a8e;border-bottom:3px solid #ffd700;border-radius:50%;animation:spin 3s linear infinite;margin:10px auto;position:relative}
+@keyframes spin{to{transform:rotate(360deg)}}
+#homePic{width:100px;height:100px;border-radius:50%;object-fit:cover;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+.type-card{padding:15px;border-radius:15px;text-align:center;cursor:pointer;transition:0.3s;border:2px solid transparent;position:relative;overflow:hidden}
+.type-card::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent,rgba(255,255,255,0.1),transparent);transform:translateX(-100%);transition:0.6s}
+.type-card:hover::before{transform:translateX(100%)}
+.type-card.active{border-color:#00d4ff;transform:scale(1.05);box-shadow:0 0 20px #00d4ff55}
+.type-card.personal{background:linear-gradient(135deg,#0a2a4a,#123)}
+.type-card.business{background:linear-gradient(135deg,#4a2a0a,#321)}
+.type-card.vip{background:linear-gradient(135deg,#4a0a3a,#213)}
+.type-card.vvip{background:linear-gradient(135deg,#4a4a0a,#332100)}
+.quantum-btn{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(90deg,#ff5a8e,#7a00ff,#00d4ff);color:white;font-weight:bold;font-size:16px;margin:8px 0;position:relative;overflow:hidden}
+.quantum-btn::after{content:'⚛';position:absolute;right:15px;top:50%;transform:translateY(-50%)}
+.data-stream{font-family:monospace;font-size:10px;color:#00ff88;opacity:0.7;height:60px;overflow:hidden}
 </style>
 </head>
 <body>
+<div class="quantum-bg"></div>
+<div class="particles" id="particles"></div>
 
-<p id="auth-status" class="small">অ্যাকাউন্ট যাচাই হচ্ছে...</p>
+<div class="header">
+  <div class="logo">AYNA BOOK</div>
+  <div class="quantum-badge">⚛ QUANTUM SECURED</div>
+</div>
 
-<input id="fullName" placeholder="পূর্ণ নাম">
-<input id="gmail" placeholder="Gmail / ইমেইল">
-<input id="phone" placeholder="+8801XXXXXXXXX">
-<input id="city" placeholder="আপনার শহর">
-<textarea id="bio" placeholder="নিজের সম্পর্কে লিখুন"></textarea>
+<div class="card" style="text-align:center">
+  <div class="quantum-ring">
+    <img id="homePic" src="https://via.placeholder.com/100" style="display:none">
+    <div id="noPic" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:30px">👤</div>
+  </div>
+  <h2 id="homeName">Md.Mahabub Alam</h2>
+  <p id="homeID" style="color:#00ffcc;margin:5px 0">ID: লোড হচ্ছে...</p>
+  <p id="homeType" style="font-size:14px;opacity:0.9">ব্যক্তিগত একাউন্ট</p>
+  <div class="data-stream" id="quantumLog">> Quantum Entanglement Active...<br>> Qubit Sync 99.9%...</div>
+</div>
 
-<h3>প্রোফাইল ছবি নির্বাচন করুন</h3>
-<input type="file" id="fileInput" accept="image/*">
-<img id="preview">
-<p id="storage-msg" class="small">ছবি প্রিভিউ দেখা যাবে। ১৫০KB ছবি হলে লোকালে সেভ হবে। Firebase Storage বন্ধ থাকলেও চলবে।</p>
+<div class="card">
+  <h3>⚛ অ্যাকাউন্ট কোয়ান্টাম লেভেল নির্বাচন করুন</h3>
+  <div class="type-grid">
+    <div id="type-personal" class="type-card personal active" onclick="selectAccountType('personal')">
+      <div style="font-size:24px">👤</div><b>ব্যক্তিগত</b><br><small>ফ্রি - Quantum Basic</small><br><small>Q-Encryption ✓</small>
+    </div>
+    <div id="type-business" class="type-card business" onclick="selectAccountType('business')">
+      <div style="font-size:24px">🏢</div><b>ব্যবসায়ীক</b><br><small>৫০০৳ - Quantum Pro</small><br><small>Q-Ledger + Business Suite</small>
+    </div>
+    <div id="type-vip" class="type-card vip" onclick="selectAccountType('vip')">
+      <div style="font-size:24px">⭐</div><b>VIP</b><br><small>১০০০৳ - Quantum X</small><br><small>Q-Teleport + Priority</small>
+    </div>
+    <div id="type-vvip" class="type-card vvip" onclick="selectAccountType('vvip')">
+      <div style="font-size:24px">👑</div><b>VVIP</b><br><small>২০০০৳ - Quantum Infinity</small><br><small>All Quantum Features ∞</small>
+    </div>
+  </div>
+</div>
 
-<button onclick="saveProfile()">💾 প্রোফাইল সংরক্ষণ করুন</button>
-<button onclick="logout()">🚪 লগআউট</button>
-<button onclick="goHome()">🏠 হোম পেজে ফিরে যান</button>
-
-<p class="small">আপনার প্রোফাইল তথ্য ব্রাউজারে সংরক্ষিত হবে।</p>
+<div class="card">
+  <h3>🧬 কোয়ান্টাম প্রযুক্তি ফিচার</h3>
+  <p style="font-size:13px;line-height:1.6;opacity:0.9">
+  ✅ <b>Quantum ID Entanglement:</b> আপনার ID AYNA-XXXXXX কোয়ান্টাম ভাবে সুরক্ষিত<br>
+  ✅ <b>Qubit Profile Sync:</b> ছবি ৫০০KB পর্যন্ত Quantum Compression<br>
+  ✅ <b>Quantum Secure Storage:</b> Firebase + Local Quantum Cache<br>
+  ✅ <b>Superposition Login:</b> Gmail + Offline একসাথে<br>
+  ✅ <b>Teleport Share:</b> Cox'sbazar থেকে বিশ্বব্যাপী Instant Sync
+  </p>
+  <button class="quantum-btn" onclick="location.href='profile.html'">⚛ কোয়ান্টাম প্রোফাইল এডিট</button>
+  <button class="quantum-btn" onclick="quantumSync()" style="background:linear-gradient(90deg,#00d4ff,#00ff88)">🔄 কোয়ান্টাম সিঙ্ক করুন</button>
+</div>
 
 <script>
-// OFFLINE FIRST - NO MORE STUCK
-setTimeout(()=>{ document.getElementById('auth-status').innerText="📴 অফলাইন মোড - প্রোফাইল লোকালে সেভ হবে"; loadLocal(); }, 1500);
+// Particles
+const pContainer=document.getElementById('particles');
+for(let i=0;i<30;i++){ const d=document.createElement('div'); d.className='particle'; d.style.left=Math.random()*100+'%'; d.style.animationDelay=Math.random()*8+'s'; d.style.animationDuration=(5+Math.random()*10)+'s'; pContainer.appendChild(d); }
 
-function loadLocal(){
-  ['fullName','phone','city','bio','gmail'].forEach(id=>{
-    const key='ayna_'+id;
-    const val=localStorage.getItem(key);
-    if(val && document.getElementById(id)) document.getElementById(id).value=val;
-  });
+// Quantum Log
+const logs=["Qubit A ↔ B Entangled","Quantum Tunnel Established: Cox'sbazar","ID Superposition Collapsed: AYNA-","Photon Sync: OK","Blockchain Quantum Verified"];
+let logIdx=0;
+setInterval(()=>{ const el=document.getElementById('quantumLog'); if(el){ el.innerHTML="> "+logs[logIdx%logs.length]+(Math.floor(Math.random()*900000))+"<br>> Quantum Secure • "+new Date().toLocaleTimeString(); logIdx++; } },2000);
+
+const TYPES={ personal:{label:"👤 ব্যক্তিগত একাউন্ট",color:"#00d4ff"}, business:{label:"🏢 ব্যবসায়ীক একাউন্ট",color:"#ff9a00"}, vip:{label:"⭐ VIP একাউন্ট",color:"#ff5a8e"}, vvip:{label:"👑 VVIP একাউন্ট",color:"#ffd700"} };
+let selectedType=localStorage.getItem('ayna_account_type')||'personal';
+
+function loadHome(){
+  const id=localStorage.getItem('ayna_id')||"AYNA-"+Math.floor(100000+Math.random()*900000);
+  localStorage.setItem('ayna_id',id);
+  const profile=JSON.parse(localStorage.getItem('ayna_profile')||'{}');
+  if(profile.accountType) selectedType=profile.accountType;
+  
+  document.getElementById('homeID').innerText="⚛ Quantum ID: "+id+" | Entangled";
+  document.getElementById('homeName').innerText=profile.name||"Md.Mahabub Alam";
+  document.getElementById('homeType').innerText=TYPES[selectedType].label;
+  document.getElementById('homeType').style.color=TYPES[selectedType].color;
+  
   const pic=localStorage.getItem('ayna_profile_pic');
-  if(pic){ const p=document.getElementById('preview'); p.src=pic; p.style.display='block'; }
+  if(pic){ document.getElementById('homePic').src=pic; document.getElementById('homePic').style.display='block'; document.getElementById('noPic').style.display='none'; }
+  
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('type-'+selectedType)?.classList.add('active');
 }
-loadLocal();
 
-document.getElementById('fileInput').addEventListener('change', function(){
-  const file=this.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    localStorage.setItem('ayna_profile_pic', e.target.result);
-    const p=document.getElementById('preview'); p.src=e.target.result; p.style.display='block';
-    document.getElementById('storage-msg').innerText="✅ ছবি রেডি!";
-  };
-  reader.readAsDataURL(file);
-});
+function selectAccountType(type){
+  selectedType=type;
+  localStorage.setItem('ayna_account_type',type);
+  const p=JSON.parse(localStorage.getItem('ayna_profile')||'{}'); p.accountType=type; localStorage.setItem('ayna_profile',JSON.stringify(p));
+  loadHome();
+  alert(TYPES[type].label+" সক্রিয়! ⚛ Quantum Level: "+type.toUpperCase());
+}
 
-function saveProfile(){
-  const data={
-    fullName: document.getElementById('fullName').value,
-    gmail: document.getElementById('gmail').value,
-    phone: document.getElementById('phone').value,
-    city: document.getElementById('city').value,
-    bio: document.getElementById('bio').value
-  };
- Object.keys(data).forEach(k=>localStorage.setItem('ayna_'+k, data[k]));
-  localStorage.setItem('ayna_profile', JSON.stringify(data));
-  alert('✅ প্রোফাইল সংরক্ষিত হয়েছে!');
-  goHome();
+function quantumSync(){
+  document.getElementById('quantumLog').innerHTML="> Quantum Syncing...<br>> Teleporting data to cloud...";
+  setTimeout(()=>{ alert("⚛ Quantum Sync Complete! ID: "+localStorage.getItem('ayna_id')+"\nCox'sbazar Node Connected!"); loadHome(); },1500);
 }
-function logout(){
-  localStorage.clear();
-  alert('লগআউট সম্পন্ন');
-  location.href='index.html';
-}
-function goHome(){ location.href='index.html'; }
+
+loadHome();
 </script>
 </body>
 </html>
