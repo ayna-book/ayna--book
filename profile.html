@@ -1,168 +1,75 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
-  <title>AYNA BOOK — My Profile</title>
+  <title>AYNA BOOK — আমার প্রোফাইল</title>
   <link rel="stylesheet" href="./styles.css">
-
   <style>
-    body {
-      min-height: 100vh;
-      padding: 20px;
-      background: linear-gradient(135deg, #071b49, #512b81);
-      color: white;
-      font-family: Arial, sans-serif;
-    }
-
-    .profile-card {
-      max-width: 520px;
-      margin: 25px auto;
-      padding: 24px;
-      background: #ffffff12;
-      border: 1px solid #ffffff35;
-      border-radius: 20px;
-    }
-
-    .profile-card h1,
-    .subtitle {
-      text-align: center;
-    }
-
-    .subtitle {
-      color: #35d9ef;
-    }
-
-    #photoPreview {
-      display: block;
-      width: 120px;
-      height: 120px;
-      margin: 20px auto;
-      border: 3px solid #35d9ef;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #ffffff20;
-    }
-
-    label {
-      display: block;
-      margin: 16px 0 7px;
-    }
-
-    input,
-    textarea {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font: inherit;
-    }
-
-    button,
-    .back-link {
-      display: block;
-      width: 100%;
-      margin-top: 16px;
-      padding: 13px;
-      border: 0;
-      border-radius: 10px;
-      background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
-    }
-
-    #profileStatus {
-      min-height: 24px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    .muted {
-      color: #ddd;
-      font-size: 13px;
-      line-height: 1.6;
-    }
+    *{box-sizing:border-box}
+    body{min-height:100vh;padding:20px;background:linear-gradient(135deg,#071b49,#512b81);color:#fff;font-family:Arial,sans-serif}
+    .profile-card{max-width:520px;margin:25px auto;padding:24px;background:#ffffff12;border:1px solid #ffffff35;border-radius:20px}
+    h1,.subtitle{text-align:center}
+    .subtitle{color:#35d9ef}
+    label{display:block;margin:16px 0 7px;font-weight:bold}
+    input,textarea{display:block;width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font:inherit}
+    button,.back-link{display:block;width:100%;margin-top:16px;padding:13px;border:0;border-radius:10px;background:linear-gradient(90deg,#ff4fa3,#8b5cf6,#35d9ef);color:white;font-size:16px;font-weight:bold;text-align:center;text-decoration:none;cursor:pointer}
+    button:disabled{opacity:.6;cursor:wait}
+    #photoPreview{width:120px;height:120px;margin:18px auto;border-radius:50%;object-fit:cover;border:3px solid #35d9ef;background:#ffffff20}
+    #profileStatus{min-height:24px;line-height:1.6;overflow-wrap:anywhere}
+    .muted{color:#ddd;font-size:13px;line-height:1.6}
+    .readonly{background:#eef1f7;color:#333}
   </style>
 </head>
-
 <body>
   <main class="profile-card">
     <h1>🌍 AYNA BOOK</h1>
     <p class="subtitle">My World. My Story. My AYNA BOOK.</p>
-
     <h2>👤 আমার প্রোফাইল</h2>
 
-    <p id="accountEmail" class="muted">
+    <p id="accountStatus" class="muted" role="status">
       অ্যাকাউন্ট যাচাই হচ্ছে...
     </p>
 
-    <img
-      id="photoPreview"
-      alt="প্রোফাইল ছবির প্রিভিউ"
-      hidden
-    >
+    <img id="photoPreview" alt="প্রোফাইল ছবির প্রিভিউ" hidden>
 
     <form id="profileForm">
-      <label for="name">আপনার পূর্ণ নাম</label>
-      <input
-        id="name"
-        type="text"
-        maxlength="80"
-        autocomplete="name"
-        required
-      >
+      <label for="name">পূর্ণ নাম</label>
+      <input id="name" type="text" maxlength="80"
+             autocomplete="name" required>
 
-      <label for="username">ইউজারনেম</label>
-      <input
-        id="username"
-        type="text"
-        maxlength="30"
-        required
-      >
+      <label for="email">Gmail / ইমেইল</label>
+      <input id="email" class="readonly" type="email"
+             readonly aria-readonly="true">
+
+      <label for="phone">ফোন নম্বর</label>
+      <input id="phone" type="tel" maxlength="20"
+             autocomplete="tel" placeholder="+8801XXXXXXXXX">
+
+      <label for="location">শহর / অবস্থান</label>
+      <input id="location" type="text" maxlength="100"
+             autocomplete="address-level2" placeholder="আপনার শহর">
 
       <label for="bio">আপনার পরিচিতি</label>
-      <textarea
-        id="bio"
-        rows="4"
-        maxlength="300"
-        placeholder="নিজের সম্পর্কে লিখুন"
-      ></textarea>
+      <textarea id="bio" rows="4" maxlength="300"
+                placeholder="নিজের সম্পর্কে লিখুন"></textarea>
 
-      <label for="location">আপনার শহর বা অবস্থান</label>
-      <input
-        id="location"
-        type="text"
-        maxlength="100"
-        placeholder="শহরের নাম লিখুন"
-      >
+      <label for="photo">প্রোফাইল ছবি নির্বাচন করুন</label>
+      <input id="photo" type="file"
+             accept="image/jpeg,image/png,image/webp">
 
-      <label for="photo">প্রোফাইল ছবি (সর্বোচ্চ ২ MB)</label>
-      <input
-        id="photo"
-        type="file"
-        accept="image/*"
-      >
+      <p class="muted">
+        ছবি প্রিভিউ দেখা যাবে। Firebase Storage চালু না থাকায়
+        ছবিটি আপাতত অনলাইনে সংরক্ষণ হবে না।
+      </p>
 
       <button id="saveButton" type="submit">
         💾 প্রোফাইল সংরক্ষণ করুন
       </button>
     </form>
 
-    <button id="logoutButton" type="button">
-      🚪 লগআউট
-    </button>
+    <button id="logoutButton" type="button">🚪 লগআউট</button>
 
     <p id="profileStatus" role="status" aria-live="polite"></p>
 
@@ -171,8 +78,9 @@
     </a>
 
     <p class="muted">
-      আপনার ব্যক্তিগত প্রোফাইল তথ্য Firebase-এ সংরক্ষিত হবে।
-      ছবি Firebase Storage-এ আপলোড হবে।
+      আপনার প্রোফাইল তথ্য Firebase-এ সংরক্ষিত হবে।
+      ফোন নম্বরের মালিকানা নিশ্চিত করতে আলাদা SMS OTP যাচাই
+      যুক্ত করতে হবে।
     </p>
   </main>
 
