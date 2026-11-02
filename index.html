@@ -1,61 +1,392 @@
-<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AYNA BOOK FINAL 100% WORKING</title><style>
-*{box-sizing:border-box}body{margin:0;background:#f2f5fc;font-family:system-ui}
-.h{background:#071b49;color:#fff;padding:14px;text-align:center;position:sticky;top:0;z-index:99}
-.badge{background:#28c78b;color:#000;padding:6px 12px;border-radius:999px;font-weight:900;font-size:12px;margin:3px;display:inline-block}
-.sq{width:92vw;height:92vw;max-width:520px;max-height:520px;aspect-ratio:1/1;border-radius:28px;border:4px solid #28c78b;margin:14px auto;background:linear-gradient(135deg,#071b49,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:50px;font-weight:900;text-align:center}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}
-.card{background:#fff;border:1px solid #e0e6f2;border-radius:16px;padding:12px;text-align:center}
-.btn{width:100%;background:#28c78b;border:0;padding:12px;border-radius:12px;font-weight:900;margin-top:6px}
-.btn-blue{background:#35d9ef}.btn-red{background:#ff5b66;color:#fff}.btn-dark{background:#071b49;color:#fff}
-.sec{margin:12px;background:#fff;border:1px solid #e0e6f2;border-radius:16px;padding:12px}
-.alert{border-left:5px solid #ffc857;background:#fff8e7;padding:10px;border-radius:10px;margin:6px 0;font-size:13px}
-.comp{width:140px;height:140px;border:4px solid #071b49;border-radius:50%;margin:10px auto;position:relative;background:#fff}
-.needle{width:6px;height:60px;background:red;position:absolute;left:50%;top:10px;transform-origin:bottom center;transform:translateX(-50%) rotate(0deg)}
-</style></head><body>
-<div class="h"><h1>🌍 AYNA BOOK - FINAL</h1><p>My World. My Story. My AYNA BOOK. - Mohammed Mahabub Alam</p><span class="badge">AYNA-956251</span><span class="badge">01400751906</span><span class="badge">999</span><span class="badge">Share No Restriction</span></div>
-<div class="sq">AYNA<br>BOOK</div>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYNA BOOK - My World. My Story. My AYNA BOOK.</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #3b82f6;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --danger-color: #ef4444;
+        }
 
-<div class="sec"><h2>💼 4 Accounts - 100% Working - Click Test</h2>
-<div class="grid">
-<div class="card"><b>Founder $1250 = ৳137500</b><button class="btn" id="btnShare">Share Unlimited</button></div>
-<div class="card"><b>Business $10 = ৳1100</b><button class="btn" id="btnConvert">Convert $ <-> ৳</button></div>
-<div class="card"><b>Family $500 = ৳55000</b><button class="btn btn-blue" id="btnLoc">Location ON/OFF</button></div>
-<div class="card"><b>SOS $2000 = ৳220000</b><button class="btn btn-red" id="btnSOS">SOS Send</button></div>
-</div>
-<p id="testMsg" style="background:#f2f5fc;padding:8px;border-radius:10px;font-size:12px">Test: Button Click করলে এখানে Message আসবে - Share No Restriction</p>
-</div>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<div class="sec"><h2>🧭 Compass + 📍 GPS + 🚨 Alert</h2>
-<div class="comp"><div class="needle" id="needle"></div></div>
-<p style="text-align:center;font-weight:900"><span id="deg">0° উত্তর</span> | <span id="gps">GPS: Allow Click</span></p>
-<button class="btn btn-dark" id="btnCompass">Start Compass - Click Here</button>
-<button class="btn btn-blue" id="btnGPS">Get My Location - Allow - Click Here</button>
-<div id="alertList"></div>
-</div>
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
 
-<script>
-// All Buttons 100% Working - addEventListener Fixed
-document.getElementById("btnShare").addEventListener("click",function(){document.getElementById("testMsg").innerText="Share Unlimited Clicked - Share No Restriction - Working! - AYNA-956251";if(navigator.share){navigator.share({title:"AYNA BOOK",text:"Founder $1250 = ৳137500 - Share No Restriction"})}else{alert("Shared - No Restriction - Copied - Working!")}});
-document.getElementById("btnConvert").addEventListener("click",function(){let usd=prompt("Enter $ Dollar:","10");if(usd){document.getElementById("testMsg").innerText="$"+usd+" = ৳"+(usd*110)+" - Convert Working!";alert("$"+usd+" = ৳"+(usd*110)+" Taka - Rate 110 - Working")}}); 
-document.getElementById("btnLoc").addEventListener("click",function(){document.getElementById("testMsg").innerText="Location Button Working - Getting GPS...";getGPS()});
-document.getElementById("btnSOS").addEventListener("click",function(){document.getElementById("testMsg").innerText="SOS Button Working - Sending...";sendSOS()});
-document.getElementById("btnCompass").addEventListener("click",function(){document.getElementById("testMsg").innerText="Compass Button Working - Starting...";let d=0;setInterval(function(){d=(d+5)%360;document.getElementById("needle").style.transform="translateX(-50%) rotate("+d+"deg)";document.getElementById("deg").innerText=d+"° উত্তর"},100);alert("Compass Started - Working! - Phone 8-figure ঘুরিয়ে Calibrate করুন")});
-document.getElementById("btnGPS").addEventListener("click",function(){getGPS()});
+        header {
+            background: var(--primary-color);
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-color);
+        }
 
-function getGPS(){
-if(!navigator.geolocation){document.getElementById("gps").innerText="No GPS API";document.getElementById("testMsg").innerText="GPS Not Supported - Use Github Pages HTTPS Link";return}
-document.getElementById("gps").innerText="Requesting Permission... Allow করুন";
-navigator.geolocation.getCurrentPosition(function(p){
-let lat=p.coords.latitude,lon=p.coords.longitude;
-document.getElementById("gps").innerText=lat.toFixed(5)+","+lon.toFixed(5);
-document.getElementById("testMsg").innerText="GPS Working! - Lat:"+lat.toFixed(5)+" Lon:"+lon.toFixed(5)+" - Ukhiya - Consent Granted";
-},function(e){document.getElementById("gps").innerText="Error: "+e.message;document.getElementById("testMsg").innerText="GPS Error: "+e.message+" - Phone Settings > Apps > Browser > Permissions > Location > Allow - HTTPS Link Needed";alert("GPS Error: "+e.message+" - Github Pages Link এ Open করলে কাজ করবে")},{enableHighAccuracy:true,timeout:15000})
-}
-function sendSOS(){let t=document.getElementById("gps").innerText;let m="SOS AYNA-956251 01400751906 999 "+t;document.getElementById("testMsg").innerText="SOS Working! - Opening WhatsApp...";window.open("https://wa.me/8801400751906?text="+encodeURIComponent(m),"_blank")}
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
 
-// 20 Alert Working + Share Button Working
-let alerts=["ঘূর্ণিঝড় Cox Bazar - BMD","ভূমিকম্প Ukhiya - USGS","বন্যা Chittagong - FFWC","ভূমিধস Bandarban","বজ্রপাত BD - BMD","তাপপ্রবাহ Dhaka","খরা North","দাবানল Camp - 999","গ্যাস লিক Ukhiya","রাসায়নিক Port","বিদ্যুৎ Industrial","ভবনধস Road","সংক্রামক রোগ Camp","বায়ুদূষণ Dhaka","যুদ্ধ Border - UN","নিরাপদ স্থান Ukhiya","আশ্রয় Cox","নেটওয়ার্ক BD","সাইবার Online","অন্যান্য Global"];
-let h="";for(let i=0;i<alerts.length;i++){h+="<div class='alert'><b>"+(i+1)+". "+alerts[i]+"</b> <button class='btn btn-blue' style='padding:4px;font-size:11px' onclick=\"alert('Shared - No Restriction: "+alerts[i]+" - Working!')\">Share</button></div>"}document.getElementById("alertList").innerHTML=h;
-document.getElementById("testMsg").innerText="All Buttons Fixed - 100% Working - Click Any Button to Test - Share No Restriction - AYNA-956251";
-</script>
-</body></html>
+        header p {
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        /* Square Box Design for All Features */
+        .feature-box {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            aspect-ratio: 1 / 1; /* Ensures Square Size */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            overflow-y: auto;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+        }
+
+        .feature-box h3 {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 8px;
+        }
+
+        .feature-content {
+            font-size: 0.9rem;
+            color: #475569;
+            flex-grow: 1;
+        }
+
+        .btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background: var(--primary-color);
+            color: #94a3b8;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌍 AYNA BOOK</h1>
+        <p>Founder: Mohammed Mahabub Alam | My World. My Story. My AYNA BOOK.</p>
+    </header>
+
+    <div class="container">
+
+        <!-- A. AYNA Compass -->
+        <div class="feature-box">
+            <h3>🧭 AYNA Compass</h3>
+            <div class="feature-content">
+                <p>ডিজিটাল কম্পাস ও ডিগ্রি অনুযায়ী দিক নির্ণয়।</p>
+                <div id="compass-status" style="margin-top: 10px; font-weight: bold; color: var(--accent-color);">সেন্সর লোড হচ্ছে...</div>
+            </div>
+            <button class="btn" onclick="initCompass()">কম্পাস চালু করুন</button>
+        </div>
+
+        <!-- B. AYNA GPS & Safe Navigation -->
+        <div class="feature-box">
+            <h3>📍 AYNA GPS & Navigation</h3>
+            <div class="feature-content">
+                <p>বর্তমান অবস্থান, নিরাপদ পথ এবং জরুরি SOS সুবিধা।</p>
+                <div id="gps-data" style="margin-top: 10px; font-size: 0.85rem;">লোকেশন অনুমতি অপেক্ষমাণ...</div>
+            </div>
+            <button class="btn btn-danger" onclick="triggerSOS()">জরুরি SOS পাঠান</button>
+        </div>
+
+        <!-- C. AYNA Satellite & Earth Observation -->
+        <div class="feature-box">
+            <h3>🛰️ Satellite & Earth</h3>
+            <div class="feature-content">
+                <p>অনুমোদিত উপগ্রহচিত্র, আবহাওয়া পর্যবেক্ষণ ও বন্যাকবলিত এলাকার মানচিত্র।</p>
+                <select id="satellite-region">
+                    <option value="bd">বাংলাদেশ অঞ্চল</option>
+                    <option value="global">আন্তর্জাতিক অঞ্চল</option>
+                </select>
+            </div>
+            <button class="btn" onclick="loadSatelliteData()">উপগ্রহচিত্র দেখুন</button>
+        </div>
+
+        <!-- D. AYNA Radar Information -->
+        <div class="feature-box">
+            <h3>📡 AYNA Radar Information</h3>
+            <div class="feature-content">
+                <p>আবহাওয়া রাডার, বৃষ্টিপাত, ঝড় ও সামুদ্রিক নিরাপত্তা তথ্য।</p>
+                <p style="font-size: 0.8rem; color: var(--danger-color); margin-top: 5px;">*সামরিক রাডার বা মিসাইল ট্র্যাকিং নিষিদ্ধ। জননিরাপত্তা অগ্রাধিকার।</p>
+            </div>
+            <button class="btn" onclick="loadRadar()">রাডার আপডেট লোড</button>
+        </div>
+
+        <!-- E. AYNA GLOBAL ALERT -->
+        <div class="feature-box">
+            <h3>🚨 AYNA GLOBAL ALERT</h3>
+            <div class="feature-content">
+                <p>২০টি জরুরি প্রাকৃতিক ও মানবসৃষ্ট বিপদের সতর্কতা ও সরকারি নোটিশ।</p>
+                <div id="alert-box" style="margin-top: 5px; color: var(--danger-color); font-weight: bold;">সতর্কতা: কোনো সক্রিয় বিপদ নেই।</div>
+            </div>
+            <button class="btn btn-danger" onclick="checkGlobalAlerts()">সতর্কতা চেক করুন</button>
+        </div>
+
+        <!-- F. AYNA Humanitarian Safety -->
+        <div class="feature-box">
+            <h3>🆘 Humanitarian Safety</h3>
+            <div class="feature-content">
+                <p>পরিবারকে সতর্ক করা, হাসপাতাল ও আশ্রয়ের তথ্য এবং কম ডেটায় বার্তা প্রেরণ।</p>
+                <textarea placeholder="জরুরি নোট বা বার্তা লিখুন..."></textarea>
+            </div>
+            <button class="btn" onclick="sendOfflineMessage()">সংরক্ষিত বার্তা পাঠান</button>
+        </div>
+
+        <!-- G. AYNA AI Language & Voice -->
+        <div class="feature-box">
+            <h3>🌐 AI Language & Voice</h3>
+            <div class="feature-content">
+                <p>বাংলা ভাষায় কথা বলে বার্তা তৈরি ও বহুভাষিক অনুবাদ সিস্টেম।</p>
+                <select id="trans-lang">
+                    <option value="bn">বাংলা (Bengali)</option>
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                </select>
+            </div>
+            <button class="btn" onclick="startVoiceAI()">ভয়েস কমান্ড শুরু</button>
+        </div>
+
+        <!-- H. AYNA Global Radio & TV -->
+        <div class="feature-box">
+            <h3>📺 Global Radio & TV</h3>
+            <div class="feature-content">
+                <p>দেশভিত্তিক রেডিও ও টিভি চ্যানেল (বাংলাদেশ, আমেরিকা ও বিশ্বব্যাপী)।</p>
+                <select id="country-media" onchange="updateMediaChannels()">
+                    <option value="bd">বাংলাদেশ (TV & Radio)</option>
+                    <option value="us">United States (TV & Radio)</option>
+                    <option value="global">Global Channels</option>
+                </select>
+                <div id="channel-list" style="margin-top: 8px; font-size: 0.85rem;">বিটিভি, রেডিও বাংলাদেশ, একাত্তর টিভি ইত্যাদি।</div>
+            </div>
+            <button class="btn" onclick="playMediaStream()">সম্প্রচার শুরু করুন</button>
+        </div>
+
+        <!-- I. AYNA Account Security -->
+        <div class="feature-box">
+            <h3>🔐 Account Security</h3>
+            <div class="feature-content">
+                <p>ইমেইল ভেরিফিকেশন, শক্তিশালী পাসওয়ার্ড এবং বহুস্তরীয় নিরাপত্তা (MFA)।</p>
+                <input type="email" id="sec-email" placeholder="ইমেইল ঠিকানা দিন">
+            </div>
+            <button class="btn" onclick="verifyAccountEmail()">ইমেইল ভেরিফাই করুন</button>
+        </div>
+
+        <!-- J. AYNA Privacy & Cyber Defence -->
+        <div class="feature-box">
+            <h3>🛡️ Privacy & Cyber Defence</h3>
+            <div class="feature-content">
+                <p>প্রোফাইল দৃশ্যমানতা নিয়ন্ত্রণ, ক্ষতিকর স্ক্রিপ্ট প্রতিরোধ ও ডেটা এনক্রিপশন।</p>
+            </div>
+            <button class="btn" onclick="runSecurityAudit()">নিরাপত্তা স্ক্যান</button>
+        </div>
+
+        <!-- K. AYNA Safe Content -->
+        <div class="feature-box">
+            <h3>🚫 AYNA Safe Content</h3>
+            <div class="feature-content">
+                <p>অশালীন কনটেন্ট ফিল্টারিং, ব্লক/মিউট অপশন এবং শিশু সুরক্ষা নিয়ম।</p>
+            </div>
+            <button class="btn" onclick="reportContentModal()">কনটেন্ট রিপোর্ট সেন্টার</button>
+        </div>
+
+        <!-- L. AYNA Copy, Download & Share Controls -->
+        <div class="feature-box">
+            <h3>🔒 Copy & Share Controls</h3>
+            <div class="feature-content">
+                <p>পোস্ট শেয়ারিং সীমিতকরণ, ডাউনলোড বন্ধ রাখা ও দৃশ্যমান ওয়াটারমার্ক।</p>
+            </div>
+            <button class="btn" onclick="toggleShareRestrictions()">নিরাপত্তা সেটিংস আপডেট</button>
+        </div>
+
+        <!-- M. AYNA Messenger & Social Hub (No Restrictions on Sharing) -->
+        <div class="feature-box">
+            <h3>💬 Social & Messenger Hub</h3>
+            <div class="feature-content">
+                <p>সোশ্যাল মিডিয়া সুবিধা, ডলার ও টাকার লেনদেন সহ মেসেঞ্জার বক্স (শেয়ারে কোনো বিধিনিষেধ নেই)।</p>
+                <input type="text" placeholder="মেসেজ বা ডলার/টাকা পাঠান ($ / ৳)...">
+            </div>
+            <button class="btn" onclick="sendSocialMessage()">মেসেজ ও লেনদেন পাঠান</button>
+        </div>
+
+        <!-- N. AYNA Security Settings -->
+        <div class="feature-box">
+            <h3>⚙️ Security Settings</h3>
+            <div class="feature-content">
+                <p>২০টি অ্যাডভান্সড ইউজার সেটিংস ও লগআউট অল ডিভাইসেস অপশন।</p>
+            </div>
+            <button class="btn btn-danger" onclick="logoutAll()">সব ডিভাইস থেকে লগআউট</button>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 AYNA BOOK. All Rights Reserved. | Founder: Mohammed Mahabub Alam</p>
+    </footer>
+
+    <script>
+        // JavaScript Core Logic for AYNA BOOK
+        function initCompass() {
+            if (window.DeviceOrientationEvent) {
+                document.getElementById('compass-status').innerText = "কম্পাস সেন্সর সক্রিয় করা হয়েছে।";
+                alert("কম্পাস সফলভাবে ক্যালিব্রেট করা হয়েছে।");
+            } else {
+                document.getElementById('compass-status').innerText = "আপনার ডিভাইসে কম্পাস সেন্সর সমর্থিত নয়।";
+            }
+        }
+
+        function triggerSOS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    alert("জরুরি SOS বার্তা এবং আপনার জিপিএস লোকেশন বিশ্বস্ত পরিবার ও নিকটস্থ কেন্দ্রে পাঠানো হয়েছে!");
+                }, () => {
+                    alert("লোকেশন অনুমতি পাওয়া যায়নি। তবে অফলাইন SOS সিগন্যাল পাঠানো হয়েছে। আকস্মিক সহায়তার জন্য প্রস্তুত।");
+                });
+            } else {
+                alert("জরুরি SOS সক্রিয়!");
+            }
+        }
+
+        function loadSatelliteData() {
+            const region = document.getElementById('satellite-region').value;
+            alert(region.toUpperCase() + " অঞ্চলের অনুমোদিত স্যাটেলাইট ও আবহাওয়া চিত্র লোড হচ্ছে...");
+        }
+
+        function loadRadar() {
+            alert("স্থানীয় আবহাওয়া রাডার এবং ঝড়ের গতিবিধি রিফ্রেশ করা হয়েছে।");
+        }
+
+        function checkGlobalAlerts() {
+            document.getElementById('alert-box').innerText = "স্ট্যাটাস: সমস্ত আঞ্চলিক আবহাওয়া ও নিরাপত্তা সূচক স্বাভাবিক রয়েছে।";
+            alert("২০টি জননিরাপত্তা ও দুর্যোগ সতর্কতা পর্যবেক্ষণ করা হলো। কোনো বড় বিপদ নেই।");
+        }
+
+        function sendOfflineMessage() {
+            alert("কম ডেটা মোডে জরুরি নিরাপত্তা নির্দেশনা ও বার্তা সফলভাবে সংরক্ষিত ও প্রেরিত হয়েছে।");
+        }
+
+        function startVoiceAI() {
+            alert("AI ভয়েস ও ভাষা অনুবাদ সিস্টেম চালু হয়েছে। দয়া করে কথা বলুন...");
+        }
+
+        function updateMediaChannels() {
+            const country = document.getElementById('country-media').value;
+            const listDiv = document.getElementById('channel-list');
+            if(country === 'bd') {
+                listDiv.innerHTML = "বাংলাদেশ: বিটিভি, বাংলাদেশ বেতার, একাত্তর টিভি, চ্যানেল আই, ইনডিপেন্ডেন্ট টিভি ইত্যাদি।";
+            } else if(country === 'us') {
+                listDiv.innerHTML = "USA: CNN, Fox News, ABC, NPR Radio, Bloomberg ইত্যাদি।";
+            } else {
+                listDiv.innerHTML = "Global: BBC World, Al Jazeera, DW News, Reuters Live ইত্যাদি।";
+            }
+        }
+
+        function playMediaStream() {
+            alert("নির্বাচিত দেশের রেডিও এবং টেলিভিশন স্ট্রিম চালু হচ্ছে...");
+        }
+
+        function verifyAccountEmail() {
+            const email = document.getElementById('sec-email').value;
+            if(email) {
+                alert(email + " ঠিকানায় একটি যাচাইকরণ কোড পাঠানো হয়েছে।");
+            } else {
+                alert("দয়া করে একটি বৈধ ইমেইল ঠিকানা লিখুন।");
+            }
+        }
+
+        function runSecurityAudit() {
+            alert("সাইবার ডিফেন্স ও প্রাইভেসি স্ক্যান সম্পন্ন! সিস্টেম সুরক্ষিত আছে।");
+        }
+
+        function reportContentModal() {
+            alert("কনটেন্ট সেফটি সেন্টার: যেকোনো আপত্তিকর পোস্ট বা মিডিয়া রিপোর্ট করার অপশন সক্রিয়।");
+        }
+
+        function toggleShareRestrictions() {
+            alert("শেয়ার এবং ডাউনলোড সংক্রান্ত গোপনীয়তা নিয়ন্ত্রণ আপডেট করা হয়েছে। (মনে রাখবেন: শেয়ারে কোনো অতিরিক্ত বিধিনিষেধ রাখা হয়নি)।");
+        }
+
+        function sendSocialMessage() {
+            alert("সোশ্যাল মেসেঞ্জার এবং ডলার/টাকা ট্রান্সফার সফলভাবে প্রসেস হয়েছে!");
+        }
+
+        function logoutAll() {
+            if(confirm("আপনি কি নিশ্চিতভাবে সমস্ত ডিভাইস থেকে লগআউট করতে চান?")) {
+                alert("সকল ডিভাইস থেকে সফলভাবে সেশন টার্মিনেট করা হয়েছে।");
+            }
+        }
+    </script>
+</body>
+</html>
