@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>AYNA BOOK - Interactive Custom Radar Map</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { width: 100%; height: 500px; border-radius: 10px; }
+    </style>
+</head>
+<body style="background: #030712; color: #fff; padding: 20px;">
+
+    <h2>🌍 AYNA BOOK — কাস্টম রাডার ও আবহাওয়া মানচিত্র</h2>
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // মানচিত্র ইনিশিয়ালাইজ করা (ডিফল্ট কেন্দ্র: বাংলাদেশ)
+        const map = L.map('map').setView([23.6850, 90.3563], 7);
+
+        // বেস ম্যাপ টাইল যুক্ত করা
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // উদাহরণস্বরূপ একটি লাইভ ওয়েদার রাডার বা ক্লাউড লেয়ার যুক্ত করা (Intellicast / RainViewer API)
+        L.tileLayer('https://tile.rainviewer.com/v2/radar/nowcast_10m/{z}/{x}/{y}/2/1_1.png', {
+            opacity: 0.7,
+            attribution: 'RainViewer API'
+        }).addTo(map);
+
+        // ব্যবহারকারীর লোকেশন বা নির্দিষ্ট এলার্ট পয়েন্ট মার্ক করা
+        const marker = L.marker([23.6850, 90.3563]).addTo(map);
+        marker.bindPopup("<b>AYNA BOOK Radar Node</b><br>বর্তমান আবহাওয়া শান্ত রয়েছে।").openPopup();
+    </script>
+
+</body>
+</html>
