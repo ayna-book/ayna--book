@@ -2,65 +2,88 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AYNA BOOK GLOBAL VISION FINAL - 956251</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>AYNA BOOK - GLOBAL FINAL VISION</title>
 <style>
-:root{--gold:#FFD36B;--blue:#0A2A6B;--cyan:#00D4FF;--green:#00FF88;--red:#ff2a2a;--bg:#020208}
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:var(--bg);color:#fff;padding:8px;padding-top:85px}
-#left{width:75px;height:75px;background:#000;border:3px solid var(--gold);border-radius:50%;position:fixed;top:10px;left:10px;z-index:9999;display:flex;align-items:center;justify-content:center;animation:rotL 8s linear infinite}
-#right{width:75px;height:75px;background:#000;border:3px solid var(--cyan);border-radius:50%;position:fixed;top:10px;right:10px;z-index:9999;display:flex;align-items:center;justify-content:center;animation:rotR 12s linear infinite reverse}
-@keyframes rotL{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-@keyframes rotR{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-.card{background:rgba(255,255,255,0.07);border:1px solid #00d4ff44;border-radius:20px;padding:14px;margin:14px 0}
-.glow{border:3px solid var(--gold);box-shadow:0 0 15px #00d4ff88}
-.big-square{width:100%;max-width:400px;aspect-ratio:1/1;margin:12px auto;border-radius:24px;border:5px solid var(--gold);object-fit:cover;display:block;background:#111}
-.btn{width:100%;padding:12px;border-radius:12px;background:linear-gradient(90deg,var(--blue),#1a3a8a);border:1px solid var(--gold);color:var(--gold);font-weight:900;margin:5px 0;cursor:pointer;font-size:11px;display:block;text-align:center;text-decoration:none}
-.btn2{background:#222;border:1px solid #555;color:#fff}
-.gridSquare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:768px){.gridSquare{grid-template-columns:1fr}}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-#map{width:100%;aspect-ratio:1/1;border-radius:20px;border:3px solid var(--gold);max-height:400px}
-canvas{width:100%;aspect-ratio:1/1;background:#000;border-radius:50%;display:block}
-select,input,textarea{width:100%;padding:10px;border-radius:10px;background:#111;border:1px solid var(--gold);color:#fff;margin:5px 0;font-size:12px}
-.qbox{background:#111;border-radius:16px;padding:12px;text-align:center;aspect-ratio:1/1;display:flex;flex-direction:column;justify-content:center;border:1px solid #333}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#020617;color:#e2e8f0;font-family:system-ui}
+.square{width:92vw;height:92vw;max-width:520px;max-height:520px;aspect-ratio:1/1;border-radius:28px;overflow:hidden;border:4px solid #22c55e;margin:18px auto;background:#0f172a;display:flex}
+.header{position:sticky;top:0;background:rgba(2,6,23,.9);padding:14px;text-align:center;border-bottom:1px solid #1e293b;z-index:99}
+.badge{background:#22c55e;color:#000;padding:5px 12px;border-radius:999px;font-weight:900;font-size:12px;margin:3px;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
+@media(min-width:900px){.grid2{grid-template-columns:1fr 1fr 1fr 1fr}}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:20px;padding:14px}
+.btn{width:100%;background:#22c55e;color:#000;border:0;padding:12px;border-radius:12px;font-weight:900;margin-top:8px}
+.btn-blue{background:#0ea5e9;color:#fff}.btn-red{background:#ef4444;color:#fff}
+.section{margin:18px 12px;background:#0f172a;border:1px solid #1e293b;border-radius:20px;padding:16px}
+.compass{width:160px;height:160px;border:3px solid #22c55e;border-radius:50%;margin:12px auto;position:relative}
+.needle{width:4px;height:70px;background:#ef4444;position:absolute;left:50%;top:10px;transform-origin:bottom center}
+.messenger{position:fixed;bottom:0;right:0;width:100%;max-width:380px;height:70vh;background:#0f172a;border:1px solid #334155;border-radius:20px 20px 0 0;display:none;flex-direction:column;z-index:9999}.messenger.open{display:flex}
+.fab{position:fixed;bottom:20px;right:20px;width:66px;height:66px;background:#0084ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;z-index:9998}
+.alert-item{border-left:5px solid #f59e0b;background:#1e293b;padding:10px;border-radius:10px;margin:8px 0;font-size:13px}
 </style>
 </head>
 <body>
-<div id="left"><div style="color:var(--gold);text-align:center;font-weight:900;font-size:11px">📖<br>AYNA<br>BOOK</div></div>
-<div id="right"><div style="color:var(--cyan);text-align:center;font-weight:900;font-size:11px">🌍<br>GLOBAL<br>VISION</div></div>
-
-<div class="card glow" style="text-align:center">
-<h1 style="color:var(--gold)">🌍 AYNA BOOK</h1>
-<p style="color:var(--cyan);font-weight:800">Global Technology, Safety & Security Vision</p>
-<p style="font-size:11px"><b>প্রতিষ্ঠাতা:</b> Mohammed Mahabub Alam | <b>স্লোগান:</b> My World. My Story. My AYNA BOOK. | <b>লক্ষ্য:</b> Connect. Create. Share. Protect.</p>
-<p style="font-size:9px;color:#00FF88">Share এ কোনো বিধিনিষেধ নেই — No Restriction | Offline+Online | Phone+PC | Square Size | 4 Account Dollar Taka | 01400751906 | AYNA-956251</p>
+<div class="header">
+<h1>🌍 AYNA BOOK - Global Vision</h1>
+<p>প্রতিষ্ঠাতা: Mohammed Mahabub Alam | My World. My Story. My AYNA BOOK.</p>
+<span class="badge">AYNA-956251</span><span class="badge">01400751906</span><span class="badge">999</span><span class="badge">Share No Restriction</span>
 </div>
 
-<div class="card glow" style="text-align:center">
-<h3 style="color:var(--gold)">📸 ছবি একদম বড় সাইজ Square — 400px — 1:1 — FINAL</h3>
-<img id="pic" class="big-square" src="" style="display:none">
-<div id="np" class="big-square" style="display:flex;align-items:center;justify-content:center;font-size:80px">👤</div>
-<div id="fileBox" class="grid2" style="max-width:400px;margin:0 auto"><input type="file" accept="image/*" onchange="up(this)"><button class="btn btn2" onclick="this.previousElementSibling.click()">📸 Choose File Big Square</button></div>
-<div id="afterUpload" style="display:none;max-width:400px;margin:8px auto" class="grid2"><button class="btn" onclick="document.querySelector('input[type=file]').click()">✏️ Change Photo Pencil</button><button class="btn btn2" onclick="removePic()">🗑️ Remove</button></div>
-<p style="font-size:10px">GPS <span id="gps">21.2395,92.1582</span> | <span id="onlineStatus">🟢 Online</span></p>
-<p id="status" style="font-size:9px;color:#00FF88">✅ Big Square 400px — Compressed — Offline Online — Share No Restriction</p>
-<div class="grid2" style="max-width:400px;margin:0 auto"><button class="btn" onclick="shareNoRestriction()">📤 Share No Restriction — No Limit</button><button class="btn btn2" onclick="toggleOnlineOffline()">🔄 Offline ↔ Online</button></div>
+<div class="square"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=800&fit=crop" style="width:100%;height:100%;object-fit:cover"></div>
+
+<div class="section">
+<h2>💼 4 Accounts - Dollar & Taka - No Restriction Share</h2>
+<div class="grid2">
+<div class="card"><h3>Account 1 Founder</h3><p>$1250 = ৳137,500</p><button class="btn">Share Unlimited</button></div>
+<div class="card"><h3>Account 2 Business</h3><p>$10 Fixed = ৳1100</p><button class="btn">Convert $ <-> ৳</button></div>
+<div class="card"><h3>Account 3 Family</h3><p>$500 = ৳55,000</p><button class="btn btn-blue">Location Share ON/OFF</button></div>
+<div class="card"><h3>Account 4 Emergency SOS</h3><p>$2000 = ৳220,000</p><button class="btn btn-red">SOS Send Money</button></div>
+</div>
 </div>
 
-<div class="card" style="border:2px solid var(--gold)">
-<h2 style="text-align:center;color:var(--gold)">💳 4 Account Dollar Taka — Square — No Restriction</h2>
-<p style="text-align:center;font-size:9px">1$ = 110৳ | VIP 10$ = 1100৳ | VVIP 20$ = 2200৳</p>
-<div class="gridSquare">
-<div class="qbox" style="border:2px solid #00FF88"><h4>👤 Personal</h4><p style="font-size:9px">0$ = 0৳</p><p style="font-size:7px;word-break:break-all" id="link-personal">https://ayna-book.web.app/personal/956251</p><button class="btn btn2" onclick="copyLink('personal')">📋 Copy Link</button><button class="btn" onclick="openDashboard('personal')">📂 Open → Dashboard Pencil</button><button class="btn btn2" onclick="genQR('personal')">📱 QR 300px Square</button></div>
-<div class="qbox" style="border:2px solid #00D4FF"><h4>💼 Business</h4><p style="font-size:9px">0$ = 0৳</p><p style="font-size:7px;word-break:break-all" id="link-business">https://ayna-book.web.app/business/956251</p><button class="btn btn2" onclick="copyLink('business')">📋 Copy Link</button><button class="btn" onclick="openDashboard('business')">📂 Open → Dashboard Pencil</button><button class="btn btn2" onclick="genQR('business')">📱 QR Square</button></div>
-<div class="qbox" style="border:2px solid var(--gold)"><h4>⭐ VIP 10$</h4><p style="font-size:11px;color:var(--gold);font-weight:900">10$ = 1100৳</p><p style="font-size:7px;word-break:break-all" id="link-vip">https://ayna-book.web.app/vip/956251?token=10$</p><button class="btn btn2" onclick="copyLink('vip')">📋 Copy Link</button><button class="btn" onclick="openDashboard('vip')">📂 Open → Pencil</button><button class="btn btn2" onclick="genQR('vip')">📱 QR Square</button></div>
-<div class="qbox" style="border:2px solid var(--red)"><h4>👑 VVIP 20$</h4><p style="font-size:11px;color:var(--red);font-weight:900">20$ = 2200৳</p><p style="font-size:7px;word-break:break-all" id="link-vvip">https://ayna-book.web.app/vvip/956251?token=20$&all=1</p><button class="btn btn2" onclick="copyLink('vvip')">📋 Copy Link</button><button class="btn" onclick="openDashboard('vvip')">📂 Open → Pencil</button><button class="btn btn2" onclick="genQR('vvip')">📱 QR Square</button></div>
-</div>
-<div id="qrBox" style="text-align:center;display:none;margin-top:10px"><img id="qrImg" src="" style="width:100%;max-width:300px;aspect-ratio:1/1;border-radius:20px;border:3px solid var(--gold)"><p id="qrLink" style="font-size:9px"></p></div>
-<div id="dashboardBox" style="display:none" class="card"><h3 style="text-align:center">📂 Dashboard <span id="dashType"></span> <button onclick="enableEdit()" style="width:40px;height:40px;border-radius:50%;background:var(--gold);border:none">✏️</button> Pencil</h3><div class="grid2"><input id="dashName" placeholder="Name"><input id="dashPhone" placeholder="Phone"><input id="dashGPS" placeholder="GPS"><input id="dashLink" placeholder="Link"></div><div class="grid2"><button class="btn" onclick="saveDashboard()">💾 Save Firebase LIVE</button><button class="btn btn2" onclick="closeDashboard()">❌ Close</button></div></div>
+<div class="section">
+<h2>A. 🧭 Compass B. 📍 GPS C. 🛰️ Satellite D. 📡 Radar</h2>
+<div class="compass"><div class="needle" id="needle"></div></div>
+<p id="compassDeg" style="text-align:center;font-size:24px;font-weight:900">0° North - উত্তর</p>
+<p id="gpsText" style="text-align:center">GPS: Allow Permission - Ukhiya</p>
+<canvas id="radarCanvas" style="width:100%;height:220px;background:#020617;border-radius:16px;border:2px solid #22c55e"></canvas>
+<button class="btn" onclick="requestCompass()">Compass Permission Allow</button>
+<button class="btn btn-red" onclick="sendSOS()">🆘 SOS 999</button>
 </div>
 
-<div class="card" style="border:2px solid var(--red)"><h3 style="text-align:center;color:var(--red)">A. 🧭 Compass — Square Size — Left Logo 360°</h3><div class="gridSquare"><div class="square" style="border:3px solid var(--red)"><canvas id="compass" width="300" height="300"></canvas></div><div class="qbox" style="border:2px solid var(--red)"><p style="font-size:10px"><b id="compTxt" style="color:var(--red)">N 62° Big Red Arrow</b><br>ফোনের
+<div class="section">
+<h2>E. 🚨 20 Global Alert - Share No Restriction</h2>
+<div id="alertList"></div>
+</div>
+
+<div class="section">
+<h2>H. 📺 Global Radio TV - Bangladesh + USA + World - Country Auto</h2>
+<p id="countryDetect">Auto Detecting Country...</p>
+<select id="countrySelect" onchange="loadCountry()" style="width:100%;padding:10px;border-radius:10px;background:#020617;color:#fff"><option value="BD">Bangladesh All</option><option value="US">USA All</option><option value="ALL">World 1000+</option></select>
+<div class="grid2" id="channelGrid"></div>
+</div>
+
+<div class="section">
+<h2>💬 Messenger Box - All Social Media</h2>
+<p>Facebook, WhatsApp 01400751906, Telegram, Instagram, YouTube - All in One</p>
+<button class="btn btn-blue" onclick="toggleMessenger()">Open Messenger Box</button>
+</div>
+
+<div class="fab" onclick="toggleMessenger()">💬</div>
+<div class="messenger" id="messengerBox">
+<div style="padding:10px;background:#0084ff;display:flex;justify-content:space-between"><b>AYNA Messenger</b><span onclick="toggleMessenger()">X</span></div>
+<div style="flex:1;padding:10px;overflow:auto" id="chatBox"><div style="background:#1e293b;padding:8px;border-radius:10px;margin:4px">Welcome - All Social - Share No Restriction</div></div>
+<div style="display:flex;padding:6px"><input id="msgInput" placeholder="Type..." style="flex:1;padding:10px;border-radius:10px;background:#020617;color:#fff"><button class="btn" style="width:70px;margin-left:6px" onclick="sendMsg()">Send</button></div>
+</div>
+
+<script>
+// Online/Offline + Service Worker
+if('serviceWorker' in navigator){let sw=`self.addEventListener('install',e=>{e.waitUntil(caches.open('ayna-v1').then(c=>c.addAll(['./'])))});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))})`;let b=new Blob([sw],{type:'text/javascript'});navigator.serviceWorker.register(URL.createObjectURL(b))}
+// Compass
+function requestCompass(){if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(r=>{if(r=='granted') window.addEventListener('deviceorientation',handleCompass)})}else window.addEventListener('deviceorientation',handleCompass)}
+function handleCompass(e){let h=e.webkitCompassHeading||(360-e.alpha);if(h==null)return;document.getElementById('needle').style.transform=`translateX(-50%) rotate(${h}deg)`;document.getElementById('compassDeg').innerText=Math.round(h)+'°'}
+if('geolocation' in navigator){navigator.geolocation.watchPosition(p=>{document.getElementById('gpsText').innerText=`GPS: ${p.coords.latitude.toFixed(5)},${p.coords.longitude.toFixed(5)} - Ukhiya`})}
+function sendSOS(){let m='SOS AYNA-956251 01400751906 999 '+document.getElementById('gpsText').innerText;window.open('https://wa.me/8801400751906?text='+encodeURIComponent(m))}
+// Alerts 20
+const alerts=[['ঘূর্ণিঝড়','Cox Bazar','BMD','আশ্রয়কেন্দ্রে যান'],['ভূমিকম্প','Ukhiya','USGS','খোলা জায়গায় থাকুন'],['বন্যা','Chittagong','FFWC','উঁচ
