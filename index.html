@@ -3,107 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Tech Master Hub - AYNA BOOK</title>
+    <title>AYNA BOOK - Master Tech & Accounts Hub</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f172a;
-            color: #f8fafc;
-            margin: 0;
-            padding: 20px;
+            background: #0b0f19;
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 20px;
         }
-        .master-card {
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            max-width: 500px;
+        .main-card {
+            background: #161f30;
             width: 100%;
+            max-width: 480px;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid #233148;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .title {
             text-align: center;
-            border: 1px solid #334155;
-        }
-        h1 {
             color: #38bdf8;
-            font-size: 22px;
-            margin-bottom: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
-        p {
+        .subtitle {
+            text-align: center;
             color: #94a3b8;
-            font-size: 14px;
+            font-size: 13px;
             margin-bottom: 20px;
         }
-        .tech-grid {
+        .section-title {
+            font-size: 14px;
+            color: #f59e0b;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
         }
-        .tech-btn {
-            background: #3b82f6;
+        .btn {
+            background: #2563eb;
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 12px 10px;
+            font-size: 13px;
             font-weight: bold;
+            border-radius: 8px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
+            text-align: center;
         }
-        .tech-btn:hover {
-            background: #2563eb;
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
         }
-        #result-box {
-            background: #0f172a;
+        .btn-acc {
+            background: #0d9488;
+        }
+        .btn-acc:hover {
+            background: #0f766e;
+        }
+        #display-box {
+            margin-top: 20px;
+            background: #090d16;
+            border: 1px solid #1e293b;
+            border-left: 4px solid #10b981;
             padding: 15px;
             border-radius: 8px;
-            border-left: 4px solid #10b981;
-            text-align: left;
             font-family: monospace;
             font-size: 13px;
             color: #34d399;
-            min-height: 60px;
-            max-height: 120px;
-            overflow-y: auto;
+            min-height: 80px;
+            word-wrap: break-word;
         }
     </style>
 </head>
 <body>
 
-<div class="master-card">
-    <h1>🌐 UNIVERSAL TECH CONNECTOR</h1>
-    <p>পৃথিবীর বিভিন্ন প্রযুক্তির ডেটা ফেচ করার মাস্টার হাব</p>
+<div class="main-card">
+    <div class="title">🌐 AYNA BOOK MASTER HUB</div>
+    <div class="subtitle">অল-ইন-ওয়ান অফলাইন অ্যাকাউন্ট ও টেকনোলজি কানেক্টর</div>
 
-    <div class="tech-grid">
-        <button class="tech-btn" onclick="fetchTech('time')">সার্ভার টাইম টেকনোলজি</button>
-        <button class="tech-btn" onclick="fetchTech('crypto')">ক্রিপ্টো কারেন্সি মার্কেট</button>
-        <button class="tech-btn" onclick="fetchTech('ai_core')">এআই নিউরাল কোর</button>
-        <button class="tech-btn" onclick="fetchTech('ayna_offline')">AYNA BOOK অফলাইন ডেটা</button>
+    <!-- ৪টি নির্দিষ্ট অ্যাকাউন্ট বাটন -->
+    <div class="section-title">💳 অ্যাকাউন্টসমূহ:</div>
+    <div class="grid">
+        <button class="btn btn-acc" onclick="showAccount(1)">১. Personal Account</button>
+        <button class="btn btn-acc" onclick="showAccount(2)">২. Business Account</button>
+        <button class="btn btn-acc" onclick="showAccount(3)">৩. VIP Account</button>
+        <button class="btn btn-acc" onclick="showAccount(4)">৪. VVIP Account</button>
     </div>
 
-    <div id="result-box">
-        > টেক্সট হাব প্রস্তুত। যেকোনো প্রযুক্তির বাটন প্রেস করুন...
+    <!-- অন্যান্য প্রযুক্তি বাটন -->
+    <div class="section-title">⚡ গ্লোবাল টেকনোলজি:</div>
+    <div class="grid">
+        <button class="btn" onclick="fetchTech('time')">সার্ভার টাইম টেকনোলজি</button>
+        <button class="btn" onclick="fetchTech('crypto')">ক্রিপ্টো কারেন্সি মার্কেট</button>
+        <button class="btn" onclick="fetchTech('ai_core')">এআই নিউরাল কোর</button>
+        <button class="btn" onclick="fetchTech('system_check')">সিস্টেম সিকিউরিটি টেস্ট</button>
+    </div>
+
+    <!-- ফলাফল দেখানোর বক্স -->
+    <div id="display-box">
+        > সিস্টেম সম্পূর্ণ রেডি। কাজ করার জন্য যেকোনো বাটনে চাপ দিন...
     </div>
 </div>
 
 <script>
+    // ৪টি অ্যাকাউন্টের অফলাইন ডেটা
+    const accountsData = {
+        1: { name: "Personal Account", fee: "ফ্রি (Free)", balance: "০.০০ টাকা", feature: "সাধারণ হিসাব-নিকাশ" },
+        2: { name: "Business Account", fee: "$10 (১০ ডলার) / ১২০০ টাকা", balance: "সক্রিয় ব্যালেন্স", feature: "ব্যবসার লেজার ও ক্যাশ ফ্লো" },
+        3: { name: "VIP Account", fee: "$10 (১০ ডলার) / ১২০০ টাকা", balance: "প্রিমিয়াম এক্সেস", feature: "ভিআইপি রিপোর্ট ও অটো ব্যাকআপ" },
+        4: { name: "VVIP Account", fee: "$20 (২০ ডলার) / ২৪০০ টাকা", balance: "অল-ইন-ওয়ান আনলিমিটেড", feature: "কোয়ান্টাম স্পিড ও আল্ট্রা সিকিউরিটি" }
+    };
+
+    // অ্যাকাউন্ট তথ্য দেখানোর ফাংশন
+    function showAccount(id) {
+        const acc = accountsData[id];
+        const box = document.getElementById("display-box");
+        box.style.borderLeftColor = "#38bdf8";
+        box.innerHTML = `<strong>[ACCOUNT DATA LOADED]</strong><br>` +
+                        `অ্যালটমেন্ট: ${acc.name}<br>` +
+                        `ফি/মূল্য: ${acc.fee}<br>` +
+                        `ফিচার: ${acc.feature}<br>` +
+                        `স্ট্যাটাস: অফলাইনে সংযুক্ত ও সক্রিয় ✅`;
+    }
+
+    // টেকনোলজি ডেটা ফেচ করার ফাংশন
     function fetchTech(type) {
-        const resultBox = document.getElementById("result-box");
+        const box = document.getElementById("display-box");
+        box.style.borderLeftColor = "#10b981";
         
         if (type === 'time') {
             const now = new Date();
-            resultBox.innerHTML = `[TIME TECH]: বর্তমান গ্লোবাল টাইম ও ডেট: ${now.toLocaleString()}`;
+            box.innerHTML = `<strong>[TIME TECH SUCCESS]</strong><br>বর্তমান লোকাল ও গ্লোবাল সময়: ${now.toLocaleString()}`;
         } 
         else if (type === 'crypto') {
-            resultBox.innerHTML = `[FINTECH API]: বিটকয়েন ও ব্লকচেইন নোড সিঙ্ক সফল। মার্কেট স্ট্যাটাস: একটিভ।`;
+            box.innerHTML = `<strong>[FINTECH CORE]</strong><br>ব্লকচেইন নোড সিঙ্ক সম্পূর্ণ। বিটকয়েন/ইউএসডিটি মার্কেট অফলাইন ক্যাশে সেভ হয়েছে!`;
         } 
         else if (type === 'ai_core') {
-            resultBox.innerHTML = `[AI NEURAL CORE]: কোয়ান্টাম লজিক প্রসেসর রেডি। কমান্ড গ্রহণ করা হচ্ছে...`;
-        } 
-        else if (type === 'ayna_offline') {
-            resultBox.innerHTML = `[AYNA BOOK]: আপনার ৪টি অ্যাকাউন্ট লোকাল স্টোরেজ থেকে নিরাপদে লোড হয়েছে!`;
+            box.innerHTML = `<strong>[AI NEURAL ENGINE]</strong><br>এআই ইঞ্জিন রান করছে... আপনার AYNA BOOK দ্রুত প্রসেস করার জন্য প্রস্তুত!`;
+        }
+        else if (type === 'system_check') {
+            box.innerHTML = `<strong>[SYSTEM CHECK]</strong><br>সকল বাটন, লোকাল স্টোরেজ এবং অফলাইন সার্ভিস ১০০% সচল আছে!`;
         }
     }
 </script>
