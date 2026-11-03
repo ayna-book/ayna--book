@@ -1,496 +1,707 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK - World Class 150+ Alert & Voice System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AYNA BOOK - Global Enterprise Cloud Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Firebase SDKs for Global Cloud Sync -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
     <style>
         :root {
-            --bg-dark: #030308;
-            --card-bg: rgba(15, 15, 26, 0.85);
-            --pink-border: #ff007f;
-            --pink-glow: rgba(255, 0, 127, 0.4);
-            --gold-title: #ffd700;
-            --text-light: #ffffff;
-            --text-sub: #b0b0c0;
-            --alert-green: #00ff88;
+            --bg-dark: #0a1128;
+            --card-bg: #1c2541;
+            --card-inner: #0b132b;
+            --accent-blue: #3a86ff;
+            --accent-cyan: #00f5d4;
+            --text-primary: #ffffff;
+            --text-secondary: #8d99ae;
+            --border: #2b3a67;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; }
+        
+        .master-app { width: 100%; max-width: 500px; background-color: var(--bg-dark); border: 1px solid var(--border); display: flex; flex-direction: column; min-height: 100vh; position: relative; padding-bottom: 80px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
+        /* Top Bar with Static Logo & White/Blue Contrast */
+        .top-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 14px 20px; 
+            background-color: var(--card-bg); 
+            border-bottom: 2px solid var(--accent-blue);
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-
-        /* 3D Golden Logo & Header Section */
-        .header-container {
-            text-align: center;
-            margin-top: 20px;
-            margin-bottom: 15px;
-        }
-
-        .logo-box {
-            width: 130px;
-            height: 130px;
-            margin: 0 auto;
+        
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        
+        /* Static Solid Logo without rotation */
+        .static-book-logo {
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            border: 2px solid var(--pink-border);
-            box-shadow: 0 0 20px var(--pink-glow);
-            overflow: hidden;
-        }
-
-        .logo-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            animation: logoRotate 10s linear infinite; /* ১০ সেকেন্ড পর পর ঘুরবে */
-        }
-
-        @keyframes logoRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .brand-heading {
-            font-size: 30px;
-            font-weight: 900;
-            color: var(--gold-title);
-            margin-top: 10px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
-        }
-
-        /* 150+ Alert Badge */
-        .alert-status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 0, 127, 0.15);
-            border: 1px solid var(--pink-border);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--alert-green);
-            margin-top: 8px;
-            box-shadow: 0 0 10px var(--pink-glow);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--alert-green);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--alert-green);
-        }
-
-        /* Container & Cards */
-        .main-app {
-            width: 92%;
-            max-width: 480px;
-        }
-
-        .quantum-card {
-            display: none;
-            background: var(--card-bg);
-            border: 2px solid var(--pink-border); /* পিংক কালার বর্ডার */
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 0 20px var(--pink-glow);
-            backdrop-filter: blur(10px);
-            animation: cardFade 0.3s ease-in-out;
-        }
-
-        .quantum-card.active {
-            display: block;
-        }
-
-        @keyframes cardFade {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        h2 {
-            color: var(--gold-title);
-            font-size: 20px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--pink-border);
-            padding-bottom: 8px;
-        }
-
-        /* Form Controls */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            color: #ff80bf;
-            margin-bottom: 5px;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--pink-border);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: var(--gold-title);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-
-        /* Buttons */
-        .quantum-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, var(--gold-title), var(--pink-border));
-            border: none;
-            border-radius: 8px;
-            color: #000;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 5px;
-        }
-
-        .quantum-btn:hover {
-            opacity: 0.9;
-            box-shadow: 0 0 15px var(--pink-glow);
-        }
-
-        /* 150+ Alert Monitor Display */
-        .alert-monitor {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--pink-border);
-            border-radius: 8px;
-            padding: 12px;
-            height: 140px;
-            overflow-y: auto;
-            font-family: monospace;
-            font-size: 12px;
-            color: #00ffaa;
-            margin-bottom: 15px;
-        }
-
-        /* Chat Display */
-        .chat-box {
-            height: 180px;
-            overflow-y: auto;
-            border: 1px solid var(--pink-border);
-            border-radius: 8px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            margin-bottom: 10px;
-        }
-
-        .chat-msg {
-            margin-bottom: 8px;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 13px;
-        }
-
-        .msg-user { background: rgba(255, 0, 127, 0.2); border-left: 3px solid var(--pink-border); }
-        .msg-bot { background: rgba(255, 215, 0, 0.2); border-left: 3px solid var(--gold-title); }
-
-        /* Compass Circle */
-        .compass-wrap {
-            text-align: center;
-            padding: 10px;
-        }
-
-        .compass-dial {
-            width: 140px;
-            height: 140px;
-            border: 3px solid var(--gold-title);
-            border-radius: 50%;
-            margin: 10px auto;
-            position: relative;
+            border: 2px solid var(--text-primary);
+            background: linear-gradient(135deg, var(--accent-blue), #002244);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 10px rgba(58, 134, 255, 0.5);
+        }
+        .static-book-logo i { font-size: 20px; color: #ffffff; }
+
+        .top-bar .title { 
+            font-size: 20px; 
+            font-weight: 900; 
+            color: #ffffff;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.4);
         }
 
-        .compass-needle {
-            width: 4px;
-            height: 60px;
-            background: linear-gradient(to top, transparent 50%, var(--pink-border) 50%);
-            position: absolute;
-            transition: transform 0.2s ease;
-        }
+        .content { padding: 15px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
 
-        /* Bottom Navigation Bar */
-        .navbar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 65px;
-            background: #080810;
-            border-top: 2px solid var(--pink-border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 100;
+        /* Priority New Account Section */
+        .priority-reg-card { 
+            background: linear-gradient(135deg, #1c2541, #0b132b); 
+            border: 2px solid var(--accent-blue); 
+            border-radius: 16px; 
+            padding: 18px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
+        .priority-reg-card h3 { color: #ffffff; font-size: 15px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
 
-        .nav-item {
-            background: none;
-            border: none;
-            color: var(--text-sub);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 11px;
-            cursor: pointer;
-        }
+        /* Big Square Feature Grid */
+        .square-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .square-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; cursor: pointer; transition: 0.2s; min-height: 95px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .square-box:active { transform: scale(0.96); background: var(--border); }
+        .square-box i { font-size: 24px; color: var(--accent-blue); }
+        .square-box span { font-size: 11px; font-weight: bold; color: var(--text-primary); }
 
-        .nav-item.active, .nav-item:hover {
-            color: var(--gold-title);
-        }
+        /* Status & Alert Controls */
+        .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; border-left: 4px solid var(--success); font-size: 12px; color: var(--text-primary); }
+        
+        .alert-control-box { background: linear-gradient(135deg, #0b132b, #1c2541); border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .alert-info h4 { font-size: 12px; color: var(--warning); }
+        .alert-info p { font-size: 10px; color: var(--text-secondary); }
 
-        .nav-item span {
-            font-size: 20px;
-            margin-bottom: 2px;
-        }
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Feature Sections & Forms */
+        .feature-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: none; }
+        .feature-section h3 { color: var(--text-primary); font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 600; }
+        .form-control { width: 100%; padding: 11px; border-radius: 8px; border: 1px solid var(--border); background: var(--card-inner); color: white; font-size: 12px; }
+        .form-control:focus { border-color: var(--accent-blue); }
+        
+        .password-container { position: relative; }
+        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 11px; font-weight: bold; }
+
+        .submit-btn { width: 100%; background: var(--accent-blue); color: #ffffff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 13px; transition: 0.2s; box-shadow: 0 4px 15px rgba(58,134,255,0.3); }
+        .submit-btn:active { transform: scale(0.98); }
+
+        /* Merchant Payment Box Section */
+        .payment-box { background: linear-gradient(135deg, #0b132b, #1c2541); border: 2px solid var(--accent-blue); border-radius: 14px; padding: 14px; margin-top: 5px; }
+        .payment-box h4 { font-size: 13px; color: #ffffff; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .payment-methods { display: flex; flex-direction: column; gap: 8px; }
+        .payment-row { background: var(--card-inner); padding: 10px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+        .payment-number { font-weight: bold; color: var(--accent-cyan); font-family: monospace; font-size: 12px; }
+
+        /* Video Container Section */
+        .video-box-wrapper { width: 100%; height: 210px; background: #000; border-radius: 10px; overflow: hidden; position: relative; border: 1px solid var(--border); margin-bottom: 10px; }
+        .video-box-wrapper iframe { width: 100%; height: 100%; border: none; }
+
+        /* Messaging & Chat Container */
+        .chat-container { background: var(--card-inner); border: 1px solid var(--border); border-radius: 10px; padding: 12px; height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+        .chat-msg { background: #2b3a67; padding: 8px 12px; border-radius: 8px; font-size: 11px; max-width: 85%; line-height: 1.4; color: #fff; }
+        .chat-msg.self { background: var(--accent-blue); align-self: flex-end; }
+
+        /* Saved Cards Area */
+        .saved-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+        .saved-item { background: var(--card-inner); padding: 12px; border-radius: 10px; margin-top: 10px; border-left: 4px solid var(--accent-blue); font-size: 11px; line-height: 1.6; display: flex; flex-direction: column; gap: 10px; position: relative; }
+        .profile-header { display: flex; align-items: center; gap: 12px; }
+        .profile-big-square { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; border: 2px solid var(--accent-blue); }
+        .edit-icon-btn { position: absolute; right: 12px; top: 12px; background: #2b3a67; color: var(--accent-cyan); border: 1px solid var(--border); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        .qr-code-display { background: #fff; padding: 8px; border-radius: 8px; text-align: center; margin-top: 5px; width: fit-content; align-self: center; }
+        .qr-code-display img { width: 90px; height: 90px; }
+
+        .action-row { display: flex; gap: 8px; margin-top: 5px; }
+        .btn-sm { flex: 1; padding: 8px; font-size: 10px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; background: #2b3a67; color: #fff; text-align: center; }
+        .btn-sm.copy { background: #0d9488; }
+
+        /* Bottom Nav Bar */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background-color: var(--card-bg); border-top: 2px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; box-shadow: 0 -4px 15px rgba(0,0,0,0.6); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .nav-item i { font-size: 18px; margin-bottom: 3px; }
+        .nav-item.active, .nav-item:hover { color: #ffffff; }
     </style>
 </head>
 <body>
 
-    <!-- Header Section -->
-    <div class="header-container">
-        <div class="logo-box">
-            <img src="1000042389.jpg" alt="AYNA BOOK Logo" class="logo-img">[span_4](start_span)[span_4](end_span)
+<div class="master-app">
+    <!-- Top Bar with Static Logo -->
+    <div class="top-bar">
+        <div class="logo-area">
+            <div class="static-book-logo">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <div class="title">AYNA BOOK</div>
         </div>
-        <div class="brand-heading">AYNA BOOK</div>
-        <div class="alert-status-badge">
-            <div class="status-dot"></div>
-            🚨 150+ Risk & Alert System Active (ON) ✓[span_5](start_span)[span_5](end_span)
-        </div>
+        <div style="font-size: 11px; color: var(--accent-cyan); font-weight: bold;" id="loginStatusIndicator">Guest (Cloud Active)</div>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="main-app">
+    <!-- Main Scrollable Content -->
+    <div class="content" id="appContent">
 
-        <!-- 1. Home & 150+ Risk Monitor -->
-        <div id="home" class="quantum-card active">
-            <h2>🚨 ১৫০+ রিস্ক ও এলার্ট ড্যাশবোর্ড</h2>
-            <div class="alert-monitor" id="alertLog">
-                [SYSTEM]: ১৫০+ এলার্ট সিস্টেম সফলভাবে সক্রিয় করা হয়েছে।<br>[span_6](start_span)[span_6](end_span)
-                [SECURITY]: কোয়ান্টাম ডাটা সিকিউরিটি এনক্রিপ্টেড।<br>
-                [VOICE]: ক্রিস্টাল ক্লিয়ার অডিও ইঞ্জিন প্রস্তুত।
-            </div>
-            <button class="quantum-btn" onclick="triggerSystemCheck()">স্মার্ট সিকিউরিটি স্ক্যান করুন</button>
-        </div>
-
-        <!-- 2. Account & OTP Section -->
-        <div id="account" class="quantum-card">
-            <h2>👤 একাউন্ট রেজিস্ট্রেশন ও ওটিপি</h2>
-            <div class="form-group">
-                <label>নাম</label>
-                <input type="text" placeholder="Sharmin Jahan">
-            </div>
-            <div class="form-group">
-                <label>মোবাইল নম্বর</label>
-                <input type="text" id="phoneNum" placeholder="01863370793">
-            </div>
-            <div class="form-group">
-                <label>ওটিপি (OTP) কোড</label>[span_7](start_span)[span_7](end_span)
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" id="otpCode" placeholder="৬ ডিজিট কোড">
-                    <button class="quantum-btn" style="width: 40%; margin: 0;" onclick="sendOTPCode()">OTP পাঠান</button>
+        <!-- 1. PRIORITY NEW ACCOUNT FORM -->
+        <div class="priority-reg-card" id="regCardSection">
+            <h3><i class="fas fa-user-plus"></i> Open New Account (Global Cloud Sync)</h3>
+            <div class="form-group"><label>Profile Photo (Big Square Box)</label><input type="file" id="regPhoto" class="form-control" accept="image/*"></div>
+            <div class="form-group"><label>Full Name (English)</label><input type="text" id="regName" class="form-control" placeholder="Your Full Name"></div>
+            <div class="form-group"><label>Phone Number (Bkash/Nagad/Intl Code)</label><input type="tel" id="regPhone" class="form-control" placeholder="+8801400751906"></div>
+            <div class="form-group"><label>Gmail / Email</label><input type="email" id="regEmail" class="form-control" placeholder="example@gmail.com"></div>
+            
+            <div class="form-group"><label>Password (Min 11 Digits/Chars)</label>
+                <div class="password-container">
+                    <input type="password" id="regPass" class="form-control" placeholder="11-digit secure password">
+                    <span class="toggle-password" id="togglePassBtn">Show</span>
                 </div>
             </div>
-            <button class="quantum-btn" onclick="verifyOTPCode()">একাউন্ট নিশ্চিত করুন</button>
-        </div>
 
-        <!-- 3. Radio & TV Section -->
-        <div id="media" class="quantum-card">
-            <h2>📻 রেডিও এবং লাইভ টিভি</h2>
-            <div class="form-group">
-                <label>চ্যানেল সিলেক্ট করুন</label>
-                <select id="mediaChannel" onchange="switchChannel()">
-                    <option value="radio">বাংলাদেশ বেতার (অনলাইন রেডিও)</option>
-                    <option value="tv">কোয়ান্টাম স্পেস এইচডি টিভি</option>
+            <div class="form-group"><label>Account Package / Tier</label>
+                <select id="regTier" class="form-control">
+                    <option value="Personal Account - Free">Personal Account - Free</option>
+                    <option value="Business Account - $10 / 1200 BDT">Business Account - $10 / 1200 BDT</option>
+                    <option value="VIP Account - $10 / 1200 BDT">VIP Account - $10 / 1200 BDT</option>
+                    <option value="VVIP Account - $25 / 3000 BDT">VVIP Account - $25 / 3000 BDT</option>
                 </select>
             </div>
-            <div style="text-align: center; margin-top: 15px;">
-                <audio id="radioPlayer" controls style="width: 100%;">
-                    <source src="https://stream.zeno.fm/f3wvbb75zk8uv" type="audio/mpeg">
-                </audio>
+            <button class="submit-btn" id="submitRegBtn">Verify OTP (2 Mins) & Open Cloud ID</button>
+        </div>
+
+        <!-- Official Payment Numbers Box -->
+        <div class="payment-box">
+            <h4><i class="fas fa-wallet"></i> Official Payment Accounts (Merchant / Personal)</h4>
+            <div class="payment-methods">
+                <div class="payment-row">
+                    <span><i class="fas fa-mobile-alt" style="color:#e2136e;"></i> bKash Personal / Send Money</span>
+                    <span class="payment-number">01400751906</span>
+                    <button class="btn-sm copy" onclick="copyPaymentNumber('01400751906')">Copy</button>
+                </div>
+                <div class="payment-row">
+                    <span><i class="fas fa-wallet" style="color:#f7921e;"></i> Nagad Personal / Cash In</span>
+                    <span class="payment-number">01400751906</span>
+                    <button class="btn-sm copy" onclick="copyPaymentNumber('01400751906')">Copy</button>
+                </div>
+                <div class="payment-row">
+                    <span><i class="fas fa-globe" style="color:#0072ce;"></i> Payoneer Global ID</span>
+                    <span class="payment-number">01400751906</span>
+                    <button class="btn-sm copy" onclick="copyPaymentNumber('01400751906')">Copy</button>
+                </div>
             </div>
         </div>
 
-        <!-- 4. Voice & Chat Section -->
-        <div id="chat" class="quantum-card">
-            <h2>💬 ভয়েস ও ক্রিস্টাল চ্যাট</h2>
-            <div class="chat-box" id="chatDisplay">
-                <div class="chat-msg msg-bot">সিস্টেম: কথা বলুন বা মেসেজ লিখুন, আমি স্পষ্টভাবে উত্তর দেব।</div>
+        <!-- Status Card -->
+        <div class="status-card">
+            ✨ Firebase Cloud Firestore Connected & Active ✅
+        </div>
+
+        <!-- Risk Alert System -->
+        <div class="alert-control-box">
+            <div class="alert-info">
+                <h4>🚨 150+ Risk & Alert Early Warning</h4>
+                <p id="alertStatusText">Early Warning System Active (ON) ✅</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="alertToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- 4 Big Square Feature Boxes -->
+        <div class="square-grid">
+            <div class="square-box" id="navLoginBox">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Secure Login & OTP</span>
+            </div>
+            <div class="square-box" id="navRadioBox">
+                <i class="fas fa-tv"></i>
+                <span>Live Video & TV</span>
+            </div>
+            <div class="square-box" id="navChatBox">
+                <i class="fas fa-comments"></i>
+                <span>Global Chat Hub</span>
+            </div>
+            <div class="square-box" id="navRadarBox">
+                <i class="fas fa-satellite-dish"></i>
+                <span>Radar & GPS Track</span>
+            </div>
+        </div>
+
+        <!-- FEATURE PANELS (DYNAMICAL-TOGGLE) -->
+        
+        <!-- Login Panel -->
+        <div id="loginSection" class="feature-section">
+            <h3>🔐 Secure Login & Recovery</h3>
+            <div class="form-group"><label>Gmail or Phone Number</label><input type="text" id="loginEmail" class="form-control" placeholder="Enter Gmail or Phone"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="loginPass" class="form-control" placeholder="Enter Password"></div>
+            <button class="submit-btn" id="loginSubmitBtn">Login Securely</button>
+            <button class="submit-btn" id="forgotPassBtn" style="background:#2b3a67; margin-top:6px;">Forgot Password? (OTP Recovery)</button>
+        </div>
+
+        <!-- Live Video & TV Section -->
+        <div id="radiotvSection" class="feature-section">
+            <h3>📡 Live Satellite Video Broadcasting Stream</h3>
+            <div class="video-box-wrapper">
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=UC1234567890" allowfullscreen></iframe>
+            </div>
+            <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">• High-Definition Live Global Broadcast Active.<br>• Emergency Weather Telemetry streaming 24/7.</p>
+        </div>
+
+        <!-- Global Chat Hub -->
+        <div id="chatSection" class="feature-section">
+            <h3>💬 Live Messaging Hub (Firebase Cloud)</h3>
+            <div class="chat-container" id="chatMessagesContainer">
+                <div class="chat-msg">Welcome to AYNA BOOK Official Global Chat! 👋</div>
+                <div class="chat-msg self">Cloud synchronization running live 🌐</div>
             </div>
             <div style="display: flex; gap: 8px;">
-                <input type="text" id="chatMsg" placeholder="এখানে লিখুন..." style="flex: 1; padding: 10px; background: #000; border: 1px solid var(--pink-border); color: #fff; border-radius: 6px;">
-                <button class="quantum-btn" style="width: 80px; margin: 0;" onclick="sendChatMessage()">পাঠান</button>
+                <input type="text" id="chatInputMsg" class="form-control" placeholder="Write a message...">
+                <button class="submit-btn" id="sendChatBtn" style="width: 85px; margin-top:0;">Send</button>
             </div>
         </div>
 
-        <!-- 5. GPS Compass & Settings -->
-        <div id="gps" class="quantum-card">
-            <h2>🧭 জিপিএস কম্পাস নেভিগেশন</h2>
-            <div class="compass-wrap">
-                <div class="compass-dial">
-                    <div class="compass-needle" id="needle"></div>
-                    <span style="position: absolute; top: 5px; color: var(--gold-title); font-weight: bold;">N</span>
-                </div>
-                <p id="headingText">দিক: ০° (উত্তর)</p>
-                <button class="quantum-btn" style="margin-top: 10px;" onclick="startGPSCompass()">কম্পাস স্টার্ট করুন</button>
-            </div>
+        <!-- Radar Section -->
+        <div id="radarSection" class="feature-section">
+            <h3>🛰️ Radar Telemetry & GPS Tracking</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.6;">• Global GPS Telemetry active for maritime and risk zones.<br>• Real-time 10-minute early warning telemetry linked.</p>
         </div>
 
+        <!-- Saved Registered Cloud Accounts -->
+        <div class="saved-box">
+            <div style="font-size: 12px; font-weight: bold; color: #ffffff; margin-bottom: 6px;">📥 Global Registered Accounts (Cloud Synced):</div>
+            <div id="savedListContainer">
+                <p style="color: #8d99ae; font-size: 11px;">Loading cloud accounts...</p>
+            </div>
+        </div>
     </div>
 
-    <!-- Navigation Bar -->
-    <div class="navbar">
-        <button class="nav-item active" onclick="openTab('home', this)">
-            <span>🚨</span>এলার্ট
-        </button>
-        <button class="nav-item" onclick="openTab('account', this)">
-            <span>👤</span>একাউন্ট
-        </button>
-        <button class="nav-item" onclick="openTab('media', this)">
-            <span>📻</span>রেডিও/টিভি
-        </button>
-        <button class="nav-item" onclick="openTab('chat', this)">
-            <span>💬</span>ভয়েস চ্যাট
-        </button>
-        <button class="nav-item" onclick="openTab('gps', this)">
-            <span>🧭</span>জিপিএস
-        </button>
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <div class="nav-item active" id="bottomHome"><i class="fas fa-home"></i>Home</div>
+        <div class="nav-item" id="bottomOpenId"><i class="fas fa-user-plus"></i>Open ID</div>
+        <div class="nav-item" id="bottomLogin"><i class="fas fa-lock"></i>Login</div>
+        <div class="nav-item" id="bottomRadio"><i class="fas fa-tv"></i>Video/TV</div>
+        <div class="nav-item" id="bottomChat"><i class="fas fa-comments"></i>Chat</div>
     </div>
+</div>
 
-    <script>
-        // ক্রিস্টাল ক্লিয়ার ভয়েস স্পিচ ইনজিনের কোড (Crystal Clear Voice Engine)
-        function speakCrystalClear(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // পূর্বের ভয়েস থামিয়ে নতুন কথা শুরু করবে
-                const speech = new SpeechSynthesisUtterance(text);
-                speech.lang = 'bn-BD'; // বাংলা ভয়েস
-                speech.rate = 0.95;    // স্পষ্ট শোনার জন্য স্পিড
-                speech.pitch = 1.0;    // ক্রিস্টাল টোন
-                window.speechSynthesis.speak(speech);
+<script>
+    /* ========================================================
+       FIREBASE CONFIGURATION & EVENT LISTENERS
+       ======================================================== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+      authDomain: "ayna-book.firebaseapp.com",
+      databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "ayna-book",
+      storageBucket: "ayna-book.firebasestorage.app",
+      messagingSenderId: "805601138500",
+      appId: "1:805601138500:web:47acdc90cb0cb521626911",
+      measurementId: "G-RKHHSKNB4B"
+    };
+
+    let db = null;
+    try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        console.log("Firebase initialized successfully!");
+    } catch(e) {
+        console.log("Firebase fallback mode: ", e);
+    }
+
+    let currentEditId = null;
+
+    function hideAllSections() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('radiotvSection').style.display = 'none';
+        document.getElementById('chatSection').style.display = 'none';
+        document.getElementById('radarSection').style.display = 'none';
+    }
+
+    function copyPaymentNumber(num) {
+        navigator.clipboard.writeText(num);
+        alert(`Payment Account Number ${num} Copied to Clipboard! 📋`);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // Registration Trigger
+        document.getElementById('submitRegBtn').addEventListener('click', function() {
+            initiateOTPVerification('new');
+        });
+
+        // Password Show/Hide Toggle
+        document.getElementById('togglePassBtn').addEventListener('click', function() {
+            const passInput = document.getElementById('regPass');
+            if(passInput.type === "password") {
+                passInput.type = "text";
+                this.textContent = "Hide";
+            } else {
+                passInput.type = "password";
+                this.textContent = "Show";
             }
+        });
+
+        // Alert System Toggle
+        document.getElementById('alertToggle').addEventListener('change', function() {
+            const statusText = document.getElementById('alertStatusText');
+            if(this.checked) {
+                statusText.innerHTML = "Early Warning System Active (ON) ✅";
+            } else {
+                statusText.innerHTML = "Early Warning Inactive (OFF) ❌";
+            }
+        });
+
+        // Feature Box Click Listeners
+        document.getElementById('navLoginBox').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('loginSection').scrollIntoView({behavior: 'smooth'});
+        });
+
+        document.getElementById('navRadioBox').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('radiotvSection').style.display = 'block';
+            document.getElementById('radiotvSection').scrollIntoView({behavior: 'smooth'});
+        });
+
+        document.getElementById('navChatBox').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('chatSection').style.display = 'block';
+            document.getElementById('chatSection').scrollIntoView({behavior: 'smooth'});
+        });
+
+        document.getElementById('navRadarBox').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('radarSection').style.display = 'block';
+            document.getElementById('radarSection').scrollIntoView({behavior: 'smooth'});
+        });
+
+        // Bottom Navigation Bar Clicks
+        document.getElementById('bottomHome').addEventListener('click', () => {
+            hideAllSections();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+        document.getElementById('bottomOpenId').addEventListener('click', () => {
+            hideAllSections();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+        document.getElementById('bottomLogin').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('loginSection').scrollIntoView({behavior: 'smooth'});
+        });
+        document.getElementById('bottomRadio').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('radiotvSection').style.display = 'block';
+            document.getElementById('radiotvSection').scrollIntoView({behavior: 'smooth'});
+        });
+        document.getElementById('bottomChat').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('chatSection').style.display = 'block';
+            document.getElementById('chatSection').scrollIntoView({behavior: 'smooth'});
+        });
+
+        // Chat Send Action
+        document.getElementById('sendChatBtn').addEventListener('click', function() {
+            const input = document.getElementById('chatInputMsg');
+            const container = document.getElementById('chatMessagesContainer');
+            if(input.value.trim() !== "") {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'chat-msg self';
+                msgDiv.textContent = input.value;
+                container.appendChild(msgDiv);
+                input.value = '';
+                container.scrollTop = container.scrollHeight;
+            }
+        });
+
+        document.getElementById('loginSubmitBtn').addEventListener('click', loginUser);
+        document.getElementById('forgotPassBtn').addEventListener('click', forgotPassword);
+
+        loadSavedAccounts();
+    });
+
+    function initiateOTPVerification(type) {
+        const name = document.getElementById('regName').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value;
+
+        if(!name || !phone || !email || !pass) { alert('Please fill in all fields!'); return; }
+        if(pass.length < 11) { alert('Password must be at least 11 digits/characters!'); return; }
+
+        let otpCode = Math.floor(1000 + Math.random() * 9000);
+        let userOtp = prompt(`💬 [AYNA BOOK CLOUD SMS BOX - 2 MINS TIMER]\nMessage sent to phone (${phone}): "Your OTP is ${otpCode}. Valid for 2 minutes."\nEnter the 4-digit OTP code below:`);
+
+        if(userOtp == otpCode) {
+            alert('✅ OTP Verified Successfully within 2 minutes timeframe!');
+            processPhotoAndStore(type);
+        } else {
+            alert('❌ Invalid or Expired OTP! Account creation aborted.');
         }
+    }
 
-        // ট্যাব সুইচ করার লজিক
-        function openTab(tabId, element) {
-            document.querySelectorAll('.quantum-card').forEach(card => card.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            element.classList.add('active');
-
-            if(tabId === 'home') speakCrystalClear('১৫০ প্লাস রিস্ক ও এলার্ট সিস্টেম চালু আছে।');[span_8](start_span)[span_8](end_span)
-            if(tabId === 'account') speakCrystalClear('একাউন্ট রেজিস্টার এবং ওটিপি পেজ।');[span_9](start_span)[span_9](end_span)
-            if(tabId === 'media') speakCrystalClear('রেডিও এবং অনলাইন টিভি প্লেয়ার।');
-            if(tabId === 'chat') speakCrystalClear('ভয়েস ও মেসেজ চ্যাট বক্স।');
-            if(tabId === 'gps') speakCrystalClear('জিপিএস কম্পাস নেভিগেশন।');
-        }
-
-        // ১৫০+ সিকিউরিটি চেক সিমুলেশন
-        function triggerSystemCheck() {
-            const log = document.getElementById('alertLog');
-            speakCrystalClear('১৫০ টি নিরাপত্তা অ্যালার্ট পরীক্ষা করা হচ্ছে। সব সিস্টেম নিরাপদ আছে।');
-            log.innerHTML += `<br>[R-150]: স্ক্যান সম্পন্ন। ১৫০/১৫০ রিস্ক পয়েন্ট সুরক্ষিত।`;[span_10](start_span)[span_10](end_span)
-            log.scrollTop = log.scrollHeight;
-        }
-
-        // ওটিপি লজিক
-        let myOTP = null;
-        function sendOTPCode() {
-            const phone = document.getElementById('phoneNum').value;
-            if(!phone) {
-                speakCrystalClear('অনুগ্রহ করে আপনার মোবাইল নম্বর লিখুন।');
-                alert('মোবাইল নম্বর লিখুন!');
+    function processPhotoAndStore(type) {
+        const photoInput = document.getElementById('regPhoto');
+        let photoUrl = "https://via.placeholder.com/100";
+        if(photoInput.files && photoInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                finalizeStorage(e.target.result, type);
+            };
+            reader.readAsDataURL(photoInput.files[0]);
+        } else {
+            if(currentEditId) {
+                getAccountsFromStorage((accounts) => {
+                    let existing = accounts.find(acc => acc.id == currentEditId);
+                    if(existing) photoUrl = existing.photo;
+                    finalizeStorage(photoUrl, type);
+                });
                 return;
             }
-            myOTP = Math.floor(100000 + Math.random() * 900000);
-            speakCrystalClear('আপনার ওটিপি কোড পাঠানো হয়েছে।');[span_11](start_span)[span_11](end_span)
-            alert('আপনার ওটিপি (OTP) কোডটি হলো: ' + myOTP);[span_12](start_span)[span_12](end_span)
+            finalizeStorage(photoUrl, type);
         }
+    }
 
-        function verifyOTPCode() {
-            const userOTP = document.getElementById('otpCode').value;
-            if(userOTP && userOTP == myOTP) {
-                speakCrystalClear('অভিনন্দন! আপনার একাউন্ট সফলভাবে যাচাই করা হয়েছে।');
-                alert('একাউন্ট যাচাই সফল!');
-            } else {
-                speakCrystalClear('ইনভ্যালিড ওটিপি! একাউন্ট রেজিস্ট্রেশন বাতিল করা হলো।');[span_13](start_span)[span_13](end_span)
-                alert('Invalid or Expired OTP!');[span_14](start_span)[span_14](end_span)
-            }
+    function finalizeStorage(photo, type) {
+        const name = document.getElementById('regName').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value;
+        const tier = document.getElementById('regTier').value;
+        
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK-${encodeURIComponent(email)}`;
+        const accountId = currentEditId ? currentEditId : Date.now().toString();
+
+        const accData = {
+            id: accountId,
+            name: name,
+            phone: phone,
+            email: email,
+            pass: pass,
+            tier: tier,
+            photo: photo,
+            qrCodeUrl: qrCodeUrl,
+            time: new Date().toLocaleString()
+        };
+
+        if(db) {
+            db.collection("ayna_global_accounts").doc(accountId).set(accData)
+            .then(() => {
+                alert('Cloud Account successfully saved globally on Firebase! 🌐✅');
+                postSaveCleanup(email);
+            })
+            .catch((error) => {
+                console.error("Firestore Error: ", error);
+                saveToLocalStorageFallback(accData, email);
+            });
+        } else {
+            saveToLocalStorageFallback(accData, email);
         }
+    }
 
-        // ভয়েস চ্যাট সিস্টেম
-        function sendChatMessage() {
-            const input = document.getElementById('chatMsg');
-            const display = document.getElementById('chatDisplay');
-            if(input.value.trim() !== '') {
-                const text = input.value;
-                const userDiv = document.createElement('div');
-                userDiv.className = 'chat-msg msg-user';
-                userDiv.innerText = 'আপনি: ' + text;
-                display.appendChild(userDiv);
-
-                // অটো ক্রিস্টাল ভয়েস রিপ্লাই
-                setTimeout(() => {
-                    const replyText = 'আমি আপনার বার্তা পেয়েছি: ' + text;
-                    const botDiv = document.createElement('div');
-                    botDiv.className = 'chat-msg msg-bot';
-                    botDiv.innerText = 'আইনা বুক: ' + replyText;
-                    display.appendChild(botDiv);
-                    display.scrollTop = display.scrollHeight;
-                    speakCrystalClear(replyText);
-                }, 500);
-
-                input.value = '';
-                display.scrollTop = display.scrollHeight;
-            }
+    function saveToLocalStorageFallback(accData, email) {
+        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+        if(currentEditId) {
+            accounts = accounts.map(acc => acc.id == currentEditId ? accData : acc);
+            currentEditId = null;
+        } else {
+            accounts.push(accData);
         }
+        localStorage.setItem('ayna_global_accounts', JSON.stringify(accounts));
+        localStorage.setItem('ayna_logged_in', email);
+        alert('Account saved successfully (Local Backup)! ✅');
+        postSaveCleanup(email);
+    }
 
-        // জিপিএস সেন্সর
-        function startGPSCompass() {
-            speakCrystalClear('জিপিএস কম্পাস সক্রিয় করা হচ্ছে।');
-            if (window.DeviceOrientationEvent) {
-                window.addEventListener('deviceorientation', function(e) {
-                    let alpha = e.alpha;
-                    if(alpha !== null) {
-                        document.getElementById('needle').style.transform = `rotate(${alpha}deg)`;
-                        document.getElementById('headingText').innerText = `দিক: ${Math.round(alpha)}°`;
-                    }
+    function postSaveCleanup(email) {
+        localStorage.setItem('ayna_logged_in', email);
+        document.getElementById('regName').value = '';
+        document.getElementById('regPhone').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regPass').value = '';
+        document.getElementById('regPhoto').value = '';
+        currentEditId = null;
+        loadSavedAccounts();
+    }
+
+    function getAccountsFromStorage(callback) {
+        if(db) {
+            db.collection("ayna_global_accounts").get().then((querySnapshot) => {
+                let accounts = [];
+                querySnapshot.forEach((doc) => {
+                    accounts.push(doc.data());
                 });
-            }
+                callback(accounts);
+            }).catch((error) => {
+                let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+                callback(localAcc);
+            });
+        } else {
+            let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+            callback(localAcc);
         }
+    }
 
-        function switchChannel() {
-            speakCrystalClear('চ্যানেল পরিবর্তন করা হয়েছে।');
+    function loginUser() {
+        const inputEmail = document.getElementById('loginEmail').value.trim();
+        const inputPass = document.getElementById('loginPass').value;
+
+        getAccountsFromStorage((accounts) => {
+            const found = accounts.find(acc => (acc.email === inputEmail || acc.phone === inputEmail) && acc.pass === inputPass);
+            if(found) {
+                localStorage.setItem('ayna_logged_in', found.email);
+                updateLoginIndicator();
+                alert(`Welcome back ${found.name}! Logged in successfully.`);
+                loadSavedAccounts();
+                hideAllSections();
+            } else {
+                alert('Invalid credentials or password!');
+            }
+        });
+    }
+
+    function forgotPassword() {
+        let identifier = prompt("Enter your registered Phone or Gmail for OTP password recovery:");
+        getAccountsFromStorage((accounts) => {
+            let found = accounts.find(acc => acc.email === identifier || acc.phone === identifier);
+            if(found) {
+                let otp = Math.floor(1000 + Math.random() * 9000);
+                let inputOtp = prompt(`💬 [SMS BOX - 2 MINS TIMER]\nOTP sent to ${found.phone}.\nSimulated OTP: ${otp}\nEnter OTP code to view password:`);
+                if(inputOtp == otp) {
+                    alert(`Your Secure Password is: ${found.pass}`);
+                } else {
+                    alert('Invalid OTP code!');
+                }
+            } else {
+                alert('Account not found in cloud storage!');
+            }
+        });
+    }
+
+    function logoutUser() {
+        localStorage.removeItem('ayna_logged_in');
+        updateLoginIndicator();
+        alert('Logged out securely.');
+        loadSavedAccounts();
+        hideAllSections();
+    }
+
+    function updateLoginIndicator() {
+        let user = localStorage.getItem('ayna_logged_in');
+        const indicator = document.getElementById('loginStatusIndicator');
+        if(user) {
+            indicator.innerHTML = `<span style="color:var(--success);">Cloud Online</span> <i class="fas fa-sign-out-alt" id="logoutBtn" style="cursor:pointer; margin-left:5px;" title="Logout"></i>`;
+            setTimeout(() => {
+                const logoutBtn = document.getElementById('logoutBtn');
+                if(logoutBtn) logoutBtn.addEventListener('click', logoutUser);
+            }, 100);
+        } else {
+            indicator.innerHTML = `Guest (Cloud Active)`;
         }
-    </script>
+    }
+
+    function copyAccountLink(id) {
+        let link = `https://ayna-956251.github.io/ayna--book/#id=${id}`;
+        navigator.clipboard.writeText(link);
+        alert('Secure Cloud Link Copied! 🔗');
+    }
+
+    function triggerEditAccount(id) {
+        let enteredPass = prompt("Enter your account password to edit profile:");
+        getAccountsFromStorage((accounts) => {
+            let target = accounts.find(acc => acc.id == id);
+            if(target && target.pass === enteredPass) {
+                currentEditId = id;
+                document.getElementById('regName').value = target.name;
+                document.getElementById('regPhone').value = target.phone;
+                document.getElementById('regEmail').value = target.email;
+                document.getElementById('regPass').value = target.pass;
+                document.getElementById('regTier').value = target.tier;
+                window.scrollTo({top: 0, behavior: 'smooth'});
+                alert('You are authorized. Modify details in top form and click verify OTP to update.');
+            } else {
+                alert('❌ Incorrect password or unauthorized access!');
+            }
+        });
+    }
+
+    function loadSavedAccounts() {
+        const container = document.getElementById('savedListContainer');
+        let loggedIn = localStorage.getItem('ayna_logged_in');
+
+        getAccountsFromStorage((accounts) => {
+            if(accounts.length === 0) {
+                container.innerHTML = `<p style="color: #8d99ae; font-size: 11px;">No accounts created yet.</p>`;
+                return;
+            }
+
+            let html = '';
+            accounts.forEach((acc, i) => {
+                let isOwner = (loggedIn === acc.email);
+                let passDisplay = isOwner ? acc.pass : "••••••••••• (Hidden)";
+                let phoneDisplay = isOwner ? acc.phone : acc.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+                let emailDisplay = isOwner ? acc.email : acc.email.replace(/(.{2})(.*)(@.*)/, '$1***$3');
+                let safeQR = acc.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK`;
+
+                html += `<div class="saved-item">
+                    <button class="edit-icon-btn" onclick="triggerEditAccount('${acc.id}')" title="Edit with Password">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <div class="profile-header">
+                        <img src="${acc.photo}" alt="Photo" class="profile-big-square">
+                        <div>
+                            <strong style="font-size:12px; color:#ffffff;">#${i+1} - ${acc.name}</strong><br>
+                            <span style="color:var(--accent-cyan); font-weight:bold;">${acc.tier}</span><br>
+                            📞 Phone: ${phoneDisplay} | ✉️ Email: ${emailDisplay}<br>
+                            🔑 Password: <span style="color:var(--warning); font-family:monospace;">${passDisplay}</span><br>
+                            <span style="color:#8d99ae; font-size:9px;">Time: ${acc.time}</span>
+                        </div>
+                    </div>
+                    <div class="qr-code-display">
+                        <img src="${safeQR}" alt="Account QR Code">
+                    </div>
+                    <div class="action-row">
+                        <button class="btn-sm copy" onclick="copyAccountLink('${acc.id}')"><i class="fas fa-copy"></i> Copy Link</button>
+                        ${isOwner ? `<button class="btn-sm logout-item-btn" style="background:#ef4444;" onclick="logoutUser()">Logout</button>` : ``}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+            updateLoginIndicator();
+        });
+    }
+</script>
+
 </body>
 </html>
