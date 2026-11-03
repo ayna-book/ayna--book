@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AYNA BOOK - Live Global Hub</title>
+    <title>AYNA BOOK - Global Cloud Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Firebase SDKs for Global Cloud Sync -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
     <style>
         :root {
             --bg-dark: #070a13;
@@ -120,7 +126,7 @@
             </div>
             <div class="title">AYNA BOOK</div>
         </div>
-        <div style="font-size: 12px; color: var(--accent-glow);" id="loginStatusIndicator">Guest (Hidden)</div>
+        <div style="font-size: 12px; color: var(--accent-glow);" id="loginStatusIndicator">Guest (Cloud Ready)</div>
     </div>
 
     <!-- Main Content -->
@@ -128,7 +134,7 @@
 
         <!-- 1. PRIORITY NEW ACCOUNT SECTION ON TOP -->
         <div class="priority-reg-card">
-            <h3><i class="fas fa-user-plus"></i> Open New Account (Bkash/Nagad/Intl)</h3>
+            <h3><i class="fas fa-user-plus"></i> Open New Account (Global Cloud Sync)</h3>
             <div class="form-group"><label>Profile Photo (Big Square Box)</label><input type="file" id="regPhoto" class="form-control" accept="image/*"></div>
             <div class="form-group"><label>Full Name (English)</label><input type="text" id="regName" class="form-control" placeholder="Your Full Name"></div>
             <div class="form-group"><label>Phone Number (Bkash/Nagad/Intl Code)</label><input type="tel" id="regPhone" class="form-control" placeholder="+88017xxxxxxxx"></div>
@@ -149,12 +155,12 @@
                     <option value="VVIP Account - $25 / 3000 BDT">VVIP Account - $25 / 3000 BDT</option>
                 </select>
             </div>
-            <button class="submit-btn" onclick="initiateOTPVerification('new')">Verify OTP (2 Mins) & Open Account</button>
+            <button class="submit-btn" onclick="initiateOTPVerification('new')">Verify OTP (2 Mins) & Open Cloud ID</button>
         </div>
 
         <!-- 2. STATUS & OTHER FEATURES BELOW -->
         <div class="status-card">
-            ✨ Quantum & Android Core Active | 10-Min Early Alert Protection ON ✅
+            ✨ Firebase Cloud Firestore & Android Core Active ✅
         </div>
 
         <!-- Alert ON/OFF Box -->
@@ -194,9 +200,9 @@
 
         <!-- 3. REGISTERED ACCOUNTS WITH LIVE QR CODE -->
         <div class="saved-box">
-            <div style="font-size: 12px; font-weight: bold; color: var(--accent-glow); margin-bottom: 5px;">📥 Registered Accounts (Secure & Hidden until Login):</div>
+            <div style="font-size: 12px; font-weight: bold; color: var(--accent-glow); margin-bottom: 5px;">📥 Global Registered Accounts (Cloud Synced):</div>
             <div id="savedListContainer">
-                <p style="color: #64748b; font-size: 11px;">No accounts created yet.</p>
+                <p style="color: #64748b; font-size: 11px;">Loading cloud accounts...</p>
             </div>
         </div>
     </div>
@@ -212,6 +218,27 @@
 </div>
 
 <script>
+    /* ========================================================
+       FIREBASE CONFIGURATION (রিয়েল ক্লাউড ডাটাবেজ সেটআপ)
+       ======================================================== */
+    const firebaseConfig = {
+        apiKey: "YOUR_FIREBASE_API_KEY",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase (Fallback to LocalStorage if Firebase is not yet configured)
+    let db = null;
+    try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+    } catch(e) {
+        console.log("Firebase config pending, using LocalStorage hybrid mode.");
+    }
+
     let currentEditId = null;
 
     function toggleAlertSystem() {
@@ -288,7 +315,7 @@
         if(pass.length < 11) { alert('Password must be at least 11 digits/characters!'); return; }
 
         let otpCode = Math.floor(1000 + Math.random() * 9000);
-        let userOtp = prompt(`💬 [AYNA BOOK SMS BOX - 2 MINS TIMER]\nMessage sent to phone (${phone}): "Your OTP is ${otpCode}. Valid for 2 minutes."\nEnter the 4-digit OTP code below:`);
+        let userOtp = prompt(`💬 [AYNA BOOK CLOUD SMS BOX - 2 MINS TIMER]\nMessage sent to phone (${phone}): "Your OTP is ${otpCode}. Valid for 2 minutes."\nEnter the 4-digit OTP code below:`);
 
         if(userOtp == otpCode) {
             alert('✅ OTP Verified Successfully within 2 minutes timeframe!');
@@ -309,9 +336,12 @@
             reader.readAsDataURL(photoInput.files[0]);
         } else {
             if(currentEditId) {
-                let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
-                let existing = accounts.find(acc => acc.id === currentEditId);
-                if(existing) photoUrl = existing.photo;
+                getAccountsFromStorage((accounts) => {
+                    let existing = accounts.find(acc => acc.id == currentEditId);
+                    if(existing) photoUrl = existing.photo;
+                    finalizeStorage(photoUrl, type);
+                });
+                return;
             }
             finalizeStorage(photoUrl, type);
         }
@@ -325,71 +355,114 @@
         const tier = document.getElementById('regTier').value;
         
         const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK-${encodeURIComponent(email)}`;
+        const accountId = currentEditId ? currentEditId : Date.now().toString();
 
-        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+        const accData = {
+            id: accountId,
+            name: name,
+            phone: phone,
+            email: email,
+            pass: pass,
+            tier: tier,
+            photo: photo,
+            qrCodeUrl: qrCodeUrl,
+            time: new Date().toLocaleString()
+        };
 
-        if(type === 'edit' && currentEditId) {
-            accounts = accounts.map(acc => {
-                if(acc.id === currentEditId) {
-                    return { ...acc, name, phone, email, pass, tier, photo, qrCodeUrl, time: new Date().toLocaleString() };
-                }
-                return acc;
+        if(db) {
+            // Save to Firebase Firestore (Global Cloud)
+            db.collection("ayna_global_accounts").doc(accountId).set(accData)
+            .then(() => {
+                alert('Cloud Account successfully saved globally! 🌐✅');
+                postSaveCleanup(email);
+            })
+            .catch((error) => {
+                console.error("Firestore Error, fallback to localStorage: ", error);
+                saveToLocalStorageFallback(accData, email);
             });
-            alert('Account successfully updated with OTP! ✏️');
+        } else {
+            saveToLocalStorageFallback(accData, email);
+        }
+    }
+
+    function saveToLocalStorageFallback(accData, email) {
+        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+        if(currentEditId) {
+            accounts = accounts.map(acc => acc.id == currentEditId ? accData : acc);
             currentEditId = null;
         } else {
-            const newAcc = { id: Date.now(), name, phone, email, pass, tier, photo, qrCodeUrl, time: new Date().toLocaleString() };
-            accounts.push(newAcc);
-            alert('New Account successfully opened & saved with Live QR Code! ✅');
+            accounts.push(accData);
         }
-
         localStorage.setItem('ayna_global_accounts', JSON.stringify(accounts));
         localStorage.setItem('ayna_logged_in', email);
-        
+        alert('Account saved locally (Hybrid Mode)! ✅');
+        postSaveCleanup(email);
+    }
+
+    function postSaveCleanup(email) {
+        localStorage.setItem('ayna_logged_in', email);
         document.getElementById('regName').value = '';
         document.getElementById('regPhone').value = '';
         document.getElementById('regEmail').value = '';
         document.getElementById('regPass').value = '';
         document.getElementById('regPhoto').value = '';
-
-        updateLoginIndicator();
+        currentEditId = null;
         loadSavedAccounts();
+    }
+
+    function getAccountsFromStorage(callback) {
+        if(db) {
+            db.collection("ayna_global_accounts").get().then((querySnapshot) => {
+                let accounts = [];
+                querySnapshot.forEach((doc) => {
+                    accounts.push(doc.data());
+                });
+                callback(accounts);
+            }).catch((error) => {
+                console.log("Error getting cloud documents: ", error);
+                let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+                callback(localAcc);
+            });
+        } else {
+            let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+            callback(localAcc);
+        }
     }
 
     function loginUser() {
         const inputEmail = document.getElementById('loginEmail').value.trim();
         const inputPass = document.getElementById('loginPass').value;
 
-        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
-        const found = accounts.find(acc => (acc.email === inputEmail || acc.phone === inputEmail) && acc.pass === inputPass);
-
-        if(found) {
-            localStorage.setItem('ayna_logged_in', found.email);
-            updateLoginIndicator();
-            alert(`Welcome back ${found.name}! Logged in successfully.`);
-            loadSavedAccounts();
-            switchView('home');
-        } else {
-            alert('Invalid credentials or password!');
-        }
+        getAccountsFromStorage((accounts) => {
+            const found = accounts.find(acc => (acc.email === inputEmail || acc.phone === inputEmail) && acc.pass === inputPass);
+            if(found) {
+                localStorage.setItem('ayna_logged_in', found.email);
+                updateLoginIndicator();
+                alert(`Welcome back ${found.name}! Logged in successfully.`);
+                loadSavedAccounts();
+                switchView('home');
+            } else {
+                alert('Invalid credentials or password!');
+            }
+        });
     }
 
     function forgotPassword() {
         let identifier = prompt("Enter your registered Phone or Gmail for OTP password recovery:");
-        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
-        let found = accounts.find(acc => acc.email === identifier || acc.phone === identifier);
-
-        if(found) {
-            let otp = Math.floor(1000 + Math.random() * 9000);
-            let inputOtp = prompt(`💬 [SMS BOX - 2 MINS TIMER]\nOTP sent to ${found.phone}.\nSimulated OTP: ${otp}\nEnter OTP code to view password:`);
-            if(inputOtp == otp) {
-                alert(`Your Secure Password is: ${found.pass}`);
+        getAccountsFromStorage((accounts) => {
+            let found = accounts.find(acc => acc.email === identifier || acc.phone === identifier);
+            if(found) {
+                let otp = Math.floor(1000 + Math.random() * 9000);
+                let inputOtp = prompt(`💬 [SMS BOX - 2 MINS TIMER]\nOTP sent to ${found.phone}.\nSimulated OTP: ${otp}\nEnter OTP code to view password:`);
+                if(inputOtp == otp) {
+                    alert(`Your Secure Password is: ${found.pass}`);
+                } else {
+                    alert('Invalid OTP code!');
+                }
             } else {
-                alert('Invalid OTP code!');
+                alert('Account not found in cloud storage!');
             }
-        } else {
-            alert('Account not found in secure storage!');
-        }
+        });
     }
 
     function logoutUser() {
@@ -404,80 +477,81 @@
         let user = localStorage.getItem('ayna_logged_in');
         const indicator = document.getElementById('loginStatusIndicator');
         if(user) {
-            indicator.innerHTML = `<span style="color:var(--success);">Secure Online</span> <i class="fas fa-sign-out-alt" style="cursor:pointer; margin-left:5px;" onclick="logoutUser()" title="Logout"></i>`;
+            indicator.innerHTML = `<span style="color:var(--success);">Cloud Online</span> <i class="fas fa-sign-out-alt" style="cursor:pointer; margin-left:5px;" onclick="logoutUser()" title="Logout"></i>`;
         } else {
-            indicator.innerHTML = `Guest (Hidden)`;
+            indicator.innerHTML = `Guest (Cloud Ready)`;
         }
     }
 
     function copyAccountLink(id) {
         let link = `https://ayna-956251.github.io/ayna-book/#id=${id}`;
         navigator.clipboard.writeText(link);
-        alert('Secure Account Link Copied! 🔗 You can share this link or QR code.');
+        alert('Secure Cloud Link Copied! 🔗 You can share this link or QR code.');
     }
 
     function triggerEditAccount(id) {
         let enteredPass = prompt("Enter your account password to edit profile:");
-        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
-        let target = accounts.find(acc => acc.id === id);
-
-        if(target && target.pass === enteredPass) {
-            currentEditId = id;
-            document.getElementById('regName').value = target.name;
-            document.getElementById('regPhone').value = target.phone;
-            document.getElementById('regEmail').value = target.email;
-            document.getElementById('regPass').value = target.pass;
-            document.getElementById('regTier').value = target.tier;
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            alert('You are authorized. Modify details in top form and click verify OTP to update.');
-        } else {
-            alert('❌ Incorrect password or unauthorized access!');
-        }
+        getAccountsFromStorage((accounts) => {
+            let target = accounts.find(acc => acc.id == id);
+            if(target && target.pass === enteredPass) {
+                currentEditId = id;
+                document.getElementById('regName').value = target.name;
+                document.getElementById('regPhone').value = target.phone;
+                document.getElementById('regEmail').value = target.email;
+                document.getElementById('regPass').value = target.pass;
+                document.getElementById('regTier').value = target.tier;
+                window.scrollTo({top: 0, behavior: 'smooth'});
+                alert('You are authorized. Modify details in top form and click verify OTP to update.');
+            } else {
+                alert('❌ Incorrect password or unauthorized access!');
+            }
+        });
     }
 
     function loadSavedAccounts() {
         const container = document.getElementById('savedListContainer');
-        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
         let loggedIn = localStorage.getItem('ayna_logged_in');
 
-        if(accounts.length === 0) {
-            container.innerHTML = `<p style="color: #64748b; font-size: 11px;">No accounts created yet.</p>`;
-            return;
-        }
+        getAccountsFromStorage((accounts) => {
+            if(accounts.length === 0) {
+                container.innerHTML = `<p style="color: #64748b; font-size: 11px;">No accounts created yet.</p>`;
+                return;
+            }
 
-        let html = '';
-        accounts.forEach((acc, i) => {
-            let isOwner = (loggedIn === acc.email);
-            let passDisplay = isOwner ? acc.pass : "••••••••••• (Hidden)";
-            let phoneDisplay = isOwner ? acc.phone : acc.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
-            let emailDisplay = isOwner ? acc.email : acc.email.replace(/(.{2})(.*)(@.*)/, '$1***$3');
-            let safeQR = acc.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK`;
+            let html = '';
+            accounts.forEach((acc, i) => {
+                let isOwner = (loggedIn === acc.email);
+                let passDisplay = isOwner ? acc.pass : "••••••••••• (Hidden)";
+                let phoneDisplay = isOwner ? acc.phone : acc.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+                let emailDisplay = isOwner ? acc.email : acc.email.replace(/(.{2})(.*)(@.*)/, '$1***$3');
+                let safeQR = acc.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK`;
 
-            html += `<div class="saved-item">
-                <button class="edit-icon-btn" title="Edit with Password" onclick="triggerEditAccount(${acc.id})">
-                    <i class="fas fa-pencil-alt"></i>
-                </button>
-                <div class="profile-header">
-                    <img src="${acc.photo}" alt="Photo" class="profile-big-square">
-                    <div>
-                        <strong style="font-size:12px; color:var(--accent-glow);">#${i+1} - ${acc.name}</strong><br>
-                        <span style="color:var(--warning);">${acc.tier}</span><br>
-                        📞 Phone: ${phoneDisplay} | ✉️ Gmail: ${emailDisplay}<br>
-                        🔑 Password: <span style="color:#f59e0b; font-family:monospace;">${passDisplay}</span><br>
-                        <span style="color:#64748b; font-size:9px;">Time: ${acc.time}</span>
+                html += `<div class="saved-item">
+                    <button class="edit-icon-btn" title="Edit with Password" onclick="triggerEditAccount('${acc.id}')">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <div class="profile-header">
+                        <img src="${acc.photo}" alt="Photo" class="profile-big-square">
+                        <div>
+                            <strong style="font-size:12px; color:var(--accent-glow);">#${i+1} - ${acc.name}</strong><br>
+                            <span style="color:var(--warning);">${acc.tier}</span><br>
+                            📞 Phone: ${phoneDisplay} | ✉️ Gmail: ${emailDisplay}<br>
+                            🔑 Password: <span style="color:#f59e0b; font-family:monospace;">${passDisplay}</span><br>
+                            <span style="color:#64748b; font-size:9px;">Time: ${acc.time}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="qr-code-display" title="Scan or Share QR">
-                    <img src="${safeQR}" alt="Account QR Code">
-                </div>
-                <div class="action-row">
-                    <button class="btn-sm copy" onclick="copyAccountLink(${acc.id})"><i class="fas fa-copy"></i> Copy Link</button>
-                    ${isOwner ? `<button class="btn-sm" style="background:#ef4444;" onclick="logoutUser()">Logout</button>` : ``}
-                </div>
-            </div>`;
+                    <div class="qr-code-display" title="Scan or Share QR">
+                        <img src="${safeQR}" alt="Account QR Code">
+                    </div>
+                    <div class="action-row">
+                        <button class="btn-sm copy" onclick="copyAccountLink('${acc.id}')"><i class="fas fa-copy"></i> Copy Link</button>
+                        ${isOwner ? `<button class="btn-sm" style="background:#ef4444;" onclick="logoutUser()">Logout</button>` : ``}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+            updateLoginIndicator();
         });
-        container.innerHTML = html;
-        updateLoginIndicator();
     }
 
     window.onload = function() {
