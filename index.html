@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AYNA BOOK - Android Master App</title>
+    <title>AYNA BOOK - Quantum Secure Global Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -19,25 +19,53 @@
             --warning: #f59e0b;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-dark); color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; user-select: none; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-dark); color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; }
         
         .master-app { width: 100%; max-width: 500px; background-color: var(--bg-dark); border: 1px solid var(--border); display: flex; flex-direction: column; min-height: 100vh; position: relative; padding-bottom: 75px; }
 
-        /* Android Style App Bar */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .top-bar .title { font-size: 15px; font-weight: 800; color: var(--accent-glow); text-transform: uppercase; letter-spacing: 0.5px; }
-        .top-bar .icons i { font-size: 18px; color: var(--text-secondary); margin-left: 15px; cursor: pointer; }
+        /* Top Bar with Rotating Globe Logo (1 second speed) */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        
+        /* Rotating Globe Logo CSS */
+        .rotating-globe {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, #2563eb, #070a13);
+            animation: rotateGlobe 1s linear infinite;
+        }
+        .rotating-globe i { font-size: 20px; color: var(--accent-glow); }
 
-        /* Main Content Scroll Area */
-        .content { padding: 15px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        @keyframes rotateGlobe {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-        /* Status & Alert Controls */
-        .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; border-left: 4px solid var(--accent-glow); }
-        .status-title { font-size: 13px; font-weight: bold; color: var(--accent-glow); margin-bottom: 4px; }
-        .status-desc { font-size: 11px; color: var(--text-secondary); }
+        .top-bar .title { font-size: 13px; font-weight: 800; color: var(--accent-glow); text-transform: uppercase; }
 
+        .content { padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+
+        /* Language Selector Bar */
+        .lang-bar { display: flex; justify-content: flex-end; gap: 5px; font-size: 11px; color: var(--text-secondary); margin-bottom: -5px; }
+        .lang-bar select { background: var(--card-bg); color: var(--accent-glow); border: 1px solid var(--border); border-radius: 4px; padding: 2px 5px; }
+
+        /* Big Square Feature Boxes */
+        .square-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .square-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; cursor: pointer; transition: 0.2s; min-height: 100px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+        .square-box:active { transform: scale(0.96); }
+        .square-box i { font-size: 24px; color: var(--accent-glow); }
+        .square-box span { font-size: 12px; font-weight: bold; color: var(--text-primary); }
+
+        /* Status & Security Notice */
+        .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; border-left: 4px solid var(--accent-glow); font-size: 11px; color: var(--text-secondary); }
+        
         .alert-control-box { background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid #4338ca; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .alert-info h4 { font-size: 12px; color: #fbbf24; margin-bottom: 2px; }
+        .alert-info h4 { font-size: 12px; color: #fbbf24; }
         .alert-info p { font-size: 10px; color: var(--text-secondary); }
 
         /* Toggle Switch */
@@ -48,71 +76,75 @@
         input:checked + .slider { background-color: var(--success); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* Button Grids */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-        .action-btn { background: linear-gradient(135deg, #0f766e, #0d9488); color: white; border: none; padding: 14px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
-        .action-btn:active { transform: scale(0.95); }
-        .action-btn i { font-size: 18px; color: #38bdf8; }
-        .action-btn.purple { background: linear-gradient(135deg, #4f46e5, #4338ca); }
-        .action-btn.blue { background: linear-gradient(135deg, #1d4ed8, #2563eb); }
-
-        /* Dynamic Screens Area */
-        .dynamic-screen { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: none; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
-        .dynamic-screen h3 { color: var(--accent-glow); font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
-
-        /* Inputs & Forms */
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
-        .form-control { width: 100%; padding: 11px; border-radius: 8px; border: 1px solid var(--border); background: #070a13; color: white; font-size: 12px; }
+        /* Dynamic Screen & Forms */
+        .dynamic-screen { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: none; }
+        .dynamic-screen h3 { color: var(--accent-glow); font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 3px; }
+        .form-control { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #070a13; color: white; font-size: 12px; }
         
         .password-container { position: relative; }
         .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 11px; }
 
-        .submit-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 13px; }
-        .logout-btn { background: var(--danger); }
+        .submit-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 11px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 12px; }
 
-        /* Saved Cards with Photo & Edit Button */
+        /* Saved Cards with Big Square Photo & Barcode */
         .saved-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
-        .saved-item { background: #070a13; padding: 12px; border-radius: 10px; margin-top: 10px; border-left: 4px solid var(--success); font-size: 11px; line-height: 1.6; display: flex; align-items: center; justify-content: space-between; position: relative; }
-        .saved-item-info { display: flex; align-items: center; gap: 12px; flex: 1; }
-        .saved-item img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-glow); }
-        .edit-icon-btn { background: #1e293b; color: #38bdf8; border: 1px solid #334155; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: 0.2s; }
-        .edit-icon-btn:hover { background: #2563eb; color: #ffffff; }
+        .saved-item { background: #070a13; padding: 12px; border-radius: 10px; margin-top: 10px; border-left: 4px solid var(--success); font-size: 11px; line-height: 1.6; display: flex; flex-direction: column; gap: 10px; position: relative; }
+        .profile-header { display: flex; align-items: center; gap: 12px; }
+        .profile-big-square { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; border: 2px solid var(--accent-glow); }
+        .edit-icon-btn { position: absolute; right: 12px; top: 12px; background: #1e293b; color: #38bdf8; border: 1px solid #334155; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        .barcode-box { background: #ffffff; color: #000; padding: 5px; text-align: center; font-family: 'Courier New', monospace; font-weight: bold; font-size: 14px; letter-spacing: 3px; border-radius: 4px; margin-top: 5px; }
 
-        /* Android Bottom Navigation Bar */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background-color: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; box-shadow: 0 -4px 10px rgba(0,0,0,0.5); }
+        .action-row { display: flex; gap: 8px; margin-top: 5px; }
+        .btn-sm { flex: 1; padding: 6px; font-size: 10px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; background: #1e293b; color: #fff; text-align: center; }
+        .btn-sm.copy { background: #0d9488; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background-color: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; box-shadow: 0 -4px 10px rgba(0,0,0,0.5); }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; font-weight: bold; cursor: pointer; }
-        .nav-item i { font-size: 18px; margin-bottom: 3px; }
+        .nav-item i { font-size: 16px; margin-bottom: 2px; }
         .nav-item.active, .nav-item:hover { color: var(--accent-glow); }
     </style>
 </head>
 <body>
 
 <div class="master-app">
-    <!-- Top Bar -->
+    <!-- Top Bar with Rotating Globe Logo -->
     <div class="top-bar">
-        <i class="fas fa-bars" onclick="switchView('home')"></i>
-        <div class="title">AYNA BOOK - ANDROID HUB</div>
-        <div class="icons">
-            <i class="fas fa-search" onclick="switchView('home')"></i>
-            <i class="fas fa-cog" onclick="switchView('settings')"></i>
+        <div class="logo-area">
+            <div class="rotating-globe">
+                <i class="fas fa-globe-americas"></i>
+            </div>
+            <div class="title" id="uiTitle">AYNA BOOK HUB</div>
         </div>
+        <div style="font-size: 12px; color: var(--accent-glow);" id="loginStatusIndicator">Guest</div>
     </div>
 
-    <!-- Scrollable Content -->
+    <!-- Main Content -->
     <div class="content" id="appContent">
-        <!-- System Status Bar -->
-        <div class="status-card">
-            <div class="status-title">কোয়ান্টাম নেটওয়ার্ক ও অ্যান্ড্রয়েড কোর সক্রিয়</div>
-            <div class="status-desc">জিপিএস, রাডার, সাগরের জাহাজ ও দুর্গম অঞ্চলের জন্য ১০ মিনিটের সতর্কবার্তা সচল ✅</div>
+        <!-- Language Selector -->
+        <div class="lang-bar">
+            <span>Language:</span>
+            <select id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="bn">বাংলা</option>
+                <option value="ar">العربية</option>
+            </select>
         </div>
 
-        <!-- Alert ON/OFF Switch -->
+        <!-- Status -->
+        <div class="status-card" id="statusText">
+            ✨ Quantum & Android Core Active | 10-Min Early Alert Protection ON ✅
+        </div>
+
+        <!-- Alert ON/OFF Box -->
         <div class="alert-control-box">
             <div class="alert-info">
-                <h4>🚨 ১৫০+ এলার্ট ও ঝুঁকি সিস্টেম</h4>
-                <p id="alertStatusText">১০ মিনিট পূর্বের আগাম সতর্কবার্তা চালু (ON) ✅</p>
+                <h4 id="alertBoxTitle">🚨 150+ Risk & Alert System</h4>
+                <p id="alertStatusText">Early Warning System Active (ON) ✅</p>
             </div>
             <label class="switch">
                 <input type="checkbox" id="alertToggle" checked onclick="toggleAlertSystem()">
@@ -120,59 +152,113 @@
             </label>
         </div>
 
-        <!-- Action Grid Buttons -->
-        <div class="grid-2">
-            <button class="action-btn" onclick="switchView('register')">
-                <i class="fas fa-user-plus"></i>নতুন ID ওপেন ও ফটো
-            </button>
-            <button class="action-btn blue" onclick="switchView('login')">
-                <i class="fas fa-sign-in-alt"></i>লগইন ও অ্যাকাউন্ট হাব
-            </button>
+        <!-- Big Square Feature Boxes -->
+        <div class="square-grid">
+            <div class="square-box" onclick="switchView('register')">
+                <i class="fas fa-user-plus"></i>
+                <span id="box1Text">New ID & Photo (Bkash/Nagad)</span>
+            </div>
+            <div class="square-box" onclick="switchView('login')">
+                <i class="fas fa-sign-in-alt"></i>
+                <span id="box2Text">Login & OTP Verify</span>
+            </div>
+            <div class="square-box" onclick="switchView('radiotv')">
+                <i class="fas fa-tv"></i>
+                <span id="box3Text">Live Radio & TV</span>
+            </div>
+            <div class="square-box" onclick="switchView('radar')">
+                <i class="fas fa-satellite-dish"></i>
+                <span id="box4Text">Radar & GPS Track</span>
+            </div>
         </div>
 
-        <div class="grid-2">
-            <button class="action-btn purple" onclick="switchView('radar')">
-                <i class="fas fa-satellite-dish"></i>রাডার ও জিপিএস ট্র্যাক
-            </button>
-            <button class="action-btn" onclick="switchView('disasters')">
-                <i class="fas fa-exclamation-triangle"></i>১৫০+ এলার্ট তালিকা
-            </button>
-        </div>
-
-        <!-- Dynamic Screen Area -->
+        <!-- Dynamic Content Screen -->
         <div id="dynamicScreen" class="dynamic-screen"></div>
 
-        <!-- Saved ID Cards List -->
+        <!-- Saved Accounts -->
         <div class="saved-box">
-            <div style="font-size: 12px; font-weight: bold; color: var(--accent-glow); margin-bottom: 5px;">📥 নিবন্ধিত ID সমূহ (পেনসিল বাটন দিয়ে এডিট করুন):</div>
+            <div style="font-size: 12px; font-weight: bold; color: var(--accent-glow); margin-bottom: 5px;" id="savedTitle">📥 Registered IDs (Secure Barcode & Photo):</div>
             <div id="savedListContainer">
-                <p style="color: #64748b; font-size: 11px;">কোনো ID এখনো খোলা হয়নি।</p>
+                <p style="color: #64748b; font-size: 11px;">No ID created yet.</p>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Nav -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchView('home')"><i class="fas fa-home"></i>হোম</div>
-        <div class="nav-item" onclick="switchView('register')"><i class="fas fa-user-plus"></i>ID ওপেন</div>
-        <div class="nav-item" onclick="switchView('login')"><i class="fas fa-lock"></i>লগইন</div>
-        <div class="nav-item" onclick="switchView('radar')"><i class="fas fa-satellite"></i>রাডার</div>
-        <div class="nav-item" onclick="switchView('settings')"><i class="fas fa-cog"></i>সেটিংস</div>
+        <div class="nav-item active" onclick="switchView('home')"><i class="fas fa-home"></i>Home</div>
+        <div class="nav-item" onclick="switchView('register')"><i class="fas fa-user-plus"></i>Open ID</div>
+        <div class="nav-item" onclick="switchView('login')"><i class="fas fa-lock"></i>Login</div>
+        <div class="nav-item" onclick="switchView('radiotv')"><i class="fas fa-tv"></i>Radio/TV</div>
+        <div class="nav-item" onclick="switchView('radar')"><i class="fas fa-satellite"></i>Radar</div>
     </div>
 </div>
 
 <script>
-    let currentEditId = null; // Global variable for tracking edits
+    let currentEditId = null;
+    let currentLang = 'en';
+
+    // Translations Dictionary for Global Users
+    const translations = {
+        en: {
+            title: "AYNA BOOK HUB",
+            status: "✨ Quantum & Android Core Active | 10-Min Early Alert Protection ON ✅",
+            alertTitle: "🚨 150+ Risk & Alert System",
+            alertText: "Early Warning System Active (ON) ✅",
+            b1: "New ID & Photo (Bkash/Nagad)",
+            b2: "Login & OTP Verify",
+            b3: "Live Radio & TV",
+            b4: "Radar & GPS Track",
+            saved: "📥 Registered IDs (Secure Barcode & Photo):",
+            noId: "No ID created yet."
+        },
+        bn: {
+            title: "আয়না বুক হাব",
+            status: "✨ কোয়ান্টাম ও অ্যান্ড্রয়েড কোর সক্রিয় | ১০ মিনিটের আগাম এলার্ট সিস্টেম সচল ✅",
+            alertTitle: "🚨 ১৫০+ ঝুঁকি ও এলার্ট সিস্টেম",
+            alertText: "সতর্কবার্তা চালু (ON) ✅",
+            b1: "নতুন ID ও ফটো (বিকাশ/নগদ)",
+            b2: "লগইন ও ওটিপি ভেরিফিকেশন",
+            b3: "রেডিও ও টিভি লাইভ",
+            b4: "রাডার ও জিপিএস ট্র্যাক",
+            saved: "📥 নিবন্ধিত ID সমূহ (সিকিউর বারকোড ও ফটোসহ):",
+            noId: "কোনো ID এখনো খোলা হয়নি।"
+        },
+        ar: {
+            title: "منصة آينا بوك",
+            status: "✨ النظام الكمي ونظام الأندرويد نشط | تنبيه مبكر مفعل ✅",
+            alertTitle: "🚨 نظام التنبيه والمخاطر",
+            alertText: "نظام الإنذار المبكر مفعل (ON) ✅",
+            b1: "معرف جديد وصورة",
+            b2: "تسجيل الدخول والتحقق",
+            b3: "راديو وتلفزيون مباشر",
+            b4: "الرادار و GPS",
+            saved: "📥 المعرفات المسجلة (مع الرمز الشريطي):",
+            noId: "لم يتم إنشاء أي معرف بعد."
+        }
+    };
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('uiTitle').textContent = translations[lang].title;
+        document.getElementById('statusText').textContent = translations[lang].status;
+        document.getElementById('alertBoxTitle').textContent = translations[lang].alertTitle;
+        document.getElementById('alertStatusText').textContent = translations[lang].alertText;
+        document.getElementById('box1Text').textContent = translations[lang].b1;
+        document.getElementById('box2Text').textContent = translations[lang].b2;
+        document.getElementById('box3Text').textContent = translations[lang].b3;
+        document.getElementById('box4Text').textContent = translations[lang].b4;
+        document.getElementById('savedTitle').textContent = translations[lang].saved;
+        loadSavedAccounts();
+    }
 
     function toggleAlertSystem() {
         const toggle = document.getElementById('alertToggle');
         const statusText = document.getElementById('alertStatusText');
         if(toggle.checked) {
-            statusText.innerHTML = "১০ মিনিট পূর্বের আগাম সতর্কবার্তা চালু (ON) ✅";
-            alert("এলার্ট সিস্টেম চালু করা হয়েছে।");
+            statusText.innerHTML = currentLang === 'bn' ? "সতর্কবার্তা চালু (ON) ✅" : "Early Warning Active (ON) ✅";
         } else {
-            statusText.innerHTML = "এলার্ট সিস্টেম বন্ধ (OFF) ❌";
-            alert("এলার্ট সিস্টেম বন্ধ করা হয়েছে।");
+            statusText.innerHTML = currentLang === 'bn' ? "সতর্কবার্তা বন্ধ (OFF) ❌" : "Early Warning Inactive (OFF) ❌";
         }
     }
 
@@ -185,168 +271,137 @@
         }
         else if(viewName === 'register') {
             currentEditId = editId;
-            let titleText = editId ? "✏️ ID তথ্য এডিট করুন (Edit Profile)" : "📝 নতুন ID ওপেন ও ছবি আপলোড";
-            let btnText = editId ? "আপডেট করুন (Save Changes)" : "ID ওপেন ও সেভ করুন";
-
             let nameVal = "", phoneVal = "", emailVal = "", passVal = "", tierVal = "Personal (Free)";
-
             if(editId) {
                 let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
                 let target = accounts.find(acc => acc.id === editId);
                 if(target) {
-                    nameVal = target.name;
-                    phoneVal = target.phone;
-                    emailVal = target.email;
-                    passVal = target.pass;
-                    tierVal = target.tier;
+                    nameVal = target.name; phoneVal = target.phone; emailVal = target.email; passVal = target.pass; tierVal = target.tier;
                 }
             }
 
             screen.innerHTML = `
-                <h3>${titleText}</h3>
-                <div class="form-group"><label>প্রোফাইল ছবি (Upload/Change Photo)</label><input type="file" id="regPhoto" class="form-control" accept="image/*"></div>
-                <div class="form-group"><label>নাম</label><input type="text" id="regName" class="form-control" value="${nameVal}" placeholder="আপনার পুরো নাম"></div>
-                <div class="form-group"><label>ফোন নম্বর</label><input type="tel" id="regPhone" class="form-control" value="${phoneVal}" placeholder="017xxxxxxxx"></div>
-                <div class="form-group"><label>জিমেইল</label><input type="email" id="regEmail" class="form-control" value="${emailVal}" placeholder="example@gmail.com"></div>
+                <h3>${editId ? 'Edit ID & OTP Verification' : 'New ID Registration (Bkash/Nagad Supported)'}</h3>
+                <div class="form-group"><label>Profile Photo (Big Square Box)</label><input type="file" id="regPhoto" class="form-control" accept="image/*"></div>
+                <div class="form-group"><label>Full Name (English)</label><input type="text" id="regName" class="form-control" value="${nameVal}" placeholder="Your Full Name"></div>
+                <div class="form-group"><label>Phone Number (Bkash/Nagad/Intl with Code)</label><input type="tel" id="regPhone" class="form-control" value="${phoneVal}" placeholder="+88017xxxxxxxx"></div>
+                <div class="form-group"><label>Gmail / Email</label><input type="email" id="regEmail" class="form-control" value="${emailVal}" placeholder="example@gmail.com"></div>
                 
-                <div class="form-group"><label>পাসওয়ার্ড (কমপক্ষে ১১ সংখ্যা)</label>
+                <div class="form-group"><label>Password (Min 11 Digits/Chars)</label>
                     <div class="password-container">
-                        <input type="password" id="regPass" class="form-control" value="${passVal}" placeholder="১১ সংখ্যার পাসওয়ার্ড">
-                        <span class="toggle-password" onclick="togglePass('regPass', this)">দেখান</span>
+                        <input type="password" id="regPass" class="form-control" value="${passVal}" placeholder="11-digit secure password">
+                        <span class="toggle-password" onclick="togglePass('regPass', this)">Show</span>
                     </div>
                 </div>
 
-                <div class="form-group"><label>পাসওয়ার্ড নিশ্চিত করুন (Re-Password)</label>
-                    <div class="password-container">
-                        <input type="password" id="regConfirmPass" class="form-control" value="${passVal}" placeholder="পুনরায় পাসওয়ার্ড দিন">
-                        <span class="toggle-password" onclick="togglePass('regConfirmPass', this)">দেখান</span>
-                    </div>
-                </div>
-
-                <div class="form-group"><label>অ্যাকাউন্ট প্যাকেজ</label>
+                <div class="form-group"><label>Account Package / Tier</label>
                     <select id="regTier" class="form-control">
-                        <option value="Personal (Free)" ${tierVal === 'Personal (Free)' ? 'selected' : ''}>Personal Account - ফ্রি (Free)</option>
-                        <option value="Business ($10)" ${tierVal === 'Business ($10)' ? 'selected' : ''}>Business Account - $10 / ১২০০ BDT</option>
-                        <option value="VIP ($10)" ${tierVal === 'VIP ($10)' ? 'selected' : ''}>VIP Account - $10 / ১২০০ BDT</option>
-                        <option value="VVIP ($20)" ${tierVal === 'VVIP ($20)' ? 'selected' : ''}>VVIP Account - $20 / ২৪০০ BDT</option>
+                        <option value="Personal (Free)" ${tierVal === 'Personal (Free)' ? 'selected' : ''}>Personal Account - Free</option>
+                        <option value="Business ($10)" ${tierVal === 'Business ($10)' ? 'selected' : ''}>Business Account - $10</option>
+                        <option value="VIP ($10)" ${tierVal === 'VIP ($10)' ? 'selected' : ''}>VIP Account - $10</option>
+                        <option value="VVIP ($20)" ${tierVal === 'VVIP ($20)' ? 'selected' : ''}>VVIP Account - $20</option>
                     </select>
                 </div>
-                <button class="submit-btn" onclick="saveAccountData()">${btnText}</button>
+                <button class="submit-btn" onclick="sendOTPAndSave('${editId ? 'edit' : 'new'}')">Send OTP & Save ID</button>
             `;
         }
         else if(viewName === 'login') {
-            let loggedInUser = localStorage.getItem('ayna_logged_in');
-            if(loggedInUser) {
-                screen.innerHTML = `
-                    <h3>🔐 লগইন স্ট্যাটাস</h3>
-                    <p style="color:var(--success); margin-bottom:10px;">✅ আপনি লগইন অবস্থায় আছেন: <b>${loggedInUser}</b></p>
-                    <button class="submit-btn logout-btn" onclick="logoutUser()">লগআউট করুন (Logout)</button>
-                `;
-            } else {
-                screen.innerHTML = `
-                    <h3>🔐 ইউজার লগইন</h3>
-                    <div class="form-group"><label>জিমেইল বা ফোন</label><input type="text" id="loginEmail" class="form-control" placeholder="আপনার জিমেইল বা ফোন দিন"></div>
-                    <div class="form-group"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" class="form-control" placeholder="পাসওয়ার্ড দিন"></div>
-                    <button class="submit-btn" onclick="loginUser()">লগইন (Login)</button>
-                `;
-            }
+            screen.innerHTML = `
+                <h3>🔐 Secure Login & OTP Recovery</h3>
+                <div class="form-group"><label>Gmail or Phone Number</label><input type="text" id="loginEmail" class="form-control" placeholder="Enter Gmail or Phone"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="loginPass" class="form-control" placeholder="Enter Password"></div>
+                <button class="submit-btn" onclick="loginUser()">Login Securely</button>
+                <button class="submit-btn" style="background:#475569; margin-top:5px;" onclick="forgotPassword()">Forgot Password? (OTP Recovery)</button>
+            `;
+        }
+        else if(viewName === 'radiotv') {
+            screen.innerHTML = `
+                <h3>📡 Live Radio & TV Broadcasting Hub</h3>
+                <p>• Global Satellite TV & Radio streams connected.<br>• Real-time emergency weather updates playing live.</p>
+            `;
         }
         else if(viewName === 'radar') {
             screen.innerHTML = `
-                <h3>🛰️ রাডার ও জিপিএস ট্র্যাকিং</h3>
-                <p>• সাগরের জাহাজ, বোট ও মহাকাশের লোকেশন লাইভ সিঙ্ক হচ্ছে।<br>• জিপিএস স্যাটেলাইট কানেকশন সক্রিয় আছে।</p>
-            `;
-        }
-        else if(viewName === 'disasters') {
-            screen.innerHTML = `
-                <h3>⚠️ ১৫০+ ঝুঁকি ও এলার্ট কভারেজ</h3>
-                <p>• ঘূর্ণিঝড়, খরা, সুনামি, ভূমিকম্প, গ্যাস বিস্ফোরণ, অগ্নিকাণ্ড ইত্যাদির আগাম সতর্কবার্তা প্রদান করা হবে।</p>
-            `;
-        }
-        else if(viewName === 'settings') {
-            screen.innerHTML = `
-                <h3>⚙️ সিস্টেম সেটিংস</h3>
-                <p>• অ্যান্ড্রয়েড নোটিফিকেশন: সক্রিয় ✅<br>• এলার্ট সাউন্ড: ফুল ভলিউম</p>
+                <h3>🛰️ Radar & GPS Satellite Navigation</h3>
+                <p>• Global GPS tracking for ships, boats, and high-risk zones active.<br>• 10-minute early disaster warning telemetry connected.</p>
             `;
         }
     }
 
     function togglePass(id, el) {
         const input = document.getElementById(id);
-        if(input.type === "password") {
-            input.type = "text";
-            el.textContent = "লুকান";
-        } else {
-            input.type = "password";
-            el.textContent = "দেখান";
-        }
+        if(input.type === "password") { input.type = "text"; el.textContent = "Hide"; }
+        else { input.type = "password"; el.textContent = "Show"; }
     }
 
-    function saveAccountData() {
+    function sendOTPAndSave(type) {
         const name = document.getElementById('regName').value.trim();
         const phone = document.getElementById('regPhone').value.trim();
         const email = document.getElementById('regEmail').value.trim();
         const pass = document.getElementById('regPass').value;
-        const confirmPass = document.getElementById('regConfirmPass').value;
-        const tier = document.getElementById('regTier').value;
+
+        if(!name || !phone || !email || !pass) { alert('Please fill in all fields!'); return; }
+        if(pass.length < 11) { alert('Password must be at least 11 characters/digits!'); return; }
+
+        // OTP verification simulation sent to phone/email
+        let otpCode = Math.floor(1000 + Math.random() * 9000);
+        let userOtp = prompt(`📱 [AYNA BOOK SECURE OTP]\nAn OTP has been sent to your phone (${phone}) and Gmail (${email}).\n(Simulated OTP: ${otpCode})\nEnter the 4-digit OTP code:`);
+
+        if(userOtp == otpCode) {
+            alert('✅ OTP Verified Successfully!');
+            processPhotoAndStore(type);
+        } else {
+            alert('❌ Invalid OTP! Account creation cancelled for security.');
+        }
+    }
+
+    function processPhotoAndStore(type) {
         const photoInput = document.getElementById('regPhoto');
-
-        if(!name || !phone || !email || !pass || !confirmPass) {
-            alert('দয়া করে সব তথ্য দিন!');
-            return;
-        }
-
-        if(pass.length < 11) {
-            alert('পাসওয়ার্ড কমপক্ষে ১১ সংখ্যার হতে হবে!');
-            return;
-        }
-
-        if(pass !== confirmPass) {
-            alert('পাসওয়ার্ড এবং রি-পাসওয়ার্ড মিলছে না!');
-            return;
-        }
-
-        let photoUrl = "https://via.placeholder.com/60";
+        let photoUrl = "https://via.placeholder.com/100";
         if(photoInput.files && photoInput.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                storeAccount(name, phone, email, pass, tier, e.target.result);
+                finalizeStorage(e.target.result, type);
             };
             reader.readAsDataURL(photoInput.files[0]);
         } else {
-            // Keep previous photo if editing
             if(currentEditId) {
                 let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
                 let existing = accounts.find(acc => acc.id === currentEditId);
                 if(existing) photoUrl = existing.photo;
             }
-            storeAccount(name, phone, email, pass, tier, photoUrl);
+            finalizeStorage(photoUrl, type);
         }
     }
 
-    function storeAccount(name, phone, email, pass, tier, photo) {
+    function finalizeStorage(photo, type) {
+        const name = document.getElementById('regName').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value;
+        const tier = document.getElementById('regTier').value;
+        const barcode = "║█║▌║█║▌│║▌║▌█║ " + Math.floor(10000000 + Math.random() * 90000000);
+
         let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
 
-        if(currentEditId) {
-            // Update existing ID
+        if(type === 'edit' && currentEditId) {
             accounts = accounts.map(acc => {
                 if(acc.id === currentEditId) {
-                    return { ...acc, name, phone, email, pass, tier, photo, time: new Date().toLocaleString() };
+                    return { ...acc, name, phone, email, pass, tier, photo, barcode, time: new Date().toLocaleString() };
                 }
                 return acc;
             });
-            alert('ID তথ্য সফলভাবে এডিট ও আপডেট করা হয়েছে!✏️');
+            alert('ID successfully updated with OTP verification! ✏️');
             currentEditId = null;
         } else {
-            // Create new ID
-            const newAcc = { id: Date.now(), name, phone, email, pass, tier, photo, time: new Date().toLocaleString() };
+            const newAcc = { id: Date.now(), name, phone, email, pass, tier, photo, barcode, time: new Date().toLocaleString() };
             accounts.push(newAcc);
-            alert('নতুন ID সফলভাবে খোলা ও সেভ করা হয়েছে!✅');
+            alert('New ID successfully opened & saved with Secure Barcode! ✅');
         }
 
         localStorage.setItem('ayna_global_accounts', JSON.stringify(accounts));
         localStorage.setItem('ayna_logged_in', email);
-
+        updateLoginIndicator();
         loadSavedAccounts();
         switchView('home');
     }
@@ -360,44 +415,94 @@
 
         if(found) {
             localStorage.setItem('ayna_logged_in', found.email);
-            alert(`স্বাগতম ${found.name}! সফলভাবে লগইন করা হয়েছে।`);
+            updateLoginIndicator();
+            alert(`Welcome back ${found.name}! Logged in securely.`);
             switchView('home');
         } else {
-            alert('ভুল জিমেইল/ফোন অথবা পাসওয়ার্ড!');
+            alert('Invalid credentials or password!');
+        }
+    }
+
+    function forgotPassword() {
+        let identifier = prompt("Enter your registered Phone or Gmail for OTP password recovery:");
+        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+        let found = accounts.find(acc => acc.email === identifier || acc.phone === identifier);
+
+        if(found) {
+            let otp = Math.floor(1000 + Math.random() * 9000);
+            let inputOtp = prompt(`OTP sent to ${found.phone}.\nSimulated OTP: ${otp}\nEnter OTP code to view password:`);
+            if(inputOtp == otp) {
+                alert(`Your Secure Password is: ${found.pass}`);
+            } else {
+                alert('Invalid OTP code!');
+            }
+        } else {
+            alert('Account not found in secure storage!');
         }
     }
 
     function logoutUser() {
         localStorage.removeItem('ayna_logged_in');
-        alert('লগআউট সম্পূর্ণ হয়েছে।');
+        updateLoginIndicator();
+        alert('Logged out securely. All sensitive details are now hidden.');
+        loadSavedAccounts();
         switchView('home');
+    }
+
+    function updateLoginIndicator() {
+        let user = localStorage.getItem('ayna_logged_in');
+        const indicator = document.getElementById('loginStatusIndicator');
+        if(user) {
+            indicator.innerHTML = `<span style="color:var(--success);">Secure Online</span> <i class="fas fa-sign-out-alt" style="cursor:pointer; margin-left:5px;" onclick="logoutUser()" title="Logout"></i>`;
+        } else {
+            indicator.innerHTML = `Guest`;
+        }
+    }
+
+    function copyAccountLink(id) {
+        let link = `https://ayna-956251.github.io/ayna-book/#id=${id}`;
+        navigator.clipboard.writeText(link);
+        alert('Secure Account Link Copied! 🔗');
     }
 
     function loadSavedAccounts() {
         const container = document.getElementById('savedListContainer');
         let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+        let loggedIn = localStorage.getItem('ayna_logged_in');
+
         if(accounts.length === 0) {
-            container.innerHTML = `<p style="color: #64748b; font-size: 11px;">কোনো ID খোলা হয়নি।</p>`;
+            container.innerHTML = `<p style="color: #64748b; font-size: 11px;">${translations[currentLang].noId}</p>`;
             return;
         }
+
         let html = '';
         accounts.forEach((acc, i) => {
+            let isOwner = (loggedIn === acc.email);
+            let passDisplay = isOwner ? acc.pass : "••••••••••• (Hidden for Security)";
+
             html += `<div class="saved-item">
-                <div class="saved-item-info">
-                    <img src="${acc.photo}" alt="Photo">
-                    <div>
-                        <strong>#${i+1} - ${acc.name} (${acc.tier})</strong><br>
-                        📞 ফোন: ${acc.phone} | ✉️ জিমেইল: ${acc.email}<br>
-                        🔑 পাসওয়ার্ড (১১ সংখ্যা): <span style="color:#f59e0b; font-family:monospace;">${acc.pass}</span><br>
-                        <span style="color:#64748b; font-size:10px;">সময়: ${acc.time}</span>
-                    </div>
-                </div>
-                <button class="edit-icon-btn" title="Edit Profile" onclick="switchView('register', ${acc.id})">
+                <button class="edit-icon-btn" title="Edit Profile with OTP" onclick="switchView('register', ${acc.id})">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
+                <div class="profile-header">
+                    <img src="${acc.photo}" alt="Photo" class="profile-big-square">
+                    <div>
+                        <strong style="font-size:12px; color:var(--accent-glow);">#${i+1} - ${acc.name}</strong><br>
+                        <span style="color:var(--warning);">${acc.tier}</span><br>
+                        📞 Phone: ${acc.phone} | ✉️ Gmail: ${acc.email}<br>
+                        🔑 Password: <span style="color:#f59e0b; font-family:monospace;">${passDisplay}</span><br>
+                        <span style="color:#64748b; font-size:9px;">Time: ${acc.time}</span>
+                    </div>
+                </div>
+                <div class="barcode-box">${acc.barcode}</div>
+                <div class="action-row">
+                    <button class="btn-sm copy" onclick="copyAccountLink(${acc.id})"><i class="fas fa-copy"></i> Copy Account Link</button>
+                    ${isOwner ? `<button class="btn-sm" style="background:#ef4444;" onclick="logoutUser()">Logout</button>` : ``}
+                </div>
             </div>`;
         });
         container.innerHTML = html;
+        updateLoginIndicator();
     }
 
     window.onload = function() {
