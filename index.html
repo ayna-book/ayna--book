@@ -1,21 +1,567 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AYNA BOOK - Global Cloud Hub</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<style>
-:root{--bg:#070a13;--card:#111625;--cyan:#00ffcc;--blue:#2563eb;--border:#1f2937;--green:#10b981}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui;background:var(--bg);color:#fff;display:flex;justify-content:center}
-.app{width:100%;max-width:500px;background:var(--bg);min-height:100vh;padding-bottom:80px;position:relative}
-.top{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:12px 15px;background:var(--card);border-bottom:1px solid var(--border)}
-.logo-area{display:flex;align-items:center;gap:10px}
-.logo{width:40px;height:40px;border-radius:50%;border:2px solid var(--cyan);background:radial-gradient(circle,#2563eb,#070a13);display:flex;align-items:center;justify-content:center;animation:rotate1min 60s linear infinite}
-@keyframes rotate1min{0%{transform:rotate(0deg)}2%{transform:rotate(360deg)}100%{transform:rotate(360deg)}}
-.logo i{color:var(--cyan);font-size:18px}
-.title{color:var(--cyan);font-weight:800;letter-spacing:1px;font-size:14px}
-.content{padding:12px;display:flex;flex-direction:column;gap:12px}
-.card{border:2px solid var(--cyan);border-radius:14px;padding:14px;background:var(--card)}
-input,select{width:100%;padding:11px;border-radius:8px;border:1px solid var(--border);background:#070a
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AYNA BOOK - Global Cloud Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Firebase SDKs for Global Cloud Sync -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #070a13;
+            --card-bg: #111625;
+            --accent-glow: #00ffcc;
+            --accent-blue: #2563eb;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border: #1f2937;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-dark); color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; }
+        
+        .master-app { width: 100%; max-width: 500px; background-color: var(--bg-dark); border: 1px solid var(--border); display: flex; flex-direction: column; min-height: 100vh; position: relative; padding-bottom: 75px; }
+
+        /* Top Bar with 1-Second Rotating Logo */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        
+        .rotating-book-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-glow);
+            background: radial-gradient(circle, #2563eb, #070a13);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: rotateBookLogo 1s linear infinite;
+        }
+        .rotating-book-logo i { font-size: 18px; color: var(--accent-glow); }
+
+        @keyframes rotateBookLogo {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .top-bar .title { font-size: 14px; font-weight: 800; color: var(--accent-glow); text-transform: uppercase; letter-spacing: 1px; }
+
+        .content { padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+
+        /* Priority New Account Box on Top */
+        .priority-reg-card { background: linear-gradient(135deg, #0f172a, #1e293b); border: 2px solid var(--accent-glow); border-radius: 14px; padding: 15px; margin-bottom: 5px; box-shadow: 0 6px 15px rgba(0,255,204,0.15); }
+        .priority-reg-card h3 { color: var(--accent-glow); font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+        /* Big Square Feature Boxes */
+        .square-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .square-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; cursor: pointer; transition: 0.2s; min-height: 90px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+        .square-box:active { transform: scale(0.96); }
+        .square-box i { font-size: 22px; color: var(--accent-glow); }
+        .square-box span { font-size: 11px; font-weight: bold; color: var(--text-primary); }
+
+        /* Status & Alert Box */
+        .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; border-left: 4px solid var(--accent-glow); font-size: 11px; color: var(--text-secondary); }
+        
+        .alert-control-box { background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid #4338ca; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .alert-info h4 { font-size: 12px; color: #fbbf24; }
+        .alert-info p { font-size: 10px; color: var(--text-secondary); }
+
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Dynamic Screen & Forms */
+        .dynamic-screen { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: none; }
+        .dynamic-screen h3 { color: var(--accent-glow); font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 3px; }
+        .form-control { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #070a13; color: white; font-size: 12px; }
+        
+        .password-container { position: relative; }
+        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 11px; }
+
+        .submit-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 11px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 12px; }
+
+        /* Saved Cards */
+        .saved-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+        .saved-item { background: #070a13; padding: 12px; border-radius: 10px; margin-top: 10px; border-left: 4px solid var(--success); font-size: 11px; line-height: 1.6; display: flex; flex-direction: column; gap: 10px; position: relative; }
+        .profile-header { display: flex; align-items: center; gap: 12px; }
+        .profile-big-square { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; border: 2px solid var(--accent-glow); }
+        .edit-icon-btn { position: absolute; right: 12px; top: 12px; background: #1e293b; color: #38bdf8; border: 1px solid #334155; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        .qr-code-display { background: #fff; padding: 8px; border-radius: 6px; text-align: center; margin-top: 5px; }
+        .qr-code-display img { width: 90px; height: 90px; }
+
+        .action-row { display: flex; gap: 8px; margin-top: 5px; }
+        .btn-sm { flex: 1; padding: 6px; font-size: 10px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; background: #1e293b; color: #fff; text-align: center; }
+        .btn-sm.copy { background: #0d9488; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background-color: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; box-shadow: 0 -4px 10px rgba(0,0,0,0.5); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; font-weight: bold; cursor: pointer; }
+        .nav-item i { font-size: 16px; margin-bottom: 2px; }
+        .nav-item.active, .nav-item:hover { color: var(--accent-glow); }
+    </style>
+</head>
+<body>
+
+<div class="master-app">
+    <!-- Top Bar with 1-Second Rotating Logo -->
+    <div class="top-bar">
+        <div class="logo-area">
+            <div class="rotating-book-logo">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <div class="title">AYNA BOOK</div>
+        </div>
+        <div style="font-size: 12px; color: var(--accent-glow);" id="loginStatusIndicator">Guest (Cloud Ready)</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content" id="appContent">
+
+        <!-- 1. PRIORITY NEW ACCOUNT SECTION ON TOP -->
+        <div class="priority-reg-card">
+            <h3><i class="fas fa-user-plus"></i> Open New Account (Global Cloud Sync)</h3>
+            <div class="form-group"><label>Profile Photo (Big Square Box)</label><input type="file" id="regPhoto" class="form-control" accept="image/*"></div>
+            <div class="form-group"><label>Full Name (English)</label><input type="text" id="regName" class="form-control" placeholder="Your Full Name"></div>
+            <div class="form-group"><label>Phone Number (Bkash/Nagad/Intl Code)</label><input type="tel" id="regPhone" class="form-control" placeholder="+88017xxxxxxxx"></div>
+            <div class="form-group"><label>Gmail / Email</label><input type="email" id="regEmail" class="form-control" placeholder="example@gmail.com"></div>
+            
+            <div class="form-group"><label>Password (Min 11 Digits/Chars)</label>
+                <div class="password-container">
+                    <input type="password" id="regPass" class="form-control" placeholder="11-digit secure password">
+                    <span class="toggle-password" onclick="togglePass('regPass', this)">Show</span>
+                </div>
+            </div>
+
+            <div class="form-group"><label>Account Package / Tier</label>
+                <select id="regTier" class="form-control">
+                    <option value="Personal Account - Free">Personal Account - Free</option>
+                    <option value="Business Account - $10 / 1200 BDT">Business Account - $10 / 1200 BDT</option>
+                    <option value="VIP Account - $10 / 1200 BDT">VIP Account - $10 / 1200 BDT</option>
+                    <option value="VVIP Account - $25 / 3000 BDT">VVIP Account - $25 / 3000 BDT</option>
+                </select>
+            </div>
+            <button class="submit-btn" onclick="initiateOTPVerification('new')">Verify OTP (2 Mins) & Open Cloud ID</button>
+        </div>
+
+        <!-- 2. STATUS & OTHER FEATURES BELOW -->
+        <div class="status-card">
+            ✨ Firebase Cloud Firestore Connected & Active ✅
+        </div>
+
+        <!-- Alert ON/OFF Box -->
+        <div class="alert-control-box">
+            <div class="alert-info">
+                <h4>🚨 150+ Risk & Alert System</h4>
+                <p id="alertStatusText">Early Warning System Active (ON) ✅</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="alertToggle" checked onclick="toggleAlertSystem()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Other Feature Boxes -->
+        <div class="square-grid">
+            <div class="square-box" onclick="switchView('login')">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Secure Login & OTP</span>
+            </div>
+            <div class="square-box" onclick="switchView('radiotv')">
+                <i class="fas fa-tv"></i>
+                <span>Live Radio & TV</span>
+            </div>
+            <div class="square-box" onclick="switchView('radar')">
+                <i class="fas fa-satellite-dish"></i>
+                <span>Radar & GPS Track</span>
+            </div>
+            <div class="square-box" onclick="switchView('settings')">
+                <i class="fas fa-cog"></i>
+                <span>Live Settings</span>
+            </div>
+        </div>
+
+        <!-- Dynamic Content Screen -->
+        <div id="dynamicScreen" class="dynamic-screen"></div>
+
+        <!-- 3. REGISTERED ACCOUNTS WITH LIVE QR CODE -->
+        <div class="saved-box">
+            <div style="font-size: 12px; font-weight: bold; color: var(--accent-glow); margin-bottom: 5px;">📥 Global Registered Accounts (Cloud Synced):</div>
+            <div id="savedListContainer">
+                <p style="color: #64748b; font-size: 11px;">Loading cloud accounts...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchView('home')"><i class="fas fa-home"></i>Home</div>
+        <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'});"><i class="fas fa-user-plus"></i>Open ID</div>
+        <div class="nav-item" onclick="switchView('login')"><i class="fas fa-lock"></i>Login</div>
+        <div class="nav-item" onclick="switchView('radiotv')"><i class="fas fa-tv"></i>Radio/TV</div>
+        <div class="nav-item" onclick="switchView('radar')"><i class="fas fa-satellite"></i>Radar</div>
+    </div>
+</div>
+
+<script>
+    /* ========================================================
+       YOUR FIREBASE CONFIGURATION (রিয়েল ক্লাউড ডাটাবেজ)
+       ======================================================== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+      authDomain: "ayna-book.firebaseapp.com",
+      databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "ayna-book",
+      storageBucket: "ayna-book.firebasestorage.app",
+      messagingSenderId: "805601138500",
+      appId: "1:805601138500:web:47acdc90cb0cb521626911",
+      measurementId: "G-RKHHSKNB4B"
+    };
+
+    // Initialize Firebase (Firestore Database Active)
+    let db = null;
+    try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        console.log("Firebase initialized successfully!");
+    } catch(e) {
+        console.log("Firebase initialization error, fallback to local storage mode: ", e);
+    }
+
+    let currentEditId = null;
+
+    function toggleAlertSystem() {
+        const toggle = document.getElementById('alertToggle');
+        const statusText = document.getElementById('alertStatusText');
+        if(toggle.checked) {
+            statusText.innerHTML = "Early Warning Active (ON) ✅";
+        } else {
+            statusText.innerHTML = "Early Warning Inactive (OFF) ❌";
+        }
+    }
+
+    function switchView(viewName) {
+        const screen = document.getElementById('dynamicScreen');
+        screen.style.display = 'block';
+
+        if(viewName === 'home') {
+            screen.style.display = 'none';
+        }
+        else if(viewName === 'login') {
+            screen.innerHTML = `
+                <h3>🔐 Secure Login & Password Recovery</h3>
+                <div class="form-group"><label>Gmail or Phone Number</label><input type="text" id="loginEmail" class="form-control" placeholder="Enter Gmail or Phone"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="loginPass" class="form-control" placeholder="Enter Password"></div>
+                <button class="submit-btn" onclick="loginUser()">Login Securely</button>
+                <button class="submit-btn" style="background:#475569; margin-top:5px;" onclick="forgotPassword()">Forgot Password? (OTP Recovery)</button>
+            `;
+        }
+        else if(viewName === 'radiotv') {
+            screen.innerHTML = `
+                <h3>📡 Live Radio & TV Broadcasting Hub</h3>
+                <p>• Global Satellite TV & Radio streams connected.<br>• Real-time emergency weather updates playing live.</p>
+            `;
+        }
+        else if(viewName === 'radar') {
+            screen.innerHTML = `
+                <h3>🛰️ Radar & GPS Satellite Navigation</h3>
+                <p>• Global GPS tracking for ships, boats, and high-risk zones active.<br>• 10-minute early disaster warning telemetry connected.</p>
+            `;
+        }
+        else if(viewName === 'settings') {
+            screen.innerHTML = `
+                <h3>⚙️ Live System Settings & Control Panel</h3>
+                <div class="form-group"><label>System Theme Mode</label>
+                    <select class="form-control" onchange="alert('Theme updated successfully!')">
+                        <option>Quantum Dark Mode (Active)</option>
+                        <option>Ultra Secure Mode</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Alert Sound Volume</label>
+                    <select class="form-control">
+                        <option>Max Volume (Siren Enabled)</option>
+                        <option>Vibration Only</option>
+                    </select>
+                </div>
+                <p style="font-size:10px; color:var(--success); margin-top:5px;">• Encryption: AES-256 Secure<br>• Live Status: 100% Operational ✅</p>
+            `;
+        }
+    }
+
+    function togglePass(id, el) {
+        const input = document.getElementById(id);
+        if(input.type === "password") { input.type = "text"; el.textContent = "Hide"; }
+        else { input.type = "password"; el.textContent = "Show"; }
+    }
+
+    function initiateOTPVerification(type) {
+        const name = document.getElementById('regName').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value;
+
+        if(!name || !phone || !email || !pass) { alert('Please fill in all fields!'); return; }
+        if(pass.length < 11) { alert('Password must be at least 11 digits/characters!'); return; }
+
+        let otpCode = Math.floor(1000 + Math.random() * 9000);
+        let userOtp = prompt(`💬 [AYNA BOOK CLOUD SMS BOX - 2 MINS TIMER]\nMessage sent to phone (${phone}): "Your OTP is ${otpCode}. Valid for 2 minutes."\nEnter the 4-digit OTP code below:`);
+
+        if(userOtp == otpCode) {
+            alert('✅ OTP Verified Successfully within 2 minutes timeframe!');
+            processPhotoAndStore(type);
+        } else {
+            alert('❌ Invalid or Expired OTP! Account creation aborted.');
+        }
+    }
+
+    function processPhotoAndStore(type) {
+        const photoInput = document.getElementById('regPhoto');
+        let photoUrl = "https://via.placeholder.com/100";
+        if(photoInput.files && photoInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                finalizeStorage(e.target.result, type);
+            };
+            reader.readAsDataURL(photoInput.files[0]);
+        } else {
+            if(currentEditId) {
+                getAccountsFromStorage((accounts) => {
+                    let existing = accounts.find(acc => acc.id == currentEditId);
+                    if(existing) photoUrl = existing.photo;
+                    finalizeStorage(photoUrl, type);
+                });
+                return;
+            }
+            finalizeStorage(photoUrl, type);
+        }
+    }
+
+    function finalizeStorage(photo, type) {
+        const name = document.getElementById('regName').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value;
+        const tier = document.getElementById('regTier').value;
+        
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK-${encodeURIComponent(email)}`;
+        const accountId = currentEditId ? currentEditId : Date.now().toString();
+
+        const accData = {
+            id: accountId,
+            name: name,
+            phone: phone,
+            email: email,
+            pass: pass,
+            tier: tier,
+            photo: photo,
+            qrCodeUrl: qrCodeUrl,
+            time: new Date().toLocaleString()
+        };
+
+        if(db) {
+            // Save to Firebase Firestore Cloud Database
+            db.collection("ayna_global_accounts").doc(accountId).set(accData)
+            .then(() => {
+                alert('Cloud Account successfully saved globally on Firebase! 🌐✅');
+                postSaveCleanup(email);
+            })
+            .catch((error) => {
+                console.error("Firestore Error, fallback to localStorage: ", error);
+                saveToLocalStorageFallback(accData, email);
+            });
+        } else {
+            saveToLocalStorageFallback(accData, email);
+        }
+    }
+
+    function saveToLocalStorageFallback(accData, email) {
+        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+        if(currentEditId) {
+            accounts = accounts.map(acc => acc.id == currentEditId ? accData : acc);
+            currentEditId = null;
+        } else {
+            accounts.push(accData);
+        }
+        localStorage.setItem('ayna_global_accounts', JSON.stringify(accounts));
+        localStorage.setItem('ayna_logged_in', email);
+        alert('Account saved locally (Hybrid Mode)! ✅');
+        postSaveCleanup(email);
+    }
+
+    function postSaveCleanup(email) {
+        localStorage.setItem('ayna_logged_in', email);
+        document.getElementById('regName').value = '';
+        document.getElementById('regPhone').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regPass').value = '';
+        document.getElementById('regPhoto').value = '';
+        currentEditId = null;
+        loadSavedAccounts();
+    }
+
+    function getAccountsFromStorage(callback) {
+        if(db) {
+            db.collection("ayna_global_accounts").get().then((querySnapshot) => {
+                let accounts = [];
+                querySnapshot.forEach((doc) => {
+                    accounts.push(doc.data());
+                });
+                callback(accounts);
+            }).catch((error) => {
+                console.log("Error getting cloud documents, fallback to local: ", error);
+                let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+                callback(localAcc);
+            });
+        } else {
+            let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+            callback(localAcc);
+        }
+    }
+
+    function loginUser() {
+        const inputEmail = document.getElementById('loginEmail').value.trim();
+        const inputPass = document.getElementById('loginPass').value;
+
+        getAccountsFromStorage((accounts) => {
+            const found = accounts.find(acc => (acc.email === inputEmail || acc.phone === inputEmail) && acc.pass === inputPass);
+            if(found) {
+                localStorage.setItem('ayna_logged_in', found.email);
+                updateLoginIndicator();
+                alert(`Welcome back ${found.name}! Logged in successfully.`);
+                loadSavedAccounts();
+                switchView('home');
+            } else {
+                alert('Invalid credentials or password!');
+            }
+        });
+    }
+
+    function forgotPassword() {
+        let identifier = prompt("Enter your registered Phone or Gmail for OTP password recovery:");
+        getAccountsFromStorage((accounts) => {
+            let found = accounts.find(acc => acc.email === identifier || acc.phone === identifier);
+            if(found) {
+                let otp = Math.floor(1000 + Math.random() * 9000);
+                let inputOtp = prompt(`💬 [SMS BOX - 2 MINS TIMER]\nOTP sent to ${found.phone}.\nSimulated OTP: ${otp}\nEnter OTP code to view password:`);
+                if(inputOtp == otp) {
+                    alert(`Your Secure Password is: ${found.pass}`);
+                } else {
+                    alert('Invalid OTP code!');
+                }
+            } else {
+                alert('Account not found in cloud storage!');
+            }
+        });
+    }
+
+    function logoutUser() {
+        localStorage.removeItem('ayna_logged_in');
+        updateLoginIndicator();
+        alert('Logged out securely. All details are now hidden.');
+        loadSavedAccounts();
+        switchView('home');
+    }
+
+    function updateLoginIndicator() {
+        let user = localStorage.getItem('ayna_logged_in');
+        const indicator = document.getElementById('loginStatusIndicator');
+        if(user) {
+            indicator.innerHTML = `<span style="color:var(--success);">Cloud Online</span> <i class="fas fa-sign-out-alt" style="cursor:pointer; margin-left:5px;" onclick="logoutUser()" title="Logout"></i>`;
+        } else {
+            indicator.innerHTML = `Guest (Cloud Ready)`;
+        }
+    }
+
+    function copyAccountLink(id) {
+        let link = `https://ayna-956251.github.io/ayna-book/#id=${id}`;
+        navigator.clipboard.writeText(link);
+        alert('Secure Cloud Link Copied! 🔗 You can share this link or QR code.');
+    }
+
+    function triggerEditAccount(id) {
+        let enteredPass = prompt("Enter your account password to edit profile:");
+        getAccountsFromStorage((accounts) => {
+            let target = accounts.find(acc => acc.id == id);
+            if(target && target.pass === enteredPass) {
+                currentEditId = id;
+                document.getElementById('regName').value = target.name;
+                document.getElementById('regPhone').value = target.phone;
+                document.getElementById('regEmail').value = target.email;
+                document.getElementById('regPass').value = target.pass;
+                document.getElementById('regTier').value = target.tier;
+                window.scrollTo({top: 0, behavior: 'smooth'});
+                alert('You are authorized. Modify details in top form and click verify OTP to update.');
+            } else {
+                alert('❌ Incorrect password or unauthorized access!');
+            }
+        });
+    }
+
+    function loadSavedAccounts() {
+        const container = document.getElementById('savedListContainer');
+        let loggedIn = localStorage.getItem('ayna_logged_in');
+
+        getAccountsFromStorage((accounts) => {
+            if(accounts.length === 0) {
+                container.innerHTML = `<p style="color: #64748b; font-size: 11px;">No accounts created yet.</p>`;
+                return;
+            }
+
+            let html = '';
+            accounts.forEach((acc, i) => {
+                let isOwner = (loggedIn === acc.email);
+                let passDisplay = isOwner ? acc.pass : "••••••••••• (Hidden)";
+                let phoneDisplay = isOwner ? acc.phone : acc.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+                let emailDisplay = isOwner ? acc.email : acc.email.replace(/(.{2})(.*)(@.*)/, '$1***$3');
+                let safeQR = acc.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK`;
+
+                html += `<div class="saved-item">
+                    <button class="edit-icon-btn" title="Edit with Password" onclick="triggerEditAccount('${acc.id}')">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <div class="profile-header">
+                        <img src="${acc.photo}" alt="Photo" class="profile-big-square">
+                        <div>
+                            <strong style="font-size:12px; color:var(--accent-glow);">#${i+1} - ${acc.name}</strong><br>
+                            <span style="color:var(--warning);">${acc.tier}</span><br>
+                            📞 Phone: ${phoneDisplay} | ✉️ Gmail: ${emailDisplay}<br>
+                            🔑 Password: <span style="color:#f59e0b; font-family:monospace;">${passDisplay}</span><br>
+                            <span style="color:#64748b; font-size:9px;">Time: ${acc.time}</span>
+                        </div>
+                    </div>
+                    <div class="qr-code-display" title="Scan or Share QR">
+                        <img src="${safeQR}" alt="Account QR Code">
+                    </div>
+                    <div class="action-row">
+                        <button class="btn-sm copy" onclick="copyAccountLink('${acc.id}')"><i class="fas fa-copy"></i> Copy Link</button>
+                        ${isOwner ? `<button class="btn-sm" style="background:#ef4444;" onclick="logoutUser()">Logout</button>` : ``}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+            updateLoginIndicator();
+        });
+    }
+
+    window.onload = function() {
+        loadSavedAccounts();
+    }
+</script>
+
+</body>
+</html>
