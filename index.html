@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AYNA BOOK QUANTUM GLOBAL</title>
+    <title>AYNA BOOK QUANTUM GLOBAL - Alert & Safety Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -14,60 +14,70 @@
             --text-primary: #ffffff;
             --text-secondary: #94a3b8;
             --border: #1f2937;
+            --danger: #ef4444;
+            --success: #10b981;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-dark); color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; }
         
-        .master-app { width: 100%; max-width: 500px; background-color: var(--bg-dark); border: 1px solid var(--border); display: flex; flex-direction: column; padding-bottom: 30px; }
+        .master-app { width: 100%; max-width: 500px; background-color: var(--bg-dark); border: 1px solid var(--border); display: flex; flex-direction: column; min-height: 100vh; position: relative; padding-bottom: 70px; }
 
         /* Top Bar */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--border); }
-        .top-bar .title { font-size: 16px; font-weight: 800; color: var(--accent-glow); text-transform: uppercase; letter-spacing: 0.5px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .top-bar .title { font-size: 14px; font-weight: 800; color: var(--accent-glow); text-transform: uppercase; letter-spacing: 0.5px; }
         .top-bar .icons i { font-size: 18px; color: var(--text-secondary); margin-left: 15px; cursor: pointer; }
 
         /* Content Area */
-        .content { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .content { padding: 15px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
 
         /* Status Card */
         .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; border-left: 4px solid var(--accent-glow); }
         .status-title { font-size: 13px; font-weight: bold; color: var(--accent-glow); margin-bottom: 4px; }
         .status-desc { font-size: 11px; color: var(--text-secondary); }
 
-        /* Grid Layout for Buttons */
+        /* Alert Control Box (ON/OFF) */
+        .alert-control-box { background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid #4338ca; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .alert-info h4 { font-size: 13px; color: #fbbf24; margin-bottom: 3px; }
+        .alert-info p { font-size: 10px; color: var(--text-secondary); }
+        
+        /* Switch Design */
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        /* Grid Layout */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
         /* Action Buttons */
-        .action-btn { background: linear-gradient(135deg, #0f766e, #0d9488); color: white; border: none; padding: 14px 10px; border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+        .action-btn { background: linear-gradient(135deg, #0f766e, #0d9488); color: white; border: none; padding: 14px 10px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
         .action-btn:active { transform: scale(0.97); }
         .action-btn i { font-size: 18px; color: #38bdf8; }
         .action-btn.purple { background: linear-gradient(135deg, #4f46e5, #4338ca); }
         .action-btn.blue { background: linear-gradient(135deg, #1d4ed8, #2563eb); }
 
-        /* Messaging Hub Container */
-        .msg-hub { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; }
-        .hub-title { font-size: 13px; font-weight: bold; color: var(--accent-glow); text-align: center; margin-bottom: 12px; text-transform: uppercase; }
-        .msg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .msg-btn { background: #1e293b; color: white; border: 1px solid #334155; padding: 10px 5px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; }
-        .msg-btn:hover { background: #2563eb; }
+        /* Dynamic Screen Box */
+        .dynamic-screen { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-top: 10px; display: none; }
+        .dynamic-screen h3 { color: var(--accent-glow); font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        .dynamic-screen p { font-size: 11px; color: var(--text-secondary); line-height: 1.6; }
 
-        /* AI Section */
-        .ai-card { background: linear-gradient(135deg, #111625, #1a233a); border: 1px solid #3b82f6; border-radius: 12px; padding: 12px; text-align: center; }
-        .ai-title { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; }
-        .ai-desc { font-size: 10px; color: var(--text-secondary); line-height: 1.4; }
-
-        /* Modal Overlay */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background: var(--card-bg); padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
-        .modal-content h3 { color: var(--accent-glow); margin-bottom: 15px; font-size: 16px; text-align: center; }
+        /* Form elements */
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
         .form-control { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #070a13; color: white; font-size: 13px; }
-        .submit-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .close-modal { float: right; color: #ef4444; font-size: 20px; cursor: pointer; font-weight: bold; }
+        .submit-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 5px; }
 
-        /* Saved List */
+        /* Saved List Card */
         .saved-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
         .saved-item { background: #070a13; padding: 10px; border-radius: 8px; margin-top: 8px; border-left: 3px solid #10b981; font-size: 11px; line-height: 1.5; }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background-color: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; font-weight: bold; cursor: pointer; }
+        .nav-item i { font-size: 18px; margin-bottom: 3px; }
+        .nav-item.active, .nav-item:hover { color: var(--accent-glow); }
     </style>
 </head>
 <body>
@@ -75,76 +85,59 @@
 <div class="master-app">
     <!-- Top Bar -->
     <div class="top-bar">
-        <i class="fas fa-bars" onclick="alert('মেনু অপশন সক্রিয় আছে।')"></i>
-        <div class="title">AYNA BOOK QUANTUM GLOBAL</div>
+        <i class="fas fa-bars" onclick="switchView('home')"></i>
+        <div class="title">AYNA BOOK - ALERT & SAFETY HUB</div>
         <div class="icons">
-            <i class="fas fa-search" onclick="alert('গ্লোবাল সার্চ সক্রিয়!')"></i>
-            <i class="fas fa-cog" onclick="alert('সেটিংস প্যানেল আপডেট করা হয়েছে।')"></i>
+            <i class="fas fa-search" onclick="switchView('home')"></i>
+            <i class="fas fa-cog" onclick="switchView('settings')"></i>
         </div>
     </div>
 
     <!-- Main Content Grid -->
-    <div class="content">
+    <div class="content" id="appContent">
         <!-- Status -->
         <div class="status-card">
-            <div class="status-title">কোয়ান্টাম সিস্টেম স্ট্যাটাস: লাইভ সক্রিয় (LIVE)</div>
-            <div class="status-desc">সার্ভার সিঙ্ক: সারা বিশ্বে সংযুক্ত ✅ | মহাকাশ ও সমুদ্র রাডার রেডি</div>
+            <div class="status-title">কোয়ান্টাম সিস্টেম ও এলার্ট নেটওয়ার্ক সক্রিয়</div>
+            <div class="status-desc">মহাকাশ, সমুদ্র, জাহাজ ও দুর্গম অঞ্চলের জন্য ১০ মিনিটের আগাম সতর্কবার্তা রেডি ✅</div>
         </div>
 
-        <!-- 4 Action Buttons Top -->
+        <!-- 150 Alerts ON/OFF Control Box -->
+        <div class="alert-control-box">
+            <div class="alert-info">
+                <h4>🚨 ১৫০+ দুর্যোগ ও ঝুঁকি এলার্ট প্রযুক্তি</h4>
+                <p id="alertStatusText">স্ট্যাটাস: এলার্ট সিস্টেম চালু আছে (১০ মিনিট পূর্বে সতর্ক করবে)</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="alertToggle" checked onclick="toggleAlertSystem()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Action Buttons -->
         <div class="grid-2">
-            <button class="action-btn" onclick="openModal()">
+            <button class="action-btn" onclick="switchView('register')">
                 <i class="fas fa-user-plus"></i>
-                নতুন অ্যাকাউন্ট রেজিস্ট্রেশন (সেভ করুন)
+                নতুন অ্যাকাউন্ট রেজিস্ট্রেশন
             </button>
-            <button class="action-btn" onclick="openRadar()">
+            <button class="action-btn" onclick="switchView('radar')">
                 <i class="fas fa-satellite-dish"></i>
-                ১. রাডার প্রযুক্তি (লাইভ ম্যাপ ও জাহাজ ট্র্যাক)
+                রাডার ও জিপিএস (জাহাজ ও বোট)
             </button>
         </div>
 
         <div class="grid-2">
-            <button class="action-btn blue" onclick="openRadioTV()">
+            <button class="action-btn blue" onclick="switchView('radiotv')">
                 <i class="fas fa-tv"></i>
-                ২. রেডিও টিভি (লাইভ চ্যানেল সংযোগ)
+                রেডিও ও টিভি লাইভ চ্যানেল
             </button>
-            <button class="action-btn purple" onclick="openCompass()">
-                <i class="fas fa-compass"></i>
-                কম্পাস ও দিকনির্দেশ (0MB স্যাটেলাইট)
+            <button class="action-btn purple" onclick="switchView('disasters')">
+                <i class="fas fa-exclamation-triangle"></i>
+                ১৫০+ দুর্যোগ ও যুদ্ধের তালিকা
             </button>
         </div>
 
-        <!-- Messaging Hub -->
-        <div class="msg-hub">
-            <div class="hub-title">💬 মেসেজিং হাব</div>
-            <div class="msg-grid">
-                <button class="msg-btn" onclick="msgAction('post')">পোস্ট করুন</button>
-                <button class="msg-btn" onclick="msgAction('audio')">অডিও বার্তা</button>
-                <button class="msg-btn" onclick="msgAction('video')">ভিডিও বার্তা</button>
-                <button class="msg-btn" onclick="msgAction('live')">লাইভ শুরু</button>
-                <button class="msg-btn" onclick="msgAction('chat')">চ্যাট ও নিন્দু</button>
-                <button class="msg-btn" onclick="msgAction('like')">লাইক ❤️</button>
-                <button class="msg-btn" onclick="msgAction('share')">শেয়ার 🔗</button>
-                <button class="msg-btn" onclick="msgAction('comment')">কমেন্ট 💬</button>
-                <button class="msg-btn" onclick="msgAction('ai_mind')">AI মন পাঠ</button>
-            </div>
-        </div>
-
-        <!-- AI Translation Hub -->
-        <div class="grid-2">
-            <div class="ai-card" onclick="aiTranslate('text')">
-                <div class="ai-title"><i class="fas fa-language"></i> AI অনুবাদ (রিয়েল-টাইম)</div>
-                <div class="ai-desc">বাংলার বিপরীতে বিশ্বের যেকোনো ভাষা রূপান্তর</div>
-            </div>
-            <div class="ai-card" onclick="aiTranslate('audio')">
-                <div class="ai-title"><i class="fas fa-microphone-alt"></i> AI অডিও ট্রান্সলেটর</div>
-                <div class="ai-desc">কথার সাথে সাথে সরাসরি অন্য ভাষায় অডিও রূপান্তর</div>
-            </div>
-        </div>
-        <div class="ai-card" onclick="aiTranslate('video')" style="margin-top:-5px;">
-            <div class="ai-title"><i class="fas fa-video"></i> AI ভিডিও ট্রান্সলেটর (গ্লোবাল ভয়েস সিঙ্ক)</div>
-            <div class="ai-desc">ভিডিও কল বা কনফারেন্সে যেকোনো দেশের ভাষা স্বয়ংক্রিয়ভাবে আপনার ভাষায় রূপান্তরিত হবে।</div>
-        </div>
+        <!-- Dynamic Screen Display Area -->
+        <div id="dynamicScreen" class="dynamic-screen"></div>
 
         <!-- Saved Accounts List -->
         <div class="saved-box">
@@ -154,46 +147,85 @@
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal for Account Registration -->
-<div id="regModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <h3>নতুন অ্যাকাউন্ট তৈরি</h3>
-        <div class="form-group">
-            <label>ব্যবহারকারীর নাম</label>
-            <input type="text" id="regName" class="form-control" placeholder="আপনার নাম">
-        </div>
-        <div class="form-group">
-            <label>ফোন নম্বর</label>
-            <input type="tel" id="regPhone" class="form-control" placeholder="017xxxxxxxx">
-        </div>
-        <div class="form-group">
-            <label>জিমেইল</label>
-            <input type="email" id="regEmail" class="form-control" placeholder="example@gmail.com">
-        </div>
-        <div class="form-group">
-            <label>পাসওয়ার্ড</label>
-            <input type="password" id="regPass" class="form-control" placeholder="পাসওয়ার্ড দিন">
-        </div>
-        <div class="form-group">
-            <label>অ্যাকাউন্ট টায়ার</label>
-            <select id="regTier" class="form-control">
-                <option value="Personal (Free)">Personal Account - ফ্রি (Free)</option>
-                <option value="Business ($10)">Business Account - $10 / ১২০০ BDT</option>
-                <option value="VIP ($10)">VIP Account - $10 / ১২০০ BDT</option>
-                <option value="VVIP ($20)">VVIP Account - $20 / ২৪০০ BDT</option>
-            </select>
-        </div>
-        <button class="submit-btn" onclick="saveAccountData()">অ্যাকাউন্ট সেভ করুন</button>
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchView('home')"><i class="fas fa-home"></i>হোম</div>
+        <div class="nav-item" onclick="switchView('register')"><i class="fas fa-user-plus"></i>অ্যাকাউন্ট</div>
+        <div class="nav-item" onclick="switchView('radar')"><i class="fas fa-satellite"></i>রাডার</div>
+        <div class="nav-item" onclick="switchView('disasters')"><i class="fas dangerously"></i>এলার্ট তালিকা</div>
+        <div class="nav-item" onclick="switchView('settings')"><i class="fas fa-cog"></i>সেটিংস</div>
     </div>
 </div>
 
 <script>
-    // Modal Control
-    function openModal() { document.getElementById('regModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('regModal').style.display = 'none'; }
+    // Alert System Toggle Function (ON / OFF)
+    function toggleAlertSystem() {
+        const toggle = document.getElementById('alertToggle');
+        const statusText = document.getElementById('alertStatusText');
+        if(toggle.checked) {
+            statusText.innerHTML = "স্ট্যাটাস: এলার্ট সিস্টেম চালু আছে (১০ মিনিট পূর্বে সতর্ক করবে) ✅";
+            alert("সতর্কবার্তা সিস্টেম সফলভাবে চালু (ON) করা হয়েছে। এখন থেকে ১০ মিনিট আগে এলার্ট পাওয়া যাবে।");
+        } else {
+            statusText.innerHTML = "স্ট্যাটাস: এলার্ট সিস্টেম বন্ধ আছে ❌";
+            alert("সতর্কবার্তা সিস্টেম বন্ধ (OFF) করা হয়েছে।");
+        }
+    }
+
+    // View Switcher Function
+    function switchView(viewName) {
+        const screen = document.getElementById('dynamicScreen');
+        screen.style.display = 'block';
+
+        if(viewName === 'home') {
+            screen.style.display = 'none';
+        }
+        else if(viewName === 'register') {
+            screen.innerHTML = `
+                <h3>📝 নতুন অ্যাকাউন্ট রেজিস্ট্রেশন</h3>
+                <div class="form-group"><label>নাম</label><input type="text" id="regName" class="form-control" placeholder="আপনার পুরো নাম"></div>
+                <div class="form-group"><label>ফোন নম্বর</label><input type="tel" id="regPhone" class="form-control" placeholder="017xxxxxxxx"></div>
+                <div class="form-group"><label>জিমেইল</label><input type="email" id="regEmail" class="form-control" placeholder="example@gmail.com"></div>
+                <div class="form-group"><label>পাসওয়ার্ড</label><input type="password" id="regPass" class="form-control" placeholder="পাসওয়ার্ড দিন"></div>
+                <div class="form-group"><label>প্যাকেজ</label>
+                    <select id="regTier" class="form-control">
+                        <option value="Personal (Free)">Personal Account - ফ্রি (Free)</option>
+                        <option value="Business ($10)">Business Account - $10 / ১২০০ BDT</option>
+                        <option value="VIP ($10)">VIP Account - $10 / ১২০০ BDT</option>
+                        <option value="VVIP ($20)">VVIP Account - $20 / ২৪০০ BDT</option>
+                    </select>
+                </div>
+                <button class="submit-btn" onclick="saveAccountData()">অ্যাকাউন্ট সেভ করুন</button>
+            `;
+        }
+        else if(viewName === 'radar') {
+            screen.innerHTML = `
+                <h3>🛰️ রাডার, জিপিএস ও স্যাটেলাইট ট্র্যাকিং</h3>
+                <p>• মহাশূন্য, সমুদ্র ও সাগরে চলাচলকারী জাহাজ ও বোটগুলির জিপিএস লোকেশন রিয়েল-টাইমে ট্র্যাক করা হচ্ছে।<br>• যেকোনো ঝড় বা দুর্ঘটনার ১০ মিনিট পূর্বে এলার্ট বেজে উঠবে।</p>
+            `;
+        }
+        else if(viewName === 'radiotv') {
+            screen.innerHTML = `
+                <h3>📡 রেডিও ও টিভি লাইভ চ্যানেল সংযোগ</h3>
+                <p>• আন্তর্জাতিক দুর্যোগ ও আবহাওয়া বার্তা সরাসরি সম্প্রচার দেখতে ও শুনতে এই চ্যানেলগুলি সংযুক্ত রয়েছে।</p>
+            `;
+        }
+        else if(viewName === 'disasters') {
+            screen.innerHTML = `
+                <h3>⚠️ ১৫০+ প্রাকৃতিক দুর্যোগ, যুদ্ধ ও দুর্ঘটনা তালিকা</h3>
+                <p><strong>১. প্রাকৃতিক দুর্যোগ:</strong> ঘূর্ণিঝড়, টর্নেডো, বন্যা, সুনামি, ভূমিকম্প, আগ্নেয়গিরি, দাবানল, খরা ইত্যাদি।<br>
+                <strong>২. যুদ্ধ ও সংঘাত:</strong> আন্তর্জাতিক যুদ্ধ, গৃহযুদ্ধ, সাইবারযুদ্ধ, ক্ষেপণাস্ত্র হামলা ও সশস্ত্র সংঘাত।<br>
+                <strong>৩. দুর্ঘটনা:</strong> গ্যাস সিলিন্ডার বিস্ফোরণ, ভবনধস, অগ্নিকাণ্ড, বিমান ও নৌযান দুর্ঘটনা, বিদ্যুৎ ও রাসায়নিক বিপর্যয়।<br>
+                <em>(এই সমস্ত ঝুঁকির ক্ষেত্রে ১০ মিনিট পূর্বে স্বয়ংক্রিয় এলার্ট প্রদান করা হবে।)</em></p>
+            `;
+        }
+        else if(viewName === 'settings') {
+            screen.innerHTML = `
+                <h3>⚙️ সিস্টেম ও এলার্ট সেটিংস</h3>
+                <p>• এলার্ট সাউন্ড: লাউড ও ভাইব্রেশন সক্রিয়<br>• জিপিএস লোকেশন ট্র্যাকিং: পারমিটেড ✅<br>• কোয়ান্টাম ডেটা সিকিউরিটি: এনক্রিপ্টেড।</p>
+            `;
+        }
+    }
 
     // Save Data to LocalStorage
     function saveAccountData() {
@@ -213,9 +245,9 @@
         accounts.push(newAcc);
         localStorage.setItem('ayna_global_accounts', JSON.stringify(accounts));
 
-        closeModal();
         loadSavedAccounts();
         alert('অ্যাকাউন্ট সফলভাবে তৈরি এবং সংরক্ষিত হয়েছে!');
+        switchView('home');
     }
 
     // Load Saved Accounts
@@ -238,28 +270,6 @@
         container.innerHTML = html;
     }
 
-    // Feature Buttons Action Handlers
-    function openRadar() {
-        alert('🛰️ রাডার ও স্যাটেলাইট কানেক্টিভিটি সক্রিয়! সাগর ও মহাকাশের জাহাজ/বোট ট্র্যাকিং ডেটা সিঙ্ক হচ্ছে...');
-    }
-    function openRadioTV() {
-        alert('📡 রেডিও ও টিভি লাইভ চ্যানেল মোড চালু হয়েছে। গ্লোবাল ব্রডকাস্টিং কানেক্টেড!');
-    }
-    function openCompass() {
-        alert('🧭 কোয়ান্টাম কম্পাস ও দিকনির্দেশনা জিরো-এমবি (0MB) স্যাটেলাইট মোডে সচল রয়েছে।');
-    }
-    function msgAction(type) {
-        if(type === 'ai_mind') {
-            alert('🧠 AI প্রিডিকশন কোর: আপনি এবং আপনার বিশ্বব্যাপী ব্যবহারকারী কী ভাবছেন তা এআই এনালাইসিস করে সিকিউরড মেসেজ তৈরি করছে!');
-        } else {
-            alert(`💬 মেসেজিং হাব [${type.toUpperCase()}] সফলভাবে কার্যকর করা হয়েছে!`);
-        }
-    }
-    function aiTranslate(mode) {
-        alert(`🌐 AI ${mode.toUpperCase()} ট্রান্সলেটর সক্রিয়! বাংলার সাথে বিশ্বের যেকোনো ভাষার অডিও/ভিডিও রিয়েল-টাইম রূপান্তর চলছে।`);
-    }
-
-    // Window Load
     window.onload = function() {
         loadSavedAccounts();
     }
