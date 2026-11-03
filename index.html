@@ -118,9 +118,9 @@
         input:checked + .slider { background-color: var(--success); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* Dynamic Screen & Forms */
-        .dynamic-screen { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: none; }
-        .dynamic-screen h3 { color: var(--accent-blue); font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        /* Pre-built Feature Sections (পাসওয়ার্ড ও রেডিও প্যানেল আগে থেকেই তৈরি যাতে ক্লিক করলে ইনস্ট্যান্ট খোলে) */
+        .feature-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-top: 10px; display: none; }
+        .feature-section h3 { color: var(--accent-blue); font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
         
         .form-group { margin-bottom: 10px; }
         .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 3px; }
@@ -132,7 +132,7 @@
         .submit-btn { width: 100%; background: linear-gradient(135deg, #00d2ff, #3a86ff); color: #0a0f1d; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 13px; box-shadow: 0 4px 15px rgba(0,210,255,0.3); }
 
         /* Saved Cards */
-        .saved-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+        .saved-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; }
         .saved-item { background: #0a0f1d; padding: 12px; border-radius: 10px; margin-top: 10px; border-left: 4px solid var(--accent-blue); font-size: 11px; line-height: 1.6; display: flex; flex-direction: column; gap: 10px; position: relative; }
         .profile-header { display: flex; align-items: center; gap: 12px; }
         .profile-big-square { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; border: 2px solid var(--accent-blue); }
@@ -169,8 +169,8 @@
     <!-- Main Content -->
     <div class="content" id="appContent">
 
-        <!-- 1. PRIORITY NEW ACCOUNT SECTION ON TOP -->
-        <div class="priority-reg-card">
+        <!-- 1. PRIORITY NEW ACCOUNT SECTION -->
+        <div class="priority-reg-card" id="regCardSection">
             <h3><i class="fas fa-user-plus"></i> Open New Account (Global Cloud Sync)</h3>
             <div class="form-group"><label>Profile Photo (Big Square Box)</label><input type="file" id="regPhoto" class="form-control" accept="image/*"></div>
             <div class="form-group"><label>Full Name (English)</label><input type="text" id="regName" class="form-control" placeholder="Your Full Name"></div>
@@ -212,7 +212,7 @@
             </label>
         </div>
 
-        <!-- Other Feature Boxes -->
+        <!-- Other Feature Boxes (Grid) -->
         <div class="square-grid">
             <div class="square-box" id="navLoginBox">
                 <i class="fas fa-sign-in-alt"></i>
@@ -232,8 +232,40 @@
             </div>
         </div>
 
-        <!-- Dynamic Content Screen -->
-        <div id="dynamicScreen" class="dynamic-screen"></div>
+        <!-- PRE-BUILT FEATURE SECTIONS (ক্লিক করলে ইনস্ট্যান্ট ওপেন হবে) -->
+        
+        <!-- Login Section -->
+        <div id="loginSection" class="feature-section">
+            <h3>🔐 Secure Login & Password Recovery</h3>
+            <div class="form-group"><label>Gmail or Phone Number</label><input type="text" id="loginEmail" class="form-control" placeholder="Enter Gmail or Phone"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="loginPass" class="form-control" placeholder="Enter Password"></div>
+            <button class="submit-btn" id="loginSubmitBtn">Login Securely</button>
+            <button class="submit-btn" id="forgotPassBtn" style="background:#475569; margin-top:5px;">Forgot Password? (OTP Recovery)</button>
+        </div>
+
+        <!-- Radio & TV Section -->
+        <div id="radiotvSection" class="feature-section">
+            <h3>📡 Live Radio & TV Broadcasting Hub</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.6;">• Global Satellite TV & Radio streams connected.<br>• Real-time emergency weather updates playing live.</p>
+        </div>
+
+        <!-- Radar Section -->
+        <div id="radarSection" class="feature-section">
+            <h3>🛰️ Radar & GPS Satellite Navigation</h3>
+            <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.6;">• Global GPS tracking for ships, boats, and high-risk zones active.<br>• 10-minute early disaster warning telemetry connected.</p>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settingsSection" class="feature-section">
+            <h3>⚙️ Live System Settings & Control Panel</h3>
+            <div class="form-group"><label>System Theme Mode</label>
+                <select class="form-control" id="themeSelect">
+                    <option>Quantum Blue & White Mode (Active)</option>
+                    <option>Ultra Secure Mode</option>
+                </select>
+            </div>
+            <p style="font-size:10px; color:var(--success); margin-top:5px;">• Encryption: AES-256 Secure<br>• Live Status: 100% Operational ✅</p>
+        </div>
 
         <!-- 3. REGISTERED ACCOUNTS WITH LIVE QR CODE -->
         <div class="saved-box">
@@ -256,7 +288,7 @@
 
 <script>
     /* ========================================================
-       FIREBASE CONFIGURATION & EVENT LISTENERS
+       FIREBASE CONFIGURATION & FIXED EVENT LISTENERS
        ======================================================== */
     const firebaseConfig = {
       apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
@@ -279,7 +311,14 @@
 
     let currentEditId = null;
 
-    // DOM Loaded হলে সব বাটন ও ইভেন্ট সরাসরি বাইন্ড করা হবে (যাতে কোনো বাটন মিস না হয়)
+    // সব সেクション লুকা বা দেখানোর ফাংশন
+    function hideAllSections() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('radiotvSection').style.display = 'none';
+        document.getElementById('radarSection').style.display = 'none';
+        document.getElementById('settingsSection').style.display = 'none';
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         
         // Register Submit Button
@@ -309,73 +348,63 @@
             }
         });
 
-        // Square Box Navigation
-        document.getElementById('navLoginBox').addEventListener('click', () => switchView('login'));
-        document.getElementById('navRadioBox').addEventListener('click', () => switchView('radiotv'));
-        document.getElementById('navRadarBox').addEventListener('click', () => switchView('radar'));
-        document.getElementById('navSettingsBox').addEventListener('click', () => switchView('settings'));
+        // Square Box Navigation (ক্লিক করলে নির্দিষ্ট প্যানেল ওপেন হবে)
+        document.getElementById('navLoginBox').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('loginSection').scrollIntoView({behavior: 'smooth'});
+        });
+
+        document.getElementById('navRadioBox').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('radiotvSection').style.display = 'block';
+            document.getElementById('radiotvSection').scrollIntoView({behavior: 'smooth'});
+        });
+
+        document.getElementById('navRadarBox').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('radarSection').style.display = 'block';
+            document.getElementById('radarSection').scrollIntoView({behavior: 'smooth'});
+        });
+
+        document.getElementById('navSettingsBox').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('settingsSection').style.display = 'block';
+            document.getElementById('settingsSection').scrollIntoView({behavior: 'smooth'});
+        });
 
         // Bottom Navigation
-        document.getElementById('bottomHome').addEventListener('click', () => switchView('home'));
-        document.getElementById('bottomOpenId').addEventListener('click', () => {
-            switchView('home');
+        document.getElementById('bottomHome').addEventListener('click', () => {
+            hideAllSections();
             window.scrollTo({top: 0, behavior: 'smooth'});
         });
-        document.getElementById('bottomLogin').addEventListener('click', () => switchView('login'));
-        document.getElementById('bottomRadio').addEventListener('click', () => switchView('radiotv'));
-        document.getElementById('bottomRadar').addEventListener('click', () => switchView('radar'));
+        document.getElementById('bottomOpenId').addEventListener('click', () => {
+            hideAllSections();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+        document.getElementById('bottomLogin').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('loginSection').scrollIntoView({behavior: 'smooth'});
+        });
+        document.getElementById('bottomRadio').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('radiotvSection').style.display = 'block';
+            document.getElementById('radiotvSection').scrollIntoView({behavior: 'smooth'});
+        });
+        document.getElementById('bottomRadar').addEventListener('click', () => {
+            hideAllSections();
+            document.getElementById('radarSection').style.display = 'block';
+            document.getElementById('radarSection').scrollIntoView({behavior: 'smooth'});
+        });
+
+        // Login & Recovery Actions
+        document.getElementById('loginSubmitBtn').addEventListener('click', loginUser);
+        document.getElementById('forgotPassBtn').addEventListener('click', forgotPassword);
+        document.getElementById('themeSelect').addEventListener('change', () => alert('Theme updated successfully!'));
 
         loadSavedAccounts();
     });
-
-    function switchView(viewName) {
-        const screen = document.getElementById('dynamicScreen');
-        screen.style.display = 'block';
-
-        if(viewName === 'home') {
-            screen.style.display = 'none';
-        }
-        else if(viewName === 'login') {
-            screen.innerHTML = `
-                <h3>🔐 Secure Login & Password Recovery</h3>
-                <div class="form-group"><label>Gmail or Phone Number</label><input type="text" id="loginEmail" class="form-control" placeholder="Enter Gmail or Phone"></div>
-                <div class="form-group"><label>Password</label><input type="password" id="loginPass" class="form-control" placeholder="Enter Password"></div>
-                <button class="submit-btn" id="loginSubmitBtn">Login Securely</button>
-                <button class="submit-btn" id="forgotPassBtn" style="background:#475569; margin-top:5px;">Forgot Password? (OTP Recovery)</button>
-            `;
-            setTimeout(() => {
-                document.getElementById('loginSubmitBtn').addEventListener('click', loginUser);
-                document.getElementById('forgotPassBtn').addEventListener('click', forgotPassword);
-            }, 100);
-        }
-        else if(viewName === 'radiotv') {
-            screen.innerHTML = `
-                <h3>📡 Live Radio & TV Broadcasting Hub</h3>
-                <p>• Global Satellite TV & Radio streams connected.<br>• Real-time emergency weather updates playing live.</p>
-            `;
-        }
-        else if(viewName === 'radar') {
-            screen.innerHTML = `
-                <h3>🛰️ Radar & GPS Satellite Navigation</h3>
-                <p>• Global GPS tracking for ships, boats, and high-risk zones active.<br>• 10-minute early disaster warning telemetry connected.</p>
-            `;
-        }
-        else if(viewName === 'settings') {
-            screen.innerHTML = `
-                <h3>⚙️ Live System Settings & Control Panel</h3>
-                <div class="form-group"><label>System Theme Mode</label>
-                    <select class="form-control" id="themeSelect">
-                        <option>Quantum Blue & White Mode (Active)</option>
-                        <option>Ultra Secure Mode</option>
-                    </select>
-                </div>
-                <p style="font-size:10px; color:var(--success); margin-top:5px;">• Encryption: AES-256 Secure<br>• Live Status: 100% Operational ✅</p>
-            `;
-            setTimeout(() => {
-                document.getElementById('themeSelect').addEventListener('change', () => alert('Theme updated successfully!'));
-            }, 100);
-        }
-    }
 
     function initiateOTPVerification(type) {
         const name = document.getElementById('regName').value.trim();
@@ -510,7 +539,7 @@
                 updateLoginIndicator();
                 alert(`Welcome back ${found.name}! Logged in successfully.`);
                 loadSavedAccounts();
-                switchView('home');
+                hideAllSections();
             } else {
                 alert('Invalid credentials or password!');
             }
@@ -540,7 +569,7 @@
         updateLoginIndicator();
         alert('Logged out securely.');
         loadSavedAccounts();
-        switchView('home');
+        hideAllSections();
     }
 
     function updateLoginIndicator() {
