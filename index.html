@@ -3,261 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AYNA BOOK QUANTUM GLOBAL - Original Core</title>
-    <!-- Font Awesome for Icons -->
+    <title>AYNA BOOK QUANTUM GLOBAL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --bg-dark: #070a13;
             --card-bg: #111625;
-            --accent-glow: #00ffcc; /* Quantum Green */
+            --accent-glow: #00ffcc;
             --accent-blue: #2563eb;
             --text-primary: #ffffff;
             --text-secondary: #94a3b8;
             --border: #1f2937;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-dark); color: var(--text-primary); display: flex; flex-direction: column; min-height: 100vh; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-dark); color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; }
         
-        /* Main Container for PWA feel */
-        .master-app { flex: 1; display: flex; flex-direction: column; width: 100%; max-width: 500px; margin: 0 auto; background-color: var(--bg-dark); border-right: 1px solid var(--border); border-left: 1px solid var(--border); position: relative; }
+        .master-app { width: 100%; max-width: 500px; background-color: var(--bg-dark); border: 1px solid var(--border); display: flex; flex-direction: column; padding-bottom: 30px; }
 
         /* Top Bar */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--border); sticky: top; z-index: 100; }
-        .top-bar .title { font-size: 18px; font-weight: 800; color: var(--accent-glow); text-transform: uppercase; letter-spacing: 1px; }
-        .top-bar .icons i { font-size: 18px; color: var(--text-secondary); margin-left: 15px; cursor: pointer; transition: 0.2s; }
-        .top-bar .icons i:hover { color: var(--accent-glow); }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--border); }
+        .top-bar .title { font-size: 16px; font-weight: 800; color: var(--accent-glow); text-transform: uppercase; letter-spacing: 0.5px; }
+        .top-bar .icons i { font-size: 18px; color: var(--text-secondary); margin-left: 15px; cursor: pointer; }
 
-        /* Dashboard Body */
-        .content { flex: 1; padding: 20px; overflow-y: auto; padding-bottom: 80px; } /* Space for bottom nav */
-        
-        /* Cards */
-        .q-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .q-card-title { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: flex; align-items: center; }
-        .q-card-title i { color: var(--accent-blue); margin-right: 8px; font-size: 14px; }
-        .q-card-value { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 5px; }
-        
-        /* Grid */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        /* Content Area */
+        .content { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
 
-        /* Buttons */
-        .q-btn { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent-blue), #1d4ed8); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(37,99,235,0.2); }
-        .q-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(37,99,235,0.4); }
-        .q-btn:active { transform: scale(0.97); }
-        .q-btn i { margin-right: 8px; font-size: 16px; }
-        .q-btn.quantum { background: linear-gradient(135deg, #0f766e, #0d9488); box-shadow: 0 4px 6px rgba(13,148,136,0.2); }
-        .q-btn.quantum:hover { background: linear-gradient(135deg, #115e59, #14b8a6); box-shadow: 0 6px 12px rgba(13,148,136,0.4); }
+        /* Status Card */
+        .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; border-left: 4px solid var(--accent-glow); }
+        .status-title { font-size: 13px; font-weight: bold; color: var(--accent-glow); margin-bottom: 4px; }
+        .status-desc { font-size: 11px; color: var(--text-secondary); }
 
-        /* Input Form */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 5px; }
-        .form-control { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background-color: rgba(255,255,255,0.03); color: white; font-size: 14px; }
-        .form-control::placeholder { color: #4b5563; }
+        /* Grid Layout for Buttons */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        /* Terminal Display */
-        .q-terminal { font-family: 'Courier New', monospace; font-size: 12px; color: #34d399; background: #020617; border-radius: 8px; border: 1px solid var(--border); border-left: 3px solid var(--accent-glow); padding: 10px; margin-top: 15px; min-height: 80px; max-height: 120px; overflow-y: auto; line-height: 1.5; }
+        /* Action Buttons */
+        .action-btn { background: linear-gradient(135deg, #0f766e, #0d9488); color: white; border: none; padding: 14px 10px; border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+        .action-btn:active { transform: scale(0.97); }
+        .action-btn i { font-size: 18px; color: #38bdf8; }
+        .action-btn.purple { background: linear-gradient(135deg, #4f46e5, #4338ca); }
+        .action-btn.blue { background: linear-gradient(135deg, #1d4ed8, #2563eb); }
 
-        /* Bottom Nav Bar */
-        .bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; background-color: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: 0.2s; }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; }
-        .nav-item.active { color: var(--accent-glow); }
-        .nav-item:hover { color: var(--accent-glow); }
+        /* Messaging Hub Container */
+        .msg-hub { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; }
+        .hub-title { font-size: 13px; font-weight: bold; color: var(--accent-glow); text-align: center; margin-bottom: 12px; text-transform: uppercase; }
+        .msg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .msg-btn { background: #1e293b; color: white; border: 1px solid #334155; padding: 10px 5px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; }
+        .msg-btn:hover { background: #2563eb; }
+
+        /* AI Section */
+        .ai-card { background: linear-gradient(135deg, #111625, #1a233a); border: 1px solid #3b82f6; border-radius: 12px; padding: 12px; text-align: center; }
+        .ai-title { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; }
+        .ai-desc { font-size: 10px; color: var(--text-secondary); line-height: 1.4; }
+
+        /* Modal Overlay */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: var(--card-bg); padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .modal-content h3 { color: var(--accent-glow); margin-bottom: 15px; font-size: 16px; text-align: center; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
+        .form-control { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #070a13; color: white; font-size: 13px; }
+        .submit-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .close-modal { float: right; color: #ef4444; font-size: 20px; cursor: pointer; font-weight: bold; }
+
+        /* Saved List */
+        .saved-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+        .saved-item { background: #070a13; padding: 10px; border-radius: 8px; margin-top: 8px; border-left: 3px solid #10b981; font-size: 11px; line-height: 1.5; }
     </style>
 </head>
 <body>
 
 <div class="master-app">
-    <!-- Top Bar with Menu & Settings -->
+    <!-- Top Bar -->
     <div class="top-bar">
-        <i class="fas fa-bars icons" style="margin-left:0;" onclick="toggleMenu('menu')"></i>
-        <div class="title">AYNA BOOK QUANTUM</div>
+        <i class="fas fa-bars" onclick="alert('মেনু অপশন সক্রিয় আছে।')"></i>
+        <div class="title">AYNA BOOK QUANTUM GLOBAL</div>
         <div class="icons">
-            <i class="fas fa-search"></i>
-            <i class="fas fa-cog" onclick="toggleMenu('settings')"></i>
+            <i class="fas fa-search" onclick="alert('গ্লোবাল সার্চ সক্রিয়!')"></i>
+            <i class="fas fa-cog" onclick="alert('সেটিংস প্যানেল আপডেট করা হয়েছে।')"></i>
         </div>
     </div>
 
-    <!-- Dashboard Content -->
-    <div class="content" id="main-content">
-        <!-- System Status Card -->
-        <div class="q-card">
-            <div class="q-card-title"><i class="fas fa-microchip"></i>কোয়ান্টাম সিস্টেম স্ট্যাটাস</div>
-            <div class="q-card-value" style="color:var(--accent-glow);">লাইভ সক্রিয় (LIVE)</div>
-            <div style="font-size: 11px; color:var(--text-secondary);">সার্ভার সিঙ্ক: সারা বিশ্বে সংযুক্ত ✅</div>
+    <!-- Main Content Grid -->
+    <div class="content">
+        <!-- Status -->
+        <div class="status-card">
+            <div class="status-title">কোয়ান্টাম সিস্টেম স্ট্যাটাস: লাইভ সক্রিয় (LIVE)</div>
+            <div class="status-desc">সার্ভার সিঙ্ক: সারা বিশ্বে সংযুক্ত ✅ | মহাকাশ ও সমুদ্র রাডার রেডি</div>
         </div>
 
-        <!-- Create Account Form -->
-        <div class="q-card">
-            <div class="q-card-title"><i class="fas fa-user-plus"></i>নতুন অ্যাকাউন্ট রেজিস্ট্রেশন</div>
-            <div class="form-group">
-                <label>ব্যবহারকারীর নাম</label>
-                <input type="text" id="accName" class="form-control" placeholder="আপনার নাম লিখুন">
-            </div>
-            <div class="form-group">
-                <label>অ্যাকাউন্টের ধরন</label>
-                <select id="accTier" class="form-control" style="background-color:var(--bg-dark); cursor:pointer;">
-                    <option value="Personal">১. Personal (Free)</option>
-                    <option value="Business ($10)">২. Business ($10)</option>
-                    <option value="VIP ($10)">৩. VIP ($10)</option>
-                    <option value="VVIP ($20)">৪. VVIP ($20)</option>
-                </select>
-            </div>
-            <button class="q-btn" style="width:100%;" onclick="createAccount()"><i class="fas fa-plus"></i>তৈরি ও সেভ করুন</button>
-        </div>
-
-        <!-- Quantum Ops Grid -->
+        <!-- 4 Action Buttons Top -->
         <div class="grid-2">
-            <button class="q-btn quantum" onclick="runOp('compute')"><i class="fas fa-infinity"></i>কোয়ান্টাম কম্পিউট</button>
-            <button class="q-btn quantum" onclick="runOp('sync')"><i class="fas fa-globe"></i>গ্লোবাল সিঙ্ক</button>
-            <button class="q-btn quantum" onclick="runOp('ai')"><i class="fas fa-brain"></i>AI কোর ২.০</button>
-            <button class="q-btn quantum" onclick="runOp('secure')"><i class="fas fa-shield-alt"></i>জিরো-ট্রাস্ট</button>
+            <button class="action-btn" onclick="openModal()">
+                <i class="fas fa-user-plus"></i>
+                নতুন অ্যাকাউন্ট রেজিস্ট্রেশন (সেভ করুন)
+            </button>
+            <button class="action-btn" onclick="openRadar()">
+                <i class="fas fa-satellite-dish"></i>
+                ১. রাডার প্রযুক্তি (লাইভ ম্যাপ ও জাহাজ ট্র্যাক)
+            </button>
         </div>
 
-        <!-- Quantum Console -->
-        <div class="q-terminal" id="console">
-            > AYNA BOOK QUANTUM GLOBAL কোর প্রস্তুত...<br>
-            > ব্যবহারকারীর অ্যাকশনের জন্য অপেক্ষা করছে।
+        <div class="grid-2">
+            <button class="action-btn blue" onclick="openRadioTV()">
+                <i class="fas fa-tv"></i>
+                ২. রেডিও টিভি (লাইভ চ্যানেল সংযোগ)
+            </button>
+            <button class="action-btn purple" onclick="openCompass()">
+                <i class="fas fa-compass"></i>
+                কম্পাস ও দিকনির্দেশ (0MB স্যাটেলাইট)
+            </button>
         </div>
-    </div>
 
-    <!-- Bottom Navigation Bar with Dashboard, Settings, etc. -->
-    <div class="bottom-nav">
-        <a class="nav-item active" onclick="loadPage('dashboard')">
-            <i class="fas fa-chart-line"></i>ড্যাশবোর্ড
+        <!-- Messaging Hub -->
+        <div class="msg-hub">
+            <div class="hub-title">💬 মেসেজিং হাব</div>
+            <div class="msg-grid">
+                <button class="msg-btn" onclick="msgAction('post')">পোস্ট করুন</button>
+                <button class="msg-btn" onclick="msgAction('audio')">অডিও বার্তা</button>
+                <button class="msg-btn" onclick="msgAction('video')">ভিডিও বার্তা</button>
+                <button class="msg-btn" onclick="msgAction('live')">লাইভ শুরু</button>
+                <button class="msg-btn" onclick="msgAction('chat')">চ্যাট ও নিন્দু</button>
+                <button class="msg-btn" onclick="msgAction('like')">লাইক ❤️</button>
+                <button class="msg-btn" onclick="msgAction('share')">শেয়ার 🔗</button>
+                <button class="msg-btn" onclick="msgAction('comment')">কমেন্ট 💬</button>
+                <button class="msg-btn" onclick="msgAction('ai_mind')">AI মন পাঠ</button>
+            </div>
         </div>
-        <a class="nav-item" onclick="loadPage('accounts')">
-            <i class="fas fa-users"></i>অ্যাকাউন্টস
+
+        <!-- AI Translation Hub -->
+        <div class="grid-2">
+            <div class="ai-card" onclick="aiTranslate('text')">
+                <div class="ai-title"><i class="fas fa-language"></i> AI অনুবাদ (রিয়েল-টাইম)</div>
+                <div class="ai-desc">বাংলার বিপরীতে বিশ্বের যেকোনো ভাষা রূপান্তর</div>
+            </div>
+            <div class="ai-card" onclick="aiTranslate('audio')">
+                <div class="ai-title"><i class="fas fa-microphone-alt"></i> AI অডিও ট্রান্সলেটর</div>
+                <div class="ai-desc">কথার সাথে সাথে সরাসরি অন্য ভাষায় অডিও রূপান্তর</div>
+            </div>
         </div>
-        <a class="nav-item" onclick="loadPage('ops')">
-            <i class="fas fa-atom"></i>অপস হাব
+        <div class="ai-card" onclick="aiTranslate('video')" style="margin-top:-5px;">
+            <div class="ai-title"><i class="fas fa-video"></i> AI ভিডিও ট্রান্সলেটর (গ্লোবাল ভয়েস সিঙ্ক)</div>
+            <div class="ai-desc">ভিডিও কল বা কনফারেন্সে যেকোনো দেশের ভাষা স্বয়ংক্রিয়ভাবে আপনার ভাষায় রূপান্তরিত হবে।</div>
         </div>
-        <a class="nav-item" onclick="loadPage('settings')">
-            <i class="fas fa-sliders-h"></i>সেটিংস
+
+        <!-- Saved Accounts List -->
+        <div class="saved-box">
+            <div style="font-size: 12px; font-weight: bold; color: var(--accent-glow); margin-bottom: 5px;">📥 সংরক্ষিত অ্যাকাউন্টসমূহ:</div>
+            <div id="savedListContainer">
+                <p style="color: #64748b; font-size: 11px;">কোনো অ্যাকাউন্ট সংরক্ষণ করা হয়নি।</p>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- Modal for Account Registration -->
+<div id="regModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h3>নতুন অ্যাকাউন্ট তৈরি</h3>
+        <div class="form-group">
+            <label>ব্যবহারকারীর নাম</label>
+            <input type="text" id="regName" class="form-control" placeholder="আপনার নাম">
+        </div>
+        <div class="form-group">
+            <label>ফোন নম্বর</label>
+            <input type="tel" id="regPhone" class="form-control" placeholder="017xxxxxxxx">
+        </div>
+        <div class="form-group">
+            <label>জিমেইল</label>
+            <input type="email" id="regEmail" class="form-control" placeholder="example@gmail.com">
+        </div>
+        <div class="form-group">
+            <label>পাসওয়ার্ড</label>
+            <input type="password" id="regPass" class="form-control" placeholder="পাসওয়ার্ড দিন">
+        </div>
+        <div class="form-group">
+            <label>অ্যাকাউন্ট টায়ার</label>
+            <select id="regTier" class="form-control">
+                <option value="Personal (Free)">Personal Account - ফ্রি (Free)</option>
+                <option value="Business ($10)">Business Account - $10 / ১২০০ BDT</option>
+                <option value="VIP ($10)">VIP Account - $10 / ১২০০ BDT</option>
+                <option value="VVIP ($20)">VVIP Account - $20 / ২৪০০ BDT</option>
+            </select>
+        </div>
+        <button class="submit-btn" onclick="saveAccountData()">অ্যাকাউন্ট সেভ করুন</button>
+    </div>
+</div>
+
 <script>
-    // System Ops Simulator
-    function runOp(op) {
-        const consoleBox = document.getElementById("console");
-        if (op === 'compute') {
-            consoleBox.innerHTML = `> [COMPUTE OPERATING]: ৫ কুইবিট কোয়ান্টাম ফেজ সিমুলেশন সফল... ডেটা এনক্রিপ্টেড! ✅`;
-        } else if (op === 'sync') {
-            consoleBox.innerHTML = `> [GLOBAL SYNCING]: আমেরিকা, ইউরোপ ও এশিয়া সার্ভারে সিঙ্ক্রোনাইজেশন সম্পূর্ণ হয়েছে। 🌐`;
-        } else if (op === 'ai') {
-            consoleBox.innerHTML = `> [AI CORE RUNNING]: নিউরাল AI ইঞ্জিন ২.০ সক্রিয়। লোকাল ডেটা এনালাইসিস চলছে... 🧠`;
-        } else if (op === 'secure') {
-            consoleBox.innerHTML = `> [SECURITY CHECK]: জিরো-ট্রাস্ট এনক্রিপশন সক্রিয়। কোনো বাগ বা ঝুঁকি পাওয়া যায়নি! 🛡️`;
-        }
-    }
+    // Modal Control
+    function openModal() { document.getElementById('regModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('regModal').style.display = 'none'; }
 
-    // Create Account and Save to Local Storage
-    function createAccount() {
-        const name = document.getElementById("accName").value.trim();
-        const tier = document.getElementById("accTier").value;
-        const consoleBox = document.getElementById("console");
+    // Save Data to LocalStorage
+    function saveAccountData() {
+        const name = document.getElementById('regName').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value;
+        const tier = document.getElementById('regTier').value;
 
-        if (name === "") {
-            alert("দয়া করে নাম লিখুন!"); return;
-        }
-
-        const newAccount = { name: name, tier: tier, timestamp: new Date().toLocaleString() };
-
-        // Save to localStorage
-        let accounts = JSON.parse(localStorage.getItem("ayna_accounts")) || [];
-        accounts.push(newAccount);
-        localStorage.setItem("ayna_accounts", JSON.stringify(accounts));
-
-        // Display Success and Clear Input
-        consoleBox.innerHTML = `> [ACCOUNT CREATED]: "${newAccount.name}" এর জন্য ${newAccount.tier} অ্যাকাউন্ট সফলভাবে লোকাল কোরে সেভ হয়েছে।`;
-        document.getElementById("accName").value = "";
-    }
-
-    // Navigation and Page Content Management
-    function loadPage(page) {
-        const contentBox = document.getElementById("main-content");
-        
-        // Remove active class from all nav items
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        
-        // Find and add active class to clicked nav item
-        const navItems = document.querySelectorAll('.nav-item');
-        if (page === 'dashboard') navItems[0].classList.add('active');
-        if (page === 'accounts') navItems[1].classList.add('active');
-        if (page === 'ops') navItems[2].classList.add('active');
-        if (page === 'settings') navItems[3].classList.add('active');
-
-        // Render Page Content
-        if (page === 'dashboard') {
-            location.reload(); // Quick way to reload dashboard
-        } else if (page === 'accounts') {
-            contentBox.innerHTML = `
-                <div class="q-card">
-                    <div class="q-card-title"><i class="fas fa-users"></i>সংরক্ষিত অ্যাকাউন্টসমূহ</div>
-                    <div id="accountList" style="font-size:13px; color:var(--text-secondary); line-height:1.6;">লোডিং হচ্ছে...</div>
-                </div>
-                <button class="q-btn" style="width:100%;" onclick="loadPage('dashboard')"><i class="fas fa-arrow-left"></i>ফিরে যান</button>
-            `;
-            displaySavedAccounts();
-        } else if (page === 'ops') {
-            contentBox.innerHTML = `
-                <div class="q-card">
-                    <div class="q-card-title"><i class="fas fa-atom"></i>কোয়ান্টাম অপারেশন হাব</div>
-                    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:15px;">সরাসরি কোয়ান্টাম প্রসেসরে অপারেশন পরিচালনা করুন।</p>
-                    <div class="grid-2">
-                        <button class="q-btn quantum" onclick="runOp('compute')"><i class="fas fa-infinity"></i>কোয়ান্টাম কম্পিউট</button>
-                        <button class="q-btn quantum" onclick="runOp('sync')"><i class="fas fa-globe"></i>গ্লোবাল সিঙ্ক</button>
-                    </div>
-                </div>
-                <button class="q-btn" style="width:100%;" onclick="loadPage('dashboard')"><i class="fas fa-arrow-left"></i>ফিরে যান</button>
-            `;
-        } else if (page === 'settings') {
-            contentBox.innerHTML = `
-                <div class="q-card">
-                    <div class="q-card-title"><i class="fas fa-sliders-h"></i>গ্লোবাল সিস্টেম সেটিংস</div>
-                    <div class="form-group">
-                        <label>সিস্টেম মুড (Quantum Mode)</label>
-                        <select class="form-control" style="background-color:var(--bg-dark);">
-                            <option>কোয়ান্টাম সক্রিয় (ACTIVE)</option>
-                            <option>সিমুলেশন মোড (SIMULATION)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>ডেটা এনক্রিপশন লেভেল</label>
-                        <select class="form-control" style="background-color:var(--bg-dark);">
-                            <option>কোয়ান্টাম AES-২৫৬ (GLOBAL)</option>
-                            <option>লোকাল ২.০ (LOCAL)</option>
-                        </select>
-                    </div>
-                    <button class="q-btn" style="width:100%;" onclick="saveSettings()"><i class="fas fa-save"></i>সেটিংস সেভ করুন</button>
-                </div>
-                <button class="q-btn" style="width:100%;" onclick="loadPage('dashboard')"><i class="fas fa-arrow-left"></i>ফিরে যান</button>
-            `;
-        }
-    }
-
-    // Function to show saved accounts in Accounts page
-    function displaySavedAccounts() {
-        const accountBox = document.getElementById("accountList");
-        let accounts = JSON.parse(localStorage.getItem("ayna_accounts")) || [];
-        if (accounts.length === 0) {
-            accountBox.innerHTML = `কোনো অ্যাকাউন্ট এখনো যোগ করা হয়নি।`;
+        if(!name || !phone || !email || !pass) {
+            alert('দয়া করে সব তথ্য পূরণ করুন!');
             return;
         }
-        let html = "";
-        accounts.forEach((acc, index) => {
-            html += `<div style="border-bottom: 1px solid var(--border); padding:10px 0;"><strong>#${index+1} - ${acc.name}</strong><br>প্যাকেজ: ${acc.tier}<br>সময়: ${acc.timestamp}</div>`;
-        });
-        accountBox.innerHTML = html;
+
+        const newAcc = { name, phone, email, pass, tier, time: new Date().toLocaleString() };
+        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+        accounts.push(newAcc);
+        localStorage.setItem('ayna_global_accounts', JSON.stringify(accounts));
+
+        closeModal();
+        loadSavedAccounts();
+        alert('অ্যাকাউন্ট সফলভাবে তৈরি এবং সংরক্ষিত হয়েছে!');
     }
 
-    // Placeholder for save settings alert
-    function saveSettings() { alert("কোয়ান্টাম সিস্টেম সেটিংস সফলভাবে আপডেট করা হয়েছে!"); }
-    
-    // Placeholder for top bar menu icons
-    function toggleMenu(menu) { alert(`${menu} মেনু সক্রিয় করা হয়েছে (ডেমো)। আসল কানেকশন এপিআই দিয়ে সম্ভব।`); }
+    // Load Saved Accounts
+    function loadSavedAccounts() {
+        const container = document.getElementById('savedListContainer');
+        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
+        if(accounts.length === 0) {
+            container.innerHTML = `<p style="color: #64748b; font-size: 11px;">কোনো অ্যাকাউন্ট সংরক্ষণ করা হয়নি।</p>`;
+            return;
+        }
+        let html = '';
+        accounts.forEach((acc, i) => {
+            html += `<div class="saved-item">
+                <strong>#${i+1} - ${acc.name} (${acc.tier})</strong><br>
+                📞 ফোন: ${acc.phone} | ✉️ জিমেইল: ${acc.email}<br>
+                🔑 পাসওয়ার্ড: <span style="color:#f59e0b; font-family:monospace;">${acc.pass}</span><br>
+                <span style="color:#64748b; font-size:10px;">সময়: ${acc.time}</span>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    // Feature Buttons Action Handlers
+    function openRadar() {
+        alert('🛰️ রাডার ও স্যাটেলাইট কানেক্টিভিটি সক্রিয়! সাগর ও মহাকাশের জাহাজ/বোট ট্র্যাকিং ডেটা সিঙ্ক হচ্ছে...');
+    }
+    function openRadioTV() {
+        alert('📡 রেডিও ও টিভি লাইভ চ্যানেল মোড চালু হয়েছে। গ্লোবাল ব্রডকাস্টিং কানেক্টেড!');
+    }
+    function openCompass() {
+        alert('🧭 কোয়ান্টাম কম্পাস ও দিকনির্দেশনা জিরো-এমবি (0MB) স্যাটেলাইট মোডে সচল রয়েছে।');
+    }
+    function msgAction(type) {
+        if(type === 'ai_mind') {
+            alert('🧠 AI প্রিডিকশন কোর: আপনি এবং আপনার বিশ্বব্যাপী ব্যবহারকারী কী ভাবছেন তা এআই এনালাইসিস করে সিকিউরড মেসেজ তৈরি করছে!');
+        } else {
+            alert(`💬 মেসেজিং হাব [${type.toUpperCase()}] সফলভাবে কার্যকর করা হয়েছে!`);
+        }
+    }
+    function aiTranslate(mode) {
+        alert(`🌐 AI ${mode.toUpperCase()} ট্রান্সলেটর সক্রিয়! বাংলার সাথে বিশ্বের যেকোনো ভাষার অডিও/ভিডিও রিয়েল-টাইম রূপান্তর চলছে।`);
+    }
+
+    // Window Load
+    window.onload = function() {
+        loadSavedAccounts();
+    }
 </script>
 
 </body>
