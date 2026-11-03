@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AYNA BOOK - Ultra Quantum Cloud Hub</title>
+    <title>AYNA BOOK - Cloud Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Firebase SDKs for Global Cloud Sync -->
@@ -13,12 +13,13 @@
 
     <style>
         :root {
-            --bg-dark: #05070b;
-            --card-bg: #0d111a;
-            --accent-gold: #ffd700;
+            --bg-dark: #0a0f1d;
+            --card-bg: #131b2e;
+            --accent-blue: #00d2ff;
+            --accent-glow: #3a86ff;
             --text-primary: #ffffff;
             --text-secondary: #94a3b8;
-            --border: #1f2937;
+            --border: #1e293b;
             --success: #10b981;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
@@ -26,66 +27,57 @@
         
         .master-app { width: 100%; max-width: 500px; background-color: var(--bg-dark); border: 1px solid var(--border); display: flex; flex-direction: column; min-height: 100vh; position: relative; padding-bottom: 75px; }
 
-        /* Top Bar with Rainbow Glowing Border & Gold Title */
+        /* Top Bar with Blue & White Theme */
         .top-bar { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             padding: 14px 20px; 
             background-color: var(--card-bg); 
-            border-bottom: 3px solid transparent; 
-            border-image: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
+            border-bottom: 2px solid var(--accent-blue);
             position: sticky; 
             top: 0; 
             z-index: 100; 
-            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.2);
         }
         
         .logo-area { display: flex; align-items: center; gap: 12px; }
         
+        /* আইকনটি ঠিক ১ মিনিট (৬০ সেকেন্ড) পর পর এক পাক ঘুরবে */
         .rotating-book-logo {
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            border: 2px solid var(--accent-gold);
-            background: radial-gradient(circle, #ff7f00, #05070b);
+            border: 2px solid var(--accent-blue);
+            background: radial-gradient(circle, #00d2ff, #0a0f1d);
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: rotateBookLogo 1s linear infinite, rainbowGlowBorder 3s infinite alternate;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            animation: rotateBookLogo 60s linear infinite;
+            box-shadow: 0 0 12px rgba(0, 210, 255, 0.5);
         }
-        .rotating-book-logo i { font-size: 20px; color: var(--accent-gold); }
+        .rotating-book-logo i { font-size: 20px; color: #ffffff; }
 
         @keyframes rotateBookLogo {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
 
-        @keyframes rainbowGlowBorder {
-            0% { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
-            20% { border-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
-            40% { border-color: #00ff00; box-shadow: 0 0 15px #00ff00; }
-            60% { border-color: #00ffff; box-shadow: 0 0 15px #00ffff; }
-            80% { border-color: #0000ff; box-shadow: 0 0 15px #0000ff; }
-            100% { border-color: #ff00ff; box-shadow: 0 0 15px #ff00ff; }
-        }
-
-        /* AYNA BOOK - Ultra Golden & Rainbow Animated Text */
+        /* AYNA BOOK - Blue & White Glowing Animated Text */
         .top-bar .title { 
             font-size: 20px; 
             font-weight: 900; 
             text-transform: uppercase; 
             letter-spacing: 1.5px;
-            background: linear-gradient(270deg, #ffd700, #ff007f, #00ffcc, #7928ca, #ffd700);
-            background-size: 400% 400%;
+            background: linear-gradient(270deg, #ffffff, #00d2ff, #3a86ff, #ffffff);
+            background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: rainbowTextAnimation 4s ease infinite;
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+            animation: blueWhiteGlow 4s ease infinite;
+            filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.6));
         }
 
-        @keyframes rainbowTextAnimation {
+        @keyframes blueWhiteGlow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
@@ -93,30 +85,29 @@
 
         .content { padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
 
-        /* Priority New Account Box with Rainbow Border Effect */
+        /* Priority New Account Box */
         .priority-reg-card { 
-            background: linear-gradient(135deg, #0d111a, #161f33); 
-            border: 2px solid var(--accent-gold); 
+            background: linear-gradient(135deg, #131b2e, #1e293b); 
+            border: 2px solid var(--accent-blue); 
             border-radius: 16px; 
             padding: 18px; 
             margin-bottom: 5px; 
-            box-shadow: 0 8px 25px rgba(255,215,0,0.25);
-            animation: rainbowGlowBorder 5s infinite alternate;
+            box-shadow: 0 8px 25px rgba(0,210,255,0.15);
         }
-        .priority-reg-card h3 { color: var(--accent-gold); font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+        .priority-reg-card h3 { color: var(--accent-blue); font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 
         /* Big Square Feature Boxes */
         .square-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .square-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; cursor: pointer; transition: 0.2s; min-height: 95px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
         .square-box:active { transform: scale(0.96); }
-        .square-box i { font-size: 24px; color: var(--accent-gold); }
+        .square-box i { font-size: 24px; color: var(--accent-blue); }
         .square-box span { font-size: 11px; font-weight: bold; color: var(--text-primary); }
 
         /* Status & Alert Box */
-        .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; border-left: 4px solid var(--accent-gold); font-size: 11px; color: var(--text-secondary); }
+        .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; border-left: 4px solid var(--accent-blue); font-size: 11px; color: var(--text-secondary); }
         
-        .alert-control-box { background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid #4338ca; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .alert-info h4 { font-size: 12px; color: #fbbf24; }
+        .alert-control-box { background: linear-gradient(135deg, #1e1b4b, #1e293b); border: 1px solid #3a86ff; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .alert-info h4 { font-size: 12px; color: #00d2ff; }
         .alert-info p { font-size: 10px; color: var(--text-secondary); }
 
         /* Toggle Switch */
@@ -129,23 +120,23 @@
 
         /* Dynamic Screen & Forms */
         .dynamic-screen { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: none; }
-        .dynamic-screen h3 { color: var(--accent-gold); font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        .dynamic-screen h3 { color: var(--accent-blue); font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
         
         .form-group { margin-bottom: 10px; }
         .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 3px; }
-        .form-control { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #05070b; color: white; font-size: 12px; }
+        .form-control { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: #0a0f1d; color: white; font-size: 12px; }
         
         .password-container { position: relative; }
         .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 11px; }
 
-        .submit-btn { width: 100%; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 13px; box-shadow: 0 4px 15px rgba(37,99,235,0.4); }
+        .submit-btn { width: 100%; background: linear-gradient(135deg, #00d2ff, #3a86ff); color: #0a0f1d; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 13px; box-shadow: 0 4px 15px rgba(0,210,255,0.3); }
 
         /* Saved Cards */
         .saved-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
-        .saved-item { background: #05070b; padding: 12px; border-radius: 10px; margin-top: 10px; border-left: 4px solid var(--accent-gold); font-size: 11px; line-height: 1.6; display: flex; flex-direction: column; gap: 10px; position: relative; }
+        .saved-item { background: #0a0f1d; padding: 12px; border-radius: 10px; margin-top: 10px; border-left: 4px solid var(--accent-blue); font-size: 11px; line-height: 1.6; display: flex; flex-direction: column; gap: 10px; position: relative; }
         .profile-header { display: flex; align-items: center; gap: 12px; }
-        .profile-big-square { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; border: 2px solid var(--accent-gold); }
-        .edit-icon-btn { position: absolute; right: 12px; top: 12px; background: #1e293b; color: var(--accent-gold); border: 1px solid #334155; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .profile-big-square { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; border: 2px solid var(--accent-blue); }
+        .edit-icon-btn { position: absolute; right: 12px; top: 12px; background: #1e293b; color: var(--accent-blue); border: 1px solid #334155; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         
         .qr-code-display { background: #fff; padding: 8px; border-radius: 6px; text-align: center; margin-top: 5px; }
         .qr-code-display img { width: 90px; height: 90px; }
@@ -158,13 +149,13 @@
         .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background-color: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; box-shadow: 0 -4px 10px rgba(0,0,0,0.5); }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; font-weight: bold; cursor: pointer; }
         .nav-item i { font-size: 16px; margin-bottom: 2px; }
-        .nav-item.active, .nav-item:hover { color: var(--accent-gold); }
+        .nav-item.active, .nav-item:hover { color: var(--accent-blue); }
     </style>
 </head>
 <body>
 
 <div class="master-app">
-    <!-- Top Bar with Rainbow Border & Animated Golden Title -->
+    <!-- Top Bar -->
     <div class="top-bar">
         <div class="logo-area">
             <div class="rotating-book-logo">
@@ -172,7 +163,7 @@
             </div>
             <div class="title">AYNA BOOK</div>
         </div>
-        <div style="font-size: 12px; color: var(--accent-gold); font-weight: bold;" id="loginStatusIndicator">Guest (Cloud Ready)</div>
+        <div style="font-size: 12px; color: var(--accent-blue); font-weight: bold;" id="loginStatusIndicator">Guest (Cloud Ready)</div>
     </div>
 
     <!-- Main Content -->
@@ -189,7 +180,7 @@
             <div class="form-group"><label>Password (Min 11 Digits/Chars)</label>
                 <div class="password-container">
                     <input type="password" id="regPass" class="form-control" placeholder="11-digit secure password">
-                    <span class="toggle-password" onclick="togglePass('regPass', this)">Show</span>
+                    <span class="toggle-password" id="togglePassBtn">Show</span>
                 </div>
             </div>
 
@@ -201,10 +192,10 @@
                     <option value="VVIP Account - $25 / 3000 BDT">VVIP Account - $25 / 3000 BDT</option>
                 </select>
             </div>
-            <button class="submit-btn" onclick="initiateOTPVerification('new')">Verify OTP (2 Mins) & Open Cloud ID</button>
+            <button class="submit-btn" id="submitRegBtn">Verify OTP (2 Mins) & Open Cloud ID</button>
         </div>
 
-        <!-- 2. STATUS & OTHER FEATURES BELOW -->
+        <!-- 2. STATUS & OTHER FEATURES -->
         <div class="status-card">
             ✨ Firebase Cloud Firestore Connected & Active ✅
         </div>
@@ -216,26 +207,26 @@
                 <p id="alertStatusText">Early Warning System Active (ON) ✅</p>
             </div>
             <label class="switch">
-                <input type="checkbox" id="alertToggle" checked onclick="toggleAlertSystem()">
+                <input type="checkbox" id="alertToggle" checked>
                 <span class="slider"></span>
             </label>
         </div>
 
         <!-- Other Feature Boxes -->
         <div class="square-grid">
-            <div class="square-box" onclick="switchView('login')">
+            <div class="square-box" id="navLoginBox">
                 <i class="fas fa-sign-in-alt"></i>
                 <span>Secure Login & OTP</span>
             </div>
-            <div class="square-box" onclick="switchView('radiotv')">
+            <div class="square-box" id="navRadioBox">
                 <i class="fas fa-tv"></i>
                 <span>Live Radio & TV</span>
             </div>
-            <div class="square-box" onclick="switchView('radar')">
+            <div class="square-box" id="navRadarBox">
                 <i class="fas fa-satellite-dish"></i>
                 <span>Radar & GPS Track</span>
             </div>
-            <div class="square-box" onclick="switchView('settings')">
+            <div class="square-box" id="navSettingsBox">
                 <i class="fas fa-cog"></i>
                 <span>Live Settings</span>
             </div>
@@ -246,7 +237,7 @@
 
         <!-- 3. REGISTERED ACCOUNTS WITH LIVE QR CODE -->
         <div class="saved-box">
-            <div style="font-size: 12px; font-weight: bold; color: var(--accent-gold); margin-bottom: 5px;">📥 Global Registered Accounts (Cloud Synced):</div>
+            <div style="font-size: 12px; font-weight: bold; color: var(--accent-blue); margin-bottom: 5px;">📥 Global Registered Accounts (Cloud Synced):</div>
             <div id="savedListContainer">
                 <p style="color: #64748b; font-size: 11px;">Loading cloud accounts...</p>
             </div>
@@ -255,17 +246,17 @@
 
     <!-- Bottom Nav -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchView('home')"><i class="fas fa-home"></i>Home</div>
-        <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'});"><i class="fas fa-user-plus"></i>Open ID</div>
-        <div class="nav-item" onclick="switchView('login')"><i class="fas fa-lock"></i>Login</div>
-        <div class="nav-item" onclick="switchView('radiotv')"><i class="fas fa-tv"></i>Radio/TV</div>
-        <div class="nav-item" onclick="switchView('radar')"><i class="fas fa-satellite"></i>Radar</div>
+        <div class="nav-item active" id="bottomHome"><i class="fas fa-home"></i>Home</div>
+        <div class="nav-item" id="bottomOpenId"><i class="fas fa-user-plus"></i>Open ID</div>
+        <div class="nav-item" id="bottomLogin"><i class="fas fa-lock"></i>Login</div>
+        <div class="nav-item" id="bottomRadio"><i class="fas fa-tv"></i>Radio/TV</div>
+        <div class="nav-item" id="bottomRadar"><i class="fas fa-satellite"></i>Radar</div>
     </div>
 </div>
 
 <script>
     /* ========================================================
-       FIREBASE CONFIGURATION (রিয়েল ক্লাউড ডাটাবেজ)
+       FIREBASE CONFIGURATION & EVENT LISTENERS
        ======================================================== */
     const firebaseConfig = {
       apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
@@ -282,22 +273,60 @@
     try {
         firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
-        console.log("Firebase initialized successfully!");
     } catch(e) {
-        console.log("Firebase initialization error, fallback to local storage mode: ", e);
+        console.log("Firebase fallback mode: ", e);
     }
 
     let currentEditId = null;
 
-    function toggleAlertSystem() {
-        const toggle = document.getElementById('alertToggle');
-        const statusText = document.getElementById('alertStatusText');
-        if(toggle.checked) {
-            statusText.innerHTML = "Early Warning Active (ON) ✅";
-        } else {
-            statusText.innerHTML = "Early Warning Inactive (OFF) ❌";
-        }
-    }
+    // DOM Loaded হলে সব বাটন ও ইভেন্ট সরাসরি বাইন্ড করা হবে (যাতে কোনো বাটন মিস না হয়)
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // Register Submit Button
+        document.getElementById('submitRegBtn').addEventListener('click', function() {
+            initiateOTPVerification('new');
+        });
+
+        // Password Show/Hide Toggle
+        document.getElementById('togglePassBtn').addEventListener('click', function() {
+            const passInput = document.getElementById('regPass');
+            if(passInput.type === "password") {
+                passInput.type = "text";
+                this.textContent = "Hide";
+            } else {
+                passInput.type = "password";
+                this.textContent = "Show";
+            }
+        });
+
+        // Alert Toggle Switch
+        document.getElementById('alertToggle').addEventListener('change', function() {
+            const statusText = document.getElementById('alertStatusText');
+            if(this.checked) {
+                statusText.innerHTML = "Early Warning System Active (ON) ✅";
+            } else {
+                statusText.innerHTML = "Early Warning Inactive (OFF) ❌";
+            }
+        });
+
+        // Square Box Navigation
+        document.getElementById('navLoginBox').addEventListener('click', () => switchView('login'));
+        document.getElementById('navRadioBox').addEventListener('click', () => switchView('radiotv'));
+        document.getElementById('navRadarBox').addEventListener('click', () => switchView('radar'));
+        document.getElementById('navSettingsBox').addEventListener('click', () => switchView('settings'));
+
+        // Bottom Navigation
+        document.getElementById('bottomHome').addEventListener('click', () => switchView('home'));
+        document.getElementById('bottomOpenId').addEventListener('click', () => {
+            switchView('home');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+        document.getElementById('bottomLogin').addEventListener('click', () => switchView('login'));
+        document.getElementById('bottomRadio').addEventListener('click', () => switchView('radiotv'));
+        document.getElementById('bottomRadar').addEventListener('click', () => switchView('radar'));
+
+        loadSavedAccounts();
+    });
 
     function switchView(viewName) {
         const screen = document.getElementById('dynamicScreen');
@@ -311,9 +340,13 @@
                 <h3>🔐 Secure Login & Password Recovery</h3>
                 <div class="form-group"><label>Gmail or Phone Number</label><input type="text" id="loginEmail" class="form-control" placeholder="Enter Gmail or Phone"></div>
                 <div class="form-group"><label>Password</label><input type="password" id="loginPass" class="form-control" placeholder="Enter Password"></div>
-                <button class="submit-btn" onclick="loginUser()">Login Securely</button>
-                <button class="submit-btn" style="background:#475569; margin-top:5px;" onclick="forgotPassword()">Forgot Password? (OTP Recovery)</button>
+                <button class="submit-btn" id="loginSubmitBtn">Login Securely</button>
+                <button class="submit-btn" id="forgotPassBtn" style="background:#475569; margin-top:5px;">Forgot Password? (OTP Recovery)</button>
             `;
+            setTimeout(() => {
+                document.getElementById('loginSubmitBtn').addEventListener('click', loginUser);
+                document.getElementById('forgotPassBtn').addEventListener('click', forgotPassword);
+            }, 100);
         }
         else if(viewName === 'radiotv') {
             screen.innerHTML = `
@@ -331,26 +364,17 @@
             screen.innerHTML = `
                 <h3>⚙️ Live System Settings & Control Panel</h3>
                 <div class="form-group"><label>System Theme Mode</label>
-                    <select class="form-control" onchange="alert('Theme updated successfully!')">
-                        <option>Quantum Rainbow Gold Mode (Active)</option>
+                    <select class="form-control" id="themeSelect">
+                        <option>Quantum Blue & White Mode (Active)</option>
                         <option>Ultra Secure Mode</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>Alert Sound Volume</label>
-                    <select class="form-control">
-                        <option>Max Volume (Siren Enabled)</option>
-                        <option>Vibration Only</option>
                     </select>
                 </div>
                 <p style="font-size:10px; color:var(--success); margin-top:5px;">• Encryption: AES-256 Secure<br>• Live Status: 100% Operational ✅</p>
             `;
+            setTimeout(() => {
+                document.getElementById('themeSelect').addEventListener('change', () => alert('Theme updated successfully!'));
+            }, 100);
         }
-    }
-
-    function togglePass(id, el) {
-        const input = document.getElementById(id);
-        if(input.type === "password") { input.type = "text"; el.textContent = "Hide"; }
-        else { input.type = "password"; el.textContent = "Show"; }
     }
 
     function initiateOTPVerification(type) {
@@ -424,7 +448,7 @@
                 postSaveCleanup(email);
             })
             .catch((error) => {
-                console.error("Firestore Error, fallback to localStorage: ", error);
+                console.error("Firestore Error: ", error);
                 saveToLocalStorageFallback(accData, email);
             });
         } else {
@@ -442,7 +466,7 @@
         }
         localStorage.setItem('ayna_global_accounts', JSON.stringify(accounts));
         localStorage.setItem('ayna_logged_in', email);
-        alert('Account saved locally (Hybrid Mode)! ✅');
+        alert('Account saved successfully! ✅');
         postSaveCleanup(email);
     }
 
@@ -466,7 +490,6 @@
                 });
                 callback(accounts);
             }).catch((error) => {
-                console.log("Error getting cloud documents, fallback to local: ", error);
                 let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
                 callback(localAcc);
             });
@@ -515,7 +538,7 @@
     function logoutUser() {
         localStorage.removeItem('ayna_logged_in');
         updateLoginIndicator();
-        alert('Logged out securely. All details are now hidden.');
+        alert('Logged out securely.');
         loadSavedAccounts();
         switchView('home');
     }
@@ -524,7 +547,11 @@
         let user = localStorage.getItem('ayna_logged_in');
         const indicator = document.getElementById('loginStatusIndicator');
         if(user) {
-            indicator.innerHTML = `<span style="color:var(--success);">Cloud Online</span> <i class="fas fa-sign-out-alt" style="cursor:pointer; margin-left:5px;" onclick="logoutUser()" title="Logout"></i>`;
+            indicator.innerHTML = `<span style="color:var(--success);">Cloud Online</span> <i class="fas fa-sign-out-alt" id="logoutBtn" style="cursor:pointer; margin-left:5px;" title="Logout"></i>`;
+            setTimeout(() => {
+                const logoutBtn = document.getElementById('logoutBtn');
+                if(logoutBtn) logoutBtn.addEventListener('click', logoutUser);
+            }, 100);
         } else {
             indicator.innerHTML = `Guest (Cloud Ready)`;
         }
@@ -533,7 +560,7 @@
     function copyAccountLink(id) {
         let link = `https://ayna-956251.github.io/ayna--book/#id=${id}`;
         navigator.clipboard.writeText(link);
-        alert('Secure Cloud Link Copied! 🔗 You can share this link or QR code.');
+        alert('Secure Cloud Link Copied! 🔗');
     }
 
     function triggerEditAccount(id) {
@@ -574,35 +601,31 @@
                 let safeQR = acc.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK`;
 
                 html += `<div class="saved-item">
-                    <button class="edit-icon-btn" title="Edit with Password" onclick="triggerEditAccount('${acc.id}')">
+                    <button class="edit-icon-btn" onclick="triggerEditAccount('${acc.id}')" title="Edit with Password">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
                     <div class="profile-header">
                         <img src="${acc.photo}" alt="Photo" class="profile-big-square">
                         <div>
-                            <strong style="font-size:12px; color:var(--accent-gold);">#${i+1} - ${acc.name}</strong><br>
-                            <span style="color:#f59e0b;">${acc.tier}</span><br>
+                            <strong style="font-size:12px; color:var(--accent-blue);">#${i+1} - ${acc.name}</strong><br>
+                            <span style="color:#00d2ff;">${acc.tier}</span><br>
                             📞 Phone: ${phoneDisplay} | ✉️ Gmail: ${emailDisplay}<br>
-                            🔑 Password: <span style="color:#f59e0b; font-family:monospace;">${passDisplay}</span><br>
+                            🔑 Password: <span style="color:#00d2ff; font-family:monospace;">${passDisplay}</span><br>
                             <span style="color:#64748b; font-size:9px;">Time: ${acc.time}</span>
                         </div>
                     </div>
-                    <div class="qr-code-display" title="Scan or Share QR">
+                    <div class="qr-code-display">
                         <img src="${safeQR}" alt="Account QR Code">
                     </div>
                     <div class="action-row">
                         <button class="btn-sm copy" onclick="copyAccountLink('${acc.id}')"><i class="fas fa-copy"></i> Copy Link</button>
-                        ${isOwner ? `<button class="btn-sm" style="background:#ef4444;" onclick="logoutUser()">Logout</button>` : ``}
+                        ${isOwner ? `<button class="btn-sm logout-item-btn" style="background:#ef4444;" onclick="logoutUser()">Logout</button>` : ``}
                     </div>
                 </div>`;
             });
             container.innerHTML = html;
             updateLoginIndicator();
         });
-    }
-
-    window.onload = function() {
-        loadSavedAccounts();
     }
 </script>
 
