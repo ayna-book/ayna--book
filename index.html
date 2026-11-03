@@ -160,7 +160,7 @@
 
         <!-- 2. STATUS & OTHER FEATURES BELOW -->
         <div class="status-card">
-            ✨ Firebase Cloud Firestore & Android Core Active ✅
+            ✨ Firebase Cloud Firestore Connected & Active ✅
         </div>
 
         <!-- Alert ON/OFF Box -->
@@ -219,24 +219,27 @@
 
 <script>
     /* ========================================================
-       FIREBASE CONFIGURATION (রিয়েল ক্লাউড ডাটাবেজ সেটআপ)
+       YOUR FIREBASE CONFIGURATION (রিয়েল ক্লাউড ডাটাবেজ)
        ======================================================== */
     const firebaseConfig = {
-        apiKey: "YOUR_FIREBASE_API_KEY",
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT_ID.appspot.com",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+      authDomain: "ayna-book.firebaseapp.com",
+      databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "ayna-book",
+      storageBucket: "ayna-book.firebasestorage.app",
+      messagingSenderId: "805601138500",
+      appId: "1:805601138500:web:47acdc90cb0cb521626911",
+      measurementId: "G-RKHHSKNB4B"
     };
 
-    // Initialize Firebase (Fallback to LocalStorage if Firebase is not yet configured)
+    // Initialize Firebase (Firestore Database Active)
     let db = null;
     try {
         firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
+        console.log("Firebase initialized successfully!");
     } catch(e) {
-        console.log("Firebase config pending, using LocalStorage hybrid mode.");
+        console.log("Firebase initialization error, fallback to local storage mode: ", e);
     }
 
     let currentEditId = null;
@@ -370,10 +373,10 @@
         };
 
         if(db) {
-            // Save to Firebase Firestore (Global Cloud)
+            // Save to Firebase Firestore Cloud Database
             db.collection("ayna_global_accounts").doc(accountId).set(accData)
             .then(() => {
-                alert('Cloud Account successfully saved globally! 🌐✅');
+                alert('Cloud Account successfully saved globally on Firebase! 🌐✅');
                 postSaveCleanup(email);
             })
             .catch((error) => {
@@ -419,7 +422,7 @@
                 });
                 callback(accounts);
             }).catch((error) => {
-                console.log("Error getting cloud documents: ", error);
+                console.log("Error getting cloud documents, fallback to local: ", error);
                 let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
                 callback(localAcc);
             });
