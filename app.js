@@ -8,18 +8,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const actionButtons = document.querySelectorAll('[data-go]');
   const showPasswordBtns = document.querySelectorAll('.show-password');
 
+  // Register & OTP Elements
+  const registerForm = document.getElementById('registerForm');
+  const otpSection = document.getElementById('otpSection');
+
   // Page Switch Function
   function navigateToPage(pageId) {
-    // 1. Hide all pages
     pages.forEach(page => page.classList.remove('active'));
 
-    // 2. Show selected page
     const targetPage = document.getElementById(`page-${pageId}`);
     if (targetPage) {
       targetPage.classList.add('active');
     }
 
-    // 3. Update top nav active state
     navLinks.forEach(link => {
       if (link.dataset.page === pageId) {
         link.classList.add('active');
@@ -28,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // 4. Update bottom nav active state
     bottomItems.forEach(item => {
       if (item.dataset.page === pageId) {
         item.classList.add('active');
@@ -37,40 +37,35 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Close mobile main menu if open
     if (mainNav.classList.contains('open')) {
       mainNav.classList.remove('open');
     }
 
-    // Scroll to top of the page
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Top Nav Button Clicks
+  // Top Nav Clicks
   navLinks.forEach(button => {
     button.addEventListener('click', () => {
-      const pageId = button.dataset.page;
-      navigateToPage(pageId);
+      navigateToPage(button.dataset.page);
     });
   });
 
-  // Bottom Nav Button Clicks
+  // Bottom Nav Clicks
   bottomItems.forEach(button => {
     button.addEventListener('click', () => {
-      const pageId = button.dataset.page;
-      navigateToPage(pageId);
+      navigateToPage(button.dataset.page);
     });
   });
 
-  // Feature Cards and Hero Buttons (data-go) Clicks
+  // Action Buttons Clicks (data-go)
   actionButtons.forEach(button => {
     button.addEventListener('click', () => {
-      const targetPageId = button.dataset.go;
-      navigateToPage(targetPageId);
+      navigateToPage(button.dataset.go);
     });
   });
 
-  // Toggle Header Mobile Menu
+  // Toggle Mobile Menu
   if (menuButton && mainNav) {
     menuButton.addEventListener('click', () => {
       mainNav.classList.toggle('open');
@@ -93,4 +88,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Register Form Submit -> Show OTP Section
+  if (registerForm && otpSection) {
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault(); // ফর্মের ডিফল্ট রিলোড হওয়া আটকাবে
+      
+      // রেজিস্ট্রেশন ফর্ম লুকিয়ে ওটিপি বক্সটি দৃশ্যমান করা
+      registerForm.style.display = 'none';
+      otpSection.hidden = false;
+      
+      const otpStatus = document.getElementById('otpStatus');
+      if(otpStatus) {
+        otpStatus.textContent = "ওটিপি সফলভাবে পাঠানো হয়েছে। দয়া করে ৬ সংখ্যার কোডটি লিখুন।";
+      }
+    });
+  }
 });
