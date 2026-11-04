@@ -4,7 +4,6 @@ package com.aynabook.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,12 +19,10 @@ import androidx.compose.ui.unit.sp
 private val Navy = Color(0xFF071B49)
 private val Gold = Color(0xFFFFD700)
 private val White = Color.White
-private val Pink = Color(0xFFFF4FA3)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             AynaBookApp()
         }
@@ -49,7 +46,6 @@ fun AynaBookApp() {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Text(
                     text = "AYNA BOOK",
                     color = Gold,
@@ -67,14 +63,14 @@ fun AynaBookApp() {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
                     listOf("Home", "Post", "Profile", "Messages")
                         .forEach { tab ->
                             Button(
                                 onClick = { selectedTab = tab },
                                 modifier = Modifier.weight(1f),
-                                contentPadding = PaddingValues(4.dp),
+                                contentPadding = PaddingValues(3.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor =
                                         if (selectedTab == tab) Gold
@@ -84,10 +80,7 @@ fun AynaBookApp() {
                                         else White
                                 )
                             ) {
-                                Text(
-                                    text = tab,
-                                    fontSize = 11.sp
-                                )
+                                Text(tab, fontSize = 10.sp)
                             }
                         }
                 }
@@ -97,16 +90,11 @@ fun AynaBookApp() {
                 when (selectedTab) {
                     "Home" -> HomeScreen()
                     "Post" -> PostScreen()
-
                     "Profile" -> SimpleScreen(
                         title = "আমার প্রোফাইল",
                         description = "আপনার ব্যক্তিগত প্রোফাইল এখানে তৈরি হবে।"
                     )
-
-                    "Messages" -> SimpleScreen(
-                        title = "AYNA Messaging",
-                        description = "নিরাপদ মেসেজিং ব্যবস্থা পরবর্তী ধাপে যুক্ত হবে।"
-                    )
+                    "Messages" -> MessagingScreen()
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -142,7 +130,7 @@ fun HomeScreen() {
 
             Text(
                 text = "আপনার পৃথিবী, আপনার গল্প, আপনার আয়না বুক।",
-                color = Pink,
+                color = Color(0xFFFF4FA3),
                 fontSize = 17.sp
             )
 
