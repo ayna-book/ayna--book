@@ -2,16 +2,27 @@ ayna--book/
 │
 ├── index.html
 ├── styles.css
-├── app.js
-├── manifest.json
+├── firebase-config.js
+├── firestore.rules
 │
-├── offline.js
-├── low-data.js
-├── audio-engine.js
-├── messaging.js
-├── ai-translation.js
-├── media-engine.js
-├── global-alert.html
-├── security.js
+├── js/
+│   ├── app.js
+│   ├── auth.js
+│   ├── otp.js
+│   ├── profile.js
+│   ├── dashboard.js
+│   ├── messaging.js
+│   ├── audio.js
+│   ├── video.js
+│   ├── radio-tv.js
+│   ├── gps.js
+│   ├── compass.js
+│   ├── alerts.js
+│   └── settings.js
 │
-└── README.md
+├── assets/
+│   ├── icon-192.png
+│   ├── icon-512.png
+│   └── ayna-gold-logo.png
+│
+└── manifest.json
