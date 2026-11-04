@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
 
 private val Navy = Color(0xFF071B49)
 private val Gold = Color(0xFFFFD700)
@@ -23,6 +24,7 @@ private val White = Color.White
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             AynaBookApp()
         }
@@ -31,7 +33,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AynaBookApp() {
-    var selectedTab by remember { mutableStateOf("Home") }
+    var loggedIn by remember {
+        mutableStateOf(
+            FirebaseAuth.getInstance().currentUser != null
+        )
+    }
+
+    var selectedTab by remember {
+        mutableStateOf("Home")
+    }
 
     MaterialTheme {
         Scaffold(
@@ -46,27 +56,38 @@ fun AynaBookApp() {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "AYNA BOOK",
-                    color = Gold,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold
-                )
 
-                Text(
-                    text = "My World. My Story. My AYNA BOOK.",
-                    color = White,
-                    fontSize = 14.sp
-                )
+                if (!loggedIn) {
+                    AuthScreen(
+                        onLoginSuccess = {
+                            loggedIn = true
+                        }
+                    )
+                } else {
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = "AYNA BOOK",
+                        color = Gold,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold
+                    )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    listOf("Home", "Post", "Profile", "Messages")
-                        .forEach { tab ->
+                    Text(
+                        text = "My World. My Story. My AYNA BOOK.",
+                        color = White,
+                        fontSize = 14.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        listOf(
+                            "Home", "Post", "Profile", "Messages"
+                        ).forEach { tab ->
+
                             Button(
                                 onClick = { selectedTab = tab },
                                 modifier = Modifier.weight(1f),
@@ -83,27 +104,45 @@ fun AynaBookApp() {
                                 Text(tab, fontSize = 10.sp)
                             }
                         }
-                }
+                    }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                when (selectedTab) {
-                    "Home" -> HomeScreen()
-                    "Post" -> PostScreen()
-                    "Profile" -> SimpleScreen(
-                        title = "আমার প্রোফাইল",
-                        description = "আপনার ব্যক্তিগত প্রোফাইল এখানে তৈরি হবে।"
+                    when (selectedTab) {
+                        "Home" -> HomeScreen()
+                        "Post" -> PostScreen()
+
+                        "Profile" -> SimpleScreen(
+                            title = "আমার প্রোফাইল",
+                            description = "আপনার ব্যক্তিগত প্রোফাইল এখানে তৈরি হবে।"
+                        )
+
+                        "Messages" -> MessagingScreen()
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    OutlinedButton(
+                        onClick = {
+                            FirebaseAuth.getInstance().signOut()
+                            loggedIn = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Logout",
+                            color = White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Text(
+                        text = "Connect. Create. Share. Protect.",
+                        color = Gold,
+                        fontSize = 14.sp
                     )
-                    "Messages" -> MessagingScreen()
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Connect. Create. Share. Protect.",
-                    color = Gold,
-                    fontSize = 14.sp
-                )
             }
         }
     }
