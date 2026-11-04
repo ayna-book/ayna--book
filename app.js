@@ -3,14 +3,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// আপনার ফায়ারবেস প্রজেক্ট কনফিগারেশন (স্ক্রিনশটের তথ্য সহ)
+// ফায়ারবেস সঠিক কনফিগারেশন
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY", // ফায়ারবেস ওয়েব অ্যাপ (</>) থেকে আপনার আসল apiKey বসিয়ে নিন
+  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
   authDomain: "ayna-book.firebaseapp.com",
-  projectId: "ayna-book", //[span_1](start_span)[span_1](end_span)
-  storageBucket: "ayna-book.appspot.com",
-  messagingSenderId: "805601138500", //[span_2](start_span)[span_2](end_span)
-  appId: "YOUR_APP_ID" // ফায়ারবেস ওয়েব অ্যাপ (</>) থেকে আপনার আসল appId বসিয়ে নিন
+  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ayna-book",
+  storageBucket: "ayna-book.firebasestorage.app",
+  messagingSenderId: "805601138500",
+  appId: "1:805601138500:web:47acdc90cb0cb521626911",
+  measurementId: "G-RKHHSKNB4B"
 };
 
 // ফায়ারবেস ও ফায়ারস্টোর ইনিশিয়ালাইজেশন
@@ -18,7 +20,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("AYNA BOOK 5000-Year Core & Firebase Initialized.");
+  console.log("AYNA BOOK 5000-Year Core & Firebase Initialized Successfully.");
 
   // ১. সিঙ্গেল পেজ রাউটিং (পেজ সুইচিং ও বাটন সচল করা)
   const navButtons = document.querySelectorAll('[data-page], [data-go]');
