@@ -1,8 +1,7 @@
 
 package com.aynabook.app
 
-import android.content.Intent
-import.net.Uri
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -15,11 +14,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+private val PostNavy = Color(0xFF071B49)
+private val PostGold = Color(0xFFFFD700)
+private val PostPink = Color(0xFFFF4FA3)
+
 @Composable
 fun PostScreen() {
     var postText by remember { mutableStateOf("") }
     var selectedMedia by remember { mutableStateOf<Uri?>(null) }
-    var mediaType by remember { mutableStateOf("") }
+    var mediaLabel by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
 
     val mediaPicker = rememberLauncherForActivityResult(
@@ -27,39 +30,57 @@ fun PostScreen() {
     ) { uri ->
         if (uri != null) {
             selectedMedia = uri
-            message = "মিডিয়া নির্বাচন হয়েছে"
+            mediaLabel = "মিডিয়া নির্বাচন করা হয়েছে"
+            message = "আপনার মিডিয়া প্রস্তুত।"
         }
     }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(18.dp))
-            .padding(16.dp)
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(18.dp)
     ) {
         Text(
-            text = "AYNA BOOK - নতুন পোস্ট",
-            color = Color(0xFF071B49),
-            fontSize = 22.sp
+            text = "AYNA BOOK",
+            color = PostNavy,
+            fontSize = 25.sp
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "নতুন পোস্ট তৈরি করুন",
+            color = PostPink,
+            fontSize = 20.sp
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
 
         OutlinedTextField(
             value = postText,
-            onValueChange = { postText = it },
+            onValueChange = {
+                postText = it
+                message = ""
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp),
-            label = { Text("আপনার গল্প লিখুন...") },
-            placeholder = { Text("আজ আপনার পৃথিবীতে কী ঘটেছে?") }
+                .height(160.dp),
+            label = {
+                Text("আপনার গল্প লিখুন")
+            },
+            placeholder = {
+                Text("আজ আপনার পৃথিবীতে কী ঘটেছে?")
+            }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
             onClick = {
-                mediaType = "image/*"
                 mediaPicker.launch(arrayOf("image/*"))
             },
             modifier = Modifier.fillMaxWidth()
@@ -67,9 +88,10 @@ fun PostScreen() {
             Text("📷 ছবি নির্বাচন করুন")
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         Button(
             onClick = {
-                mediaType = "video/*"
                 mediaPicker.launch(arrayOf("video/*"))
             },
             modifier = Modifier.fillMaxWidth()
@@ -78,34 +100,53 @@ fun PostScreen() {
         }
 
         if (selectedMedia != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+
             Text(
-                text = "নির্বাচিত মিডিয়া: $mediaType",
-                color = Color(0xFF071B49)
+                text = mediaLabel,
+                color = PostNavy,
+                fontSize = 15.sp
+            )
+
+            Text(
+                text = selectedMedia.toString(),
+                color = PostPink,
+                fontSize = 11.sp
             )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
-                message = if (postText.isNotBlank() || selectedMedia != null) {
-                    "পোস্ট প্রস্তুত। এখনো সার্ভারে প্রকাশ করা হয়নি।"
-                } else {
-                    "লেখা অথবা ছবি/ভিডিও নির্বাচন করুন।"
+                message = when {
+                    postText.isBlank() && selectedMedia == null ->
+                        "লেখা অথবা ছবি/ভিডিও নির্বাচন করুন।"
+
+                    else ->
+                        "পোস্ট প্রস্তুত হয়েছে। অনলাইনে প্রকাশের জন্য Firebase সংযোগ প্রয়োজন।"
                 }
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFFD700),
-                contentColor = Color(0xFF071B49)
+                containerColor = PostGold,
+                contentColor = PostNavy
             )
         ) {
-            Text("পোস্ট প্রস্তুত করুন")
+            Text(
+                text = "পোস্ট প্রস্তুত করুন",
+                fontSize = 17.sp
+            )
         }
 
         if (message.isNotBlank()) {
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(message, color = Color(0xFF071B49))
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = message,
+                color = PostNavy,
+                fontSize = 14.sp
+            )
         }
     }
 }
