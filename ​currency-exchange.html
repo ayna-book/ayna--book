@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <meta name="description" content="AYNA BOOK — Global Currency Exchange & Quantum Financial Trading Hub with 2000+ Advanced Technologies.">
+  <title>AYNA BOOK — Global Currency Exchange & Financial Hub (2000+ Tech)</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #071b49;
+      --accent-color: #00ffcc;
+      --dark-bg: #020c24;
+      --text-color: #ffffff;
+      --neon-gold: #ffcc00;
+      --success-green: #00ff66;
+    }
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .fin-container {
+      max-width: 950px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .top-nav a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ফিন্যান্স হিরো ব্যানার */
+    .fin-hero {
+      background: linear-gradient(135deg, #071b49 0%, #020c24 100%);
+      border: 3px solid var(--accent-color);
+      border-radius: 24px;
+      padding: 35px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0, 255, 204, 0.4);
+      margin-bottom: 25px;
+    }
+    .fin-hero h1 {
+      color: var(--accent-color);
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    /* কারেন্সি কনভার্টার প্যানেল */
+    .converter-panel {
+      background: linear-gradient(145deg, var(--primary-color), var(--dark-bg));
+      border: 2px solid var(--accent-color);
+      border-radius: 18px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 30px rgba(0, 255, 204, 0.25);
+    }
+    .converter-panel h3 {
+      color: var(--accent-color);
+      margin-top: 0;
+      border-bottom: 1px solid rgba(0,255,204,0.3);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent-color);
+      font-size: 14px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(2, 12, 36, 0.9);
+      border: 1px solid var(--accent-color);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    input:focus, select:focus {
+      outline: none;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+    }
+    .btn-exchange {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent-color);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+      transition: all 0.3s ease;
+    }
+    .btn-exchange:hover {
+      background: #00cca3;
+      box-shadow: 0 0 30px rgba(0, 255, 204, 0.8);
+    }
+    .result-box {
+      background: #000;
+      border: 1px solid var(--success-green);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+      color: var(--success-green);
+      font-weight: bold;
+      display: none;
+    }
+
+    /* বিশ্ব মুদ্রা রেট গ্রিড */
+    .rates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .rate-card {
+      background: rgba(7, 27, 73, 0.85);
+      border: 1px solid var(--accent-color);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+    }
+    .rate-card h4 {
+      margin: 0 0 5px 0;
+      color: var(--neon-gold);
+    }
+    .status-alert {
+      margin-top: 15px;
+      padding: 12px;
+      background: rgba(0, 255, 204, 0.1);
+      border: 1px solid var(--accent-color);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--accent-color);
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+<div class="fin-container">
+
+  <div class="top-nav">
+    <h2><i class="fa-solid fa-money-bill-transfer" style="color: var(--accent-color);"></i> Global Currency & Finance Hub</h2>
+    <a href="./index.html"><i class="fa-solid fa-arrow-left"></i> হোমে চলুন</a>
+  </div>
+
+  <!-- ১. ফিন্যান্স হিরো ব্যানার -->
+  <div class="fin-hero">
+    <h1><i class="fa-solid fa-earth-americas"></i> AYNA BOOK Global Currency Exchange</h1>
+    <p style="color: #fff; font-size: 14px; max-width: 650px; margin: 10px auto 0 auto;">পৃথিবীর সকল দেশের মুদ্রা এবং ক্রিপ্টোকারেন্সির রিয়েল-টাইম লেনদেন, এক্সচেঞ্জ রেট ও কোয়ান্টাম সিকিউর ফিন্যান্সিয়াল হাব।</p>
+    <div id="marketLiveText" style="margin-top: 15px; color: var(--success-green); font-weight: bold; font-size: 13px;">
+      🟢 গ্লোবাল ফিন্যান্স মার্কেট: লাইভ ও অপ্টিমাইজড (0% Fee)
+    </div>
+  </div>
+
+  <div id="finAlert" class="status-alert"></div>
+
+  <!-- ২. কারেন্সি কনভার্টার প্যানেল -->
+  <div class="converter-panel">
+    <h3><i class="fa-solid fa-calculator"></i> কোয়ান্টাম মুদ্রা কনভার্টার (Currency Converter)</h3>
+    
+    <div class="form-group">
+      <label>টাকার পরিমাণ (Amount):</label>
+      <input type="number" id="amountInput" value="100" placeholder="পরিমাণ লিখুন">
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+      <div class="form-group">
+        <label>যে মুদ্রা থেকে (From):</label>
+        <select id="fromCurrency">
+          <option value="USD" selected>USD (US Dollar)</option>
+          <option value="EUR">EUR (Euro)</option>
+          <option value="GBP">GBP (British Pound)</option>
+          <option value="BDT">BDT (Bangladeshi Taka)</option>
+          <option value="INR">INR (Indian Rupee)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>যে মুদ্রায় রূপান্তর (To):</label>
+        <select id="toCurrency">
+          <option value="BDT" selected>BDT (Bangladeshi Taka)</option>
+          <option value="USD">USD (US Dollar)</option>
+          <option value="EUR">EUR (Euro)</option>
+          <option value="GBP">GBP (British Pound)</option>
+          <option value="INR">INR (Indian Rupee)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-exchange" onclick="convertCurrency()">
+      <i class="fa-solid fa-right-left"></i> মুদ্রা এক্সচেঞ্জ হিসাব করুন
+    </button>
+
+    <div class="result-box" id="conversionResult">
+      <!-- রেজাল্ট এখানে দেখাবে -->
+    </div>
+  </div>
+
+  <!-- ৩. প্রধান বিশ্ব মুদ্রার হার -->
+  <div class="converter-panel">
+    <h3><i class="fa-solid fa-chart-line"></i> বিশ্ব প্রধান মুদ্রার লাইভ এক্সচেঞ্জ রেট (USD বেইজড)</h3>
+    <div class="rates-grid">
+      <div class="rate-card">
+        <h4>1 USD = 118.50 BDT</h4>
+        <p style="font-size: 12px; color: #aaa; margin: 0;">বাংলাদেশি টাকা</p>
+      </div>
+      <div class="rate-card">
+        <h4>1 USD = 0.92 EUR</h4>
+        <p style="font-size: 12px; color: #aaa; margin: 0;">ইউরোপিয়ান ইউরো</p>
+      </div>
+      <div class="rate-card">
+        <h4>1 USD = 83.20 INR</h4>
+        <p style="font-size: 12px; color: #aaa; margin: 0;">ভারতীয় রুপি</p>
+      </div>
+      <div class="rate-card">
+        <h4>1 USD = 0.79 GBP</h4>
+        <p style="font-size: 12px; color: #aaa; margin: 0;">ব্রিটিশ পাউন্ড</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // কারেন্সি কনভার্শন রেট টেবিল (USD বেইজড আনুমানিক বা রিয়েল রেট)
+  const exchangeRates = {
+    USD: 1,
+    EUR: 0.92,
+    GBP: 0.79,
+    BDT: 118.50,
+    INR: 83.20
+  };
+
+  function convertCurrency() {
+    const amount = parseFloat(document.getElementById('amountInput').value);
+    const from = document.getElementById('fromCurrency').value;
+    const to = document.getElementById('toCurrency').value;
+    const resultBox = document.getElementById('conversionResult');
+    const alertBox = document.getElementById('finAlert');
+
+    if (isNaN(amount) || amount <= 0) {
+      alert("দয়া করে সঠিক পরিমাণ লিখুন!");
+      return;
+    }
+
+    // ইউএসডিতে কনভার্ট করে তারপর কাঙ্ক্ষিত মুদ্রায় রূপান্তর
+    const amountInUSD = amount / exchangeRates[from];
+    const finalAmount = amountInUSD * exchangeRates[to];
+
+    resultBox.style.display = 'block';
+    resultBox.innerHTML = `💱 ${amount} ${from} = ${finalAmount.toFixed(2)} ${to}`;
+
+    alertBox.style.display = 'block';
+    alertBox.textContent = "🟢 কোয়ান্টাম কারেন্সি এক্সচেঞ্জ সফলভাবে হিসাব সম্পন্ন হয়েছে!";
+    
+    setTimeout(() => {
+      alertBox.style.display = 'none';
+    }, 3500);
+  }
+</script>
+</body>
+</html>
