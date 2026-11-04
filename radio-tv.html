@@ -1,85 +1,217 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK - Global Live TV & Radio Streaming</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background-color: #030712;
-            color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .square-box {
-            aspect-ratio: 1 / 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background-color: #0b132b;
-            border: 2px solid #1e293b;
-            border-radius: 1rem;
-            padding: 1.25rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <title>AYNA BOOK — 10,000-Year Quantum Radio & Giant Screen TV</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #071b49;
+      --accent-color: #00ffcc;
+      --dark-bg: #020c24;
+      --text-color: #ffffff;
+      --neon-gold: #ffcc00;
+    }
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .tv-container {
+      max-width: 950px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .top-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .top-nav-bar a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* সিনেমাটিক বড় টিভি স্ক্রিন */
+    .giant-tv-screen {
+      width: 100%;
+      height: 480px;
+      background: #000;
+      border: 3px solid var(--accent-color);
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(0, 255, 204, 0.35);
+      margin-bottom: 25px;
+    }
+    .giant-tv-screen iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* চ্যানেল কন্ট্রোল ও রেডিও কার্ড গ্রিড */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .channel-card {
+      background: linear-gradient(145deg, var(--primary-color), var(--dark-bg));
+      border: 2px solid var(--accent-color);
+      border-radius: 14px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.15);
+    }
+    .channel-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 255, 204, 0.6);
+      background: var(--accent-color);
+      color: #000;
+    }
+    .channel-card h4 {
+      margin: 10px 0 5px 0;
+    }
+    
+    .section-title {
+      color: var(--accent-color);
+      border-bottom: 1px solid rgba(0,255,204,0.3);
+      padding-bottom: 8px;
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .radio-player-box {
+      background: rgba(7, 27, 73, 0.9);
+      border: 2px solid var(--neon-gold);
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .play-radio-btn {
+      padding: 12px 25px;
+      background: var(--neon-gold);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+    }
+  </style>
 </head>
-<body class="min-h-screen p-6">
 
-    <div class="max-w-4xl mx-auto text-center mb-8">
-        <h1 class="text-3xl font-extrabold text-sky-400">📺 AYNA BOOK — লাইভ টেলিভিশন ও মিডিয়া নেটওয়ার্ক</h1>
-        <p class="text-slate-400 text-sm mt-1">বিশ্বের সমস্ত নিউজ, বিনোদন ও শিক্ষা চ্যানেল সরাসরি সম্প্রচার</p>
+<body>
+<div class="tv-container">
+
+  <div class="top-nav-bar">
+    <h2><i class="fa-solid fa-tv" style="color: var(--accent-color);"></i> AYNA Giant Screen TV & NASA Radio</h2>
+    <a href="./index.html"><i class="fa-solid fa-arrow-left"></i> হোমে চলুন</a>
+  </div>
+
+  <!-- ১. বড় পর্দার লাইভ টিভি ভিডিও স্ক্রিন -->
+  <div class="giant-tv-screen">
+    <iframe id="mainTvPlayer" src="https://www.youtube.com/embed/live_stream?channel=UCupvZG-5ko_eiXAupbDfxWw" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+
+  <!-- ২. টিভি চ্যানেল সিলেক্টর -->
+  <h3 class="section-title"><i class="fa-solid fa-list"></i> লাইভ টিভি চ্যানেল সিলেক্ট করুন</h3>
+  <div class="media-grid">
+    <div class="channel-card" onclick="playChannel('https://www.youtube.com/embed/live_stream?channel=UCupvZG-5ko_eiXAupbDfxWw', 'NASA Live Satellite Feed')">
+      <i class="fa-solid fa-user-astronaut fa-2x"></i>
+      <h4>NASA TV Stream</h4>
+      <p style="font-size: 11px;">🛰️ আন্তর্জাতিক মহাকাশ স্টেশন</p>
     </div>
 
-    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        <!-- টেলিভিশন প্লেয়ার বক্স (1:1 Aspect Ratio) -->
-        <div class="square-box">
-            <h3 class="text-lg font-bold text-sky-400 border-b border-slate-700 pb-2">🔴 লাইভ টিভি স্ট্রিম প্লেয়ার</h3>
-            <div class="flex-grow flex flex-col justify-center items-center bg-slate-950 rounded border border-slate-800 p-2 my-2">
-                <select id="tv-channel-select" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white mb-3">
-                    <option value="btv">বাংলাদেশ টেলিভিশন (BTV National)</option>
-                    <option value="ekattor">একাত্তর টিভি (Ekattor TV News)</option>
-                    <option value="cnn">CNN International News (USA)</option>
-                    <option value="nasa">NASA Live Space TV</option>
-                </select>
-                <div id="tv-screen" class="w-full h-32 bg-slate-900 rounded flex items-center justify-center text-xs text-emerald-400 font-mono">
-                    সরাসরি সম্প্রচার লোড হচ্ছে...
-                </div>
-            </div>
-            <button id="btn-play-tv" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 rounded text-sm transition">▶️ টিভি চালু করুন</button>
-        </div>
-
-        <!-- রেডিও ও অডিও স্ট্রিম বক্স (1:1 Aspect Ratio) -->
-        <div class="square-box">
-            <h3 class="text-lg font-bold text-sky-400 border-b border-slate-700 pb-2">📻 লাইভ রেডিও স্ট্রিম</h3>
-            <div class="flex-grow flex flex-col justify-center items-center bg-slate-950 rounded border border-slate-800 p-2 my-2">
-                <select id="radio-channel-select" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white mb-3">
-                    <option value="betar">বাংলাদেশ বেতার (Bangladesh Betar)</option>
-                    <option value="foorti">রেডিও ফুর্তি (Radio Foorti 89.6 FM)</option>
-                    <option value="bbc">BBC World Service Radio</option>
-                </select>
-                <div id="radio-screen" class="w-full h-32 bg-slate-900 rounded flex items-center justify-center text-xs text-purple-300 font-mono">
-                    ফ্রিকোয়েন্সি: 89.6 MHz FM (Ready)
-                </div>
-            </div>
-            <button id="btn-play-radio" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded text-sm transition">▶️ রেডিও শুনুন</button>
-        </div>
-
+    <div class="channel-card" onclick="playChannel('https://www.youtube.com/embed/live_stream?channel=UC16niRr50-MSBwiO3YDb3RA', 'BBC News Live')">
+      <i class="fa-solid fa-newspaper fa-2x"></i>
+      <h4>BBC News World</h4>
+      <p style="font-size: 11px;">🌍 আন্তর্জাতিক খবর</p>
     </div>
 
-    <script>
-        document.getElementById('btn-play-tv')?.addEventListener('click', () => {
-            const channel = document.getElementById('tv-channel-select').value;
-            document.getElementById('tv-screen').innerText = `স্ট্রিমিং চলছে: ${channel.toUpperCase()}`;
-            alert("সরাসরি টেলিভিশন সম্প্রচার শুরু হয়েছে!");
-        });
+    <div class="channel-card" onclick="playChannel('https://www.youtube.com/embed/live_stream?channel=UCLZa1p_7s1vRtlN4w6mY6hA', 'Al Jazeera Live')">
+      <i class="fa-solid fa-globe fa-2x"></i>
+      <h4>Al Jazeera Live</h4>
+      <p style="font-size: 11px;">📡 গ্লোবাল লাইভ চ্যানেল</p>
+    </div>
 
-        document.getElementById('btn-play-radio')?.addEventListener('click', () => {
-            const channel = document.getElementById('radio-channel-select').value;
-            document.getElementById('radio-screen').innerText = `রেডিও প্লে হচ্ছে: ${channel.toUpperCase()}`;
-            alert("রেডিও লাইভ অডিও স্ট্রিম চালু হয়েছে!");
-        });
-    </script>
+    <div class="channel-card" onclick="playChannel('https://www.youtube.com/embed/live_stream?channel=UCq-Fj5jknLsUf-MWSy4_brA', 'Nature & Tech Live')">
+      <i class="fa-solid fa-earth-americas fa-2x"></i>
+      <h4>Nature 4K Stream</h4>
+      <p style="font-size: 11px;">🌿 কোয়ান্টাম নেচার ফিড</p>
+    </div>
+  </div>
+
+  <!-- ৩. অডিও রেডিও প্লেয়ার হাব -->
+  <h3 class="section-title"><i class="fa-solid fa-radio"></i> লাইভ কোয়ান্টাম অডিও রেডিও প্লেয়ার</h3>
+  <div class="radio-player-box">
+    <div>
+      <h4 style="margin: 0; color: var(--neon-gold);"><i class="fa-solid fa-tower-cell"></i> AYNA Global Space Radio FM</h4>
+      <p style="font-size: 12px; color: #fff; margin: 4px 0 0 0;">হাই-কোয়ালিটি রেডিও ও মহাকাশ অডিও ফ্রিকোয়েন্সি (0MB Optimized)</p>
+    </div>
+    <button class="play-radio-btn" id="radioToggleBtn" onclick="toggleRadio()">
+      <i class="fa-solid fa-play"></i> প্লে রেডিও
+    </button>
+  </div>
+
+</div>
+
+<!-- কাস্টম রেডিও অডিও ফাইল -->
+<audio id="radioAudioStream" src="https://stream.zeno.fm/f3wvbbqmdg8uv"></audio>
+
+<script>
+  // চ্যানেল পরিবর্তন ফাংশন
+  function playChannel(url, title) {
+    const player = document.getElementById('mainTvPlayer');
+    player.src = url;
+    alert(`📺 ${title} চ্যানেলটি বড় পর্দায় লোড হচ্ছে!`);
+  }
+
+  // রেডিও টগল ফাংশন
+  let isRadioPlaying = false;
+  function toggleRadio() {
+    const radio = document.getElementById('radioAudioStream');
+    const btn = document.getElementById('radioToggleBtn');
+
+    if (!isRadioPlaying) {
+      radio.play().then(() => {
+        isRadioPlaying = true;
+        btn.innerHTML = '<i class="fa-solid fa-pause"></i> পজ রেডিও';
+        btn.style.background = '#00ffcc';
+      }).catch(err => {
+        alert("রেডিও স্ট্রিমিং এই মুহূর্তে লোড করা সম্ভব হয়নি।");
+      });
+    } else {
+      radio.pause();
+      isRadioPlaying = false;
+      btn.innerHTML = '<i class="fa-solid fa-play"></i> প্লে রেডিও';
+      btn.style.background = 'var(--neon-gold)';
+    }
+  }
+</script>
 </body>
 </html>
