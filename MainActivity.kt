@@ -6,7 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.sp
 
 private val Navy = Color(0xFF071B49)
 private val Gold = Color(0xFFFFD700)
+private val White = Color.White
 private val Pink = Color(0xFFFF4FA3)
 
 class MainActivity : ComponentActivity() {
@@ -43,9 +45,11 @@ fun AynaBookApp() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(18.dp),
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 Text(
                     text = "AYNA BOOK",
                     color = Gold,
@@ -55,84 +59,131 @@ fun AynaBookApp() {
 
                 Text(
                     text = "My World. My Story. My AYNA BOOK.",
-                    color = Color.White,
+                    color = White,
                     fontSize = 14.sp
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                Card(
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(18.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    )
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(20.dp)
-                    ) {
-                        Text(
-                            text = "স্বাগতম AYNA BOOK-এ",
-                            color = Navy,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                    listOf("Home", "Post", "Profile", "Messages")
+                        .forEach { tab ->
+                            Button(
+                                onClick = { selectedTab = tab },
+                                modifier = Modifier.weight(1f),
+                                contentPadding = PaddingValues(4.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor =
+                                        if (selectedTab == tab) Gold
+                                        else Color(0xFF18366D),
+                                    contentColor =
+                                        if (selectedTab == tab) Navy
+                                        else White
+                                )
+                            ) {
+                                Text(
+                                    text = tab,
+                                    fontSize = 11.sp
+                                )
+                            }
+                        }
+                }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                        Text(
-                            text = "Connect. Create. Share. Protect.",
-                            color = Pink,
-                            fontSize = 16.sp
-                        )
+                when (selectedTab) {
+                    "Home" -> HomeScreen()
+                    "Post" -> PostScreen()
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                    "Profile" -> SimpleScreen(
+                        title = "আমার প্রোফাইল",
+                        description = "আপনার ব্যক্তিগত প্রোফাইল এখানে তৈরি হবে।"
+                    )
 
-                        Text(
-                            text = "আপনার পৃথিবী, আপনার গল্প, আপনার আয়না বুক।",
-                            color = Navy,
-                            fontSize = 16.sp
-                        )
-                    }
+                    "Messages" -> SimpleScreen(
+                        title = "AYNA Messaging",
+                        description = "নিরাপদ মেসেজিং ব্যবস্থা পরবর্তী ধাপে যুক্ত হবে।"
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
-
-                val tabs = listOf(
-                    "Home", "Profile", "Messages",
-                    "Discover", "Settings"
-                )
-
-                tabs.forEach { tab ->
-                    Button(
-                        onClick = { selectedTab = tab },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor =
-                                if (selectedTab == tab) Gold
-                                else Color(0xFF18366D),
-                            contentColor =
-                                if (selectedTab == tab) Navy
-                                else Color.White
-                        )
-                    ) {
-                        Text(
-                            text = tab,
-                            fontSize = 17.sp
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Selected: $selectedTab",
-                    color = Color.White,
-                    fontSize = 16.sp
+                    text = "Connect. Create. Share. Protect.",
+                    color = Gold,
+                    fontSize = 14.sp
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun HomeScreen() {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = White,
+        shape = MaterialTheme.shapes.large
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
+            Text(
+                text = "স্বাগতম AYNA BOOK-এ",
+                color = Navy,
+                fontSize = 23.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "আপনার পৃথিবী, আপনার গল্প, আপনার আয়না বুক।",
+                color = Pink,
+                fontSize = 17.sp
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            Text(
+                text = "আপনার গল্প শেয়ার করতে Post নির্বাচন করুন।",
+                color = Navy,
+                fontSize = 15.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun SimpleScreen(
+    title: String,
+    description: String
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = White,
+        shape = MaterialTheme.shapes.large
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
+            Text(
+                text = title,
+                color = Navy,
+                fontSize = 23.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = description,
+                color = Navy,
+                fontSize = 16.sp
+            )
         }
     }
 }
