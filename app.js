@@ -22,11 +22,14 @@ const db = getFirestore(app);
 document.addEventListener('DOMContentLoaded', () => {
   console.log("AYNA BOOK 5000-Year Core & Firebase Initialized Successfully.");
 
-  // ১. সিঙ্গেল পেজ রাউটিং (পেজ সুইচিং ও বাটন সচল করা)
+  // ১. ইউনিভার্সাল পেজ সুইচিং (data-page এবং data-go উভয়ই সাপোর্ট করবে)
   const navButtons = document.querySelectorAll('[data-page], [data-go]');
   const pages = document.querySelectorAll('.page');
 
   function switchPage(targetPageId) {
+    if (!targetPageId) return;
+
+    // সব পেজ হাইড করে শুধুমাত্র টার্গেট পেজ শো করা
     pages.forEach(page => {
       if (page.id === 'page-' + targetPageId) {
         page.classList.add('active');
@@ -35,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // নেভিগেশন বাটনের এক্টিভ স্টেট আপডেট করা
     navButtons.forEach(btn => {
       const pageAttr = btn.getAttribute('data-page') || btn.getAttribute('data-go');
       if (pageAttr === targetPageId) {
@@ -44,9 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // স্ক্রিন উপরে স্ক্রোল করা
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // প্রতিটি ক্লিকযোগ্য ইলিমেন্টে ইভেন্ট যোগ করা
   navButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       e.preventDefault();
@@ -84,8 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (docSnap.exists()) {
         const userData = docSnap.data();
-        document.getElementById("profileName").textContent = userData.name || "Quantum User";
-        document.getElementById("profileEmail").textContent = userData.email || "secure@aynabook.com";
+        const profileName = document.getElementById("profileName");
+        const profileEmail = document.getElementById("profileEmail");
+        if (profileName) profileName.textContent = userData.name || "Quantum User";
+        if (profileEmail) profileEmail.textContent = userData.email || "secure@aynabook.com";
         console.log("Firestore User Data Loaded Successfully.");
       }
     } catch (error) {
@@ -93,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ৪. এআই ভয়েস ও চ্যাট ট্রান্সলেশন সিস্টেম
+  // ৪. এআই চ্যাট সাবমিট সিস্টেম
   const chatForm = document.getElementById('chatForm');
   const chatInputMsg = document.getElementById('chatInputMsg');
   const chatMessagesContainer = document.getElementById('chatMessagesContainer');
@@ -124,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ৫. সামরিক স্যাটেলাইট জিপিএস ও রাডার স্ক্যান
+  // ৫. স্যাটেলাইট জিপিএস ও সামরিক রাডার সোয়াইপ
   const startGpsBtn = document.getElementById('startGpsBtn');
   const startCompassBtn = document.getElementById('startCompassBtn');
   const gpsStatus = document.getElementById('gpsStatus');
@@ -142,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ৬. হেলথ ও ফিভার মনিটর অ্যালার্ট
+  // ৬. হেলথ ও ফিভার অ্যালার্ট
   const enableAlertsBtn = document.getElementById('enableAlertsBtn');
   const alertsContainer = document.getElementById('alertsContainer');
 
