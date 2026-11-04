@@ -1,155 +1,280 @@
-// AYNA BOOK — 10,000-Year Quantum & 1500+ Tech Engine
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <meta name="description" content="AYNA BOOK — 10,000-Year Quantum Super App with 2000+ Advanced Technologies, Live TV, Radar, Messaging & Video Hub.">
+  <title>AYNA BOOK — 10,000-Year Quantum & Military Global Super App (2000+ Tech)</title>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-  authDomain: "ayna-book.firebaseapp.com",
-  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ayna-book",
-  storageBucket: "ayna-book.firebasestorage.app",
-  messagingSenderId: "805601138500",
-  appId: "1:805601138500:web:47acdc90cb0cb521626911",
-  measurementId: "G-RKHHSKNB4B"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// ইউনিভার্সাল পেজ সুইচিং ও বাটন সচল রাখার লজিক
-function initAynaSystem() {
-  const allNavElements = document.querySelectorAll('[data-page], [data-go]');
-  const pages = document.querySelectorAll('.page');
-
-  function gotoPage(targetId) {
-    if (!targetId) return;
-
-    pages.forEach(page => {
-      if (page.id === 'page-' + targetId) {
-        page.classList.add('active');
-        page.style.display = 'block';
-      } else {
-        page.classList.remove('active');
-        page.style.display = 'none';
-      }
-    });
-
-    allNavElements.forEach(el => {
-      const pageName = el.getAttribute('data-page') || el.getAttribute('data-go');
-      if (pageName === targetId) {
-        el.classList.add('active');
-      } else {
-        el.classList.remove('active');
-      }
-    });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  document.body.addEventListener('click', (e) => {
-    const clickable = e.target.closest('[data-page], [data-go]');
-    if (clickable) {
-      e.preventDefault();
-      const targetPage = clickable.getAttribute('data-page') || clickable.getAttribute('data-go');
-      gotoPage(targetPage);
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #071b49;
+      --accent-color: #00ffcc;
+      --dark-bg: #020c24;
+      --text-color: #ffffff;
     }
-  });
-}
+    body { background-color: var(--dark-bg); color: var(--text-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+    .quantum-badge { background: linear-gradient(135deg, var(--accent-color), var(--primary-color)); color: #fff; padding: 5px 12px; border-radius: 25px; font-size: 11px; font-weight: bold; display: inline-block; box-shadow: 0 0 20px rgba(0,255,204,0.6); }
+    .radar-screen-fullscreen { background: radial-gradient(circle, #021529 0%, #000 100%); border: 3px solid var(--accent-color); border-radius: 16px; padding: 25px; position: relative; overflow: hidden; min-height: 420px; box-shadow: 0 0 35px rgba(0,255,204,0.35); }
+    .radar-sweep { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: conic-gradient(from 0deg at 50% 50%, rgba(0,255,204,0) 0deg, rgba(0,255,204,0.45) 360deg); animation: radarRotate 3s linear infinite; pointer-events: none; border-radius: 16px; }
+    @keyframes radarRotate { 100% { transform: rotate(360deg); } }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+    .feature-card {
+      aspect-ratio: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, var(--primary-color), var(--dark-bg));
+      border: 2px solid var(--accent-color);
+      border-radius: 18px;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+    }
+    .feature-card:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 40px rgba(0, 255, 204, 0.7);
+    }
+    .page { display: none; }
+    .page.active { display: block !important; }
+    .tech-ticker { background: var(--dark-bg); color: var(--accent-color); padding: 10px; font-size: 12px; border-bottom: 1px solid rgba(0,255,204,0.3); white-space: nowrap; overflow: hidden; box-sizing: border-box; }
+    .tech-ticker span { display: inline-block; animation: tickerScroll 45s linear infinite; }
+    @keyframes tickerScroll { 0% { transform: translate3d(100%, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+    
+    .large-screen-box { width: 100%; min-height: 350px; background: #000; border: 2px solid var(--accent-color); border-radius: 14px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-bottom: 15px; }
+    .marketplace-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px; }
+    .market-item { background: rgba(7,27,73,0.85); border: 1px solid var(--accent-color); padding: 15px; border-radius: 12px; text-align: center; color: #fff; box-shadow: 0 0 15px rgba(0,255,204,0.15); }
+  </style>
+</head>
 
-// DOM লোড হলে এক্সিকিউট হবে
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initAynaSystem);
-} else {
-  initAynaSystem();
-}
+<body>
+<div class="app-shell">
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log("AYNA BOOK 1500-Tech & 10,000-Year Engine Initialized.");
+  <!-- বিশ্বমানের উন্নত প্রযুক্তির টিকার -->
+  <div class="tech-ticker">
+    <span>🚀 [AYNA 2000-TECH SUPREME ACTIVE]: 1. 10,000-Year Neural Quantum Core | 2. Instant Live Video Stream Pro | 3. Ultra-Fast 100GB/s File Transfer | 4. NASA 360° Military Satellite Radar | 5. Giant Screen Ultra Live TV | 6. Ayna Book Cinematic Video Upload Hub | 7. Global AI Smart Marketplace & Trading Box | 8. Quantum Voice Cloning Engine | 9. Zero-Delay Global Mesh Messaging | +1991 Advanced Future Technologies Integrated!</span>
+  </div>
 
-  // ১. সুপার ফাস্ট চ্যাট ও ফাইল ট্রান্সফার
-  const chatForm = document.getElementById('chatForm');
-  const chatInputMsg = document.getElementById('chatInputMsg');
-  const chatMessagesContainer = document.getElementById('chatMessagesContainer');
-  const bulkFileInput = document.getElementById('bulkFileInput');
-  const fileNameDisplay = document.getElementById('fileNameDisplay');
+  <!-- টপবার ও লোগো -->
+  <header class="topbar">
+    <button class="icon-button menu-button" id="menuButton" aria-label="Open menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
 
-  if (bulkFileInput) {
-    bulkFileInput.addEventListener('change', () => {
-      if (bulkFileInput.files.length > 0) {
-        fileNameDisplay.textContent = `${bulkFileInput.files.length}টি ফাইল সিলেক্ট করা হয়েছে (Ready for 10GB/s transfer)`;
-      }
-    });
-  }
+    <a href="#home" class="brand" aria-label="AYNA BOOK Home" data-page="home">
+      <img src="./assets/ayna-gold-logo.png" alt="AYNA BOOK Gold Logo" id="aynaLogo" style="filter: drop-shadow(0 0 12px var(--accent-color));">
+      <span>AYNA <strong>BOOK</strong> <span class="quantum-badge">Q-10000+2000</span></span>
+    </a>
 
-  if (chatForm) {
-    chatForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const msg = chatInputMsg.value.trim();
-      if (!msg && (!bulkFileInput || bulkFileInput.files.length === 0)) return;
+    <div class="header-right">
+      <span id="loginStatusIndicator" class="online-status" style="color: var(--accent-color);">🟢 Super Online (100GB/s)</span>
+      <button class="icon-button" id="profileButton" aria-label="Profile" data-page="profile">
+        <i class="fa-solid fa-circle-user"></i>
+      </button>
+    </div>
+  </header>
 
-      const userElem = document.createElement('div');
-      userElem.style.cssText = "background: #071b49; border: 1px solid #00ffcc44; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px;";
-      
-      let fileText = "";
-      if (bulkFileInput && bulkFileInput.files.length > 0) {
-        fileText = ` <br><span style="color:#00ffcc;">📎 [Attached Files: ${bulkFileInput.files.length} files sent at light-speed]</span>`;
-      }
+  <!-- প্রধান নেভিগেশন বার -->
+  <nav class="main-nav" id="mainNav">
+    <button class="nav-link active" data-page="home"><i class="fa-solid fa-house"></i> Home</button>
+    <button class="nav-link" data-page="register"><i class="fa-solid fa-user-plus"></i> Open ID</button>
+    <button class="nav-link" data-page="login"><i class="fa-solid fa-lock"></i> Login</button>
+    <button class="nav-link" data-page="chat"><i class="fa-solid fa-comments"></i> Chat & Files</button>
+    <button class="nav-link" data-page="videochat"><i class="fa-solid fa-video"></i> Live Video</button>
+    <button class="nav-link" data-page="livetv"><i class="fa-solid fa-tv"></i> Live TV</button>
+    <button class="nav-link" data-page="radarbox"><i class="fa-solid fa-satellite-dish"></i> Radar & Compass</button>
+    <button class="nav-link" data-page="uploadhub"><i class="fa-solid fa-cloud-arrow-up"></i> Video Hub</button>
+    <button class="nav-link" data-page="market"><i class="fa-solid fa-store"></i> বেচাকেনা Box</button>
+  </nav>
 
-      userElem.innerHTML = `<strong>Sathiya:</strong> ${msg} ${fileText}`;
-      chatMessagesContainer.appendChild(userElem);
-      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+  <main class="page-container">
 
-      chatInputMsg.value = "";
-      if (bulkFileInput) bulkFileInput.value = "";
-      if (fileNameDisplay) fileNameDisplay.textContent = "কোনো ফাইল নেই";
-    });
-  }
+    <!-- ১. হোম পেজ -->
+    <section class="page active" id="page-home">
+      <div class="hero panel">
+        <p class="eyebrow">10,000-YEAR QUANTUM SUPREME NETWORK (2000+ TECH)</p>
+        <h1>MY WORLD.<br>MY STORY.<br><span>MY AYNA BOOK.</span></h1>
+        <p>১০ হাজার বছরের ভবিষ্যৎ প্রযুক্তি, সুপার ফাস্ট মেসেজিং, লাইভ ভিডিও স্ট্রিমিং ও গ্লোবাল সিকিউরিটি মডিউল এক ছাদের নিচে সুরক্ষিত।</p>
+        <div class="hero-actions">
+          <button class="btn primary" data-page="register"><i class="fa-solid fa-user-plus"></i> দ্রুত একাউন্ট খুলুন</button>
+          <button class="btn secondary" data-page="videochat"><i class="fa-solid fa-video"></i> লাইভ ভিডিও কল করুন</button>
+        </div>
+      </div>
 
-  // ২. ইনস্ট্যান্ট লাইভ ভিডিও কল (Camera Stream)
-  const startLiveCamBtn = document.getElementById('startLiveCamBtn');
-  const liveVideoFeed = document.getElementById('liveVideoFeed');
+      <div class="panel">
+        <h2><i class="fa-solid fa-globe"></i> AYNA BOOK Super Dashboard (2000+ Tech Grid)</h2>
+        <p class="muted">আপনার প্রয়োজনীয় মডিউল বা সেবা এক ক্লিকে সিলেক্ট করুন:</p>
 
-  if (startLiveCamBtn && liveVideoFeed) {
-    startLiveCamBtn.addEventListener('click', async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        liveVideoFeed.srcObject = stream;
-        startLiveCamBtn.textContent = "🟢 লাইভ ভিডিও সম্প্রচার চলছে";
-        startLiveCamBtn.style.background = "#00ffcc";
-        startLiveCamBtn.style.color = "#000";
-      } catch (err) {
-        alert("ক্যামেরা পারমিশন পাওয়া যায়নি অথবা ব্রাউজার ব্লক করেছে।");
-        console.error(err);
-      }
-    });
-  }
+        <div class="feature-grid">
+          <div class="feature-card" data-page="profile"><i class="fa-solid fa-user fa-2x"></i><span>My Profile</span></div>
+          <div class="feature-card" data-page="chat"><i class="fa-solid fa-comments fa-2x"></i><span>Fast Chat & Files</span></div>
+          <div class="feature-card" data-page="videochat"><i class="fa-solid fa-video fa-2x"></i><span>Live Video Call</span></div>
+          <div class="feature-card" data-page="livetv"><i class="fa-solid fa-tv fa-2x"></i><span>Giant Screen TV</span></div>
+          <div class="feature-card" data-page="radarbox"><i class="fa-solid fa-compass fa-2x"></i><span>Radar & Compass</span></div>
+          <div class="feature-card" data-page="uploadhub"><i class="fa-solid fa-play fa-2x"></i><span>Ayna Video Hub</span></div>
+          <div class="feature-card" data-page="market"><i class="fa-solid fa-store fa-2x"></i><span>বেচাকেনা Box</span></div>
+          <div class="feature-card" data-page="settings"><i class="fa-solid fa-gear fa-2x"></i><span>2000+ Tech Settings</span></div>
+        </div>
+      </div>
+    </section>
 
-  // ৩. আয়না বুক ভিডিও আপলোড ও ফিড বক্স
-  const uploadVideoBtn = document.getElementById('uploadVideoBtn');
-  const videoUploadInput = document.getElementById('videoUploadInput');
-  const videoFeedContainer = document.getElementById('videoFeedContainer');
+    <!-- ২. অ্যাকাউন্ট রেজিস্ট্রেশন -->
+    <section class="page" id="page-register">
+      <div class="panel">
+        <h2><i class="fa-solid fa-user-plus"></i> দ্রুত একাউন্ট ওপেনিং (Quantum Tier)</h2>
+        <form id="registerForm">
+          <label>পূর্ণ নাম</label>
+          <input type="text" placeholder="আপনার নাম লিখুন" required>
+          <label>মোবাইল নম্বর / জিমেইল</label>
+          <input type="text" placeholder="Phone or Email" required>
+          <label>পাসওয়ার্ড</label>
+          <input type="password" placeholder="২০০০+ টেক এনক্রিপ্টেড পাসওয়ার্ড" required>
+          <button class="btn primary full-width" type="submit">একাউন্ট তৈরি করুন</button>
+        </form>
+      </div>
+    </section>
 
-  if (uploadVideoBtn && videoUploadInput) {
-    uploadVideoBtn.addEventListener('click', () => {
-      if (videoUploadInput.files.length === 0) {
-        alert("দয়া করে প্রথমে একটি ভিডিও ফাইল সিলেক্ট করুন!");
-        return;
-      }
+    <!-- ৩. লগইন পেজ -->
+    <section class="page" id="page-login">
+      <div class="panel">
+        <h2><i class="fa-solid fa-lock"></i> Quantum Secure Login</h2>
+        <form id="loginForm">
+          <label>ইমেইল বা ফোন</label>
+          <input type="text" placeholder="Registered email" required>
+          <label>পাসওয়ার্ড</label>
+          <input type="password" placeholder="Password" required>
+          <button type="submit" class="btn primary full-width">লগইন করুন</button>
+        </form>
+      </div>
+    </section>
 
-      const file = videoUploadInput.files[0];
-      const videoURL = URL.createObjectURL(file);
+    <!-- ৪. চ্যাট ও ফাইল ট্রান্সফার -->
+    <section class="page" id="page-chat">
+      <div class="panel">
+        <h2><i class="fa-solid fa-comments"></i> সুপার ফাস্ট মেসেজিং ও ১০০GB ফাইল আদান-প্রদান</h2>
+        <div id="chatMessagesContainer" style="height: 270px; background: var(--dark-bg); border: 1px solid rgba(0,255,204,0.3); padding: 12px; border-radius: 12px; overflow-y: auto; margin-bottom: 12px;">
+          <p style="color: var(--accent-color);">[AYNA Secure Chat]: কোয়ান্টাম মেসেজিং ও ফাইল হাব প্রস্তুত।</p>
+        </div>
 
-      const videoCard = document.createElement('div');
-      videoCard.style.cssText = "margin-bottom: 15px; background: #071b49; padding: 10px; border-radius: 8px; border: 1px solid #00ffcc;";
-      videoCard.innerHTML = `
-        <p style="color: #00ffcc; font-weight: bold; margin-bottom: 5px;">🎥 ${file.name}</p>
-        <video controls style="width: 100%; max-height: 200px; border-radius: 6px;" src="${videoURL}"></video>
-      `;
+        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+          <input type="file" id="bulkFileInput" style="display: none;" multiple>
+          <button class="btn secondary" onclick="document.getElementById('bulkFileInput').click()"><i class="fa-solid fa-paperclip"></i> বড় ফাইল সিলেক্ট করুন</button>
+          <span id="fileNameDisplay" class="muted" style="align-self: center;">কোনো ফাইল নেই</span>
+        </div>
 
-      videoFeedContainer.prepend(videoCard);
-      alert("ভিডিও সফলভাবে আয়না বুক হাবে আপলোড ও প্রকাশিত হয়েছে!");
-      videoUploadInput.value = "";
-    });
-  }
-});
+        <form id="chatForm" style="display: flex; gap: 10px;">
+          <input type="text" id="chatInputMsg" placeholder="মেসেজ লিখুন..." style="flex: 1; padding: 12px; background: var(--primary-color); border: 1px solid var(--accent-color); color: #fff; border-radius: 8px;" autocomplete="off">
+          <button class="btn primary" type="submit"><i class="fa-solid fa-paper-plane"></i> পাঠান</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ৫. লাইভ ভিডিও কল -->
+    <section class="page" id="page-videochat">
+      <div class="panel">
+        <h2><i class="fa-solid fa-video"></i> এখনই লাইভ ভিডিও কল করুন</h2>
+        <div class="large-screen-box">
+          <video id="liveVideoFeed" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+          <div style="position: absolute; bottom: 12px; background: rgba(0,0,0,0.7); padding: 6px 18px; border-radius: 20px; color: var(--accent-color); font-size: 13px;">🔴 লাইভ ক্যামেরা কানেক্টেড</div>
+        </div>
+        <button class="btn primary full-width" id="startLiveCamBtn"><i class="fa-solid fa-camera"></i> ক্যামেরা অন করুন ও লাইভ শুরু করুন</button>
+      </div>
+    </section>
+
+    <!-- ৬. লাইভ টিভি -->
+    <section class="page" id="page-livetv">
+      <div class="panel">
+        <h2><i class="fa-solid fa-tv"></i> বড় পর্দার লাইভ টিভি ও স্যাটেলাইট ফিড</h2>
+        <div class="large-screen-box">
+          <iframe src="https://www.youtube.com/embed/live_stream?channel=UCupvZG-5ko_eiXAupbDfxWw" style="width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ৭. রাডার ও কম্পাস -->
+    <section class="page" id="page-radarbox">
+      <div class="panel radar-screen-fullscreen">
+        <div class="radar-sweep"></div>
+        <h2 style="color: var(--accent-color); position: relative; z-index: 2;"><i class="fa-solid fa-satellite-dish"></i> সামরিক রাডার ও কম্পাস (বড় স্ক্রিন ভিউ)</h2>
+        <div style="margin-top: 30px; position: relative; z-index: 2; text-align: center;">
+          <i class="fa-solid fa-compass fa-4x" style="color: var(--accent-color); animation: spin 10s linear infinite;"></i>
+          <p style="color: var(--accent-color); margin-top: 15px; font-weight: bold;">Latitude: 23.8103° N | Longitude: 90.4125° E (Quantum Secure 2000)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ৮. ভিডিও আপলোড ও দেখার আলাদা বক্স -->
+    <section class="page" id="page-uploadhub">
+      <div class="panel">
+        <h2><i class="fa-solid fa-cloud-arrow-up"></i> আয়না বুক ভিডিও আপলোড ও দেখার আলাদা বক্স</h2>
+        <input type="file" id="videoUploadInput" accept="video/*" style="margin-bottom: 15px; color: #fff;">
+        <button class="btn primary full-width" id="uploadVideoBtn"><i class="fa-solid fa-upload"></i> ভিডিও আপলোড করুন</button>
+        <div id="videoFeedContainer" style="margin-top: 15px; background: var(--dark-bg); border: 1px solid rgba(0,255,204,0.3); padding: 15px; border-radius: 12px; min-height: 140px;">
+          <p class="muted">কোনো ভিডিও আপলোড করা হয়নি। আপনার প্রথম ভিডিও যুক্ত করুন!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ৯. বেচাকেনা Box -->
+    <section class="page" id="page-market">
+      <div class="panel">
+        <h2><i class="fa-solid fa-store"></i> আয়না বুক বেচাকেনা Box (Marketplace)</h2>
+        <div class="marketplace-grid">
+          <div class="market-item">
+            <i class="fa-solid fa-mobile-screen fa-2x" style="color: var(--accent-color); margin-bottom: 8px;"></i>
+            <h4>Quantum Phone X1</h4>
+            <p style="font-size: 13px; color: var(--accent-color);">$999</p>
+          </div>
+          <div class="market-item">
+            <i class="fa-solid fa-laptop fa-2x" style="color: var(--accent-color); margin-bottom: 8px;"></i>
+            <h4>Ayna Book VR Kit</h4>
+            <p style="font-size: 13px; color: var(--accent-color);">$450</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ১০. সেটিংস ও প্রোফাইল -->
+    <section class="page" id="page-settings">
+      <div class="panel">
+        <h2><i class="fa-solid fa-gear"></i> 2000+ Tech Settings</h2>
+        <button class="btn secondary full-width" data-page="home">হোম পেজে ফিরে যান</button>
+      </div>
+    </section>
+
+    <section class="page" id="page-profile">
+      <div class="panel">
+        <h2><i class="fa-solid fa-user-circle"></i> My Profile</h2>
+        <p id="profileName" style="font-size: 18px; font-weight: bold; margin-top: 10px;">Sathiya (Supreme Creator)</p>
+        <button class="btn secondary" data-page="home" style="margin-top: 15px;">হোমে চলুন</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- নিচের নেভিগেশন বার -->
+  <footer class="bottom-nav">
+    <button class="bottom-item active" data-page="home"><i class="fa-solid fa-house"></i><span>Home</span></button>
+    <button class="bottom-item" data-page="chat"><i class="fa-solid fa-comments"></i><span>Chat</span></button>
+    <button class="bottom-item" data-page="videochat"><i class="fa-solid fa-video"></i><span>Live</span></button>
+    <button class="bottom-item" data-page="livetv"><i class="fa-solid fa-tv"></i><span>TV</span></button>
+    <button class="bottom-item" data-page="market"><i class="fa-solid fa-store"></i><span>Market</span></button>
+  </footer>
+
+</div>
+
+<script type="module" src="./js/app.js?v=4.0"></script>
+</body>
+</html>
