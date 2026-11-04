@@ -3,14 +3,14 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// আপনার ফায়ারবেস কনফিগারেশন (আপনার প্রজেক্ট অনুযায়ী আপডেট করে নিন)
+// আপনার ফায়ারবেস প্রজেক্ট কনফিগারেশন (স্ক্রিনশটের তথ্য সহ)
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "YOUR_API_KEY", // ফায়ারবেস ওয়েব অ্যাপ (</>) থেকে আপনার আসল apiKey বসিয়ে নিন
   authDomain: "ayna-book.firebaseapp.com",
-  projectId: "ayna-book",
+  projectId: "ayna-book", //[span_1](start_span)[span_1](end_span)
   storageBucket: "ayna-book.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  messagingSenderId: "805601138500", //[span_2](start_span)[span_2](end_span)
+  appId: "YOUR_APP_ID" // ফায়ারবেস ওয়েব অ্যাপ (</>) থেকে আপনার আসল appId বসিয়ে নিন
 };
 
 // ফায়ারবেস ও ফায়ারস্টোর ইনিশিয়ালাইজেশন
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ২. পাসওয়ার্ড শো/হাইড় টগল
+  // ২. পাসওয়ার্ড শো/হাইড় টগল
   const showPassButtons = document.querySelectorAll('.show-password');
   showPassButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -84,15 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const userData = docSnap.data();
         document.getElementById("profileName").textContent = userData.name || "Quantum User";
         document.getElementById("profileEmail").textContent = userData.email || "secure@aynabook.com";
-        console.log("Firestore User Data Loaded Successfully[span_0](start_span)[span_0](end_span).");
+        console.log("Firestore User Data Loaded Successfully.");
       }
     } catch (error) {
       console.error("Error loading user data from Firebase: ", error);
     }
   }
-
-  // উদাহরণের জন্য একটি ইউজার আইডি দিয়ে ফায়ারবেস ডাটা কল করা যেতে পারে
-  // loadUserProfile("B91hFzywdnOsUquCKKsRha...");
 
   // ৪. এআই ভয়েস ও চ্যাট ট্রান্সলেশন সিস্টেম
   const chatForm = document.getElementById('chatForm');
