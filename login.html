@@ -4,181 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071b49">
-  <title>AYNA BOOK — লগইন</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      font-family: Arial, sans-serif;
-      color: white;
-      background: linear-gradient(135deg, #071b49, #512b81);
-    }
-
-    .card {
-      width: 100%;
-      max-width: 440px;
-      padding: 25px;
-      border: 1px solid #ffffff35;
-      border-radius: 20px;
-      background: #ffffff12;
-    }
-
-    h1, .subtitle { text-align: center; }
-
-    .subtitle {
-      color: #35d9ef;
-      line-height: 1.6;
-    }
-
-    label {
-      display: block;
-      margin: 17px 0 7px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      min-width: 0;
-      padding: 13px;
-      border: 1px solid #d5dbea;
-      border-radius: 10px;
-      font-size: 16px;
-    }
-
-    .password-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .password-row input { flex: 1; }
-
-    button, .link-button {
-      display: block;
-      width: 100%;
-      margin-top: 16px;
-      padding: 13px;
-      border: 0;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .primary {
-      color: white;
-      background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
-    }
-
-    .toggle {
-      width: auto;
-      min-width: 75px;
-      margin-top: 0;
-      color: #071b49;
-      background: #35d9ef;
-    }
-
-    .secondary {
-      color: white;
-      background: #34466d;
-    }
-
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
-    }
-
-    #status {
-      min-height: 25px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    .links {
-      margin-top: 20px;
-      text-align: center;
-      line-height: 2.2;
-    }
-
-    a { color: #35d9ef; }
-  </style>
+  <title>AYNA BOOK — Login</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
-
 <body>
-  <main class="card">
-    <h1>🌍 AYNA BOOK</h1>
-    <p class="subtitle">My World. My Story. My AYNA BOOK.</p>
+<div class="app-shell" style="padding: 20px; max-width: 500px; margin: 50px auto;">
+  <div class="panel">
+    <h2><i class="fa-solid fa-lock"></i> Quantum Secure Login</h2>
+    <form id="standaloneLoginForm">
+      <label>ইমেইল বা ফোন</label>
+      <input type="text" placeholder="Registered email or phone" required style="width: 100%; padding: 10px; margin: 8px 0; background: #071b49; border: 1px solid #00ffcc; color: #fff; border-radius: 8px;">
 
-    <h2>🔐 আপনার অ্যাকাউন্টে লগইন করুন</h2>
+      <label>পাসওয়ার্ড</label>
+      <input type="password" placeholder="Password" required style="width: 100%; padding: 10px; margin: 8px 0; background: #071b49; border: 1px solid #00ffcc; color: #fff; border-radius: 8px;">
 
-    <form id="loginForm">
-      <label for="email">Gmail বা ইমেইল</label>
-      <input
-        id="email"
-        type="email"
-        autocomplete="username"
-        placeholder="name@gmail.com"
-        required
-      >
-
-      <label for="password">পাসওয়ার্ড</label>
-
-      <div class="password-row">
-        <input
-          id="password"
-          type="password"
-          autocomplete="current-password"
-          placeholder="আপনার পাসওয়ার্ড"
-          required
-        >
-
-        <button
-          id="togglePassword"
-          class="toggle"
-          type="button"
-          aria-pressed="false"
-        >দেখুন</button>
-      </div>
-
-      <button id="loginButton" class="primary" type="submit">
-        🔓 লগইন করুন
-      </button>
+      <button type="submit" class="btn primary full-width" style="margin-top: 15px; width: 100%; padding: 12px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer;">লগইন করুন</button>
     </form>
-
-    <button id="resetButton" class="secondary" type="button">
-      পাসওয়ার্ড ভুলে গেছেন?
-    </button>
-
-    <p id="status" role="status" aria-live="polite"></p>
-
-    <div class="links">
-      নতুন ব্যবহারকারী?
-      <a href="./signup.html">নতুন অ্যাকাউন্ট তৈরি করুন</a>
-      <br>
-      <a href="./index.html">🏠 হোম পেজে ফিরে যান</a>
-    </div>
-  </main>
-
-  <script>
-    const passwordInput = document.getElementById("password");
-    const toggleButton = document.getElementById("togglePassword");
-
-    toggleButton.addEventListener("click", () => {
-      const showing = passwordInput.type === "password";
-
-      passwordInput.type = showing ? "text" : "password";
-      toggleButton.textContent = showing ? "লুকান" : "দেখুন";
-      toggleButton.setAttribute("aria-pressed", String(showing));
-    });
-  </script>
-
-  <script type="module" src="./js/login.js"></script>
+    
+    <p style="text-align: center; margin-top: 15px;">
+      <a href="./index.html" style="color: #00ffcc; text-decoration: none;">← হোম পেজে ফিরে যান</a>
+    </p>
+  </div>
+</div>
 </body>
 </html>
