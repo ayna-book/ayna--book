@@ -1,707 +1,421 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AYNA BOOK - Global Enterprise Cloud Hub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- Firebase SDKs for Global Cloud Sync -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <meta name="description" content="AYNA BOOK — My World. My Story. My AYNA BOOK.">
+  <title>AYNA BOOK — Global Social Platform</title>
 
-    <style>
-        :root {
-            --bg-dark: #0a1128;
-            --card-bg: #1c2541;
-            --card-inner: #0b132b;
-            --accent-blue: #3a86ff;
-            --accent-cyan: #00f5d4;
-            --text-primary: #ffffff;
-            --text-secondary: #8d99ae;
-            --border: #2b3a67;
-            --danger: #ef4444;
-            --success: #10b981;
-            --warning: #f59e0b;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; }
-        
-        .master-app { width: 100%; max-width: 500px; background-color: var(--bg-dark); border: 1px solid var(--border); display: flex; flex-direction: column; min-height: 100vh; position: relative; padding-bottom: 80px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
-
-        /* Top Bar with Static Logo & White/Blue Contrast */
-        .top-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 14px 20px; 
-            background-color: var(--card-bg); 
-            border-bottom: 2px solid var(--accent-blue);
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        
-        .logo-area { display: flex; align-items: center; gap: 12px; }
-        
-        /* Static Solid Logo without rotation */
-        .static-book-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            border: 2px solid var(--text-primary);
-            background: linear-gradient(135deg, var(--accent-blue), #002244);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 10px rgba(58, 134, 255, 0.5);
-        }
-        .static-book-logo i { font-size: 20px; color: #ffffff; }
-
-        .top-bar .title { 
-            font-size: 20px; 
-            font-weight: 900; 
-            color: #ffffff;
-            letter-spacing: 1.5px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
-        }
-
-        .content { padding: 15px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
-
-        /* Priority New Account Section */
-        .priority-reg-card { 
-            background: linear-gradient(135deg, #1c2541, #0b132b); 
-            border: 2px solid var(--accent-blue); 
-            border-radius: 16px; 
-            padding: 18px; 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-        }
-        .priority-reg-card h3 { color: #ffffff; font-size: 15px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-
-        /* Big Square Feature Grid */
-        .square-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .square-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; cursor: pointer; transition: 0.2s; min-height: 95px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .square-box:active { transform: scale(0.96); background: var(--border); }
-        .square-box i { font-size: 24px; color: var(--accent-blue); }
-        .square-box span { font-size: 11px; font-weight: bold; color: var(--text-primary); }
-
-        /* Status & Alert Controls */
-        .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; border-left: 4px solid var(--success); font-size: 12px; color: var(--text-primary); }
-        
-        .alert-control-box { background: linear-gradient(135deg, #0b132b, #1c2541); border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .alert-info h4 { font-size: 12px; color: var(--warning); }
-        .alert-info p { font-size: 10px; color: var(--text-secondary); }
-
-        /* Toggle Switch */
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--success); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        /* Feature Sections & Forms */
-        .feature-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: none; }
-        .feature-section h3 { color: var(--text-primary); font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-        
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 600; }
-        .form-control { width: 100%; padding: 11px; border-radius: 8px; border: 1px solid var(--border); background: var(--card-inner); color: white; font-size: 12px; }
-        .form-control:focus { border-color: var(--accent-blue); }
-        
-        .password-container { position: relative; }
-        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 11px; font-weight: bold; }
-
-        .submit-btn { width: 100%; background: var(--accent-blue); color: #ffffff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 13px; transition: 0.2s; box-shadow: 0 4px 15px rgba(58,134,255,0.3); }
-        .submit-btn:active { transform: scale(0.98); }
-
-        /* Merchant Payment Box Section */
-        .payment-box { background: linear-gradient(135deg, #0b132b, #1c2541); border: 2px solid var(--accent-blue); border-radius: 14px; padding: 14px; margin-top: 5px; }
-        .payment-box h4 { font-size: 13px; color: #ffffff; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-        .payment-methods { display: flex; flex-direction: column; gap: 8px; }
-        .payment-row { background: var(--card-inner); padding: 10px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
-        .payment-number { font-weight: bold; color: var(--accent-cyan); font-family: monospace; font-size: 12px; }
-
-        /* Video Container Section */
-        .video-box-wrapper { width: 100%; height: 210px; background: #000; border-radius: 10px; overflow: hidden; position: relative; border: 1px solid var(--border); margin-bottom: 10px; }
-        .video-box-wrapper iframe { width: 100%; height: 100%; border: none; }
-
-        /* Messaging & Chat Container */
-        .chat-container { background: var(--card-inner); border: 1px solid var(--border); border-radius: 10px; padding: 12px; height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-        .chat-msg { background: #2b3a67; padding: 8px 12px; border-radius: 8px; font-size: 11px; max-width: 85%; line-height: 1.4; color: #fff; }
-        .chat-msg.self { background: var(--accent-blue); align-self: flex-end; }
-
-        /* Saved Cards Area */
-        .saved-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
-        .saved-item { background: var(--card-inner); padding: 12px; border-radius: 10px; margin-top: 10px; border-left: 4px solid var(--accent-blue); font-size: 11px; line-height: 1.6; display: flex; flex-direction: column; gap: 10px; position: relative; }
-        .profile-header { display: flex; align-items: center; gap: 12px; }
-        .profile-big-square { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; border: 2px solid var(--accent-blue); }
-        .edit-icon-btn { position: absolute; right: 12px; top: 12px; background: #2b3a67; color: var(--accent-cyan); border: 1px solid var(--border); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        
-        .qr-code-display { background: #fff; padding: 8px; border-radius: 8px; text-align: center; margin-top: 5px; width: fit-content; align-self: center; }
-        .qr-code-display img { width: 90px; height: 90px; }
-
-        .action-row { display: flex; gap: 8px; margin-top: 5px; }
-        .btn-sm { flex: 1; padding: 8px; font-size: 10px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; background: #2b3a67; color: #fff; text-align: center; }
-        .btn-sm.copy { background: #0d9488; }
-
-        /* Bottom Nav Bar */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background-color: var(--card-bg); border-top: 2px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; box-shadow: 0 -4px 15px rgba(0,0,0,0.6); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .nav-item i { font-size: 18px; margin-bottom: 3px; }
-        .nav-item.active, .nav-item:hover { color: #ffffff; }
-    </style>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
+
 <body>
+<div class="app-shell">
 
-<div class="master-app">
-    <!-- Top Bar with Static Logo -->
-    <div class="top-bar">
-        <div class="logo-area">
-            <div class="static-book-logo">
-                <i class="fas fa-book-open"></i>
-            </div>
-            <div class="title">AYNA BOOK</div>
-        </div>
-        <div style="font-size: 11px; color: var(--accent-cyan); font-weight: bold;" id="loginStatusIndicator">Guest (Cloud Active)</div>
+  <!-- HEADER -->
+  <header class="topbar">
+    <button class="icon-button menu-button" id="menuButton"
+      aria-label="Open menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <a href="#home" class="brand" aria-label="AYNA BOOK Home">
+      <img src="./assets/ayna-gold-logo.png"
+        alt="AYNA BOOK Gold Logo" id="aynaLogo">
+      <span>AYNA <strong>BOOK</strong></span>
+    </a>
+
+    <div class="header-right">
+      <span id="loginStatusIndicator" class="online-status">
+        Guest
+      </span>
+      <button class="icon-button" id="profileButton"
+        aria-label="Profile">
+        <i class="fa-solid fa-circle-user"></i>
+      </button>
     </div>
+  </header>
 
-    <!-- Main Scrollable Content -->
-    <div class="content" id="appContent">
+  <!-- MAIN NAVIGATION -->
+  <nav class="main-nav" id="mainNav">
+    <button class="nav-link active" data-page="home">
+      <i class="fa-solid fa-house"></i> Home
+    </button>
+    <button class="nav-link" data-page="register">
+      <i class="fa-solid fa-user-plus"></i> Open ID
+    </button>
+    <button class="nav-link" data-page="login">
+      <i class="fa-solid fa-lock"></i> Login
+    </button>
+    <button class="nav-link" data-page="chat">
+      <i class="fa-solid fa-comments"></i> Chat
+    </button>
+    <button class="nav-link" data-page="media">
+      <i class="fa-solid fa-tv"></i> Radio / TV
+    </button>
+    <button class="nav-link" data-page="location">
+      <i class="fa-solid fa-location-dot"></i> GPS
+    </button>
+    <button class="nav-link" data-page="settings">
+      <i class="fa-solid fa-gear"></i> Settings
+    </button>
+  </nav>
 
-        <!-- 1. PRIORITY NEW ACCOUNT FORM -->
-        <div class="priority-reg-card" id="regCardSection">
-            <h3><i class="fas fa-user-plus"></i> Open New Account (Global Cloud Sync)</h3>
-            <div class="form-group"><label>Profile Photo (Big Square Box)</label><input type="file" id="regPhoto" class="form-control" accept="image/*"></div>
-            <div class="form-group"><label>Full Name (English)</label><input type="text" id="regName" class="form-control" placeholder="Your Full Name"></div>
-            <div class="form-group"><label>Phone Number (Bkash/Nagad/Intl Code)</label><input type="tel" id="regPhone" class="form-control" placeholder="+8801400751906"></div>
-            <div class="form-group"><label>Gmail / Email</label><input type="email" id="regEmail" class="form-control" placeholder="example@gmail.com"></div>
-            
-            <div class="form-group"><label>Password (Min 11 Digits/Chars)</label>
-                <div class="password-container">
-                    <input type="password" id="regPass" class="form-control" placeholder="11-digit secure password">
-                    <span class="toggle-password" id="togglePassBtn">Show</span>
-                </div>
-            </div>
+  <main class="page-container">
 
-            <div class="form-group"><label>Account Package / Tier</label>
-                <select id="regTier" class="form-control">
-                    <option value="Personal Account - Free">Personal Account - Free</option>
-                    <option value="Business Account - $10 / 1200 BDT">Business Account - $10 / 1200 BDT</option>
-                    <option value="VIP Account - $10 / 1200 BDT">VIP Account - $10 / 1200 BDT</option>
-                    <option value="VVIP Account - $25 / 3000 BDT">VVIP Account - $25 / 3000 BDT</option>
-                </select>
-            </div>
-            <button class="submit-btn" id="submitRegBtn">Verify OTP (2 Mins) & Open Cloud ID</button>
+    <!-- HOME -->
+    <section class="page active" id="page-home">
+      <div class="hero panel">
+        <p class="eyebrow">WELCOME TO THE GLOBAL COMMUNITY</p>
+        <h1>MY WORLD.<br>MY STORY.<br><span>MY AYNA BOOK.</span></h1>
+        <p>
+          Connect. Create. Share. Protect.
+          আপনার পৃথিবী, আপনার গল্প, আপনার আয়না বুক।
+        </p>
+        <div class="hero-actions">
+          <button class="btn primary" data-go="register">
+            <i class="fa-solid fa-user-plus"></i> Open New Account
+          </button>
+          <button class="btn secondary" data-go="login">
+            <i class="fa-solid fa-right-to-bracket"></i> Login
+          </button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2><i class="fa-solid fa-globe"></i> AYNA BOOK Dashboard</h2>
+        <p class="muted">আপনার প্রয়োজনীয় সেবা নির্বাচন করুন।</p>
+
+        <div class="feature-grid">
+          <button class="feature-card" data-go="profile">
+            <i class="fa-solid fa-user"></i>
+            <span>My Profile</span>
+          </button>
+
+          <button class="feature-card" data-go="chat">
+            <i class="fa-solid fa-comments"></i>
+            <span>Global Chat</span>
+          </button>
+
+          <button class="feature-card" data-go="media">
+            <i class="fa-solid fa-radio"></i>
+            <span>Radio & TV</span>
+          </button>
+
+          <button class="feature-card" data-go="location">
+            <i class="fa-solid fa-satellite-dish"></i>
+            <span>GPS & Compass</span>
+          </button>
+
+          <button class="feature-card" data-go="alerts">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Emergency Alerts</span>
+          </button>
+
+          <button class="feature-card" data-go="settings">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="panel status-panel">
+        <h3>Cloud Connection</h3>
+        <p id="cloudStatus">Checking Firebase connection...</p>
+        <p id="appStatus" class="muted">AYNA BOOK is starting...</p>
+      </div>
+    </section>
+
+    <!-- REGISTER -->
+    <section class="page" id="page-register">
+      <div class="panel">
+        <h2><i class="fa-solid fa-user-plus"></i> Open New Account</h2>
+        <p class="muted">Create your AYNA BOOK account.</p>
+
+        <form id="registerForm">
+          <label for="regPhoto">Profile Photo</label>
+          <input type="file" id="regPhoto"
+            accept="image/jpeg,image/png,image/webp">
+
+          <label for="regName">Full Name</label>
+          <input type="text" id="regName"
+            placeholder="Enter your full name"
+            autocomplete="name" required>
+
+          <label for="regPhone">Phone Number</label>
+          <input type="tel" id="regPhone"
+            placeholder="+8801XXXXXXXXX"
+            autocomplete="tel" required>
+
+          <label for="regEmail">Gmail / Email</label>
+          <input type="email" id="regEmail"
+            placeholder="example@gmail.com"
+            autocomplete="email" required>
+
+          <label for="regPass">Password</label>
+          <div class="password-field">
+            <input type="password" id="regPass"
+              minlength="11" autocomplete="new-password"
+              placeholder="At least 11 characters" required>
+            <button type="button" class="show-password"
+              data-target="regPass">Show</button>
+          </div>
+
+          <label for="regTier">Account Type</label>
+          <select id="regTier">
+            <option value="personal">Personal — Free</option>
+            <option value="business">Business</option>
+            <option value="vip">VIP</option>
+            <option value="vvip">VVIP</option>
+          </select>
+
+          <button class="btn primary full-width" type="submit"
+            id="submitRegBtn">
+            Continue to OTP Verification
+          </button>
+        </form>
+
+        <!-- OTP BOX -->
+        <div id="otpSection" class="otp-panel" hidden>
+          <h3><i class="fa-solid fa-shield-halved"></i>
+            OTP Verification</h3>
+          <p id="otpMessage" class="muted">
+            আপনার ফোনে পাঠানো ৬ সংখ্যার OTP লিখুন।
+          </p>
+
+          <label for="otpCode">6-Digit OTP</label>
+          <input type="text" id="otpCode"
+            inputmode="numeric" autocomplete="one-time-code"
+            maxlength="6" pattern="[0-9]{6}"
+            placeholder="Enter 6-digit OTP">
+
+          <div id="recaptcha-container"></div>
+
+          <button class="btn primary full-width"
+            id="verifyOtpBtn" type="button">
+            Verify OTP & Create Account
+          </button>
+
+          <button class="btn secondary full-width"
+            id="resendOtpBtn" type="button">
+            Resend OTP
+          </button>
+
+          <p id="otpStatus" class="status"></p>
         </div>
 
-        <!-- Official Payment Numbers Box -->
-        <div class="payment-box">
-            <h4><i class="fas fa-wallet"></i> Official Payment Accounts (Merchant / Personal)</h4>
-            <div class="payment-methods">
-                <div class="payment-row">
-                    <span><i class="fas fa-mobile-alt" style="color:#e2136e;"></i> bKash Personal / Send Money</span>
-                    <span class="payment-number">01400751906</span>
-                    <button class="btn-sm copy" onclick="copyPaymentNumber('01400751906')">Copy</button>
-                </div>
-                <div class="payment-row">
-                    <span><i class="fas fa-wallet" style="color:#f7921e;"></i> Nagad Personal / Cash In</span>
-                    <span class="payment-number">01400751906</span>
-                    <button class="btn-sm copy" onclick="copyPaymentNumber('01400751906')">Copy</button>
-                </div>
-                <div class="payment-row">
-                    <span><i class="fas fa-globe" style="color:#0072ce;"></i> Payoneer Global ID</span>
-                    <span class="payment-number">01400751906</span>
-                    <button class="btn-sm copy" onclick="copyPaymentNumber('01400751906')">Copy</button>
-                </div>
-            </div>
+        <p id="registerStatus" class="status" role="status"></p>
+      </div>
+    </section>
+
+    <!-- LOGIN -->
+    <section class="page" id="page-login">
+      <div class="panel">
+        <h2><i class="fa-solid fa-lock"></i> Secure Login</h2>
+
+        <form id="loginForm">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail"
+            placeholder="Your registered email"
+            autocomplete="username" required>
+
+          <label for="loginPass">Password</label>
+          <div class="password-field">
+            <input type="password" id="loginPass"
+              autocomplete="current-password"
+              placeholder="Your password" required>
+            <button type="button" class="show-password"
+              data-target="loginPass">Show</button>
+          </div>
+
+          <button type="submit" class="btn primary full-width"
+            id="loginSubmitBtn">Login</button>
+        </form>
+
+        <button class="text-button" id="forgotPassBtn">
+          Forgot Password?
+        </button>
+
+        <button class="btn danger full-width"
+          id="logoutBtn" hidden>Logout</button>
+
+        <p id="loginStatus" class="status" role="status"></p>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="page" id="page-profile">
+      <div class="panel">
+        <h2><i class="fa-solid fa-user-circle"></i> My Profile</h2>
+        <img id="profilePreview" class="profile-photo"
+          src="./assets/ayna-gold-logo.png" alt="Profile photo">
+        <p id="profileName">Guest User</p>
+        <p id="profileEmail" class="muted">Not logged in</p>
+        <button class="btn secondary" id="editProfileBtn">
+          Edit Profile
+        </button>
+        <p id="profileStatus" class="status"></p>
+      </div>
+    </section>
+
+    <!-- CHAT -->
+    <section class="page" id="page-chat">
+      <div class="panel">
+        <h2><i class="fa-solid fa-comments"></i> Global Chat</h2>
+        <div id="chatMessagesContainer" class="chat-messages"
+          aria-live="polite">
+          <p class="muted">Login করে মেসেজিং শুরু করুন।</p>
         </div>
 
-        <!-- Status Card -->
-        <div class="status-card">
-            ✨ Firebase Cloud Firestore Connected & Active ✅
+        <form id="chatForm" class="chat-form">
+          <input type="text" id="chatInputMsg"
+            placeholder="Write a message..."
+            maxlength="2000" autocomplete="off">
+          <button class="btn primary" type="submit"
+            id="sendChatBtn">
+            <i class="fa-solid fa-paper-plane"></i> Send
+          </button>
+        </form>
+        <p id="chatStatus" class="status"></p>
+      </div>
+    </section>
+
+    <!-- RADIO / TV -->
+    <section class="page" id="page-media">
+      <div class="panel">
+        <h2><i class="fa-solid fa-radio"></i> Radio & TV</h2>
+        <p class="muted">
+          অনুমোদিত লাইভ সম্প্রচার ও রেডিও স্ট্রিম এখানে যুক্ত হবে।
+        </p>
+
+        <label for="mediaUrl">Stream URL</label>
+        <input type="url" id="mediaUrl"
+          placeholder="Enter authorized stream URL">
+
+        <video id="videoPlayer" controls playsinline
+          class="media-player"></video>
+
+        <audio id="audioPlayer" controls
+          class="audio-player"></audio>
+
+        <button class="btn primary" id="playMediaBtn">
+          Play Stream
+        </button>
+        <button class="btn secondary" id="stopMediaBtn">
+          Stop
+        </button>
+
+        <p id="mediaStatus" class="status"></p>
+      </div>
+    </section>
+
+    <!-- GPS & COMPASS -->
+    <section class="page" id="page-location">
+      <div class="panel">
+        <h2><i class="fa-solid fa-location-crosshairs"></i>
+          GPS & Digital Compass</h2>
+
+        <button class="btn primary full-width" id="startGpsBtn">
+          Get My Location
+        </button>
+
+        <p id="gpsStatus" class="status">
+          Location permission not requested.
+        </p>
+
+        <div class="compass-display">
+          <i class="fa-solid fa-compass" id="compassIcon"></i>
+          <p id="compassHeading">Compass: Not started</p>
         </div>
 
-        <!-- Risk Alert System -->
-        <div class="alert-control-box">
-            <div class="alert-info">
-                <h4>🚨 150+ Risk & Alert Early Warning</h4>
-                <p id="alertStatusText">Early Warning System Active (ON) ✅</p>
-            </div>
-            <label class="switch">
-                <input type="checkbox" id="alertToggle" checked>
-                <span class="slider"></span>
-            </label>
-        </div>
+        <button class="btn secondary full-width"
+          id="startCompassBtn">
+          Start Compass
+        </button>
 
-        <!-- 4 Big Square Feature Boxes -->
-        <div class="square-grid">
-            <div class="square-box" id="navLoginBox">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Secure Login & OTP</span>
-            </div>
-            <div class="square-box" id="navRadioBox">
-                <i class="fas fa-tv"></i>
-                <span>Live Video & TV</span>
-            </div>
-            <div class="square-box" id="navChatBox">
-                <i class="fas fa-comments"></i>
-                <span>Global Chat Hub</span>
-            </div>
-            <div class="square-box" id="navRadarBox">
-                <i class="fas fa-satellite-dish"></i>
-                <span>Radar & GPS Track</span>
-            </div>
-        </div>
+        <p id="compassStatus" class="status"></p>
+      </div>
+    </section>
 
-        <!-- FEATURE PANELS (DYNAMICAL-TOGGLE) -->
-        
-        <!-- Login Panel -->
-        <div id="loginSection" class="feature-section">
-            <h3>🔐 Secure Login & Recovery</h3>
-            <div class="form-group"><label>Gmail or Phone Number</label><input type="text" id="loginEmail" class="form-control" placeholder="Enter Gmail or Phone"></div>
-            <div class="form-group"><label>Password</label><input type="password" id="loginPass" class="form-control" placeholder="Enter Password"></div>
-            <button class="submit-btn" id="loginSubmitBtn">Login Securely</button>
-            <button class="submit-btn" id="forgotPassBtn" style="background:#2b3a67; margin-top:6px;">Forgot Password? (OTP Recovery)</button>
-        </div>
+    <!-- ALERTS -->
+    <section class="page" id="page-alerts">
+      <div class="panel">
+        <h2><i class="fa-solid fa-triangle-exclamation"></i>
+          Emergency Alerts</h2>
 
-        <!-- Live Video & TV Section -->
-        <div id="radiotvSection" class="feature-section">
-            <h3>📡 Live Satellite Video Broadcasting Stream</h3>
-            <div class="video-box-wrapper">
-                <iframe src="https://www.youtube.com/embed/live_stream?channel=UC1234567890" allowfullscreen></iframe>
-            </div>
-            <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;">• High-Definition Live Global Broadcast Active.<br>• Emergency Weather Telemetry streaming 24/7.</p>
-        </div>
+        <p class="muted">
+          দুর্যোগ, বন্যা, ঘূর্ণিঝড়, ভূমিকম্প ও অন্যান্য
+          জরুরি সতর্কবার্তার তথ্য এখানে দেখানো হবে।
+        </p>
 
-        <!-- Global Chat Hub -->
-        <div id="chatSection" class="feature-section">
-            <h3>💬 Live Messaging Hub (Firebase Cloud)</h3>
-            <div class="chat-container" id="chatMessagesContainer">
-                <div class="chat-msg">Welcome to AYNA BOOK Official Global Chat! 👋</div>
-                <div class="chat-msg self">Cloud synchronization running live 🌐</div>
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <input type="text" id="chatInputMsg" class="form-control" placeholder="Write a message...">
-                <button class="submit-btn" id="sendChatBtn" style="width: 85px; margin-top:0;">Send</button>
-            </div>
-        </div>
+        <button class="btn primary" id="enableAlertsBtn">
+          Enable Notifications
+        </button>
 
-        <!-- Radar Section -->
-        <div id="radarSection" class="feature-section">
-            <h3>🛰️ Radar Telemetry & GPS Tracking</h3>
-            <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.6;">• Global GPS Telemetry active for maritime and risk zones.<br>• Real-time 10-minute early warning telemetry linked.</p>
+        <div id="alertsContainer" class="alerts-list">
+          <p>এখনো কোনো যাচাইকৃত সতর্কবার্তা লোড হয়নি।</p>
         </div>
+      </div>
+    </section>
 
-        <!-- Saved Registered Cloud Accounts -->
-        <div class="saved-box">
-            <div style="font-size: 12px; font-weight: bold; color: #ffffff; margin-bottom: 6px;">📥 Global Registered Accounts (Cloud Synced):</div>
-            <div id="savedListContainer">
-                <p style="color: #8d99ae; font-size: 11px;">Loading cloud accounts...</p>
-            </div>
-        </div>
-    </div>
+    <!-- SETTINGS -->
+    <section class="page" id="page-settings">
+      <div class="panel">
+        <h2><i class="fa-solid fa-gear"></i> Settings</h2>
 
-    <!-- Bottom Navigation Bar -->
-    <div class="bottom-nav">
-        <div class="nav-item active" id="bottomHome"><i class="fas fa-home"></i>Home</div>
-        <div class="nav-item" id="bottomOpenId"><i class="fas fa-user-plus"></i>Open ID</div>
-        <div class="nav-item" id="bottomLogin"><i class="fas fa-lock"></i>Login</div>
-        <div class="nav-item" id="bottomRadio"><i class="fas fa-tv"></i>Video/TV</div>
-        <div class="nav-item" id="bottomChat"><i class="fas fa-comments"></i>Chat</div>
-    </div>
+        <label for="languageSelect">Language</label>
+        <select id="languageSelect">
+          <option value="bn">বাংলা</option>
+          <option value="en">English</option>
+        </select>
+
+        <label for="fontSizeSelect">Text Size</label>
+        <select id="fontSizeSelect">
+          <option value="normal">Normal</option>
+          <option value="large">Large</option>
+          <option value="xlarge">Extra Large</option>
+        </select>
+
+        <button class="btn secondary full-width"
+          id="themeToggleBtn">Change Theme</button>
+
+        <button class="btn danger full-width"
+          id="settingsLogoutBtn">Logout</button>
+
+        <p id="settingsStatus" class="status"></p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION -->
+  <footer class="bottom-nav">
+    <button class="bottom-item active" data-page="home">
+      <i class="fa-solid fa-house"></i><span>Home</span>
+    </button>
+    <button class="bottom-item" data-page="register">
+      <i class="fa-solid fa-user-plus"></i><span>Open ID</span>
+    </button>
+    <button class="bottom-item" data-page="login">
+      <i class="fa-solid fa-lock"></i><span>Login</span>
+    </button>
+    <button class="bottom-item" data-page="media">
+      <i class="fa-solid fa-tv"></i><span>Video/TV</span>
+    </button>
+    <button class="bottom-item" data-page="chat">
+      <i class="fa-solid fa-comments"></i><span>Chat</span>
+    </button>
+  </footer>
+
 </div>
 
-<script>
-    /* ========================================================
-       FIREBASE CONFIGURATION & EVENT LISTENERS
-       ======================================================== */
-    const firebaseConfig = {
-      apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-      authDomain: "ayna-book.firebaseapp.com",
-      databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "ayna-book",
-      storageBucket: "ayna-book.firebasestorage.app",
-      messagingSenderId: "805601138500",
-      appId: "1:805601138500:web:47acdc90cb0cb521626911",
-      measurementId: "G-RKHHSKNB4B"
-    };
-
-    let db = null;
-    try {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
-        console.log("Firebase initialized successfully!");
-    } catch(e) {
-        console.log("Firebase fallback mode: ", e);
-    }
-
-    let currentEditId = null;
-
-    function hideAllSections() {
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('radiotvSection').style.display = 'none';
-        document.getElementById('chatSection').style.display = 'none';
-        document.getElementById('radarSection').style.display = 'none';
-    }
-
-    function copyPaymentNumber(num) {
-        navigator.clipboard.writeText(num);
-        alert(`Payment Account Number ${num} Copied to Clipboard! 📋`);
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        
-        // Registration Trigger
-        document.getElementById('submitRegBtn').addEventListener('click', function() {
-            initiateOTPVerification('new');
-        });
-
-        // Password Show/Hide Toggle
-        document.getElementById('togglePassBtn').addEventListener('click', function() {
-            const passInput = document.getElementById('regPass');
-            if(passInput.type === "password") {
-                passInput.type = "text";
-                this.textContent = "Hide";
-            } else {
-                passInput.type = "password";
-                this.textContent = "Show";
-            }
-        });
-
-        // Alert System Toggle
-        document.getElementById('alertToggle').addEventListener('change', function() {
-            const statusText = document.getElementById('alertStatusText');
-            if(this.checked) {
-                statusText.innerHTML = "Early Warning System Active (ON) ✅";
-            } else {
-                statusText.innerHTML = "Early Warning Inactive (OFF) ❌";
-            }
-        });
-
-        // Feature Box Click Listeners
-        document.getElementById('navLoginBox').addEventListener('click', () => {
-            hideAllSections();
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('loginSection').scrollIntoView({behavior: 'smooth'});
-        });
-
-        document.getElementById('navRadioBox').addEventListener('click', () => {
-            hideAllSections();
-            document.getElementById('radiotvSection').style.display = 'block';
-            document.getElementById('radiotvSection').scrollIntoView({behavior: 'smooth'});
-        });
-
-        document.getElementById('navChatBox').addEventListener('click', () => {
-            hideAllSections();
-            document.getElementById('chatSection').style.display = 'block';
-            document.getElementById('chatSection').scrollIntoView({behavior: 'smooth'});
-        });
-
-        document.getElementById('navRadarBox').addEventListener('click', () => {
-            hideAllSections();
-            document.getElementById('radarSection').style.display = 'block';
-            document.getElementById('radarSection').scrollIntoView({behavior: 'smooth'});
-        });
-
-        // Bottom Navigation Bar Clicks
-        document.getElementById('bottomHome').addEventListener('click', () => {
-            hideAllSections();
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        });
-        document.getElementById('bottomOpenId').addEventListener('click', () => {
-            hideAllSections();
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        });
-        document.getElementById('bottomLogin').addEventListener('click', () => {
-            hideAllSections();
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('loginSection').scrollIntoView({behavior: 'smooth'});
-        });
-        document.getElementById('bottomRadio').addEventListener('click', () => {
-            hideAllSections();
-            document.getElementById('radiotvSection').style.display = 'block';
-            document.getElementById('radiotvSection').scrollIntoView({behavior: 'smooth'});
-        });
-        document.getElementById('bottomChat').addEventListener('click', () => {
-            hideAllSections();
-            document.getElementById('chatSection').style.display = 'block';
-            document.getElementById('chatSection').scrollIntoView({behavior: 'smooth'});
-        });
-
-        // Chat Send Action
-        document.getElementById('sendChatBtn').addEventListener('click', function() {
-            const input = document.getElementById('chatInputMsg');
-            const container = document.getElementById('chatMessagesContainer');
-            if(input.value.trim() !== "") {
-                const msgDiv = document.createElement('div');
-                msgDiv.className = 'chat-msg self';
-                msgDiv.textContent = input.value;
-                container.appendChild(msgDiv);
-                input.value = '';
-                container.scrollTop = container.scrollHeight;
-            }
-        });
-
-        document.getElementById('loginSubmitBtn').addEventListener('click', loginUser);
-        document.getElementById('forgotPassBtn').addEventListener('click', forgotPassword);
-
-        loadSavedAccounts();
-    });
-
-    function initiateOTPVerification(type) {
-        const name = document.getElementById('regName').value.trim();
-        const phone = document.getElementById('regPhone').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const pass = document.getElementById('regPass').value;
-
-        if(!name || !phone || !email || !pass) { alert('Please fill in all fields!'); return; }
-        if(pass.length < 11) { alert('Password must be at least 11 digits/characters!'); return; }
-
-        let otpCode = Math.floor(1000 + Math.random() * 9000);
-        let userOtp = prompt(`💬 [AYNA BOOK CLOUD SMS BOX - 2 MINS TIMER]\nMessage sent to phone (${phone}): "Your OTP is ${otpCode}. Valid for 2 minutes."\nEnter the 4-digit OTP code below:`);
-
-        if(userOtp == otpCode) {
-            alert('✅ OTP Verified Successfully within 2 minutes timeframe!');
-            processPhotoAndStore(type);
-        } else {
-            alert('❌ Invalid or Expired OTP! Account creation aborted.');
-        }
-    }
-
-    function processPhotoAndStore(type) {
-        const photoInput = document.getElementById('regPhoto');
-        let photoUrl = "https://via.placeholder.com/100";
-        if(photoInput.files && photoInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                finalizeStorage(e.target.result, type);
-            };
-            reader.readAsDataURL(photoInput.files[0]);
-        } else {
-            if(currentEditId) {
-                getAccountsFromStorage((accounts) => {
-                    let existing = accounts.find(acc => acc.id == currentEditId);
-                    if(existing) photoUrl = existing.photo;
-                    finalizeStorage(photoUrl, type);
-                });
-                return;
-            }
-            finalizeStorage(photoUrl, type);
-        }
-    }
-
-    function finalizeStorage(photo, type) {
-        const name = document.getElementById('regName').value.trim();
-        const phone = document.getElementById('regPhone').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const pass = document.getElementById('regPass').value;
-        const tier = document.getElementById('regTier').value;
-        
-        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK-${encodeURIComponent(email)}`;
-        const accountId = currentEditId ? currentEditId : Date.now().toString();
-
-        const accData = {
-            id: accountId,
-            name: name,
-            phone: phone,
-            email: email,
-            pass: pass,
-            tier: tier,
-            photo: photo,
-            qrCodeUrl: qrCodeUrl,
-            time: new Date().toLocaleString()
-        };
-
-        if(db) {
-            db.collection("ayna_global_accounts").doc(accountId).set(accData)
-            .then(() => {
-                alert('Cloud Account successfully saved globally on Firebase! 🌐✅');
-                postSaveCleanup(email);
-            })
-            .catch((error) => {
-                console.error("Firestore Error: ", error);
-                saveToLocalStorageFallback(accData, email);
-            });
-        } else {
-            saveToLocalStorageFallback(accData, email);
-        }
-    }
-
-    function saveToLocalStorageFallback(accData, email) {
-        let accounts = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
-        if(currentEditId) {
-            accounts = accounts.map(acc => acc.id == currentEditId ? accData : acc);
-            currentEditId = null;
-        } else {
-            accounts.push(accData);
-        }
-        localStorage.setItem('ayna_global_accounts', JSON.stringify(accounts));
-        localStorage.setItem('ayna_logged_in', email);
-        alert('Account saved successfully (Local Backup)! ✅');
-        postSaveCleanup(email);
-    }
-
-    function postSaveCleanup(email) {
-        localStorage.setItem('ayna_logged_in', email);
-        document.getElementById('regName').value = '';
-        document.getElementById('regPhone').value = '';
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regPass').value = '';
-        document.getElementById('regPhoto').value = '';
-        currentEditId = null;
-        loadSavedAccounts();
-    }
-
-    function getAccountsFromStorage(callback) {
-        if(db) {
-            db.collection("ayna_global_accounts").get().then((querySnapshot) => {
-                let accounts = [];
-                querySnapshot.forEach((doc) => {
-                    accounts.push(doc.data());
-                });
-                callback(accounts);
-            }).catch((error) => {
-                let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
-                callback(localAcc);
-            });
-        } else {
-            let localAcc = JSON.parse(localStorage.getItem('ayna_global_accounts')) || [];
-            callback(localAcc);
-        }
-    }
-
-    function loginUser() {
-        const inputEmail = document.getElementById('loginEmail').value.trim();
-        const inputPass = document.getElementById('loginPass').value;
-
-        getAccountsFromStorage((accounts) => {
-            const found = accounts.find(acc => (acc.email === inputEmail || acc.phone === inputEmail) && acc.pass === inputPass);
-            if(found) {
-                localStorage.setItem('ayna_logged_in', found.email);
-                updateLoginIndicator();
-                alert(`Welcome back ${found.name}! Logged in successfully.`);
-                loadSavedAccounts();
-                hideAllSections();
-            } else {
-                alert('Invalid credentials or password!');
-            }
-        });
-    }
-
-    function forgotPassword() {
-        let identifier = prompt("Enter your registered Phone or Gmail for OTP password recovery:");
-        getAccountsFromStorage((accounts) => {
-            let found = accounts.find(acc => acc.email === identifier || acc.phone === identifier);
-            if(found) {
-                let otp = Math.floor(1000 + Math.random() * 9000);
-                let inputOtp = prompt(`💬 [SMS BOX - 2 MINS TIMER]\nOTP sent to ${found.phone}.\nSimulated OTP: ${otp}\nEnter OTP code to view password:`);
-                if(inputOtp == otp) {
-                    alert(`Your Secure Password is: ${found.pass}`);
-                } else {
-                    alert('Invalid OTP code!');
-                }
-            } else {
-                alert('Account not found in cloud storage!');
-            }
-        });
-    }
-
-    function logoutUser() {
-        localStorage.removeItem('ayna_logged_in');
-        updateLoginIndicator();
-        alert('Logged out securely.');
-        loadSavedAccounts();
-        hideAllSections();
-    }
-
-    function updateLoginIndicator() {
-        let user = localStorage.getItem('ayna_logged_in');
-        const indicator = document.getElementById('loginStatusIndicator');
-        if(user) {
-            indicator.innerHTML = `<span style="color:var(--success);">Cloud Online</span> <i class="fas fa-sign-out-alt" id="logoutBtn" style="cursor:pointer; margin-left:5px;" title="Logout"></i>`;
-            setTimeout(() => {
-                const logoutBtn = document.getElementById('logoutBtn');
-                if(logoutBtn) logoutBtn.addEventListener('click', logoutUser);
-            }, 100);
-        } else {
-            indicator.innerHTML = `Guest (Cloud Active)`;
-        }
-    }
-
-    function copyAccountLink(id) {
-        let link = `https://ayna-956251.github.io/ayna--book/#id=${id}`;
-        navigator.clipboard.writeText(link);
-        alert('Secure Cloud Link Copied! 🔗');
-    }
-
-    function triggerEditAccount(id) {
-        let enteredPass = prompt("Enter your account password to edit profile:");
-        getAccountsFromStorage((accounts) => {
-            let target = accounts.find(acc => acc.id == id);
-            if(target && target.pass === enteredPass) {
-                currentEditId = id;
-                document.getElementById('regName').value = target.name;
-                document.getElementById('regPhone').value = target.phone;
-                document.getElementById('regEmail').value = target.email;
-                document.getElementById('regPass').value = target.pass;
-                document.getElementById('regTier').value = target.tier;
-                window.scrollTo({top: 0, behavior: 'smooth'});
-                alert('You are authorized. Modify details in top form and click verify OTP to update.');
-            } else {
-                alert('❌ Incorrect password or unauthorized access!');
-            }
-        });
-    }
-
-    function loadSavedAccounts() {
-        const container = document.getElementById('savedListContainer');
-        let loggedIn = localStorage.getItem('ayna_logged_in');
-
-        getAccountsFromStorage((accounts) => {
-            if(accounts.length === 0) {
-                container.innerHTML = `<p style="color: #8d99ae; font-size: 11px;">No accounts created yet.</p>`;
-                return;
-            }
-
-            let html = '';
-            accounts.forEach((acc, i) => {
-                let isOwner = (loggedIn === acc.email);
-                let passDisplay = isOwner ? acc.pass : "••••••••••• (Hidden)";
-                let phoneDisplay = isOwner ? acc.phone : acc.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
-                let emailDisplay = isOwner ? acc.email : acc.email.replace(/(.{2})(.*)(@.*)/, '$1***$3');
-                let safeQR = acc.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=AYNA-BOOK`;
-
-                html += `<div class="saved-item">
-                    <button class="edit-icon-btn" onclick="triggerEditAccount('${acc.id}')" title="Edit with Password">
-                        <i class="fas fa-pencil-alt"></i>
-                    </button>
-                    <div class="profile-header">
-                        <img src="${acc.photo}" alt="Photo" class="profile-big-square">
-                        <div>
-                            <strong style="font-size:12px; color:#ffffff;">#${i+1} - ${acc.name}</strong><br>
-                            <span style="color:var(--accent-cyan); font-weight:bold;">${acc.tier}</span><br>
-                            📞 Phone: ${phoneDisplay} | ✉️ Email: ${emailDisplay}<br>
-                            🔑 Password: <span style="color:var(--warning); font-family:monospace;">${passDisplay}</span><br>
-                            <span style="color:#8d99ae; font-size:9px;">Time: ${acc.time}</span>
-                        </div>
-                    </div>
-                    <div class="qr-code-display">
-                        <img src="${safeQR}" alt="Account QR Code">
-                    </div>
-                    <div class="action-row">
-                        <button class="btn-sm copy" onclick="copyAccountLink('${acc.id}')"><i class="fas fa-copy"></i> Copy Link</button>
-                        ${isOwner ? `<button class="btn-sm logout-item-btn" style="background:#ef4444;" onclick="logoutUser()">Logout</button>` : ``}
-                    </div>
-                </div>`;
-            });
-            container.innerHTML = html;
-            updateLoginIndicator();
-        });
-    }
-</script>
+<!-- Firebase and application modules -->
+<script type="module" src="./js/app.js"></script>
 
 </body>
 </html>
