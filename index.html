@@ -1,303 +1,155 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071b49">
-  <meta name="description" content="AYNA BOOK — 5000-Year Quantum Ultra Global Secure Platform with 500+ Advanced Technologies, Military Radar, NASA Satellite & Health AI.">
-  <title>AYNA BOOK — 5000-Year Quantum & Military Global Super App (500+ Tech)</title>
+// AYNA BOOK — 10,000-Year Quantum & 1500+ Tech Engine
 
-  <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  
-  <style>
-    .quantum-badge { background: linear-gradient(135deg, #00ffcc, #071b49); color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-block; box-shadow: 0 0 15px rgba(0,255,204,0.5); }
-    .radar-screen { background: radial-gradient(circle, #021529 0%, #000 100%); border: 2px solid #00ffcc; border-radius: 12px; padding: 15px; position: relative; overflow: hidden; }
-    .radar-sweep { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: conic-gradient(from 0deg at 50% 50%, rgba(0,255,204,0) 0deg, rgba(0,255,204,0.3) 360deg); animation: radarRotate 4s linear infinite; pointer-events: none; border-radius: 12px; }
-    @keyframes radarRotate { 100% { transform: rotate(360deg); } }
-    
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 15px;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+  authDomain: "ayna-book.firebaseapp.com",
+  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ayna-book",
+  storageBucket: "ayna-book.firebasestorage.app",
+  messagingSenderId: "805601138500",
+  appId: "1:805601138500:web:47acdc90cb0cb521626911",
+  measurementId: "G-RKHHSKNB4B"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ইউনিভার্সাল পেজ সুইচিং ও বাটন সচল রাখার লজিক
+function initAynaSystem() {
+  const allNavElements = document.querySelectorAll('[data-page], [data-go]');
+  const pages = document.querySelectorAll('.page');
+
+  function gotoPage(targetId) {
+    if (!targetId) return;
+
+    pages.forEach(page => {
+      if (page.id === 'page-' + targetId) {
+        page.classList.add('active');
+        page.style.display = 'block';
+      } else {
+        page.classList.remove('active');
+        page.style.display = 'none';
+      }
+    });
+
+    allNavElements.forEach(el => {
+      const pageName = el.getAttribute('data-page') || el.getAttribute('data-go');
+      if (pageName === targetId) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.body.addEventListener('click', (e) => {
+    const clickable = e.target.closest('[data-page], [data-go]');
+    if (clickable) {
+      e.preventDefault();
+      const targetPage = clickable.getAttribute('data-page') || clickable.getAttribute('data-go');
+      gotoPage(targetPage);
     }
-    .feature-card {
-      aspect-ratio: 1 / 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(145deg, #071b49, #020c24);
-      border: 2px solid #00ffcc;
-      border-radius: 16px;
-      color: #fff;
-      box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
-      transition: all 0.3s ease-in-out;
-      cursor: pointer;
-    }
-    .feature-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 35px rgba(0, 255, 204, 0.6);
-    }
-    .page { display: none; }
-    .page.active { display: block; }
-    .tech-ticker { background: #020c24; color: #00ffcc; padding: 8px; font-size: 12px; border-bottom: 1px solid #00ffcc44; white-space: nowrap; overflow: hidden; box-sizing: border-box; }
-    .tech-ticker span { display: inline-block; animation: tickerScroll 35s linear infinite; }
-    @keyframes tickerScroll { 0% { transform: translate3d(100%, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
-  </style>
-</head>
+  });
+}
 
-<body>
-<div class="app-shell">
+// DOM লোড হলে এক্সিকিউট হবে
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAynaSystem);
+} else {
+  initAynaSystem();
+}
 
-  <div class="tech-ticker">
-    <span>🚀 [AYNA 500-TECH ACTIVE]: 1. Quantum Biometrics | 2. NASA Satellite Sync | 3. AI Exact Voice Clone | 4. 0MB Mesh Network | 5. Medical Fever & Health Guard | 6. Military Radar 360° | 7. Neural Translation Engine | 8. 150+ Disaster Prediction | 9. Quantum Holographic Display | 10. Neural Mind Sync | +490 Future Technologies Integrated!</span>
-  </div>
+document.addEventListener('DOMContentLoaded', () => {
+  console.log("AYNA BOOK 1500-Tech & 10,000-Year Engine Initialized.");
 
-  <header class="topbar">
-    <button class="icon-button menu-button" id="menuButton" aria-label="Open menu">
-      <i class="fa-solid fa-bars"></i>
-    </button>
+  // ১. সুপার ফাস্ট চ্যাট ও ফাইল ট্রান্সফার
+  const chatForm = document.getElementById('chatForm');
+  const chatInputMsg = document.getElementById('chatInputMsg');
+  const chatMessagesContainer = document.getElementById('chatMessagesContainer');
+  const bulkFileInput = document.getElementById('bulkFileInput');
+  const fileNameDisplay = document.getElementById('fileNameDisplay');
 
-    <a href="#home" class="brand" aria-label="AYNA BOOK Home" data-go="home">
-      <img src="./assets/ayna-gold-logo.png" alt="AYNA BOOK Gold Logo" id="aynaLogo">
-      <span>AYNA <strong>BOOK</strong> <span class="quantum-badge">Q-5000+500</span></span>
-    </a>
+  if (bulkFileInput) {
+    bulkFileInput.addEventListener('change', () => {
+      if (bulkFileInput.files.length > 0) {
+        fileNameDisplay.textContent = `${bulkFileInput.files.length}টি ফাইল সিলেক্ট করা হয়েছে (Ready for 10GB/s transfer)`;
+      }
+    });
+  }
 
-    <div class="header-right">
-      <span id="loginStatusIndicator" class="online-status">Guest (0MB Mode)</span>
-      <button class="icon-button" id="profileButton" aria-label="Profile" data-go="profile">
-        <i class="fa-solid fa-circle-user"></i>
-      </button>
-    </div>
-  </header>
+  if (chatForm) {
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = chatInputMsg.value.trim();
+      if (!msg && (!bulkFileInput || bulkFileInput.files.length === 0)) return;
 
-  <nav class="main-nav" id="mainNav">
-    <button class="nav-link active" data-page="home">
-      <i class="fa-solid fa-house"></i> Home
-    </button>
-    <button class="nav-link" data-page="register">
-      <i class="fa-solid fa-user-plus"></i> Open ID
-    </button>
-    <button class="nav-link" data-page="login">
-      <i class="fa-solid fa-lock"></i> Login
-    </button>
-    <button class="nav-link" data-page="chat">
-      <i class="fa-solid fa-comments"></i> Chat
-    </button>
-    <button class="nav-link" data-page="media">
-      <i class="fa-solid fa-tv"></i> Radio / TV
-    </button>
-    <button class="nav-link" data-page="location">
-      <i class="fa-solid fa-location-dot"></i> GPS & Radar
-    </button>
-    <button class="nav-link" data-page="settings">
-      <i class="fa-solid fa-gear"></i> Settings
-    </button>
-  </nav>
+      const userElem = document.createElement('div');
+      userElem.style.cssText = "background: #071b49; border: 1px solid #00ffcc44; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px;";
+      
+      let fileText = "";
+      if (bulkFileInput && bulkFileInput.files.length > 0) {
+        fileText = ` <br><span style="color:#00ffcc;">📎 [Attached Files: ${bulkFileInput.files.length} files sent at light-speed]</span>`;
+      }
 
-  <main class="page-container">
+      userElem.innerHTML = `<strong>Sathiya:</strong> ${msg} ${fileText}`;
+      chatMessagesContainer.appendChild(userElem);
+      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
-    <!-- HOME -->
-    <section class="page active" id="page-home">
-      <div class="hero panel">
-        <p class="eyebrow">5000-YEAR QUANTUM, 500+ TECH & MILITARY SATELLITE NETWORK</p>
-        <h1>MY WORLD.<br>MY STORY.<br><span>MY AYNA BOOK.</span></h1>
-        <p>
-          Connect. Create. Share. Protect. 5000-Year Future Intelligence with 500+ Superior Online Tech.<br>
-          আপনার পৃথিবী, আপনার গল্প, আপনার আয়না বুক (৫০০+ ভবিষ্যৎ প্রযুক্তি ও কোয়ান্টাম সুরক্ষিত)।
-        </p>
-        <div class="hero-actions">
-          <button class="btn primary" data-go="register">
-            <i class="fa-solid fa-user-plus"></i> Open New Account
-          </button>
-          <button class="btn secondary" data-go="login">
-            <i class="fa-solid fa-right-to-bracket"></i> Login
-          </button>
-        </div>
-      </div>
+      chatInputMsg.value = "";
+      if (bulkFileInput) bulkFileInput.value = "";
+      if (fileNameDisplay) fileNameDisplay.textContent = "কোনো ফাইল নেই";
+    });
+  }
 
-      <div class="panel">
-        <h2><i class="fa-solid fa-globe"></i> AYNA BOOK Super Dashboard (560x560 Square Grid)</h2>
-        <p class="muted">আপনার প্রয়োজনীয় সেবা, সামরিক রাডার ও ৫০০+ উন্নত প্রযুক্তি মডিউল নির্বাচন করুন।</p>
+  // ২. ইনস্ট্যান্ট লাইভ ভিডিও কল (Camera Stream)
+  const startLiveCamBtn = document.getElementById('startLiveCamBtn');
+  const liveVideoFeed = document.getElementById('liveVideoFeed');
 
-        <div class="feature-grid">
-          <div class="feature-card" data-go="profile">
-            <i class="fa-solid fa-user fa-2x"></i>
-            <span>My Profile</span>
-          </div>
+  if (startLiveCamBtn && liveVideoFeed) {
+    startLiveCamBtn.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        liveVideoFeed.srcObject = stream;
+        startLiveCamBtn.textContent = "🟢 লাইভ ভিডিও সম্প্রচার চলছে";
+        startLiveCamBtn.style.background = "#00ffcc";
+        startLiveCamBtn.style.color = "#000";
+      } catch (err) {
+        alert("ক্যামেরা পারমিশন পাওয়া যায়নি অথবা ব্রাউজার ব্লক করেছে।");
+        console.error(err);
+      }
+    });
+  }
 
-          <div class="feature-card" data-go="chat">
-            <i class="fa-solid fa-comments fa-2x"></i>
-            <span>Global AI Chat</span>
-          </div>
+  // ৩. আয়না বুক ভিডিও আপলোড ও ফিড বক্স
+  const uploadVideoBtn = document.getElementById('uploadVideoBtn');
+  const videoUploadInput = document.getElementById('videoUploadInput');
+  const videoFeedContainer = document.getElementById('videoFeedContainer');
 
-          <div class="feature-card" data-go="media">
-            <i class="fa-solid fa-radio fa-2x"></i>
-            <span>NASA Radio & TV</span>
-          </div>
+  if (uploadVideoBtn && videoUploadInput) {
+    uploadVideoBtn.addEventListener('click', () => {
+      if (videoUploadInput.files.length === 0) {
+        alert("দয়া করে প্রথমে একটি ভিডিও ফাইল সিলেক্ট করুন!");
+        return;
+      }
 
-          <div class="feature-card" data-go="location">
-            <i class="fa-solid fa-satellite-dish fa-2x"></i>
-            <span>GPS & Military Radar</span>
-          </div>
+      const file = videoUploadInput.files[0];
+      const videoURL = URL.createObjectURL(file);
 
-          <div class="feature-card" data-go="alerts">
-            <i class="fa-solid fa-triangle-exclamation fa-2x"></i>
-            <span>150+ Alerts & Fever Guard</span>
-          </div>
+      const videoCard = document.createElement('div');
+      videoCard.style.cssText = "margin-bottom: 15px; background: #071b49; padding: 10px; border-radius: 8px; border: 1px solid #00ffcc;";
+      videoCard.innerHTML = `
+        <p style="color: #00ffcc; font-weight: bold; margin-bottom: 5px;">🎥 ${file.name}</p>
+        <video controls style="width: 100%; max-height: 200px; border-radius: 6px;" src="${videoURL}"></video>
+      `;
 
-          <div class="feature-card" data-go="settings">
-            <i class="fa-solid fa-gear fa-2x"></i>
-            <span>500+ Tech Settings</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel status-panel">
-        <h3><i class="fa-solid fa-shield-cat"></i> 500+ Technologies & Quantum Intelligence Status</h3>
-        <p id="quantumStatus">🟢 5000-Year Quantum Code & 500+ Tech Sync: Active & Fully Operational</p>
-        <p id="radarStatus" class="muted">📡 Military Radar, NASA Satellite & Medical Fever AI: Live / 0MB Optimized</p>
-        <p id="appStatus" class="muted">AYNA BOOK is running at maximum light speed with all 500+ features active.</p>
-      </div>
-    </section>
-
-    <!-- REGISTER -->
-    <section class="page" id="page-register">
-      <div class="panel">
-        <h2><i class="fa-solid fa-user-plus"></i> Open New Account (5000-Year Quantum Tier)</h2>
-        <p class="muted">Create your secure AYNA BOOK account with 500+ Advanced Tech integration.</p>
-
-        <form id="registerForm">
-          <label for="regPhoto">Profile Photo</label>
-          <input type="file" id="regPhoto" accept="image/jpeg,image/png,image/webp">
-
-          <label for="regName">Full Name</label>
-          <input type="text" id="regName" placeholder="Enter your full name" autocomplete="name" required>
-
-          <label for="regPhone">Phone Number</label>
-          <input type="tel" id="regPhone" placeholder="+8801XXXXXXXXX" autocomplete="tel" required>
-
-          <label for="regEmail">Gmail / Email</label>
-          <input type="email" id="regEmail" placeholder="example@gmail.com" autocomplete="email" required>
-
-          <label for="regPass">Password (Quantum 500-Tech Encrypted)</label>
-          <div class="password-field">
-            <input type="password" id="regPass" minlength="11" autocomplete="new-password" placeholder="At least 11 characters" required>
-            <button type="button" class="show-password" data-target="regPass">Show</button>
-          </div>
-
-          <label for="regTier">Account Type</label>
-          <select id="regTier">
-            <option value="personal">Personal — Free (0MB + 500 Tech)</option>
-            <option value="business">Business ($10)</option>
-            <option value="vip">VIP (Tier 10)</option>
-            <option value="vvip">VVIP (Tier 20 - Quantum 5000)</option>
-          </select>
-
-          <button class="btn primary full-width" type="submit" id="submitRegBtn">
-            Continue to Quantum OTP Verification
-          </button>
-        </form>
-        <p id="registerStatus" class="status" role="status"></p>
-      </div>
-    </section>
-
-    <!-- LOGIN -->
-    <section class="page" id="page-login">
-      <div class="panel">
-        <h2><i class="fa-solid fa-lock"></i> Quantum Secure Login</h2>
-        <form id="loginForm">
-          <label for="loginEmail">Email Address</label>
-          <input type="email" id="loginEmail" placeholder="Your registered email" autocomplete="username" required>
-
-          <label for="loginPass">Password</label>
-          <div class="password-field">
-            <input type="password" id="loginPass" autocomplete="current-password" placeholder="Your password" required>
-            <button type="button" class="show-password" data-target="loginPass">Show</button>
-          </div>
-
-          <button type="submit" class="btn primary full-width" id="loginSubmitBtn">Login with 500-Tech Security</button>
-        </form>
-        <p id="loginStatus" class="status" role="status"></p>
-      </div>
-    </section>
-
-    <!-- PROFILE -->
-    <section class="page" id="page-profile">
-      <div class="panel">
-        <h2><i class="fa-solid fa-user-circle"></i> My Profile (500+ Tech Active)</h2>
-        <img id="profilePreview" class="profile-photo" src="./assets/ayna-gold-logo.png" alt="Profile photo">
-        <p id="profileName">Guest User (Quantum Level 5000)</p>
-        <p id="profileEmail" class="muted">Not logged in</p>
-        <button class="btn secondary" data-go="home">Back to Home</button>
-      </div>
-    </section>
-
-    <!-- CHAT -->
-    <section class="page" id="page-chat">
-      <div class="panel">
-        <h2><i class="fa-solid fa-comments"></i> Global AI Chat (Voice Translation)</h2>
-        <div id="chatMessagesContainer" class="chat-messages" aria-live="polite">
-          <p class="muted">মেসেজিং শুরু করুন।</p>
-        </div>
-        <form id="chatForm" class="chat-form">
-          <input type="text" id="chatInputMsg" placeholder="Write message..." autocomplete="off">
-          <button class="btn primary" type="submit">Send</button>
-        </form>
-        <p id="chatStatus" class="status"></p>
-      </div>
-    </section>
-
-    <!-- MEDIA -->
-    <section class="page" id="page-media">
-      <div class="panel">
-        <h2><i class="fa-solid fa-radio"></i> NASA & Global Radio/TV</h2>
-        <button class="btn primary" data-go="home">Back to Home</button>
-      </div>
-    </section>
-
-    <!-- LOCATION -->
-    <section class="page" id="page-location">
-      <div class="panel radar-screen">
-        <div class="radar-sweep"></div>
-        <h2 style="color: #00ffcc; position: relative; z-index: 2;"><i class="fa-solid fa-satellite"></i> Military Radar & NASA</h2>
-        <button class="btn primary full-width" id="startGpsBtn" style="position: relative; z-index: 2;">Get Satellite Location</button>
-        <p id="gpsStatus" class="status" style="color: #fff; position: relative; z-index: 2;"></p>
-      </div>
-    </section>
-
-    <!-- ALERTS -->
-    <section class="page" id="page-alerts">
-      <div class="panel">
-        <h2><i class="fa-solid fa-triangle-exclamation"></i> 150+ Alerts & Fever Guard</h2>
-        <button class="btn primary" id="enableAlertsBtn">Enable Health Alerts</button>
-        <div id="alertsContainer"></div>
-      </div>
-    </section>
-
-    <!-- SETTINGS -->
-    <section class="page" id="page-settings">
-      <div class="panel">
-        <h2><i class="fa-solid fa-gear"></i> 500+ Tech Settings</h2>
-        <button class="btn secondary full-width" data-go="home">Back to Home</button>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="bottom-nav">
-    <button class="bottom-item active" data-page="home"><i class="fa-solid fa-house"></i><span>Home</span></button>
-    <button class="bottom-item" data-page="register"><i class="fa-solid fa-user-plus"></i><span>Open ID</span></button>
-    <button class="bottom-item" data-page="login"><i class="fa-solid fa-lock"></i><span>Login</span></button>
-    <button class="bottom-item" data-page="media"><i class="fa-solid fa-tv"></i><span>Video/TV</span></button>
-    <button class="bottom-item" data-page="chat"><i class="fa-solid fa-comments"></i><span>Chat</span></button>
-  </footer>
-
-</div>
-
-<!-- ক্যাশ এড়াতে ভার্সন সহ মডিউল স্ক্রিপ্ট লোড -->
-<script type="module" src="./js/app.js?v=1.2"></script>
-</body>
-</html>
+      videoFeedContainer.prepend(videoCard);
+      alert("ভিডিও সফলভাবে আয়না বুক হাবে আপলোড ও প্রকাশিত হয়েছে!");
+      videoUploadInput.value = "";
+    });
+  }
+});
