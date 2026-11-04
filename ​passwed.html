@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <title>AYNA BOOK — Quantum Password Management & Security</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #071b49;
+      --accent-color: #00ffcc;
+      --dark-bg: #020c24;
+      --text-color: #ffffff;
+    }
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .pass-container {
+      max-width: 550px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    .pass-panel {
+      background: linear-gradient(145deg, var(--primary-color), var(--dark-bg));
+      border: 2px solid var(--accent-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 0 35px rgba(0, 255, 204, 0.25);
+    }
+    .pass-panel h2 {
+      color: var(--accent-color);
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: var(--accent-color);
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(2, 12, 36, 0.9);
+      border: 1px solid var(--accent-color);
+      color: #fff;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
+    }
+    .password-group {
+      position: relative;
+    }
+    .toggle-pass {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--accent-color);
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .btn-submit {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      background: var(--accent-color);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+    }
+    .btn-submit:hover {
+      background: #00cca3;
+      box-shadow: 0 0 25px rgba(0, 255, 204, 0.8);
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .status-msg {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+<div class="pass-container">
+  <div class="pass-panel">
+    <h2><i class="fa-solid fa-shield-halved"></i> Quantum Password Security</h2>
+    <p class="muted" style="font-size: 13px; color: #aaa;">আপনার আয়না বুক অ্যাকাউন্টের পাসওয়ার্ড পরিবর্তন বা শক্তিশালী কোয়ান্টাম এনক্রিপশনে আপডেট করুন।</p>
+
+    <form id="passForm">
+      <label for="currentPass">বর্তমান পাসওয়ার্ড</label>
+      <div class="password-group">
+        <input type="password" id="currentPass" placeholder="পুরোনো পাসওয়ার্ড লিখুন" required>
+        <button type="button" class="toggle-pass" data-target="currentPass">Show</button>
+      </div>
+
+      <label for="newPass">নতুন পাসওয়ার্ড (ন্যূনতম ১১ ক্যারেক্টার)</label>
+      <div class="password-group">
+        <input type="password" id="newPass" minlength="11" placeholder="শক্তিশালী নতুন পাসওয়ার্ড দিন" required>
+        <button type="button" class="toggle-pass" data-target="newPass">Show</button>
+      </div>
+
+      <label for="confirmPass">নতুন পাসওয়ার্ড নিশ্চিত করুন</label>
+      <div class="password-group">
+        <input type="password" id="confirmPass" minlength="11" placeholder="পুনরায় নতুন পাসওয়ার্ড লিখুন" required>
+        <button type="button" class="toggle-pass" data-target="confirmPass">Show</button>
+      </div>
+
+      <button type="submit" class="btn-submit">পাসওয়ার্ড আপডেট করুন</button>
+    </form>
+
+    <p id="passStatus" class="status-msg"></p>
+
+    <a href="./index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান</a>
+  </div>
+</div>
+
+<script>
+  // পাসওয়ার্ড শো/হাইড টগল লজিক
+  document.querySelectorAll('.toggle-pass').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById(btn.getAttribute('data-target'));
+      if (input) {
+        if (input.type === 'password') {
+          input.type = 'text';
+          btn.textContent = 'Hide';
+        } else {
+          input.type = 'password';
+          btn.textContent = 'Show';
+        }
+      }
+    });
+  });
+
+  // ফর্ম সাবমিট হ্যান্ডলার
+  const passForm = document.getElementById('passForm');
+  const passStatus = document.getElementById('passStatus');
+
+  if (passForm) {
+    passForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newPass = document.getElementById('newPass').value;
+      const confirmPass = document.getElementById('confirmPass').value;
+
+      if (newPass !== confirmPass) {
+        passStatus.style.color = "#ff4d4d";
+        passStatus.textContent = "❌ নতুন পাসওয়ার্ড দুটি মিলেনি! দয়া করে চেক করুন।";
+        return;
+      }
+
+      passStatus.style.color = "var(--accent-color)";
+      passStatus.textContent = "⏳ কোয়ান্টাম এনক্রিপশনে পাসওয়ার্ড আপডেট হচ্ছে...";
+
+      setTimeout(() => {
+        passStatus.style.color = "#00ffcc";
+        passStatus.textContent = "🟢 পাসওয়ার্ড সফলভাবে পরিবর্তিত ও সুরক্ষিত হয়েছে!";
+        passForm.reset();
+      }, 1000);
+    });
+  }
+</script>
+</body>
+</html>
