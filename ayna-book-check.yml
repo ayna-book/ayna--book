@@ -1,0 +1,108 @@
+
+name: AYNA BOOK HTML Build Check
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "app.js"
+      - "manifest.json"
+      - "offline.js"
+      - "security.js"
+      - ".github/workflows/ayna-book-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  html-check:
+    name: Check AYNA BOOK homepage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository files
+        uses: actions/checkout@v4
+
+      - name: Check homepage
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          file = Path("index.html")
+          if not file.is_file():
+              raise SystemExit("ERROR: index.html not found")
+
+          source = file.read_text(encoding="utf-8")
+          parser = HTMLParser()
+          parser.feed(source)
+          parser.close()
+
+          required = [
+              "<!doctype html",
+              "<html",
+              "<head",
+              "<body",
+              "</html>"
+          ]
+
+          missing = [
+              item for item in required
+              if item not in source.lower()
+          ]
+
+          if missing:
+              raise SystemExit(
+                  "ERROR: Missing HTML structure: "
+                  + ", ".join(missing)
+              )
+
+          class Checker(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.files = []
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  keys = []
+
+                  if tag == "script":
+                      keys = ["src"]
+                  elif tag == "link":
+                      keys = ["href"]
+                  elif tag == "img":
+                      keys = ["src"]
+
+                  for key in keys:
+                      value = attrs.get(key)
+                      if value:
+                          parsed = urlparse(value)
+                          if not parsed.scheme and not value.startswith("#"):
+                              self.files.append(
+                                  value.split("?")[0].split("#")[0]
+                              )
+
+          checker = Checker()
+          checker.feed(source)
+
+          missing_files = []
+
+          for ref in checker.files:
+              path = Path(ref.lstrip("./"))
+              if not path.exists():
+                  missing_files.append(ref)
+
+          if missing_files:
+              raise SystemExit(
+                  "ERROR: Missing files: "
+                  + ", ".join(missing_files)
+              )
+
+          print("SUCCESS: AYNA BOOK HTML check passed.")
+          print("SUCCESS: Local files checked.")
+          PY
