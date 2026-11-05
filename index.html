@@ -1,502 +1,171 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071b49">
-  <meta name="description" content="AYNA BOOK — 10,000-Year Quantum Super-App Ecosystem designed by Mohammad Mahbub Alam.">
-  <title>AYNA BOOK — Supreme Quantum Super Dashboard & Global Ecosystem</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK</title>
 
-  <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  
-  <style>
-    :root {
-      --primary-color: #071b49;
-      --accent-color: #00ffcc;
-      --dark-bg: #020c24;
-      --panel-bg: #051438;
-      --text-color: #ffffff;
-      --neon-gold: #ffcc00;
-      --neon-pink: #ff007f;
-      --quantum-purple: #9d00ff;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      background-color: var(--dark-bg);
-      color: var(--text-color);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
-
-    .supreme-container {
-      max-width: 1150px;
-      margin: 15px auto;
-      padding: 15px;
-    }
-
-    /* হিরো ব্যানার */
-    .supreme-hero {
-      background: radial-gradient(circle, #0a2366 0%, #020c24 100%);
-      border: 2px solid var(--accent-color);
-      border-radius: 20px;
-      padding: 25px;
-      text-align: center;
-      box-shadow: 0 0 45px rgba(0, 255, 204, 0.35);
-      margin-bottom: 25px;
-    }
-    .supreme-hero h1 {
-      color: var(--accent-color);
-      margin: 0 0 10px 0;
-      font-size: 26px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .live-status-bar {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--accent-color);
-      border-radius: 12px;
-      padding: 10px;
-      margin-top: 15px;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 13px;
-    }
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--accent-color);
-      font-weight: bold;
-    }
-
-    .section-title {
-      color: var(--accent-color);
-      border-bottom: 2px solid rgba(0, 255, 204, 0.3);
-      padding-bottom: 8px;
-      margin: 30px 0 15px 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 19px;
-    }
-
-    /* একাউন্ট এবং প্রোফাইল প্যানেল */
-    .account-panel {
-      background: var(--panel-bg);
-      border: 2px solid var(--neon-gold);
-      border-radius: 16px;
-      padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      box-shadow: 0 0 25px rgba(255, 204, 0, 0.2);
-    }
-    .account-input-group input {
-      width: 100%;
-      padding: 10px;
-      margin: 6px 0;
-      background: #000;
-      border: 1px solid var(--accent-color);
-      color: #fff;
-      border-radius: 6px;
-    }
-    .btn-action {
-      background: var(--accent-color);
-      color: #000;
-      border: none;
-      padding: 10px 18px;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 8px;
-      transition: 0.3s;
-    }
-    .btn-action:hover {
-      background: var(--neon-gold);
-      box-shadow: 0 0 15px var(--neon-gold);
-    }
-
-    /* ইন্টারেক্টিভ গ্রিড */
-    .interactive-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-    }
-    .interactive-box {
-      background: var(--panel-bg);
-      border: 1px solid var(--accent-color);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
-    }
-    .interactive-box h3 {
-      margin-top: 0;
-      color: var(--neon-gold);
-      font-size: 17px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .chat-display {
-      height: 180px;
-      background: #000;
-      border: 1px solid rgba(0,255,204,0.3);
-      border-radius: 8px;
-      padding: 10px;
-      overflow-y: auto;
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-    .chat-item {
-      margin-bottom: 8px;
-      padding-bottom: 4px;
-      border-bottom: 1px dashed #222;
-    }
-    .chat-item span { color: var(--accent-color); font-weight: bold; }
-
-    .video-frame {
-      width: 100%;
-      height: 190px;
-      border-radius: 8px;
-      background: #000;
-      border: 1px solid var(--quantum-purple);
-    }
-
-    .market-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0,0,0,0.5);
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin-bottom: 8px;
-      border-left: 3px solid var(--accent-color);
-    }
-
-    /* টেক গ্রিড */
-    .supreme-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-    .supreme-card {
-      background: linear-gradient(145deg, var(--primary-color), var(--dark-bg));
-      border: 1.5px solid var(--accent-color);
-      border-radius: 14px;
-      padding: 18px;
-      text-align: center;
-      text-decoration: none;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-    .supreme-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 25px var(--accent-color);
-      background: var(--accent-color);
-      color: #000;
-    }
-    .supreme-card:hover i { color: #000 !important; }
-    .supreme-card i {
-      font-size: 32px;
-      color: var(--accent-color);
-      margin-bottom: 8px;
-    }
-    .supreme-card h3 { margin: 6px 0 4px 0; font-size: 15px; }
-    .supreme-card p { margin: 0; font-size: 11px; color: #aaa; }
-    .supreme-card:hover p { color: #111; }
-
-    /* টার্মিনাল প্যানেল */
-    .control-terminal {
-      background: #020817;
-      border: 2px solid var(--quantum-purple);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 0 35px rgba(157, 0, 255, 0.3);
-    }
-    .terminal-screen {
-      background: #000;
-      border: 1px solid var(--quantum-purple);
-      border-radius: 8px;
-      padding: 12px;
-      font-family: monospace;
-      color: var(--accent-color);
-      font-size: 12px;
-      height: 130px;
-      overflow-y: auto;
-      margin-top: 10px;
-    }
-
-    .supreme-footer-nav {
-      display: flex;
-      justify-content: space-around;
-      background: rgba(7, 27, 73, 0.95);
-      border: 1px solid var(--accent-color);
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 30px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .supreme-footer-nav a {
-      color: var(--accent-color);
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 13px;
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#071b49;
+  color:white;
+}
+header{
+  background:#06132f;
+  padding:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #31518a;
+}
+.logo{font-size:24px;font-weight:bold;color:#00d9ff}
+.logo span{color:#ff4fa3}
+main{max-width:900px;margin:auto;padding:12px}
+.hero{
+  text-align:center;
+  padding:30px 12px;
+  border-radius:18px;
+  background:linear-gradient(130deg,#12366f,#381b68);
+}
+.hero h1{color:#00d9ff;font-size:38px}
+.owner{color:#ffda7b;font-size:13px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:10px;
+  margin:15px 0;
+}
+.tile,.card{
+  background:#102653;
+  border:1px solid #31518a;
+  border-radius:14px;
+  padding:15px;
+}
+.tile{text-align:center}
+.tile .emoji{font-size:28px}
+.tile strong{display:block;margin:8px 0}
+h2{color:#00d9ff;font-size:20px}
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin:7px 0 12px;
+  border:1px solid #45649b;
+  border-radius:9px;
+  background:#071a3c;
+  color:white;
+  font:inherit;
+}
+textarea{min-height:85px}
+button{
+  padding:12px 16px;
+  border:0;
+  border-radius:9px;
+  color:white;
+  background:linear-gradient(100deg,#087fc5,#6845c5);
+  cursor:pointer;
+  margin:3px;
+}
+.notice{color:#c0cce5;font-size:13px}
+.post{padding:12px 0;border-top:1px solid #31518a}
+#chatMessages{
+  height:200px;
+  overflow:auto;
+  background:#071a3c;
+  padding:10px;
+  border-radius:10px;
+}
+footer{text-align:center;padding:25px;color:#c0cce5}
+</style>
 </head>
 
 <body>
-<div class="supreme-container">
+<header>
+  <div class="logo">AYNA <span>BOOK</span></div>
+  <div id="connection">সংযোগ হচ্ছে...</div>
+</header>
 
-  <!-- হিরো ব্যানার -->
-  <div class="supreme-hero">
-    <h1><i class="fa-solid fa-crown" style="color: var(--neon-gold);"></i> AYNA BOOK Q-10000+2000 SUPREME</h1>
-    <p style="color: #fff; font-size: 13px; max-width: 750px; margin: 0 auto;">MY WORLD. MY STORY. MY AYNA BOOK. ১০ হাজার বছরের অগ্রগামী কোয়ান্টাম প্রযুক্তি, ইনস্ট্যান্ট লাইভ মেসেজিং, গ্লোবাল মার্কেট ও সুপারকম্পিউটিং ইঞ্জিন।</p>
-    
-    <div class="live-status-bar">
-      <div class="status-badge"><i class="fa-solid fa-bolt"></i> Speed: 100GB/s Quantum Sync</div>
-      <div class="status-badge"><i class="fa-solid fa-shield-halved"></i> 10000-Yr Encryption</div>
-      <div class="status-badge" id="liveClock"><i class="fa-solid fa-clock"></i> 00:00:00</div>
-    </div>
+<main>
+<section class="hero">
+  <h1>🌍 AYNA BOOK</h1>
+  <p>আমার পৃথিবী আমার গল্প আমার আয়না বুক</p>
+  <p>Connect. Create. Share. Protect.</p>
+  <div class="owner">
+    Founder: Mohammad Mahabub Alam · Ukhiya 4750
   </div>
+</section>
 
-  <!-- একাউন্ট এবং প্রোফাইল ডিটেইলস সেকশন -->
-  <h3 class="section-title"><i class="fa-solid fa-user-shield"></i> ১. একাউন্ট ও অফিসিয়াল ওনারশিপ ডিটেইলস</h3>
-  <div class="account-panel">
-    <div>
-      <h4 style="margin:0 0 10px 0; color:var(--accent-color);"><i class="fa-solid fa-id-card"></i> প্রোফাইল রেজিস্টার / আইডি সেভ</h4>
-      <div class="account-input-group">
-        <input type="text" id="accName" value="মোহাম্মদ মাহাবুব আলম" placeholder="আপনার পূর্ণ নাম">
-        <input type="text" id="accRole" value="AYNA BOOK Supreme Founder" placeholder="একাউন্ট টাইপ">
-        <input type="text" id="accLoc" value="উখিয়া, কক্সবাজার" placeholder="আপনার ঠিকানা">
-        <button class="btn-action" id="saveProfileBtn"><i class="fa-solid fa-cloud-arrow-up"></i> ফায়ারবেসে একাউন্ট আপডেট করুন</button>
-      </div>
-    </div>
-    <div style="border-left: 1px solid rgba(0,255,204,0.2); padding-left: 15px;">
-      <h4 style="margin:0 0 10px 0; color:var(--neon-gold);"><i class="fa-solid fa-crown"></i> বর্তমান অ্যাক্টিভ একাউন্ট ডিটেইলস</h4>
-      <p style="font-size:13px; margin:5px 0;"><strong>মালিক/ইউজার:</strong> <span id="dispName">মোহাম্মদ মাহাবুব আলম</span></p>
-      <p style="font-size:13px; margin:5px 0;"><strong>অবস্থান:</strong> <span id="dispLoc">উখিয়া, কক্সবাজার</span></p>
-      <p style="font-size:13px; margin:5px 0;"><strong>মেম্বারশিপ:</strong> <span id="dispRole" style="color:var(--accent-color);">AYNA BOOK Supreme Founder</span></p>
-      <p style="font-size:13px; margin:5px 0;"><strong>ক্লাউড আইডি:</strong> <span style="font-family:monospace; color:var(--neon-pink);">AYNA-805601138500</span></p>
-      <p style="font-size:13px; margin:5px 0;"><strong>স্ট্যাটাস:</strong> <span style="color:#00ff00;">● Online (Firebase Connected)</span></p>
-    </div>
-  </div>
+<section class="grid">
+  <div class="tile"><div class="emoji">🌐</div><strong>Global Network</strong><small>বিশ্ব যোগাযোগ</small></div>
+  <div class="tile"><div class="emoji">💬</div><strong>Messenger</strong><small>বার্তা আদান-প্রদান</small></div>
+  <div class="tile"><div class="emoji">🔐</div><strong>Security</strong><small>নিরাপত্তা</small></div>
+  <div class="tile"><div class="emoji">⚛️</div><strong>Quantum Lab</strong><small>প্রযুক্তি ডেমো</small></div>
+  <div class="tile"><div class="emoji">🖥️</div><strong>Super Computing</strong><small>কম্পিউটিং ডেমো</small></div>
+  <div class="tile"><div class="emoji">📡</div><strong>Low Data</strong><small>কম ডেটা ব্যবহার</small></div>
+  <div class="tile"><div class="emoji">🧭</div><strong>GPS</strong><small>লোকেশন</small></div>
+  <div class="tile"><div class="emoji">🚨</div><strong>Emergency</strong><small>জরুরি তথ্য</small></div>
+</section>
 
-  <!-- লাইভ ইন্টারেক্টিভ ফিচারস -->
-  <h3 class="section-title"><i class="fa-solid fa-network-wired"></i> ২. অডিও, ভিডিও, চ্যাট, লাইভ টিভি ও বেচাকেনা Box</h3>
-  <div class="interactive-grid">
-    
-    <!-- চ্যাট বক্স -->
-    <div class="interactive-box">
-      <h3><i class="fa-solid fa-comments"></i> ফাস্ট চ্যাট ও মিডিয়া বক্স</h3>
-      <div class="chat-display" id="chatContainer">
-        <div class="chat-item"><span>[System]:</span> রিয়েলটাইম ফাস্ট সার্ভার কানেক্টেড।</div>
-      </div>
-      <input type="text" id="chatMsg" placeholder="মেসেজ বা ফাইল লিংক লিখুন..." style="width:100%; padding:8px; background:#000; border:1px solid var(--accent-color); color:#fff; border-radius:4px; margin-bottom:6px;">
-      <button class="btn-action" id="sendChatBtn"><i class="fa-solid fa-paper-plane"></i> সেন্ড চ্যাট / অডিও / ভিডিও</button>
-    </div>
+<section class="card">
+  <h2>👤 My Profile</h2>
+  <input id="profileName" placeholder="আপনার নাম">
+  <textarea id="profileBio" placeholder="আপনার পরিচিতি"></textarea>
+  <button id="saveProfile">প্রোফাইল সংরক্ষণ</button>
+  <p id="profileStatus" class="notice"></p>
+</section>
 
-    <!-- লাইভ স্ট্রিম বক্স -->
-    <div class="interactive-box">
-      <h3><i class="fa-solid fa-tv"></i> সরাসরি লাইভ ভিডিও ও টিভি বক্স</h3>
-      <iframe class="video-frame" src="https://www.youtube-nocookie.com/embed/live_stream?channel=UC4R8Fzc6eej-xcjKO10uQ4w" title="AYNA Live" frameborder="0" allowfullscreen></iframe>
-      <p style="font-size:11px; color:#aaa; margin:5px 0 0 0;">গ্লোবাল ব্রডকাস্ট ও লাইভ টিভি চ্যানেল বক্স।</p>
-    </div>
+<section class="card">
+  <h2>📝 Create Post</h2>
+  <textarea id="postText" placeholder="আপনার মনের কথা লিখুন..."></textarea>
+  <button id="publishPost">পোস্ট প্রকাশ করুন</button>
+  <p id="postStatus" class="notice"></p>
+</section>
 
-    <!-- বেচাকেনা Box -->
-    <div class="interactive-box">
-      <h3><i class="fa-solid fa-cart-shopping"></i> বেচাকেনা Box (গ্লোবাল মার্কেট)</h3>
-      <div class="market-item">
-        <div><strong>Quantum Chipset X1</strong><br><small style="color:#aaa;">হাই-স্পিড প্রসেসর</small></div>
-        <button style="background:var(--neon-gold); border:none; padding:5px 10px; font-weight:bold; cursor:pointer; border-radius:4px;" onclick="buyItem('Quantum Chipset')">$499 Buy</button>
-      </div>
-      <div class="market-item">
-        <div><strong>EV Motor Battery Cell</strong><br><small style="color:#aaa;">লং লাইফ ব্যাটারি</small></div>
-        <button style="background:var(--neon-gold); border:none; padding:5px 10px; font-weight:bold; cursor:pointer; border-radius:4px;" onclick="buyItem('EV Cell')">$1200 Buy</button>
-      </div>
-      <div id="marketStatus" style="font-size:12px; color:var(--accent-color); margin-top:5px;"></div>
-    </div>
+<section class="card">
+  <h2>🌍 Global Feed</h2>
+  <div id="feed">পোস্ট লোড হচ্ছে...</div>
+</section>
 
-  </div>
+<section class="card">
+  <h2>💬 AYNA Messenger</h2>
+  <div id="chatMessages">চ্যাট লোড হচ্ছে...</div>
+  <input id="chatText" placeholder="বার্তা লিখুন">
+  <button id="sendMessage">বার্তা পাঠান</button>
+  <p id="chatStatus" class="notice"></p>
+</section>
 
-  <!-- টেকনোলজি মডিউল গ্রিড -->
-  <h3 class="section-title"><i class="fa-solid fa-cubes"></i> ৩. ২০০০+ কোয়ান্টাম ও ফিউচার প্রযুক্তি মডিউল</h3>
-  <div class="supreme-grid">
-    <a href="#" class="supreme-card">
-      <i class="fa-solid fa-radar"></i>
-      <h3>Radar & Compass</h3>
-      <p>জিপিএস ও স্যাটেলাইট ট্র্যাকিং</p>
-    </a>
-    <a href="#" class="supreme-card">
-      <i class="fa-solid fa-server"></i>
-      <h3>Supercomputer Core</h3>
-      <p>১০,০০০ বছরের নিউরাল কোয়ান্টাম সিমুলেশন</p>
-    </a>
-    <a href="#" class="supreme-card">
-      <i class="fa-solid fa-dna"></i>
-      <h3>Medical Science</h3>
-      <p>জিনোম ও এআই ডিএনএ রিসার্চ</p>
-    </a>
-    <a href="#" class="supreme-card">
-      <i class="fa-solid fa-building-columns"></i>
-      <h3>World Leadership</h3>
-      <p>গ্লোবাল ডিপ্লোম্যাটিক নেটওয়ার্ক</p>
-    </a>
-  </div>
+<section class="card">
+  <h2>📍 AYNA GPS</h2>
+  <button id="getLocation">আমার লোকেশন দেখান</button>
+  <p id="locationResult" class="notice"></p>
+</section>
 
-  <!-- কোয়ান্টাম টার্মিনাল -->
-  <div class="control-terminal">
-    <h3 style="color: var(--accent-color); margin: 0; display:flex; align-items:center; gap:8px;">
-      <i class="fa-solid fa-terminal"></i> 10,000-Year Quantum Supercomputer Core Engine
-    </h3>
-    <p style="font-size: 12px; color: #aaa; margin:5px 0;">রিয়েল-টাইম ফায়ারবেস ব্যাকএন্ড ডেটা সিঙ্ক ও কোয়ান্টাম ডায়াগনস্টিক স্ক্যান রান করুন।</p>
-    
-    <button class="btn-action" style="width:auto; padding:10px 20px; background:var(--quantum-purple); color:#fff;" onclick="runQuantumDiagnostic()">
-      <i class="fa-solid fa-microchip"></i> সুপার কোয়ান্টাম স্ক্যান চালু করুন
-    </button>
+<section class="card">
+  <h2>⚛️ Quantum & Supercomputing</h2>
+  <p class="notice">এটি প্রযুক্তির ডেমো। বাস্তব কোয়ান্টাম কম্পিউটার নয়।</p>
+  <button id="runSimulation">সিস্টেম পরীক্ষা</button>
+  <p id="simulationResult" class="notice"></p>
+</section>
 
-    <div class="terminal-screen" id="terminalLog">
-      [00:00:00] SYSTEM INITIALIZING: AYNA BOOK Q-10000 Ecosystem<br>
-      [00:00:01] CONNECTING FIREBASE REALTIME DATABASE...<br>
-      [00:00:02] STATUS: SECURED FOR MOHAMMAD MAHBUB ALAM (COX'S BAZAR).
-    </div>
-  </div>
+<section class="card">
+  <h2>📺 Radio & TV</h2>
+  <p class="notice">অনুমোদিত সম্প্রচার লিংক এখানে যুক্ত করা যাবে।</p>
+</section>
 
-  <!-- ফুটার -->
-  <div class="supreme-footer-nav">
-    <a href="#"><i class="fa-solid fa-house"></i> Home</a>
-    <a href="#"><i class="fa-solid fa-user"></i> Owner Profile</a>
-    <a href="#"><i class="fa-solid fa-comments"></i> Chat Box</a>
-    <a href="#"><i class="fa-solid fa-tv"></i> Live TV</a>
-    <a href="#"><i class="fa-solid fa-store"></i> Market</a>
-  </div>
+<section class="card">
+  <h2>🚨 Emergency Safety</h2>
+  <p>🌪️ ঘূর্ণিঝড় · 🌊 বন্যা · 🔥 আগুন · 🌍 ভূমিকম্প · ⚡ দুর্ঘটনা</p>
+  <p class="notice">জরুরি অবস্থায় সরকারি নির্দেশনা অনুসরণ করুন।</p>
+</section>
+</main>
 
-</div>
-
-<!-- ফায়ারবেস রিয়েলটাইম কানেক্টিভিটি স্ক্রিপ্ট -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-  // ভেরিফায়েড ফায়ারবেস কনফিগারেশন
-  const firebaseConfig = {
-    apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-    authDomain: "ayna-book.firebaseapp.com",
-    databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "ayna-book",
-    storageBucket: "ayna-book.firebasestorage.app",
-    messagingSenderId: "805601138500",
-    appId: "1:805601138500:web:47acdc90cb0cb521626911",
-    measurementId: "G-RKHHSKNB4B"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-
-  // ১. একাউন্ট বা প্রোফাইল আপডেট ফায়ারবেসে সেভ করা
-  document.getElementById('saveProfileBtn').addEventListener('click', () => {
-    const name = document.getElementById('accName').value;
-    const role = document.getElementById('accRole').value;
-    const loc = document.getElementById('accLoc').value;
-
-    set(ref(database, 'users/owner'), {
-      name: name,
-      role: role,
-      location: loc,
-      lastUpdated: Date.now()
-    }).then(() => {
-      document.getElementById('dispName').innerText = name;
-      document.getElementById('dispRole').innerText = role;
-      document.getElementById('dispLoc').innerText = loc;
-      alert('সফলভাবে ফায়ারবেস ডেটাবেসে একাউন্ট আপডেট হয়েছে!');
-    });
-  });
-
-  // ২. লাইভ চ্যাট মেসেজিং ও ফাইল শেয়ারিং
-  const chatMsgInput = document.getElementById('chatMsg');
-  const sendChatBtn = document.getElementById('sendChatBtn');
-  const chatContainer = document.getElementById('chatContainer');
-
-  sendChatBtn.addEventListener('click', () => {
-    const msg = chatMsgInput.value;
-    if(!msg.trim()) return;
-
-    const chatRef = ref(database, 'chats');
-    push(chatRef, {
-      sender: document.getElementById('dispName').innerText,
-      message: msg,
-      timestamp: Date.now()
-    }).then(() => {
-      chatMsgInput.value = '';
-    });
-  });
-
-  // রিয়েল-টাইম চ্যাট লিসনার
-  onValue(ref(database, 'chats'), (snapshot) => {
-    chatContainer.innerHTML = '';
-    const data = snapshot.val();
-    if(data) {
-      Object.values(data).forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'chat-item';
-        div.innerHTML = `<span>[${c.sender}]:</span> ${c.message}`;
-        chatContainer.appendChild(div);
-      });
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-  });
-
-  // ৩. বেচাকেনা Box অর্ডার ফাংশন
-  window.buyItem = function(itemName) {
-    const status = document.getElementById('marketStatus');
-    status.innerText = `অর্ডার প্রক্রিয়াধীন... (${itemName})`;
-    
-    push(ref(database, 'orders'), {
-      item: itemName,
-      buyer: document.getElementById('dispName').innerText,
-      time: Date.now()
-    }).then(() => {
-      status.innerText = `সফল! ${itemName} অর্ডার ফায়ারবেসে রেকর্ড হয়েছে।`;
-    });
-  };
-
-  // ৪. কোয়ান্টাম ডায়াগনস্টিক স্ক্যান
-  window.runQuantumDiagnostic = function() {
-    const term = document.getElementById('terminalLog');
-    const time = new Date().toLocaleTimeString();
-    term.innerHTML += `<br>[${time}] QUANTUM SCAN: Verifying 2000+ Tech & Nodes...`;
-    term.scrollTop = term.scrollHeight;
-
-    setTimeout(() => {
-      term.innerHTML += `<br>[${time}] SUCCESS: 10,000-Year Quantum Core fully operational. Zero latency!`;
-      term.scrollTop = term.scrollHeight;
-    }, 1200);
-  };
-</script>
-
-<script>
-  // লাইভ ঘড়ি
-  setInterval(() => {
-    const now = new Date();
-    document.getElementById('liveClock').innerHTML = `<i class="fa-solid fa-clock"></i> ${now.toLocaleTimeString()}`;
-  }, 1000);
-</script>
+<footer>
+AYNA BOOK © 2026<br>
+My World. My Story. My AYNA BOOK.
+</footer>
 </body>
 </html>
