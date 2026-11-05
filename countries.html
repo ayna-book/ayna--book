@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<meta name="description" content="AYNA BOOK - বিশ্বের সমস্ত রাষ্ট্রসমূহ ও কোয়ান্টাম এআই ইঞ্জিন">
+<title>বিশ্বের সমস্ত রাষ্ট্রসমূহ — AYNA BOOK</title>
+<style>
+:root{
+  --navy:#071b49;--blue:#12366f;--cyan:#00d9ff;
+  --pink:#ff4fa3;--purple:#9b6cff;--white:#fff;
+  --muted:#c0cce5;--panel:#102653;--line:#31518a;--gold:#f59e0b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;color:var(--white);
+  background:linear-gradient(145deg,#06132f,#0b2250,#15113e);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+}
+header{
+  position:sticky;top:0;z-index:10;
+  background:#061638f5;border-bottom:1px solid var(--line);
+  padding:13px 15px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;
+}
+.brand{font-size:23px;font-weight:900;color:var(--cyan)}
+.brand span{color:var(--pink)}
+main{width:min(100% - 22px,950px);margin:18px auto}
+.hero{
+  text-align:center;padding:28px 15px;border:1px solid var(--line);
+  border-radius:20px;background:linear-gradient(130deg,#102e68,#311d65);
+}
+.hero h1{margin:0;color:var(--cyan);font-size:clamp(26px,6vw,42px)}
+.hero p{color:var(--muted)}
+.card{
+  background:rgba(16,38,83,.96);border:1px solid var(--line);
+  border-radius:15px;padding:15px;margin:14px 0;
+}
+h2{color:var(--cyan);font-size:20px;margin:0 0 14px}
+input,textarea{
+  width:100%;padding:12px;margin:7px 0 12px;
+  color:white;background:#071a3c;border:1px solid #36558c;
+  border-radius:10px;font:inherit;
+}
+button{
+  border:0;border-radius:10px;padding:11px 15px;margin:3px;
+  color:white;background:linear-gradient(100deg,#087fc5,#6845c5);
+  cursor:pointer;font-weight:bold;
+}
+.notice{color:var(--muted);font-size:13px;line-height:1.6}
+.country-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:10px;margin-top:10px;max-height:350px;overflow-y:auto;padding:5px;
+}
+.country-item{
+  background:#071a3c;border:1px solid var(--line);
+  padding:10px;border-radius:8px;font-size:14px;
+}
+.country-item strong{color:var(--cyan);display:block;margin-bottom:3px}
+footer{text-align:center;padding:25px 10px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">AYNA <span>BOOK</span></div>
+  <div id="connectionStatus">🌐 গ্লোবাল সার্ভার সংযুক্ত</div>
+</header>
+
+<main>
+<section class="hero">
+  <h1>🌍 বিশ্বের সমস্ত রাষ্ট্রসমূহ</h1>
+  <p>সকল দেশের রাজধানী, মুদ্রা এবং মৌলিক তথ্য এক নজরে</p>
+</section>
+
+<!-- Country Search & Database Section -->
+<section class="card">
+  <h2>🔍 রাষ্ট্র খুঁজুন (Search Nations)</h2>
+  <input type="text" id="searchInput" placeholder="দেশের নাম বাংলায় বা ইংরেজীতে লিখুন (যেমন: বাংলাদেশ, Japan)...">
+  <div id="countryCount" class="notice" style="margin-bottom: 8px;">মোট রাষ্ট্র লোড করা হচ্ছে...</div>
+  <div class="country-grid" id="countryList">
+    <!-- JavaScript দ্বারা ডায়নামিক্যালি কান্ট্রি লিস্ট লোড হবে -->
+  </div>
+</section>
+
+<!-- Voice Clock Section -->
+<section class="card">
+  <h2>⏰ রিয়েল-টাইম ঘড়ি ও নারী কন্ঠের সময় ঘোষণা</h2>
+  <div id="clockDisplay" style="font-size: 1.4rem; font-weight: bold; color: var(--gold); margin-bottom: 8px;">--:--:--</div>
+  <p id="voiceClockStatus" class="notice">প্রতি ১ ঘণ্টা পর পর সুললিত নারী কণ্ঠে স্বয়ংক্রিয় সময় ঘোষণা সক্রিয়।</p>
+  <button id="testVoiceBtn">কণ্ঠস্বর টেস্ট করুন</button>
+</section>
+
+<!-- GPS & Location Section -->
+<section class="card">
+  <h2>📍 AYNA GPS লোকেশন</h2>
+  <button id="getLocation">আমার বর্তমান লোকেশন দেখান</button>
+  <p id="locationResult" class="notice"></p>
+</section>
+
+<!-- Low Data Mode -->
+<section class="card">
+  <h2>📡 0MB Low Data Mode</h2>
+  <button id="lowDataButton">Low Data Mode চালু করুন</button>
+  <p id="lowDataStatus" class="notice">Low Data Mode বন্ধ।</p>
+</section>
+</main>
+
+<footer>
+  AYNA BOOK © 2026<br>
+  Designed by Mohammad Mahabub Alam · Ukhiya 4750
+</footer>
+
+<script>
+// বিশ্বের প্রধান রাষ্ট্রসমূহের ডেটাবেস
+const nations = [
+  {name: "বাংলাদেশ (Bangladesh)", capital: "ঢাকা", currency: "টাকা", region: "এশিয়া"},
+  {name: "ভারত (India)", capital: "নয়াদিল্লি", currency: "রুপি", region: "এশিয়া"},
+  {name: "পাকিস্তান (Pakistan)", capital: "ইসলামাবাদ", currency: "রুপি", region: "এশিয়া"},
+  {name: "যুক্তরাষ্ট্র (USA)", capital: "ওয়াশিংটন ডি.সি.", currency: "ডলার", region: "উত্তর আমেরিকা"},
+  {name: "যুক্তরাজ্য (UK)", capital: "লন্ডন", currency: "পাউন্ড", region: "ইউরোপ"},
+  {name: "চীন (China)", capital: "বেইজিং", currency: "ইউয়ান", region: "এশিয়া"},
+  {name: "জাপান (Japan)", capital: "টোকিও", currency: "ইয়েন", region: "এশিয়া"},
+  {name: "সৌদি আরব (Saudi Arabia)", capital: "রিয়াদ", currency: "রিয়াল", region: "এশিয়া"},
+  {name: "কানাডা (Canada)", capital: "অটোয়া", currency: "ডলার", region: "উত্তর আমেরিকা"},
+  {name: "অস্ট্রেলিয়া (Australia)", capital: "ক্যানবেরা", currency: "ডলার", region: "ওশেনিয়া"},
+  {name: "জার্মানি (Germany)", capital: "বার্লিন", currency: "ইউরো", region: "ইউরোপ"},
+  {name: "ফ্রান্স (France)", capital: "প্যারিস", currency: "ইউরো", region: "ইউরোপ"},
+  {name: "রাশিয়া (Russia)", capital: "মস্কো", currency: "রুবল", region: "ইউরোপ/এশিয়া"},
+  {name: "সংযুক্ত আরব আমিরাত (UAE)", capital: "আবুধাবি", currency: "দিরহাম", region: "এশিয়া"},
+  {name: "তুরস্ক (Turkey)", capital: "আঙ্কারা", currency: "লিরা", region: "এশিয়া/ইউরোপ"},
+  {name: "মালয়েশিয়া (Malaysia)", capital: "কুয়ালালামপুর", currency: "রিঙ্গিত", region: "এশিয়া"},
+  {name: "মালদ্বীপ (Maldives)", capital: "মালে", currency: "রূফিয়া", region: "এশিয়া"},
+  {name: "দক্ষিণ কোরিয়া (South Korea)", capital: "সিউল", currency: "ওয়ান", region: "এশিয়া"}
+];
+
+function displayCountries(items) {
+  const listContainer = document.getElementById("countryList");
+  listContainer.innerHTML = "";
+  
+  items.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "country-item";
+    div.innerHTML = `<strong>${c.name}</strong> রাজধানী: ${c.capital}<br>মুদ্রা: ${c.currency} (${c.region})`;
+    listContainer.appendChild(div);
+  });
+
+  document.getElementById("countryCount").textContent = `মোট প্রদর্শিত রাষ্ট্র: ${items.length} টি`;
+}
+
+// ইনিশিয়াল লোড
+displayCountries(nations);
+
+// সার্চ ফিল্টার লজিক
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  const keyword = e.target.value.toLowerCase();
+  const filtered = nations.filter(c => c.name.toLowerCase().includes(keyword) || c.capital.toLowerCase().includes(keyword));
+  displayCountries(filtered);
+});
+
+// রিয়েল-টাইম ঘড়ি ও নারী কন্ঠের ঘোষণা
+function updateClock() {
+  const now = new Date();
+  document.getElementById("clockDisplay").textContent = now.toLocaleTimeString('bn-BD', { hour12: true });
+
+  if (now.getMinutes() === 0 && now.getSeconds() === 0) {
+    speakTime(now.getHours());
+  }
+}
+
+function speakTime(hour) {
+  if ('speechSynthesis' in window) {
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    const text = `এলার্ট! এখন সময় ঠিক ${formattedHour} টা। AYNA BOOK এর পক্ষ থেকে শুভেচ্ছা।`;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'bn-BD';
+    utterance.pitch = 1.3;
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+document.getElementById("testVoiceBtn").addEventListener("click", () => {
+  const now = new Date();
+  const formattedHour = now.getHours() % 12 || 12;
+  const text = `AYNA BOOK এ আপনাকে স্বাগতম। বর্তমান সময় ${formattedHour} টা বেজে ${now.getMinutes()} মিনিট।`;
+  
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'bn-BD';
+    utterance.pitch = 1.3;
+    window.speechSynthesis.speak(utterance);
+    document.getElementById("voiceClockStatus").textContent = "🗣️ সুললিত নারী কণ্ঠে সময় ঘোষণা করা হয়েছে।";
+  } else {
+    document.getElementById("voiceClockStatus").textContent = "⚠️ ব্রাউজারে স্পিচ সিন্থেসিস সমর্থিত নয়।";
+  }
+});
+
+setInterval(updateClock, 1000);
+
+// GPS লোকেশন
+document.getElementById("getLocation").addEventListener("click", () => {
+  const output = document.getElementById("locationResult");
+  if (!navigator.geolocation) {
+    output.textContent = "আপনার ব্রাউজারে GPS সুবিধা নেই।";
+    return;
+  }
+  output.textContent = "লোকেশন খোঁজা হচ্ছে...";
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      output.innerHTML = `Latitude: ${lat.toFixed(6)} | Longitude: ${lon.toFixed(6)}<br><a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank">Google Maps-এ দেখুন</a>`;
+    },
+    error => { output.textContent = "লোকেশন পাওয়া যায়নি: " + error.message; },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+});
+
+// Low Data Mode
+let lowData = false;
+document.getElementById("lowDataButton").addEventListener("click", () => {
+  lowData = !lowData;
+  document.getElementById("lowDataButton").textContent = lowData ? "Low Data Mode বন্ধ করুন" : "Low Data Mode চালু করুন";
+  document.getElementById("lowDataStatus").textContent = lowData ? "⚡ Low Data (0MB) Mode সক্রিয়।" : "Low Data Mode বন্ধ হয়েছে।";
+});
+</script>
+</body>
+</html>
