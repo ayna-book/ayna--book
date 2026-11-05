@@ -1,14 +1,20 @@
 
-name: AYNA BOOK SHA Fingerprint
+name: AYNA BOOK Android SHA-1
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "android/**"
+      - ".github/workflows/sha1.yml"
 
 permissions:
   contents: read
 
 jobs:
-  sha:
+  signing-report:
     name: Generate Android SHA-1
     runs-on: ubuntu-latest
 
@@ -20,16 +26,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
-      - name: Check Android Project
-        run: |
-          ls -la
-          ls -la android-app
-          test -f android-app/gradlew
+      - name: Grant Gradle Permission
+        working-directory: android
+        run: chmod +x gradlew
 
-      - name: Generate SHA Fingerprints
-        working-directory: android-app
-        run: |
-          chmod +x gradlew
-          ./gradlew :app:signingReport
+      - name: Generate Signing Report
+        working-directory: android
+        run: ./gradlew :app:signingReport
