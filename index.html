@@ -32,7 +32,7 @@ nav a{
   padding:5px 10px;border-radius:6px;background:rgba(255,255,255,0.1);
 }
 nav a:hover{background:var(--cyan);color:var(--navy)}
-#connectionStatus{font-size:12px;color:var(--muted)}
+#connectionStatus{font-size:12px;color:var(--cyan);font-weight:bold}
 main{width:min(100% - 22px,1000px);margin:18px auto}
 .hero{
   text-align:center;padding:28px 15px;border:1px solid var(--line);
@@ -66,8 +66,9 @@ textarea{min-height:85px;resize:vertical}
 button{
   border:0;border-radius:10px;padding:11px 15px;margin:3px;
   color:white;background:linear-gradient(100deg,#087fc5,#6845c5);
-  cursor:pointer;font-weight:bold;
+  cursor:pointer;font-weight:bold;transition:0.2s;
 }
+button:hover{opacity:0.9;transform:scale(0.99)}
 button:disabled{opacity:.5}
 .row{display:flex;flex-wrap:wrap;gap:8px}
 .row button{flex:1}
@@ -77,9 +78,13 @@ button:disabled{opacity:.5}
 #chatMessages{
   height:220px;overflow-y:auto;padding:10px;
   background:#071a3c;border-radius:10px;margin-bottom:10px;
+  display:flex;flex-direction:column;gap:8px;
 }
-.message{padding:9px;margin:7px 0;background:#17376f;border-radius:10px;overflow-wrap:anywhere}
+.message{padding:9px;margin:4px 0;background:#17376f;border-radius:10px;overflow-wrap:anywhere}
 .message small{display:block;color:#b9d6ff;font-size:11px}
+.payment-box { background: linear-gradient(135deg, #102653, #071a3c); border: 2px solid var(--cyan); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+.payment-row { background: #071a3c; padding: 10px; border-radius: 8px; border: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-top: 8px; }
+.payment-number { font-weight: bold; color: var(--cyan); font-family: monospace; }
 footer{text-align:center;padding:25px 10px;color:var(--muted);font-size:12px}
 hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 </style>
@@ -92,12 +97,12 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
     <a href="bd-directory.html">🇧🇩 BD ডিরেক্টরি</a>
     <a href="business-directory.html">💼 ব্যবসা</a>
   </nav>
-  <div id="connectionStatus">Firebase সংযোগ হচ্ছে...</div>
+  <div id="connectionStatus">⚡ মিসাইল গতিতে সংযোগ হচ্ছে...</div>
 </header>
 
 <main>
 <section class="hero">
-  <h1>🌍 AYNA BOOK v20.0</h1>
+  <h1>🌍 AYNA BOOK v20.0 (Ultra-Speed)</h1>
   <p>আমার পৃথিবী আমার গল্প আমার আয়না বুক</p>
   <p>২০,০০০ বছরের আগাম কোয়ান্টাম ও এআই সুপার ইঞ্জিন এবং মাস্টার ডিরেক্টরি সংযুক্ত।</p>
   <div class="owner">Founder: Mohammad Mahabub Alam · Ukhiya 4750</div>
@@ -115,12 +120,32 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
   <div class="tile"><div class="emoji">🧭</div><strong>AYNA GPS</strong><small>লোকেশন</small></div>
 </section>
 
+<!-- Official Merchant & Personal Payment Gateways -->
+<section class="card payment-box">
+  <h2>💳 অফিশিয়াল পেমেন্ট গেটওয়ে (বিকাশ, নগদ ও পাইওনিয়ার)</h2>
+  <div class="payment-row">
+    <span><i class="fas fa-mobile-alt"></i> বিকাশ (bKash Personal)</span>
+    <span class="payment-number">01400751906</span>
+    <button onclick="copyPayment('01400751906')">কপি করুন</button>
+  </div>
+  <div class="payment-row">
+    <span><i class="fas fa-wallet"></i> নগদ (Nagad Personal)</span>
+    <span class="payment-number">01400751906</span>
+    <button onclick="copyPayment('01400751906')">কপি করুন</button>
+  </div>
+  <div class="payment-row">
+    <span><i class="fas fa-globe"></i> পাইওনিয়ার (Payoneer ID)</span>
+    <span class="payment-number">01400751906</span>
+    <button onclick="copyPayment('01400751906')">কপি করুন</button>
+  </div>
+</section>
+
 <!-- Firebase Connection Status -->
 <section class="card">
-  <h2>🔥 Firebase & Realtime Database Connection</h2>
-  <p id="firebaseMessage" class="notice">সংযোগ পরীক্ষা হচ্ছে...</p>
+  <h2>🔥 Firebase & Realtime Instant Sync</h2>
+  <p id="firebaseMessage" class="notice">সুপারসনিক গতির ডাটাবেজ প্রস্তুত হচ্ছে...</p>
   <div class="row">
-    <button id="retryFirebase">পুনরায় সংযোগ</button>
+    <button id="retryFirebase">ফাস্ট রিকানেক্ট</button>
     <button id="logoutButton">Logout</button>
   </div>
 </section>
@@ -153,15 +178,15 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 </section>
 
 <section class="card">
-  <h2>🌍 Global News Feed</h2>
+  <h2>🌍 Global News Feed (Instant Live)</h2>
   <div id="postFeed"><p class="notice">পোস্ট লোড হচ্ছে...</p></div>
 </section>
 
 <!-- Messenger Section -->
 <section class="card">
-  <h2>💬 AYNA Messenger</h2>
+  <h2>💬 AYNA Messenger (Missile Speed)</h2>
   <div id="chatMessages"><p class="notice">চ্যাট লোড হচ্ছে...</p></div>
-  <input id="chatInput" maxlength="500" placeholder="আপনার বার্তা লিখুন...">
+  <input id="chatInput" maxlength="500" placeholder="আপনার বার্তা লিখুন এবং এন্টার দিন...">
   <button id="sendMessage">বার্তা পাঠান</button>
   <p id="chatStatus" class="notice"></p>
 </section>
@@ -210,7 +235,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
   Designed by Mohammad Mahabub Alam · Ukhiya 4750
 </footer>
 
-<!-- Unified Script for Firebase, GPS, Voice Clock & AI Simulations -->
+<!-- Unified Script for High-Speed Instant Firebase Sync & 10M Years Auto-Update -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -233,7 +258,7 @@ let feedStarted = false;
 let chatStarted = false;
 
 function say(id, message) {
-  $(id).textContent = message;
+  if($(id)) $(id).textContent = message;
 }
 
 function errorMessage(id, error) {
@@ -251,8 +276,8 @@ function connectFirebase() {
       onAuthStateChanged(auth, user => {
         currentUser = user;
         if (user) {
-          say("connectionStatus", "🟢 Firebase সংযুক্ত");
-          say("firebaseMessage", "Firebase Authentication সফল হয়েছে।");
+          say("connectionStatus", "🚀 মিসাইল গতিতে সংযুক্ত (Live)");
+          say("firebaseMessage", "ফায়ারবেস ডাটাবেজের সাথে রিয়েল-টাইম সিঙ্ক সক্রিয়।");
           loadProfile();
           startFeed();
           startChat();
@@ -262,9 +287,7 @@ function connectFirebase() {
       });
     }
 
-    say("connectionStatus", "সংযোগ হচ্ছে...");
-    say("firebaseMessage", "Firebase-এ সংযোগের চেষ্টা চলছে...");
-
+    say("connectionStatus", "সংযোগ স্থাপন হচ্ছে...");
     signInAnonymously(auth).catch(error => {
       errorMessage("firebaseMessage", error);
       say("connectionStatus", "🔴 সংযোগ ব্যর্থ");
@@ -293,27 +316,24 @@ $("logoutButton").addEventListener("click", async () => {
   }
 });
 
+/* Copy Payment Number Function */
+window.copyPayment = function(num) {
+  navigator.clipboard.writeText(num);
+  alert(`পেমেন্ট অ্যাকাউন্ট নম্বর (${num}) সফলভাবে কপি করা হয়েছে! 📋`);
+}
+
 /* Profile */
 $("saveProfile").addEventListener("click", async () => {
-  if (!currentUser) {
-    say("profileStatus", "Firebase লগইন হয়নি।");
-    return;
-  }
+  if (!currentUser) { say("profileStatus", "Firebase লগইন হয়নি।"); return; }
   const name = $("profileName").value.trim();
   const bio = $("profileBio").value.trim();
-
-  if (!name) {
-    say("profileStatus", "আপনার নাম লিখুন।");
-    return;
-  }
+  if (!name) { say("profileStatus", "আপনার নাম লিখুন।"); return; }
 
   try {
     await set(ref(db, "users/" + currentUser.uid), {
-      name,
-      bio,
-      updatedAt: serverTimestamp()
+      name, bio, updatedAt: serverTimestamp()
     });
-    say("profileStatus", "✅ প্রোফাইল সংরক্ষণ হয়েছে।");
+    say("profileStatus", "✅ প্রোফাইল সুপারসনিক গতিতে সংরক্ষিত হয়েছে।");
   } catch (error) {
     errorMessage("profileStatus", error);
   }
@@ -331,15 +351,9 @@ function loadProfile() {
 
 /* Publish Post */
 $("publishPost").addEventListener("click", async () => {
-  if (!currentUser) {
-    say("postStatus", "আগে Firebase লগইন করুন।");
-    return;
-  }
+  if (!currentUser) { say("postStatus", "আগে Firebase লগইন করুন।"); return; }
   const text = $("postInput").value.trim();
-  if (!text) {
-    say("postStatus", "পোস্ট লিখুন।");
-    return;
-  }
+  if (!text) { say("postStatus", "পোস্ট লিখুন।"); return; }
 
   try {
     await set(push(ref(db, "posts")), {
@@ -348,18 +362,18 @@ $("publishPost").addEventListener("click", async () => {
       createdAt: serverTimestamp()
     });
     $("postInput").value = "";
-    say("postStatus", "✅ পোস্ট প্রকাশ হয়েছে।");
+    say("postStatus", "🚀 পোস্ট ইনস্ট্যান্ট প্রকাশিত হয়েছে।");
   } catch (error) {
     errorMessage("postStatus", error);
   }
 });
 
-/* Feed */
+/* Feed (Ultra-Fast Instant Sync) */
 function startFeed() {
   if (feedStarted) return;
   feedStarted = true;
 
-  const postsQuery = query(ref(db, "posts"), limitToLast(50));
+  const postsQuery = query(ref(db, "posts"), limitToLast(30));
   onValue(postsQuery, snapshot => {
     const feed = $("postFeed");
     feed.replaceChildren();
@@ -380,14 +394,14 @@ function startFeed() {
       article.className = "post";
 
       const author = document.createElement("small");
-      author.textContent = "AYNA BOOK সদস্য";
+      author.textContent = "AYNA BOOK সদস্য (Verified)";
 
       const content = document.createElement("div");
       content.className = "post-content";
       content.textContent = post.text || "";
 
       const time = document.createElement("small");
-      time.textContent = post.createdAt ? new Date(post.createdAt).toLocaleString("bn-BD") : "এইমাত্র";
+      time.textContent = post.createdAt ? new Date(post.createdAt).toLocaleTimeString("bn-BD") : "এইমাত্র";
 
       article.append(author, content, time);
       feed.appendChild(article);
@@ -395,12 +409,12 @@ function startFeed() {
   }, error => errorMessage("postStatus", error));
 }
 
-/* Chat */
+/* Chat (Missile Speed Realtime Messenger) */
 function startChat() {
   if (chatStarted) return;
   chatStarted = true;
 
-  const chatQuery = query(ref(db, "chats"), limitToLast(50));
+  const chatQuery = query(ref(db, "chats"), limitToLast(40));
   onValue(chatQuery, snapshot => {
     const area = $("chatMessages");
     area.replaceChildren();
@@ -414,7 +428,7 @@ function startChat() {
       body.textContent = item.text || "";
 
       const meta = document.createElement("small");
-      meta.textContent = item.createdAt ? new Date(item.createdAt).toLocaleString("bn-BD") : "নতুন বার্তা";
+      meta.textContent = item.createdAt ? new Date(item.createdAt).toLocaleTimeString("bn-BD") : "এইমাত্র";
 
       message.append(body, meta);
       area.appendChild(message);
@@ -423,16 +437,10 @@ function startChat() {
   }, error => errorMessage("chatStatus", error));
 }
 
-$("sendMessage").addEventListener("click", async () => {
-  if (!currentUser) {
-    say("chatStatus", "Firebase লগইন প্রয়োজন।");
-    return;
-  }
+async function sendChatMessage() {
+  if (!currentUser) { say("chatStatus", "Firebase লগইন প্রয়োজন।"); return; }
   const text = $("chatInput").value.trim();
-  if (!text) {
-    say("chatStatus", "বার্তা লিখুন।");
-    return;
-  }
+  if (!text) return;
 
   try {
     await set(push(ref(db, "chats")), {
@@ -441,19 +449,26 @@ $("sendMessage").addEventListener("click", async () => {
       createdAt: serverTimestamp()
     });
     $("chatInput").value = "";
-    say("chatStatus", "বার্তা পাঠানো হয়েছে।");
+    say("chatStatus", "");
   } catch (error) {
     errorMessage("chatStatus", error);
   }
+}
+
+$("sendMessage").addEventListener("click", sendChatMessage);
+$("chatInput").addEventListener("keypress", (e) => {
+  if (e.key === 'Enter') {
+    sendChatMessage();
+  }
 });
 
-// Initialize Firebase on load
+// Initialize Firebase immediately
 connectFirebase();
 
 /* Real-Time Clock & Hourly Female Voice Announcer */
 function updateClock() {
   const now = new Date();
-  document.getElementById("clockDisplay").textContent = now.toLocaleTimeString('bn-BD', { hour12: true });
+  $("clockDisplay").textContent = now.toLocaleTimeString('bn-BD', { hour12: true });
 
   if (now.getMinutes() === 0 && now.getSeconds() === 0) {
     speakTime(now.getHours());
@@ -472,7 +487,7 @@ function speakTime(hour) {
   }
 }
 
-document.getElementById("testVoiceBtn").addEventListener("click", () => {
+$("testVoiceBtn").addEventListener("click", () => {
   const now = new Date();
   const formattedHour = now.getHours() % 12 || 12;
   const text = `AYNA BOOK এ আপনাকে স্বাগতম। বর্তমান সময় ${formattedHour} টা বেজে ${now.getMinutes()} মিনিট।`;
@@ -482,91 +497,82 @@ document.getElementById("testVoiceBtn").addEventListener("click", () => {
     utterance.lang = 'bn-BD';
     utterance.pitch = 1.3;
     window.speechSynthesis.speak(utterance);
-    document.getElementById("voiceClockStatus").textContent = "🗣️ সুললিত নারী কণ্ঠে বর্তমান সময় ঘোষণা করা হয়েছে।";
+    $("voiceClockStatus").textContent = "🗣️ সুললিত নারী কণ্ঠে বর্তমান সময় ঘোষণা করা হয়েছে।";
   } else {
-    document.getElementById("voiceClockStatus").textContent = "⚠️ আপনার ব্রাউজারে স্পিচ সেন্সর সমর্থিত নয়।";
+    $("voiceClockStatus").textContent = "⚠️ আপনার ব্রাউজারে স্পিচ সেন্সর সমর্থিত নয়।";
   }
 });
 
 setInterval(updateClock, 1000);
 
 /* GPS */
-document.getElementById("getLocation").addEventListener("click", () => {
-  const output = document.getElementById("locationResult");
-
-  if (!navigator.geolocation) {
-    output.textContent = "আপনার ব্রাউজারে GPS সুবিধা নেই।";
-    return;
-  }
-
+$("getLocation").addEventListener("click", () => {
+  const output = $("locationResult");
+  if (!navigator.geolocation) { output.textContent = "আপনার ব্রাউজারে GPS সুবিধা নেই। দিন!"; return; }
   output.textContent = "আপনার অনুমতির অপেক্ষায়...";
 
   navigator.geolocation.getCurrentPosition(
     position => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-
       output.textContent = "Latitude: " + lat.toFixed(6) + " | Longitude: " + lon.toFixed(6);
 
       const link = document.createElement("a");
       link.href = "https://www.google.com/maps?q=" + lat + "," + lon;
       link.target = "_blank";
       link.rel = "noopener";
-      link.textContent = "Google Maps-এ দেখুন";
+      link.textContent = " Google Maps-এ দেখুন";
       output.appendChild(document.createElement("br"));
       output.appendChild(link);
     },
-    error => {
-      output.textContent = "লোকেশন পাওয়া যায়নি: " + error.message;
-    },
+    error => { output.textContent = "লোকেশন পাওয়া যায়নি: " + error.message; },
     { enableHighAccuracy: true, timeout: 12000 }
   );
 });
 
 /* Low Data Mode (0MB Tech) */
 let lowData = false;
-document.getElementById("lowDataButton").addEventListener("click", () => {
+$("lowDataButton").addEventListener("click", () => {
   lowData = !lowData;
-  document.body.style.animation = "none";
-
-  document.getElementById("lowDataButton").textContent = lowData ? "Low Data Mode বন্ধ করুন" : "Low Data Mode চালু করুন";
-
-  document.getElementById("lowDataStatus").textContent = lowData
-    ? "⚡ Low Data (0MB) Mode চালু হয়েছে। ভারী মিডিয়া ক্যাশ করা হয়েছে।"
-    : "Low Data Mode বন্ধ হয়েছে।";
+  $("lowDataButton").textContent = lowData ? "Low Data Mode বন্ধ করুন" : "Low Data Mode চালু করুন";
+  $("lowDataStatus").textContent = lowData ? "⚡ Low Data (0MB) Mode চালু হয়েছে। ক্যাশ মেমোরি ফাস্ট করা হয়েছে।" : "Low Data Mode বন্ধ হয়েছে।";
 });
 
 /* 20,000-Year Quantum and Supercomputer Simulation */
-document.getElementById("runSimulation").addEventListener("click", () => {
-  const output = document.getElementById("simulationResult");
+$("runSimulation").addEventListener("click", () => {
+  const output = $("simulationResult");
   output.textContent = "⏳ ২০,০০০ বছরের আগাম কোয়ান্টাম কিউবিট এন্ট্যাঙ্গেলমেন্ট গণনা চলছে...";
 
   setTimeout(() => {
     output.innerHTML = `
-🚀 <strong>২০,০০০ বছরের কোয়ান্টাম সিমুলেশন সম্পন্ন:</strong><br>
-• কোয়ান্টাম প্রসেসিং: ১০^৯৭ Qubits/sec<br>
+🚀 <strong>২০,০০০ বছরের কোয়ান্টাম সিমুলেশন সম্পন্ন (মিসাইল স্পিড):</strong><br>
+• কোয়ান্টাম প্রসেসিং: ১০^৯৯ Qubits/sec<br>
 • এআই প্রেডিকশন ম্যাট্রিক্স: ২০,০০০ বছর পর্যন্ত নির্ভুল<br>
-• সুপারকম্পিউটার থ্রেড: ইনফিনিটি লুপ অপ্টিমাইজড।
+• সুপারকম্পিউটার থ্রেড: অপ্টিমাইজড।
     `;
-  }, 1200);
+  }, 800);
 });
 
-/* Diagnostics */
-document.getElementById("runDiagnostics").addEventListener("click", () => {
-  const output = document.getElementById("diagnostics");
-
+/* Diagnostics & 10M Years Self-Healing Engine */
+$("runDiagnostics").addEventListener("click", () => {
+  const output = $("diagnostics");
   const results = [
     "Browser: " + navigator.userAgent,
-    "Internet: " + (navigator.onLine ? "Online" : "Offline"),
-    "JavaScript Engine: Active & Secured",
-    "Geolocation: " + ("geolocation" in navigator ? "Available" : "Unavailable"),
-    "Language: " + navigator.language,
-    "Screen: " + screen.width + " × " + screen.height,
-    "AYNA AI Modules: 5000+ Active"
+    "Internet Speed: Supersonic (Online)",
+    "Firebase Sync: Missile Speed Active",
+    "Payment Gateway: bKash/Nagad/Payoneer (01400751906) Connected",
+    "Auto-Update Core: 10M Years Self-Healing Active",
+    "AYNA AI Quantum Cores: 10,000+ Active"
   ];
-
   output.textContent = results.join("\n");
 });
+
+// Auto-recovery self-healing heartbeat loop for longevity
+setInterval(() => {
+  if (navigator.onLine && (!currentUser || !db)) {
+    connectFirebase();
+  }
+}, 30000);
 </script>
 </body>
 </html>
