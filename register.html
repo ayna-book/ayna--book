@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071b49">
+  <title>AYNA BOOK | Create Account</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      color: white;
+      background: linear-gradient(135deg, #020c24, #071b49, #24104b);
+    }
+
+    .register-box {
+      width: 100%;
+      max-width: 430px;
+      padding: 30px 24px;
+      border: 1px solid #00ffcc;
+      border-radius: 20px;
+      background: rgba(4, 17, 48, 0.96);
+      box-shadow: 0 0 25px rgba(0, 255, 204, 0.18);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      color: #00ffcc;
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      text-align: center;
+      color: #ffcc00;
+      margin-bottom: 25px;
+      font-size: 13px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      margin: 13px 0 7px;
+      color: #b8f7ed;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #36527f;
+      border-radius: 9px;
+      outline: none;
+      background: #0c2047;
+      color: white;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #00ffcc;
+      box-shadow: 0 0 8px rgba(0, 255, 204, 0.2);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 9px;
+      background: linear-gradient(90deg, #00ffcc, #00aaff);
+      color: #04152e;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #message {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .links {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 2;
+    }
+
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+
+    .home-link {
+      display: block;
+      margin-top: 12px;
+      color: #ffcc00;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="register-box">
+    <div class="logo">🌍 AYNA BOOK</div>
+    <div class="tagline">MY WORLD. MY STORY. MY AYNA BOOK.</div>
+
+    <h2>নতুন অ্যাকাউন্ট তৈরি করুন</h2>
+
+    <form id="registerForm">
+      <label for="fullName">আপনার পূর্ণ নাম</label>
+      <input
+        id="fullName"
+        type="text"
+        placeholder="আপনার নাম লিখুন"
+        maxlength="80"
+        autocomplete="name"
+        required
+      >
+
+      <label for="email">Gmail / Email</label>
+      <input
+        id="email"
+        type="email"
+        placeholder="example@gmail.com"
+        autocomplete="email"
+        required
+      >
+
+      <label for="password">পাসওয়ার্ড</label>
+      <input
+        id="password"
+        type="password"
+        placeholder="কমপক্ষে ৬ অক্ষর"
+        minlength="6"
+        autocomplete="new-password"
+        required
+      >
+
+      <label for="confirmPassword">পাসওয়ার্ড নিশ্চিত করুন</label>
+      <input
+        id="confirmPassword"
+        type="password"
+        placeholder="আবার পাসওয়ার্ড লিখুন"
+        minlength="6"
+        autocomplete="new-password"
+        required
+      >
+
+      <button id="registerButton" type="submit">
+        Create AYNA BOOK Account
+      </button>
+    </form>
+
+    <div id="message" role="status" aria-live="polite"></div>
+
+    <div class="links">
+      আগে থেকেই অ্যাকাউন্ট আছে?
+      <a href="./login.html">Login করুন</a>
+
+      <a class="home-link" href="./index.html">
+        ← AYNA BOOK Home
+      </a>
+    </div>
+  </main>
+
+  <script type="module">
+    import { auth, db } from "./js/firebase.js";
+
+    import {
+      createUserWithEmailAndPassword,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+    import {
+      doc,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+    const form = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+    const registerButton = document.getElementById("registerButton");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+      message.textContent = "";
+
+      if (!fullName || !email || !password || !confirmPassword) {
+        message.textContent = "সব তথ্য পূরণ করুন।";
+        return;
+      }
+
+      if (password.length < 6) {
+        message.textContent = "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        message.textContent = "দুটি পাসওয়ার্ড মিলছে না।";
+        return;
+      }
+
+      registerButton.disabled = true;
+      registerButton.textContent = "অ্যাকাউন্ট তৈরি হচ্ছে...";
+
+      try {
+        const userCredential =
+          await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+        const user = userCredential.user;
+
+        await updateProfile(user, {
+          displayName: fullName
+        });
+
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          fullName: fullName,
+          email: user.email,
+          photoURL: "",
+          bio: "",
+          createdAt: serverTimestamp()
+        });
+
+        message.textContent =
+          "অ্যাকাউন্ট তৈরি হয়েছে! AYNA BOOK-এ স্বাগতম।";
+
+        form.reset();
+
+        setTimeout(() => {
+          window.location.href = "./profile.html";
+        }, 1500);
+
+      } catch (error) {
+        console.error("Registration error:", error);
+
+        const errorMessages = {
+          "auth/email-already-in-use":
+            "এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট রয়েছে।",
+          "auth/invalid-email":
+            "সঠিক ইমেইল ঠিকানা লিখুন।",
+          "auth/weak-password":
+            "আরও শক্তিশালী পাসওয়ার্ড ব্যবহার করুন।",
+          "auth/network-request-failed":
+            "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
+          "permission-denied":
+            "Firebase Firestore Rules অনুমতি দিচ্ছে না।"
+        };
+
+        message.textContent =
+          errorMessages[error.code] ||
+          "অ্যাকাউন্ট তৈরি হয়নি। আবার চেষ্টা করুন।";
+
+      } finally {
+        registerButton.disabled = false;
+        registerButton.textContent =
+          "Create AYNA BOOK Account";
+      }
+    });
+  </script>
+</body>
+</html>
