@@ -9,17 +9,24 @@ permissions:
 
 jobs:
   sha:
+    name: Generate Android SHA-1
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
+      - name: Check Android Project
+        run: |
+          ls -la
+          ls -la android-app
+          test -f android-app/gradlew
 
       - name: Generate SHA Fingerprints
         working-directory: android-app
