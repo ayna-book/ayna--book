@@ -1,14 +1,12 @@
-name: Generate Android SHA-1 and SHA-256
+name: AYNA BOOK SHA Fingerprint
 
 on:
   push:
     branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
-  build:
+  sha:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +21,10 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission for gradlew
+        # আপনার অ্যান্ড্রয়েড ফোল্ডার ডিরেক্টরি অনুযায়ী রান করবে
         run: chmod +x gradlew
+        working-directory: ./android # যদি প্রজেক্টের সব ফাইল android ফোল্ডারে থাকে
 
       - name: Run Gradle Signing Report
         run: ./gradlew signingReport
+        working-directory: ./android # যদি প্রজেক্টের সব ফাইল android ফোল্ডারে থাকে
