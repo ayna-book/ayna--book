@@ -1,37 +1,33 @@
-
-name: AYNA BOOK Android SHA-1
+name: Generate Android SHA-1 and SHA-256
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
-    paths:
-      - "android/**"
-      - ".github/workflows/sha1.yml"
-
-permissions:
-  contents: read
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # এটি দিয়ে আপনি গিটহাব ওয়েবসাইট থেকে ম্যানুয়ালি রান করাতে পারবেন
 
 jobs:
-  signing-report:
-    name: Generate Android SHA-1
+  generate-sha1:
     runs-on: ubuntu-latest
 
     steps:
+      # ১. প্রজেক্টের কোড চেকআউট করা
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      # ২. জাভা এনভায়রনমেন্ট সেটআপ করা (অ্যান্ড্রয়েডের জন্য JDK 17 স্ট্যান্ডার্ড)
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: "17"
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
 
-      - name: Grant Gradle Permission
-        working-directory: android
+      # ৩. গ্রেডল ফাইলের এক্সিকিউট পারমিশন নিশ্চিত করা
+      - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Generate Signing Report
-        working-directory: android
-        run: ./gradlew :app:signingReport
+      # ৪. ডিবাগ এবং রিলিজ সাইনিং রিপোর্ট জেনারেট করা
+      - name: Run Gradle Signing Report
+        run: ./gradlew signingReport
