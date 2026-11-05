@@ -132,7 +132,7 @@ fun AynaBookApp() {
                     Column(
                         modifier = Modifier.padding(20.dp)
                     ) {
-                        Text(
+                       Text(
                             text = "Welcome to AYNA BOOK 🌍",
                             color = White,
                             fontSize = 20.sp,
