@@ -156,7 +156,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 <!-- GPS Section -->
 <section class="card">
   <h2>📍 AYNA GPS & Tracking</h2>
-  <p class="notice">আপনার অনুমতি নিয়ে ব্রাউজারের GPS লোকেশন ট্র্যাক করা হবে।</p>
+  <p class="notice">আপনার অনুমতি নিয়ে ব্রাউজارهای GPS লোকেশন ট্র্যাক করা হবে।</p>
   <button id="getLocation">আমার লোকেশন দেখান</button>
   <p id="locationResult" class="notice"></p>
 </section>
@@ -203,7 +203,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
   Designed by Mohammad Mahabub Alam
 </footer>
 
-<!-- Firebase & Application Script -->
+<!-- Unified Script for Firebase, GPS, Voice Clock & AI Simulations -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -442,15 +442,12 @@ $("sendMessage").addEventListener("click", async () => {
 
 // Initialize Firebase on load
 connectFirebase();
-</script>
 
-<script>
 /* Real-Time Clock & Hourly Female Voice Announcer */
 function updateClock() {
   const now = new Date();
   document.getElementById("clockDisplay").textContent = now.toLocaleTimeString('bn-BD', { hour12: true });
 
-  // Hourly female voice check
   if (now.getMinutes() === 0 && now.getSeconds() === 0) {
     speakTime(now.getHours());
   }
@@ -462,7 +459,7 @@ function speakTime(hour) {
     const text = `এলার্ট! এখন সময় ঠিক ${formattedHour} টা। AYNA BOOK এর পক্ষ থেকে আপনাকে শুভেচ্ছা।`;
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'bn-BD';
-    utterance.pitch = 1.3; // Feminine higher pitch tone
+    utterance.pitch = 1.3;
     utterance.rate = 0.9;
     window.speechSynthesis.speak(utterance);
   }
@@ -535,12 +532,12 @@ document.getElementById("lowDataButton").addEventListener("click", () => {
 /* 20,000-Year Quantum and Supercomputer Simulation */
 document.getElementById("runSimulation").addEventListener("click", () => {
   const output = document.getElementById("simulationResult");
-  output.textContent = "⏳ ২০,০০০ বছরের আগাম কোয়ান্টাম কুবির এন্ট্যাঙ্গেলমেন্ট গণনা চলছে...";
+  output.textContent = "⏳ ২০,০০০ বছরের আগাম কোয়ান্টাম কিউবিট এন্ট্যাঙ্গেলমেন্ট গণনা চলছে...";
 
   setTimeout(() => {
     output.innerHTML = `
 🚀 <strong>২০,০০০ বছরের কোয়ান্টাম সিমুলেশন সম্পন্ন:</strong><br>
-• কোয়ান্টাম কয়েন্ট প্রসেসিং: ১০^৯৭ Qubits/sec<br>
+• কোয়ান্টাম প্রসেসিং: ১০^৯৭ Qubits/sec<br>
 • এআই প্রেডিকশন ম্যাট্রিক্স: ২০,০০০ বছর পর্যন্ত নির্ভুল<br>
 • সুপারকম্পিউটার থ্রেড: ইনফিনিটি লুপ অপ্টিমাইজড।
     `;
