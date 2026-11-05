@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<meta name="description" content="AYNA BOOK - বাংলাদেশ সরকারি ও পুলিশ কর্মকর্তা ডিরেক্টরি">
+<title>বাংলাদেশ ডিরেক্টরি — AYNA BOOK</title>
+<style>
+:root{
+  --navy:#071b49;--blue:#12366f;--cyan:#00d9ff;
+  --pink:#ff4fa3;--purple:#9b6cff;--white:#fff;
+  --muted:#c0cce5;--panel:#102653;--line:#31518a;--gold:#f59e0b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;color:var(--white);
+  background:linear-gradient(145deg,#06132f,#0b2250,#15113e);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+}
+header{
+  position:sticky;top:0;z-index:10;
+  background:#061638f5;border-bottom:1px solid var(--line);
+  padding:13px 15px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;
+}
+.brand{font-size:23px;font-weight:900;color:var(--cyan)}
+.brand span{color:var(--pink)}
+main{width:min(100% - 22px,1000px);margin:18px auto}
+.hero{
+  text-align:center;padding:28px 15px;border:1px solid var(--line);
+  border-radius:20px;background:linear-gradient(130deg,#102e68,#311d65);
+}
+.hero h1{margin:0;color:var(--cyan);font-size:clamp(22px,5vw,36px)}
+.hero p{color:var(--muted)}
+.card{
+  background:rgba(16,38,83,.96);border:1px solid var(--line);
+  border-radius:15px;padding:15px;margin:14px 0;
+}
+h2{color:var(--cyan);font-size:20px;margin:0 0 14px}
+input, select{
+  width:100%;padding:12px;margin:7px 0 12px;
+  color:white;background:#071a3c;border:1px solid #36558c;
+  border-radius:10px;font:inherit;
+}
+button{
+  border:0;border-radius:10px;padding:11px 15px;margin:3px;
+  color:white;background:linear-gradient(100deg,#087fc5,#6845c5);
+  cursor:pointer;font-weight:bold;
+}
+.notice{color:var(--muted);font-size:13px;line-height:1.6}
+.directory-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:12px;margin-top:10px;max-height:500px;overflow-y:auto;padding:5px;
+}
+.person-item{
+  background:#071a3c;border:1px solid var(--line);
+  padding:12px;border-radius:10px;font-size:13px;line-height:1.6;
+}
+.person-item strong{color:var(--cyan);display:block;font-size:15px;margin-bottom:4px}
+.role-badge{color:var(--gold);font-weight:bold;display:inline-block;margin-bottom:4px;}
+.contact-link{color:var(--cyan);text-decoration:none;}
+.contact-link:hover{text-decoration:underline;}
+footer{text-align:center;padding:25px 10px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">AYNA <span>BOOK</span></div>
+  <div id="connectionStatus">🇧🇩 বাংলাদেশ ডিরেক্টরি ডেটাবেস সক্রিয়</div>
+</header>
+
+<main>
+<section class="hero">
+  <h1>🇧🇩 বাংলাদেশ সরকারি ও পুলিশ কর্মকর্তা ডিরেক্টরি</h1>
+  <p>রাষ্ট্রপতি, প্রধানমন্ত্রী, উপদেষ্টা/মন্ত্রী, ডিসি, এসপি ও ওসিদের ফোন নম্বর ও ইমেইল ঠিকানা</p>
+</section>
+
+<!-- Search and Filter Section -->
+<section class="card">
+  <h2>🔍 সার্চ ও ফিল্টার করুন</h2>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <input type="text" id="searchInput" placeholder="নাম, পদবী, জেলা বা থানা দিয়ে খুঁজুন (যেমন: উখিয়া, ওসি, ডিসি)..." style="flex: 2;">
+    <select id="categoryFilter" style="flex: 1;">
+      <option value="all">সকল ক্যাটাগরি</option>
+      <option value="রাষ্ট্রীয়">রাষ্ট্রীয় শীর্ষ পদ</option>
+      <option value="উপদেষ্টা/মন্ত্রী">উপদেষ্টা/মন্ত্রী পরিষদ</option>
+      <option value="জেলা প্রশাসন">জেলা প্রশাসন (DC)</option>
+      <option value="পুলিশ প্রশাসন">পুলিশ প্রশাসন (SP/SP Office)</option>
+      <option value="থানা পুলিশ">থানার ওসি (OC)</option>
+    </select>
+  </div>
+  <div id="recordCount" class="notice" style="margin-bottom: 8px;">লোড হচ্ছে...</div>
+  <div class="directory-grid" id="directoryList">
+    <!-- জাভাস্ক্রিপ্ট দিয়ে তালিকা রেন্ডার হবে -->
+  </div>
+</section>
+
+<!-- Voice Clock Section -->
+<section class="card">
+  <h2>⏰ রিয়েল-টাইম ঘড়ি ও নারী কন্ঠের সময় ঘোষণা</h2>
+  <div id="clockDisplay" style="font-size: 1.4rem; font-weight: bold; color: var(--gold); margin-bottom: 8px;">--:--:--</div>
+  <p id="voiceClockStatus" class="notice">প্রতি ১ ঘণ্টা পর পর স্বয়ংক্রিয় সময় ঘোষণা সক্রিয়।</p>
+  <button id="testVoiceBtn">কণ্ঠস্বর টেস্ট করুন</button>
+</section>
+
+<!-- Emergency GPS Track -->
+<section class="card">
+  <h2>📍 আপনার নিকটস্থ অবস্থান ও GPS</h2>
+  <button id="getLocation">আমার বর্তমান লোকেশন দেখুন</button>
+  <p id="locationResult" class="notice"></p>
+</section>
+</main>
+
+<footer>
+  AYNA BOOK © 2026<br>
+  Designed by Mohammad Mahabub Alam · Ukhiya 4750
+</footer>
+
+<script>
+// বাংলাদেশ অফিশিয়াল পরিচিতি ও ডিরেক্টরি ডাটাবেস
+const bdDirectory = [
+  {
+    name: "মোঃ শাহাবুদ্দিন",
+    role: "রাষ্ট্রপতি",
+    category: "রাষ্ট্রীয়",
+    office: "বঙ্গভবন, ঢাকা-১০০০",
+    phone: "+880-2-9568041",
+    email: "president@bangabhaban.gov.bd"
+  },
+  {
+    name: "ড. মুহাম্মদ ইউনুস",
+    role: "প্রধান উপদেষ্টা (সরকার প্রধান)",
+    category: "উপদেষ্টা/মন্ত্রী",
+    office: "প্রধান উপদেষ্টার কার্যালয়, তেজগাঁও, ঢাকা",
+    phone: "+880-2-55029444",
+    email: "info@pmo.gov.bd"
+  },
+  {
+    name: "উপদেষ্টা পরিষদ (মন্ত্রিপরিষদ বিভাগ)",
+    role: "মন্ত্রিপরিষদ সচিব / কর্মকর্তা",
+    category: "উপদেষ্টা/মন্ত্রী",
+    office: "মন্ত্রিপরিষদ বিভাগ, বাংলাদেশ সচিবালয়, ঢাকা",
+    phone: "+880-2-9540001",
+    email: "cabinet_sec@cabinet.gov.bd"
+  },
+  {
+    name: "মোহাম্মদ সালাহউদ্দিন",
+    role: "জেলা প্রশাসক (DC)",
+    category: "জেলা প্রশাসন",
+    office: "জেলা প্রশাসকের কার্যালয়, কক্সবাজার",
+    phone: "+880-1762693800",
+    email: "dccoxsbazar@mopa.gov.bd"
+  },
+  {
+    name: "মুহাম্মদ রহমত উল্লাহ",
+    role: "পুলিশ সুপার (SP)",
+    category: "পুলিশ প্রশাসন",
+    office: "পুলিশ সুপারের কার্যালয়, কক্সবাজার",
+    phone: "+880-1320107800",
+    email: "spcoxsbazar@police.gov.bd"
+  },
+  {
+    name: "অফিসার ইনচার্জ (OC)",
+    role: "থানার ওসি (উখিয়া থানা)",
+    category: "থানা পুলিশ",
+    office: "উখিয়া থানা, কক্সবাজার-৪৭৫০",
+    phone: "+880-1320107955",
+    email: "ukhiyathana@police.gov.bd"
+  },
+  {
+    name: "অফিসার ইনচার্জ (OC)",
+    role: "থানার ওসি (টেকনাফ থানা)",
+    category: "থানা পুলিশ",
+    office: "টেকনাফ থানা, কক্সবাজার",
+    phone: "+880-1320107968",
+    email: "teknafthana@police.gov.bd"
+  },
+  {
+    name: "অফিসার ইনচার্জ (OC)",
+    role: "থানার ওসি (রমনা থানা)",
+    category: "থানা পুলিশ",
+    office: "রমনা থানা, ডিএমপি, ঢাকা",
+    phone: "+880-1320039454",
+    email: "ramnathana@dmp.gov.bd"
+  },
+  {
+    name: "জেলা প্রশাসক (DC)",
+    role: "জেলা প্রশাসক (ঢাকা)",
+    category: "জেলা প্রশাসন",
+    office: "জেলা প্রশাসকের কার্যালয়, ঢাকা",
+    phone: "+880-2-9555030",
+    email: "dcdhaka@mopa.gov.bd"
+  }
+];
+
+function displayDirectory(items) {
+  const listContainer = document.getElementById("directoryList");
+  listContainer.innerHTML = "";
+  
+  if (items.length === 0) {
+    listContainer.innerHTML = "<p class='notice'>কোনো তথ্য পাওয়া যায়নি।</p>";
+    document.getElementById("recordCount").textContent = "প্রদর্শিত তথ্য: ০ টি";
+    return;
+  }
+
+  items.forEach(person => {
+    const div = document.createElement("div");
+    div.className = "person-item";
+    div.innerHTML = `
+      <span class="role-badge">[${person.category}]</span>
+      <strong>${person.name}</strong> 
+      📌 পদবী: ${person.role}<br>
+      🏢 ঠিকানা: ${person.office}<br>
+      📞 মোবাইল/ফোন: <a href="tel:${person.phone}" class="contact-link">${person.phone}</a><br>
+      ✉️ ইমেইল: <a href="mailto:${person.email}" class="contact-link">${person.email}</a>
+    `;
+    listContainer.appendChild(div);
+  });
+
+  document.getElementById("recordCount").textContent = `মোট প্রদর্শিত এন্ট্রি: ${items.length} টি`;
+}
+
+// ইনিশিয়াল লোড
+displayDirectory(bdDirectory);
+
+// সার্চ এবং ফিল্টার লজিক
+function filterData() {
+  const keyword = document.getElementById("searchInput").value.toLowerCase();
+  const category = document.getElementById("categoryFilter").value;
+
+  const filtered = bdDirectory.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(keyword) || 
+                          item.role.toLowerCase().includes(keyword) || 
+                          item.office.toLowerCase().includes(keyword) ||
+                          item.phone.includes(keyword);
+    
+    const matchesCategory = category === "all" || item.category === category;
+    
+    return matchesSearch && matchesCategory;
+  });
+
+  displayDirectory(filtered);
+}
+
+document.getElementById("searchInput").addEventListener("input", filterData);
+document.getElementById("categoryFilter").addEventListener("change", filterData);
+
+// রিয়েল-টাইম ঘড়ি ও নারী কন্ঠের ঘোষণা
+function updateClock() {
+  const now = new Date();
+  document.getElementById("clockDisplay").textContent = now.toLocaleTimeString('bn-BD', { hour12: true });
+
+  if (now.getMinutes() === 0 && now.getSeconds() === 0) {
+    speakTime(now.getHours());
+  }
+}
+
+function speakTime(hour) {
+  if ('speechSynthesis' in window) {
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    const text = `এলার্ট! এখন সময় ঠিক ${formattedHour} টা। AYNA BOOK এর পক্ষ থেকে শুভেচ্ছা।`;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'bn-BD';
+    utterance.pitch = 1.3;
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+document.getElementById("testVoiceBtn").addEventListener("click", () => {
+  const now = new Date();
+  const formattedHour = now.getHours() % 12 || 12;
+  const text = `AYNA BOOK এ আপনাকে স্বাগতম। বর্তমান সময় ${formattedHour} টা বেজে ${now.getMinutes()} মিনিট।`;
+  
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'bn-BD';
+    utterance.pitch = 1.3;
+    window.speechSynthesis.speak(utterance);
+    document.getElementById("voiceClockStatus").textContent = "🗣️ সময় ঘোষণা সফলভাবে আউটপুট দেওয়া হয়েছে।";
+  }
+});
+
+setInterval(updateClock, 1000);
+
+// GPS লোকেশন ট্র্যাকার
+document.getElementById("getLocation").addEventListener("click", () => {
+  const output = document.getElementById("locationResult");
+  if (!navigator.geolocation) {
+    output.textContent = "আপনার ব্রাউজারে GPS সুবিধা নেই।";
+    return;
+  }
+  output.textContent = "লোকেশন খোঁজা হচ্ছে...";
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      output.innerHTML = `Latitude: ${lat.toFixed(6)} | Longitude: ${lon.toFixed(6)}<br><a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" class="contact-link">Google Maps-এ অবস্থান দেখুন</a>`;
+    },
+    error => { output.textContent = "লোকেশন পাওয়া যায়নি: " + error.message; },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+});
+</script>
+</body>
+</html>
