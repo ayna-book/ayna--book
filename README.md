@@ -1,20 +1,34 @@
-ayna--book/
-│
+AYNA-BOOK/
+├── .github/
+│   └── workflows/
+│       ├── ayna-book-check.yml
+│       └── build-apk.yml
 ├── android-app/
-│   ├── settings.gradle.kts
-│   ├── build.gradle.kts
-│   ├── gradle.properties
-│   │
-│   └── app/
-│       ├── build.gradle.kts
-│       └── src/main/
-│           ├── AndroidManifest.xml
-│           ├── java/com/aynabook/app/
-│           │   ├── MainActivity.kt
-│           │   ├── ui/
-│           │   ├── auth/
-│           │   ├── chat/
-│           │   ├── radar/
-│           │   ├── compass/
-│           │   └── alerts/
-│           └── res/
+│   ├── AndroidManifest.xml
+│   ├── AuthScreen.kt
+│   ├── MainActivity.kt
+│   ├── MessagingScreen.kt
+│   └── PostScreen.kt
+├── assets/
+│   ├── icon-192.png
+│   ├── icon-512.png
+│   └── ...
+├── js/
+│   ├── app.js
+│   ├── auth.js
+│   ├── chat.js
+│   ├── connectivity.js
+│   ├── login.js
+│   ├── offline.js
+│   └── sw.js
+├── styles/
+│   └── styles.css
+├── public/ (অথবা রুট ফোল্ডার)
+│   ├── index.html
+│   ├── login.html
+│   ├── profile.html
+│   └── ...
+├── firebase.json / firestore.rules
+├── package.json
+├── vercel.json
+└── README.md
