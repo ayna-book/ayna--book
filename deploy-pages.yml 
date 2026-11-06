@@ -1,0 +1,70 @@
+
+name: AYNA BOOK Auto Update and Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare AYNA BOOK
+        run: |
+          mkdir -p _site
+
+          rsync -av ./ _site/ \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='android' \
+            --exclude='_site'
+
+          SHORT_SHA="${GITHUB_SHA:0:7}"
+          VERSION="2026.${GITHUB_RUN_NUMBER}.${SHORT_SHA}"
+          UPDATED="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          cat > _site/version.json <<EOF
+          {
+            "version": "$VERSION",
+            "updatedAt": "$UPDATED",
+            "message": "AYNA BOOK automatic update"
+          }
+          EOF
+
+          echo "AYNA BOOK version: $VERSION"
+
+      - name: Upload Website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy AYNA BOOK
+        id: deployment
+        uses: actions/deploy-pages@v4
