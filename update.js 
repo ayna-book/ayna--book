@@ -1,0 +1,170 @@
+
+(() => {
+  "use strict";
+
+  const VERSION_URL = "./version.json";
+  const STORAGE_KEY = "ayna_book_installed_version";
+
+  let registration = null;
+  let latestVersion = null;
+  let updateBanner = null;
+
+  function createBanner() {
+    if (updateBanner) return;
+
+    updateBanner = document.createElement("div");
+
+    Object.assign(updateBanner.style, {
+      position: "fixed",
+      bottom: "15px",
+      left: "12px",
+      right: "12px",
+      zIndex: "99999",
+      background: "#071b49",
+      color: "white",
+      padding: "16px",
+      border: "1px solid #00d9ff",
+      borderRadius: "14px",
+      boxShadow: "0 4px 20px #0008",
+      textAlign: "center",
+      fontFamily: "Arial, sans-serif"
+    });
+
+    const message = document.createElement("p");
+    message.textContent =
+      "🚀 AYNA BOOK-এর নতুন সংস্করণ পাওয়া গেছে!";
+
+    const button = document.createElement("button");
+    button.textContent = "Update Now";
+
+    Object.assign(button.style, {
+      background: "#00bde9",
+      color: "#071b49",
+      padding: "12px 25px",
+      border: "0",
+      borderRadius: "8px",
+      fontWeight: "bold"
+    });
+
+    button.addEventListener("click", applyUpdate);
+
+    updateBanner.append(message, button);
+    document.body.appendChild(updateBanner);
+  }
+
+  function showUpdate(version) {
+    latestVersion = version;
+    createBanner();
+  }
+
+  function applyUpdate() {
+    if (!latestVersion) return;
+
+    localStorage.setItem(STORAGE_KEY, latestVersion);
+
+    if (registration && registration.waiting) {
+      navigator.serviceWorker.addEventListener(
+        "controllerchange",
+        () => location.reload(),
+        { once: true }
+      );
+
+      registration.waiting.postMessage("SKIP_WAITING");
+    } else {
+      location.reload();
+    }
+  }
+
+  async function checkVersion() {
+    if (!navigator.onLine) return;
+
+    try {
+      const response = await fetch(
+        VERSION_URL + "?check=" + Date.now(),
+        { cache: "no-store" }
+      );
+
+      if (!response.ok) {
+        throw new Error("Version check failed");
+      }
+
+      const data = await response.json();
+
+      if (!data.version) return;
+
+      const installed =
+        localStorage.getItem(STORAGE_KEY);
+
+      if (!installed) {
+        localStorage.setItem(
+          STORAGE_KEY,
+          data.version
+        );
+        return;
+      }
+
+      if (installed !== data.version) {
+        showUpdate(data.version);
+      }
+
+    } catch (error) {
+      console.warn("AYNA Update:", error.message);
+    }
+  }
+
+  async function startUpdateSystem() {
+    if (!("serviceWorker" in navigator)) {
+      console.warn("Service Worker not supported");
+      return;
+    }
+
+    try {
+      registration =
+        await navigator.serviceWorker.register("./sw.js");
+
+      await checkVersion();
+
+      registration.addEventListener("updatefound", () => {
+        const worker = registration.installing;
+        if (!worker) return;
+
+        worker.addEventListener("statechange", () => {
+          if (
+            worker.state === "installed" &&
+            navigator.serviceWorker.controller
+          ) {
+            checkVersion();
+          }
+        });
+      });
+
+      if (registration.waiting) {
+        checkVersion();
+      }
+
+      // প্রতি ৫ মিনিটে নতুন সংস্করণ পরীক্ষা
+      setInterval(() => {
+        checkVersion();
+        registration.update().catch(console.warn);
+      }, 5 * 60 * 1000);
+
+      document.addEventListener(
+        "visibilitychange",
+        () => {
+          if (document.visibilityState === "visible") {
+            checkVersion();
+          }
+        }
+      );
+
+    } catch (error) {
+      console.error("AYNA Update Error:", error);
+    }
+  }
+
+  window.addEventListener(
+    "load",
+    startUpdateSystem,
+    { once: true }
+  );
+})();
