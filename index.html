@@ -33,13 +33,14 @@ button:disabled{opacity:.5;cursor:not-allowed}.row{display:flex;flex-wrap:wrap;g
 footer{text-align:center;padding:25px 10px;color:var(--muted);font-size:12px}.hidden{display:none!important}
 .low-data *{animation:none!important;transition:none!important}
 img.nasa-img{width:100%;border-radius:10px;margin-top:10px}
+.copy-box{background:#12366f;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin:8px 0;border:1px solid var(--cyan)}
 </style>
 </head>
 <body>
 <header>
  <div class="brand">AYNA <span>BOOK</span></div>
  <nav>
-  <a href="#nasaHub">🚀 নাসা ও মহাকাশ</a><a href="#globalTech">🌐 AI</a><a href="#medicalAI">🏥 চিকিৎসা</a><a href="#prayerAlert">🕌 নামাজ</a><a href="#profile">👤 প্রোফাইল</a><a href="#messenger">💬 মেসেঞ্জার</a>
+  <a href="#nasaHub">🚀 নাসা ও মহাকাশ</a><a href="#globalTech">🌐 AI</a><a href="#medicalAI">🏥 চিকিৎসা</a><a href="#prayerAlert">🕌 নামাজ</a><a href="#profile">👤 প্রোফাইল</a><a href="#accountSection">👤 একাউন্ট</a><a href="#globalMediaHub">📡 মিডিয়া ও রাডার</a>
  </nav>
  <div id="connectionStatus" class="status">Firebase সংযোগ হচ্ছে...</div>
 </header>
@@ -60,7 +61,79 @@ img.nasa-img{width:100%;border-radius:10px;margin-top:10px}
  <a class="tile" href="#medicalAI"><div class="emoji">🩺</div><strong>Medical Info</strong><small>স্বাস্থ্য তথ্য</small></a>
  <a class="tile" href="#prayerAlert"><div class="emoji">🕌</div><strong>Prayer</strong><small>নামাজের স্মরণ</small></a>
  <a class="tile" href="#gps"><div class="emoji">📍</div><strong>AYNA GPS</strong><small>লোকেশন</small></a>
- <a class="tile" href="#future"><div class="emoji">⚛️</div><strong>Future Lab</strong><small>ভবিষ্যৎ গবেষণা</small></a>
+ <a class="tile" href="#globalMediaHub"><div class="emoji">📡</div><strong>Live & Radar</strong><small>রেডিও, টিভি ও রাডার</small></a>
+</section>
+
+<!-- নতুন অ্যাকাউন্ট ও সাবস্ক্রিপশন সেকশন -->
+<section class="card" id="accountSection">
+ <h2>👤 একাউন্ট রেজিস্ট্রেশন ও সাবস্ক্রিপশন</h2>
+ <label>নাম</label>
+ <input id="accName" type="text" placeholder="আপনার নাম লিখুন">
+ 
+ <label>জিমেইল</label>
+ <input id="accEmail" type="email" placeholder="example@gmail.com">
+ 
+ <label>ফোন নম্বর</label>
+ <input id="accPhone" type="tel" placeholder="আপনার ফোন নম্বর">
+ 
+ <label>পাসওয়ার্ড (কমপক্ষে ১১ সংখ্যার)</label>
+ <div style="display:flex; gap:5px;">
+  <input id="accPass" type="password" maxlength="20" placeholder="১১ সংখ্যার পাসওয়ার্ড">
+  <button type="button" onclick="togglePass('accPass', this)" style="padding:0 10px;">👁️</button>
+ </div>
+ 
+ <label>পুনরায় পাসওয়ার্ড (Re-Password)</label>
+ <div style="display:flex; gap:5px;">
+  <input id="accRePass" type="password" maxlength="20" placeholder="পাসওয়ার্ড নিশ্চিত করুন">
+  <button type="button" onclick="togglePass('accRePass', this)" style="padding:0 10px;">👁️</button>
+ </div>
+
+ <label>একাউন্ট বিস্তারিত ও ক্যাটাগরি</label>
+ <select id="accType">
+  <option value="personal">১. ব্যক্তিগত (Personal)</option>
+  <option value="business">২. ব্যবসায়িক (Business) - ১০ ডলার + টাকা</option>
+  <option value="vip">৩. ভিআইপি (VIP) - ১০ ডলার + টাকা</option>
+  <option value="vvip">৪. ভিভিআইপি (VVIP) - ২৫ ডলার + টাকা</option>
+ </select>
+
+ <div style="margin:12px 0; border:1px solid var(--line); padding:12px; border-radius:10px; background:#071a3c;">
+  <label style="color:var(--gold); font-weight:bold; margin-bottom:5px;">💳 পেমেন্ট মাধ্যম (নগদ, বিকাশ, পাইওনিয়ার)</label>
+  <p class="notice" style="margin:0 0 8px;">ফি পরিশোধের জন্য নিচের নম্বরে সেন্ড মানি বা পেমেন্ট করুন:</p>
+  <div class="copy-box">
+   <div>
+    <strong>নগদ / বিকাশ / পাইওনিয়ার নম্বর:</strong><br>
+    <span id="payNumber" style="font-size:16px; color:var(--cyan); font-weight:bold;">01400751906</span>
+   </div>
+   <button type="button" id="copyBtn" style="background:var(--cyan); color:var(--navy); padding:6px 12px; font-size:12px;">নম্বর কপি করুন</button>
+  </div>
+ </div>
+
+ <button id="saveAccountBtn">একাউন্ট রেজিস্টার করুন</button>
+ <p id="accStatus" class="notice"></p>
+</section>
+
+<!-- বিশ্ব ও বাংলাদেশ লাইভ রেডিও, টিভি, রাডার ও কম্পাস হাব (স্কয়ার ডিসপ্লে সহ) -->
+<section class="card" id="globalMediaHub">
+ <h2>🌍 গ্লোবাল ও বাংলাদেশি লাইভ রেডিও, টিভি, রাডার ও কম্পাস</h2>
+ <p class="notice">বিশ্বের এবং বাংলাদেশের সমস্ত এএম (AM), এফএম (FM) রেডিও, টিভি চ্যানেল সরাসরি লাইভ, সামরিক-বেসামরিক রাডার এবং ডিজিটাল কম্পাস।</p>
+ 
+ <div class="row">
+  <button id="btnBdRadio">🇧🇩 বাংলাদেশি রেডিও ও টিভি</button>
+  <button id="btnGlobalRadio">🌐 বিশ্ব রেডিও ও টিভি</button>
+ </div>
+ <div class="row" style="margin-top:8px;">
+  <button id="btnRadar">🛰️ সামরিক ও বেসামরিক রাডার</button>
+  <button id="btnCompass">🧭 ডিজিটাল কম্পাস</button>
+ </div>
+
+ <!-- স্কয়ার সাইজ বড় পর্দা ডিসপ্লে বক্স -->
+ <div id="mediaDisplayBox" style="margin-top:15px; background:#071a3c; border:2px solid var(--cyan); border-radius:15px; width:100%; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; text-align:center; padding:15px; overflow:hidden; position:relative;">
+  <div id="mediaScreenContent">
+   <div style="font-size:40px;">📡</div>
+   <strong>বড় পর্দা (Square Size Display)</strong>
+   <p class="notice">লাইভ রেডিও, টিভি, রাডার বা কম্পাস দেখতে উপরের যেকোনো একটি বাটনে ক্লিক করুন।</p>
+  </div>
+ </div>
 </section>
 
 <!-- নতুন নাসা হাব সেকশন -->
@@ -128,6 +201,91 @@ function showError(id,error){
  console.error(error);
  say(id,"সমস্যা: "+(error?.message||"সেটিংস পরীক্ষা করুন।"));
 }
+
+/* নাম্বার কপি করার ফাংশন */
+$("copyBtn").addEventListener("click",()=>{
+ const numberText=$("payNumber").textContent;
+ navigator.clipboard.writeText(numberText).then(()=>{
+  $("copyBtn").textContent="কপি সফল! ✅";
+  setTimeout(()=>{$("copyBtn").textContent="নম্বর কপি করুন";},2000);
+ }).catch(err=>{
+  alert("কপি করা যায়নি।");
+ });
+});
+
+/* পাসওয়ার্ড দেখানো এবং লুকানোর ফাংশন */
+window.togglePass=function(id, btn){
+ const input=$(id);
+ if(input.type==="password"){
+  input.type="text";
+  btn.textContent="🙈";
+ }else{
+  input.type="password";
+  btn.textContent="👁️";
+ }
+};
+
+/* একাউন্ট রেজিস্ট্রেশন ও ১১ ডিজিট পাসওয়ার্ড চেক */
+$("saveAccountBtn").addEventListener("click",()=>{
+ const name=$("accName").value.trim();
+ const pass=$("accPass").value;
+ const rePass=$("accRePass").value;
+ const status=$("accStatus");
+
+ if(!name){
+  status.textContent="দয়া করে আপনার নাম লিখুন।";
+  return;
+ }
+ if(pass.length<11){
+  status.textContent="ত্রুটি: পাসওয়ার্ড অন্তত ১১ সংখ্যার হতে হবে!";
+  return;
+ }
+ if(pass!==rePass){
+  status.textContent="ত্রুটি: পাসওয়ার্ড দুটি এক হয়নি!";
+  return;
+ }
+ status.textContent="✅ একাউন্ট সফলভাবে নিবন্ধিত হয়েছে!";
+});
+
+/* মিডিয়া ও রাডার ডিসপ্লে হ্যান্ডেলার */
+$("btnBdRadio").addEventListener("click",()=>{
+ $("mediaScreenContent").innerHTML=`
+  <h3 style="color:var(--cyan)">🇧🇩 বাংলাদেশি লাইভ রেডিও ও টিভি</h3>
+  <p class="notice">বিটিভি, বাংলাদেশ বেতার এবং অন্যান্য জনপ্রিয় এফএম ও এএম চ্যানেল সরাসরি সম্প্রচার...</p>
+  <div style="background:#12366f; padding:10px; border-radius:8px; margin-top:10px;">🔴 লাইভ ফিড সক্রিয়</div>
+ `;
+});
+
+$("btnGlobalRadio").addEventListener("click",()=>{
+ $("mediaScreenContent").innerHTML=`
+  <h3 style="color:var(--cyan)">🌐 গ্লোবাল লাইভ রেডিও ও টিভি</h3>
+  <p class="notice">বিশ্বের বিভিন্ন দেশের প্রধান প্রধান এএম/এফএম রেডিও এবং নিউজ টিভি চ্যানেল...</p>
+  <div style="background:#12366f; padding:10px; border-radius:8px; margin-top:10px;">🌍 ওয়ার্ল্ড ব্রডকাস্ট কানেক্টেড</div>
+ `;
+});
+
+$("btnRadar").addEventListener("click",()=>{
+ $("mediaScreenContent").innerHTML=`
+  <h3 style="color:var(--cyan)">🛰️ সামরিক ও বেসামরিক রাডার</h3>
+  <p class="notice">এয়ার ট্রাফিক কন্ট্রোল এবং গ্লোবাল ডিফেন্স রাডার সিগন্যাল স্ক্যান করা হচ্ছে...</p>
+  <div style="background:#12366f; padding:10px; border-radius:8px; margin-top:10px;">🛰️ রাডার মনিটরিং অন</div>
+ `;
+});
+
+$("btnCompass").addEventListener("click",()=>{
+ if(window.DeviceOrientationEvent){
+  $("mediaScreenContent").innerHTML=`
+   <h3 style="color:var(--cyan)">🧭 ডিজিটাল কম্পাস</h3>
+   <p class="notice">আপনার ডিভাইসের সেন্সর ব্যবহার করে সঠিক দিক নির্ণয় করা হচ্ছে...</p>
+   <div style="font-size:30px; margin-top:10px;">🧭 N 0° North</div>
+  `;
+ }else{
+  $("mediaScreenContent").innerHTML=`
+   <h3 style="color:var(--cyan)">🧭 ডিজিটাল কম্পাস</h3>
+   <p class="notice">এই ডিভাইসে কম্পাস সেন্সর সমর্থিত নয়।</p>
+  `;
+ }
+});
 
 /* নাসা এপিআই ইন্টিগ্রেশন (NASA APOD) */
 $("loadNasaApod").addEventListener("click",async()=>{
