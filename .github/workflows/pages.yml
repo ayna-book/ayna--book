@@ -1,0 +1,51 @@
+name: Deploy Jekyll site to Pages
+
+on:
+  push:
+    branches: ["main"] # অথবা আপনার ডিফল্ট ব্রাঞ্চের নাম (যেমন master)
+
+  # workflow_dispatch থেকে ম্যানুয়ালি রান করার সুবিধা
+  workflow_dispatch:
+
+# গিটহাব পেজেস ব্যবহারের জন্য পারমিশন
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# একসাথে একাধিক ডিপ্লয়মেন্ট এড়াতে কনকারেন্সি
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+  
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2' # আপনার প্রজেক্টের সংস্করণ অনুযায়ী
+          bundler-cache: true
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Build with Jekyll
+        run: bundle exec jekyll build --destination ./_site
+        env:
+          JEKYLL_ENV: production
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
