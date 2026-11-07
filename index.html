@@ -3,484 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#071b49">
-    <title>AYNA BOOK v21.0 | Supreme Master Platform</title>
-    <!-- Font Awesome Icons -->
+    <meta name="theme-color" content="#0b132b">
+    <title>AYNA BOOK v21.0 | World Standard Dashboard</title>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --navy: #071b49;
-            --blue: #12366f;
-            --cyan: #00d9ff;
-            --pink: #ff4fa3;
-            --purple: #9b6cff;
-            --white: #ffffff;
-            --muted: #c0cce5;
-            --line: #31518a;
+            --navy: #0b132b;
+            --dark-card: #1c2541;
+            --cyan: #48cae4;
+            --pink: #ff007f;
             --gold: #ffd700;
-            --neon-green: #00ff66;
-            --card-bg: rgba(16, 38, 83, 0.92);
+            --white: #ffffff;
+            --muted: #8d99ae;
+            --line: #3a506b;
+            --neon-green: #2ec4b6;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         html { scroll-behavior: smooth; }
-        body {
-            color: var(--white);
-            background: linear-gradient(145deg, #06132f, #0b2250, #15113e);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            padding-bottom: 40px;
-        }
+        body { background-color: var(--navy); color: var(--white); min-height: 100vh; padding: 15px; }
 
-        /* Navigation & Header */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(6, 22, 56, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--line);
-            padding: 12px 20px;
+        .container { max-width: 500px; margin: 0 auto; }
+
+        /* Header & Brand */
+        .header-brand {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .brand {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--gold);
-            position: relative;
-            letter-spacing: 1px;
-        }
-        .brand span { color: var(--pink); }
-        .brand-light {
-            position: absolute;
-            top: 2px;
-            right: -14px;
-            width: 10px;
-            height: 10px;
-            background: var(--neon-green);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--neon-green);
-            animation: pulseLight 2s infinite;
-        }
-
-        @keyframes pulseLight {
-            0% { opacity: 0.3; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 15px var(--neon-green); }
-            100% { opacity: 0.3; transform: scale(0.9); }
-        }
-
-        nav { display: flex; gap: 8px; flex-wrap: wrap; }
-        nav a {
-            color: var(--white);
-            text-decoration: none;
-            font-size: 12px;
-            padding: 7px 12px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-        nav a:hover {
-            background: var(--cyan);
-            color: var(--navy);
-            font-weight: bold;
-            box-shadow: 0 0 12px rgba(0, 217, 255, 0.4);
-        }
-
-        /* Main Container */
-        main { width: min(100% - 30px, 1150px); margin: 20px auto; }
-
-        /* Hero Banner */
-        .hero {
-            text-align: center;
-            padding: 30px 20px;
+            background: var(--dark-card);
+            padding: 15px 20px;
+            border-radius: 12px;
             border: 1px solid var(--line);
-            border-radius: 20px;
-            background: linear-gradient(130deg, #102e68, #311d65);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
-        .hero h1 { color: var(--cyan); font-size: 32px; margin-bottom: 8px; font-weight: 800; }
-        .hero h2 { color: var(--pink); font-size: 16px; letter-spacing: 2px; margin-bottom: 12px; }
-        .hero p { color: var(--muted); line-height: 1.6; font-size: 14px; max-width: 800px; margin: 0 auto; }
-        .owner { color: var(--gold); font-size: 13px; margin-top: 15px; font-weight: 600; }
+        .brand-title { font-size: 24px; font-weight: 900; color: var(--gold); position: relative; }
+        .brand-title span { color: var(--pink); }
+        .quantum-dot { width: 10px; height: 10px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 10px var(--neon-green); display: inline-block; margin-left: 5px; }
+        
+        .signal-status { font-size: 12px; color: var(--neon-green); display: flex; align-items: center; gap: 6px; }
 
-        /* Quick Menu Grid */
-        .grid {
+        /* Top Menu Grid */
+        .top-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
         }
-        .tile {
-            background: var(--card-bg);
+        .menu-btn {
+            background: var(--dark-card);
             border: 1px solid var(--line);
-            border-radius: 16px;
-            padding: 16px;
+            padding: 10px 5px;
             text-align: center;
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 11px;
             text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s;
         }
-        .tile:hover {
-            border-color: var(--cyan);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 217, 255, 0.25);
-        }
-        .tile .emoji { font-size: 28px; margin-bottom: 6px; }
-        .tile strong { display: block; font-size: 12px; color: var(--white); }
-        .tile small { color: var(--muted); font-size: 10px; }
+        .menu-btn:hover { border-color: var(--cyan); background: #24305e; }
+        .menu-btn i { font-size: 16px; color: var(--cyan); }
 
-        /* Standard Content Cards */
+        /* Card Box */
         .card {
-            background: var(--card-bg);
+            background: var(--dark-card);
             border: 1px solid var(--line);
-            border-radius: 18px;
-            padding: 22px;
-            margin-bottom: 25px;
-            scroll-margin-top: 90px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
-        h2 { color: var(--cyan); font-size: 20px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .card h2 { color: var(--cyan); font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
 
-        /* Forms & Inputs */
-        label { display: block; color: var(--muted); font-size: 13px; margin-bottom: 6px; }
-        .input-group { position: relative; margin-bottom: 15px; }
-        input, textarea, select {
+        /* Form Controls */
+        .form-group { margin-bottom: 15px; position: relative; }
+        label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+        .form-control {
             width: 100%;
             padding: 12px 15px;
-            color: white;
-            background: #071a3c;
-            border: 1px solid #36558c;
-            border-radius: 10px;
-            font: inherit;
+            background: var(--navy);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 14px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: 0.3s;
         }
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--cyan);
-            box-shadow: 0 0 8px rgba(0, 217, 255, 0.3);
-        }
+        .form-control:focus { border-color: var(--pink); box-shadow: 0 0 8px rgba(255, 0, 127, 0.3); }
 
-        /* Password Toggle Styling */
-        .password-wrapper { position: relative; }
-        .toggle-password {
+        .password-box { position: relative; }
+        .toggle-icon {
             position: absolute;
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
             color: var(--muted);
-            font-size: 16px;
         }
 
-        /* Buttons */
-        button {
-            border: 0;
-            border-radius: 10px;
-            padding: 12px 18px;
-            margin: 4px;
-            color: white;
-            background: linear-gradient(100deg, #087fc5, #6845c5);
-            cursor: pointer;
+        /* Action Buttons */
+        .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: bold;
-            font-size: 13px;
-            transition: all 0.2s ease;
-        }
-        button:hover { opacity: 0.9; transform: translateY(-1px); }
-        button:active { transform: scale(0.98); }
-        .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-        .row button { flex: 1; min-width: 140px; }
-
-        /* Display Boxes & Dynamic Content */
-        .list-item {
-            background: #071a3c;
-            border: 1px solid var(--line);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 12px;
-            line-height: 1.6;
-        }
-        .notice { color: var(--muted); font-size: 13px; }
-        .status { font-size: 13px; font-weight: 600; }
-
-        /* Profile Details Box (Dashboard view) */
-        .profile-container {
+            cursor: pointer;
+            color: var(--white);
             display: flex;
             align-items: center;
-            gap: 20px;
-            background: #09204a;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid var(--line);
-            margin-top: 15px;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.3s;
         }
-        .profile-preview {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 3px solid var(--cyan);
-            background: #071a3c;
-        }
-        .profile-details p { margin-bottom: 5px; font-size: 13px; }
+        .btn-save { background: linear-gradient(135deg, #4361ee, #3a0ca3); }
+        .btn-login { background: linear-gradient(135deg, #2ec4b6, #25a18e); }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        footer { text-align: center; padding: 25px 10px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); }
+        /* Dashboard Profile View Box */
+        .dashboard-box {
+            background: #0b132b;
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+        .profile-flex { display: flex; align-items: center; gap: 15px; }
+        .profile-img-preview {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid var(--pink);
+            object-fit: cover;
+        }
+        .profile-info p { font-size: 13px; margin-bottom: 4px; color: var(--white); }
+        .profile-info p span { color: var(--muted); }
+
+        .notice-msg { font-size: 12px; margin-top: 10px; text-align: center; }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="brand">AYNA <span>BOOK</span><div class="brand-light" title="কোয়ান্টাম সিগন্যাল লাইভ"></div></div>
-    <nav>
-        <a href="#accountSection">👤 একাউন্ট</a>
-        <a href="#globalMediaHub">📡 মিডিয়া</a>
-        <a href="#islamicHub">🕌 ইসলামিক</a>
-        <a href="#leadersHub">🌍 বিশ্বনেতা</a>
-        <a href="#ngoHub">❤️ এনজিও/ফান্ড</a>
-        <a href="#matrimonialHub">💍 বিয়েশাদী</a>
-        <a href="#marketplaceHub">🛒 বেচাকেনা</a>
-        <a href="#defense">🛰️ ডিফেন্স</a>
-        <a href="#kidsHub">🧸 কিডস</a>
-    </nav>
-    <div id="connectionStatus" class="status" style="color:var(--neon-green)">🟢 কোয়ান্টাম সিগন্যাল প্রস্তুত</div>
-</header>
+<div class="container">
 
-<main>
+    <!-- Header & Brand -->
+    <div class="header-brand">
+        <div>
+            <div class="brand-title">AYNA <span>BOOK</span><div class="quantum-dot"></div></div>
+            <div class="signal-status"><i class="fa-solid fa-signal"></i> কোয়ান্টাম সিগন্যাল প্রস্তুত</div>
+        </div>
+    </div>
 
-    <!-- Hero Header -->
-    <section class="hero">
-        <h1>🌍 AYNA BOOK v21.0</h1>
-        <h2>SUPREME MASTER & GLOBAL PLATFORM</h2>
-        <p>১৫০ এলার্ট প্রযুক্তি, ইতিহাস ও ১ কোটি বছরের ভবিষ্যৎ ভিশন নিয়ে বিশ্বসেরা সমন্বিত অল-ইন-ওয়ান ডিজিটাল প্ল্যাটফর্ম।</p>
-        <div class="owner">Founder: Mohammad Mahbub Alam · Ukhiya 4750</div>
-    </section>
+    <!-- Top Navigation Icons Grid -->
+    <div class="top-grid">
+        <a href="#accountSection" class="menu-btn"><i class="fa-solid fa-user"></i><span>একাউন্ট</span></a>
+        <a href="#mediaSection" class="menu-btn"><i class="fa-solid fa-satellite-dish"></i><span>মিডিয়া</span></a>
+        <a href="#islamicSection" class="menu-btn"><i class="fa-solid fa-mosque"></i><span>ইসলামিক</span></a>
+        <a href="#leaderSection" class="menu-btn"><i class="fa-solid fa-globe"></i><span>বিশ্বনেতা</span></a>
+        <a href="#ngoSection" class="menu-btn"><i class="fa-solid fa-heart"></i><span>এনজিও/ফান্ড</span></a>
+        <a href="#matrimonialSection" class="menu-btn"><i class="fa-solid fa-ring"></i><span>বিয়েশাদী</span></a>
+        <a href="#marketSection" class="menu-btn"><i class="fa-solid fa-cart-shopping"></i><span>বেচাকেনা</span></a>
+        <a href="#kidsSection" class="menu-btn"><i class="fa-solid fa-child"></i><span>কিডস</span></a>
+    </div>
 
-    <!-- Home Menu Grid -->
-    <section class="grid">
-        <a class="tile" href="#accountSection"><div class="emoji">👤</div><strong>Account</strong><small>প্রোফাইল ও লগইন</small></a>
-        <a class="tile" href="#globalMediaHub"><div class="emoji">📡</div><strong>Live Media</strong><small>রেডিও ও টিভি</small></a>
-        <a class="tile" href="#islamicHub"><div class="emoji">🕌</div><strong>Islamic</strong><small>ওয়াজ ও কোরআন</small></a>
-        <a class="tile" href="#leadersHub"><div class="emoji">🌐</div><strong>Leaders</strong><small>বিশ্বনেতাদের তালিকা</small></a>
-        <a class="tile" href="#ngoHub"><div class="emoji">🤝</div><strong>NGO & Fund</strong><small>সাহায্য ও ফান্ড</small></a>
-        <a class="tile" href="#matrimonialHub"><div class="emoji">💍</div><strong>Matrimonial</strong><small>জীবনসঙ্গী</small></a>
-        <a class="tile" href="#marketplaceHub"><div class="emoji">🛒</div><strong>Marketplace</strong><small>বেচাকেনা</small></a>
-        <a class="tile" href="#defense"><div class="emoji">🛰️</div><strong>Defense</strong><small>রাডার ও ট্র্যাকার</small></a>
-        <a class="tile" href="#kidsHub"><div class="emoji">🧸</div><strong>Kids Zone</strong><small>শিশু বিনোদন</small></a>
-    </section>
-
-    <!-- 1. Account Management Module -->
-    <section class="card" id="accountSection">
-        <h2>👤 একাউন্ট রেজিস্ট্রেশন ও ড্যাশবোর্ড প্রোফাইল</h2>
+    <!-- Account Registration & Login Section -->
+    <div class="card" id="accountSection">
+        <h2><i class="fa-solid fa-user-shield"></i> একাউন্ট রেজিস্ট্রেশন ও লগইন</h2>
         
-        <div id="formWrapper">
-            <label>📷 প্রোফাইল ছবি আপলোড</label>
-            <div class="input-group">
-                <input type="file" id="profileImageInput" accept="image/*">
-            </div>
+        <div class="form-group">
+            <label><i class="fa-solid fa-camera"></i> প্রোফাইল ছবি আপলোড</label>
+            <input type="file" id="profilePicInput" class="form-control" accept="image/*">
+        </div>
 
-            <label>📝 পূর্ণ নাম</label>
-            <div class="input-group">
-                <input id="accName" type="text" placeholder="আপনার নাম লিখুন">
-            </div>
+        <div class="form-group">
+            <label><i class="fa-solid fa-user"></i> নাম</label>
+            <input type="text" id="userName" class="form-control" placeholder="আপনার নাম লিখুন">
+        </div>
 
-            <label>📱 মোবাইল নম্বর</label>
-            <div class="input-group">
-                <input id="accPhone" type="tel" placeholder="০১৭xxxxxxxx">
-            </div>
+        <div class="form-group">
+            <label><i class="fa-solid fa-phone"></i> ফোন নম্বর</label>
+            <input type="tel" id="userPhone" class="form-control" placeholder="০১৭xxxxxxxx">
+        </div>
 
-            <label>📧 জিমেইল অ্যাড্রেস</label>
-            <div class="input-group">
-                <input id="accEmail" type="email" placeholder="example@gmail.com">
-            </div>
+        <div class="form-group">
+            <label><i class="fa-solid fa-envelope"></i> জিমেইল</label>
+            <input type="email" id="userEmail" class="form-control" placeholder="example@gmail.com">
+        </div>
 
-            <label>🔒 পাসওয়ার্ড (কমপক্ষে ১১ সংখ্যা)</label>
-            <div class="input-group password-wrapper">
-                <input id="accPass" type="password" placeholder="১১ সংখ্যার পাসওয়ার্ড">
-                <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('accPass', this)"></i>
-            </div>
-
-            <label>🔒 পাসওয়ার্ড নিশ্চিত করুন (Re-Password)</label>
-            <div class="input-group password-wrapper">
-                <input id="accRePass" type="password" placeholder="পুনরায় পাসওয়ার্ড লিখুন">
-                <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('accRePass', this)"></i>
-            </div>
-
-            <div class="row">
-                <button onclick="saveAccount()"><i class="fa-solid fa-floppy-disk"></i> সেভ করুন</button>
-                <button onclick="loginAccount()" style="background:linear-gradient(100deg,#28a745,#218838);"><i class="fa-solid fa-right-to-bracket"></i> লগইন করুন</button>
+        <div class="form-group">
+            <label><i class="fa-solid fa-lock"></i> পাসওয়ার্ড (কমপক্ষে ১১ সংখ্যা)</label>
+            <div class="password-box">
+                <input type="password" id="userPass" class="form-control" placeholder="১১ সংখ্যার পাসওয়ার্ড">
+                <i class="fa-solid fa-eye toggle-icon" onclick="togglePass('userPass', this)"></i>
             </div>
         </div>
 
-        <p id="accStatus" class="notice" style="color:var(--gold); margin-top:10px;"></p>
-        
-        <!-- Profile Dynamic Dashboard Container -->
-        <div id="profileContainer"></div>
-    </section>
-
-    <!-- 2. Live Media & Radio -->
-    <section class="card" id="globalMediaHub">
-        <h2>📡 বিশ্ব ও বাংলাদেশ লাইভ রেডিও, টিভি ও রাডার</h2>
-        <div class="row">
-            <button onclick="playMedia('bd')">🇧🇩 বাংলাদেশি রেডিও ও টিভি</button>
-            <button onclick="playMedia('global')">🌐 গ্লোবাল লাইভ চ্যানেল</button>
-            <button onclick="playMedia('radar')">🛰️ সামরিক রাডার স্ক্যানার</button>
-            <button onclick="playMedia('compass')">🧭 ডিজিটাল কম্পাস</button>
-        </div>
-        <div id="mediaDisplayBox" class="list-item" style="text-align:center;">
-            <div id="mediaContent">
-                <div style="font-size:35px; margin-bottom:8px;">📡</div>
-                <p class="notice">লাইভ ব্রডকাস্ট বা স্ট্রিম দেখতে উপরের যেকোনো বাটনে ক্লিক করুন।</p>
+        <div class="form-group">
+            <label><i class="fa-solid fa-lock"></i> রি-পাসওয়ার্ড (কনফার্ম পাসওয়ার্ড)</label>
+            <div class="password-box">
+                <input type="password" id="userRePass" class="form-control" placeholder="পুনরায় পাসওয়ার্ড দিন">
+                <i class="fa-solid fa-eye toggle-icon" onclick="togglePass('userRePass', this)"></i>
             </div>
         </div>
-    </section>
 
-    <!-- 3. Islamic Hub -->
-    <section class="card" id="islamicHub">
-        <h2>🕌 ইসলামিক কর্নার: ওয়াজ, কোরআন ও হাদিস</h2>
-        <div class="row">
-            <button onclick="showIslamic('quran')">📖 পবিত্র কোরআন</button>
-            <button onclick="showIslamic('hadith')">📜 সহীহ হাদিস</button>
-            <button onclick="showIslamic('waz')">🎙️ উলামাদের ওয়াজ</button>
+        <div class="btn-row">
+            <button class="btn btn-save" onclick="saveUserAccount()"><i class="fa-solid fa-check"></i> সেভ করুন</button>
+            <button class="btn btn-login" onclick="loginUserAccount()"><i class="fa-solid fa-key"></i> লগইন</button>
         </div>
-        <div id="islamicDisplay" class="list-item">
-            <p class="notice">বাটনে চাপ দিলে কোরআন, হাদিস ও ওয়াজ সংক্রান্ত তথ্য প্রদর্শিত হবে।</p>
-        </div>
-    </section>
 
-    <!-- 4. Global Leaders Hub -->
-    <section class="card" id="leadersHub">
-        <h2>🌍 বিশ্ব রাষ্ট্রনেতাদের নাম, ফোন, জিমেইল ও পরিচিতি</h2>
-        <button onclick="loadLeaders()"><i class="fa-solid fa-users"></i> বিশ্বনেতাদের তালিকা দেখুন</button>
-        <div id="leadersDisplay"></div>
-    </section>
+        <div id="statusNotice" class="notice-msg" style="color: var(--gold);"></div>
 
-    <!-- 5. NGO & Fund Hub -->
-    <section class="card" id="ngoHub">
-        <h2>🤝 গ্লোবাল এনজিও ও দরিদ্র ফান্ড উত্তোলন</h2>
-        <div class="row">
-            <button onclick="showNgo('list')">🏢 এনজিও তালিকা</button>
-            <button onclick="showNgo('fund')">❤️ দরিদ্র ফান্ড আবেদন</button>
+        <!-- Dashboard Profile Details (Hidden until saved/logged in) -->
+        <div id="dashboardProfile" class="dashboard-box">
+            <h3 style="color: var(--cyan); font-size: 15px; margin-bottom: 10px;"><i class="fa-solid fa-id-badge"></i> ড্যাশবোর্ড প্রোফাইল বিবরণী</h3>
+            <div class="profile-flex">
+                <img id="displayImg" src="" class="profile-img-preview" alt="Profile">
+                <div class="profile-info">
+                    <p><strong>নাম:</strong> <span id="displayName"></span></p>
+                    <p><strong>ফোন:</strong> <span id="displayPhone"></span></p>
+                    <p><strong>জিমেইল:</strong> <span id="displayEmail"></span></p>
+                    <p><strong>স্ট্যাটাস:</strong> <span style="color: var(--neon-green);">অ্যাক্টিভ ও ভেরিফাইড</span></p>
+                </div>
+            </div>
         </div>
-        <div id="ngoDisplay" class="list-item">
-            <p class="notice">ফান্ড জমা বা তালিকা দেখতে বাটনে ক্লিক করুন।</p>
-        </div>
-    </section>
+    </div>
 
-    <!-- 6. Matrimonial Hub -->
-    <section class="card" id="matrimonialHub">
-        <h2>💍 বিয়েশাদী ও জীবনসঙ্গী সন্ধান</h2>
-        <div class="row">
-            <button onclick="showMatrimonial('add')">➕ বায়োডাটা জমা দিন</button>
-            <button onclick="showMatrimonial('search')">🔍 বায়োডাটা খুঁজুন</button>
-        </div>
-        <div id="matrimonialDisplay" class="list-item">
-            <p class="notice">শরিয়তসম্মত পাত্র/পাত্রী বায়োডাটা সিস্টেম চালু আছে।</p>
-        </div>
-    </section>
+    <!-- Other Hubs Sections (Preview) -->
+    <div class="card" id="mediaSection">
+        <h2><i class="fa-solid fa-tower-broadcast"></i> বিশ্ব ও বাংলাদেশ লাইভ রেডিও ও টিভি</h2>
+        <p style="font-size: 13px; color: var(--muted);">লাইভ ব্রডকাস্ট এবং স্যাটেলাইট রাডার সিস্টেম এখানে সংযুক্ত আছে।</p>
+    </div>
 
-    <!-- 7. Marketplace Hub -->
-    <section class="card" id="marketplaceHub">
-        <h2>🛒 AYNA বেচাকেনার হাট</h2>
-        <div class="row">
-            <button onclick="showMarket('post')">🏷️ নতুন বিজ্ঞাপন দিন</button>
-            <button onclick="showMarket('view')">🛍️ হাটের পণ্যগুলো দেখুন</button>
-        </div>
-        <div id="marketDisplay" class="list-item">
-            <p class="notice">হাটে যেকোনো পণ্য কেনাবেচার নিরাপদ প্ল্যাটফর্ম।</p>
-        </div>
-    </section>
-
-    <!-- 8. Global Defense Hub -->
-    <section class="card" id="defense">
-        <h2>🛰️ Global Defense & Tactical Radar Hub</h2>
-        <div class="row">
-            <button onclick="runDefense('mossad')">🕵️ মোসাদ প্রোটোকল ও ডিফেন্স ট্র্যাকার</button>
-            <button onclick="runDefense('jets')">✈️ F-35 যুদ্ধবিমান স্ক্যানার</button>
-        </div>
-        <div id="defenseResult" class="list-item" style="color:var(--cyan);">
-            <p class="notice">ডিফেন্স মনিটরিং ডাটা দেখতে নির্বাচন করুন।</p>
-        </div>
-    </section>
-
-    <!-- 9. Kids Zone Hub -->
-    <section class="card" id="kidsHub">
-        <h2>🧸 AYNA Kids Entertainment Zone</h2>
-        <div class="row">
-            <button onclick="showKids('cartoon')">🎬 কার্টুন ও ছড়া</button>
-            <button onclick="showKids('story')">📚 গল্প শুনুন</button>
-            <button onclick="showKids('game')">🎮 মজার গেম</button>
-        </div>
-        <div id="kidsScreen" class="list-item" style="text-align:center;">
-            <p class="notice">বাচ্চাদের সুস্থ বিনোদনের প্লেয়ার সক্রিয় করুন।</p>
-        </div>
-    </section>
-
-</main>
-
-<footer>
-    AYNA BOOK v21.0 © 2026 | All Rights Reserved<br>
-    Founder: Mohammad Mahbub Alam · Ukhiya 4750
-</footer>
+</div>
 
 <script>
-let imgData = "";
+let base64Image = "";
 
-// 1. Password Visibility Toggle
-function togglePasswordVisibility(fieldId, iconElem) {
-    const input = document.getElementById(fieldId);
-    if (input.type === "password") {
-        input.type = "text";
-        iconElem.classList.remove("fa-eye");
-        iconElem.classList.add("fa-eye-slash");
-    } else {
-        input.type = "password";
-        iconElem.classList.remove("fa-eye-slash");
-        iconElem.classList.add("fa-eye");
-    }
-}
-
-// Profile Image Data Conversion
-document.getElementById('profileImageInput').addEventListener('change', function(e){
+// Profile Image Reader
+document.getElementById('profilePicInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
-    if(file){
+    if (file) {
         const reader = new FileReader();
-        reader.onload = function(evt){
-            imgData = evt.target.result;
+        reader.onload = function(event) {
+            base64Image = event.target.result;
         };
         reader.readAsDataURL(file);
     }
 });
 
-// Save Account (Registration)
-function saveAccount() {
-    const name = document.getElementById('accName').value.trim();
-    const phone = document.getElementById('accPhone').value.trim();
-    const email = document.getElementById('accEmail').value.trim();
-    const pass = document.getElementById('accPass').value;
-    const rePass = document.getElementById('accRePass').value;
-    const statusMsg = document.getElementById('accStatus');
+// Toggle Password Visibility (Showing/Hiding)
+function togglePass(fieldId, iconElem) {
+    const field = document.getElementById(fieldId);
+    if (field.type === "password") {
+        field.type = "text";
+        iconElem.classList.remove("fa-eye");
+        iconElem.classList.add("fa-eye-slash");
+    } else {
+        field.type = "password";
+        iconElem.classList.remove("fa-eye-slash");
+        iconElem.classList.add("fa-eye");
+    }
+}
 
-    if (!name || !phone || !email || !pass) {
-        statusMsg.style.color = "#ff4fa3";
-        statusMsg.innerText = "❌ অনুগ্রহ করে সমস্ত ইনপুট ফিল্ড পূরণ করুন!";
+// Save Account Function
+function saveUserAccount() {
+    const name = document.getElementById('userName').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
+    const email = document.getElementById('userEmail').value.trim();
+    const pass = document.getElementById('userPass').value;
+    const rePass = document.getElementById('userRePass').value;
+    const notice = document.getElementById('statusNotice');
+
+    if (!name || !phone || !email || !pass || !rePass) {
+        notice.style.color = "#ff4fa3";
+        notice.innerText = "❌ দয়া করে সমস্ত ফিল্ড সঠিকভাবে পূরণ করুন!";
         return;
     }
 
     if (pass.length < 11) {
-        statusMsg.style.color = "#ff4fa3";
-        statusMsg.innerText = "❌ পাসওয়ার্ড কমপক্ষে ১১ সংখ্যার হতে হবে!";
+        notice.style.color = "#ff4fa3";
+        notice.innerText = "❌ পাসওয়ার্ড কমপক্ষে ১১ সংখ্যার হতে হবে!";
         return;
     }
 
     if (pass !== rePass) {
-        statusMsg.style.color = "#ff4fa3";
-        statusMsg.innerText = "❌ পাসওয়ার্ড এবং রি-পাসওয়ার্ড হুবহু মিলে নাই!";
+        notice.style.color = "#ff4fa3";
+        notice.innerText = "❌ পাসওয়ার্ড এবং রি-পাসওয়ার্ড হুবহু এক হতে হবে!";
         return;
     }
 
@@ -489,132 +304,53 @@ function saveAccount() {
         phone: phone,
         email: email,
         pass: pass,
-        img: imgData || "https://via.placeholder.com/80/071a3c/00d9ff?text=User"
+        img: base64Image || "https://via.placeholder.com/150/1c2541/48cae4?text=AYNA"
     };
 
-    localStorage.setItem('ayna_user_v21', JSON.stringify(userData));
-    statusMsg.style.color = "var(--neon-green)";
-    statusMsg.innerText = "✅ একাউন্ট সফলভাবে রেজিস্টার্ড এবং লোকাল স্টোরেজে সেভ হয়েছে!";
-    renderProfileDashboard(userData);
+    localStorage.setItem('ayna_master_user', JSON.stringify(userData));
+    notice.style.color = "var(--neon-green)";
+    notice.innerText = "✅ একাউন্ট সফলভাবে সেভ ও রেজিস্টার্ড হয়েছে!";
+    
+    showDashboard(userData);
 }
 
-// Login Account
-function loginAccount() {
-    const statusMsg = document.getElementById('accStatus');
-    const savedData = localStorage.getItem('ayna_user_v21');
+// Login Account Function
+function loginUserAccount() {
+    const notice = document.getElementById('statusNotice');
+    const savedData = localStorage.getItem('ayna_master_user');
 
     if (savedData) {
         const user = JSON.parse(savedData);
-        document.getElementById('accName').value = user.name;
-        document.getElementById('accPhone').value = user.phone || "";
-        document.getElementById('accEmail').value = user.email || "";
-        statusMsg.style.color = "var(--cyan)";
-        statusMsg.innerText = "✅ স্বাগতম " + user.name + "! আপনার পুরানো একাউন্ট সক্রিয় করা হয়েছে।";
-        renderProfileDashboard(user);
+        document.getElementById('userName').value = user.name;
+        document.getElementById('userPhone').value = user.phone;
+        document.getElementById('userEmail').value = user.email;
+        
+        notice.style.color = "var(--cyan)";
+        notice.innerText = `✅ স্বাগতম ${user.name}! আপনার পুরানো অ্যাকাউন্ট সফলভাবে লগইন হয়েছে।`;
+        
+        showDashboard(user);
     } else {
-        statusMsg.style.color = "#ff4fa3";
-        statusMsg.innerText = "⚠️ কোনো পুরানো রেজিস্ট্রেশন তথ্য পাওয়া যায়নি!";
+        notice.style.color = "#ff4fa3";
+        notice.innerText = "⚠️ কোনো পুরানো অ্যাকাউন্ট ডেটা পাওয়া যায়নি!";
     }
 }
 
-// Dynamic Profile Dashboard View Render
-function renderProfileDashboard(user) {
-    const container = document.getElementById('profileContainer');
-    container.innerHTML = `
-        <div class="profile-container">
-            <img src="${user.img}" class="profile-preview" alt="Profile Picture">
-            <div class="profile-details">
-                <p><strong><i class="fa-solid fa-id-card"></i> নাম:</strong> ${user.name}</p>
-                <p><strong><i class="fa-solid fa-phone"></i> মোবাইল:</strong> ${user.phone}</p>
-                <p><strong><i class="fa-solid fa-envelope"></i> জিমেইল:</strong> ${user.email}</p>
-                <p style="color:var(--neon-green);"><strong><i class="fa-solid fa-shield-halved"></i> স্ট্যাটাস:</strong> ভেরিফাইড (কোয়ান্টাম সিগন্যাল সক্রিয়)</p>
-            </div>
-        </div>
-    `;
+// Render Dashboard View
+function showDashboard(user) {
+    document.getElementById('displayName').innerText = user.name;
+    document.getElementById('displayPhone').innerText = user.phone;
+    document.getElementById('displayEmail').innerText = user.email;
+    document.getElementById('displayImg').src = user.img;
+    document.getElementById('dashboardProfile').style.display = "block";
 }
 
-// Auto Load Profile on App Launch
-window.addEventListener('DOMContentLoaded', () => {
-    const savedData = localStorage.getItem('ayna_user_v21');
-    if(savedData) {
-        renderProfileDashboard(JSON.parse(savedData));
+// Auto load dashboard if data exists on page load
+window.onload = function() {
+    const savedData = localStorage.getItem('ayna_master_user');
+    if (savedData) {
+        showDashboard(JSON.parse(savedData));
     }
-});
-
-// 2. Media Player Handler
-function playMedia(type){
-    const box = document.getElementById('mediaContent');
-    if(type === 'bd'){
-        box.innerHTML = `
-            <h3 style="color:var(--cyan); margin-bottom:8px;">🇧🇩 বাংলাদেশি রেডিও ও টিভি লাইভ</h3>
-            <p class="notice">বাংলাদেশ বেতার ও লাইভ নিউজ অডিও সম্প্রচার...</p>
-            <audio controls autoplay style="width:100%; margin-top:12px;">
-                <source src="https://stream.zeno.fm/f3wvbbqmdg8uv" type="audio/mpeg">
-            </audio>`;
-    } else if(type === 'global'){
-        box.innerHTML = `
-            <h3 style="color:var(--cyan); margin-bottom:8px;">🌐 গ্লোবাল লাইভ ব্রডকাস্ট</h3>
-            <p class="notice">আন্তর্জাতিক সংবাদ এবং গ্লোবাল মিউজিক স্ট্রিম...</p>
-            <audio controls autoplay style="width:100%; margin-top:12px;">
-                <source src="https://stream-162.zeno.fm/0rmv37xy3k8uv" type="audio/mpeg">
-            </audio>`;
-    } else if(type === 'radar'){
-        box.innerHTML = `
-            <h3 style="color:var(--neon-green); margin-bottom:8px;">🛰️ সামরিক রাডার স্ক্যানার</h3>
-            <p class="notice">গ্লোবাল এয়ারস্পেস স্ক্যানিং সফল। কোনো হুমকি পরিলক্ষিত হয়নি।</p>`;
-    } else if(type === 'compass'){
-        box.innerHTML = `
-            <h3 style="color:var(--gold); margin-bottom:8px;">🧭 ডিজিটাল কম্পাস</h3>
-            <p style="font-size:18px; color:var(--white);">🧭 Direction: N 45° North-East (Live Sensor Active)</p>`;
-    }
-}
-
-// 3. Islamic Hub Handler
-function showIslamic(type){
-    const box = document.getElementById('islamicDisplay');
-    if(type==='quran') box.innerHTML = `<strong>📖 পবিত্র কোরআনুল কারীম:</strong><p class="notice">১১৪টি সূরার ডিজিটাল তিলাওয়াত ও অডিও প্লেয়ার অ্যাক্সেস।</p>`;
-    if(type==='hadith') box.innerHTML = `<strong>📜 সহীহ হাদিস সংগ্রহ:</strong><p class="notice">সহীহ বুখারী ও মুসলিম শরীফের ভেরিফাইড হাদিস ডাটাবেজ।</p>`;
-    if(type==='waz') box.innerHTML = `<strong>🎙️ আলেমগণের ওয়াজ মাহফিল:</strong><p class="notice">শীর্ষস্থানীয় উলামায়ে কেরামগণের আলোচনা ও অডিও রেকর্ড।</p>`;
-}
-
-// 4. Global Leaders Data Loader
-function loadLeaders(){
-    document.getElementById('leadersDisplay').innerHTML = `
-        <div class="list-item"><strong>🇺🇸 USA:</strong> President Office | Email: whitehouse@gov.us | Phone: +1-202-456-1111</div>
-        <div class="list-item"><strong>🇬🇧 UK:</strong> Prime Minister Office | Email: contact@gov.uk | Phone: +44-20-7925-0918</div>
-        <div class="list-item"><strong>🇸🇦 Saudi Arabia:</strong> Royal Court | Email: info@spa.gov.sa | Phone: +966-11-488-2222</div>
-        <div class="list-item"><strong>🇧🇩 Bangladesh:</strong> PM Office | Email: info@pmo.gov.bd | Phone: +880-2-8888888</div>
-    `;
-}
-
-// 5. NGO, Matrimonial & Market Modules
-function showNgo(t){
-    const box = document.getElementById('ngoDisplay');
-    box.innerHTML = t==='list' ? `<strong>🏢 বিশ্ব এনজিও তালিকা:</strong> UNICEF, Red Cross, BRAC ডিজিটাল কানেক্ট সক্রিয়।` : `<strong>❤️ দরিদ্র ফান্ড:</strong> আবেদন ফরম ও নিরাপদ পেমেন্ট গেটওয়ে প্যানেল তৈরি।`;
-}
-
-function showMatrimonial(t){
-    const box = document.getElementById('matrimonialDisplay');
-    box.innerHTML = t==='add' ? `<strong>➕ বায়োডাটা ফরম:</strong> পাত্র/পাত্রীর ব্যক্তিগত ও পারিবারিক তথ্য ইনপুট ফরম।` : `<strong>🔍 বায়োডাটা সার্চ:</strong> জেলা ও বয়স অনুযায়ী পাত্র/পাত্রী অনুসন্ধানের ফিল্টার।`;
-}
-
-function showMarket(t){
-    const box = document.getElementById('marketDisplay');
-    box.innerHTML = t==='post' ? `<strong>🏷️ বিজ্ঞাপন দিন:</strong> আপনার পণ্যের ছবি, বিবরণ ও দাম নির্ধারণ করুন।` : `<strong>🛍️ হাটের পণ্যসমূহ:</strong> ইলেকট্রনিক্স, মোবাইল ও নিত্যপ্রয়োজনীয় পণ্যের বিজ্ঞাপন ফিড।`;
-}
-
-// 6. Defense & Kids Modules
-function runDefense(t){
-    const box = document.getElementById('defenseResult');
-    box.innerText = t==='mossad' ? "🕵️ [Mossad Hub Protocol]: এনক্রিপ্টেড ভয়েস ও ডিজিটাল ফুটপ্রিন্ট স্যাটেলাইট কানেক্টেড।" : "✈️ [F-35 Radar Scan]: আন্তর্জাতিক এয়ারস্পেস ফাইটার ফ্লাইট লাইভ ট্র্যাকিং সক্রিয়।";
-}
-
-function showKids(t){
-    const box = document.getElementById('kidsScreen');
-    if(t==='cartoon') box.innerHTML = `<h3>🎬 অ্যানিমেটেড ছড়া ও শিক্ষণীয় কার্টুন প্লে হচ্ছে...</h3>`;
-    if(t==='story') box.innerHTML = `<h3>📚 রূপকথার অডিও নৈতিক গল্প সংকলন...</h3>`;
-    if(t==='game') box.innerHTML = `<h3>🎮 কিডস পাজল ও শেখার গেম লোড হয়েছে!</h3>`;
-}
+};
 </script>
 
 </body>
