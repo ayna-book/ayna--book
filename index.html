@@ -165,7 +165,7 @@ img.nasa-img, .profile-preview{width:100%;max-height:220px;object-fit:cover;bord
 <!-- ডিফেন্স হাব -->
 <section class="card" id="defense">
  <h2>🛰️ Global Defense, Mossad & Fighter Jets Hub</h2>
- <p class="notice">ইসরায়েলি গোয়েন্দা সংস্থা মোসাদের নজরদারি নেটওয়ার্ক, অটো কল রেকর্ডিং, আমেরিকা (F-35), রাশিয়া, চীন, জার্মানি, ফ্রান্স ও অন্যান্য পরাশক্তির যুদ্ধবিমানের রিয়েল-टाइम ট্র্যাকিং।</p>
+ <p class="notice">ইসরায়েলি গোয়েন্দা সংস্থা মোসাদের নজরদারি নেটওয়ার্ক, অটো কল রেকর্ডিং, আমেরিকা (F-35), রাশিয়া, চীন, জার্মানি, ফ্রান্স ও অন্যান্য পরাশক্তির যুদ্ধবিমানের রিয়েল-টাইম ট্র্যাকিং।</p>
  <div class="row">
   <button id="runMossadScan" type="button">🕵️ মোসাদ ও কল রেকর্ডিং হাব</button>
   <button id="runJetTracker" type="button">✈️ F-35 ও রুশ যুদ্ধবিমান রাডার</button>
@@ -336,12 +336,28 @@ $("btnRadar").addEventListener("click",()=>{
  `;
 });
 
+/* রিয়েল-টাইম কম্পাস সেন্সর */
 $("btnCompass").addEventListener("click",()=>{
  $("mediaScreenContent").innerHTML=`
-  <h3 style="color:var(--cyan)">🧭 কোয়ান্টাম ডিজিটাল কম্পাস</h3>
-  <p class="notice">উত্তর মেরু ও জিপিএস কোঅর্ডিনেট নিখুঁতভাবে ক্যালিব্রেট করা হয়েছে।</p>
-  <div style="font-size:28px; margin-top:10px; color:var(--gold);">🧭 N 360° North (Active)</div>
+  <h3 style="color:var(--cyan)">🧭 রিয়েল-টাইম কোয়ান্টাম ডিজিটাল কম্পাস</h3>
+  <p class="notice">মোবাইলের সেন্সর থেকে লাইভ দিক নির্ণয় করা হচ্ছে...</p>
+  <div id="compassLive" style="font-size:28px; margin-top:10px; color:var(--gold);">🧭 ক্যালিব্রেট করা হচ্ছে...</div>
  `;
+
+ if (window.DeviceOrientationEvent) {
+  window.addEventListener("deviceorientation", (event) => {
+   let compass = event.alpha;
+   if (compass !== null) {
+    const compassEl = document.getElementById("compassLive");
+    if(compassEl) {
+     compassEl.textContent = `🧭 N ${Math.round(compass)}° North (Live)`;
+    }
+   }
+  }, true);
+ } else {
+  const compassEl = document.getElementById("compassLive");
+  if(compassEl) compassEl.textContent = "🧭 কম্পাস সেন্সর উপলব্ধ নয়।";
+ }
 });
 
 /* ডিফেন্স ও মোসাদ হাব */
