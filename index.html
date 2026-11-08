@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AYNA BOOK - WORLD SAFETY OS - All Radio TV + Emergency Alert - AYNA-956251</title>
+<!-- HLS Video Library for Real-time IPTV/HLS Stream Support -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:#020208;color:#fff;padding:8px}
@@ -56,15 +57,15 @@ body{background:#020208;color:#fff;padding:8px}
 <h2 id="homeName">Md.Mahabub Alam</h2>
 <p style="font-size:10px;color:#00ffcc">AYNA-956251 | <span class="live-dot"></span> <span id="netStatus">Online - Quantum Node</span></p>
 <div class="grid3" style="margin:10px 0">
-<div style="background:#111;padding:8px;border-radius:10px"><b id="totalAcc">1</b><br><small style="font-size:9px">Total Acc</small></div>
+<div style="background:#111;padding:8px;border-radius:10px"><b id="totalAcc">4</b><br><small style="font-size:9px">Total Acc</small></div>
 <div style="background:#111;padding:8px;border-radius:10px"><b style="color:#00ff88">Safe</b><br><small style="font-size:9px">Emergency</small></div>
 <div style="background:#111;padding:8px;border-radius:10px"><b style="color:#ffd700">260px</b><br><small style="font-size:9px">Photo Big</small></div>
 </div>
 </div>
 
 <div class="card">
-<h3>🔑 MY ACCOUNTS - SWITCH / OPEN</h3>
-<p style="font-size:10px;opacity:0.6">আপনার সব একাউন্ট এখানে - এক ক্লিকে ওপেন করুন</p>
+<h3>🔑 MY ACCOUNTS (4 ACCOUNTS ACTIVE)</h3>
+<p style="font-size:10px;opacity:0.6">আপনার সব অ্যাকাউন্ট এখানে - এক ক্লিকে সুইচের মাধ্যমে সিলেক্ট করুন</p>
 <div id="switchList" style="text-align:left"></div>
 <button class="btn" onclick="show('new')">➕ New Account Open - 2 Password</button>
 <button class="btn btn2" onclick="show('alert')">🚨 Open Emergency Dashboard</button>
@@ -80,16 +81,15 @@ body{background:#020208;color:#fff;padding:8px}
 </div>
 </div>
 
-<!-- ALL RADIO - WORLDWIDE WORKING -->
+<!-- ALL RADIO -->
 <div id="radioView" class="hidden">
 <div class="card">
 <h3>📻 ALL WORLD RADIO - FM/AM - 100% WORKING</h3>
-<p style="font-size:10px;opacity:0.7">BBC ছাড়াও সব চলবে - নিচে Search করুন, Play করুন - পৃথিবীর 40,000+ Radio</p>
+<p style="font-size:10px;opacity:0.7">BBC ছাড়াও সব চলবে - নিচে Search করুন, Play করুন - পৃথিবীর 40,000+ Radio</p>
 
 <div class="inp"><input type="text" id="radioSearch" placeholder="Search Radio - Ex: India, USA, Quran, Sports..." oninput="filterRadio()"></div>
 
 <div class="grid2" id="radioGrid">
-<!-- WORKING STREAMS -->
 <button class="btn btn2" onclick="playRadio('https://stream.live.vc.bbcmedia.co.uk/bbc_world_service','BBC World Service - UK AM')">🇬🇧 BBC World</button>
 <button class="btn btn2" onclick="playRadio('https://icecast2.edume.eu:8000/betar','Bangladesh Betar 88.8 FM')">🇧🇩 Betar 88.8</button>
 <button class="btn btn2" onclick="playRadio('https://s1.voscast.com:11154/;','Radio Today 89.6 FM BD')">🇧🇩 Today 89.6</button>
@@ -110,23 +110,28 @@ body{background:#020208;color:#fff;padding:8px}
 </div>
 </div>
 
-<!-- ALL TV - WORLDWIDE WORKING YOUTUBE -->
+<!-- ALL TV - DIRECT HLS + YOUTUBE LIVE DUAL PLAYER -->
 <div id="tvView" class="hidden">
 <div class="card">
-<h3>📺 ALL WORLD TV - LIVE - 100% WORKING</h3>
+<h3>📺 ALL WORLD TV - LIVE (HLS & YouTube Direct)</h3>
+
 <div class="grid2">
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/9Auq9mYxFEE','Bangladesh Somoy TV Live')">🇧🇩 Somoy TV</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/8Z5R6U4D4eU','BBC World News Live')">🇬🇧 BBC News</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/86YLFOog4GM','Al Jazeera English Live')">🌍 Al Jazeera</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/38Zv2VjRz0o','Al Quran Al Kareem Makkah Live')">🕋 Makkah Live</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/jfKfPfyJRdk','Lofi Girl - Music FM')">🎵 Lofi Music TV</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/XWq5kBlakcQ','NASA Live ISS')">🚀 NASA ISS Live</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/0kY1Q5b3K0E','DW News Germany')">🇩🇪 DW News</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/wtcB0Y0k5j0','Weather World')">🌦️ Weather Live</button>
+<button class="btn btn2" onclick="playTV('hls','https://somoyreg.b-cdn.net/somoy/live/playlist.m3u8','Bangladesh Somoy TV Live')">🇧🇩 Somoy TV (HLS)</button>
+<button class="btn btn2" onclick="playTV('hls','https://video.aljazeera.net/m3u8/live.m3u8','Al Jazeera English Live')">🌍 Al Jazeera (HLS)</button>
+<button class="btn btn2" onclick="playTV('hls','https://saudi-channel-1.stream-tv.org/hls/quran.m3u8','Al Quran Makkah Live')">🕋 Makkah Live (HLS)</button>
+<button class="btn btn2" onclick="playTV('hls','https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8','DW News Germany')">🇩🇪 DW News (HLS)</button>
+<button class="btn btn2" onclick="playTV('hls','https://amg01201-amg01201c1-france24-en-dash-us.amagi.tv/playlist.m3u8','France 24 News')">🇫🇷 France 24 (HLS)</button>
+<button class="btn btn2" onclick="playTV('hls','https://cdn-video.presstv.ir/hls/live.m3u8','Press TV Live')">📡 Press TV (HLS)</button>
+<button class="btn btn2" onclick="playTV('yt','https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig','BBC News Live')">🇬🇧 BBC News (YT)</button>
+<button class="btn btn2" onclick="playTV('yt','https://www.youtube.com/embed/jfKfPfyJRdk','Lofi Music Live')">🎵 Lofi Music (YT)</button>
 </div>
+
 <div class="card" style="background:#000;padding:0;overflow:hidden;margin-top:10px">
 <p style="padding:8px"><span class="live-dot"></span> <b id="tvName">Select TV Channel</b></p>
-<iframe id="tvPlayer" width="100%" height="220" src="https://www.youtube.com/embed/9Auq9mYxFEE" frameborder="0" allowfullscreen></iframe>
+<!-- Video Element for HLS Streaming -->
+<video id="hlsPlayer" controls style="width:100%;height:220px;background:#000;" class="hidden"></video>
+<!-- Iframe Element for YouTube Streaming -->
+<iframe id="tvPlayer" width="100%" height="220" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="hidden"></iframe>
 </div>
 </div>
 </div>
@@ -141,7 +146,7 @@ body{background:#020208;color:#fff;padding:8px}
 </div>
 </div>
 
-<!-- EMERGENCY - YOUR DREAM TECH -->
+<!-- EMERGENCY -->
 <div id="alertView" class="hidden">
 <div class="card" style="border:2px solid #ff2a2a">
 <h2 style="color:#ff2a2a;text-align:center">🚨 EMERGENCY ALERT OS - 10 MIN BEFORE!</h2>
@@ -166,7 +171,7 @@ body{background:#020208;color:#fff;padding:8px}
 2. <b>Auto Call:</b> জাহাজ ডুবলে → GPS Location সহ Auto → Fire Service 999 + নিকটস্থ ডুবুরী দল + Coast Guard কে Call + SMS<br>
 3. <b>Location:</b> <span id="myLoc">Fetching GPS...</span> - Google Map Link সহ যাবে<br>
 4. <b>Gas Cylinder:</b> MQ-2 Sensor (Demo) - গ্যাস লিক 10% হলেই Alert + Auto Fan On + Family কে SMS<br>
-5. <b>মিসাইল/ড্রোন:</b> Radar 360° + Sound Frequency + Heat Signature দিয়ে 50km আগে Detect
+5. <b>মিসাইল/ড্রোন:</b> Radar 360° + Sound Frequency + Heat Signature দিয়ে 50km আগে Detect
 </div>
 
 <button class="btn" onclick="autoCallDemo()">📞 AUTO CALL DEMO - Fire Service + Diver + Location Send</button>
@@ -194,12 +199,28 @@ body{background:#020208;color:#fff;padding:8px}
 <div class="card">
 <h3>⚙️ SETTINGS DASHBOARD - All Tech Combined</h3>
 <div id="passList" style="text-align:left"></div>
-<p style="font-size:10px;opacity:0.6;margin-top:10px">• All Radio/TV = Radio.Garden + YouTube Live Working<br>• Emergency = 10 Min Before Quantum Prediction<br>• Radar + FM/AM Same Wave Tech</p>
+<p style="font-size:10px;opacity:0.6;margin-top:10px">• All Radio/TV = HLS Direct Live Stream + Radio.Garden Working<br>• Emergency = 10 Min Before Quantum Prediction<br>• Radar + FM/AM Same Wave Tech</p>
 </div>
 </div>
 
 <script>
+// INITIALIZE DEFAULT 4 ACCOUNTS IF NOT EXISTS
+function initDefaultAccounts(){
+  const existing = localStorage.getItem('ayna_all_accounts');
+  if(!existing || JSON.parse(existing).length === 0){
+    const defaultAccounts = [
+      {name:"Md.Mahabub Alam", email:"mahabub@ayna.com", pass1:"m123456", pass2:"m889900", id:"AYNA-956251", date:"Main Root", loc:"Cox's Bazar Ukhiya"},
+      {name:"Ayna Enterprise Node", email:"biz@ayna.com", pass1:"b123456", pass2:"b889900", id:"AYNA-772102", date:"Business Account", loc:"Dhaka Hub"},
+      {name:"Safety Control Node", email:"safety@ayna.com", pass1:"s123456", pass2:"s889900", id:"AYNA-303911", date:"Emergency VIP", loc:"Global Quantum Node"},
+      {name:"Family VIP Access", email:"family@ayna.com", pass1:"f123456", pass2:"f889900", id:"AYNA-109283", date:"Shared Security", loc:"Chittagong"}
+    ];
+    localStorage.setItem('ayna_all_accounts', JSON.stringify(defaultAccounts));
+  }
+}
+initDefaultAccounts();
+
 function tog(id,el){const i=document.getElementById(id);if(i.type==="password"){i.type="text";el.innerText="🙈";}else{i.type="password";el.innerText="👁️";}}
+
 function show(v){
 ['home','quantum','radio','tv','radar','alert','new','set'].forEach(x=>document.getElementById(x+'View').classList.add('hidden'));
 document.getElementById(v+'View').classList.remove('hidden');
@@ -210,26 +231,63 @@ if(v==='home')refreshHome();
 if(v==='quantum')startQuantum();
 if(v==='alert')getLocation();
 }
+
 function playRadio(url,name){
 const p=document.getElementById('radioPlayer');
 p.src=url;p.play().catch(()=>{alert('Radio Loading... If not play, try Radio.Garden Button - Worldwide Working');});
 document.getElementById('radioName').innerText="▶️ "+name+" - LIVE";
 logRadar("Radio: "+name+" FM/AM Locked");
 }
+
 function filterRadio(){
 const q=document.getElementById('radioSearch').value.toLowerCase();
 document.querySelectorAll('#radioGrid button').forEach(b=>{b.style.display=b.innerText.toLowerCase().includes(q)?'block':'none';});
 }
-function playTV(url,name){
-document.getElementById('tvPlayer').src=url;
-document.getElementById('tvName').innerText="▶️ "+name+" LIVE TV - Worldwide";
-logRadar("TV: "+name+" Locked");
+
+// ADVANCED LIVE TV PLAYER SYSTEM (HLS + YOUTUBE SUPPORT)
+let hlsInstance = null;
+function playTV(type, url, name){
+  const hlsPlayer = document.getElementById('hlsPlayer');
+  const tvPlayer = document.getElementById('tvPlayer');
+  document.getElementById('tvName').innerText = "▶️ " + name + " LIVE";
+
+  if(type === 'hls'){
+    tvPlayer.classList.add('hidden');
+    tvPlayer.src = "";
+    hlsPlayer.classList.remove('hidden');
+
+    if (Hls.isSupported()) {
+      if(hlsInstance){ hlsInstance.destroy(); }
+      hlsInstance = new Hls();
+      hlsInstance.loadSource(url);
+      hlsInstance.attachMedia(hlsPlayer);
+      hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+        hlsPlayer.play();
+      });
+    } else if (hlsPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+      hlsPlayer.src = url;
+      hlsPlayer.play();
+    } else {
+      alert("HLS playback is not supported on this browser.");
+    }
+  } else {
+    if(hlsInstance){ hlsInstance.destroy(); }
+    hlsPlayer.pause();
+    hlsPlayer.classList.add('hidden');
+    tvPlayer.classList.remove('hidden');
+    tvPlayer.src = url;
+  }
+  logRadar("TV: " + name + " Stream Initialized");
 }
+
 function startQuantum(){
 setInterval(()=>{const el=document.getElementById('qcalc');if(el)el.innerText=`Qbit ${956251+Math.floor(Math.random()*100)} | Speed ${(1.2+Math.random()).toFixed(2)} K/s | Superposition FAST | Node: COX'S BAZAR`;},900);
 }
+
 function addBlip(){const box=document.getElementById('radarBox');const b=document.createElement('div');b.className='blip';b.style.top=Math.random()*80+10+'%';b.style.left=Math.random()*80+10+'%';box.appendChild(b);logRadar(`Target ${b.style.left} Range ${(Math.random()*50).toFixed(1)}km`);}
+
 function logRadar(m){const l=document.getElementById('radarLog');if(l)l.innerHTML=new Date().toLocaleTimeString()+" - "+m+"<br>"+l.innerHTML;}
+
 let locStr="Cox's Bazar Ukhiya - 21.20N 92.07E";
 function getLocation(){
 if(navigator.geolocation){
@@ -237,6 +295,7 @@ navigator.geolocation.getCurrentPosition(pos=>{locStr=`Lat ${pos.coords.latitude
 }else{document.getElementById('myLoc').innerText=locStr;}
 document.getElementById('netStatus').innerText=navigator.onLine?'Online - Quantum Node':'Offline';
 }
+
 function triggerAlert(type,msg){
 const box=document.getElementById('alertLive');
 const id=Date.now();
@@ -245,15 +304,18 @@ if('vibrate' in navigator)navigator.vibrate([500,200,500]);
 if('Notification' in window&&Notification.permission==="granted"){new Notification("AYNA EMERGENCY",{body:msg});}
 logRadar("EMERGENCY: "+type+" Alert 10 Min Before");
 }
+
 function autoCallDemo(){
 const num="999 (Bangladesh Emergency) + Coast Guard + Local Diver Team";
 const mapLink=`https://www.google.com/maps?q=${encodeURIComponent(locStr)}`;
 alert(`📞 AUTO CALL SYSTEM ACTIVATED!\n\n1. Calling Fire Service: ${num}\n2. Sending Location: ${locStr}\n3. Map Link: ${mapLink}\n4. SMS to Family + Diver Team\n5. Radar Live Tracking ON\n\n(Real App এ auto call হবে, Demo তে Alert দেখাচ্ছে)\nLocation: ${locStr}`);
 triggerAlert('autocall',`📞 Auto Call Sent! Fire Service + Diver Team + Location: ${locStr} - Map: ${mapLink}`);
 }
+
 function testAllAlert(){
 ['fire','missile','drone','flood','gas','ship'].forEach((t,i)=>{setTimeout(()=>triggerAlert(t,`TEST ${t} Alert - 10 Min Before Demo - Location ${locStr}`),i*800);});
 }
+
 function createAcc(){
 const name=document.getElementById('nName').value;const p1=document.getElementById('p1').value;const p2=document.getElementById('p2').value;
 if(!name||!p1||!p2){alert('Name + 2 Password দিন');return;}
@@ -264,11 +326,12 @@ localStorage.setItem('ayna_all_accounts',JSON.stringify(all));
 alert('Created! Now you can Switch Account from Dashboard');
 refreshHome();show('home');
 }
+
 function refreshHome(){
 const all=JSON.parse(localStorage.getItem('ayna_all_accounts')||'[]');
-document.getElementById('totalAcc').innerText=all.length+1;
+document.getElementById('totalAcc').innerText=all.length;
 let h='';
-if(all.length===0)h='<p style="font-size:11px;opacity:0.5">No other accounts - Create New</p>';
+if(all.length===0)h='<p style="font-size:11px;opacity:0.5">No accounts found.</p>';
 else all.forEach((a,i)=>{
 h+=`<div style="background:#111;padding:8px;border-radius:10px;margin:6px 0;display:flex;justify-content:space-between;align-items:center">
 <div style="font-size:11px;text-align:left"><b>${a.name}</b><br><small>${a.id} | ${a.date}</small><br><small>📍 ${a.loc||locStr}</small></div>
@@ -279,12 +342,14 @@ document.getElementById('switchList').innerHTML=h;
 const pic=localStorage.getItem('ayna_profile_pic');
 if(pic){document.getElementById('homePic').src=pic;document.getElementById('homePic').style.display='block';document.getElementById('noPic').style.display='none';}
 }
+
 function switchAcc(i){
 const all=JSON.parse(localStorage.getItem('ayna_all_accounts')||'[]');
 const a=all[i];
 document.getElementById('homeName').innerText=a.name+" (Switched)";
 alert(`✅ Account Opened: ${a.name}\nID: ${a.id}\n1st Pass: ${a.pass1}\n2nd Pass: ${a.pass2}\nLocation: ${a.loc}\n\nNow Dashboard Showing This Account`);
 }
+
 function refreshSet(){
 const all=JSON.parse(localStorage.getItem('ayna_all_accounts')||'[]');
 let h='';all.forEach((a,i)=>{
@@ -293,10 +358,13 @@ h+=`<div style="background:#111;padding:8px;border-radius:8px;margin:6px 0;font-
 2nd: <input type="password" id="s2_${i}" value="${a.pass2}" style="background:transparent;border:none;color:#fd0;width:60px"><span onclick="tog('s2_${i}',this)" style="cursor:pointer">👁️</span>
 <button class="btn" style="padding:4px 8px;width:auto;font-size:10px" onclick="switchAcc(${i})">OPEN THIS</button></div>`;
 });
-document.getElementById('passList').innerHTML=h||'No accounts yet - Create New Account';
+document.getElementById('passList').innerHTML=h||'No accounts yet';
 }
+
 if('Notification' in window&&Notification.permission!=="granted"){Notification.requestPermission();}
 getLocation();refreshHome();startQuantum();
+// Default Play First HLS Channel
+playTV('hls','https://somoyreg.b-cdn.net/somoy/live/playlist.m3u8','Bangladesh Somoy TV Live');
 </script>
 </body>
 </html>
