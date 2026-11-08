@@ -3,157 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK - Real Working Platform</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>AYNA BOOK - Working Edition</title>
     <style>
-        :root {
-            --bg: #070a12;
-            --card: #131b2e;
-            --cyan: #38bdf8;
-            --pink: #ec4899;
-            --text: #ffffff;
-            --sub: #94a3b8;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { background: var(--bg); color: var(--text); display: flex; justify-content: center; min-height: 100vh; }
-        .app { width: 100%; max-width: 480px; padding: 15px; }
-
-        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1e293b; }
-        .brand { font-size: 1.2rem; font-weight: bold; color: var(--cyan); }
-        .brand span { color: var(--pink); }
-
-        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-top: 15px; }
-        h3 { margin-bottom: 10px; color: var(--cyan); font-size: 1rem; }
-        
-        .input-group { position: relative; margin-bottom: 10px; }
-        input { width: 100%; padding: 10px; background: #0b0f19; border: 1px solid #334155; color: #fff; border-radius: 8px; }
-        .toggle-pass { position: absolute; right: 10px; top: 10px; color: var(--sub); cursor: pointer; }
-
-        button { width: 100%; padding: 10px; background: linear-gradient(45deg, var(--cyan), var(--pink)); border: none; color: #fff; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 5px; }
-
-        /* Media Player */
-        video, audio { width: 100%; border-radius: 8px; margin-top: 8px; }
-
-        /* Compass & Radar Animation */
-        .radar-box { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--cyan); margin: 10px auto; position: relative; overflow: hidden; background: radial-gradient(circle, #0f172a 0%, #000 100%); }
-        .radar-sweep { width: 100%; height: 100%; background: conic-gradient(from 0deg, transparent 80%, rgba(56, 189, 248, 0.4) 100%); animation: spin 2s linear infinite; border-radius: 50%; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .compass-display { text-align: center; font-size: 1.2rem; font-weight: bold; color: var(--pink); }
+        body { background: #070a12; color: #ffffff; font-family: Arial, sans-serif; padding: 20px; max-width: 480px; margin: auto; }
+        .card { background: #131b2e; padding: 15px; border-radius: 10px; margin-top: 15px; border: 1px solid #334155; }
+        input { width: 100%; padding: 10px; margin: 8px 0; background: #0b0f19; border: 1px solid #475569; color: #fff; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #38bdf8; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 5px; }
+        .btn-logout { background: #ef4444; color: #fff; margin-top: 8px; }
+        h3 { color: #38bdf8; margin-top: 0; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
-<div class="app">
-    <header>
-        <div class="brand">AYNA <span>BOOK</span></div>
-        <div id="userInfo" style="font-size:0.8rem; color:var(--sub);">গেস্ট অ্যাকাউন্ট</div>
-    </header>
+    <h2 style="text-align:center; color:#38bdf8;">AYNA BOOK</h2>
+    <p id="welcomeMsg" style="text-align:center; color:#94a3b8; font-size:0.9rem;">গেস্ট মোড</p>
 
-    <!-- 1. AUTH SYSTEM -->
-    <div class="card" id="authBox">
-        <h3 id="authTitle">রেজিস্ট্রেশন / লগইন</h3>
-        <div class="input-group">
-            <input type="text" id="username" placeholder="ইউজারনেম">
-        </div>
-        <div class="input-group">
-            <input type="password" id="password" placeholder="পাসওয়ার্ড">
-            <i class="fa-solid fa-eye toggle-pass" onclick="togglePassword()"></i>
-        </div>
-        <button onclick="handleAuth()">অ্যাকাউন্ট সেভ/লগইন করুন</button>
-        <p id="authMsg" style="font-size:0.8rem; margin-top:8px;"></p>
-    </div>
-
-    <!-- 2. MEDIA SYSTEM -->
+    <!-- অ্যাকাউন্ট ও লগইন সেকশন -->
     <div class="card">
-        <h3>📺 লাইভ এইচডি ভিডিও ও সাউন্ড প্লেয়ার</h3>
-        <video id="vPlayer" controls style="display:none;"></video>
-        <audio id="aPlayer" controls style="display:none;"></audio>
-        <button onclick="playTV()"><i class="fa-solid fa-tv"></i> লাইভ এইচডি ভিডিও প্লে করুন</button>
-        <button onclick="playRadio()" style="margin-top:5px;"><i class="fa-solid fa-radio"></i> এইচডি সাউন্ড রেডিও শুনুন</button>
+        <h3>👤 একাউন্ট ও লগইন</h3>
+        <input type="email" id="userEmail" placeholder="জিমেইল বা ইমেইল লিখুন">
+        <input type="password" id="userPass" placeholder="পাসওয়ার্ড লিখুন">
+        <button onclick="saveLogin()">লগইন / সেভ করুন</button>
+        <button class="btn-logout" onclick="logoutAcc()">লগআউট</button>
+        <p id="statusText" style="font-size:0.85rem; margin-top:8px; text-align:center;"></p>
     </div>
 
-    <!-- 3. RADAR & COMPASS -->
+    <!-- রেডিও ও মিডিয়া সেকশন -->
     <div class="card">
-        <h3>📡 ডিজিটাল রাডার ও ওডি কম্পাস</h3>
-        <div class="radar-box"><div class="radar-sweep"></div></div>
-        <div class="compass-display" id="compassHead">0° N</div>
-        <button onclick="startCompass()" style="margin-top:10px;">কম্পাস সেন্সর সক্রিয় করুন</button>
+        <h3>📻 রেডিও ও মিডিয়া প্লেয়ার</h3>
+        <audio id="audioPlayer" controls style="width:100%; margin-top:10px; display:none;"></audio>
+        <button onclick="playRadioAudio()">অনলাইন রেডিও চালু করুন</button>
     </div>
-</div>
+
+    <!-- রাডার ও কম্পাস সেকশন -->
+    <div class="card">
+        <h3>📡 রাডার ও জিপিএস কম্পাস</h3>
+        <button onclick="getDeviceLocation()">আমার বর্তমান লোকেশন দেখুন</button>
+        <p id="locResult" style="font-size:0.85rem; margin-top:8px; color:#cbd5e1;"></p>
+    </div>
 
 <script>
-    // Password Show/Hide
-    function togglePassword() {
-        const passInput = document.getElementById('password');
-        const icon = document.querySelector('.toggle-pass');
-        if (passInput.type === 'password') {
-            passInput.type = 'text';
-            icon.classList.replace('fa-eye', 'fa-eye-slash');
-        } else {
-            passInput.type = 'password';
-            icon.classList.replace('fa-eye-slash', 'fa-eye');
+    // পেজ লোড হলে সেভ করা ডাটা চেক করা
+    window.onload = function() {
+        const saved = localStorage.getItem('ayna_mail');
+        if(saved) {
+            document.getElementById('userEmail').value = saved;
+            document.getElementById('welcomeMsg').textContent = "স্বাগতম, " + saved;
+            document.getElementById('statusText').style.color = "#10b981";
+            document.getElementById('statusText').textContent = "একাউন্ট একটিভ আছে।";
         }
     }
 
-    // Authentic Local Auth
-    function handleAuth() {
-        const u = document.getElementById('username').value.trim();
-        const p = document.getElementById('password').value;
-        const msg = document.getElementById('authMsg');
+    // লগইন বা সেভ ফাংশন
+    function saveLogin() {
+        const mail = document.getElementById('userEmail').value.trim();
+        const pass = document.getElementById('userPass').value;
+        const status = document.getElementById('statusText');
 
-        if(!u || !p) { msg.textContent = "দয়া করে নাম ও পাসওয়ার্ড দিন।"; return; }
-
-        localStorage.setItem('ayna_user', u);
-        localStorage.setItem('ayna_pass', p);
-        
-        document.getElementById('userInfo').textContent = "স্বাগতম, " + u;
-        msg.style.color = "#34d399";
-        msg.textContent = "অ্যাকাউন্ট সফলভাবে ব্রাউজারে সংরক্ষিত হয়েছে!";
-    }
-
-    // Media Functions (Actual Working Stream Sources)
-    function playTV() {
-        const v = document.getElementById('vPlayer');
-        const a = document.getElementById('aPlayer');
-        a.style.display = 'none'; a.pause();
-        
-        v.style.display = 'block';
-        v.src = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
-        v.play();
-    }
-
-    function playRadio() {
-        const v = document.getElementById('vPlayer');
-        const a = document.getElementById('aPlayer');
-        v.style.display = 'none'; v.pause();
-        
-        a.style.display = 'block';
-        a.src = 'https://stream.zeno.fm/f3wvbbqmdg8uv';
-        a.play();
-    }
-
-    // Compass Sensor logic
-    function startCompass() {
-        if (window.DeviceOrientationEvent) {
-            window.addEventListener('deviceorientation', function(e) {
-                let heading = e.alpha ? Math.round(e.alpha) : 0;
-                document.getElementById('compassHead').textContent = heading + "° " + getDirection(heading);
-            });
-        } else {
-            alert("আপনার ডিভাইসে ডিরেকশন সেন্সর সাপোর্ট করছে না।");
+        if(!mail || !pass) {
+            status.style.color = "#ef4444";
+            status.textContent = "ইমেইল এবং পাসওয়ার্ড উভয়ই দিন।";
+            return;
         }
+
+        localStorage.setItem('ayna_mail', mail);
+        document.getElementById('welcomeMsg').textContent = "স্বাগতম, " + mail;
+        status.style.color = "#10b981";
+        status.textContent = "সফলভাবে সেভ হয়েছে!";
     }
 
-    function getDirection(deg) {
-        if (deg >= 337.5 || deg < 22.5) return 'N';
-        if (deg >= 22.5 && deg < 67.5) return 'NE';
-        if (deg >= 67.5 && deg < 112.5) return 'E';
-        if (deg >= 112.5 && deg < 157.5) return 'SE';
-        if (deg >= 157.5 && deg < 202.5) return 'S';
-        if (deg >= 202.5 && deg < 247.5) return 'SW';
-        if (deg >= 247.5 && deg < 292.5) return 'W';
-        return 'NW';
+    // লগআউট ফাংশন
+    function logoutAcc() {
+        localStorage.removeItem('ayna_mail');
+        document.getElementById('userEmail').value = "";
+        document.getElementById('userPass').value = "";
+        document.getElementById('welcomeMsg').textContent = "গেস্ট মোড";
+        document.getElementById('statusText').style.color = "#ef4444";
+        document.getElementById('statusText').textContent = "লগআউট করা হয়েছে।";
+    }
+
+    // রেডিও প্লে করার ফাংশন
+    function playRadioAudio() {
+        const player = document.getElementById('audioPlayer');
+        player.style.display = 'block';
+        player.src = 'https://stream.zeno.fm/f3wvbbqmdg8uv';
+        player.play().catch(err => {
+            alert("ব্রাউজার পলিসির কারণে অডিও অটো-প্লে ব্লক হতে পারে। দয়া করে প্লেয়ারের প্লে বোতামে চাপ দিন।");
+        });
+    }
+
+    // জিপিএস লোকেশন দেখার ফাংশন
+    function getDeviceLocation() {
+        const res = document.getElementById('locResult');
+        if(!navigator.geolocation) {
+            res.textContent = "আপনার ব্রাউজার লোকেশন সমর্থন করে না।";
+            return;
+        }
+        res.textContent = "লোকেশন খোঁজা হচ্ছে...";
+        navigator.geolocation.getCurrentPosition(pos => {
+            res.textContent = `ল্যাটিটিউড: ${pos.coords.latitude.toFixed(4)}, লংজিটিউড: ${pos.coords.longitude.toFixed(4)}`;
+        }, err => {
+            res.textContent = "লোকেশন পারমিশন দেওয়া হয়নি বা পাওয়া যায়নি।";
+        });
     }
 </script>
+
 </body>
 </html>
