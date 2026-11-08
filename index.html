@@ -1,1588 +1,562 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#050a1e">
-<meta name="description" content="AYNA BOOK v24.0 SUPREME - বাংলাদেশ ও সারাবিশ্বের জন্য সুপার অ্যাপ (রেডিও, টিভি, রাডার, ৩ডি কম্পাস, ওয়ালেট, এআই)">
-<title>AYNA BOOK v24.0 SUPREME — গ্লোবাল এন্টারপ্রাইজ সুপার অ্যাপ</title>
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- Font Awesome Icons & Google Fonts -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-
-<script>
-  tailwind.config = {
-    darkMode: 'class',
-    theme: {
-      extend: {
-        colors: {
-          navy: { 950: '#030712', 900: '#050a1e', 800: '#0a1334', 700: '#101f4c', 600: '#182b68' },
-          neon: { cyan: '#00d9ff', pink: '#ff4fa3', purple: '#7c3aed', gold: '#ffd700', green: '#00ff88', red: '#ff4757' }
-        },
-        fontFamily: {
-          sans: ['Noto Sans Bengali', 'Inter', 'sans-serif'],
-          mono: ['JetBrains Mono', 'monospace']
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYNA BOOK v24.0 SUPREME</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #131b2e;
+            --accent-purple: #7c3aed;
+            --accent-pink: #ec4899;
+            --accent-gold: #f59e0b;
+            --accent-green: #10b981;
+            --text-main: #ffffff;
+            --text-sub: #94a3b8;
         }
-      }
-    }
-  }
-</script>
 
-<style>
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    background-color: #050a1e;
-    color: #f3f4f6;
-    font-family: 'Noto Sans Bengali', 'Inter', sans-serif;
-    overflow-x: hidden;
-  }
-  
-  /* Glassmorphism Styling */
-  .glass-card {
-    background: rgba(16, 26, 58, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-  }
-  .glass-nav {
-    background: rgba(5, 10, 30, 0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  .glass-pill {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-  
-  /* Gradients */
-  .text-gradient {
-    background: linear-gradient(135deg, #00d9ff 0%, #7c3aed 50%, #ff4fa3 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .btn-gradient {
-    background: linear-gradient(90deg, #0ea5e9, #7c3aed, #ec4899);
-    transition: all 0.3s ease;
-  }
-  .btn-gradient:hover {
-    filter: brightness(1.15);
-    box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
-  }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: #050a1e; }
-  ::-webkit-scrollbar-thumb { background: rgba(0, 217, 255, 0.3); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 217, 255, 0.6); }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-  /* Compass smooth dial */
-  .compass-dial {
-    transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
-  }
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background: #070a12;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
+            padding-bottom: 70px;
+        }
 
-  /* Hide scrollbar for stories */
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-</style>
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: rgba(19, 27, 46, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-light {
+            width: 12px;
+            height: 12px;
+            background-color: #00ff66;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.2; box-shadow: 0 0 0px #00ff66; }
+            50% { opacity: 1; box-shadow: 0 0 12px #00ff66; }
+        }
+
+        .title-single-line {
+            white-space: nowrap;
+            font-size: 1.3rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #38bdf8, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-supreme {
+            background: linear-gradient(45deg, var(--accent-gold), #f97316);
+            color: #000;
+            font-weight: bold;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .top-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: #1e293b;
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .icon-btn .badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--accent-pink);
+            font-size: 0.6rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Banner */
+        .banner {
+            margin: 15px 20px;
+            background: linear-gradient(135deg, #1e1b4b, #311042);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .banner-chip {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+        }
+
+        .banner h2 {
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, #fff, var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .banner p {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            line-height: 1.4;
+        }
+
+        /* Hero Action Buttons */
+        .hero-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 0 20px 15px;
+        }
+
+        .hero-btn {
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-pink { background: linear-gradient(45deg, var(--accent-pink), var(--accent-purple)); }
+        .btn-blue { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1); }
+
+        /* Feature Grid 512x512 Concept */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 0 20px 20px;
+        }
+
+        .feature-box {
+            aspect-ratio: 1 / 1;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-purple);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        .feature-box i {
+            font-size: 1.2rem;
+        }
+
+        .feature-box span {
+            font-size: 0.65rem;
+            text-align: center;
+            color: var(--text-sub);
+        }
+
+        /* 4-Color Accents for Icons */
+        .color-1 { color: #38bdf8; }
+        .color-2 { color: #ec4899; }
+        .color-3 { color: #f59e0b; }
+        .color-4 { color: #10b981; }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: #0f172a;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-sub);
+            font-size: 0.65rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-item.active { color: var(--accent-pink); }
+        .nav-item i { font-size: 1.1rem; }
+
+        .play-center-btn {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(45deg, var(--accent-purple), var(--accent-pink));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            margin-top: -20px;
+            box-shadow: 0 4px 10px rgba(236, 72, 153, 0.5);
+        }
+
+        /* Views (Modals / Screens) */
+        .view-modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            z-index: 200;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .view-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Profile & Settings Styling */
+        .profile-img-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-purple);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, var(--accent-green), var(--accent-purple));
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Wallet Cards */
+        .wallet-card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
 </head>
+<body>
 
-<body class="bg-navy-950 text-gray-100 min-h-screen pb-24 select-none">
-
-  <!-- টপ নেভিগেশন বার (Header Bar) -->
-  <header class="sticky top-0 z-50 glass-nav px-4 py-3 flex items-center justify-between gap-3">
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('feed')">
-        <span class="text-2xl font-black tracking-wider text-white">AYNA <span class="text-gradient">BOOK</span></span>
-        <span class="bg-gradient-to-r from-amber-400 to-yellow-500 text-black font-extrabold text-[10px] px-2 py-0.5 rounded-full uppercase shadow-md shadow-amber-500/20">v24.0 SUPREME</span>
-      </div>
+<div class="app-container">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="brand-section">
+            <div class="status-light"></div>
+            <span class="title-single-line">AYNA BOOK</span>
+        </div>
+        <div class="badge-supreme">v24.0 SUPREME</div>
+        <div class="top-icons">
+            <button class="icon-btn" onclick="openView('settingsView')">
+                <i class="fa-solid fa-bell"></i>
+                <span class="badge">4</span>
+            </button>
+            <button class="icon-btn" onclick="openView('settingsView')">
+                <i class="fa-solid fa-sliders"></i>
+            </button>
+        </div>
     </div>
 
-    <!-- লাইভ আর্কিটেকচার কাউন্টার (ডেস্কটপ ভিউ) -->
-    <div class="hidden lg:flex items-center gap-4 bg-navy-900/90 px-3.5 py-1.5 rounded-full border border-white/10 text-xs font-mono">
-      <span class="flex items-center gap-1.5 text-neon-green"><i class="fa-solid fa-circle text-[8px] animate-pulse"></i> সিস্টেম: ১০,০০,০০০ লাইন কোড</span>
-      <span class="text-gray-600">|</span>
-      <span class="text-neon-cyan"><i class="fa-solid fa-microchip"></i> প্রসেসর: <span id="cpuMeter">14%</span></span>
-      <span class="text-gray-600">|</span>
-      <span class="text-neon-pink"><i class="fa-solid fa-users"></i> লাইভ ইউজার: ১৮,২৪০</span>
+    <!-- Banner -->
+    <div class="banner">
+        <div class="banner-chip"><i class="fa-solid fa-bolt"></i> ১,০০,০০,০০০ লাইন এন্টারপ্রাইজ আর্কিটেকচার</div>
+        <h2>AYNA BOOK v24.0 SUPREME</h2>
+        <p>বাংলাদেশের প্রথম সর্বাধুনিক গ্লোবাল সুপার অ্যাপ — রেডিও • লাইভ টিভি • ডিজিটাল রাডার • ওডি কম্পাস • এআই চ্যাটবট • ওয়ালেট</p>
     </div>
 
-    <!-- সার্চ ও প্রফাইল নোটিফিকেশন -->
-    <div class="flex items-center gap-2">
-      <div class="relative hidden sm:block w-48 md:w-64">
-        <input type="text" id="globalSearchInput" onkeyup="handleGlobalSearch()" placeholder="🔍 আইটেম খুঁজুন..." class="w-full bg-navy-900/90 border border-white/10 rounded-full px-4 py-1.5 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-neon-cyan transition-all">
-      </div>
-      <button onclick="showToast('🔔 ৪টি নতুন নোটিফিকেশন পাওয়া গেছে!')" class="relative w-9 h-9 rounded-full glass-pill flex items-center justify-center text-gray-300 hover:text-white hover:border-neon-cyan transition-all">
-        <i class="fa-regular fa-bell text-sm"></i>
-        <span class="absolute -top-1 -right-1 bg-neon-red text-white font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center shadow-lg shadow-red-500/50">4</span>
-      </button>
-      <button onclick="switchTab('architecture')" class="w-9 h-9 rounded-full glass-pill flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/10 transition-all" title="১০,০০০,০০০ লাইন কোডবেস">
-        <i class="fa-solid fa-code-branch text-sm"></i>
-      </button>
+    <!-- Hero Buttons -->
+    <div class="hero-btns">
+        <button class="hero-btn btn-pink" onclick="openView('mediaView')">
+            <i class="fa-solid fa-play"></i> টিভি ও রেডিও শুনুন
+        </button>
+        <button class="hero-btn btn-blue" onclick="openView('radarView')">
+            <i class="fa-solid fa-radar"></i> রাডার স্ক্যানার
+        </button>
     </div>
-  </header>
 
-  <!-- প্রধান কন্টেইনার (Main Container) -->
-  <main class="max-w-7xl mx-auto px-2 sm:px-4 py-4 grid grid-cols-1 lg:grid-cols-12 gap-5">
-
-    <!-- বাম সাইডবার (Desktop Sidebar: 3 cols) -->
-    <aside class="hidden lg:block lg:col-span-3 space-y-4">
-      
-      <!-- প্রতিষ্ঠাতা প্রফাইল কার্ড -->
-      <div class="glass-card rounded-2xl p-4 border border-white/10 text-center relative overflow-hidden">
-        <div class="absolute -right-6 -top-6 w-24 h-24 bg-neon-purple/20 rounded-full blur-xl pointer-events-none"></div>
-        <div class="relative z-10">
-          <div class="relative w-20 h-20 mx-auto mb-3">
-            <img id="userProfilePic" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop" class="w-full h-full rounded-full object-cover border-2 border-neon-cyan p-0.5 shadow-lg shadow-neon-cyan/20">
-            <span class="absolute bottom-0 right-0 bg-neon-green text-black text-[10px] p-1 rounded-full border-2 border-navy-950"><i class="fa-solid fa-check"></i></span>
-          </div>
-          <h3 class="font-bold text-white text-base tracking-wide flex items-center justify-center gap-1.5" id="profileNameDisplay">
-            মোহাম্মদ মাহবুব আলম
-            <i class="fa-solid fa-circle-check text-neon-cyan text-xs"></i>
-          </h3>
-          <p class="text-xs text-neon-gold font-semibold mt-0.5">প্রতিষ্ঠাতা ও সিস্টেম আর্কিটেক্ট</p>
-          <p class="text-[11px] text-gray-400 mt-1"><i class="fa-solid fa-location-dot text-neon-pink"></i> উখিয়া ৪৭৫০, কক্সবাজার, বাংলাদেশ</p>
-
-          <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-white/10 text-center">
-            <div class="bg-navy-900/80 p-2 rounded-xl border border-white/5">
-              <span class="block text-[10px] text-gray-400">পোস্ট</span>
-              <span class="text-xs font-bold text-white" id="statPostsCount">১৪২</span>
-            </div>
-            <div class="bg-navy-900/80 p-2 rounded-xl border border-white/5">
-              <span class="block text-[10px] text-gray-400">ফলোয়ার</span>
-              <span class="text-xs font-bold text-neon-cyan">১২.৪K</span>
-            </div>
-            <div class="bg-navy-900/80 p-2 rounded-xl border border-white/5">
-              <span class="block text-[10px] text-gray-400">ভার্সন</span>
-              <span class="text-xs font-bold text-neon-green">v24.0</span>
-            </div>
-          </div>
+    <!-- 512x512 Feature Grid -->
+    <div class="grid-container">
+        <div class="feature-box" onclick="openView('socialView')">
+            <i class="fa-solid fa-newspaper color-1"></i>
+            <span>সোশাল ফিড</span>
         </div>
-      </div>
-
-      <!-- নেভিগেশন মডিউল তালিকা -->
-      <div class="glass-card rounded-2xl p-4 border border-white/10">
-        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center justify-between">
-          <span><i class="fa-solid fa-cubes text-neon-cyan mr-1.5"></i> সুপার মডিউলসমূহ</span>
-          <span class="text-[10px] text-neon-pink font-normal">১২টি ইঞ্জিন</span>
-        </h4>
-        <nav class="space-y-1.5 text-xs">
-          <button onclick="switchTab('feed')" class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left bg-neon-cyan/10 text-neon-cyan font-semibold border border-neon-cyan/30 transition-all" data-tab="feed">
-            <span><i class="fa-solid fa-newspaper w-6 text-center"></i> সামাজিক ফিড ও স্টোরি</span>
-            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-          </button>
-          <button onclick="switchTab('media')" class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-gray-300 hover:bg-white/5 hover:text-white transition-all" data-tab="media">
-            <span><i class="fa-solid fa-tv w-6 text-center text-neon-pink"></i> লাইভ টিভি ও গ্লোবাল রেডিও</span>
-            <span class="bg-neon-pink/20 text-neon-pink text-[9px] px-1.5 py-0.5 rounded font-bold">LIVE</span>
-          </button>
-          <button onclick="switchTab('radar')" class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-gray-300 hover:bg-white/5 hover:text-white transition-all" data-tab="radar">
-            <span><i class="fa-solid fa-radar w-6 text-center text-neon-green"></i> ডিজিটাল রাডার ও নাসা সায়েন্স</span>
-            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-          </button>
-          <button onclick="switchTab('compass')" class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-gray-300 hover:bg-white/5 hover:text-white transition-all" data-tab="compass">
-            <span><i class="fa-solid fa-compass w-6 text-center text-neon-gold"></i> ৩ডি গায়রো কম্পাস ও কিবলা</span>
-            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-          </button>
-          <button onclick="switchTab('wallet')" class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-gray-300 hover:bg-white/5 hover:text-white transition-all" data-tab="wallet">
-            <span><i class="fa-solid fa-wallet w-6 text-center text-emerald-400"></i> আয়না ওয়ালেট (বিকাশ/নগদ)</span>
-            <span class="bg-emerald-500/20 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded">bKash Demo</span>
-          </button>
-          <button onclick="switchTab('ai')" class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-gray-300 hover:bg-white/5 hover:text-white transition-all" data-tab="ai">
-            <span><i class="fa-solid fa-robot w-6 text-center text-purple-400"></i> AYNA স্মার্ট AI চ্যাটবট</span>
-            <span class="bg-purple-500/20 text-purple-300 text-[9px] px-1.5 py-0.5 rounded">বাংলা এআই</span>
-          </button>
-          <button onclick="switchTab('islamic')" class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-gray-300 hover:bg-white/5 hover:text-white transition-all" data-tab="islamic">
-            <span><i class="fa-solid fa-kaaba w-6 text-center text-amber-400"></i> ইসলামিক হাব ও হাদিস</span>
-            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-          </button>
-          <button onclick="switchTab('medical')" class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-gray-300 hover:bg-white/5 hover:text-white transition-all" data-tab="medical">
-            <span><i class="fa-solid fa-heart-pulse w-6 text-center text-red-400"></i> মেডিকেল ও হেলথ এডভাইজরি</span>
-            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-          </button>
-          <button onclick="switchTab('architecture')" class="tab-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-gray-300 hover:bg-white/5 hover:text-white transition-all" data-tab="architecture">
-            <span><i class="fa-solid fa-code w-6 text-center text-neon-cyan"></i> ১ কোটি লাইন কোডবেস</span>
-            <span class="text-[9px] text-gray-400 font-mono">10M Lines</span>
-          </button>
-        </nav>
-      </div>
-
-    </aside>
-
-    <!-- প্রধান ভিউপোর্ট (Center Content Viewport: 9 cols) -->
-    <section class="col-span-1 lg:col-span-9 space-y-5">
-
-      <!-- টপ হিরো ব্যানার (Hero Banner) -->
-      <div class="relative rounded-3xl p-6 overflow-hidden border border-white/15 bg-gradient-to-r from-navy-900 via-navy-800 to-purple-950 shadow-2xl">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-neon-cyan/20 via-neon-purple/20 to-neon-pink/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <div class="flex flex-wrap items-center gap-2 mb-2">
-              <span class="bg-neon-green/20 text-neon-green border border-neon-green/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                <i class="fa-solid fa-satellite animate-spin text-[9px]"></i> লাইভ নোড সচল
-              </span>
-              <span class="bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                ⚡ ১,০০,০০,০০০ লাইন এন্টারপ্রাইজ আর্কিটেকচার
-              </span>
-            </div>
-            <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight">
-              AYNA BOOK <span class="text-gradient">v24.0 SUPREME</span>
-            </h1>
-            <p class="text-gray-300 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">
-              বাংলাদেশের প্রথম সর্বাধুনিক গ্লোবাল সুপার অ্যাপ — রেডিও • লাইভ টিভি • ডিজিটাল রাডার • ৩ডি কম্পাস • এআই চ্যাটবট • ওয়ালেট • নাসা স্পেস তথ্য
-            </p>
-            <p class="text-[11px] text-neon-gold mt-2 font-medium">
-              প্রতিষ্ঠাতা: <b>মোহাম্মদ মাহবুব আলম</b> (উখিয়া ৪৭৫০, কক্সবাজার, বাংলাদেশ)
-            </p>
-          </div>
-
-          <div class="flex flex-wrap gap-2 w-full md:w-auto">
-            <button onclick="switchTab('media')" class="btn-gradient text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-lg flex items-center justify-center gap-2 flex-1 md:flex-none">
-              <i class="fa-solid fa-circle-play"></i> টিভি ও রেডিও শুনুন
-            </button>
-            <button onclick="switchTab('radar')" class="bg-navy-900 hover:bg-navy-800 text-neon-cyan border border-neon-cyan/40 px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 flex-1 md:flex-none">
-              <i class="fa-solid fa-radar"></i> রাডার স্ক্যানার
-            </button>
-          </div>
+        <div class="feature-box" onclick="openView('mediaView')">
+            <i class="fa-solid fa-tv color-2"></i>
+            <span>টিভি/রেডিও</span>
         </div>
-      </div>
-
-      <!-- দ্রুত নেভিগেশন গ্রিড (Quick Icons Grid) -->
-      <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
-        <button onclick="switchTab('feed')" class="glass-card hover:border-neon-cyan p-2.5 rounded-2xl text-center transition-all group">
-          <div class="w-10 h-10 mx-auto rounded-xl bg-neon-cyan/10 flex items-center justify-center text-neon-cyan mb-1 group-hover:scale-110 transition-transform">
-            <i class="fa-solid fa-newspaper text-base"></i>
-          </div>
-          <span class="block text-[11px] font-medium text-gray-200">সোশ্যাল ফিড</span>
-        </button>
-        <button onclick="switchTab('media')" class="glass-card hover:border-neon-pink p-2.5 rounded-2xl text-center transition-all group">
-          <div class="w-10 h-10 mx-auto rounded-xl bg-neon-pink/10 flex items-center justify-center text-neon-pink mb-1 group-hover:scale-110 transition-transform">
-            <i class="fa-solid fa-tv text-base"></i>
-          </div>
-          <span class="block text-[11px] font-medium text-gray-200">টিভি/রেডিও</span>
-        </button>
-        <button onclick="switchTab('radar')" class="glass-card hover:border-neon-green p-2.5 rounded-2xl text-center transition-all group">
-          <div class="w-10 h-10 mx-auto rounded-xl bg-neon-green/10 flex items-center justify-center text-neon-green mb-1 group-hover:scale-110 transition-transform">
-            <i class="fa-solid fa-radar text-base"></i>
-          </div>
-          <span class="block text-[11px] font-medium text-gray-200">রাডার</span>
-        </button>
-        <button onclick="switchTab('compass')" class="glass-card hover:border-neon-gold p-2.5 rounded-2xl text-center transition-all group">
-          <div class="w-10 h-10 mx-auto rounded-xl bg-neon-gold/10 flex items-center justify-center text-neon-gold mb-1 group-hover:scale-110 transition-transform">
-            <i class="fa-solid fa-compass text-base"></i>
-          </div>
-          <span class="block text-[11px] font-medium text-gray-200">৩ডি কম্পাস</span>
-        </button>
-        <button onclick="switchTab('wallet')" class="glass-card hover:border-emerald-400 p-2.5 rounded-2xl text-center transition-all group">
-          <div class="w-10 h-10 mx-auto rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-1 group-hover:scale-110 transition-transform">
-            <i class="fa-solid fa-wallet text-base"></i>
-          </div>
-          <span class="block text-[11px] font-medium text-gray-200">ওয়ালেট</span>
-        </button>
-        <button onclick="switchTab('ai')" class="glass-card hover:border-purple-400 p-2.5 rounded-2xl text-center transition-all group">
-          <div class="w-10 h-10 mx-auto rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-1 group-hover:scale-110 transition-transform">
-            <i class="fa-solid fa-robot text-base"></i>
-          </div>
-          <span class="block text-[11px] font-medium text-gray-200">AYNA AI</span>
-        </button>
-        <button onclick="switchTab('islamic')" class="glass-card hover:border-amber-400 p-2.5 rounded-2xl text-center transition-all group">
-          <div class="w-10 h-10 mx-auto rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-1 group-hover:scale-110 transition-transform">
-            <i class="fa-solid fa-kaaba text-base"></i>
-          </div>
-          <span class="block text-[11px] font-medium text-gray-200">ইসলামিক</span>
-        </button>
-        <button onclick="switchTab('architecture')" class="glass-card hover:border-neon-cyan p-2.5 rounded-2xl text-center transition-all group">
-          <div class="w-10 h-10 mx-auto rounded-xl bg-neon-cyan/10 flex items-center justify-center text-neon-cyan mb-1 group-hover:scale-110 transition-transform">
-            <i class="fa-solid fa-code text-base"></i>
-          </div>
-          <span class="block text-[11px] font-medium text-gray-200">১ কোটি কোড</span>
-        </button>
-      </div>
-
-      <!-- মডিউল ১: সোশ্যাল ফিড ও রিলস (Social Feed & Reels) -->
-      <div id="tab-feed" class="tab-content space-y-4">
-        
-        <!-- স্টোরিস সেকশন -->
-        <div class="glass-card rounded-2xl p-3 border border-white/10">
-          <div class="flex items-center gap-3 overflow-x-auto pb-1 no-scrollbar" id="storiesContainer">
-            <!-- স্টোরি আইটেম জাভাস্ক্রিপ্ট দিয়ে যুক্ত হবে -->
-          </div>
+        <div class="feature-box" onclick="openView('radarView')">
+            <i class="fa-solid fa-satellite-dish color-3"></i>
+            <span>রাডার</span>
         </div>
-
-        <!-- পোস্ট তৈরি বক্স -->
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
-          <div class="flex items-start gap-3">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop" class="w-10 h-10 rounded-full border border-neon-cyan object-cover">
-            <div class="flex-1">
-              <textarea id="newPostText" rows="2" placeholder="আজ আপনার মনে কি আছে? (ছবি, ভয়েস পোস্ট বা পোল তৈরি করুন...)" class="w-full bg-navy-900/80 border border-white/10 rounded-xl p-3 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-neon-cyan transition-all resize-none"></textarea>
-            </div>
-          </div>
-          
-          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10">
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <label class="glass-pill px-3 py-1.5 rounded-xl text-xs text-gray-300 hover:text-white cursor-pointer flex items-center gap-1.5 transition-all">
-                <i class="fa-solid fa-image text-neon-green"></i> ছবি সংযুক্ত করুন
-                <input type="file" id="postImageInput" accept="image/*" class="hidden" onchange="previewImageUpload(this)">
-              </label>
-              <button onclick="triggerVoicePost()" class="glass-pill px-3 py-1.5 rounded-xl text-xs text-neon-cyan hover:bg-neon-cyan/10 flex items-center gap-1.5 transition-all">
-                <i class="fa-solid fa-microphone"></i> ভয়েস পোস্ট
-              </button>
-              <button onclick="createPollPost()" class="glass-pill px-3 py-1.5 rounded-xl text-xs text-neon-gold hover:bg-neon-gold/10 flex items-center gap-1.5 transition-all">
-                <i class="fa-solid fa-square-poll-vertical"></i> পোল পোস্ট
-              </button>
-              <button onclick="openReelModal()" class="glass-pill px-3 py-1.5 rounded-xl text-xs text-neon-pink hover:bg-neon-pink/10 flex items-center gap-1.5 transition-all">
-                <i class="fa-solid fa-film"></i> শর্ট রিলস (Reels)
-              </button>
-            </div>
-            <button onclick="publishNewPost()" class="btn-gradient px-5 py-1.5 rounded-xl text-xs font-bold text-white shadow-md flex items-center gap-1.5">
-              <i class="fa-solid fa-paper-plane"></i> পোস্ট করুন
-            </button>
-          </div>
-          <div id="imagePreviewContainer" class="hidden relative w-full h-32 rounded-xl overflow-hidden border border-white/10">
-            <img id="imagePreviewImg" class="w-full h-full object-cover">
-            <button onclick="clearImageUpload()" class="absolute top-2 right-2 bg-black/60 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
-          </div>
+        <div class="feature-box" onclick="alert('ওডি কম্পাস চালু হচ্ছে...')">
+            <i class="fa-solid fa-compass color-4"></i>
+            <span>ওডি কম্পাস</span>
         </div>
-
-        <!-- সোশ্যাল পোস্ট স্ট্রিম -->
-        <div id="postsFeedList" class="space-y-4">
-          <!-- পোস্টসমূহ ডায়নামিকভাবে রেন্ডার হবে -->
+        <div class="feature-box" onclick="openView('walletView')">
+            <i class="fa-solid fa-wallet color-3"></i>
+            <span>ওয়ালেট</span>
         </div>
-      </div>
-
-      <!-- মডিউল ২: গ্লোবাল রেডিও ও লাইভ টিভি প্লেয়ার (Global Radio & Live TV) -->
-      <div id="tab-media" class="tab-content hidden space-y-4">
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-            <div>
-              <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-tv text-neon-pink"></i> গ্লোবাল লাইভ টিভি ও রেডিও স্ট্রিমিং প্লেয়ার
-              </h2>
-              <p class="text-xs text-gray-400">এইচটিএমএল৫ রিয়েল-টাইম ভিডিও ক্যানভাস ও অডিও স্পেকট্রাম ভিজ্যুয়ালাইজার</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
-                <i class="fa-solid fa-circle text-[8px] animate-pulse"></i> ২৪/৭ লাইভ টেলিকাস্ট
-              </span>
-            </div>
-          </div>
-
-          <!-- সিমুলেটেড লাইভ ভিডিও স্ক্রিন ক্যানভাস -->
-          <div class="relative rounded-2xl overflow-hidden bg-black border border-white/20 shadow-2xl aspect-video max-h-[420px] flex items-center justify-center">
-            <canvas id="tvSimCanvas" class="w-full h-full object-cover"></canvas>
-            
-            <div class="absolute top-3 left-3 bg-navy-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs text-white flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-neon-green animate-ping"></span>
-              <span id="currentMediaTitle" class="font-bold">BTV World Live (1080p Stream)</span>
-            </div>
-
-            <!-- অডিও ভিজ্যুয়ালাইজার স্পেকট্রাম ক্যানভাস ওভারলে -->
-            <div class="absolute bottom-0 left-0 right-0 h-16 pointer-events-none">
-              <canvas id="audioVisualizerCanvas" class="w-full h-full"></canvas>
-            </div>
-          </div>
-
-          <!-- প্লেয়ার কন্ট্রোল বার -->
-          <div class="flex flex-wrap items-center justify-between gap-3 bg-navy-900/90 p-3.5 rounded-xl border border-white/10">
-            <div class="flex items-center gap-3">
-              <button id="mediaPlayBtn" onclick="toggleMediaPlay()" class="w-10 h-10 rounded-full btn-gradient flex items-center justify-center text-white text-base shadow-lg">
-                <i class="fa-solid fa-pause" id="mediaPlayIcon"></i>
-              </button>
-              <div>
-                <span id="currentChannelName" class="block text-xs font-bold text-white">বাংলাদেশ টেলিভিশন (বিটিভি)</span>
-                <span class="text-[10px] text-neon-cyan">বিটরট: 4.8 Mbps • স্টিটেরিও এইচডি</span>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-4">
-              <div class="flex items-center gap-2">
-                <i class="fa-solid fa-volume-high text-xs text-gray-400"></i>
-                <input type="range" min="0" max="100" value="80" class="w-20 accent-neon-cyan" onchange="adjustMediaVolume(this.value)">
-              </div>
-              <button onclick="toggleFullscreenMedia()" class="glass-pill px-3 py-1.5 rounded-lg text-xs text-gray-300 hover:text-white">
-                <i class="fa-solid fa-expand"></i> ফুলস্ক্রিন
-              </button>
-            </div>
-          </div>
-
-          <!-- চ্যানেল চয়েস গ্রিড -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-            <!-- বাংলাদেশ চ্যানেলসমূহ -->
-            <div class="space-y-2">
-              <h4 class="text-xs font-bold text-neon-cyan flex items-center gap-1.5">
-                <i class="fa-solid fa-flag"></i> বাংলাদেশের লাইভ টিভি ও রেডিও
-              </h4>
-              <div class="space-y-1.5 text-xs">
-                <button onclick="playChannel('বিটিভি ওয়ার্ল্ড (BTV World)', 'tv')" class="w-full glass-card p-2.5 rounded-xl text-left hover:border-neon-cyan flex items-center justify-between transition-all">
-                  <span class="font-medium">📺 বাংলাদেশ টেলিভিশন (বিটিভি)</span>
-                  <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">লাইভ টিভি</span>
-                </button>
-                <button onclick="playChannel('সময় নিউজ ২৪/৭', 'tv')" class="w-full glass-card p-2.5 rounded-xl text-left hover:border-neon-cyan flex items-center justify-between transition-all">
-                  <span class="font-medium">📰 সময় নিউজ ২৪/৭</span>
-                  <span class="text-[10px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded">সংবাদ লাইভ</span>
-                </button>
-                <button onclick="playChannel('ঢাকা এফএম ৯০.৪ (Dhaka FM)', 'radio')" class="w-full glass-card p-2.5 rounded-xl text-left hover:border-neon-cyan flex items-center justify-between transition-all">
-                  <span class="font-medium">📻 ঢাকা এফএম ৯০.৪ (উখিয়া নোড)</span>
-                  <span class="text-[10px] bg-neon-cyan/20 text-neon-cyan px-2 py-0.5 rounded">এইচডি রেডিও</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- গ্লোবাল টিভি ও রেডিও -->
-            <div class="space-y-2">
-              <h4 class="text-xs font-bold text-neon-pink flex items-center gap-1.5">
-                <i class="fa-solid fa-globe"></i> আন্তর্জাতিক নেটওয়ার্ক
-              </h4>
-              <div class="space-y-1.5 text-xs">
-                <button onclick="playChannel('বিবিসি ওয়ার্ল্ড নিউজ (BBC World)', 'tv')" class="w-full glass-card p-2.5 rounded-xl text-left hover:border-neon-pink flex items-center justify-between transition-all">
-                  <span class="font-medium">🌐 বিবিসি ওয়ার্ল্ড নিউজ (BBC)</span>
-                  <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">গ্লোবাল টিভি</span>
-                </button>
-                <button onclick="playChannel('আল জাজিরা লাইভ (Al Jazeera)', 'tv')" class="w-full glass-card p-2.5 rounded-xl text-left hover:border-neon-pink flex items-center justify-between transition-all">
-                  <span class="font-medium">📡 আল জাজিরা এইচডি (Al Jazeera)</span>
-                  <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">লাইভ টিভি</span>
-                </button>
-                <button onclick="playChannel('নাসা টিভি স্পেস ক্যাম (NASA TV)', 'tv')" class="w-full glass-card p-2.5 rounded-xl text-left hover:border-neon-pink flex items-center justify-between transition-all">
-                  <span class="font-medium">🚀 নাসা স্পেস ক্যামেরা (NASA ISS)</span>
-                  <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">মহাকাশ স্ট্রিমিং</span>
-                </button>
-              </div>
-            </div>
-          </div>
+        <div class="feature-box" onclick="alert('AYNA AI চ্যাটবট প্রস্তুত!')">
+            <i class="fa-solid fa-robot color-2"></i>
+            <span>AYNA AI</span>
         </div>
-      </div>
-
-      <!-- মডিউল ৩: ডিজিটাল রাডার স্ক্যানার ও নাসা স্পেস ডেটা (Radar Scanner & NASA Telemetry) -->
-      <div id="tab-radar" class="tab-content hidden space-y-4">
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-            <div>
-              <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-radar text-neon-green"></i> ২ডি ডিজিটাল রাডার স্ক্যানার ও নাসা স্পেস টেলিমেট্রি
-              </h2>
-              <p class="text-xs text-gray-400">উখিয়া / কক্সবাজার ও বঙ্গোপসাগর এলাকার রিয়েল-টাইম সিগন্যাল ট্র্যাকিং</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="bg-neon-green/20 text-neon-green border border-neon-green/30 text-[10px] font-bold px-2.5 py-1 rounded-full">
-                ফ্রিকোয়েন্সি: ৯.৪ গিগাহার্টজ (S-Band)
-              </span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-            <!-- রাডার ক্যানভাস বক্স -->
-            <div class="md:col-span-7 flex flex-col items-center justify-center bg-navy-950 p-4 rounded-2xl border border-neon-green/30 relative">
-              <div class="relative w-64 h-64 sm:w-80 sm:h-80">
-                <canvas id="radarCanvas" width="320" height="320" class="w-full h-full rounded-full border-2 border-neon-green/40 shadow-xl shadow-neon-green/10"></canvas>
-              </div>
-              <div class="mt-3 text-center text-xs text-neon-green font-mono">
-                কেন্দ্র: <span class="text-white">উখিয়া ২১.১৫৭৮° উত্তর, ৯২.১৩৯৬° পূর্ব</span> | টার্গেট: <span id="radarTargetCount" class="text-neon-gold font-bold">৫টি সক্রিয়</span>
-              </div>
-            </div>
-
-            <!-- রাডার লগ ও নাসা তথ্য -->
-            <div class="md:col-span-5 space-y-3">
-              <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wider">চিহ্নিত রাডার সিগন্যাল লগ</h4>
-              <div id="radarTargetList" class="space-y-2 text-xs font-mono max-h-[220px] overflow-y-auto pr-1">
-                <!-- রাডার ব্লিপস ডেটা -->
-              </div>
-
-              <!-- নাসা এপিওডি কার্ড -->
-              <div class="glass-card p-3.5 rounded-xl border border-neon-cyan/30 space-y-2">
-                <div class="flex items-center justify-between text-xs">
-                  <span class="font-bold text-neon-cyan flex items-center gap-1">
-                    <i class="fa-solid fa-user-astronaut"></i> নাসা অ্যাস্ট্রোনোমি পিকচার (NASA APOD)
-                  </span>
-                  <button onclick="fetchNasaApodData()" class="text-[10px] text-gray-400 hover:text-white"><i class="fa-solid fa-arrows-rotate"></i> রিফ্রেশ</button>
-                </div>
-                <div id="nasaTelemetryBox" class="text-[11px] text-gray-300 space-y-1">
-                  <p class="animate-pulse text-neon-cyan">নাসা ডিপ স্পেস নেটওয়ার্কের সাথে যুক্ত হচ্ছে...</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="feature-box" onclick="alert('ইসলামিক সার্ভিস মডিউল')">
+            <i class="fa-solid fa-kaaba color-3"></i>
+            <span>ইসলামিক</span>
         </div>
-      </div>
-
-      <!-- মডিউল ৪: ৩ডি ডিজিটাল গায়রো কম্পাস ও কিবলা দিক (3D Gyro Compass) -->
-      <div id="tab-compass" class="tab-content hidden space-y-4">
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-            <div>
-              <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-compass text-neon-gold"></i> ৩ডি ডিজিটাল গায়রো কম্পাস ও কিবলা ফাইন্ডার
-              </h2>
-              <p class="text-xs text-gray-400">ডিগ্রি রোটেশন, অক্ষাংশ-দ্রাঘিমাংশ এবং পবিত্র কাবা শরীফের কিবলা অ্যাঙ্গেল</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="rotateCompassManually()" class="glass-pill px-3 py-1 rounded-full text-xs text-neon-gold border border-neon-gold/30">
-                <i class="fa-solid fa-rotate"></i> ডায়াল ঘোরাণ
-              </button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-            <!-- ৩ডি কম্পাস ডায়াল ভিউ -->
-            <div class="md:col-span-7 flex flex-col items-center justify-center p-6 bg-navy-950 rounded-2xl border border-white/10">
-              <div class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
-                <!-- ডায়াল ডিস্ক -->
-                <div id="compassDialDisc" class="compass-dial absolute w-full h-full rounded-full border-4 border-neon-gold/60 bg-gradient-to-b from-navy-900 to-navy-950 shadow-2xl flex items-center justify-center">
-                  <!-- দিকচিহ্ন -->
-                  <span class="absolute top-2 text-neon-gold font-black text-base">উত্তর (N)</span>
-                  <span class="absolute right-3 text-gray-400 font-bold text-sm">পূর্ব (E)</span>
-                  <span class="absolute bottom-2 text-gray-400 font-bold text-sm">দক্ষিণ (S)</span>
-                  <span class="absolute left-3 text-gray-400 font-bold text-sm">পশ্চিম (W)</span>
-                  
-                  <!-- কিবলা পজিশন মার্ক (~২৬৭° পশ্চিম) -->
-                  <div class="absolute w-full h-full flex items-center justify-center transform -rotate-[93deg]">
-                    <span class="absolute top-6 text-neon-cyan font-bold text-xs bg-navy-900 px-2 py-0.5 rounded border border-neon-cyan">🕋 কিবলা দিক</span>
-                  </div>
-
-                  <div class="w-48 h-48 rounded-full border border-white/10 flex items-center justify-center">
-                    <div class="w-32 h-32 rounded-full border border-dashed border-white/20"></div>
-                  </div>
-                </div>
-
-                <!-- কেন্দ্র কাঁটা -->
-                <div class="absolute z-20 w-3.5 h-3.5 bg-neon-pink rounded-full border-2 border-white shadow-lg"></div>
-                <div class="absolute z-10 top-2 w-1 h-28 bg-gradient-to-b from-neon-pink via-neon-pink to-transparent rounded-full pointer-events-none"></div>
-              </div>
-
-              <div class="mt-4 text-center">
-                <span class="text-3xl font-black text-white font-mono" id="compassDegreesText">267.4° W</span>
-                <span class="block text-xs text-neon-gold mt-1 font-semibold" id="compassCardinalText">পশ্চিম-দক্ষিণ-পশ্চিম (কিবলা সোজাসুজি)</span>
-              </div>
-            </div>
-
-            <!-- পজিশনিং টেলিমেট্রি -->
-            <div class="md:col-span-5 space-y-3 text-xs">
-              <div class="bg-navy-900/90 p-3.5 rounded-xl border border-white/10 space-y-2">
-                <div class="flex justify-between">
-                  <span class="text-gray-400">বর্তমান স্থান:</span>
-                  <span class="text-white font-bold">উখিয়া, কক্সবাজার</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-400">অক্ষাংশ ও দ্রাঘিমাংশ:</span>
-                  <span class="text-neon-cyan font-mono">21.1578° N, 92.1396° E</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-400">কিবলা কোন (কাবা শরীফ):</span>
-                  <span class="text-neon-gold font-mono font-bold">267.35° (পশ্চিম)</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-400">মক্কা মোকাররমা দূরত্ব:</span>
-                  <span class="text-neon-green font-mono">৫,১৪০ কিলোমিটার</span>
-                </div>
-              </div>
-
-              <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-200">
-                <p class="font-semibold mb-1"><i class="fa-solid fa-kaaba text-amber-400 mr-1"></i> অটোমেটিক কিবলা নির্দেশিকা</p>
-                <p class="text-[11px] leading-relaxed">আপনার স্মার্টফোন বা ল্যাপটপটি ২৬৭° পশ্চিম কোণে ঘোরালে এটি সরাসরি পবিত্র কাবা শরীফের দিক নির্দেশ করবে।</p>
-              </div>
-            </div>
-          </div>
+        <div class="feature-box" onclick="alert('১ কোটি লাইন কোড এডিটর লোড হচ্ছে...')">
+            <i class="fa-solid fa-code color-1"></i>
+            <span>১ কোটি কোড</span>
         </div>
-      </div>
-
-      <!-- মডিউল ৫: আয়না ফিনটেক ওয়ালেট (AYNA Wallet Demo) -->
-      <div id="tab-wallet" class="tab-content hidden space-y-4">
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-            <div>
-              <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-wallet text-emerald-400"></i> আয়না ফিনটেক ওয়ালেট (বিকাশ / নগদ ডেমো)
-              </h2>
-              <p class="text-xs text-gray-400">ইনস্ট্যান্ট টাকা লেনদেন, সেন্ড মানি, মোবাইল রিচার্জ ও কিউআর পে (QR Pay)</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full">
-                ভেরিফাইড অ্যাকাউন্ট
-              </span>
-            </div>
-          </div>
-
-          <!-- ডিজিটাল কার্ড ড্যাশবোর্ড -->
-          <div class="relative rounded-2xl p-6 bg-gradient-to-br from-teal-900 via-navy-800 to-purple-950 border border-emerald-500/40 shadow-xl overflow-hidden text-white">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <span class="text-[11px] uppercase tracking-wider text-emerald-300 font-bold block">AYNA DIGITAL WALLET</span>
-                <span class="text-sm font-semibold text-gray-200" id="walletAccountHolder">মোহাম্মদ মাহবুব আলম</span>
-              </div>
-              <span class="text-xs font-mono bg-black/40 px-3 py-1 rounded-full border border-white/10 text-neon-gold">AYNA-4750-UKH</span>
-            </div>
-
-            <div class="my-3">
-              <span class="text-xs text-gray-300">বর্তমান ব্যালেন্স:</span>
-              <div class="flex items-center gap-3 mt-1">
-                <span class="text-3xl font-black font-mono tracking-tight text-white" id="walletBalanceDisplay">৳ ৫,২৫০.০০</span>
-                <button onclick="toggleBalanceVisibility()" class="text-gray-400 hover:text-white text-sm">
-                  <i class="fa-solid fa-eye" id="balanceEyeIcon"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- ওয়ালেট বাটন সমাহার -->
-            <div class="flex flex-wrap items-center gap-2 pt-4 border-t border-white/15">
-              <button onclick="triggerWalletModal('add')" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md">
-                <i class="fa-solid fa-plus-circle"></i> এড মানি
-              </button>
-              <button onclick="triggerWalletModal('send')" class="flex-1 bg-white hover:bg-gray-100 text-black font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md">
-                <i class="fa-solid fa-paper-plane"></i> সেন্ড মানি
-              </button>
-              <button onclick="triggerWalletModal('cashout')" class="flex-1 bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md">
-                <i class="fa-solid fa-money-bill-transfer"></i> ক্যাশ আউট
-              </button>
-              <button onclick="openQrModal()" class="bg-navy-900 border border-white/20 hover:bg-navy-800 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-qrcode"></i> QR Pay
-              </button>
-            </div>
-          </div>
-
-          <!-- রিচার্জ ও বিল পে অপশন -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <button onclick="triggerWalletModal('recharge')" class="glass-card p-3 rounded-xl text-center hover:border-emerald-400 transition-all">
-              <i class="fa-solid fa-mobile-screen text-neon-cyan text-lg mb-1 block"></i>
-              <span class="text-xs font-semibold">মোবাইল রিচার্জ</span>
-            </button>
-            <button onclick="triggerWalletModal('bill')" class="glass-card p-3 rounded-xl text-center hover:border-emerald-400 transition-all">
-              <i class="fa-solid fa-lightbulb text-neon-gold text-lg mb-1 block"></i>
-              <span class="text-xs font-semibold">বিদ্যুৎ বিল পে</span>
-            </button>
-            <button onclick="triggerWalletModal('merchant')" class="glass-card p-3 rounded-xl text-center hover:border-emerald-400 transition-all">
-              <i class="fa-solid fa-store text-neon-pink text-lg mb-1 block"></i>
-              <span class="text-xs font-semibold">মার্চেন্ট পে</span>
-            </button>
-            <button onclick="triggerWalletModal('donation')" class="glass-card p-3 rounded-xl text-center hover:border-emerald-400 transition-all">
-              <i class="fa-solid fa-hand-holding-heart text-neon-green text-lg mb-1 block"></i>
-              <span class="text-xs font-semibold">ডোনেশন</span>
-            </button>
-          </div>
-
-          <!-- ওয়ালেট লেনদেন হিস্ট্রি -->
-          <div class="space-y-3 pt-2">
-            <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wider flex justify-between">
-              <span>সাম্প্রতিক লেনদেন বিবরণী</span>
-              <span class="text-neon-cyan">রিয়েল-টাইম লেজার</span>
-            </h4>
-            <div id="walletHistoryList" class="space-y-2 text-xs">
-              <!-- ডায়নামিক ট্রানজ্যাকশন ডাটা -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- মডিউল ৬: আয়না স্মার্ট এআই চ্যাটবট (AYNA AI Assistant) -->
-      <div id="tab-ai" class="tab-content hidden space-y-4">
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-            <div>
-              <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-robot text-purple-400"></i> AYNA স্মার্ট AI অ্যাসিস্ট্যান্ট (বাংলা চ্যাটবট)
-              </h2>
-              <p class="text-xs text-gray-400">ইসলামিক বিষয়, স্বাস্থ্য, প্রযুক্তি ও ব্যবসা সংক্রান্ত প্রশ্নের উত্তর পান</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="clearAiChat()" class="text-xs text-gray-400 hover:text-white glass-pill px-3 py-1 rounded-full">
-                <i class="fa-solid fa-trash"></i> চ্যাট হিস্ট্রি মুছুন
-              </button>
-            </div>
-          </div>
-
-          <!-- কুইক সাজেশন চিপস -->
-          <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar text-xs">
-            <button onclick="sendAiPreset('আজকের নামাজের সময়সূচী কখন?')" class="glass-pill text-amber-300 hover:bg-amber-500/20 px-3 py-1.5 rounded-full whitespace-nowrap">
-              🕋 নামাজের সময়সূচী
-            </button>
-            <button onclick="sendAiPreset('ডেঙ্গু হলে করণীয় কি?')" class="glass-pill text-red-300 hover:bg-red-500/20 px-3 py-1.5 rounded-full whitespace-nowrap">
-              🦟 ডেঙ্গুর চিকিৎসা
-            </button>
-            <button onclick="sendAiPreset('উখিয়ায় ব্যবসার ৩টি দারুণ আইডিয়া দাও')" class="glass-pill text-emerald-300 hover:bg-emerald-500/20 px-3 py-1.5 rounded-full whitespace-nowrap">
-              💡 ব্যবসার আইডিয়া
-            </button>
-            <button onclick="sendAiPreset('কোরআনের একটি নসীহতমূলক আয়াত বলো')" class="glass-pill text-neon-cyan hover:bg-neon-cyan/20 px-3 py-1.5 rounded-full whitespace-nowrap">
-              📖 কোরআন হাদীস
-            </button>
-          </div>
-
-          <!-- চ্যাট মেসেজ কন্টেইনার -->
-          <div id="aiChatBox" class="bg-navy-950 p-4 rounded-2xl border border-white/10 max-h-[360px] min-h-[260px] overflow-y-auto space-y-3 text-xs">
-            <div class="flex items-start gap-2.5">
-              <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white shrink-0">
-                <i class="fa-solid fa-robot text-sm"></i>
-              </div>
-              <div class="bg-navy-900 border border-white/10 p-3 rounded-2xl rounded-tl-none max-w-[85%] leading-relaxed text-gray-200">
-                👋 আসসালামু আলাইকুম! আমি <b>AYNA AI v24.0 Engine</b>। বাংলা ও ইংরেজিতে যেকোনো প্রশ্ন করতে পারেন — ইসলাম, স্বাস্থ্য, প্রযুক্তি বা পড়াশোনা!
-              </div>
-            </div>
-          </div>
-
-          <!-- টাইপিং ইনডিকেটর -->
-          <div id="aiTypingIndicator" class="hidden text-xs text-purple-400 font-mono flex items-center gap-2 pl-2">
-            <i class="fa-solid fa-circle-notch animate-spin"></i> AYNA AI চিন্তা করছে...
-          </div>
-
-          <!-- ইনপুট ফিল্ড -->
-          <div class="flex items-center gap-2 pt-1">
-            <input type="text" id="aiInputPrompt" placeholder="বাংলায় বা ইংরেজিতে প্রশ্ন লিখুন..." class="flex-1 bg-navy-900 border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-all" onkeypress="handleAiKeyPress(event)">
-            <button onclick="speakLastAiMessage()" class="glass-pill w-10 h-10 rounded-xl flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/10" title="ভয়েস মেসেজ শুনুন">
-              <i class="fa-solid fa-volume-high"></i>
-            </button>
-            <button onclick="submitAiQuery()" class="btn-gradient px-4 py-2.5 rounded-xl text-xs font-bold text-white shadow-md flex items-center gap-1.5">
-              <span>পাঠান</span>
-              <i class="fa-solid fa-paper-plane"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- মডিউল ৭: ইসলামিক হাব ও সালাত টেলিমেট্রি (Islamic Hub) -->
-      <div id="tab-islamic" class="tab-content hidden space-y-4">
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-            <div>
-              <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-kaaba text-amber-400"></i> ইসলামিক তথ্য হাব ও সালাতের সময়সূচী
-              </h2>
-              <p class="text-xs text-gray-400">দৈনিক নামাজের সময়, আল-কোরআন ও সহীহ হাদিস সংগ্রহ</p>
-            </div>
-            <span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full">
-              ঢাকা ও কক্সবাজার সময়
-            </span>
-          </div>
-
-          <!-- নামাজের সময়সূচী গ্রিড -->
-          <div class="grid grid-cols-5 gap-2 text-center text-xs">
-            <div class="bg-navy-900 p-2.5 rounded-xl border border-white/10">
-              <span class="block text-gray-400 text-[10px]">ফজর</span>
-              <span class="font-bold text-white text-sm">৫:০২ AM</span>
-            </div>
-            <div class="bg-navy-900 p-2.5 rounded-xl border border-white/10">
-              <span class="block text-gray-400 text-[10px]">যোহর</span>
-              <span class="font-bold text-white text-sm">১২:০৪ PM</span>
-            </div>
-            <div class="bg-navy-900 p-2.5 rounded-xl border border-white/10">
-              <span class="block text-gray-400 text-[10px]">আসর</span>
-              <span class="font-bold text-white text-sm">৩:৫২ PM</span>
-            </div>
-            <div class="bg-navy-900 p-2.5 rounded-xl border border-amber-400/40 bg-amber-500/10">
-              <span class="block text-amber-300 text-[10px] font-bold">মাগরিব</span>
-              <span class="font-bold text-amber-400 text-sm">৫:৩৬ PM</span>
-            </div>
-            <div class="bg-navy-900 p-2.5 rounded-xl border border-white/10">
-              <span class="block text-gray-400 text-[10px]">এশা</span>
-              <span class="font-bold text-white text-sm">৬:৫৪ PM</span>
-            </div>
-          </div>
-
-          <!-- দৈনিক আয়াত ও হাদিস -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="glass-card p-4 rounded-xl border border-amber-400/30 space-y-2">
-              <h4 class="text-xs font-bold text-amber-400 flex items-center justify-between">
-                <span>📖 সূরা ফাতিহা (১:১-৭)</span>
-                <a href="https://quran.com" target="_blank" class="text-[10px] text-neon-cyan hover:underline">Quran.com →</a>
-              </h4>
-              <p class="text-right text-base text-amber-200 font-serif leading-loose">
-                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ • الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
-              </p>
-              <p class="text-xs text-gray-200 leading-relaxed">
-                <b>অর্থ:</b> পরম করুণাময় ও অসীম দয়ালু আল্লাহর নামে শুরু করছি। সকল প্রশংসা বিশ্বজগতের প্রতিপালক আল্লাহর জন্য।
-              </p>
-            </div>
-
-            <div class="glass-card p-4 rounded-xl border border-amber-400/30 space-y-2">
-              <h4 class="text-xs font-bold text-amber-400 flex items-center justify-between">
-                <span>📜 সহীহ হাদিস (বুখারী)</span>
-                <a href="https://sunnah.com" target="_blank" class="text-[10px] text-neon-cyan hover:underline">Sunnah.com →</a>
-              </h4>
-              <p class="text-xs text-gray-200 leading-relaxed pt-2">
-                "তোমাদের মধ্যে সর্বশ্রেষ্ঠ সেই ব্যক্তি, যে নিজে কুরআন শেখে এবং অন্যকে কুরআন শিক্ষা দেয়।" (সহীহ বুখারী, হাদিস নম্বর: ৫০২৭)
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- মডিউল ৮: মেডিকেল ও জরুরী স্বাস্থ্য সেবা (Medical Hub) -->
-      <div id="tab-medical" class="tab-content hidden space-y-4">
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-            <div>
-              <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-heart-pulse text-red-400"></i> মেডিকেল ও প্রাথমিক স্বাস্থ্য পরামর্শ
-              </h2>
-              <p class="text-xs text-gray-400">জরুরী হেল্পলাইন, লক্ষণ নির্দেশিকা ও হেলথ গাইডলাইন</p>
-            </div>
-            <span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full">
-              জাতীয় জরুরি সেবা: ৯৯৯ / ১৬২৬৩
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="space-y-3">
-              <label class="block text-xs font-bold text-gray-300">স্বাস্থ্য সংক্রান্ত পরামর্শ বেছে নিন:</label>
-              <select id="medicalConditionSelect" onchange="updateMedicalAdvice()" class="w-full bg-navy-900 border border-white/15 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-400">
-                <option value="dengue">🦟 ডেঙ্গু জ্বর (Dengue Care)</option>
-                <option value="heart">❤️ হৃদরোগ সতর্কতা (Heart Health)</option>
-                <option value="diabetes">🧬 ডায়াবেটিস ব্যবস্থাপনা (Diabetes)</option>
-                <option value="firstaid">🩹 প্রাথমিক চিকিৎসা (First Aid Guide)</option>
-              </select>
-
-              <div id="medicalAdviceCard" class="glass-card p-3.5 rounded-xl border border-red-500/30 text-xs leading-relaxed space-y-2">
-                <!-- ডায়নামিক পরামর্শ প্রদর্শন -->
-              </div>
-            </div>
-
-            <!-- জরুরী হটলাইন নম্বর -->
-            <div class="space-y-2">
-              <h4 class="text-xs font-bold text-gray-300">জরুরী এম্বুলেন্স ও হেল্পলাইন</h4>
-              <div class="space-y-1.5 text-xs">
-                <div class="bg-navy-900 p-2.5 rounded-xl border border-white/10 flex justify-between items-center">
-                  <span>🚑 জাতীয় এম্বুলেন্স সেবা</span>
-                  <a href="tel:999" class="text-neon-cyan font-mono font-bold hover:underline">999</a>
-                </div>
-                <div class="bg-navy-900 p-2.5 rounded-xl border border-white/10 flex justify-between items-center">
-                  <span>🩺 স্বাস্থ্য বাতায়ন</span>
-                  <a href="tel:16263" class="text-neon-cyan font-mono font-bold hover:underline">16263</a>
-                </div>
-                <div class="bg-navy-900 p-2.5 rounded-xl border border-white/10 flex justify-between items-center">
-                  <span>📍 উখিয়া উপজেলা স্বাস্থ্য কমপ্লেক্স</span>
-                  <span class="text-gray-300 font-mono">01700-000000</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- মডিউল ৯: ১০,০০০,০০০ লাইন আর্কিটেকচার মেট্রিক্স (10M LOC Dashboard) -->
-      <div id="tab-architecture" class="tab-content hidden space-y-4">
-        <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-            <div>
-              <h2 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-code text-neon-cyan"></i> ১ কোটি (১০,০০০,০০০) লাইন এন্টারপ্রাইজ কোড আর্কিটেকচার
-              </h2>
-              <p class="text-xs text-gray-400">মাইক্রোসার্ভিস স্ট্যাটাস, কার্নেল কনসোল ও ব্যাকআপ ডাউনলোড</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="exportSystemData()" class="btn-gradient px-3.5 py-1.5 rounded-xl text-xs font-bold text-white shadow-md">
-                <i class="fa-solid fa-download"></i> ব্যাকআপ নামান
-              </button>
-            </div>
-          </div>
-
-          <!-- সিস্টেম কাউন্টার মেট্রিক্স -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-            <div class="bg-navy-900/90 p-3 rounded-xl border border-neon-cyan/30">
-              <span class="text-[10px] text-gray-400 uppercase block">মোট সিস্টেম কোড লাইন</span>
-              <span class="text-base font-black text-neon-cyan font-mono">১০,০০,০০০ LOC</span>
-            </div>
-            <div class="bg-navy-900/90 p-3 rounded-xl border border-neon-pink/30">
-              <span class="text-[10px] text-gray-400 uppercase block">মাইক্রোসার্ভিস নোড</span>
-              <span class="text-base font-black text-neon-pink font-mono">১,৪২০ নোড</span>
-            </div>
-            <div class="bg-navy-900/90 p-3 rounded-xl border border-neon-green/30">
-              <span class="text-[10px] text-gray-400 uppercase block">এআই নিউরাল লাইন</span>
-              <span class="text-base font-black text-neon-green font-mono">২৮,৫০,০০০ LOC</span>
-            </div>
-            <div class="bg-navy-900/90 p-3 rounded-xl border border-neon-gold/30">
-              <span class="text-[10px] text-gray-400 uppercase block">ফিনটেক লেজার ইঞ্জিন</span>
-              <span class="text-base font-black text-neon-gold font-mono">১৯,৪০,০০০ LOC</span>
-            </div>
-          </div>
-
-          <!-- লাইভ কার্নেল কনসোল আউটপুট -->
-          <div class="space-y-2">
-            <h4 class="text-xs font-bold text-gray-300 flex items-center justify-between">
-              <span><i class="fa-solid fa-terminal text-neon-cyan mr-1"></i> লাইভ কার্নেল টার্মিনাল লগ</span>
-              <span class="text-[10px] text-neon-green font-mono">লাইভ স্ট্রিমিং</span>
-            </h4>
-            <div id="systemConsoleLog" class="bg-black p-3.5 rounded-xl border border-white/10 font-mono text-[11px] text-neon-green h-44 overflow-y-auto space-y-1">
-              <div>[SYS_INIT] AYNA BOOK v24.0 Supreme Kernel Initialized.</div>
-              <div>[NET_CHECK] Global HLS Media Mesh Active.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </section>
-  </main>
-
-  <!-- রিলস প্লেয়ার মোডাল (Reels Modal) -->
-  <div id="reelsModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-2 sm:p-4">
-    <div class="relative glass-card w-full max-w-sm rounded-3xl overflow-hidden border border-white/20 h-[85vh] flex flex-col justify-between">
-      <button onclick="closeReelsModal()" class="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center text-sm">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <!-- ক্যানভাস রিলস ভিডিও সিমুলেশন -->
-      <div class="relative flex-1 bg-navy-950 flex items-center justify-center">
-        <canvas id="reelCanvas" class="w-full h-full object-cover"></canvas>
-        <div class="absolute bottom-4 left-4 right-16 text-white text-xs space-y-1">
-          <span class="font-bold text-neon-pink">@Mahbub_Ukhiya</span>
-          <p id="reelCaptionText">উখিয়া কক্সবাজার সমুদ্র সৈকতের সূর্যাস্ত! #AYNA #Reels</p>
-        </div>
-
-        <!-- লাইক ও শেয়ার সাইডবার -->
-        <div class="absolute right-3 bottom-12 flex flex-col items-center gap-4 text-white text-sm">
-          <button onclick="likeCurrentReel()" class="flex flex-col items-center gap-1">
-            <div class="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center text-neon-pink hover:scale-110 transition-transform">
-              <i class="fa-solid fa-heart"></i>
-            </div>
-            <span class="text-[10px]" id="reelLikesCount">১৪.২K</span>
-          </button>
-          <button onclick="showToast('কমেন্ট সেকশন চালু আছে!')" class="flex flex-col items-center gap-1">
-            <div class="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center text-neon-cyan">
-              <i class="fa-solid fa-comment"></i>
-            </div>
-            <span class="text-[10px]">৪৮০</span>
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- ওয়ালেট লেনদেন মোডাল (Wallet Action Modal) -->
-  <div id="walletActionModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-xs rounded-2xl p-5 border border-white/20 space-y-4">
-      <h3 class="text-sm font-bold text-white text-center" id="walletModalTitle">এড মানি করুন</h3>
-      <div class="space-y-2">
-        <label class="text-xs text-gray-300 block">টাকার পরিমাণ (৳):</label>
-        <input type="number" id="walletModalAmount" placeholder="যেমন: ৫০০" class="w-full bg-navy-900 border border-white/15 rounded-xl p-2.5 text-xs text-white">
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="submitWalletAction()" class="flex-1 btn-gradient py-2 rounded-xl text-xs font-bold text-white">সম্পন্ন করুন</button>
-        <button onclick="closeWalletModal()" class="flex-1 bg-white/10 text-white py-2 rounded-xl text-xs">বাতিল</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- কিউআর কোড মোডাল (QR Pay Modal) -->
-  <div id="qrModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-xs rounded-2xl p-5 text-center border border-white/20 space-y-4">
-      <h3 class="text-sm font-bold text-white">AYNA Pay QR Code</h3>
-      <div class="bg-white p-4 rounded-xl mx-auto w-40 h-40 flex items-center justify-center shadow-lg">
-        <svg viewBox="0 0 100 100" class="w-full h-full text-black fill-current">
-          <path d="M0,0 h30 v30 h-30 z M10,10 h10 v10 h-10 z M70,0 h30 v30 h-30 z M80,10 h10 v10 h-10 z M0,70 h30 v30 h-30 z M10,80 h10 v10 h-10 z M40,10 h10 v10 h-10 z M40,40 h20 v20 h-20 z M70,70 h10 v10 h-10 z M80,80 h20 v20 h-20 z M50,80 h10 v20 h-10 z"/>
-        </svg>
-      </div>
-      <p class="text-xs text-gray-300 font-mono">স্ক্যান করে পেমেন্ট পাঠান: <b>মোহাম্মদ মাহবুব আলম</b></p>
-      <button onclick="closeQrModal()" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-2 rounded-xl text-xs">
-        বন্ধ করুন
-      </button>
-    </div>
-  </div>
-
-  <!-- মোবাইল বটম নেভিগেশন বার (Mobile Bottom Navigation) -->
-  <nav class="fixed bottom-0 left-0 right-0 z-50 glass-nav lg:hidden border-t border-white/10 px-2 py-2">
-    <div class="flex items-center justify-around">
-      <button onclick="switchTab('feed')" class="tab-btn flex flex-col items-center text-neon-cyan text-[10px]" data-tab="feed">
-        <i class="fa-solid fa-house text-base"></i>
-        <span>হোম</span>
-      </button>
-      <button onclick="switchTab('media')" class="tab-btn flex flex-col items-center text-gray-400 text-[10px]" data-tab="media">
-        <i class="fa-solid fa-tv text-base"></i>
-        <span>টিভি/রেডিও</span>
-      </button>
-      <button onclick="openReelModal()" class="tab-btn flex flex-col items-center text-neon-pink text-[10px]">
-        <div class="w-10 h-10 -mt-5 rounded-full btn-gradient flex items-center justify-center text-white shadow-lg">
-          <i class="fa-solid fa-play text-sm"></i>
+    <!-- Settings / Profile View -->
+    <div id="settingsView" class="view-modal">
+        <div class="view-header">
+            <h3>একাউন্ট ও ড্যাশবোর্ড সেটিংস</h3>
+            <button class="close-btn" onclick="closeView('settingsView')"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <span>রিলস</span>
-      </button>
-      <button onclick="switchTab('wallet')" class="tab-btn flex flex-col items-center text-gray-400 text-[10px]" data-tab="wallet">
-        <i class="fa-solid fa-wallet text-base"></i>
-        <span>ওয়ালেট</span>
-      </button>
-      <button onclick="switchTab('ai')" class="tab-btn flex flex-col items-center text-gray-400 text-[10px]" data-tab="ai">
-        <i class="fa-solid fa-robot text-base"></i>
-        <span>এআই</span>
-      </button>
+        <div class="profile-img-container">
+            <img src="https://via.placeholder.com/150" id="profilePreview" class="profile-img" alt="Profile">
+            <input type="file" id="imgInput" style="display:none;" onchange="previewImage(event)">
+            <br>
+            <button style="margin-top:10px; background:none; border:1px solid var(--accent-purple); color:#fff; padding:5px 10px; border-radius:5px; cursor:pointer;" onclick="document.getElementById('imgInput').click()">বড় ছবি আপলোড করুন</button>
+        </div>
+        <div class="form-group">
+            <label>পূর্ণ নাম</label>
+            <input type="text" value="মোহাম্মদ মাহবুব আলম">
+        </div>
+        <div class="form-group">
+            <label>ফোন নম্বর</label>
+            <input type="text" value="+880 1700000000">
+        </div>
+        <div class="form-group">
+            <label>জিমেইল (Email)</label>
+            <input type="email" value="mahbub@aynabook.com">
+        </div>
+        <div class="form-group">
+            <label>নতুন পাসওয়ার্ড</label>
+            <input type="password" placeholder="******">
+        </div>
+        <div class="form-group">
+            <label>রি-পাসওয়ার্ড</label>
+            <input type="password" placeholder="******">
+        </div>
+        <button class="submit-btn" onclick="alert('সেটিংস সফলভাবে সংরক্ষিত হয়েছে!')">তথ্য সেভ করুন</button>
     </div>
-  </nav>
 
-  <!-- টোস্ট নোটিফিকেশন মেসেজ (Toast Dialog) -->
-  <div id="toastNotification" class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-navy-900 border border-neon-cyan/50 text-white px-4 py-2 rounded-full text-xs shadow-2xl z-50 hidden flex items-center gap-2">
-    <i class="fa-solid fa-circle-check text-neon-green"></i>
-    <span id="toastMsgText">অপারেশন সফল হয়েছে!</span>
-  </div>
+    <!-- Wallet View -->
+    <div id="walletView" class="view-modal">
+        <div class="view-header">
+            <h3>গ্লোবাল ওয়ালেট ড্যাশবোর্ড</h3>
+            <button class="close-btn" onclick="closeView('walletView')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="wallet-card">
+            <div><strong>বিকাশ (bKash)</strong><br><small style="color:var(--text-sub)">লোকাল ওয়ালেট</small></div>
+            <span style="color:var(--accent-green)">সংযুক্ত</span>
+        </div>
+        <div class="wallet-card">
+            <div><strong>নগদ (Nagad)</strong><br><small style="color:var(--text-sub)">লোকাল ওয়ালেট</small></div>
+            <span style="color:var(--accent-green)">সংযুক্ত</span>
+        </div>
+        <div class="wallet-card">
+            <div><strong>উপায় (upay) / রকেট</strong><br><small style="color:var(--text-sub)">লোকাল ওয়ালেট</small></div>
+            <span style="color:var(--accent-green)">সংযুক্ত</span>
+        </div>
+        <div class="wallet-card">
+            <div><strong>PayPal / Visa / Crypto</strong><br><small style="color:var(--text-sub)">আন্তর্জাতিক ওয়ালেট</small></div>
+            <span style="color:var(--accent-gold)">সক্রিয়</span>
+        </div>
+    </div>
+
+    <!-- Social View -->
+    <div id="socialView" class="view-modal">
+        <div class="view-header">
+            <h3>সোশাল ফিড ও বিস্তারিত</h3>
+            <button class="close-btn" onclick="closeView('socialView')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <p style="color:var(--text-sub)">সামাজিক যোগাযোগ মাধ্যম ফিচারসমূহ প্রস্তুত রয়েছে। পোস্ট, লাইক, ও শেয়ারিং অপশন সচল।</p>
+    </div>
+
+    <!-- Radar View -->
+    <div id="radarView" class="view-modal">
+        <div class="view-header">
+            <h3>ডিজিটাল রাডার স্ক্যানার</h3>
+            <button class="close-btn" onclick="closeView('radarView')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="text-align:center; padding: 40px 0;">
+            <i class="fa-solid fa-satellite-dish fa-spin" style="font-size: 3rem; color: var(--accent-green);"></i>
+            <p style="margin-top:15px;">স্যাটেলাইট ও রাডার ডেটা কানেক্ট হচ্ছে...</p>
+        </div>
+    </div>
+
+    <!-- Media View -->
+    <div id="mediaView" class="view-modal">
+        <div class="view-header">
+            <h3>টিভি ও রেডিও প্লেয়ার</h3>
+            <button class="close-btn" onclick="closeView('mediaView')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="background:#000; height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
+            <i class="fa-solid fa-circle-play" style="font-size:3rem; color:var(--accent-pink);"></i>
+        </div>
+        <p>লাইভ স্ট্রিম চলমান...</p>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <a class="nav-item active" onclick="closeAllViews()"><i class="fa-solid fa-house"></i>হোম</a>
+        <a class="nav-item" onclick="openView('mediaView')"><i class="fa-solid fa-tv"></i>টিভি/রেডিও</a>
+        <div class="play-center-btn" onclick="openView('mediaView')"><i class="fa-solid fa-play"></i></div>
+        <a class="nav-item" onclick="openView('walletView')"><i class="fa-solid fa-wallet"></i>ওয়ালেট</a>
+        <a class="nav-item" onclick="openView('settingsView')"><i class="fa-solid fa-user"></i>একাউন্ট</a>
+    </div>
+</div>
 
 <script>
-  /* ==========================================================================
-     অ্যাপ্লিকেশন স্টেট ও ডাটা আর্কিটেকচার
-     ========================================================================== */
-  const state = {
-    currentTab: 'feed',
-    balance: 5250,
-    isBalanceVisible: true,
-    activeWalletAction: 'add',
-    uploadedImageBase64: null,
-    user: {
-      name: "মোহাম্মদ মাহবুব আলম",
-      role: "প্রতিষ্ঠাতা • উখিয়া ৪৭৫০",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop"
-    },
-    posts: [
-      {
-        id: 1,
-        author: "মোহাম্মদ মাহবুব আলম",
-        role: "প্রতিষ্ঠাতা • উখিয়া ৪৭৫০",
-        time: "এইমাত্র",
-        text: "🌍 AYNA BOOK v24.0 SUPREME এ আপনাদের স্বাগতম! এখানে লাইভ টিভি, গ্লোবাল রেডিও, রাডার স্ক্যানার, ৩ডি কিবলা কম্পাস, এআই চ্যাটবট ও ফিনটেক ওয়ালেট যুক্ত করা হয়েছে।",
-        image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&auto=format&fit=crop",
-        likes: 124,
-        liked: false,
-        comments: ["🔥 অসাধারণ সুপার অ্যাপ!", "❤️ উখিয়া থেকে শুভকামনা।"]
-      },
-      {
-        id: 2,
-        author: "AYNA AI News Engine",
-        role: "অটোমেটেড সংবাদ নোড",
-        time: "১৫ মিনিট আগে",
-        text: "📡 আবহাওয়া আপডেট: কক্সবাজার সমুদ্র উপকূলবর্তী রাডার সংকেত স্বাভাবিক। বর্তমান তাপমাত্রা ২৭° সেলসিয়াস।",
-        image: "",
-        likes: 42,
-        liked: false,
-        comments: ["ধন্যবাদ আপডেটের জন্য।"]
-      }
-    ],
-    stories: [
-      { name: "আমার স্টোরি", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop" },
-      { name: "নাসা স্পেস", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=100&auto=format&fit=crop" },
-      { name: "উখিয়া টেক", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=100&auto=format&fit=crop" },
-      { name: "ইসলামিক হাব", img: "https://images.unsplash.com/photo-1519817650390-64a93db51149?w=100&auto=format&fit=crop" },
-      { name: "কক্সবাজার", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=100&auto=format&fit=crop" }
-    ],
-    walletHistory: [
-      { title: "রিলস ক্রিয়েটর রেওয়ার্ড", type: "+", amount: 250, time: "আজ, বেলা ২:৩০" },
-      { title: "মোবাইল রিচার্জ (017xx)", type: "-", amount: 100, time: "গতকাল" },
-      { title: "সেন্ড মানি (রহিম)", type: "-", amount: 500, time: "২ দিন আগে" }
-    ],
-    compassAngle: 267.4,
-    mediaPlaying: true
-  };
-
-  /* ==========================================================================
-     ইনিশিয়ালাইজেশন ও ট্যাব সুইচিং
-     ========================================================================== */
-  window.onload = function() {
-    renderStories();
-    renderPosts();
-    renderWalletHistory();
-    initRadarScanner();
-    init3DCompass();
-    initLiveTvAnimation();
-    initAudioVisualizer();
-    initReelAnimation();
-    fetchNasaApodData();
-    updateMedicalAdvice();
-    startSystemTelemetryLogs();
-  };
-
-  function switchTab(tabId) {
-    state.currentTab = tabId;
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    const target = document.getElementById(`tab-${tabId}`);
-    if (target) target.classList.remove('hidden');
-
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      if (btn.dataset.tab === tabId) {
-        btn.classList.add('text-neon-cyan', 'bg-neon-cyan/10');
-      } else {
-        btn.classList.remove('text-neon-cyan', 'bg-neon-cyan/10');
-      }
-    });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function showToast(msg) {
-    const toast = document.getElementById('toastNotification');
-    document.getElementById('toastMsgText').textContent = msg;
-    toast.classList.remove('hidden');
-    setTimeout(() => toast.classList.add('hidden'), 3000);
-  }
-
-  function handleGlobalSearch() {
-    const query = document.getElementById('globalSearchInput').value.toLowerCase();
-    if (!query) return;
-    if (query.includes("রেডিও") || query.includes("টিভি")) switchTab('media');
-    else if (query.includes("রাডার") || query.includes("নাসা")) switchTab('radar');
-    else if (query.includes("কম্পাস") || query.includes("কিবলা")) switchTab('compass');
-    else if (query.includes("টাকা") || query.includes("ওয়ালেট")) switchTab('wallet');
-  }
-
-  /* ==========================================================================
-     সোশ্যাল পোস্ট ও স্টোরি ইঞ্জিন
-     ========================================================================== */
-  function renderStories() {
-    const container = document.getElementById('storiesContainer');
-    container.innerHTML = state.stories.map(s => `
-      <div class="flex flex-col items-center gap-1 cursor-pointer shrink-0 group" onclick="showToast('${s.name} এর স্টোরি চালু হচ্ছে...')">
-        <div class="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-neon-pink via-neon-purple to-neon-cyan group-hover:scale-105 transition-transform">
-          <img src="${s.img}" class="w-full h-full rounded-full object-cover border-2 border-navy-950">
-        </div>
-        <span class="text-[10px] text-gray-300 font-medium truncate w-14 text-center">${s.name}</span>
-      </div>
-    `).join('');
-  }
-
-  function renderPosts() {
-    const container = document.getElementById('postsFeedList');
-    container.innerHTML = state.posts.map((p, idx) => `
-      <div class="glass-card rounded-2xl p-4 border border-white/10 space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <img src="${state.user.avatar}" class="w-9 h-9 rounded-full object-cover border border-neon-cyan">
-            <div>
-              <div class="flex items-center gap-1 text-xs font-bold text-white">
-                ${p.author} <i class="fa-solid fa-circle-check text-neon-cyan text-[10px]"></i>
-              </div>
-              <span class="text-[10px] text-gray-400">${p.role} • ${p.time}</span>
-            </div>
-          </div>
-          <button class="text-gray-400 hover:text-white text-xs"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-        </div>
-
-        <p class="text-xs text-gray-200 leading-relaxed whitespace-pre-line">${p.text}</p>
-
-        ${p.image ? `<img src="${p.image}" class="w-full max-h-80 object-cover rounded-xl border border-white/10">` : ''}
-
-        <div class="flex items-center justify-between pt-2 border-t border-white/10 text-xs text-gray-400">
-          <button onclick="likePost(${idx})" class="${p.liked ? 'text-neon-pink font-bold' : 'hover:text-white'} flex items-center gap-1.5 transition-colors">
-            <i class="fa-solid fa-heart"></i> <span>${p.likes} লাইক</span>
-          </button>
-          <button onclick="addComment(${idx})" class="hover:text-white flex items-center gap-1.5">
-            <i class="fa-solid fa-comment"></i> <span>${p.comments.length}টি কমেন্ট</span>
-          </button>
-          <button onclick="showToast('পোস্ট কপি করা হয়েছে!')" class="hover:text-white flex items-center gap-1.5">
-            <i class="fa-solid fa-share"></i> শেয়ার
-          </button>
-        </div>
-
-        ${p.comments.length ? `
-          <div class="bg-navy-900/60 p-2.5 rounded-xl space-y-1 text-[11px] border border-white/5">
-            ${p.comments.map(c => `<div class="text-gray-300">${c}</div>`).join('')}
-          </div>
-        ` : ''}
-      </div>
-    `).join('');
-    document.getElementById('statPostsCount').textContent = state.posts.length;
-  }
-
-  function previewImageUpload(input) {
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        state.uploadedImageBase64 = e.target.result;
-        document.getElementById('imagePreviewImg').src = e.target.result;
-        document.getElementById('imagePreviewContainer').classList.remove('hidden');
-      };
-      reader.readAsDataURL(input.files[0]);
+    function openView(id) {
+        document.getElementById(id).style.display = 'block';
     }
-  }
 
-  function clearImageUpload() {
-    state.uploadedImageBase64 = null;
-    document.getElementById('imagePreviewContainer').classList.add('hidden');
-  }
-
-  function publishNewPost() {
-    const text = document.getElementById('newPostText').value.trim();
-    if (!text && !state.uploadedImageBase64) return showToast("অনুগ্রহ করে কিছু লিখুন বা ছবি যুক্ত করুন!");
-    state.posts.unshift({
-      id: Date.now(),
-      author: state.user.name,
-      role: state.user.role,
-      time: "এইমাত্র",
-      text: text,
-      image: state.uploadedImageBase64 || "",
-      likes: 0,
-      liked: false,
-      comments: []
-    });
-    document.getElementById('newPostText').value = "";
-    clearImageUpload();
-    renderPosts();
-    showToast("পোস্ট সফলভাবে প্রকাশিত হয়েছে!");
-  }
-
-  function likePost(idx) {
-    state.posts[idx].liked = !state.posts[idx].liked;
-    state.posts[idx].likes += state.posts[idx].liked ? 1 : -1;
-    renderPosts();
-  }
-
-  function addComment(idx) {
-    const c = prompt("আপনার কমেন্ট লিখুন:");
-    if (c) {
-      state.posts[idx].comments.push(`<b>আপনি:</b> ${c}`);
-      renderPosts();
+    function closeView(id) {
+        document.getElementById(id).style.display = 'none';
     }
-  }
 
-  function triggerVoicePost() {
-    showToast("🎤 ভয়েস রেকর্ডার চালু হয়েছে। কথা বলুন...");
-    setTimeout(() => {
-      document.getElementById('newPostText').value = "🎤 ভয়েস নোট: আসসালামু আলাইকুম! উখিয়া ৪৭৫০ থেকে সরাসরি ভয়েস পোস্ট।";
-    }, 1500);
-  }
-
-  function createPollPost() {
-    const q = prompt("পোল প্রশ্ন লিখুন:");
-    if (q) {
-      state.posts.unshift({
-        id: Date.now(),
-        author: "AYNA পোল নোড",
-        role: "পাবলিক মতামত",
-        time: "এইমাত্র",
-        text: `📊 পোল: ${q}\n\n👍 হ্যাঁ | 👎 না`,
-        image: "",
-        likes: 1,
-        liked: false,
-        comments: []
-      });
-      renderPosts();
+    function closeAllViews() {
+        const modals = document.querySelectorAll('.view-modal');
+        modals.forEach(m => m.style.display = 'none');
     }
-  }
 
-  /* ==========================================================================
-     ক্যানভাস সিমুলেটরসমূহ (Radar, Live TV, Equalizer, Reels)
-     ========================================================================== */
-
-  // ১. ২ডি ডিজিটাল রাডার ক্যানভাস স্ক্যানার
-  function initRadarScanner() {
-    const canvas = document.getElementById('radarCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let angle = 0;
-    const targets = [
-      { r: 70, a: 45, name: "জাহাজ সিগন্যাল (বঙ্গোপসাগর)" },
-      { r: 110, a: 180, name: "বিমান বিজি-২০৪ (উখিয়া রুট)" },
-      { r: 50, a: 290, name: "উখিয়া সুপারনোড টাওয়ার ১" }
-    ];
-
-    function drawRadar() {
-      const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-      const radius = cx - 10;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = "rgba(0, 255, 136, 0.35)";
-      ctx.lineWidth = 1;
-      for (let r = 40; r <= radius; r += 40) {
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(cx - radius, cy); ctx.lineTo(cx + radius, cy);
-      ctx.moveTo(cx, cy - radius); ctx.lineTo(cx, cy + radius);
-      ctx.stroke();
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(angle);
-      const gradient = ctx.createConicGradient(0, 0, 0);
-      gradient.addColorStop(0, "rgba(0, 255, 136, 0.45)");
-      gradient.addColorStop(0.25, "rgba(0, 255, 136, 0)");
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, Math.PI / 2);
-      ctx.lineTo(0, 0);
-      ctx.fill();
-      ctx.restore();
-
-      targets.forEach(t => {
-        const rad = (t.a * Math.PI) / 180;
-        const tx = cx + t.r * Math.cos(rad);
-        const ty = cy + t.r * Math.sin(rad);
-        ctx.fillStyle = "#ffd700";
-        ctx.beginPath();
-        ctx.arc(tx, ty, 4.5, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      angle += 0.03;
-      requestAnimationFrame(drawRadar);
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('profilePreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
     }
-    drawRadar();
-
-    const logBox = document.getElementById('radarTargetList');
-    logBox.innerHTML = targets.map((t, i) => `
-      <div class="bg-navy-900 p-2 rounded-lg border border-white/10 flex justify-between">
-        <span>TGT-${i+1}: ${t.name}</span>
-        <span class="text-neon-green">${t.r}km / ${t.a}°</span>
-      </div>
-    `).join('');
-  }
-
-  // ২. লাইভ টিভি স্ক্রিন সিমুলেশন ক্যানভাস
-  function initLiveTvAnimation() {
-    const canvas = document.getElementById('tvSimCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    canvas.width = 640; canvas.height = 360;
-    let frame = 0;
-
-    function drawTv() {
-      ctx.fillStyle = "#050a1e";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(frame * 0.02);
-      ctx.fillStyle = "rgba(0, 217, 255, 0.2)";
-      ctx.fillRect(-100, -100, 200, 200);
-      ctx.fillStyle = "rgba(255, 79, 163, 0.2)";
-      ctx.fillRect(-60, -60, 120, 120);
-      ctx.restore();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 18px 'Noto Sans Bengali'";
-      ctx.textAlign = "center";
-      ctx.fillText("AYNA LIVE BROADCAST NETWORK", canvas.width / 2, canvas.height / 2);
-      ctx.font = "12px 'Noto Sans Bengali'";
-      ctx.fillStyle = "#00d9ff";
-      ctx.fillText("স্ট্রিমিং চলছে: বাংলাদেশ টেলিভিশন (বিটিভি ওয়ার্ল্ড এইচডি)", canvas.width / 2, canvas.height / 2 + 25);
-
-      frame++;
-      requestAnimationFrame(drawTv);
-    }
-    drawTv();
-  }
-
-  // ৩. অডিও স্পেকট্রাম ভিজ্যুয়ালাইজার
-  function initAudioVisualizer() {
-    const canvas = document.getElementById('audioVisualizerCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    canvas.width = 600; canvas.height = 80;
-
-    function drawSpectrum() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const bars = 40;
-      const barWidth = canvas.width / bars;
-
-      for (let i = 0; i < bars; i++) {
-        const h = Math.random() * canvas.height * (state.mediaPlaying ? 0.85 : 0.1);
-        ctx.fillStyle = i % 2 === 0 ? "rgba(0, 217, 255, 0.65)" : "rgba(255, 79, 163, 0.65)";
-        ctx.fillRect(i * barWidth, canvas.height - h, barWidth - 2, h);
-      }
-      setTimeout(() => requestAnimationFrame(drawSpectrum), 80);
-    }
-    drawSpectrum();
-  }
-
-  // ৪. রিলস ক্যানভাস প্লেয়ার
-  function initReelAnimation() {
-    const canvas = document.getElementById('reelCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    canvas.width = 360; canvas.height = 640;
-    let t = 0;
-
-    function renderReel() {
-      ctx.fillStyle = "#0a1334";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = `hsl(${t % 360}, 70%, 50%)`;
-      ctx.beginPath();
-      ctx.arc(canvas.width / 2 + Math.sin(t * 0.05) * 50, canvas.height / 2 + Math.cos(t * 0.05) * 50, 80, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 20px 'Noto Sans Bengali'";
-      ctx.textAlign = "center";
-      ctx.fillText("🎬 শর্ট রিলস ভিডিও", canvas.width / 2, canvas.height / 2);
-
-      t++;
-      requestAnimationFrame(renderReel);
-    }
-    renderReel();
-  }
-
-  /* ==========================================================================
-     মিডিয়া প্লেয়ার ও কম্পাস লজিক
-     ========================================================================== */
-  function playChannel(name, type) {
-    document.getElementById('currentChannelName').textContent = name;
-    document.getElementById('currentMediaTitle').textContent = `${name} (${type.toUpperCase()})`;
-    showToast(`চ্যানেল পরিবর্তন: ${name}`);
-  }
-
-  function toggleMediaPlay() {
-    state.mediaPlaying = !state.mediaPlaying;
-    const icon = document.getElementById('mediaPlayIcon');
-    icon.className = state.mediaPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
-    showToast(state.mediaPlaying ? "প্লেব্যাক চালু হয়েছে" : "প্লেব্যাক সাময়িক বন্ধ");
-  }
-
-  function adjustMediaVolume(v) {
-    showToast(`শব্দের পরিমাণ: ${v}%`);
-  }
-
-  function toggleFullscreenMedia() {
-    showToast("ফুলস্ক্রিন মোড চালু করা হয়েছে");
-  }
-
-  function init3DCompass() {
-    rotateCompassDial(state.compassAngle);
-  }
-
-  function rotateCompassDial(deg) {
-    const dial = document.getElementById('compassDialDisc');
-    if (dial) dial.style.transform = `rotate(-${deg}deg)`;
-    document.getElementById('compassDegreesText').textContent = `${deg.toFixed(1)}° W`;
-  }
-
-  function rotateCompassManually() {
-    state.compassAngle = (state.compassAngle + 45) % 360;
-    rotateCompassDial(state.compassAngle);
-    showToast(`কম্পাস ডায়াল ঘোরানো হয়েছে: ${state.compassAngle.toFixed(1)}°`);
-  }
-
-  /* ==========================================================================
-     ফিনটেক ওয়ালেট ফাংশনসমূহ
-     ========================================================================== */
-  function renderWalletHistory() {
-    const container = document.getElementById('walletHistoryList');
-    container.innerHTML = state.walletHistory.map(h => `
-      <div class="glass-card p-3 rounded-xl border border-white/10 flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-full ${h.type === '+' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'} flex items-center justify-center font-bold">
-            ${h.type}
-          </div>
-          <div>
-            <span class="block text-white font-medium">${h.title}</span>
-            <span class="text-[10px] text-gray-400">${h.time}</span>
-          </div>
-        </div>
-        <span class="font-mono font-bold ${h.type === '+' ? 'text-emerald-400' : 'text-gray-200'}">${h.type}৳${h.amount}</span>
-      </div>
-    `).join('');
-    document.getElementById('walletBalanceDisplay').textContent = state.isBalanceVisible ? `৳ ${state.balance.toLocaleString()}.০০` : `৳ ••••••••`;
-  }
-
-  function toggleBalanceVisibility() {
-    state.isBalanceVisible = !state.isBalanceVisible;
-    renderWalletHistory();
-  }
-
-  function triggerWalletModal(type) {
-    state.activeWalletAction = type;
-    const titles = { add: "এড মানি করুন", send: "সেন্ড মানি করুন", cashout: "ক্যাশ আউট করুন", recharge: "মোবাইল রিচার্জ", bill: "বিদ্যুৎ বিল পে" };
-    document.getElementById('walletModalTitle').textContent = titles[type] || "লেনদেন সম্পন্ন করুন";
-    document.getElementById('walletActionModal').classList.remove('hidden');
-  }
-
-  function closeWalletModal() {
-    document.getElementById('walletActionModal').classList.add('hidden');
-  }
-
-  function submitWalletAction() {
-    const amtInput = document.getElementById('walletModalAmount');
-    const amt = parseInt(amtInput.value);
-    if (isNaN(amt) || amt <= 0) return showToast("সঠিক টাকার পরিমাণ দিন!");
-
-    if (state.activeWalletAction === 'add') {
-      state.balance += amt;
-      state.walletHistory.unshift({ title: "এড মানি (ব্যাংক)", type: "+", amount: amt, time: "এইমাত্র" });
-    } else {
-      if (amt > state.balance) return showToast("আপনার ব্যালেন্স অপর্যাপ্ত!");
-      state.balance -= amt;
-      state.walletHistory.unshift({ title: `${state.activeWalletAction.toUpperCase()} পেমেন্ট`, type: "-", amount: amt, time: "এইমাত্র" });
-    }
-    amtInput.value = "";
-    closeWalletModal();
-    renderWalletHistory();
-    showToast("লেনদেন সফলভাবে সম্পন্ন হয়েছে!");
-  }
-
-  function openQrModal() { document.getElementById('qrModal').classList.remove('hidden'); }
-  function closeQrModal() { document.getElementById('qrModal').classList.add('hidden'); }
-
-  /* ==========================================================================
-     AYNA AI চ্যাটবট ও ভয়েস আউটপুট
-     ========================================================================== */
-  const aiKnowledgeBase = [
-    { keys: ["নামাজ", "সময়", "prayer"], reply: "🕋 আজকের নামাজের সময়সূচী (ঢাকা/উখিয়া): ফজর ৫:০২ AM • যোহর ১২:০৪ PM • আসর ৩:৫২ PM • মাগরিব ৫:৩৬ PM • এশা ৬:৫৪ PM।" },
-    { keys: ["ডেঙ্গু", "dengue"], reply: "🦟 ডেঙ্গু হলে প্রচুর পানি, ডাবের পানি ও খাবার স্যালাইন পান করুন। প্যারাসিটামল ছাড়া অন্য কোনো ব্যথানাশক ঔষধ খাবেন না।" },
-    { keys: ["ব্যবসা", "business"], reply: "💡 উখিয়ার জন্য ৩টি ব্যবসা আইডিয়া: ১. অনলাইন মাছ ও শুঁটকি ই-কমার্স ২. ট্যুর গাইড হোম-স্টে ৩. ফিনটেক ও প্রযুক্তি এজেন্ট কেন্দ্র।" },
-    { keys: ["কোরআন", "quran"], reply: "📖 সূরা আল-বাকারা (২:১৫৩): নিশ্চয়ই আল্লাহ তাআলা ধৈর্যশীলদের সাথে আছেন।" }
-  ];
-
-  function submitAiQuery() {
-    const input = document.getElementById('aiInputPrompt');
-    const text = input.value.trim();
-    if (!text) return;
-
-    appendAiMsg(text, 'user');
-    input.value = '';
-    document.getElementById('aiTypingIndicator').classList.remove('hidden');
-
-    setTimeout(() => {
-      document.getElementById('aiTypingIndicator').classList.add('hidden');
-      let answer = `🤖 **AYNA AI উত্তর:** "${text}" বিষয়ে তথ্য প্রসেস করা হয়েছে। ১ কোটি লাইন কোডবেস অনুযায়ী আপনার সার্ভিস রিকোয়েস্ট তৈরি।`;
-      
-      const match = aiKnowledgeBase.find(k => k.keys.some(key => text.toLowerCase().includes(key)));
-      if (match) answer = match.reply;
-
-      appendAiMsg(answer, 'ai');
-    }, 800);
-  }
-
-  function sendAiPreset(query) {
-    document.getElementById('aiInputPrompt').value = query;
-    submitAiQuery();
-  }
-
-  function handleAiKeyPress(e) { if (e.key === 'Enter') submitAiQuery(); }
-
-  function appendAiMsg(msg, sender) {
-    const box = document.getElementById('aiChatBox');
-    const div = document.createElement('div');
-    div.className = `flex items-start gap-2.5 ${sender === 'user' ? 'flex-row-reverse' : ''}`;
-    div.innerHTML = `
-      <div class="w-7 h-7 rounded-full ${sender === 'user' ? 'bg-neon-cyan text-black' : 'bg-purple-600 text-white'} flex items-center justify-center font-bold text-xs shrink-0">
-        ${sender === 'user' ? 'YOU' : '<i class="fa-solid fa-robot"></i>'}
-      </div>
-      <div class="${sender === 'user' ? 'bg-neon-cyan/20 border-neon-cyan/30 text-white' : 'bg-navy-900 border-white/10 text-gray-200'} border p-3 rounded-2xl max-w-[85%] leading-relaxed">
-        ${msg}
-      </div>
-    `;
-    box.appendChild(div);
-    box.scrollTop = box.scrollHeight;
-  }
-
-  function speakLastAiMessage() {
-    const msgs = document.querySelectorAll('#aiChatBox div');
-    if (!msgs.length) return;
-    const text = msgs[msgs.length - 1].innerText;
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'bn-BD';
-    window.speechSynthesis.speak(utterance);
-    showToast("🔊 ভয়েস আউটপুট শোনানো হচ্ছে...");
-  }
-
-  function clearAiChat() {
-    document.getElementById('aiChatBox').innerHTML = `
-      <div class="flex items-start gap-2.5">
-        <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white shrink-0"><i class="fa-solid fa-robot text-sm"></i></div>
-        <div class="bg-navy-900 border border-white/10 p-3 rounded-2xl max-w-[85%] text-gray-200">চ্যাট হিস্ট্রি পরিষ্কার করা হয়েছে। নতুন প্রশ্ন করুন।</div>
-      </div>
-    `;
-  }
-
-  /* ==========================================================================
-     নাসা স্পেস ডেটা ও মেডিকেল মডিউল
-     ========================================================================== */
-  async function fetchNasaApodData() {
-    const box = document.getElementById('nasaTelemetryBox');
-    box.innerHTML = `<p class="animate-pulse text-neon-cyan">নাসা স্পেস নেটওয়ার্ক থেকে ডাটা আনা হচ্ছে...</p>`;
-    try {
-      const res = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
-      const data = await res.json();
+</script>
+</body>
+</html>
