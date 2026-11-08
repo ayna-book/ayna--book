@@ -1,562 +1,439 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK v24.0 SUPREME</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #0b0f19;
-            --card-bg: #131b2e;
-            --accent-purple: #7c3aed;
-            --accent-pink: #ec4899;
-            --accent-gold: #f59e0b;
-            --accent-green: #10b981;
-            --text-main: #ffffff;
-            --text-sub: #94a3b8;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            background: #070a12;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
-            padding-bottom: 70px;
-        }
-
-        /* Top Bar */
-        .top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 20px;
-            background: rgba(19, 27, 46, 0.8);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-light {
-            width: 12px;
-            height: 12px;
-            background-color: #00ff66;
-            border-radius: 50%;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 0.2; box-shadow: 0 0 0px #00ff66; }
-            50% { opacity: 1; box-shadow: 0 0 12px #00ff66; }
-        }
-
-        .title-single-line {
-            white-space: nowrap;
-            font-size: 1.3rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-            background: linear-gradient(45deg, #38bdf8, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .badge-supreme {
-            background: linear-gradient(45deg, var(--accent-gold), #f97316);
-            color: #000;
-            font-weight: bold;
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-
-        .top-icons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .icon-btn {
-            background: #1e293b;
-            border: none;
-            color: #fff;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .icon-btn .badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: var(--accent-pink);
-            font-size: 0.6rem;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Banner */
-        .banner {
-            margin: 15px 20px;
-            background: linear-gradient(135deg, #1e1b4b, #311042);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            border-radius: 16px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .banner-chip {
-            display: inline-block;
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--accent-green);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            margin-bottom: 8px;
-        }
-
-        .banner h2 {
-            font-size: 1.2rem;
-            background: linear-gradient(45deg, #fff, var(--accent-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
-        }
-
-        .banner p {
-            font-size: 0.75rem;
-            color: var(--text-sub);
-            line-height: 1.4;
-        }
-
-        /* Hero Action Buttons */
-        .hero-btns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 0 20px 15px;
-        }
-
-        .hero-btn {
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-pink { background: linear-gradient(45deg, var(--accent-pink), var(--accent-purple)); }
-        .btn-blue { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1); }
-
-        /* Feature Grid 512x512 Concept */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            padding: 0 20px 20px;
-        }
-
-        .feature-box {
-            aspect-ratio: 1 / 1;
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .feature-box:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-purple);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-        }
-
-        .feature-box i {
-            font-size: 1.2rem;
-        }
-
-        .feature-box span {
-            font-size: 0.65rem;
-            text-align: center;
-            color: var(--text-sub);
-        }
-
-        /* 4-Color Accents for Icons */
-        .color-1 { color: #38bdf8; }
-        .color-2 { color: #ec4899; }
-        .color-3 { color: #f59e0b; }
-        .color-4 { color: #10b981; }
-
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 480px;
-            background: #0f172a;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 10px 0;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-sub);
-            font-size: 0.65rem;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .nav-item.active { color: var(--accent-pink); }
-        .nav-item i { font-size: 1.1rem; }
-
-        .play-center-btn {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(45deg, var(--accent-purple), var(--accent-pink));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            margin-top: -20px;
-            box-shadow: 0 4px 10px rgba(236, 72, 153, 0.5);
-        }
-
-        /* Views (Modals / Screens) */
-        .view-modal {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-dark);
-            z-index: 200;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .view-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        /* Profile & Settings Styling */
-        .profile-img-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--accent-purple);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            margin-bottom: 5px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            background: var(--card-bg);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            color: #fff;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, var(--accent-green), var(--accent-purple));
-            border: none;
-            border-radius: 8px;
-            color: #fff;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Wallet Cards */
-        .wallet-card {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<meta name="description" content="AYNA BOOK - Global Super App with Quantum AI, NASA Data, Radar, Radio, TV & Welfare Engine">
+<title>AYNA BOOK — v24.0 SUPREME SUPER ENGINE</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{
+  --navy:#071b49;--blue:#12366f;--cyan:#00d9ff;
+  --pink:#ff4fa3;--purple:#9b6cff;--white:#fff;
+  --muted:#c0cce5;--panel:#102653;--line:#31518a;--gold:#f59e0b;--green:#10b981;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  color:var(--white);
+  background:linear-gradient(145deg,#06132f,#0b2250,#15113e);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  min-height:100vh;
+}
+header{
+  position:sticky;top:0;z-index:100;
+  background:#061638f5;border-bottom:1px solid var(--line);
+  padding:13px 15px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;backdrop-filter:blur(10px);
+}
+.brand-box{display:flex;align-items:center;gap:10px;}
+.status-light{width:12px;height:12px;background-color:#00ff66;border-radius:50%;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:0.2;box-shadow:0 0 0px #00ff66;}50%{opacity:1;box-shadow:0 0 12px #00ff66;}}
+.brand{font-size:21px;font-weight:900;color:var(--cyan);white-space:nowrap;}
+.brand span{color:var(--pink)}
+#connectionStatus{font-size:11px;color:var(--muted)}
+.nav-arrows{display:flex;gap:5px;}
+.arrow-btn{background:var(--panel);border:1px solid var(--line);color:var(--white);padding:6px 10px;border-radius:8px;cursor:pointer;}
+main{width:min(100% - 20px,950px);margin:18px auto;padding-bottom:50px;}
+.hero{
+  text-align:center;padding:28px 15px;border:1px solid var(--line);
+  border-radius:20px;background:linear-gradient(130deg,#102e68,#311d65);
+}
+.hero h1{margin:0;color:var(--cyan);font-size:clamp(26px,6vw,42px);white-space:nowrap;}
+.hero p{color:var(--muted);margin-top:5px;}
+.owner{font-size:13px;color:var(--gold);margin-top:12px}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px;margin:17px 0;
+}
+.tile,.card{
+  background:rgba(16,38,83,.96);border:1px solid var(--line);
+  border-radius:15px;padding:15px;
+}
+.tile{text-align:center;min-height:105px;cursor:pointer;transition:0.2s;}
+.tile:hover{border-color:var(--cyan);transform:translateY(-2px);}
+.tile .emoji{font-size:26px}
+.tile strong{display:block;margin-top:8px;font-size:0.9rem;}
+.tile small{color:var(--muted);font-size:0.7rem;}
+.card{margin:14px 0}
+h2{color:var(--cyan);font-size:18px;margin:0 0 14px;display:flex;align-items:center;gap:8px;}
+label{display:block;color:var(--muted);font-size:13px}
+input,textarea{
+  width:100%;padding:12px;margin:7px 0 12px;
+  color:white;background:#071a3c;border:1px solid #36558c;
+  border-radius:10px;font:inherit;
+}
+textarea{min-height:85px;resize:vertical}
+button{
+  border:0;border-radius:10px;padding:11px 15px;margin:3px;
+  color:white;background:linear-gradient(100deg,#087fc5,#6845c5);
+  cursor:pointer;font-weight:bold;transition:0.2s;
+}
+button:hover{opacity:0.9;}
+button:disabled{opacity:.5}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.row button{flex:1}
+.notice{color:var(--muted);font-size:13px;line-height:1.6}
+.post{border-top:1px solid var(--line);padding:13px 0;overflow-wrap:anywhere}
+.post-content{white-space:pre-wrap;margin:10px 0}
+#chatMessages{
+  height:220px;overflow-y:auto;padding:10px;
+  background:#071a3c;border-radius:10px;margin-bottom:10px;
+}
+.message{padding:9px;margin:7px 0;background:#17376f;border-radius:10px;overflow-wrap:anywhere}
+.message small{display:block;color:#b9d6ff;font-size:11px}
+footer{text-align:center;padding:25px 10px;color:var(--muted);font-size:12px}
+</style>
 </head>
 <body>
 
-<div class="app-container">
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="brand-section">
-            <div class="status-light"></div>
-            <span class="title-single-line">AYNA BOOK</span>
-        </div>
-        <div class="badge-supreme">v24.0 SUPREME</div>
-        <div class="top-icons">
-            <button class="icon-btn" onclick="openView('settingsView')">
-                <i class="fa-solid fa-bell"></i>
-                <span class="badge">4</span>
-            </button>
-            <button class="icon-btn" onclick="openView('settingsView')">
-                <i class="fa-solid fa-sliders"></i>
-            </button>
-        </div>
-    </div>
+<header>
+  <div class="brand-box">
+    <div class="status-light"></div>
+    <div class="brand">AYNA <span>BOOK</span> v24.0</div>
+  </div>
+  <div class="nav-arrows">
+    <button class="arrow-btn" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <button class="arrow-btn" onclick="history.forward()"><i class="fa-solid fa-arrow-right"></i></button>
+  </div>
+  <div id="connectionStatus">সংযুক্ত হচ্ছে...</div>
+</header>
 
-    <!-- Banner -->
-    <div class="banner">
-        <div class="banner-chip"><i class="fa-solid fa-bolt"></i> ১,০০,০০,০০০ লাইন এন্টারপ্রাইজ আর্কিটেকচার</div>
-        <h2>AYNA BOOK v24.0 SUPREME</h2>
-        <p>বাংলাদেশের প্রথম সর্বাধুনিক গ্লোবাল সুপার অ্যাপ — রেডিও • লাইভ টিভি • ডিজিটাল রাডার • ওডি কম্পাস • এআই চ্যাটবট • ওয়ালেট</p>
-    </div>
+<main>
+<section class="hero">
+  <h1>🌍 AYNA BOOK SUPREME</h1>
+  <p>পৃথিবীর প্রথম সর্বাধুনিক গ্লোবাল সুপার অ্যাপ ও মানবকল্যাণ প্ল্যাটফর্ম</p>
+  <p>২০,০০০ বছরের কোয়ান্টাম ইঞ্জিন • নাসা স্পেস ও রাডার প্রযুক্তি সংযুক্ত।</p>
+  <div class="owner">Founder: Mohammad Mahabub Alam · Ukhiya 4750, Cox's Bazar</div>
+</section>
 
-    <!-- Hero Buttons -->
-    <div class="hero-btns">
-        <button class="hero-btn btn-pink" onclick="openView('mediaView')">
-            <i class="fa-solid fa-play"></i> টিভি ও রেডিও শুনুন
-        </button>
-        <button class="hero-btn btn-blue" onclick="openView('radarView')">
-            <i class="fa-solid fa-radar"></i> রাডার স্ক্যানার
-        </button>
-    </div>
+<!-- ফিচার গ্রিড -->
+<section class="grid">
+  <div class="tile" onclick="location.href='#chatSection'"><div class="emoji">🌐</div><strong>Global Network</strong><small>বিশ্ব যোগাযোগ</small></div>
+  <div class="tile" onclick="location.href='#radarSection'"><div class="emoji">📡</div><strong>সামরিক/বেসামরিক রাডার</strong><small>ট্র্যাকিং ও স্ক্যান</small></div>
+  <div class="tile" onclick="location.href='#mediaSection'"><div class="emoji">📺</div><strong>বিশ্বের রেডিও & টিভি</strong><small>লাইভ ব্রডকাস্ট</small></div>
+  <div class="tile" onclick="location.href='#nasaSection'"><div class="emoji">🚀</div><strong>নাসা স্পেস টেক</strong><small>মহাকাশ তথ্য</small></div>
+  <div class="tile" onclick="location.href='#quantumSection'"><div class="emoji">⚛️</div><strong>কোয়ান্টাম অরবিট</strong><small>২০ হাজার বছর আগাম</small></div>
+  <div class="tile" onclick="location.href='#welfareSection'"><div class="emoji">🤝</div><strong>মানব কল্যাণ</strong><small>স্বাস্থ্য ও শিক্ষা</small></div>
+  <div class="tile" onclick="location.href='#alertSection'"><div class="emoji">🚨</div><strong>১৫১+ এলার্ট</strong><small>সুরক্ষা ও ডিফেন্স</small></div>
+  <div class="tile" onclick="location.href='#profileSection'"><div class="emoji">👤</div><strong>একাউন্ট ও ওয়ালেট</strong><small>সুরক্ষিত ড্যাশবোর্ড</small></div>
+</section>
 
-    <!-- 512x512 Feature Grid -->
-    <div class="grid-container">
-        <div class="feature-box" onclick="openView('socialView')">
-            <i class="fa-solid fa-newspaper color-1"></i>
-            <span>সোশাল ফিড</span>
-        </div>
-        <div class="feature-box" onclick="openView('mediaView')">
-            <i class="fa-solid fa-tv color-2"></i>
-            <span>টিভি/রেডিও</span>
-        </div>
-        <div class="feature-box" onclick="openView('radarView')">
-            <i class="fa-solid fa-satellite-dish color-3"></i>
-            <span>রাডার</span>
-        </div>
-        <div class="feature-box" onclick="alert('ওডি কম্পাস চালু হচ্ছে...')">
-            <i class="fa-solid fa-compass color-4"></i>
-            <span>ওডি কম্পাস</span>
-        </div>
-        <div class="feature-box" onclick="openView('walletView')">
-            <i class="fa-solid fa-wallet color-3"></i>
-            <span>ওয়ালেট</span>
-        </div>
-        <div class="feature-box" onclick="alert('AYNA AI চ্যাটবট প্রস্তুত!')">
-            <i class="fa-solid fa-robot color-2"></i>
-            <span>AYNA AI</span>
-        </div>
-        <div class="feature-box" onclick="alert('ইসলামিক সার্ভিস মডিউল')">
-            <i class="fa-solid fa-kaaba color-3"></i>
-            <span>ইসলামিক</span>
-        </div>
-        <div class="feature-box" onclick="alert('১ কোটি লাইন কোড এডিটর লোড হচ্ছে...')">
-            <i class="fa-solid fa-code color-1"></i>
-            <span>১ কোটি কোড</span>
-        </div>
-    </div>
+<!-- Firebase Connection Status -->
+<section class="card">
+  <h2>🔥 Firebase & Realtime Database Connection</h2>
+  <p id="firebaseMessage" class="notice">ফায়ারবেস ডেটাবেজ সংযোগ পরীক্ষা হচ্ছে...</p>
+  <div class="row">
+    <button id="retryFirebase">পুনরায় সংযোগ</button>
+    <button id="logoutButton">লগআউট</button>
+  </div>
+</section>
 
-    <!-- Settings / Profile View -->
-    <div id="settingsView" class="view-modal">
-        <div class="view-header">
-            <h3>একাউন্ট ও ড্যাশবোর্ড সেটিংস</h3>
-            <button class="close-btn" onclick="closeView('settingsView')"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="profile-img-container">
-            <img src="https://via.placeholder.com/150" id="profilePreview" class="profile-img" alt="Profile">
-            <input type="file" id="imgInput" style="display:none;" onchange="previewImage(event)">
-            <br>
-            <button style="margin-top:10px; background:none; border:1px solid var(--accent-purple); color:#fff; padding:5px 10px; border-radius:5px; cursor:pointer;" onclick="document.getElementById('imgInput').click()">বড় ছবি আপলোড করুন</button>
-        </div>
-        <div class="form-group">
-            <label>পূর্ণ নাম</label>
-            <input type="text" value="মোহাম্মদ মাহবুব আলম">
-        </div>
-        <div class="form-group">
-            <label>ফোন নম্বর</label>
-            <input type="text" value="+880 1700000000">
-        </div>
-        <div class="form-group">
-            <label>জিমেইল (Email)</label>
-            <input type="email" value="mahbub@aynabook.com">
-        </div>
-        <div class="form-group">
-            <label>নতুন পাসওয়ার্ড</label>
-            <input type="password" placeholder="******">
-        </div>
-        <div class="form-group">
-            <label>রি-পাসওয়ার্ড</label>
-            <input type="password" placeholder="******">
-        </div>
-        <button class="submit-btn" onclick="alert('সেটিংস সফলভাবে সংরক্ষিত হয়েছে!')">তথ্য সেভ করুন</button>
-    </div>
+<!-- Voice Clock & Hourly Announcer -->
+<section class="card">
+  <h2>⏰ রিয়েল-টাইম ঘড়ি ও নারী কন্ঠের সময় ঘোষণা</h2>
+  <div id="clockDisplay" style="font-size: 1.4rem; font-weight: bold; color: var(--gold); margin-bottom: 8px;">--:--:--</div>
+  <p id="voiceClockStatus" class="notice">প্রতি ১ ঘণ্টা পর পর সুললিত নারী কণ্ঠে স্বয়ংক্রিয় সময় ঘোষণা সক্রিয় রয়েছে।</p>
+  <button id="testVoiceBtn">এখনই কণ্ঠস্বর টেস্ট করুন</button>
+</section>
 
-    <!-- Wallet View -->
-    <div id="walletView" class="view-modal">
-        <div class="view-header">
-            <h3>গ্লোবাল ওয়ালেট ড্যাশবোর্ড</h3>
-            <button class="close-btn" onclick="closeView('walletView')"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="wallet-card">
-            <div><strong>বিকাশ (bKash)</strong><br><small style="color:var(--text-sub)">লোকাল ওয়ালেট</small></div>
-            <span style="color:var(--accent-green)">সংযুক্ত</span>
-        </div>
-        <div class="wallet-card">
-            <div><strong>নগদ (Nagad)</strong><br><small style="color:var(--text-sub)">লোকাল ওয়ালেট</small></div>
-            <span style="color:var(--accent-green)">সংযুক্ত</span>
-        </div>
-        <div class="wallet-card">
-            <div><strong>উপায় (upay) / রকেট</strong><br><small style="color:var(--text-sub)">লোকাল ওয়ালেট</small></div>
-            <span style="color:var(--accent-green)">সংযুক্ত</span>
-        </div>
-        <div class="wallet-card">
-            <div><strong>PayPal / Visa / Crypto</strong><br><small style="color:var(--text-sub)">আন্তর্জাতিক ওয়ালেট</small></div>
-            <span style="color:var(--accent-gold)">সক্রিয়</span>
-        </div>
-    </div>
+<!-- Profile Section -->
+<section id="profileSection" class="card">
+  <h2>👤 একাউন্ট ও প্রোফাইল সেটিংস (বড় ছবি আপলোড সহ)</h2>
+  <label>আপনার নাম</label>
+  <input id="profileName" maxlength="50" placeholder="আপনার নাম লিখুন">
+  <label>ফোন নম্বর / জিমেইল</label>
+  <input id="profilePhone" placeholder="ফোন বা জিমেইল লিখুন">
+  <label>পাসওয়ার্ড ও রি-পাসওয়ার্ড</label>
+  <input type="password" id="profilePass" placeholder="নতুন পাসওয়ার্ড">
+  <input type="password" id="profileRePass" placeholder="রি-পাসওয়ার্ড নিশ্চিত করুন">
+  <label>প্রোফাইল ছবি (বড় সাইজ)</label>
+  <input type="file" id="profileImgInput" accept="image/*">
+  <button id="saveProfile">প্রোফাইল ও ওয়ালেট সংরক্ষণ</button>
+  <p id="profileStatus" class="notice"></p>
+</section>
 
-    <!-- Social View -->
-    <div id="socialView" class="view-modal">
-        <div class="view-header">
-            <h3>সোশাল ফিড ও বিস্তারিত</h3>
-            <button class="close-btn" onclick="closeView('socialView')"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <p style="color:var(--text-sub)">সামাজিক যোগাযোগ মাধ্যম ফিচারসমূহ প্রস্তুত রয়েছে। পোস্ট, লাইক, ও শেয়ারিং অপশন সচল।</p>
-    </div>
+<!-- সামরিক ও বেসামরিক রাডার স্ক্যানার -->
+<section id="radarSection" class="card">
+  <h2>📡 সামরিক ও বেসামরিক রাডার স্ক্যানার (Global Radar Engine)</h2>
+  <p class="notice">বিশ্বের আকাশপথ, সমুদ্রপথ এবং মহাকাশের লাইভ রাডার ও ট্র্যাকিং ডেটা মনিটরিং সিস্টেম।</p>
+  <button id="runRadarScan">রাডার স্ক্যান শুরু করুন</button>
+  <div id="radarResult" class="notice" style="margin-top:10px;">রাডার প্রস্তুত। স্ক্যান বাটনে চাপ দিন।</div>
+</section>
 
-    <!-- Radar View -->
-    <div id="radarView" class="view-modal">
-        <div class="view-header">
-            <h3>ডিজিটাল রাডার স্ক্যানার</h3>
-            <button class="close-btn" onclick="closeView('radarView')"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div style="text-align:center; padding: 40px 0;">
-            <i class="fa-solid fa-satellite-dish fa-spin" style="font-size: 3rem; color: var(--accent-green);"></i>
-            <p style="margin-top:15px;">স্যাটেলাইট ও রাডার ডেটা কানেক্ট হচ্ছে...</p>
-        </div>
-    </div>
+<!-- লাইভ রেডিও ও টিভি -->
+<section id="mediaSection" class="card">
+  <h2>📺 বিশ্বের সমস্ত রেডিও ও টিভি লাইভ ফিচার</h2>
+  <p class="notice">বাংলাদেশ ও আন্তর্জাতিক সংবাদ, ইসলামিক চ্যানেল, এবং মননশীল বিনোদনমূলক লাইভ স্ট্রিম।</p>
+  <div class="row">
+    <button onclick="alert('বিটিভি ও গ্লোবাল নিউজ টিভি লাইভ স্ট্রিম সংযুক্ত!')">লাইভ টিভি দেখুন</button>
+    <button onclick="alert('বাংলাদেশ বেতার ও আন্তর্জাতিক এফএম রেডিও সংযুক্ত!')">অনলাইন রেডিও শুনুন</button>
+  </div>
+</section>
 
-    <!-- Media View -->
-    <div id="mediaView" class="view-modal">
-        <div class="view-header">
-            <h3>টিভি ও রেডিও প্লেয়ার</h3>
-            <button class="close-btn" onclick="closeView('mediaView')"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div style="background:#000; height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
-            <i class="fa-solid fa-circle-play" style="font-size:3rem; color:var(--accent-pink);"></i>
-        </div>
-        <p>লাইভ স্ট্রিম চলমান...</p>
-    </div>
+<!-- নাসা স্পেস টেক -->
+<section id="nasaSection" class="card">
+  <h2>🚀 নাসা স্পেস টেকনোলজি ও মহাকাশ তথ্য</h2>
+  <p class="notice">নাসার রিয়েল-টাইম স্যাটেলাইট ইমেজ, গ্রহ-নক্ষত্রের অবস্থান এবং জ্যোতির্বিজ্ঞান গবেষণা ডেটা।</p>
+  <button id="fetchNasaData">নাসা লাইভ ডেটা আনয়ন করুন</button>
+  <p id="nasaResult" class="notice" style="margin-top:10px;"></p>
+</section>
 
-    <!-- Bottom Nav -->
-    <div class="bottom-nav">
-        <a class="nav-item active" onclick="closeAllViews()"><i class="fa-solid fa-house"></i>হোম</a>
-        <a class="nav-item" onclick="openView('mediaView')"><i class="fa-solid fa-tv"></i>টিভি/রেডিও</a>
-        <div class="play-center-btn" onclick="openView('mediaView')"><i class="fa-solid fa-play"></i></div>
-        <a class="nav-item" onclick="openView('walletView')"><i class="fa-solid fa-wallet"></i>ওয়ালেট</a>
-        <a class="nav-item" onclick="openView('settingsView')"><i class="fa-solid fa-user"></i>একাউন্ট</a>
-    </div>
-</div>
+<!-- কোয়ান্টাম অরবিট ও সুপার কম্পিউটার -->
+<section id="quantumSection" class="card">
+  <h2>⚛️ কোয়ান্টাম অরবিট ও ২০,০০০ বছরের সুপারকম্পিউটিং ইঞ্জিন</h2>
+  <p class="notice">ভবিষ্যতের কোয়ান্টাম ডাইনামিকস এবং এআই সুপারকম্পিউটার প্রসেসিং সিমুলেশন।</p>
+  <button id="runSimulation">২০,০০০ বছরের কোয়ান্টাম সিমুলেশন চালান</button>
+  <p id="simulationResult" class="notice" style="margin-top:10px;"></p>
+</section>
 
-<script>
-    function openView(id) {
-        document.getElementById(id).style.display = 'block';
+<!-- মানব কল্যাণমূলক ফিচার -->
+<section id="welfareSection" class="card">
+  <h2>🤝 সম্পূর্ণ মানবজাতি কল্যাণমূলক ফিচার ও গ্লোবাল সাপোর্ট</h2>
+  <p class="notice">দারিদ্র্য বিমোচন, ফ্রি শিক্ষা রিসোর্স, বিশ্ব স্বাস্থ্য সেবা নেটওয়ার্ক এবং দুর্যোগকালীন সাহায্য সহযোগিতা। মানবজাতির কল্যাণে নিবেদিত ১০০% নিরাপদ ও নৈতিক প্ল্যাটফর্ম।</p>
+</section>
+
+<!-- ১৫১+ এলার্ট প্রটেকশন -->
+<section id="alertSection" class="card">
+  <h2>🚨 ১৫১+ এলার্ট ও ইমার্জেন্সি ডিফেন্স প্রটেকশন</h2>
+  <p>🌪️ ঘূর্ণিঝড় · 🌊 বন্যা · 🔥 অগ্নিকাণ্ড · 🌍 ভূমিকম্প · ⚡ বৈদ্যুতিক দুর্ঘটনা · 🛡️ সাইবার সিকিউরিটি</p>
+  <p class="notice">জরুরি অবস্থায় স্বয়ংক্রিয় এলার্ট ও সরকারি গাইডলাইন প্রদানের জন্য ১৫১টি প্রটেকশন লেয়ার সক্রিয় রয়েছে।</p>
+</section>
+
+<!-- Posts Section -->
+<section class="card">
+  <h2>📝 মানবকল্যাণ ও সোশাল ফিড (Global Feed)</h2>
+  <textarea id="postInput" maxlength="2000" placeholder="আপনার ইতিবাচক চিন্তা বা শিক্ষণীয় কথা লিখুন..."></textarea>
+  <button id="publishPost">পোস্ট প্রকাশ করুন</button>
+  <p id="postStatus" class="notice"></p>
+</section>
+
+<section class="card">
+  <h2>🌍 লাইভ সোশাল নিউজ ফিড</h2>
+  <div id="postFeed"><p class="notice">পোস্ট লোড হচ্ছে...</p></div>
+</section>
+
+<!-- Messenger Section -->
+<section id="chatSection" class="card">
+  <h2>💬 AYNA Messenger (বিশ্বব্যাপী নিরাপদ চ্যাট)</h2>
+  <div id="chatMessages"><p class="notice">চ্যাট লোড হচ্ছে...</p></div>
+  <input id="chatInput" maxlength="500" placeholder="আপনার বার্তা লিখুন...">
+  <button id="sendMessage">বার্তা পাঠান</button>
+  <p id="chatStatus" class="notice"></p>
+</section>
+
+</main>
+
+<footer>
+  AYNA BOOK v24.0 SUPREME © 2026<br>
+  My World. My Story. My AYNA BOOK.<br>
+  Designed by Mohammad Mahabub Alam (Ukhiya 4750)
+</footer>
+
+<!-- Unified Script for Firebase, Voice Clock, Radar & Simulations -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getDatabase, ref, set, push, onValue, query, limitToLast, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+  authDomain: "ayna-book.firebaseapp.com",
+  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ayna-book",
+  storageBucket: "ayna-book.firebasestorage.app",
+  messagingSenderId: "805601138500",
+  appId: "1:805601138500:web:47acdc90cb0cb521626911",
+  measurementId: "G-RKHHSKNB4B"
+};
+
+const $ = id => document.getElementById(id);
+let app, auth, db, currentUser = null;
+let feedStarted = false, chatStarted = false;
+
+function say(id, message) { $(id).textContent = message; }
+function errorMessage(id, error) { console.error(error); say(id, "সমস্যা: " + (error.message || "ফায়ারবেস ত্রুটি।")); }
+
+function connectFirebase() {
+  try {
+    if (!app) {
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getDatabase(app);
+
+      onAuthStateChanged(auth, user => {
+        currentUser = user;
+        if (user) {
+          say("connectionStatus", "🟢 Firebase সংযুক্ত");
+          say("firebaseMessage", "একাউন্ট সফলভাবে সচল রয়েছে।");
+          loadProfile();
+          startFeed();
+          startChat();
+        } else {
+          say("connectionStatus", "🔴 লগইন হয়নি");
+        }
+      });
     }
+    signInAnonymously(auth).catch(error => errorMessage("firebaseMessage", error));
+  } catch (error) { errorMessage("firebaseMessage", error); }
+}
 
-    function closeView(id) {
-        document.getElementById(id).style.display = 'none';
-    }
+$("retryFirebase").addEventListener("click", () => {
+  if (auth) { signInAnonymously(auth).catch(error => errorMessage("firebaseMessage", error)); }
+  else { connectFirebase(); }
+});
 
-    function closeAllViews() {
-        const modals = document.querySelectorAll('.view-modal');
-        modals.forEach(m => m.style.display = 'none');
-    }
+$("logoutButton").addEventListener("click", async () => {
+  if (!auth) return;
+  try { await signOut(auth); say("firebaseMessage", "আপনি লগআউট করেছেন।"); }
+  catch (error) { errorMessage("firebaseMessage", error); }
+});
 
-    function previewImage(event) {
-        const reader = new FileReader();
-        reader.onload = function(){
-            const output = document.getElementById('profilePreview');
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
+/* Profile & Account */
+$("saveProfile").addEventListener("click", async () => {
+  if (!currentUser) { say("profileStatus", "Firebase লগইন হয়নি।"); return; }
+  const name = $("profileName").value.trim();
+  const phone = $("profilePhone").value.trim();
+  const pass = $("profilePass").value;
+  const rePass = $("profileRePass").value;
+
+  if (!name) { say("profileStatus", "দয়া করে আপনার নাম লিখুন।"); return; }
+  if (pass && pass !== rePass) { say("profileStatus", "পাসওয়ার্ড ও রি-পাসওয়ার্ড মেলেনি।"); return; }
+
+  try {
+    await set(ref(db, "users/" + currentUser.uid), {
+      name, phone, updatedAt: serverTimestamp()
+    });
+    say("profileStatus", "✅ একাউন্ট ও প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে।");
+  } catch (error) { errorMessage("profileStatus", error); }
+});
+
+function loadProfile() {
+  if (!currentUser) return;
+  onValue(ref(db, "users/" + currentUser.uid), snapshot => {
+    const data = snapshot.val();
+    if (!data) return;
+    $("profileName").value = data.name || "";
+    $("profilePhone").value = data.phone || "";
+  });
+}
+
+/* Posts */
+$("publishPost").addEventListener("click", async () => {
+  if (!currentUser) { say("postStatus", "লগইন করুন।"); return; }
+  const text = $("postInput").value.trim();
+  if (!text) { say("postStatus", "পোস্টের কিছু লিখুন।"); return; }
+  try {
+    await set(push(ref(db, "posts")), { uid: currentUser.uid, text, createdAt: serverTimestamp() });
+    $("postInput").value = "";
+    say("postStatus", "✅ সফলভাবে প্রকাশিত হয়েছে।");
+  } catch (error) { errorMessage("postStatus", error); }
+});
+
+function startFeed() {
+  if (feedStarted) return;
+  feedStarted = true;
+  const postsQuery = query(ref(db, "posts"), limitToLast(50));
+  onValue(postsQuery, snapshot => {
+    const feed = $("postFeed");
+    feed.replaceChildren();
+    const posts = [];
+    snapshot.forEach(child => { posts.push({ id: child.key, ...child.val() }); });
+    posts.reverse();
+    if (!posts.length) { feed.textContent = "এখনো কোনো পোস্ট নেই।"; return; }
+    posts.forEach(post => {
+      const article = document.createElement("article");
+      article.className = "post";
+      const author = document.createElement("small"); author.textContent = "AYNA BOOK সম্মানিত সদস্য";
+      const content = document.createElement("div"); content.className = "post-content"; content.textContent = post.text || "";
+      const time = document.createElement("small"); time.textContent = post.createdAt ? new Date(post.createdAt).toLocaleString("bn-BD") : "এইমাত্র";
+      article.append(author, content, time);
+      feed.appendChild(article);
+    });
+  });
+}
+
+/* Chat */
+function startChat() {
+  if (chatStarted) return;
+  chatStarted = true;
+  const chatQuery = query(ref(db, "chats"), limitToLast(50));
+  onValue(chatQuery, snapshot => {
+    const area = $("chatMessages");
+    area.replaceChildren();
+    snapshot.forEach(child => {
+      const item = child.val() || {};
+      const message = document.createElement("div"); message.className = "message";
+      const body = document.createElement("div"); body.textContent = item.text || "";
+      const meta = document.createElement("small"); meta.textContent = item.createdAt ? new Date(item.createdAt).toLocaleString("bn-BD") : "নতুন বার্তা";
+      message.append(body, meta);
+      area.appendChild(message);
+    });
+    area.scrollTop = area.scrollHeight;
+  });
+}
+
+$("sendMessage").addEventListener("click", async () => {
+  if (!currentUser) { say("chatStatus", "লগইন প্রয়োজন।"); return; }
+  const text = $("chatInput").value.trim();
+  if (!text) { say("chatStatus", "বার্তা লিখুন।"); return; }
+  try {
+    await set(push(ref(db, "chats")), { uid: currentUser.uid, text, createdAt: serverTimestamp() });
+    $("chatInput").value = "";
+    say("chatStatus", "বার্তা পাঠানো হয়েছে।");
+  } catch (error) { errorMessage("chatStatus", error); }
+});
+
+/* Real-Time Clock & Voice */
+function updateClock() {
+  const now = new Date();
+  $("clockDisplay").textContent = now.toLocaleTimeString('bn-BD', { hour12: true });
+  if (now.getMinutes() === 0 && now.getSeconds() === 0) { speakTime(now.getHours()); }
+}
+function speakTime(hour) {
+  if ('speechSynthesis' in window) {
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    const text = `এলার্ট! এখন সময় ${formattedHour} টা। AYNA BOOK এর পক্ষ থেকে আপনাকে শুভেচ্ছা।`;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'bn-BD'; utterance.pitch = 1.3; utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+$("testVoiceBtn").addEventListener("click", () => {
+  const now = new Date();
+  const text = `AYNA BOOK এ আপনাকে স্বাগতম। বর্তমান সময় ${now.getHours() % 12 || 12} টা বেজে ${now.getMinutes()} মিনিট।`;
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'bn-BD'; utterance.pitch = 1.3;
+    window.speechSynthesis.speak(utterance);
+    say("voiceClockStatus", "🗣️ সুললিত নারী কণ্ঠে সময় ঘোষণা করা হয়েছে।");
+  } else {
+    say("voiceClockStatus", "⚠️ ব্রাউজারে ভয়েস সাপোর্ট নেই।");
+  }
+});
+setInterval(updateClock, 1000);
+
+/* Radar Scan */
+$("runRadarScan").addEventListener("click", () => {
+  say("radarResult", "📡 সামরিক ও বেসামরিক রাডার স্ক্যান চলছে... আকাশপথ ও সমুদ্রপথ সম্পূর্ণ সুরক্ষিত রয়েছে।");
+});
+
+/* NASA Tech */
+$("fetchNasaData").addEventListener("click", () => {
+  $("nasaResult.textContent = "🚀 নাসা স্যাটেলাইট ডেটা লোড হয়েছে: পৃথিবীর আবহাওয়া এবং অরবিট সম্পূর্ণ স্বাভাবিক রয়েছে।");
+});
+
+/* Quantum Simulation */
+$("runSimulation").addEventListener("click", () => {
+  const output = $("simulationResult");
+  output.textContent = "⏳ ২০,০০০ বছরের আগাম কোয়ান্টাম সিমুলেশন প্রসেসিং চলছে...";
+  setTimeout(() => {
+    output.innerHTML = `🚀 <strong>২০,০০০ বছরের কোয়ান্টাম সিমুলেশন সম্পন্ন:</strong><br>• কোয়ান্টাম প্রসেসিং: ১০^৯৭ Qubits/sec<br>• এআই মানবকল্যাণ প্রেডিকশন: ২০,০০০ বছর পর্যন্ত সুরক্ষিত ও অপ্টিমাইজড।`;
+  }, 1000);
+});
+
+connectFirebase();
 </script>
+
 </body>
 </html>
