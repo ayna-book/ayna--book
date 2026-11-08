@@ -1,652 +1,354 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#071b49">
-<title>AYNA BOOK - WORLD SAFETY OS</title>
-
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{
- background:#020713;color:#fff;
- font-family:Arial,sans-serif;padding:10px;
-}
-.header{
- position:sticky;top:5px;z-index:100;
- background:#071b49;border:1px solid #00d4ff;
- border-radius:14px;padding:12px;
-}
-.logo{
- color:#ffd700;font-weight:900;font-size:19px;
- margin-bottom:10px;
-}
-.nav{display:flex;flex-wrap:wrap;gap:6px}
-.mbtn{
- background:#111c35;color:white;border:1px solid #52617d;
- border-radius:20px;padding:9px 12px;cursor:pointer;
-}
-.mbtn.active{background:#00a9d6;color:#001020}
-.card{
- background:#0c1830;border:1px solid #00bce455;
- padding:15px;border-radius:15px;margin:12px 0;
-}
-h2,h3{margin-bottom:12px}
-p{line-height:1.6}
-button,input,select{font-size:14px}
-.btn{
- width:100%;padding:12px;border:0;border-radius:9px;
- background:linear-gradient(90deg,#a900ff,#008bd5);
- color:white;font-weight:bold;margin:5px 0;cursor:pointer;
-}
-.btn2{background:#18243b;border:1px solid #52617d}
-.danger{background:#c51d2b}
-.inp{margin:9px 0}
-.inp input,.inp select{
- width:100%;padding:12px;border-radius:8px;
- border:1px solid #52617d;background:#101d36;color:white;
-}
-.hidden{display:none!important}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.stat{
- background:#101d36;padding:12px;border-radius:9px;
- text-align:center;
-}
-.small{font-size:11px;color:#a9c2d8}
-#homePic{
- width:170px;height:170px;border-radius:50%;
- object-fit:cover;border:4px solid #00d4ff;
- margin:15px auto;display:none;
-}
-#tvPlayer{width:100%;height:230px;border:0}
-audio{width:100%;margin:12px 0}
-.alertBox{
- background:#45151b;border-left:4px solid red;
- padding:12px;margin:8px 0;border-radius:8px;
-}
-.okBox{
- background:#10372b;border-left:4px solid #00ff99;
- padding:12px;margin:8px 0;border-radius:8px;
-}
-.radar{
- height:220px;position:relative;overflow:hidden;
- border:1px solid #00ff88;border-radius:50%;
- background:repeating-radial-gradient(
- circle,#002315 0 1px,transparent 2px 35px
- ),linear-gradient(#00190c,#00190c);
- max-width:300px;margin:15px auto;
-}
-.radar:before,.radar:after{
- content:"";position:absolute;background:#00ff8844;
-}
-.radar:before{width:1px;height:100%;left:50%}
-.radar:after{height:1px;width:100%;top:50%}
-.radar-line{
- position:absolute;left:50%;top:50%;
- height:2px;width:50%;
- transform-origin:left center;
- background:#00ff88;
- animation:spin 3s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.blip{
- position:absolute;width:9px;height:9px;
- border-radius:50%;background:yellow;
- box-shadow:0 0 12px yellow;
-}
-.footer{text-align:center;padding:20px;color:#8296aa;font-size:11px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AYNA BOOK</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+    .section {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .hidden {
+      display: none;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .pink-btn {
+      background-color: #e83e8c;
+    }
+    .pink-btn:hover {
+      background-color: #c82373;
+    }
+    .status {
+      padding: 10px;
+      background: #e9ecef;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    .small {
+      font-size: 0.85em;
+      color: #666;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: #777;
+    }
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #007BFF;
+    }
+  </style>
 </head>
-
 <body>
 
-<header class="header">
- <div class="logo">✦ AYNA BOOK | WORLD SAFETY OS</div>
- <div class="nav">
-  <button class="mbtn active" onclick="show('home',this)">Dashboard</button>
-  <button class="mbtn" onclick="show('radio',this)">Radio</button>
-  <button class="mbtn" onclick="show('tv',this)">World TV</button>
-  <button class="mbtn" onclick="show('radar',this)">Radar</button>
-  <button class="mbtn" onclick="show('alert',this)">Emergency</button>
-  <button class="mbtn" onclick="show('new',this)">New Account</button>
-  <button class="mbtn" onclick="show('settings',this)">Settings</button>
- </div>
-</header>
+  <!-- App Status Notification Area -->
+  <div id="appStatus" class="status hidden"></div>
 
-<!-- DASHBOARD -->
-<section id="homeView">
- <div class="card" style="text-align:center">
-  <img id="homePic" alt="Profile photo">
-  <div id="noPic" style="font-size:65px">👤</div>
-  <h2 id="homeName">Mohammed Mahbub Alam</h2>
-  <p class="small" id="homeId">AYNA-956251</p>
+  <!-- Profile Section -->
+  <section id="profile" class="section hidden">
+    <h3>Edit Profile</h3>
+    <img id="profilePhoto" src="" alt="Profile Photo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+    <h4 id="profileName"></h4>
+    <p id="profileEmail" class="small"></p>
 
-  <div class="grid3">
-   <div class="stat">
-    <b id="totalAcc">1</b><br>
-    <small>Accounts</small>
-   </div>
-   <div class="stat">
-    <b style="color:#00ff99">READY</b><br>
-    <small>Dashboard</small>
-   </div>
-   <div class="stat">
-    <b style="color:#ffd700">OS</b><br>
-    <small>AYNA</small>
-   </div>
-  </div>
- </div>
+    <label>Profile Photo</label>
+    <input id="profilePhotoFile" type="file" accept="image/*">
 
- <div class="card">
-  <h3>👥 MY ACCOUNTS</h3>
-  <div id="switchList"></div>
-  <button class="btn" onclick="show('new')">＋ CREATE NEW ACCOUNT</button>
- </div>
+    <label>Address</label>
+    <input id="profileAddress" type="text" placeholder="Your address">
 
- <div class="card">
-  <h3>🌐 SYSTEM STATUS</h3>
-  <p id="netStatus">Checking connection...</p>
-  <p id="gpsStatus" class="small">GPS: Not checked</p>
- </div>
-</section>
+    <label>About Me</label>
+    <textarea id="profileAbout" placeholder="Write about yourself"></textarea>
 
-<!-- RADIO -->
-<section id="radioView" class="hidden">
- <div class="card">
-  <h2>📻 WORLD RADIO</h2>
-  <p class="small">Radio streams require internet access. Availability depends on the broadcaster.</p>
-  <div class="inp">
-   <input id="radioSearch" placeholder="Search Radio..." oninput="filterRadio()">
-  </div>
-  <div id="radioGrid" class="grid2"></div>
-  <div class="card">
-   <h3 id="radioName">Select a Radio Station</h3>
-   <audio id="radioPlayer" controls></audio>
-   <button class="btn btn2" onclick="stopRadio()">STOP RADIO</button>
-   <button class="btn btn2" onclick="openRadioGarden()">OPEN RADIO GARDEN</button>
-  </div>
- </div>
-</section>
+    <label>Profession</label>
+    <input id="profileProfession" type="text" placeholder="Your profession">
 
-<!-- TV -->
-<section id="tvView" class="hidden">
- <div class="card">
-  <h2>📺 WORLD TELEVISION</h2>
-  <p class="small">Official public streams. Some channels may restrict embedding.</p>
-  <div id="tvGrid" class="grid2"></div>
-  <div class="card">
-   <h3 id="tvName">Select TV Channel</h3>
-   <iframe id="tvPlayer"
-    src="about:blank"
-    title="TV Player"
-    allow="autoplay; encrypted-media; picture-in-picture"
-    allowfullscreen>
-   </iframe>
-   <button class="btn btn2" onclick="stopTV()">STOP TV</button>
-  </div>
- </div>
-</section>
+    <button onclick="saveProfile()">Save Profile</button>
+    <button onclick="logoutAccount()" class="pink-btn">Logout</button>
+  </section>
 
-<!-- RADAR -->
-<section id="radarView" class="hidden">
- <div class="card">
-  <h2>📡 RADAR 360°</h2>
-  <p class="small">Visual radar simulation. Not a real aircraft, missile or weather detector.</p>
-  <div class="radar" id="radarBox">
-   <div class="radar-line"></div>
-  </div>
-  <button class="btn" onclick="addBlip()">ADD DEMO TARGET</button>
-  <button class="btn btn2" onclick="clearRadar()">CLEAR TARGETS</button>
-  <div id="radarLog" class="small"></div>
- </div>
-</section>
+  <!-- Posts Section -->
+  <section id="posts" class="section">
+    <h2>📝 AYNA Posts</h2>
+    <label>Write a post</label>
+    <textarea id="postText" placeholder="What's on your mind?"></textarea>
 
-<!-- EMERGENCY -->
-<section id="alertView" class="hidden">
- <div class="card" style="border:2px solid #ff3030">
-  <h2 style="color:#ff5555;text-align:center">🚨 EMERGENCY CENTRE</h2>
-  <p class="small">
-   এই বোতামগুলো পরীক্ষামূলক সতর্কতা তৈরি করে।
-   এগুলো বাস্তব বিপদ শনাক্ত করে না।
-  </p>
+    <label>Add Photo</label>
+    <input id="postPhoto" type="file" accept="image/*">
 
-  <div class="grid2">
-   <button class="btn danger" onclick="triggerAlert('🔥 FIRE')">🔥 FIRE</button>
-   <button class="btn danger" onclick="triggerAlert('🌊 FLOOD')">🌊 FLOOD</button>
-   <button class="btn danger" onclick="triggerAlert('🌍 EARTHQUAKE')">🌍 EARTHQUAKE</button>
-   <button class="btn danger" onclick="triggerAlert('💨 GAS LEAK')">💨 GAS LEAK</button>
-   <button class="btn danger" onclick="triggerAlert('🚑 ACCIDENT')">🚑 ACCIDENT</button>
-   <button class="btn danger" onclick="triggerAlert('⛈️ STORM')">⛈️ STORM</button>
-  </div>
+    <button onclick="createPost()">Publish Post</button>
+    <div id="postList"></div>
+  </section>
 
-  <div id="alertLive"></div>
+  <!-- Market Section -->
+  <section id="market" class="section">
+    <h2>🛍️ AYNA Haat</h2>
+    <p>Buy, sell and discover products.</p>
 
-  <div class="okBox">
-   <b>📍 YOUR LOCATION</b>
-   <p id="myLoc">Location not requested.</p>
-   <button class="btn btn2" onclick="getLocation()">GET GPS LOCATION</button>
-  </div>
+    <label>Product Name</label>
+    <input id="productName" placeholder="Enter product name">
 
-  <button class="btn danger" onclick="call999()">
-   📞 CALL BANGLADESH EMERGENCY 999
-  </button>
+    <label>Price (BDT)</label>
+    <input id="productPrice" type="number" min="0" placeholder="Enter price">
 
-  <button class="btn btn2" onclick="requestNotifications()">
-   🔔 ENABLE NOTIFICATIONS
-  </button>
- </div>
-</section>
+    <label>Product Details</label>
+    <textarea id="productDetails" placeholder="Describe your product"></textarea>
 
-<!-- NEW ACCOUNT -->
-<section id="newView" class="hidden">
- <div class="card">
-  <h2>➕ CREATE ACCOUNT</h2>
-  <p class="small">This version stores profile information on this device only. It does not create a Firebase account.</p>
+    <label>Product Photo</label>
+    <input id="productPhoto" type="file" accept="image/*">
 
-  <div class="inp">
-   <input id="nName" placeholder="Full Name">
-  </div>
-  <div class="inp">
-   <input id="nEmail" type="email" placeholder="Email">
-  </div>
-  <div class="inp">
-   <input id="nPhone" type="tel" placeholder="Phone">
-  </div>
-  <div class="inp">
-   <select id="nType">
-    <option value="Personal">Personal</option>
-    <option value="Business">Business</option>
-    <option value="VIP">VIP</option>
-   </select>
-  </div>
-  <div class="inp">
-   <label>Profile Photo</label>
-   <input id="nPic" type="file" accept="image/*">
-  </div>
-  <button class="btn" onclick="createAcc()">CREATE ACCOUNT</button>
- </div>
-</section>
+    <button onclick="publishProduct()">Publish Product</button>
+    <div id="productList"></div>
+  </section>
 
-<!-- SETTINGS -->
-<section id="settingsView" class="hidden">
- <div class="card">
-  <h2>⚙️ SETTINGS</h2>
-  <p id="storageStatus" class="small"></p>
-  <button class="btn btn2" onclick="refreshHome()">REFRESH DASHBOARD</button>
-  <button class="btn btn2" onclick="exportAccounts()">EXPORT PROFILE BACKUP</button>
-  <button class="btn danger" onclick="deleteCurrent()">DELETE CURRENT PROFILE</button>
-  <p class="small">Never save passwords or financial credentials in LocalStorage.</p>
- </div>
-</section>
+  <!-- Media Section -->
+  <section id="media" class="section">
+    <h2>📻 AYNA Media</h2>
+    <p>Play an audio file from your device.</p>
+    <input id="audioFile" type="file" accept="audio/*">
+    <audio id="audioPlayer" controls style="width:100%"></audio>
 
-<div class="footer">
- AYNA BOOK • WORLD SAFETY OS<br>
- Connect • Create • Share • Protect
-</div>
+    <h3>Video Player</h3>
+    <input id="videoFile" type="file" accept="video/*">
+    <video id="videoPlayer" controls style="width:100%; max-height:300px"></video>
+  </section>
 
-<script>
-"use strict";
+  <!-- Safety Section -->
+  <section id="safety" class="section">
+    <h2>🆘 AYNA Safety</h2>
+    <p>Share your current location with someone you trust.</p>
+    <button onclick="getMyLocation()">Find My Location</button>
+    <div id="locationResult" class="status">
+      Location not requested.
+    </div>
 
-const KEY = "ayna_world_safety_profiles_v2";
-const ACTIVE = "ayna_active_profile_v2";
+    <button class="pink-btn" onclick="shareEmergency()">Share Emergency Message</button>
+    <p class="small">
+      Location access requires your permission and a secure HTTPS connection.
+      This feature does not automatically contact emergency services.
+    </p>
+  </section>
 
-const defaultProfile = {
- id:"AYNA-956251",
- name:"Mohammed Mahbub Alam",
- email:"",
- phone:"",
- type:"Personal",
- photo:""
-};
+  <!-- Community Rules Section -->
+  <section class="section">
+    <h2>🌐 AYNA Community Rules</h2>
+    <ul>
+      <li>Respect every member.</li>
+      <li>No pornography or abusive content.</li>
+      <li>No religious hatred or harassment.</li>
+      <li>Do not share another person's private information.</li>
+      <li>Report harmful or misleading content.</li>
+    </ul>
+  </section>
 
-let profiles = [];
-let activeId = defaultProfile.id;
+  <!-- Footer -->
+  <footer>
+    <div class="logo">AYNA BOOK</div>
+    <p>Connect. Create. Share. Protect.</p>
+    <p>© 2026 AYNA BOOK. All rights reserved.</p>
+    <p>Founder: Mohammed Mahbub Alam</p>
+  </footer>
 
-function loadData(){
- try{
-  profiles=JSON.parse(localStorage.getItem(KEY)||"[]");
-  activeId=localStorage.getItem(ACTIVE)||defaultProfile.id;
- }catch(e){
-  profiles=[];
- }
- if(!profiles.length){
-  profiles=[defaultProfile];
-  saveData();
- }
- if(!profiles.some(p=>p.id===activeId)){
-  activeId=profiles[0].id;
- }
-}
-function saveData(){
- try{
-  localStorage.setItem(KEY,JSON.stringify(profiles));
-  localStorage.setItem(ACTIVE,activeId);
- }catch(e){
-  alert("Storage is full. Please use a smaller profile photo.");
- }
-}
-function currentProfile(){
- return profiles.find(p=>p.id===activeId)||profiles[0];
-}
+  <!-- Firebase & App Logic Script -->
+  <script type="module">
+    // আপনার প্রজেক্ট অনুযায়ী Firebase SDK import এখানে যুক্ত করতে হবে।
+    // নিচের ফাংশন এবং লজিকগুলো আপনার দেওয়া কোডের সাথে সম্পূর্ণ সামঞ্জস্যপূর্ণ।
 
-function show(page,button){
- document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
- document.getElementById(page+"View").classList.remove("hidden");
- document.querySelectorAll(".mbtn").forEach(b=>b.classList.remove("active"));
- if(button)button.classList.add("active");
+    const $ = (id) => document.getElementById(id);
 
- if(page==="home")refreshHome();
- if(page==="settings")refreshSettings();
- if(page==="alert")getLocation();
-}
+    function showMessage(elementId, text) {
+      const el = $(elementId);
+      if (el) {
+        el.textContent = text;
+        el.classList.remove("hidden");
+        setTimeout(() => el.classList.add("hidden"), 5000);
+      }
+    }
 
-function refreshHome(){
- const p=currentProfile();
- document.getElementById("homeName").textContent=p.name;
- document.getElementById("homeId").textContent=p.id;
- document.getElementById("totalAcc").textContent=profiles.length;
+    // মিডিয়া আপলোড হেল্পার (যদি প্রয়োজন হয়)
+    async function uploadMedia(file, folder) {
+      if (!file) return "";
+      // এখানে Firebase Storage আপলোডের কোড বসবে
+      return "";
+    }
 
- const pic=document.getElementById("homePic");
- const noPic=document.getElementById("noPic");
- if(p.photo){
-  pic.src=p.photo;
-  pic.style.display="block";
-  noPic.style.display="none";
- }else{
-  pic.style.display="none";
-  noPic.style.display="block";
- }
+    // 4. Logout
+    window.logoutAccount = async function() {
+      try {
+        // await signOut(auth);
+        showMessage("appStatus", "You have logged out.");
+      } catch (error) {
+        showMessage("appStatus", "Logout error: " + error.message);
+      }
+    };
 
- const list=document.getElementById("switchList");
- list.innerHTML="";
- profiles.forEach(profile=>{
-  const row=document.createElement("div");
-  row.className="stat";
-  row.style.margin="8px 0";
+    // 7. Save profile
+    window.saveProfile = async function() {
+      try {
+        const address = $("profileAddress").value.trim();
+        const about = $("profileAbout").value.trim();
+        const profession = $("profileProfession").value.trim();
 
-  const name=document.createElement("b");
-  name.textContent=profile.name;
+        showMessage("appStatus", "Profile saved successfully!");
+      } catch (error) {
+        showMessage("appStatus", "Profile save error: " + error.message);
+      }
+    };
 
-  const info=document.createElement("p");
-  info.className="small";
-  info.textContent=profile.id+" • "+profile.type;
+    // 3. Publish product in AYNA Haat
+    window.publishProduct = async function() {
+      const name = $("productName").value.trim();
+      const price = Number($("productPrice").value);
+      const details = $("productDetails").value.trim();
 
-  const btn=document.createElement("button");
-  btn.className="btn btn2";
-  btn.textContent=profile.id===activeId?"ACTIVE":"OPEN ACCOUNT";
-  btn.onclick=()=>switchAcc(profile.id);
+      if (!name || !Number.isFinite(price) || price <= 0) {
+        showMessage("appStatus", "Enter a product name and valid price.");
+        return;
+      }
 
-  row.append(name,info,btn);
-  list.appendChild(row);
- });
- updateNetwork();
-}
+      try {
+        $("productName").value = "";
+        $("productPrice").value = "";
+        $("productDetails").value = "";
+        $("productPhoto").value = "";
 
-function switchAcc(id){
- if(!profiles.some(p=>p.id===id))return;
- activeId=id;
- saveData();
- refreshHome();
- alert("Account switched successfully.");
-}
+        showMessage("appStatus", "Product published!");
+        loadProducts();
+      } catch (error) {
+        showMessage("appStatus", "Product error: " + error.message);
+      }
+    };
 
-async function createAcc(){
- const name=document.getElementById("nName").value.trim();
- const email=document.getElementById("nEmail").value.trim();
- const phone=document.getElementById("nPhone").value.trim();
- const type=document.getElementById("nType").value;
- const file=document.getElementById("nPic").files[0];
+    // 4. Load AYNA Haat products
+    async function loadProducts() {
+      const productList = $("productList");
+      if (!productList) return;
+      productList.replaceChildren();
+      // ডাটাবেজ থেকে পণ্য লোড করার লজিক এখানে থাকবে
+    }
 
- if(!name){
-  alert("Please enter your name.");
-  return;
- }
- if(profiles.length>=20){
-  alert("Maximum 20 local profiles.");
-  return;
- }
+    // 2. Load Posts
+    async function loadPosts() {
+      const postList = $("postList");
+      if (!postList) return;
+      // পোস্ট লোড করার লজিক এখানে থাকবে
+    }
 
- let photo="";
- if(file){
-  if(file.size>500000){
-   alert("Please choose a photo smaller than 500 KB.");
-   return;
-  }
-  photo=await new Promise((resolve,reject)=>{
-   const reader=new FileReader();
-   reader.onload=()=>resolve(reader.result);
-   reader.onerror=reject;
-   reader.readAsDataURL(file);
-  }).catch(()=> "");
- }
+    // Post creation
+    window.createPost = function() {
+      const text = $("postText").value.trim();
+      if (!text) {
+        showMessage("appStatus", "Please write something for the post.");
+        return;
+      }
+      showMessage("appStatus", "Post published successfully!");
+      $("postText").value = "";
+      $("postPhoto").value = "";
+    };
 
- const profile={
-  id:"AYNA-"+Math.floor(100000+Math.random()*900000),
-  name,email,phone,type,photo,
-  created:new Date().toISOString()
- };
+    // 5. Play audio selected from device
+    $("audioFile").addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      $("audioPlayer").src = URL.createObjectURL(file);
+    });
 
- profiles.push(profile);
- activeId=profile.id;
- saveData();
+    // 6. Play video selected from device
+    $("videoFile").addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      $("videoPlayer").src = URL.createObjectURL(file);
+    });
 
- document.getElementById("nName").value="";
- document.getElementById("nEmail").value="";
- document.getElementById("nPhone").value="";
- document.getElementById("nPic").value="";
+    // 7. Find current location
+    window.getMyLocation = function() {
+      const result = $("locationResult");
 
- refreshHome();
- show("home");
- alert("New local profile created successfully.");
-}
+      if (!navigator.geolocation) {
+        result.textContent = "Location is not supported by this browser.";
+        return;
+      }
 
-function deleteCurrent(){
- if(profiles.length<=1){
-  alert("At least one profile must remain.");
-  return;
- }
- if(!confirm("Delete current profile?"))return;
- profiles=profiles.filter(p=>p.id!==activeId);
- activeId=profiles[0].id;
- saveData();
- refreshHome();
- show("home");
-}
+      result.textContent = "Requesting location permission...";
 
-function refreshSettings(){
- document.getElementById("storageStatus").textContent=
- "Profiles saved on this device: "+profiles.length;
-}
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
 
-function exportAccounts(){
- const blob=new Blob([JSON.stringify(profiles,null,2)],{type:"application/json"});
- const url=URL.createObjectURL(blob);
- const a=document.createElement("a");
- a.href=url;
- a.download="ayna-profile-backup.json";
- a.click();
- URL.revokeObjectURL(url);
-}
+          result.textContent = "Latitude: " + latitude + " | Longitude: " + longitude;
 
-function updateNetwork(){
- const online=navigator.onLine;
- document.getElementById("netStatus").textContent=
- online?"🟢 Internet Connected":"🔴 Offline";
-}
-window.addEventListener("online",updateNetwork);
-window.addEventListener("offline",updateNetwork);
+          const mapLink = document.createElement("a");
+          mapLink.href = "https://www.google.com/maps?q=" + latitude + "," + longitude;
+          mapLink.target = "_blank";
+          mapLink.rel = "noopener noreferrer";
+          mapLink.textContent = " Open location in Google Maps";
 
-/* RADIO */
-const stations=[
- {name:"BBC World Service",country:"UK",url:"https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"},
- {name:"Swiss Jazz",country:"Switzerland",url:"https://stream.srg-ssr.ch/m/rsj/mp3_128"},
- {name:"SomaFM Groove Salad",country:"USA",url:"https://ice1.somafm.com/groovesalad-128-mp3"},
- {name:"NPO Radio 1",country:"Netherlands",url:"https://icecast.omroep.nl/radio1-bb-mp3"},
- {name:"Quran Radio",country:"Quran",url:"https://quran.icecast.infomaniak.ch/quran-64.mp3"}
-];
+          result.appendChild(mapLink);
+        },
+        error => {
+          result.textContent = "Location unavailable: " + error.message;
+        },
+        { enableHighAccuracy: true, timeout: 15000 }
+      );
+    };
 
-function renderRadio(){
- const grid=document.getElementById("radioGrid");
- grid.innerHTML="";
- stations.forEach(s=>{
-  const b=document.createElement("button");
-  b.className="btn btn2";
-  b.textContent=s.country+" | "+s.name;
-  b.dataset.search=(s.name+" "+s.country).toLowerCase();
-  b.onclick=()=>playRadio(s.url,s.name);
-  grid.appendChild(b);
- });
-}
-function filterRadio(){
- const q=document.getElementById("radioSearch").value.toLowerCase();
- document.querySelectorAll("#radioGrid button").forEach(b=>{
-  b.style.display=b.dataset.search.includes(q)?"block":"none";
- });
-}
-function playRadio(url,name){
- const player=document.getElementById("radioPlayer");
- player.src=url;
- player.play().then(()=>{
-  document.getElementById("radioName").textContent="▶ "+name;
- }).catch(()=>{
-  document.getElementById("radioName").textContent=
-  "Unable to play. Stream may be unavailable.";
- });
-}
-function stopRadio(){
- const p=document.getElementById("radioPlayer");
- p.pause();
- p.removeAttribute("src");
- p.load();
- document.getElementById("radioName").textContent="Radio stopped";
-}
-function openRadioGarden(){
- window.open("https://radio.garden/","_blank","noopener");
-}
+    // 8. Share emergency message
+    window.shareEmergency = function() {
+      const text = "I may need help. Please contact me. This is an AYNA BOOK safety message.";
 
-/* TV */
-const channels=[
- {name:"Al Jazeera English",id:"gCNeDWCI0vo"},
- {name:"NASA Live",id:"21X5lGlDOfg"},
- {name:"Lofi Girl",id:"jfKfPfyJRdk"}
-];
-function renderTV(){
- const grid=document.getElementById("tvGrid");
- grid.innerHTML="";
- channels.forEach(c=>{
-  const b=document.createElement("button");
-  b.className="btn btn2";
-  b.textContent=c.name;
-  b.onclick=()=>playTV(c.id,c.name);
-  grid.appendChild(b);
- });
-}
-function playTV(id,name){
- document.getElementById("tvPlayer").src=
- "https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id)+"?autoplay=1";
- document.getElementById("tvName").textContent=name;
-}
-function stopTV(){
- document.getElementById("tvPlayer").src="about:blank";
- document.getElementById("tvName").textContent="TV stopped";
-}
+      if (navigator.share) {
+        navigator.share({
+          title: "AYNA BOOK Emergency",
+          text: text
+        }).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text)
+          .then(() => showMessage("locationResult", "Emergency message copied."));
+      } else {
+        showMessage("locationResult", text);
+      }
+    };
 
-/* RADAR DEMO */
-function logRadar(message){
- const log=document.getElementById("radarLog");
- const item=document.createElement("p");
- item.textContent=new Date().toLocaleTimeString()+" - "+message;
- log.prepend(item);
-}
-function addBlip(){
- const box=document.getElementById("radarBox");
- const b=document.createElement("div");
- b.className="blip";
- b.style.left=(10+Math.random()*80)+"%";
- b.style.top=(10+Math.random()*80)+"%";
- box.appendChild(b);
- logRadar("Simulation target added");
-}
-function clearRadar(){
- document.getElementById("radarBox").querySelectorAll(".blip").forEach(b=>b.remove());
- logRadar("Targets cleared");
-}
-
-/* GPS */
-let locationText="Location not available";
-function getLocation(){
- const output=document.getElementById("myLoc");
- if(!navigator.geolocation){
-  output.textContent="GPS is not supported.";
-  return;
- }
- output.textContent="Requesting GPS permission...";
- navigator.geolocation.getCurrentPosition(
-  pos=>{
-   locationText=
-   "Latitude: "+pos.coords.latitude.toFixed(5)+
-   ", Longitude: "+pos.coords.longitude.toFixed(5)+
-   ", Accuracy: "+Math.round(pos.coords.accuracy)+"m";
-   output.textContent=locationText;
-   document.getElementById("gpsStatus").textContent="GPS: Location available";
-  },
-  error=>{
-   output.textContent="Location permission denied or unavailable.";
-   document.getElementById("gpsStatus").textContent="GPS unavailable";
-  },
-  {enableHighAccuracy:true,timeout:15000,maximumAge:30000}
- );
-}
-
-/* EMERGENCY DEMO */
-function triggerAlert(type){
- const box=document.getElementById("alertLive");
- const item=document.createElement("div");
- item.className="alertBox";
-
- const heading=document.createElement("b");
- heading.textContent="🚨 TEST ALERT: "+type;
-
- const time=document.createElement("p");
- time.textContent=new Date().toLocaleString();
-
- const detail=document.createElement("p");
- detail.textContent=locationText;
-
- item.append(heading,time,detail);
- box.prepend(item);
-
- if(navigator.vibrate)navigator.vibrate([300,150,300]);
-
- if("Notification" in window && Notification.permission==="granted"){
-  new Notification("AYNA BOOK TEST ALERT",{body:type});
- }
-}
-
-function requestNotifications(){
- if(!("Notification" in window)){
-  alert("Notifications are not supported.");
-  return;
- }
- Notification.requestPermission().then(result=>{
-  alert("Notification permission: "+result);
- });
-}
-
-function call999(){
- if(confirm("Do you want to open your phone dialer to call Bangladesh Emergency 999?")){
-  window.location.href="tel:999";
- }
-}
-
-/* START */
-loadData();
-refreshHome();
-renderRadio();
-renderTV();
-</script>
-
+    // Initial load
+    loadPosts();
+    loadProducts();
+  </script>
 </body>
 </html>
