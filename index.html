@@ -1,60 +1,61 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1877f2">
-<meta name="description" content="AYNA BOOK - Bangladesh Social Media App">
-<title>AYNA BOOK - Social App</title>
-<link rel="manifest" href='data:application/json,{"name":"AYNA BOOK","short_name":"AYNA","display":"standalone","background_color":"#ffffff","theme_color":"#1877f2"}'>
-<style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--blue:#1877f2;--bg:#f0f2f5;--card:#fff;--txt:#050505;--mut:#65676b;--line:#ccd0d5}
-body.dark{--bg:#18191a;--card:#242526;--txt:#e4e6eb;--mut:#b0b3b8;--line:#3a3b3c}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,Arial,"Noto Sans Bengali",sans-serif;padding-bottom:70px}
-a{color:var(--blue);text-decoration:none}
-.top{position:sticky;top:0;z-index:50;background:var(--card);padding:10px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.logo{font-size:24px;font-weight:900;color:var(--blue);letter-spacing:-.5px}.logo span{font-size:10px;background:var(--blue);color:#fff;padding:2px 6px;border-radius:10px;vertical-align:middle;margin-left:4px}
-.search{flex:1;background:var(--bg);border:0;padding:9px 14px;border-radius:25px;outline:none;color:var(--txt)}
-.icon{width:38px;height:38px;border-radius:50%;background:var(--bg);border:0;font-size:18px;cursor:pointer;position:relative;flex-shrink:0}
-.badge{position:absolute;top:-3px;right:-3px;background:#e41e3f;color:#fff;font-size:10px;min-width:17px;height:17px;border-radius:10px;display:grid;place-items:center;padding:0 4px}
-.wrap{width:min(100% - 16px,680px);margin:10px auto}
-.card{background:var(--card);border-radius:12px;padding:12px;margin:10px 0;box-shadow:0 1px 2px rgba(0,0,0,.1)}
-.stories{display:flex;gap:8px;overflow-x:auto;padding:4px 2px;scrollbar-width:none}.stories::-webkit-scrollbar{display:none}
-.story{flex:0 0 110px;height:190px;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;background:#000}.story img{width:100%;height:100%;object-fit:cover;opacity:.9}.story .av{position:absolute;top:8px;left:8px;width:36px;height:36px;border-radius:50%;border:3px solid var(--blue);object-fit:cover}.story .nm{position:absolute;bottom:8px;left:8px;right:8px;color:#fff;font-size:12px;font-weight:700;text-shadow:0 1px 4px #000}.story.add{background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--txt);gap:8px}.story.add .plus{width:42px;height:42px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:22px}
-.av{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0}
-.head{display:flex;gap:10px;align-items:center}.head b{font-size:14px}.head small{color:var(--mut);font-size:12px;display:block}
-.post-text{font-size:15px;line-height:1.6;white-space:pre-wrap;margin:10px 0}.post-img{width:100%;border-radius:10px;max-height:420px;object-fit:cover}
-.actions{display:flex;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:8px}.actions button{flex:1;background:transparent;border:0;padding:10px;color:var(--mut);font-weight:600;cursor:pointer;font-size:13px}.actions button.liked{color:var(--blue)}
-.comment{margin-top:8px;background:var(--bg);padding:8px 10px;border-radius:10px;font-size:13px}
-input,textarea,select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--txt);outline:none;font:inherit}
-button{border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff;font-size:13px}button.ghost{background:var(--bg);color:var(--txt)}button.green{background:#42b72a}button:active{transform:scale(.97)}
-.row{display:flex;gap:6px}.row button{flex:1}
-.chip{display:inline-block;background:var(--bg);padding:6px 12px;border-radius:20px;font-size:12px;margin:3px;cursor:pointer}.chip.on{background:var(--blue);color:#fff}
-.friend{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.friend button{margin-left:auto;padding:7px 12px;font-size:12px}
-.reels{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 0}.reel{flex:0 0 200px;height:320px;border-radius:14px;overflow:hidden;position:relative;background:#000;scroll-snap-align:start}.reel img{width:100%;height:100%;object-fit:cover}.reel-info{position:absolute;bottom:0;left:0;right:0;padding:30px 10px 10px;background:linear-gradient(transparent,rgba(0,0,0,.85));color:#fff;font-size:12px}
-.chat-item{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
-.bottom{position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 4px calc(8px + env(safe-area-inset-bottom))}
-.bottom button{background:transparent;color:var(--mut);font-size:11px;padding:4px;display:flex;flex-direction:column;align-items:center;gap:1px}.bottom button.on{color:var(--blue)}.bottom button span{font-size:20px}
-#toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 16px;border-radius:25px;font-size:13px;display:none;z-index:100;max-width:90%;text-align:center}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;place-items:center;z-index:99;padding:16px}.modal.open{display:grid}.modal .box{background:var(--card);width:min(100%,440px);border-radius:16px;padding:16px;max-height:90vh;overflow:auto}
-.tab{display:none}.tab.active{display:block}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AYNA BOOK v100.0 OMEGA SUPREME</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="top">
- <div class="logo">ayna book<span>APP</span></div>
- <input id="search" class="search" placeholder="🔍 Search AYNA BOOK">
- <button class="icon" onclick="toggleDark()">🌙</button>
- <button class="icon" onclick="showTab('notif')">🔔<span class="badge" id="notifCount">5</span></button>
- <img class="av" style="width:38px;height:38px" src="https://i.pravatar.cc/100?img=12" onclick="showTab('profile')">
-</div>
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <h1>AYNA BOOK v100.0</h1>
+    <p>OMEGA SUPREME Loading...</p>
+    <div class="spinner"></div>
+  </div>
 
-<div class="wrap">
+  <!-- Main Application Container -->
+  <div id="app-container" class="app-container">
+    <header>
+      <h1>🌍 AYNA BOOK Dashboard</h1>
+      <p>Super Social & Multimedia Platform</p>
+    </header>
 
-<!-- HOME TAB -->
-<div id="tab-home" class="tab active">
- <div class="stories" id="stories"></div>
- <!-- CREATE POST -->
- <div class="card"><div class="head"><img class="av" src="https://i.pravatar.cc/100?img=12"><input id="postText" placeholder="What's on your mind, Mahbub?" style="border-radius:25px" onclick="document.getElementById('postFull').focus()"></div><div class="row" style="margin-top:10px">
+    <div class="dashboard-grid">
+      <div class="card">
+        <h3>👤 User Profile</h3>
+        <p>Manage account & profile pictures</p>
+        <button onclick="alert('Profile settings opened!')">Open</button>
+      </div>
+
+      <div class="card">
+        <h3>📻 Audio Radio</h3>
+        <p>Live global radio streaming</p>
+        <button onclick="alert('Radio streaming started!')">Play</button>
+      </div>
+
+      <div class="card">
+        <h3>📺 Television</h3>
+        <p>Live TV & video streams</p>
+        <button onclick="alert('TV player launching...')">Watch</button>
+      </div>
+
+      <div class="card">
+        <h3>📡 Radar & Compass</h3>
+        <p>Navigation & direction utilities</p>
+        <button onclick="alert('Radar activated!')">Explore</button>
+      </div>
+
+      <div class="card">
+        <h3>🧸 Kids Zone</h3>
+        <p>Safe entertainment for children</p>
+        <button onclick="alert('Kids zone opened!')">Enter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
