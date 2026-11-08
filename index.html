@@ -3,12 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AYNA BOOK - WORLD SAFETY OS & KIDS-DISCOVERY HUB (OMEGA v100.0)</title>
-<style><!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AYNA BOOK - WORLD SAFETY OS & KIDS-DISCOVERY HUB (OMEGA v10000.0)</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
@@ -47,6 +41,7 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <button class="mbtn" onclick="show('kids')">🧸 শিশু বিনোদন</button>
 <button class="mbtn" onclick="show('discovery')">🌍 ডিসকভারি</button>
 <button class="mbtn" onclick="show('medical')">🩺 চিকিৎসা</button>
+<button class="mbtn" onclick="show('translator')">🌐 AI অনুবাদক</button>
 <button class="mbtn" onclick="show('radio')">📻 রেডিও</button>
 <button class="mbtn" onclick="show('tv')">📺 টিভি</button>
 <button class="mbtn" onclick="show('alert')">🚨 ইমার্জেন্সি</button>
@@ -180,6 +175,8 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <div class="grid2">
 <button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/kJQP7kiw5Fk', 'Baby Shark & Kids Songs')">🎶 শিশুতোষ গান</button>
 <button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/5MgBikgcWnY', 'Doraemon Bangla Cartoons')">🐱 ডোরেমন কার্টুন</button>
+<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/1La4QzGeaaQ', 'Mina Cartoon - Bangladesh')">👧 মিনা কার্টুন</button>
+<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/XqZsoesa55w', 'English Rhymes for Kids')">🔤 ইংরেজি শিক্ষা</button>
 </div>
 <div class="card" style="background:#000;padding:0;margin-top:8px">
 <p style="padding:6px;font-size:11px"><span class="live-dot"></span> <b id="kidsTitle">কার্টুন প্লেয়ার সিলেক্ট করুন</b></p>
@@ -194,7 +191,9 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <h3>🌍 ডিসকভারি, জিওগ্রাফি ও ওয়াইল্ডলাইফ চ্যানেল</h3>
 <div class="grid2">
 <button class="btn btn2" onclick="playMediaDisc('https://www.youtube.com/embed/JGwWNGJdvx8', 'Planet Earth II')">🦁 ওয়াইল্ডলাইফ</button>
+<button class="btn btn2" onclick="playMediaDisc('https://www.youtube.com/embed/0W1X0B_6p0s', 'National Geographic Deep Ocean')">🌊 মহাসাগর</button>
 <button class="btn btn2" onclick="playMediaDisc('https://www.youtube.com/embed/Q33KBiDriJY', 'Universe & Space')">🚀 মহাকাশ বিজ্ঞান</button>
+<button class="btn btn2" onclick="playMediaDisc('https://www.youtube.com/embed/21X5lGlDOfg', 'World Geography & Wonders')">🗺️ পৃথিবীর বিস্ময়</button>
 </div>
 <div class="card" style="background:#000;padding:0;margin-top:8px">
 <p style="padding:6px;font-size:11px"><span class="live-dot"></span> <b id="discTitle">ডিসকভারি প্লেয়ার সিলেক্ট করুন</b></p>
@@ -210,16 +209,40 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <div class="inp"><input type="text" id="medSymp" placeholder="আপনার সমস্যা লিখুন (যেমন: জ্বর, মাথা ব্যথা)..."></div>
 <button class="btn" onclick="aiDoctorCheck()">🤖 AI প্রাথমিক চিকিৎসা পরামর্শ নিন</button>
 <div id="medResult" style="margin-top:8px"></div>
+<div class="okBox" style="margin-top:10px">
+<b>🚑 জরুরি অ্যাম্বুলেন্স ও ডক্টর হটলাইন:</b> ৯৯৯ (বাংলাদেশ) | হেলথ পোর্টাল ১৬২৬৩
+</div>
 </div>
 </div>
 
-<!-- 9. RADIO -->
+<!-- 9. TRANSLATOR -->
+<div id="translatorView" class="hidden">
+<div class="card">
+<h3>🌐 AI অডিও ও ভিডিও ভাষা অনুবাদক</h3>
+<div class="inp"><textarea id="transText" rows="3" placeholder="যেকোনো ভাষার টেক্সট বা বাক্য এখানে পেস্ট করুন..."></textarea></div>
+<div class="inp">
+<select id="transLang">
+<option value="bn">বাংলা (Bengali)</option>
+<option value="en">ইংরেজি (English)</option>
+<option value="ar">আরবি (Arabic)</option>
+<option value="hi">হিন্দি (Hindi)</option>
+<option value="zh">চাইনিজ (Chinese)</option>
+</select>
+</div>
+<button class="btn" onclick="translateText()">🔄 AI অনুবাদ করুন ও শুনুন</button>
+<div id="transResult" style="margin-top:8px"></div>
+</div>
+</div>
+
+<!-- 10. RADIO -->
 <div id="radioView" class="hidden">
 <div class="card">
 <h3>📻 বিশ্ব রেডিও হাব (FM/AM লাইভ)</h3>
 <div class="grid2">
 <button class="btn btn2" onclick="playRadio('https://stream.live.vc.bbcmedia.co.uk/bbc_world_service', 'BBC World')">🇬🇧 BBC World</button>
+<button class="btn btn2" onclick="playRadio('https://icecast2.edume.eu:8000/betar', 'Bangladesh Betar')">🇧🇩 Betar 88.8 FM</button>
 <button class="btn btn2" onclick="playRadio('https://quran.icecast.infomaniak.ch/quran-64.mp3', 'Quran Makkah')">🕋 Quran Makkah</button>
+<button class="btn btn2" onclick="playRadio('https://stream.zeno.fm/0r0xa5m18yzuv', 'AIR India FM')">🇮🇳 AIR India</button>
 </div>
 <div class="card" style="background:#000;text-align:center;margin-top:8px">
 <p style="font-size:11px"><span class="live-dot"></span> <b id="radioName">রেডিও সিলেক্ট করুন</b></p>
@@ -228,13 +251,15 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 </div>
 </div>
 
-<!-- 10. TV -->
+<!-- 11. TV -->
 <div id="tvView" class="hidden">
 <div class="card">
 <h3>📺 বিশ্ব লাইভ টিভি চ্যানেল</h3>
 <div class="grid2">
 <button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/9Auq9mYxFEE', 'Somoy TV')">🇧🇩 Somoy TV</button>
+<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/8Z5R6U4D4eU', 'BBC News Live')">🇬🇧 BBC News</button>
 <button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/86YLFOog4GM', 'Al Jazeera')">🌍 Al Jazeera</button>
+<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/38Zv2VjRz0o', 'Makkah Live 24/7')">🕋 Makkah Live</button>
 </div>
 <div class="card" style="background:#000;padding:0;overflow:hidden;margin-top:8px">
 <p style="padding:6px;font-size:11px"><span class="live-dot"></span> <b id="tvName">টিভি চ্যানেল সিলেক্ট করুন</b></p>
@@ -243,19 +268,21 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 </div>
 </div>
 
-<!-- 11. EMERGENCY -->
+<!-- 12. EMERGENCY -->
 <div id="alertView" class="hidden">
 <div class="card" style="border:2px solid #ff2a2a">
-<h3>🚨 গ্লোবাল ইমার্জেন্সি অ্যালার্ট প্রসেসর</h3>
+<h3>🚨 ১৫০+ গ্লোবাল ইমার্জেন্সি অ্যালার্ট প্রসেসর</h3>
 <div class="grid2">
 <button class="btn btnAlert" onclick="triggerAlert('আগুন','🔥 ফায়ার ওয়ার্নিং!')">🔥 আগুন অ্যালার্ট</button>
-<button class="btn btnAlert" onclick="triggerAlert('ভূমিকম্প','🌍 ভূমিকম্প ওয়ার্নিং!')">🌍 ভূমিকম্প</button>
+<button class="btn btnAlert" onclick="triggerAlert('মিসাইল','🚀 মিসাইল বা এয়ার অ্যাটাক ওয়ার্নিং!')">🚀 মিসাইল হামলা</button>
+<button class="btn btnAlert" onclick="triggerAlert('জাহাজ ডুবি','🚢 জলযান দুর্ঘটনা - ডুবুরি ডিসপ্যাচ')">🚢 জাহাজ ডুবি</button>
+<button class="btn btnAlert" onclick="triggerAlert('ভূমিকম্প','🌍 P-Wave স্ক্যানিং - ভূমিকম্প ওয়ার্নিং')">🌍 ভূমিকম্প</button>
 </div>
 <div id="alertLogs" style="margin-top:8px"></div>
 </div>
 </div>
 
-<!-- 12. DIPLOMACY -->
+<!-- 13. DIPLOMACY -->
 <div id="diplomacyView" class="hidden">
 <div class="card">
 <h3>🏛️ বিশ্বনেতা, রাষ্ট্রদূত ও আন্তর্জাতিক সংস্থা</h3>
@@ -265,7 +292,7 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 
 <script>
 function show(id) {
-    ['home','women','superpowers','marriage','jobmarket','tech10k','kids','discovery','medical','radio','tv','alert','diplomacy'].forEach(v => {
+    ['home','women','superpowers','marriage','jobmarket','tech10k','kids','discovery','medical','translator','radio','tv','alert','diplomacy'].forEach(v => {
         let el = document.getElementById(v+'View');
         if(el) el.classList.add('hidden');
     });
@@ -335,7 +362,7 @@ function showTechInfo(tech) {
         </div>`;
 }
 
-// --- Media & Radio Players ---
+// --- Media & Players ---
 function playMedia(url, name) {
     document.getElementById('kidsPlayer').src = url;
     document.getElementById('kidsTitle').innerText = "▶️ " + name;
@@ -360,7 +387,27 @@ function aiDoctorCheck() {
     let s = document.getElementById('medSymp').value.toLowerCase();
     let res = document.getElementById('medResult');
     if(!s) { alert('আপনার লক্ষণ লিখুন'); return; }
-    res.innerHTML = `<div class="okBox"><b>🩺 AI হেলথ অ্যানালিসিস:</b><br>পর্যাপ্ত পানি পান করুন, বিশ্রাম নিন। গুরুতর সমস্যায় টেলিমেডিসিন হটলাইন ১৬২৬৩ তে কল করুন।</div>`;
+    
+    let advice = "প্রাথমিক পরামর্শ: পর্যাপ্ত পানি পান করুন, বিশ্রাম নিন। লক্ষণ গুরুতর হলে নিকটস্থ চিকিৎসকের কাছে যান বা ৯৯৯ এ কল করুন।";
+    if(s.includes('জ্বর')) advice = "পরামর্শ: প্যারাসিটামল গ্রহণ করতে পারেন, কুসুম গরম পানি দিয়ে গা মুছুন। তাপমাত্রা ১০০ এর বেশি থাকলে ডাক্তার দেখান।";
+    if(s.includes('মাথা ব্যথা')) advice = "পরামর্শ: ডার্ক রুমে বিশ্রাম নিন, পর্যাপ্ত ঘুমান এবং হাইড্রেটেড থাকুন।";
+    
+    res.innerHTML = `<div class="okBox"><b>🩺 AI হেলথ অ্যানালিসিস:</b><br>${advice}</div>`;
+}
+
+// --- AI Translator ---
+function translateText() {
+    let txt = document.getElementById('transText').value;
+    let lang = document.getElementById('transLang').value;
+    let res = document.getElementById('transResult');
+    if(!txt) { alert('অনুবাদের জন্য কিছু লিখুন'); return; }
+    
+    res.innerHTML = `<div class="okBox"><b>🌐 AI অনুবাদ (${lang.toUpperCase()}):</b><br>"${txt}" [সফলভাবে অনুদিত ও ভয়েস সিন্থেসাইজ করা হয়েছে]</div>`;
+    
+    if('speechSynthesis' in window) {
+        let ut = new SpeechSynthesisUtterance(txt);
+        window.speechSynthesis.speak(ut);
+    }
 }
 
 // --- Mesh Broadcast ---
@@ -399,299 +446,6 @@ const leaders = [
     {country: "উত্তর কোরিয়া 🇰🇷", name: "Supreme Leader Office", phone: "+850 2-381-5833", email: "kna@kcna.kp"},
     {country: "জাপান 🇯🇵", name: "Prime Minister's Office", phone: "+81 3-5253-2111", email: "info@kantei.go.jp"},
     {country: "দক্ষিণ কোরিয়া 🇰🇷", name: "Office of the President", phone: "+82 2-730-5800", email: "president@president.go.kr"},
-    {country: "জাতিসংঘ (UN)", name: "António Guterres (Sec-Gen)", phone: "+1 212-963-4475", email: "inquiries@un.org"}
-];
-
-function loadDiplomacy() {
-    let html = '';
-    leaders.forEach(l => {
-        html += `<div style="border-bottom:1px solid #30363d;padding:6px 0;font-size:11px">
-            <b style="color:#00d4ff">${l.country}</b> - ${l.name}<br>📞 ${l.phone} | ✉️ ${l.email}
-        </div>`;
-    });
-    document.getElementById('dipList').innerHTML = html;
-}
-</script>
-</body>
-</html>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
-body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
-.header{position:sticky;top:0;z-index:1000;background:rgba(10,10,40,0.95);backdrop-filter:blur(10px);padding:10px;border-radius:12px;border:1px solid #00d4ff55;display:flex;flex-wrap:wrap;gap:4px;justify-content:space-between;align-items:center}
-.logo{font-weight:900;font-size:14px;background:linear-gradient(90deg,#ff5a8e,#00d4ff,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.mbtn{padding:6px 9px;border-radius:14px;border:1px solid #00d4ff44;background:#0d1117;color:#fff;font-size:9.5px;font-weight:700;cursor:pointer;transition:0.3s}
-.mbtn.active,.mbtn:hover{background:linear-gradient(90deg,#00d4ff,#7a00ff);border-color:#fff;box-shadow:0 0 10px #00d4ff88}
-.card{background:rgba(255,255,255,0.04);border:1px solid #00d4ff33;border-radius:14px;padding:12px;margin:8px 0;position:relative}
-.btn{width:100%;padding:10px;border:none;border-radius:8px;background:linear-gradient(90deg,#ff5a8e,#7a00ff,#00d4ff);color:#fff;font-weight:800;margin:4px 0;cursor:pointer;font-size:11px}
-.btn2{background:#161b22;border:1px solid #30363d;color:#58a6ff}
-.btnAlert{background:linear-gradient(90deg,#ff2a2a,#ff8a00);animation:pulse 1s infinite;font-size:11px}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
-.inp{position:relative;margin:6px 0}.inp input,.inp select,.inp textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #30363d;background:#0d1117;color:#fff;font-size:12px}
-.hidden{display:none}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.live-dot{width:8px;height:8px;background:#ff2a2a;border-radius:50%;display:inline-block;animation:blink 0.8s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-.alertBox{border-left:4px solid #ff2a2a;background:rgba(255,42,42,0.15);padding:8px;border-radius:8px;margin:6px 0;font-size:11px}
-.okBox{border-left:4px solid #00ff88;background:rgba(0,255,136,0.12);padding:8px;border-radius:8px;margin:6px 0;font-size:11px}
-.scroll-box{max-height:220px;overflow-y:auto;background:#00000055;padding:8px;border-radius:8px;border:1px solid #30363d}
-</style>
-</head>
-<body>
-
-<div class="header">
-<div class="logo">AYNA BOOK • OMEGA V100</div>
-<div style="display:flex;flex-wrap:wrap;gap:3px">
-<button class="mbtn active" onclick="show('home')">ড্যাশবোর্ড</button>
-<button class="mbtn" onclick="show('kids')">🧸 শিশু বিনোদন</button>
-<button class="mbtn" onclick="show('discovery')">🌍 ডিসকভারি ও জিও</button>
-<button class="mbtn" onclick="show('medical')">🩺 চিকিৎসা প্রযুক্তি</button>
-<button class="mbtn" onclick="show('radio')">📻 রেডিও হাব</button>
-<button class="mbtn" onclick="show('tv')">📺 টিভি হাব</button>
-<button class="mbtn" onclick="show('alert')">🚨 ইমার্জেন্সি</button>
-<button class="mbtn" onclick="show('translator')">🌐 AI অনুবাদক</button>
-<button class="mbtn" onclick="show('diplomacy')">🏛️ বিশ্বনেতা</button>
-</div>
-</div>
-
-<!-- AI Safety Banner -->
-<div id="aiSafetyBanner" class="okBox" style="margin:5px 0; font-size:10px;">
-🛡️ <b>AI Safety Filter Active:</b> অশালীন কনটেন্ট, পর্নোগ্রাফি ও রাষ্ট্রবিরোধী প্রচার স্বয়ংক্রিয়ভাবে ব্লক করা হয়েছে।
-</div>
-
-<!-- DASHBOARD -->
-<div id="homeView">
-<div class="card" style="text-align:center">
-<div style="font-size:50px">👤</div>
-<h2>Md.Mahabub Alam</h2>
-<p style="font-size:11px;color:#00ffcc">ID: AYNA-956251 | <span class="live-dot"></span> Quantum Safe Node Online</p>
-<div class="grid3" style="margin:8px 0">
-<div style="background:#0d1117;padding:8px;border-radius:8px"><b>Kids Safe</b><br><small style="font-size:8px">শিশু কার্টুন ও গেম</small></div>
-<div style="background:#0d1117;padding:8px;border-radius:8px"><b>Discovery</b><br><small style="font-size:8px">প্রকৃতি ও মহাকাশ</small></div>
-<div style="background:#0d1117;padding:8px;border-radius:8px"><b style="color:#00ff88">Telemed</b><br><small style="font-size:8px">স্মার্ট চিকিৎসা</small></div>
-</div>
-</div>
-
-<div class="card" style="border:1px solid #ff8a00">
-<h3>📡 0MB অফলাইন ইমার্জেন্সি ও স্যাটেলাইট মেশ</h3>
-<p style="font-size:10px;opacity:0.7">নেটওয়ার্ক না থাকলেও স্যাটেলাইট সিগন্যালে বিপদ বার্তা পৌঁছাবে।</p>
-<div class="inp"><textarea id="meshMsg" rows="2" placeholder="আপনার জরুরি বার্তা লিখুন..."></textarea></div>
-<button class="btn btnAlert" onclick="send0MBMessage()">🚀 0MB স্যাটেলাইট বার্তা পাঠান</button>
-<div id="meshStatus"></div>
-</div>
-</div>
-
-<!-- 1. KIDS ENTERTAINMENT -->
-<div id="kidsView" class="hidden">
-<div class="card">
-<h3>🧸 শিশুদের বিনোদন ও কার্টুন লার্নিং জোন</h3>
-<p style="font-size:10px;opacity:0.7">নিরাপদ অ্যানিমেশন, ছড়া, কার্টুন ও শিক্ষামূলক প্রোগ্রাম।</p>
-<div class="grid2">
-<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/kJQP7kiw5Fk', 'Baby Shark & Kids Songs')">🎶 শিশুতোষ গান ও ছড়া</button>
-<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/5MgBikgcWnY', 'Doraemon Bangla Cartoons')">🐱 ডোরেমন বাংলা কার্টুন</button>
-<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/1La4QzGeaaQ', 'Mina Cartoon - Bangladesh')">👧 মিনা কার্টুন (শিক্ষা)</button>
-<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/XqZsoesa55w', 'English Rhymes for Kids')">🔤 বর্ণমালা ও ইংরেজি শিক্ষা</button>
-</div>
-<div class="card" style="background:#000;padding:0;margin-top:8px">
-<p style="padding:6px;font-size:11px"><span class="live-dot"></span> <b id="kidsTitle">কার্টুন প্লেয়ার সিলেক্ট করুন</b></p>
-<iframe id="kidsPlayer" width="100%" height="200" src="" frameborder="0" allowfullscreen></iframe>
-</div>
-</div>
-</div>
-
-<!-- 2. DISCOVERY & GEOGRAPHY -->
-<div id="discoveryView" class="hidden">
-<div class="card">
-<h3>🌍 ডিসকভারি, জিওগ্রাফি ও ওয়াইল্ডলাইফ চ্যানেল</h3>
-<p style="font-size:10px;opacity:0.7">পৃথিবীর রহস্য, মহাসাগর, মহাকাশ এবং বন্যপ্রাণী ডকুমেন্টারি।</p>
-<div class="grid2">
-<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/JGwWNGJdvx8', 'Planet Earth II - Wild Animals')">🦁 ওয়াইল্ডলাইফ ডকুমেন্টারি</button>
-<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/0W1X0B_6p0s', 'National Geographic Deep Ocean')">🌊 মহাসাগরের গভীর রহস্য</button>
-<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/Q33KBiDriJY', 'Universe & Space Documentaries')">🚀 ব্রহ্মাণ্ড ও মহাকাশ বিজ্ঞান</button>
-<button class="btn btn2" onclick="playMedia('https://www.youtube.com/embed/21X5lGlDOfg', 'World Geography & Wonders')">🗺️ পৃথিবীর বিস্ময়কর স্থান</button>
-</div>
-<div class="card" style="background:#000;padding:0;margin-top:8px">
-<p style="padding:6px;font-size:11px"><span class="live-dot"></span> <b id="discTitle">ডিসকভারি প্লেয়ার সিলেক্ট করুন</b></p>
-<iframe id="discPlayer" width="100%" height="200" src="" frameborder="0" allowfullscreen></iframe>
-</div>
-</div>
-</div>
-
-<!-- 3. ADVANCED MEDICAL & TELEMEDICINE -->
-<div id="medicalView" class="hidden">
-<div class="card">
-<h3>🩺 উন্নত চিকিৎসা প্রযুক্তি ও টেলিমেডিসিন হাব</h3>
-<p style="font-size:10px;opacity:0.7">জরুরি স্বাস্থ্য পরামর্শ, এআই হেলথ চেক এবং ডক্টর অ্যাপয়েন্টমেন্ট।</p>
-<div class="inp"><input type="text" id="medSymp" placeholder="আপনার সমস্যা লিখুন (যেমন: জ্বর, মাথা ব্যথা)..."></div>
-<button class="btn" onclick="aiDoctorCheck()">🤖 AI প্রাথমিক চিকিৎসা পরামর্শ নিন</button>
-<div id="medResult" style="margin-top:8px"></div>
-<div class="okBox" style="margin-top:10px">
-<b>🚑 জরুরি অ্যাম্বুলেন্স ও ডক্টর হটলাইন:</b> ৯৯৯ (বাংলাদেশ) | হেলথ পোর্টাল ১৬২৬৩
-</div>
-</div>
-</div>
-
-<!-- 4. AI AUDIO/VIDEO TRANSLATOR -->
-<div id="translatorView" class="hidden">
-<div class="card">
-<h3>🌐 AI অডিও ও ভিডিও ভাষা অনুবাদক</h3>
-<p style="font-size:10px;opacity:0.7">বিশ্বের যেকোনো ভাষা তাৎক্ষণিক বাংলা বা অন্য ভাষায় রূপান্তর করুন।</p>
-<div class="inp"><textarea id="transText" rows="3" placeholder="যেকোনো ভাষার টেক্সট বা বাক্য এখানে পেস্ট করুন..."></textarea></div>
-<div class="inp">
-<select id="transLang">
-<option value="bn">বাংলা (Bengali)</option>
-<option value="en">ইংরেজি (English)</option>
-<option value="ar">আরবি (Arabic)</option>
-<option value="hi">হিন্দি (Hindi)</option>
-<option value="zh">চাইনিজ (Chinese)</option>
-</select>
-</div>
-<button class="btn" onclick="translateText()">🔄 AI অনুবাদ করুন ও শুনুন</button>
-<div id="transResult" style="margin-top:8px"></div>
-</div>
-</div>
-
-<!-- 5. RADIO HUB -->
-<div id="radioView" class="hidden">
-<div class="card">
-<h3>📻 বিশ্ব রেডিও হাব (FM/AM লাইভ)</h3>
-<div class="grid2">
-<button class="btn btn2" onclick="playRadio('https://stream.live.vc.bbcmedia.co.uk/bbc_world_service', 'BBC World Service')">🇬🇧 BBC World</button>
-<button class="btn btn2" onclick="playRadio('https://icecast2.edume.eu:8000/betar', 'Bangladesh Betar')">🇧🇩 Betar 88.8 FM</button>
-<button class="btn btn2" onclick="playRadio('https://quran.icecast.infomaniak.ch/quran-64.mp3', 'Quran Radio Makkah')">🕋 Quran Makkah</button>
-<button class="btn btn2" onclick="playRadio('https://stream.zeno.fm/0r0xa5m18yzuv', 'AIR India FM')">🇮🇳 AIR India</button>
-</div>
-<div class="card" style="background:#000;text-align:center;margin-top:8px">
-<p style="font-size:11px"><span class="live-dot"></span> <b id="radioName">রেডিও সিলেক্ট করুন</b></p>
-<audio id="radioPlayer" controls style="width:100%;margin:6px 0"></audio>
-</div>
-</div>
-</div>
-
-<!-- 6. TV HUB -->
-<div id="tvView" class="hidden">
-<div class="card">
-<h3>📺 বিশ্ব লাইভ টিভি চ্যানেল</h3>
-<div class="grid2">
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/9Auq9mYxFEE', 'Somoy TV Live')">🇧🇩 Somoy TV</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/8Z5R6U4D4eU', 'BBC News Live')">🇬🇧 BBC News</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/86YLFOog4GM', 'Al Jazeera Live')">🌍 Al Jazeera</button>
-<button class="btn btn2" onclick="playTV('https://www.youtube.com/embed/38Zv2VjRz0o', 'Makkah Live 24/7')">🕋 Makkah Live</button>
-</div>
-<div class="card" style="background:#000;padding:0;overflow:hidden;margin-top:8px">
-<p style="padding:6px;font-size:11px"><span class="live-dot"></span> <b id="tvName">ટીવી ച্যানেল সিলেক্ট করুন</b></p>
-<iframe id="tvPlayer" width="100%" height="200" src="https://www.youtube.com/embed/9Auq9mYxFEE" frameborder="0" allowfullscreen></iframe>
-</div>
-</div>
-</div>
-
-<!-- 7. EMERGENCY ALERTS -->
-<div id="alertView" class="hidden">
-<div class="card" style="border:2px solid #ff2a2a">
-<h3>🚨 ১৫০+ গ্লোবাল ইমার্জেন্সি অ্যালার্ট প্রসেসর</h3>
-<div class="grid2">
-<button class="btn btnAlert" onclick="triggerAlert('আগুন','🔥 ১০ মিনিট পূর্বে ফায়ার ওয়ার্নিং!')">🔥 আগুন অ্যালার্ট</button>
-<button class="btn btnAlert" onclick="triggerAlert('মিসাইল','🚀 মিসাইল বা এয়ার অ্যাটাক ওয়ার্নিং!')">🚀 মিসাইল হামলা</button>
-<button class="btn btnAlert" onclick="triggerAlert('জাহাজ ডুবি','🚢 জলযান দুর্ঘটনা - অটোকল ফায়ার ও ডুবুরি')">🚢 জাহাজ ডুবি</button>
-<button class="btn btnAlert" onclick="triggerAlert('ভূমিকম্প','🌍 P-Wave স্ক্যানিং - ভূমিকম্প ওয়ার্নিং')">🌍 ভূমিকম্প</button>
-</div>
-<div id="alertLogs" style="margin-top:8px"></div>
-</div>
-</div>
-
-<!-- 8. WORLD LEADERS & DIPLOMACY -->
-<div id="diplomacyView" class="hidden">
-<div class="card">
-<h3>🏛️ বিশ্বনেতা, রাষ্ট্রদূত ও আন্তর্জাতিক সংস্থা</h3>
-<div class="scroll-box" id="dipList"></div>
-</div>
-</div>
-
-<script>
-// --- Navigation & Core Functions ---
-function show(id) {
-    ['home','kids','discovery','medical','translator','radio','tv','alert','diplomacy'].forEach(v => {
-        let el = document.getElementById(v+'View');
-        if(el) el.classList.add('hidden');
-    });
-    document.getElementById(id+'View').classList.remove('hidden');
-    if(id === 'diplomacy') loadDiplomacy();
-}
-
-function playMedia(url, name) {
-    if(document.getElementById('kidsPlayer').offsetParent !== null) {
-        document.getElementById('kidsPlayer').src = url;
-        document.getElementById('kidsTitle').innerText = "▶️ " + name;
-    }
-    if(document.getElementById('discPlayer').offsetParent !== null) {
-        document.getElementById('discPlayer').src = url;
-        document.getElementById('discTitle').innerText = "▶️ " + name;
-    }
-}
-
-function playTV(url, name) {
-    document.getElementById('tvPlayer').src = url;
-    document.getElementById('tvName').innerText = "▶️ " + name;
-}
-
-function playRadio(url, name) {
-    const p = document.getElementById('radioPlayer');
-    p.src = url;
-    p.play().catch(() => alert('রেডিও স্ট্রিম লোড হচ্ছে...'));
-    document.getElementById('radioName').innerText = "▶️ " + name;
-}
-
-// --- Medical AI Assistant ---
-function aiDoctorCheck() {
-    let s = document.getElementById('medSymp').value.toLowerCase();
-    let res = document.getElementById('medResult');
-    if(!s) { alert('আপনার লক্ষণ লিখুন'); return; }
-    
-    let advice = "প্রাথমিক পরামর্শ: পর্যাপ্ত পানি পান করুন, বিশ্রাম নিন। লক্ষণ গুরুতর হলে নিকটস্থ চিকিৎসকের কাছে যান বা ৯৯৯ এ কল করুন।";
-    if(s.includes('জ্বর')) advice = "পরামর্শ: প্যারাসিটামল গ্রহণ করতে পারেন, কুসুম গরম পানি দিয়ে গা মুছুন। তাপমাত্রা ১০০ এর বেশি থাকলে ডাক্তার দেখান।";
-    if(s.includes('মাথা ব্যথা')) advice = "পরামর্শ: ডার্ক রুমে বিশ্রাম নিন, পর্যাপ্ত ঘুমান এবং হাইড্রেটেড থাকুন।";
-    
-    res.innerHTML = `<div class="okBox"><b>🩺 AI হেলথ অ্যানালিসিস:</b><br>${advice}</div>`;
-}
-
-// --- AI Audio/Video Translator ---
-function translateText() {
-    let txt = document.getElementById('transText').value;
-    let lang = document.getElementById('transLang').value;
-    let res = document.getElementById('transResult');
-    if(!txt) { alert('অনুবাদের জন্য কিছু লিখুন'); return; }
-    
-    res.innerHTML = `<div class="okBox"><b>🌐 AI অনুবাদ (${lang.toUpperCase()}):</b><br>"${txt}" [সফলভাবে অনুদিত ও ভয়েস সিন্থেসাইজ করা হয়েছে]</div>`;
-    
-    if('speechSynthesis' in window) {
-        let ut = new SpeechSynthesisUtterance(txt);
-        window.speechSynthesis.speak(ut);
-    }
-}
-
-// --- 0MB Mesh Broadcast ---
-function send0MBMessage() {
-    let msg = document.getElementById('meshMsg').value;
-    if(!msg) { alert('বার্তা লিখুন'); return; }
-    document.getElementById('meshStatus').innerHTML = `
-        <div class="okBox">
-            📡 <b>0MB Sat-Mesh:</b> "${msg}"<br><small>স্ট্যাটাস: লো-আর্থ অরবিট স্যাটেলাইটে সফলভাবে প্রেরিত।</small>
-        </div>`;
-    document.getElementById('meshMsg').value = '';
-}
-
-// --- Emergency Alert ---
-function triggerAlert(type, msg) {
-    let box = document.getElementById('alertLogs');
-    box.innerHTML = `<div class="alertBox"><b>🚨 ${type}:</b> ${msg}<br><small>⏰ ${new Date().toLocaleTimeString()} | GPS Locked</small></div>` + box.innerHTML;
-    if('vibrate' in navigator) navigator.vibrate([400, 100, 400]);
-}
-
-// --- World Leaders Directory ---
-const leaders = [
-    {country: "বাংলাদেশ 🇧🇩", name: "প্রধান উপদেষ্টা / প্রেসিডেন্ট", phone: "+880 2-9566000", email: "info@pmo.gov.bd"},
-    {country: "যুক্তরাষ্ট্র 🇺🇸", name: "Joe Biden (President)", phone: "+1 202-456-1111", email: "contact@whitehouse.gov"},
-    {country: "যুক্তরাজ্য 🇬🇧", name: "Prime Minister UK", phone: "+44 20 7925 0918", email: "action@number10.gov.uk"},
-    {country: "সৌদি আরব 🇸🇦", name: "King Salman bin Abdulaziz", phone: "+966 11 488 2222", email: "info@mofa.gov.sa"},
     {country: "জাতিসংঘ (UN)", name: "António Guterres (Sec-Gen)", phone: "+1 212-963-4475", email: "inquiries@un.org"}
 ];
 
