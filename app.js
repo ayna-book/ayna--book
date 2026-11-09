@@ -1,155 +1,472 @@
-// AYNA BOOK — 10,000-Year Quantum & 1500+ Tech Engine
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import {
+  auth, db, authPersistence
+} from "./firebase-config.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-  authDomain: "ayna-book.firebaseapp.com",
-  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ayna-book",
-  storageBucket: "ayna-book.firebasestorage.app",
-  messagingSenderId: "805601138500",
-  appId: "1:805601138500:web:47acdc90cb0cb521626911",
-  measurementId: "G-RKHHSKNB4B"
-};
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import {
+  collection, addDoc, getDocs, query,
+  orderBy, limit, serverTimestamp, doc, setDoc
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-// ইউনিভার্সাল পেজ সুইচিং ও বাটন সচল রাখার লজিক
-function initAynaSystem() {
-  const allNavElements = document.querySelectorAll('[data-page], [data-go]');
-  const pages = document.querySelectorAll('.page');
+// ==================================
+// AYNA BOOK OMEGA V10000 APP ENGINE
+// ==================================
 
-  function gotoPage(targetId) {
-    if (!targetId) return;
+const $ = id => document.getElementById(id);
 
-    pages.forEach(page => {
-      if (page.id === 'page-' + targetId) {
-        page.classList.add('active');
-        page.style.display = 'block';
-      } else {
-        page.classList.remove('active');
-        page.style.display = 'none';
-      }
+function message(id, text, error = false) {
+  const el = $(id);
+  if (!el) return;
+  el.textContent = text;
+  el.style.color = error ? "#ff8b8b" : "#00ffb0";
+}
+
+function showView(view) {
+  document.querySelectorAll(".view").forEach(section => {
+    section.classList.toggle("active", section.id === view);
+  });
+
+  document.querySelectorAll("#navigation button").forEach(button => {
+    button.classList.toggle("active", button.dataset.view === view);
+  });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll("#navigation button").forEach(button => {
+  button.addEventListener("click", () => showView(button.dataset.view));
+});
+
+// ==================================
+// FIREBASE CONNECTION
+// ==================================
+
+let firebaseReady = false;
+
+try {
+  await authPersistence;
+  firebaseReady = true;
+  message("connectionStatus", "🟢 Firebase authentication initialized");
+} catch (error) {
+  message("connectionStatus", "🔴 Firebase connection error: " + error.message, true);
+}
+
+function requireFirebase() {
+  if (!firebaseReady) {
+    throw new Error("Firebase configuration ঠিক করুন এবং আবার চেষ্টা করুন।");
+  }
+}
+
+// ==================================
+// ACCOUNT REGISTRATION
+// ==================================
+
+$("registerBtn").addEventListener("click", async () => {
+  try {
+    requireFirebase();
+
+    const name = $("fullName").value.trim();
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    const confirm = $("confirmPassword").value;
+
+    if (!name || !email || !password) {
+      throw new Error("নাম, ইমেইল ও পাসওয়ার্ড পূরণ করুন।");
+    }
+
+    if (password.length < 6) {
+      throw new Error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
+    }
+
+    if (password !== confirm) {
+      throw new Error("দুটি পাসওয়ার্ড মিলছে না।");
+    }
+
+    message("accountMessage", "Account creating...");
+
+    const credential = await createUserWithEmailAndPassword(
+      auth, email, password
+    );
+
+    await updateProfile(credential.user, {
+      displayName: name
     });
 
-    allNavElements.forEach(el => {
-      const pageName = el.getAttribute('data-page') || el.getAttribute('data-go');
-      if (pageName === targetId) {
-        el.classList.add('active');
-      } else {
-        el.classList.remove('active');
-      }
+    await setDoc(doc(db, "users", credential.user.uid), {
+      name,
+      email,
+      phone: $("phone").value.trim(),
+      createdAt: serverTimestamp(),
+      membership: "FREE"
     });
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    message("accountMessage", "✅ AYNA BOOK account created successfully!");
+
+  } catch (error) {
+    message("accountMessage", error.message, true);
+  }
+});
+
+// ==================================
+// LOGIN
+// ==================================
+
+$("loginBtn").addEventListener("click", async () => {
+  try {
+    requireFirebase();
+
+    const email = $("email").value.trim();
+    const password = $("password").value;
+
+    if (!email || !password) {
+      throw new Error("ইমেইল ও পাসওয়ার্ড লিখুন।");
+    }
+
+    await signInWithEmailAndPassword(auth, email, password);
+
+    message("accountMessage", "✅ Login successful!");
+
+  } catch (error) {
+    message("accountMessage", error.message, true);
+  }
+});
+
+// ==================================
+// LOGOUT
+// ==================================
+
+$("logoutBtn").addEventListener("click", async () => {
+  try {
+    requireFirebase();
+    await signOut(auth);
+    message("accountMessage", "Successfully logged out.");
+  } catch (error) {
+    message("accountMessage", error.message, true);
+  }
+});
+
+// ==================================
+// PASSWORD RESET
+// ==================================
+
+$("resetBtn").addEventListener("click", async () => {
+  try {
+    requireFirebase();
+
+    const email = $("email").value.trim();
+
+    if (!email) throw new Error("আগে ইমেইল লিখুন।");
+
+    await sendPasswordResetEmail(auth, email);
+
+    message("accountMessage", "Password reset email পাঠানো হয়েছে।");
+
+  } catch (error) {
+    message("accountMessage", error.message, true);
+  }
+});
+
+// ==================================
+// AUTHENTICATION STATE
+// ==================================
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    $("homeName").textContent = user.displayName || "AYNA BOOK Member";
+    $("homeEmail").textContent = user.email || "";
+    message("connectionStatus", "🟢 Logged in: " + user.email);
+  } else {
+    $("homeName").textContent = "AYNA BOOK Member";
+    $("homeEmail").textContent = "Not signed in";
+    message("connectionStatus", "🟡 Please login to your account");
+  }
+});
+
+// ==================================
+// PASSWORD SHOW / HIDE
+// ==================================
+
+$("showPassword").addEventListener("change", event => {
+  const type = event.target.checked ? "text" : "password";
+  $("password").type = type;
+  $("confirmPassword").type = type;
+});
+
+// ==================================
+// PROFILE PHOTO PREVIEW
+// ==================================
+
+$("profileFile").addEventListener("change", event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("শুধু ছবি নির্বাচন করুন।");
+    return;
   }
 
-  document.body.addEventListener('click', (e) => {
-    const clickable = e.target.closest('[data-page], [data-go]');
-    if (clickable) {
-      e.preventDefault();
-      const targetPage = clickable.getAttribute('data-page') || clickable.getAttribute('data-go');
-      gotoPage(targetPage);
+  if (file.size > 5 * 1024 * 1024) {
+    alert("ছবির সাইজ ৫ MB-এর কম রাখুন।");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    $("homeAvatar").src = reader.result;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+$("coverFile").addEventListener("change", event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("শুধু ছবি নির্বাচন করুন।");
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    alert("কভার ছবির সাইজ ৫ MB-এর কম রাখুন।");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    $("homeCover").style.backgroundImage =
+      `url("${reader.result}")`;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+// ==================================
+// SOCIAL POST ENGINE
+// ==================================
+
+$("publishBtn").addEventListener("click", async () => {
+  try {
+    requireFirebase();
+
+    if (!auth.currentUser) {
+      throw new Error("পোস্ট করতে আগে লগইন করুন।");
     }
+
+    const text = $("postText").value.trim();
+
+    if (!text) throw new Error("পোস্ট লিখুন।");
+    if (text.length > 5000) throw new Error("পোস্ট ৫০০০ অক্ষরের মধ্যে রাখুন।");
+
+    await addDoc(collection(db, "posts"), {
+      text,
+      uid: auth.currentUser.uid,
+      author: auth.currentUser.displayName || "AYNA Member",
+      createdAt: serverTimestamp()
+    });
+
+    $("postText").value = "";
+    message("postMessage", "✅ Post published!");
+
+    await loadPosts();
+
+  } catch (error) {
+    message("postMessage", error.message, true);
+  }
+});
+
+// ==================================
+// LOAD PUBLIC POSTS
+// ==================================
+
+async function loadPosts() {
+  try {
+    requireFirebase();
+
+    const postsQuery = query(
+      collection(db, "posts"),
+      orderBy("createdAt", "desc"),
+      limit(30)
+    );
+
+    const snapshot = await getDocs(postsQuery);
+    const container = $("postsList");
+
+    container.replaceChildren();
+
+    if (snapshot.empty) {
+      container.textContent = "এখনো কোনো পোস্ট নেই।";
+      return;
+    }
+
+    snapshot.forEach(item => {
+      const data = item.data();
+
+      const post = document.createElement("div");
+      post.className = "post";
+
+      const author = document.createElement("b");
+      author.textContent = data.author || "AYNA Member";
+
+      const content = document.createElement("p");
+      content.textContent = data.text || "";
+
+      const time = document.createElement("small");
+      time.className = "muted";
+      time.textContent = data.createdAt
+        ? data.createdAt.toDate().toLocaleString()
+        : "Just now";
+
+      post.append(author, content, time);
+      container.appendChild(post);
+    });
+
+  } catch (error) {
+    $("postsList").textContent =
+      "Posts unavailable: " + error.message;
+  }
+}
+
+// ==================================
+// MEDIA ENGINE
+// ==================================
+
+function playAudio(url, title) {
+  const player = $("mediaPlayer");
+  player.replaceChildren();
+
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+
+  const audio = document.createElement("audio");
+  audio.controls = true;
+  audio.preload = "none";
+  audio.src = url;
+
+  const note = document.createElement("p");
+  note.className = "muted";
+  note.textContent = "অডিও চালাতে Play চাপুন।";
+
+  player.append(heading, audio, note);
+
+  audio.addEventListener("error", () => {
+    note.textContent = "এই স্ট্রিমটি বর্তমানে পাওয়া যাচ্ছে না।";
   });
 }
 
-// DOM লোড হলে এক্সিকিউট হবে
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initAynaSystem);
-} else {
-  initAynaSystem();
+$("bbcBtn").addEventListener("click", () => {
+  playAudio(
+    "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
+    "BBC World Service"
+  );
+});
+
+$("quranBtn").addEventListener("click", () => {
+  playAudio(
+    "https://quran.icecast.infomaniak.ch/quran-64.mp3",
+    "Quran Radio"
+  );
+});
+
+$("nasaBtn").addEventListener("click", () => {
+  const player = $("mediaPlayer");
+  player.replaceChildren();
+
+  const link = document.createElement("a");
+  link.href = "https://www.nasa.gov/live/";
+  link.target = "_blank";
+  link.rel = "noopener";
+  link.textContent = "Open NASA Live Official Stream";
+
+  player.append(link);
+});
+
+// ==================================
+// BASS CONTROL
+// ==================================
+
+$("bass").addEventListener("input", event => {
+  $("bassValue").textContent = event.target.value;
+});
+
+// ==================================
+// GPS ENGINE
+// ==================================
+
+$("gpsBtn").addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    message("gpsStatus", "এই ডিভাইসে GPS API পাওয়া যাচ্ছে না।", true);
+    return;
+  }
+
+  message("gpsStatus", "📡 Location scanning...");
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      $("gpsResult").textContent =
+        `Latitude: ${lat.toFixed(6)} | Longitude: ${lon.toFixed(6)}`;
+
+      message(
+        "gpsStatus",
+        "🟢 Location received. Accuracy: " +
+        Math.round(position.coords.accuracy) + " meters"
+      );
+    },
+
+    error => {
+      message("gpsStatus", "GPS Error: " + error.message, true);
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 0
+    }
+  );
+});
+
+// ==================================
+// EMERGENCY TEST
+// ==================================
+
+$("sosBtn").addEventListener("click", () => {
+  const time = new Date().toLocaleString();
+
+  const item = document.createElement("div");
+  item.className = "status warning";
+  item.textContent = "TEST SOS generated: " + time;
+
+  $("alertLog").prepend(item);
+
+  if (navigator.vibrate) {
+    navigator.vibrate([200, 100, 200]);
+  }
+
+  alert("এটি শুধুমাত্র পরীক্ষামূলক SOS। কোনো জরুরি সেবা পাঠানো হয়নি।");
+});
+
+// ==================================
+// STARTUP
+// ==================================
+
+showView("home");
+
+if (firebaseReady) {
+  loadPosts();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log("AYNA BOOK 1500-Tech & 10,000-Year Engine Initialized.");
-
-  // ১. সুপার ফাস্ট চ্যাট ও ফাইল ট্রান্সফার
-  const chatForm = document.getElementById('chatForm');
-  const chatInputMsg = document.getElementById('chatInputMsg');
-  const chatMessagesContainer = document.getElementById('chatMessagesContainer');
-  const bulkFileInput = document.getElementById('bulkFileInput');
-  const fileNameDisplay = document.getElementById('fileNameDisplay');
-
-  if (bulkFileInput) {
-    bulkFileInput.addEventListener('change', () => {
-      if (bulkFileInput.files.length > 0) {
-        fileNameDisplay.textContent = `${bulkFileInput.files.length}টি ফাইল সিলেক্ট করা হয়েছে (Ready for 10GB/s transfer)`;
-      }
-    });
-  }
-
-  if (chatForm) {
-    chatForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const msg = chatInputMsg.value.trim();
-      if (!msg && (!bulkFileInput || bulkFileInput.files.length === 0)) return;
-
-      const userElem = document.createElement('div');
-      userElem.style.cssText = "background: #071b49; border: 1px solid #00ffcc44; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px;";
-      
-      let fileText = "";
-      if (bulkFileInput && bulkFileInput.files.length > 0) {
-        fileText = ` <br><span style="color:#00ffcc;">📎 [Attached Files: ${bulkFileInput.files.length} files sent at light-speed]</span>`;
-      }
-
-      userElem.innerHTML = `<strong>Sathiya:</strong> ${msg} ${fileText}`;
-      chatMessagesContainer.appendChild(userElem);
-      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-
-      chatInputMsg.value = "";
-      if (bulkFileInput) bulkFileInput.value = "";
-      if (fileNameDisplay) fileNameDisplay.textContent = "কোনো ফাইল নেই";
-    });
-  }
-
-  // ২. ইনস্ট্যান্ট লাইভ ভিডিও কল (Camera Stream)
-  const startLiveCamBtn = document.getElementById('startLiveCamBtn');
-  const liveVideoFeed = document.getElementById('liveVideoFeed');
-
-  if (startLiveCamBtn && liveVideoFeed) {
-    startLiveCamBtn.addEventListener('click', async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        liveVideoFeed.srcObject = stream;
-        startLiveCamBtn.textContent = "🟢 লাইভ ভিডিও সম্প্রচার চলছে";
-        startLiveCamBtn.style.background = "#00ffcc";
-        startLiveCamBtn.style.color = "#000";
-      } catch (err) {
-        alert("ক্যামেরা পারমিশন পাওয়া যায়নি অথবা ব্রাউজার ব্লক করেছে।");
-        console.error(err);
-      }
-    });
-  }
-
-  // ৩. আয়না বুক ভিডিও আপলোড ও ফিড বক্স
-  const uploadVideoBtn = document.getElementById('uploadVideoBtn');
-  const videoUploadInput = document.getElementById('videoUploadInput');
-  const videoFeedContainer = document.getElementById('videoFeedContainer');
-
-  if (uploadVideoBtn && videoUploadInput) {
-    uploadVideoBtn.addEventListener('click', () => {
-      if (videoUploadInput.files.length === 0) {
-        alert("দয়া করে প্রথমে একটি ভিডিও ফাইল সিলেক্ট করুন!");
-        return;
-      }
-
-      const file = videoUploadInput.files[0];
-      const videoURL = URL.createObjectURL(file);
-
-      const videoCard = document.createElement('div');
-      videoCard.style.cssText = "margin-bottom: 15px; background: #071b49; padding: 10px; border-radius: 8px; border: 1px solid #00ffcc;";
-      videoCard.innerHTML = `
-        <p style="color: #00ffcc; font-weight: bold; margin-bottom: 5px;">🎥 ${file.name}</p>
-        <video controls style="width: 100%; max-height: 200px; border-radius: 6px;" src="${videoURL}"></video>
-      `;
-
-      videoFeedContainer.prepend(videoCard);
-      alert("ভিডিও সফলভাবে আয়না বুক হাবে আপলোড ও প্রকাশিত হয়েছে!");
-      videoUploadInput.value = "";
-    });
-  }
-});
+console.log("AYNA BOOK OMEGA V10000 initialized.");
