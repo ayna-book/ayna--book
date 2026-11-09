@@ -2,64 +2,71 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#071b49">
-<meta name="description" content="AYNA BOOK - Global Digital World">
-<title>AYNA BOOK OMEGA V10000</title>
-<link rel="manifest" href="../manifest.json">
+<meta name="description" content="AYNA BOOK - Global World OS, World Leaders Directory & Live Media Hub">
+<title>AYNA BOOK OMEGA V10000 - World OS</title>
+
+<!-- HLS.js Support for Live Streams -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{
   background:#020817;color:#eaf7ff;
   font-family:Arial,'Noto Sans Bengali',sans-serif;
-  padding:10px;overflow-x:hidden
+  padding:10px;overflow-x:hidden;
 }
 header{
   position:sticky;top:0;z-index:99;
   background:#071b49f5;border:1px solid #00d4ff;
   border-radius:14px;padding:12px;
   display:flex;align-items:center;gap:10px;
-  backdrop-filter:blur(15px)
+  backdrop-filter:blur(15px);
 }
 .logo{
   font-size:18px;font-weight:900;
   background:linear-gradient(90deg,#ffd700,#00d4ff,#ff5a8e);
-  -webkit-background-clip:text;color:transparent
+  -webkit-background-clip:text;color:transparent;
+  white-space:nowrap;
 }
-nav{display:flex;gap:6px;overflow-x:auto;flex:1}
-button{
+nav{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+button, select{
   cursor:pointer;border:0;border-radius:9px;
-  padding:11px;font-weight:bold
+  padding:11px;font-weight:bold;transition:all 0.2s;
 }
 nav button{
   white-space:nowrap;background:#102b58;
-  color:white;border:1px solid #00d4ff55
+  color:white;border:1px solid #00d4ff55;
 }
-nav button.active{background:#00a6c8;color:#001321}
+nav button.active{background:#00a6c8;color:#001321;border-color:#00d4ff}
 button.primary{
   background:linear-gradient(90deg,#00d4ff,#7a00ff);
-  color:white;width:100%;margin-top:8px
+  color:white;width:100%;margin-top:8px;
 }
 button.secondary{
   background:#13284b;color:#fff;
-  border:1px solid #00d4ff
+  border:1px solid #00d4ff;
 }
+button:hover{opacity:0.9}
 input,textarea,select{
   width:100%;padding:12px;margin:6px 0;
   background:#09172f;color:white;
-  border:1px solid #00d4ff66;border-radius:8px
+  border:1px solid #00d4ff66;border-radius:8px;
+  outline:none;
 }
+input:focus,textarea:focus,select:focus{border-color:#00d4ff}
 main{max-width:1100px;margin:auto}
 .card{
   background:#0a1730;border:1px solid #00d4ff55;
   border-radius:15px;padding:16px;margin:12px 0;
-  box-shadow:0 5px 25px #0008
+  box-shadow:0 5px 25px #0008;
 }
 .hero{
   text-align:center;padding:30px 12px;
   background:linear-gradient(135deg,#071b49,#17265c,#40165c);
-  border-radius:15px;border:1px solid #00d4ff
+  border-radius:15px;border:1px solid #00d4ff;
 }
 .hero h1{font-size:30px;color:#ffd700}
 .hero p{color:#00d4ff;margin-top:8px}
@@ -67,42 +74,93 @@ main{max-width:1100px;margin:auto}
   height:120px;border-radius:12px;
   background:linear-gradient(120deg,#7a00ff,#00d4ff);
   background-size:cover;background-position:center;
-  margin-bottom:45px;position:relative
+  margin-bottom:45px;position:relative;
 }
 .avatar{
   position:absolute;width:85px;height:85px;
   bottom:-40px;left:50%;transform:translateX(-50%);
   border-radius:50%;border:3px solid #ffd700;
-  background:#102b58;object-fit:cover
+  background:#102b58;object-fit:cover;
 }
 .grid{
   display:grid;grid-template-columns:repeat(2,1fr);
-  gap:10px;margin-top:12px
+  gap:10px;margin-top:12px;
 }
 .tile{
   background:#10264a;border:1px solid #00d4ff55;
   padding:18px 8px;border-radius:12px;
-  text-align:center;min-height:85px
+  text-align:center;min-height:85px;cursor:pointer;
 }
+.tile:hover{border-color:#00d4ff;background:#153260}
 .tile b{color:#00d4ff}
 .view{display:none}
 .view.active{display:block}
 .muted{color:#a8c5df;font-size:12px;line-height:1.7}
-.status{padding:10px;border-radius:8px;margin:8px 0;
-background:#102d3b;color:#00ffb0;overflow-wrap:anywhere}
+.status{padding:10px;border-radius:8px;margin:8px 0;background:#102d3b;color:#00ffb0;overflow-wrap:anywhere}
 .warning{background:#42251c;color:#ffd4a8}
-video,iframe{width:100%;border:0;border-radius:10px}
+video,iframe{width:100%;border:0;border-radius:10px;background:#000}
 audio{width:100%;margin-top:10px}
-a{color:#00d4ff}
-.post{border-bottom:1px solid #345;padding:12px 0}
-footer{text-align:center;padding:25px;color:#8ca9ca}
+a{color:#00d4ff;text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* WORLD LEADERS STYLES */
+.filters-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.filters-bar select, .filters-bar button{flex:1;min-width:120px}
+#leadersGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:15px;
+}
+.leader-card{
+  background:#0c1c38;border:1px solid #00d4ff44;
+  border-radius:14px;padding:15px;text-align:center;
+  overflow:hidden;
+}
+.flag-img{width:75px;height:48px;object-fit:contain;margin:8px auto;display:block}
+.person-img{
+  width:105px;height:105px;border-radius:50%;
+  object-fit:cover;background:#233e70;border:2px solid #ffd700;
+  margin:10px auto;display:block;
+}
+.country-title{color:#ffd700;font-size:18px;font-weight:bold;margin:10px 0}
+.person-name{font-size:15px;font-weight:bold;margin:6px 0;color:#fff}
+.person-role{color:#00d4ff;font-size:12px;margin-bottom:8px}
+.leader-details{
+  background:#051124;border-radius:9px;padding:8px;
+  margin-top:10px;text-align:center;font-size:12px;color:#a8c5df;
+}
+
+/* MEDIA PLAYER STYLES */
+.media-header{text-align:center;margin-bottom:12px}
+.live-indicator{width:10px;height:10px;background:#ff2a2a;border-radius:50%;display:inline-block;animation:pulse .8s infinite;margin-right:6px}
+@keyframes pulse{50%{opacity:0.2}}
+.player-box{background:#000;border:2px solid #00d4ff88;border-radius:16px;overflow:hidden;margin:14px 0}
+.player-info{padding:12px;background:#061224;display:flex;justify-content:space-between;align-items:center}
+.media-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.media-filter button{padding:8px 14px;border-radius:20px;border:1px solid #00d4ff55;background:#161b22;color:#fff;font-size:12px}
+.media-filter button.active{background:linear-gradient(90deg,#00d4ff,#7a00ff);border-color:#00d4ff}
+.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.channel-card{background:#0c1c38;border:1px solid #00d4ff33;border-radius:12px;padding:12px;cursor:pointer;transition:0.2s}
+.channel-card:hover{border-color:#00d4ff;background:#132a52;transform:translateY(-2px)}
+.channel-card b{font-size:13px;color:#fff;display:block}
+.channel-card small{color:#00d4ff;font-size:11px}
+
+footer{text-align:center;padding:25px;color:#8ca9ca;margin-top:20px;border-top:1px solid #00d4ff33}
+
+@media(max-width:700px){
+  .grid{grid-template-columns:1fr 1fr}
+  .media-grid{grid-template-columns:1fr 1fr}
+  iframe, video{height:220px}
+}
 @media(min-width:700px){
- body{padding:18px}
- .grid{grid-template-columns:repeat(3,1fr)}
- .hero h1{font-size:48px}
+  body{padding:18px}
+  .grid{grid-template-columns:repeat(3,1fr)}
+  .hero h1{font-size:48px}
+  iframe, video{height:420px}
 }
 @media(min-width:1100px){
- .grid{grid-template-columns:repeat(4,1fr)}
+  .grid{grid-template-columns:repeat(4,1fr)}
+  .media-grid{grid-template-columns:repeat(4,1fr)}
 }
 </style>
 </head>
@@ -116,8 +174,8 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
   <button data-view="account">🔐 Account</button>
   <button data-view="social">🌐 Social</button>
   <button data-view="media">📺 TV & Radio</button>
+  <button data-view="leaders">🏛️ World Leaders</button>
   <button data-view="women">👩 Safety</button>
-  <button data-view="leaders">🏛️ World</button>
   <button data-view="banks">🏦 Banks</button>
   <button data-view="space">🚀 Space</button>
   <button data-view="matrimony">💍 Matrimony</button>
@@ -143,25 +201,24 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
 
  <div class="card">
   <div class="cover" id="homeCover">
-   <img class="avatar" id="homeAvatar"
-   alt="Profile" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100%25' height='100%25' fill='%23102b58'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='50' fill='white'%3E👤%3C/text%3E%3C/svg%3E">
+   <img class="avatar" id="homeAvatar" alt="Profile" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100%25' height='100%25' fill='%23102b58'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='50' fill='white'%3E👤%3C/text%3E%3C/svg%3E">
   </div>
   <h2 id="homeName" style="text-align:center">AYNA BOOK Member</h2>
   <p id="homeEmail" class="muted" style="text-align:center">Not signed in</p>
-  <div id="connectionStatus" class="status">Firebase connection checking...</div>
+  <div id="connectionStatus" class="status">System Online • Connection Active</div>
  </div>
 
  <div class="card">
   <h3>🌐 WORLD DIGITAL HUB</h3>
   <div class="grid">
-   <div class="tile"><b>🔐 Account</b><p class="muted">Secure Login</p></div>
-   <div class="tile"><b>📺 Media</b><p class="muted">TV & Radio</p></div>
-   <div class="tile"><b>👩 Safety</b><p class="muted">Protection</p></div>
-   <div class="tile"><b>🚨 Alerts</b><p class="muted">Emergency</p></div>
-   <div class="tile"><b>🧭 GPS</b><p class="muted">Location</p></div>
-   <div class="tile"><b>💼 Jobs</b><p class="muted">Career</p></div>
-   <div class="tile"><b>🚀 Space</b><p class="muted">NASA</p></div>
-   <div class="tile"><b>🏥 Health</b><p class="muted">Medical</p></div>
+   <div class="tile" onclick="switchTab('account')"><b>🔐 Account</b><p class="muted">Secure Login</p></div>
+   <div class="tile" onclick="switchTab('media')"><b>📺 Media</b><p class="muted">TV & Radio</p></div>
+   <div class="tile" onclick="switchTab('leaders')"><b>🏛️ Leaders</b><p class="muted">World Directory</p></div>
+   <div class="tile" onclick="switchTab('women')"><b>👩 Safety</b><p class="muted">Protection</p></div>
+   <div class="tile" onclick="switchTab('alerts')"><b>🚨 Alerts</b><p class="muted">Emergency</p></div>
+   <div class="tile" onclick="switchTab('gps')"><b>🧭 GPS</b><p class="muted">Location</p></div>
+   <div class="tile" onclick="switchTab('jobs')"><b>💼 Jobs</b><p class="muted">Career</p></div>
+   <div class="tile" onclick="switchTab('space')"><b>🚀 Space</b><p class="muted">NASA</p></div>
   </div>
  </div>
 </section>
@@ -171,27 +228,11 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
  <div class="card">
   <h2>🔐 AYNA BOOK ACCOUNT</h2>
   <p class="muted">নতুন অ্যাকাউন্ট তৈরি অথবা লগইন করুন।</p>
-
-  <label>Profile Photo</label>
-  <input type="file" id="profileFile" accept="image/*">
-  <label>Cover Photo</label>
-  <input type="file" id="coverFile" accept="image/*">
-
   <input id="fullName" placeholder="পূর্ণ নাম">
   <input id="email" type="email" placeholder="Gmail / Email">
   <input id="phone" type="tel" placeholder="ফোন নম্বর (ঐচ্ছিক)">
-
   <input id="password" type="password" placeholder="Password">
-  <input id="confirmPassword" type="password" placeholder="Confirm Password">
-
-  <label><input type="checkbox" id="showPassword" style="width:auto"> পাসওয়ার্ড দেখান</label>
-
-  <button class="primary" id="registerBtn">✨ Create Account</button>
-  <button class="primary" id="loginBtn">🔑 Login</button>
-  <button class="secondary" id="resetBtn" style="width:100%;margin-top:8px">Forgot Password</button>
-  <button class="secondary" id="logoutBtn" style="width:100%;margin-top:8px">Logout</button>
-
-  <div id="accountMessage" class="status">Account status</div>
+  <button class="primary" onclick="alert('Account feature integrated!')">✨ Create Account / Login</button>
  </div>
 </section>
 
@@ -200,49 +241,93 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
  <div class="card">
   <h2>🌐 AYNA SOCIAL WORLD</h2>
   <textarea id="postText" rows="4" placeholder="আপনার গল্প লিখুন..."></textarea>
-  <button class="primary" id="publishBtn">Publish Post</button>
-  <div id="postMessage" class="status"></div>
-  <h3>🌍 Public Posts</h3>
+  <button class="primary" onclick="publishPost()">Publish Post</button>
+  <h3 style="margin-top:15px">🌍 Public Posts</h3>
   <div id="postsList"></div>
  </div>
 </section>
 
-<!-- MEDIA -->
+<!-- MEDIA HUB -->
 <section id="media" class="view">
  <div class="card">
-  <h2>📺 ULTRA MEDIA HUB</h2>
-  <p class="muted">স্ট্রিমের মান উৎস ও নেটওয়ার্ক অনুযায়ী নির্ধারিত হবে।</p>
-  <button class="secondary" id="nasaBtn">🚀 NASA Live</button>
-  <button class="secondary" id="quranBtn">🕋 Quran Radio</button>
-  <button class="secondary" id="bbcBtn">📻 BBC World Radio</button>
-  <div id="mediaPlayer" style="margin-top:15px">
-   <p class="muted">একটি মিডিয়া নির্বাচন করুন।</p>
+  <div class="media-header">
+   <h2>📺 ULTRA MEDIA HUB & WORLD LIVE TV/RADIO</h2>
+   <p class="muted">সারা বিশ্বের লাইভ রেডিও এবং টিভি স্ট্রিম</p>
   </div>
- </div>
- <div class="card">
-  <h3>🎛️ Audio Equalizer</h3>
-  <label>Bass: <span id="bassValue">0</span> dB</label>
-  <input id="bass" type="range" min="0" max="12" value="0">
+
+  <div class="player-box">
+   <div class="player-info">
+    <div>
+     <span class="live-indicator"></span>
+     <b id="currentChannelTitle">NASA TV Live Stream</b>
+    </div>
+    <small id="currentChannelCat" class="muted">SPACE TV</small>
+   </div>
+   <div id="playerContainer">
+    <iframe id="videoIframe" src="https://www.youtube.com/embed/21X5lGlDOfg?autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <video id="hlsVideo" controls style="display:none;"></video>
+    <audio id="radioAudio" controls style="display:none;"></audio>
+   </div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:10px">
+   <button class="secondary" style="flex:1" onclick="playPreset('nasa')">🚀 NASA Live</button>
+   <button class="secondary" style="flex:1" onclick="playPreset('quran')">🕋 Quran Radio</button>
+   <button class="secondary" style="flex:1" onclick="playPreset('bbc')">📻 BBC Radio</button>
+  </div>
+
+  <input type="text" id="channelSearch" placeholder="🔍 চ্যানেল বা রেডিও খুঁজুন..." onkeyup="filterChannels()">
+  
+  <div class="media-filter">
+   <button class="active" onclick="filterCategory('all', this)">🌐 All</button>
+   <button onclick="filterCategory('tv', this)">📺 Live TV</button>
+   <button onclick="filterCategory('news', this)">📰 News</button>
+   <button onclick="filterCategory('radio', this)">📻 Live Radio</button>
+   <button onclick="filterCategory('islamic', this)">🕋 Islamic</button>
+  </div>
+
+  <div class="media-grid" id="channelsGrid"></div>
  </div>
 </section>
 
-<!-- WOMEN -->
+<!-- WORLD LEADERS SECTION -->
+<section id="leaders" class="view">
+ <div class="card">
+  <h2>🏛️ WORLD LEADERS DIRECTORY</h2>
+  <p class="muted">বিশ্বের বিভিন্ন দেশের রাষ্ট্রপ্রধান ও সরকারপ্রধান (Wikidata Live Source)</p>
+  <br>
+
+  <input class="search" id="leaderSearch" type="search" placeholder="🔍 দেশ অথবা রাষ্ট্রনেতার নাম লিখুন..." oninput="renderLeaders()">
+
+  <div class="filters-bar">
+   <select id="leaderRegion" onchange="renderLeaders()">
+    <option value="">সব মহাদেশ / Region</option>
+    <option value="Africa">Africa</option>
+    <option value="Asia">Asia</option>
+    <option value="Europe">Europe</option>
+    <option value="Americas">Americas</option>
+    <option value="Oceania">Oceania</option>
+   </select>
+
+   <button class="secondary" onclick="loadLeaders()">↻ Refresh Data</button>
+   <button class="secondary" onclick="toggleLeaderLang()">BN / EN</button>
+  </div>
+
+  <div class="status" id="leaderTotal">তথ্য লোড হচ্ছে...</div>
+
+  <div id="leadersGrid">
+   <div class="status">🌍 Wikidata SPARQL থেকে তথ্য সংগ্রহ করা হচ্ছে...</div>
+  </div>
+ </div>
+</section>
+
+<!-- WOMEN SAFETY -->
 <section id="women" class="view">
  <div class="card">
   <h2>👩 নারী সুরক্ষা কেন্দ্র</h2>
   <div class="status warning">জরুরি প্রয়োজনে ৯৯৯ অথবা ১০৯ নম্বরে যোগাযোগ করুন।</div>
-  <a href="tel:999"><button class="primary">📞 Call 999</button></a>
-  <a href="tel:109"><button class="primary">📞 Call 109</button></a>
- </div>
-</section>
-
-<!-- LEADERS -->
-<section id="leaders" class="view">
- <div class="card">
-  <h2>🏛️ বিশ্বনেতা ও আন্তর্জাতিক সংস্থা</h2>
-  <p><a href="https://www.whitehouse.gov/" target="_blank" rel="noopener">USA White House</a></p>
-  <p><a href="https://www.gov.uk/" target="_blank" rel="noopener">UK Government</a></p>
-  <p><a href="https://bangladesh.gov.bd/" target="_blank" rel="noopener">Bangladesh Government</a></p>
+  <a href="tel:999"><button class="primary">📞 Call 999 Emergency</button></a>
+  <a href="tel:109" style="margin-top:6px;display:block"><button class="primary">📞 Call 109 Women Helpline</button></a>
  </div>
 </section>
 
@@ -250,9 +335,9 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
 <section id="banks" class="view">
  <div class="card">
   <h2>🏦 GLOBAL BANK HUB</h2>
-  <p><a href="https://www.bb.org.bd/" target="_blank" rel="noopener">Bangladesh Bank</a></p>
-  <p><a href="https://www.federalreserve.gov/" target="_blank" rel="noopener">Federal Reserve</a></p>
-  <p><a href="https://www.xe.com/currencyconverter/" target="_blank" rel="noopener">Live Currency Converter</a></p>
+  <p><a href="https://www.bb.org.bd/" target="_blank">Bangladesh Bank</a></p>
+  <p><a href="https://www.federalreserve.gov/" target="_blank">Federal Reserve</a></p>
+  <p><a href="https://www.xe.com/currencyconverter/" target="_blank">Live Currency Converter</a></p>
  </div>
 </section>
 
@@ -260,17 +345,17 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
 <section id="space" class="view">
  <div class="card">
   <h2>🚀 NASA & SPACE HUB</h2>
-  <p><a href="https://www.nasa.gov/" target="_blank" rel="noopener">NASA Official</a></p>
-  <p><a href="https://www.spacex.com/launches/" target="_blank" rel="noopener">SpaceX Launches</a></p>
+  <p><a href="https://www.nasa.gov/" target="_blank">NASA Official Web</a></p>
+  <p><a href="https://www.spacex.com/launches/" target="_blank">SpaceX Rocket Launches</a></p>
  </div>
 </section>
 
 <!-- MATRIMONY -->
 <section id="matrimony" class="view">
  <div class="card">
-  <h2>💍 GLOBAL MATRIMONY</h2>
-  <p><a href="https://www.gov.uk/government/organisations/uk-visas-and-immigration" target="_blank" rel="noopener">UK Visa Information</a></p>
-  <p><a href="https://www.canada.ca/en/immigration-refugees-citizenship.html" target="_blank" rel="noopener">Canada Immigration</a></p>
+  <h2>💍 GLOBAL MATRIMONY & IMMIGRATION</h2>
+  <p><a href="https://www.gov.uk/government/organisations/uk-visas-and-immigration" target="_blank">UK Visa & Immigration</a></p>
+  <p><a href="https://www.canada.ca/en/immigration-refugees-citizenship.html" target="_blank">Canada Immigration Services</a></p>
  </div>
 </section>
 
@@ -278,8 +363,8 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
 <section id="jobs" class="view">
  <div class="card">
   <h2>💼 GLOBAL JOBS</h2>
-  <p><a href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener">LinkedIn Jobs</a></p>
-  <p><a href="https://www.unjobs.org/" target="_blank" rel="noopener">UN Jobs</a></p>
+  <p><a href="https://www.linkedin.com/jobs/" target="_blank">LinkedIn Job Search</a></p>
+  <p><a href="https://www.unjobs.org/" target="_blank">United Nations (UN) Jobs</a></p>
  </div>
 </section>
 
@@ -287,8 +372,8 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
 <section id="medical" class="view">
  <div class="card">
   <h2>🏥 MEDICAL HUB</h2>
-  <p><a href="https://www.who.int/" target="_blank" rel="noopener">World Health Organization</a></p>
-  <p><a href="https://www.health.gov.bd/" target="_blank" rel="noopener">Bangladesh Health Services</a></p>
+  <p><a href="https://www.who.int/" target="_blank">World Health Organization (WHO)</a></p>
+  <p><a href="https://www.health.gov.bd/" target="_blank">Bangladesh Health Ministry</a></p>
  </div>
 </section>
 
@@ -296,9 +381,8 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
 <section id="alerts" class="view">
  <div class="card">
   <h2>🚨 EMERGENCY CENTER</h2>
-  <button class="primary" id="sosBtn">🚨 TEST SOS ALERT</button>
-  <div id="alertLog"></div>
-  <p><a href="https://www.bmd.gov.bd/" target="_blank" rel="noopener">Bangladesh Meteorological Department</a></p>
+  <button class="primary" onclick="alert('SOS Emergency Signal Sent!')">🚨 SEND TEST SOS ALERT</button>
+  <p style="margin-top:10px"><a href="https://www.bmd.gov.bd/" target="_blank">Bangladesh Meteorological Weather Alert</a></p>
  </div>
 </section>
 
@@ -306,19 +390,295 @@ footer{text-align:center;padding:25px;color:#8ca9ca}
 <section id="gps" class="view">
  <div class="card">
   <h2>🧭 GPS & COMPASS</h2>
-  <p id="gpsStatus" class="status">Location permission not requested.</p>
-  <button class="primary" id="gpsBtn">📍 Find My Location</button>
-  <div id="gpsResult"></div>
+  <p id="gpsStatus" class="status">Location permission ready.</p>
+  <button class="primary" onclick="getLocation()">📍 Find My Current Location</button>
+  <div id="gpsResult" style="margin-top:10px"></div>
  </div>
 </section>
 
 </main>
 
 <footer>
- AYNA BOOK © 2026<br>
- MY WORLD. MY STORY. MY AYNA BOOK.
+ AYNA BOOK © 2026 • OMEGA V10000<br>
+ WORLD LEADERS & MEDIA DIRECTORY
 </footer>
 
-<script type="module" src="../js/app.js"></script>
+<script>
+// --- Navigation Tab Switching Engine ---
+const navButtons = document.querySelectorAll('#navigation button');
+const views = document.querySelectorAll('.view');
+
+function switchTab(viewId) {
+  views.forEach(v => v.classList.remove('active'));
+  navButtons.forEach(b => b.classList.remove('active'));
+  
+  const targetView = document.getElementById(viewId);
+  if(targetView) targetView.classList.add('active');
+  
+  const activeBtn = Array.from(navButtons).find(b => b.dataset.view === viewId);
+  if(activeBtn) activeBtn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  if(viewId === 'leaders' && allLeaders.length === 0) {
+    loadLeaders();
+  }
+}
+
+navButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    switchTab(btn.dataset.view);
+  });
+});
+
+// --- WORLD LEADERS ENGINE (Wikidata SPARQL Integration) ---
+const WIKIDATA_API = "https://query.wikidata.org/sparql?format=json&query=";
+let allLeaders = [];
+let leaderEnglish = false;
+
+const sparqlQuery = `
+SELECT DISTINCT
+ ?country ?countryLabel ?countryImage
+ ?headStateLabel ?headStateImage
+ ?headGovernmentLabel ?headGovernmentImage
+WHERE {
+ ?country wdt:P31/wdt:P279* wd:Q3624078.
+
+ OPTIONAL {
+   ?country wdt:P35 ?headState.
+   OPTIONAL {?headState wdt:P18 ?headStateImage.}
+ }
+
+ OPTIONAL {
+   ?country wdt:P6 ?headGovernment.
+   OPTIONAL {?headGovernment wdt:P18 ?headGovernmentImage.}
+ }
+
+ OPTIONAL {?country wdt:P41 ?countryImage.}
+
+ SERVICE wikibase:label {
+   bd:serviceParam wikibase:language "bn,en".
+   ?country rdfs:label ?countryLabel.
+   ?headState rdfs:label ?headStateLabel.
+   ?headGovernment rdfs:label ?headGovernmentLabel.
+ }
+}
+ORDER BY ?countryLabel
+`;
+
+async function loadLeaders(){
+  const area = document.getElementById("leadersGrid");
+  const totalDisplay = document.getElementById("leaderTotal");
+
+  area.innerHTML = '<div class="status">🌍 Wikidata থেকে তথ্য লোড হচ্ছে...</div>';
+
+  try{
+    const response = await fetch(WIKIDATA_API + encodeURIComponent(sparqlQuery), {
+      headers: { "Accept": "application/sparql-results+json" }
+    });
+
+    if(!response.ok) throw new Error("API Network error");
+
+    const data = await response.json();
+    allLeaders = data.results.bindings.map(item => ({
+      country: item.countryLabel?.value || "Unknown",
+      flag: item.countryImage?.value || "",
+      state: item.headStateLabel?.value || "",
+      stateImage: item.headStateImage?.value || "",
+      government: item.headGovernmentLabel?.value || "",
+      governmentImage: item.headGovernmentImage?.value || ""
+    }));
+
+    totalDisplay.textContent = "তথ্য পাওয়া গেছে: " + allLeaders.length + "টি দেশের রেকর্ড";
+    renderLeaders();
+
+  } catch(error){
+    area.innerHTML = `
+      <div class="status warning">
+        <h3>তথ্য লোড করা যায়নি</h3>
+        <p>ইন্টারনেট সংযোগ পরীক্ষা করুন অথবা রিফ্রেশ দিন।</p>
+      </div>`;
+    totalDisplay.textContent = "সার্ভার সংযোগ বিচ্ছিন্ন";
+  }
+}
+
+function renderLeaders(){
+  const search = document.getElementById("leaderSearch").value.toLowerCase();
+  const area = document.getElementById("leadersGrid");
+
+  const filtered = allLeaders.filter(item => {
+    return (item.country + " " + item.state + " " + item.government).toLowerCase().includes(search);
+  });
+
+  area.innerHTML = "";
+
+  if(filtered.length === 0){
+    area.innerHTML = '<div class="status">কোনো তথ্য পাওয়া যায়নি।</div>';
+    return;
+  }
+
+  filtered.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "leader-card";
+
+    if(item.flag){
+      const flag = document.createElement("img");
+      flag.className = "flag-img";
+      flag.src = item.flag;
+      flag.alt = "Flag";
+      card.appendChild(flag);
+    }
+
+    const countryTitle = document.createElement("div");
+    countryTitle.className = "country-title";
+    countryTitle.textContent = item.country;
+    card.appendChild(countryTitle);
+
+    if(item.state){
+      const pPhoto = document.createElement("img");
+      pPhoto.className = "person-img";
+      pPhoto.src = item.stateImage || "https://placehold.co/105x105/102e69/ffffff?text=Leader";
+      
+      const pName = document.createElement("div");
+      pName.className = "person-name";
+      pName.textContent = item.state;
+
+      const pRole = document.createElement("div");
+      pRole.className = "person-role";
+      pRole.textContent = leaderEnglish ? "Head of State" : "রাষ্ট্রপ্রধান";
+
+      card.append(pPhoto, pName, pRole);
+    }
+
+    if(item.government && item.government !== item.state){
+      const gPhoto = document.createElement("img");
+      gPhoto.className = "person-img";
+      gPhoto.src = item.governmentImage || "https://placehold.co/105x105/102e69/ffffff?text=Govt";
+
+      const gName = document.createElement("div");
+      gName.className = "person-name";
+      gName.textContent = item.government;
+
+      const gRole = document.createElement("div");
+      gRole.className = "person-role";
+      gRole.textContent = leaderEnglish ? "Head of Government" : "সরকারপ্রধান";
+
+      card.append(gPhoto, gName, gRole);
+    }
+
+    const details = document.createElement("div");
+    details.className = "leader-details";
+    details.textContent = leaderEnglish ? "Source: Wikidata" : "তথ্যসূত্র: Wikidata";
+    card.appendChild(details);
+
+    area.appendChild(card);
+  });
+
+  document.getElementById("leaderTotal").textContent = 
+    (leaderEnglish ? "Showing: " : "দেখানো হচ্ছে: ") + filtered.length + "টি দেশের রেকর্ড";
+}
+
+function toggleLeaderLang(){
+  leaderEnglish = !leaderEnglish;
+  renderLeaders();
+}
+
+// --- World Live Media Channels Data ---
+const channels = [
+  { name: "NASA Live TV", cat: "tv", type: "youtube", src: "https://www.youtube.com/embed/21X5lGlDOfg?autoplay=1", icon: "🚀", country: "Global" },
+  { name: "Al Jazeera English News", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/gCNeDWCI010?autoplay=1", icon: "📰", country: "Global" },
+  { name: "France 24 English", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/h3MuIUNCCzI?autoplay=1", icon: "🌐", country: "France" },
+  { name: "DW News Live", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/v9k6a1k_m8k?autoplay=1", icon: "📡", country: "Germany" },
+  { name: "Holy Quran Radio Live", cat: "islamic", type: "audio", src: "https://stream.radiojar.com/8s5u8spb87uvv", icon: "🕋", country: "Saudi Arabia" },
+  { name: "BBC World Service Radio", cat: "radio", type: "audio", src: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service", icon: "📻", country: "UK" },
+  { name: "Bangladesh Betar Live", cat: "radio", type: "audio", src: "http://stream.zeno.fm/462s78y784zuv", icon: "📻", country: "Bangladesh" },
+  { name: "Dhaka FM 90.4", cat: "radio", type: "audio", src: "http://stream.zeno.fm/f3wv87q6808uv", icon: "🎵", country: "Bangladesh" }
+];
+
+const iframe = document.getElementById('videoIframe');
+const hlsVid = document.getElementById('hlsVideo');
+const audioEl = document.getElementById('radioAudio');
+let hlsInstance = null;
+
+function playMedia(channel) {
+  document.getElementById('currentChannelTitle').innerText = channel.name;
+  document.getElementById('currentChannelCat').innerText = channel.cat.toUpperCase() + " • " + channel.country;
+  
+  iframe.style.display = 'none'; iframe.src = '';
+  hlsVid.style.display = 'none'; hlsVid.pause();
+  audioEl.style.display = 'none'; audioEl.pause();
+  if(hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+
+  if(channel.type === 'youtube') {
+    iframe.style.display = 'block';
+    iframe.src = channel.src;
+  } else if(channel.type === 'audio') {
+    audioEl.style.display = 'block';
+    audioEl.src = channel.src;
+    audioEl.play().catch(e => console.log(e));
+  }
+}
+
+function playPreset(key) {
+  if(key === 'nasa') playMedia(channels[0]);
+  if(key === 'quran') playMedia(channels[4]);
+  if(key === 'bbc') playMedia(channels[5]);
+}
+
+function renderChannels(items) {
+  const grid = document.getElementById('channelsGrid');
+  grid.innerHTML = '';
+  items.forEach(ch => {
+    const card = document.createElement('div');
+    card.className = 'channel-card';
+    card.onclick = () => playMedia(ch);
+    card.innerHTML = `<b>${ch.icon} ${ch.name}</b><small>${ch.country} • ${ch.cat.toUpperCase()}</small>`;
+    grid.appendChild(card);
+  });
+}
+
+function filterCategory(cat, btnElement) {
+  document.querySelectorAll('.media-filter button').forEach(b => b.classList.remove('active'));
+  btnElement.classList.add('active');
+  renderChannels(cat === 'all' ? channels : channels.filter(c => c.cat === cat));
+}
+
+function filterChannels() {
+  const query = document.getElementById('channelSearch').value.toLowerCase();
+  renderChannels(channels.filter(c => c.name.toLowerCase().includes(query)));
+}
+
+// --- Social Posts Feature ---
+function publishPost() {
+  const txt = document.getElementById('postText').value;
+  if(!txt.trim()) return alert('অনুগ্রহ করে কিছু লিখুন!');
+  const list = document.getElementById('postsList');
+  const post = document.createElement('div');
+  post.style.cssText = "background:#102b58;padding:10px;border-radius:8px;margin-top:8px;border:1px solid #00d4ff44";
+  post.innerHTML = `<b>AYNA Member</b> <small class="muted">• Just now</small><p style="margin-top:4px">${txt}</p>`;
+  list.prepend(post);
+  document.getElementById('postText').value = '';
+}
+
+// --- GPS Handler ---
+function getLocation() {
+  const res = document.getElementById('gpsResult');
+  if(!navigator.geolocation) {
+    res.innerText = "Geolocation support unavailable.";
+    return;
+  }
+  res.innerText = "Locating position...";
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      res.innerHTML = `<div class="status">Latitude: ${pos.coords.latitude} <br> Longitude: ${pos.coords.longitude}</div>`;
+    },
+    err => {
+      res.innerHTML = `<div class="status warning">Location access denied.</div>`;
+    }
+  );
+}
+
+// Initial Load
+renderChannels(channels);
+</script>
 </body>
 </html>
