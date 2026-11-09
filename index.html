@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,8 +32,8 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 .scroll-box{max-height:350px;overflow-y:auto;background:#00000066;padding:10px;border-radius:8px;border:1px solid #30363d}
 .leader-card{display:flex;align-items:center;gap:10px;border-bottom:1px solid #30363d;padding:8px 0;text-align:left}
 .leader-img{width:45px;height:45px;border-radius:50%;border:2px solid #00d4ff;object-fit:cover;background:#161b22;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff}
-.profile-cover{width:100%;height:110px;background:linear-gradient(45deg,#7a00ff,#ff5a8e);border-radius:12px;position:relative;margin-bottom:45px}
-.profile-pic{width:80px;height:80px;border-radius:50%;border:3px solid #00d4ff;position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);background:#161b22;display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden}
+.profile-cover{width:100%;height:120px;background:linear-gradient(45deg,#7a00ff,#ff5a8e);background-size:cover;background-position:center;border-radius:12px;position:relative;margin-bottom:50px}
+.profile-pic{width:90px;height:90px;border-radius:16px;border:3px solid #00d4ff;position:absolute;bottom:-45px;left:50%;transform:translateX(-50%);background:#161b22;display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden;background-size:cover;background-position:center}
 </style>
 </head>
 <body>
@@ -43,84 +43,97 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <div class="logo">AYNA BOOK</div>
 <button class="arrow-btn" onclick="scrollNav(-150)">❮</button>
 <div class="nav-scroll" id="navContainer">
-<button class="mbtn active" id="menuHome" onclick="show('home')">Dashboard</button>
-<button class="mbtn" id="menuAuth" onclick="show('auth')">🔐 Account & OTP</button>
-<button class="mbtn" id="menuNews" onclick="show('news')">🔥 Trending News</button>
-<button class="mbtn" id="menuTvRadio" onclick="show('tvradio')">📺 500+ Live TV & 📻 Radio (AM/FM)</button>
-<button class="mbtn" id="menuWomen" onclick="show('women')">👩‍🍼 Women Care & Serials</button>
-<button class="mbtn" id="menuLeaders" onclick="show('leaders')">🏛️ Leaders & Tech Hub</button>
-<button class="mbtn" id="menuCountries" onclick="show('worldstates')">🌍 World States Hub</button>
-<button class="mbtn" id="menuBanks" onclick="show('banks')">🏦 World Bank Hub</button>
-<button class="mbtn" id="menuAlerts" onclick="show('alerts150')">🚨 150+ Emergency Alerts</button>
-<button class="mbtn" id="menuRadar" onclick="show('radar')">🧭 GPS Radar & Compass</button>
-<button class="mbtn" id="menuKids" onclick="show('kids')">🧸 Kids Zone</button>
-<button class="mbtn" id="menuDiscovery" onclick="show('discovery')">🔭 Discovery Hub</button>
-<button class="mbtn" id="menuSettings" onclick="show('settings')">⚙️ Settings (Language)</button>
+<button class="mbtn active" id="menuHome" onclick="show('home')">ড্যাশবোর্ড</button>
+<button class="mbtn" id="menuAuth" onclick="show('auth')">🔐 একাউন্ট ও ওটিপি</button>
+<button class="mbtn" id="menuNews" onclick="show('news')">🔥 আলোচিত খবর</button>
+<button class="mbtn" id="menuTvRadio" onclick="show('tvradio')">📺 লাইভ টিভি ও 📻 রেডিও (AM/FM)</button>
+<button class="mbtn" id="menuWomen" onclick="show('women')">👩‍🍼 নারী সুরক্ষা ও সিরিয়াল</button>
+<button class="mbtn" id="menuLeaders" onclick="show('leaders')">🏛️ বিশ্বনেতা, ছবি ও প্রযুক্তি</button>
+<button class="mbtn" id="menuCountries" onclick="show('worldstates')">🌍 বিশ্বের রাষ্ট্রসমূহ</button>
+<button class="mbtn" id="menuBanks" onclick="show('banks')">🏦 বিশ্ব ব্যাংক হাব</button>
+<button class="mbtn" id="menuAlerts" onclick="show('alerts150')">🚨 ১৫০+ গ্লোবাল ইমার্জেন্সি অ্যালার্ট</button>
+<button class="mbtn" id="menuRadar" onclick="show('radar')">🧭 জিপিএস রাডার ও কম্পাস</button>
+<button class="mbtn" id="menuKids" onclick="show('kids')">🧸 শিশু বিনোদন</button>
+<button class="mbtn" id="menuDiscovery" onclick="show('discovery')">🔭 ডিসকভারি</button>
+<button class="mbtn" id="menuSettings" onclick="show('settings')">⚙️ সেটিং (ইংরেজি/বাংলা)</button>
 </div>
 <button class="arrow-btn" onclick="scrollNav(150)">❯</button>
 </div>
 
 <div class="okBox" style="margin:5px 0; font-size:11px;" id="topBanner">
-🛡️ <b>AYNA BOOK OMEGA V10000 Active:</b> Quantum Security, GPS Radar, OTP Authentication & 500+ Live Media Channels Ready.
+🛡️ <b>AYNA BOOK OMEGA V10000 Active:</b> কোয়ান্টাম সিকিউরিটি, গ্যালারি ফটো আপলোড, জিপিএস রাডার ও ওটিপি ভেরিফিকেশন প্রস্তুত।
 </div>
 
 <!-- 1. DASHBOARD HUB -->
 <div id="homeView">
 <div class="card">
-<div class="profile-cover">
+<div class="profile-cover" id="coverDisplay">
 <div class="profile-pic" id="displayAvatar">👤</div>
 </div>
 <div style="text-align:center;">
 <h2 id="displayName">Md. Mahabub Alam</h2>
-<p style="font-size:11px;color:#00ffcc">ID: AYNA-956251 | Account Level: <span id="displayTier" style="color:#ffd700">VVIP (20$ + BDT)</span></p>
+<p style="font-size:11px;color:#00ffcc">ID: AYNA-956251 | একাউন্ট লেভেল: <span id="displayTier" style="color:#ffd700">VVIP (20$ + টাকা)</span></p>
 </div>
 
 <div class="square-box" style="margin-top:15px; text-align:left;">
-<h3 style="color:#00d4ff; margin-bottom:8px; text-align:center;" id="dashTitle">📋 User Profile Information</h3>
+<h3 style="color:#00d4ff; margin-bottom:8px; text-align:center;" id="dashTitle">📋 আন্তর্জাতিক প্রোফাইল তথ্য</h3>
 <div class="grid2" style="font-size:11px; line-height:1.6;" id="dashBody">
-<div><b>Full Name:</b> Md. Mahabub Alam</div>
-<div><b>Profession:</b> Global Software Architect</div>
-<div><b>Age:</b> 30 Years</div>
-<div><b>Marital Status:</b> Single</div>
-<div><b>Date of Birth:</b> 15th January</div>
-<div><b>Gmail:</b> mahabub.official@gmail.com</div>
-<div><b>Phone:</b> +8801400751906</div>
-<div><b>Security:</b> Lock Active (Updates allowed every 3 months)</div>
+<div><b>পূর্ণ নাম:</b> <span id="infoName">Md. Mahabub Alam</span></div>
+<div><b>পেশা:</b> সফটওয়্যার আর্কিটেক্ট</div>
+<div><b>বয়স:</b> ৩০ বছর</div>
+<div><b>বৈবাহিক অবস্থা:</b> অবিবাহিত</div>
+<div><b>জন্মতারিখ:</b> ১৫ জানুয়ারি</div>
+<div><b>জিমেইল:</b> <span id="infoEmail">mahabub.official@gmail.com</span></div>
+<div><b>ফোন:</b> <span id="infoPhone">+8801400751906</span></div>
+<div><b>নিরাপত্তা:</b> ৩ মাস পর পর আপডেট সুবিধা (নাম স্থায়ী)</div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- 2. ACCOUNT & OTP HUB -->
+<!-- 2. ACCOUNT, PHOTO UPLOAD & OTP HUB -->
 <div id="authView" class="hidden">
 <div class="card square-box">
-<h3>🔐 International Account Registration & OTP System</h3>
-<p style="font-size:10px;color:#00d4ff;margin-bottom:8px">Select tier, enter details, and verify via OTP code.</p>
-<div class="inp"><input type="text" id="regNameInput" placeholder="Full Name"></div>
-<div class="inp"><input type="email" id="regEmailInput" placeholder="Gmail Address"></div>
-<div class="inp"><input type="text" id="regPhoneInput" placeholder="Phone Number"></div>
-<div class="inp"><input type="password" placeholder="Password"></div>
-<div class="inp"><input type="password" placeholder="Confirm Password"></div>
+<h3>🔐 আন্তর্জাতিক একাউন্ট রেজিস্ট্রেশন, ওটিপি ও ছবি আপলোড</h3>
+<p style="font-size:10px;color:#00d4ff;margin-bottom:8px">নিচের ফরমে তথ্য ও আপনার ছবি যুক্ত করে রেজিস্ট্রেশন করুন।</p>
+
+<!-- PHOTO UPLOAD CONTROLS -->
+<div class="grid2">
+<div class="inp">
+<label style="font-size:10px; display:block; text-align:left; color:#00ffcc">📸 স্কয়ার প্রোফাইল ছবি বেছে নিন:</label>
+<input type="file" id="profileImageInput" accept="image/*" onchange="previewImage(event, 'displayAvatar')">
+</div>
+<div class="inp">
+<label style="font-size:10px; display:block; text-align:left; color:#00ffcc">🖼️ কভার ছবি বেছে নিন:</label>
+<input type="file" id="coverImageInput" accept="image/*" onchange="previewCover(event, 'coverDisplay')">
+</div>
+</div>
+
+<div class="inp"><input type="text" id="regNameInput" placeholder="পূর্ণ নাম (Full Name)"></div>
+<div class="inp"><input type="email" id="regEmailInput" placeholder="জিমেইল (Gmail Address)"></div>
+<div class="inp"><input type="text" id="regPhoneInput" placeholder="ফোন নম্বর (Phone Number)"></div>
+<div class="inp"><input type="password" placeholder="পাসওয়ার্ড"></div>
+<div class="inp"><input type="password" placeholder="পুনরায় পাসওয়ার্ড"></div>
 <div class="inp">
 <select id="accTierSelect">
-<option value="1">1. Personal Account (Free)</option>
-<option value="2">2. Business Account (1$ + BDT)</option>
-<option value="3">3. VIP Account (10$ + BDT)</option>
-<option value="4" selected>4. VVIP Account (20$ + BDT)</option>
+<option value="1">১. ব্যক্তিগত একাউন্ট (Free)</option>
+<option value="2">২. ব্যবসায়িক একাউন্ট (1$ + টাকা)</option>
+<option value="3">৩. VIP একাউন্ট (10$ + টাকা)</option>
+<option value="4" selected>৪. VVIP একাউন্ট (20$ + টাকা)</option>
 </select>
 </div>
 
 <!-- OTP VERIFICATION BLOCK -->
 <div style="margin:10px 0; background:rgba(0,212,255,0.05); padding:10px; border-radius:8px; border:1px solid #00d4ff44">
-<button class="btn btn2" onclick="sendOtpCode()" style="margin-bottom:6px">📩 Send OTP Verification Code</button>
-<div class="inp"><input type="text" id="otpInput" placeholder="Enter 6-Digit OTP Code"></div>
+<button class="btn btn2" onclick="sendOtpCode()" style="margin-bottom:6px">📩 ৬-সংখ্যার OTP কোড পাঠান</button>
+<div class="inp"><input type="text" id="otpInput" placeholder="ওটিপি কোড এখানে বসান"></div>
 <div id="otpStatus" style="font-size:10px; color:#ffd700"></div>
 </div>
 
 <div class="okBox">
-💳 <b>Payment Methods (Bkash/Nagad/Payoneer):</b> <b style="color:#ffd700">01400751906</b>
+💳 <b>পেমেন্ট মাধ্যম (বিকাশ/নগদ/পাইওনিয়ার):</b> <b style="color:#ffd700">01400751906</b>
 </div>
-<button class="btn" onclick="executeRegistration()">✨ Complete 1st Registration</button>
+<button class="btn" onclick="executeRegistration()">✨ ১ম রেজিস্ট্রেশন সম্পন্ন করুন</button>
 <div id="authMsg" style="margin-top:8px"></div>
 </div>
 </div>
@@ -128,9 +141,9 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <!-- 3. TRENDING NEWS HUB -->
 <div id="newsView" class="hidden">
 <div class="card square-box">
-<h3>🔥 Trending News & Global Headlines Hub</h3>
-<button class="btn" onclick="loadTrendingNews()">⚡ Refresh 1-Click Trending News</button>
-<button class="btn btn2" onclick="makeElementFullScreen('newsBox')">🖥️ View News Panel Fullscreen</button>
+<h3>🔥 ১ ক্লিকে আলোচিত খবরের হাব</h3>
+<button class="btn" onclick="loadTrendingNews()">⚡ আলোচিত খবর রিফ্রেশ করুন</button>
+<button class="btn btn2" onclick="makeElementFullScreen('newsBox')">🖥️ ফুল স্ক্রিন সংবাদ প্যানেল</button>
 <div class="scroll-box" id="newsBox" style="margin-top:10px;"></div>
 </div>
 </div>
@@ -138,26 +151,24 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <!-- 4. 500+ TV & RADIO HUB -->
 <div id="tvradioView" class="hidden">
 <div class="card square-box">
-<h3>📺 500+ Live TV Channels & 📻 Global AM/FM Radio Hub</h3>
-<p style="font-size:10px;opacity:0.7">Working global streams, category filter, and fullscreen support.</p>
-
+<h3>📺 লাইভ টিভি চ্যানেল ও 📻 বিশ্ব রেডিও (AM/FM)</h3>
 <div class="inp">
-<input type="text" id="searchMediaInput" placeholder="Search 500+ Channels (News, Sports, Music, Quran, BBC, Somoy)..." onkeyup="filterMediaChannels()">
+<input type="text" id="searchMediaInput" placeholder="চ্যানেল খুঁজুন (Somoy, Al Jazeera, BBC, Makkah)..." onkeyup="filterMediaChannels()">
 </div>
 
 <div class="grid2" id="mediaButtonsContainer" style="margin-bottom:8px;">
-<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/9Auq9mYxFEE', 'Somoy TV Live')">🇧🇩 Somoy TV Live</button>
-<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/86YLFOog4GM', 'Al Jazeera Live')">🌍 Al Jazeera Live</button>
-<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/38Zv2VjRz0o', 'Makkah Live 24/7')">🕋 Makkah Live TV</button>
-<button class="btn btn2" onclick="playStream('radio', 'https://stream.live.vc.bbcmedia.co.uk/bbc_world_service', 'BBC World Service Radio AM/FM')">📻 BBC World Service</button>
-<button class="btn btn2" onclick="playStream('radio', 'https://quran.icecast.infomaniak.ch/quran-64.mp3', 'Quran Makkah AM/FM Radio')">🕋 Quran Makkah Radio</button>
-<button class="btn btn2" onclick="playStream('radio', 'https://icecast2.edume.eu:8000/betar', 'Bangladesh Betar AM/FM Hub')">📻 Bangladesh Betar</button>
+<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/9Auq9mYxFEE', 'Somoy TV Live')">🇧🇩 সময় টিভি লাইভ</button>
+<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/86YLFOog4GM', 'Al Jazeera Live')">🌍 আল জাজিরা লাইভ</button>
+<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/38Zv2VjRz0o', 'Makkah Live 24/7')">🕋 মক্কা লাইভ টিভি</button>
+<button class="btn btn2" onclick="playStream('radio', 'https://stream.live.vc.bbcmedia.co.uk/bbc_world_service', 'BBC World Service Radio AM/FM')">📻 BBC Radio</button>
+<button class="btn btn2" onclick="playStream('radio', 'https://quran.icecast.infomaniak.ch/quran-64.mp3', 'Quran Makkah AM/FM Radio')">🕋 কুরআন রেডিও</button>
+<button class="btn btn2" onclick="playStream('radio', 'https://icecast2.edume.eu:8000/betar', 'Bangladesh Betar AM/FM Hub')">📻 বাংলাদেশ বেতার</button>
 </div>
 
 <div class="card" id="mediaPlayerCard" style="background:#000;padding:0;overflow:hidden;margin-top:10px">
 <div style="display:flex; justify-content:space-between; align-items:center; padding:6px; background:#0d1117">
-<span style="font-size:11px"><span class="live-dot"></span> <b id="streamPlayerTitle">Select Stream to Play</b></span>
-<button class="btn2" onclick="makeElementFullScreen('mediaPlayerCard')" style="padding:4px 8px; font-size:10px">🖥️ Fullscreen Mode</button>
+<span style="font-size:11px"><span class="live-dot"></span> <b id="streamPlayerTitle">সম্প্রচার সিলেক্ট করুন</b></span>
+<button class="btn2" onclick="makeElementFullScreen('mediaPlayerCard')" style="padding:4px 8px; font-size:10px">🖥️ ফুল স্ক্রিন প্লেয়ার</button>
 </div>
 <iframe id="mainIframePlayer" width="100%" height="260" src="https://www.youtube.com/embed/86YLFOog4GM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
 <audio id="mainAudioPlayer" controls style="width:100%;margin-top:5px;display:none;"></audio>
@@ -168,10 +179,10 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <!-- 5. WOMEN SAFETY & SERIALS HUB -->
 <div id="womenView" class="hidden">
 <div class="card square-box">
-<h3>👩‍🍼 Women Safety & Serial Entertainment Hub</h3>
+<h3>👩‍🍼 নারী সুরক্ষা ও ভারতীয়-আরব সিরিয়াল হাব</h3>
 <div class="grid2">
-<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/videoseries?list=PLB5D4E6778D4A80C5', 'Indian Popular Drama Serials')">📺 Indian Serials (Auto Update)</button>
-<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/videoseries?list=PLVlX3Iwhy_67d4J_Y0fC6_m_WJ5YqUoB5', 'Arab Drama Serials')">🌍 Arab Serials (Auto Update)</button>
+<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/videoseries?list=PLB5D4E6778D4A80C5', 'ভারতীয় ড্রামা সিরিয়াল')">📺 ভারতীয় সিরিয়াল</button>
+<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/videoseries?list=PLVlX3Iwhy_67d4J_Y0fC6_m_WJ5YqUoB5', 'আরব ড্রামা সিরিয়াল')">🌍 আরব সিরিয়াল</button>
 </div>
 </div>
 </div>
@@ -179,7 +190,7 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <!-- 6. WORLD LEADERS HUB -->
 <div id="leadersView" class="hidden">
 <div class="card square-box">
-<h3>🏛️ World Leaders Database, Photos & Technology</h3>
+<h3>🏛️ বিশ্বনেতাদের ডাটাবেজ, ছবি ও প্রযুক্তি হাব</h3>
 <div class="scroll-box" id="leadersListContainer"></div>
 </div>
 </div>
@@ -187,8 +198,8 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <!-- 7. WORLD STATES HUB -->
 <div id="worldstatesView" class="hidden">
 <div class="card square-box">
-<h3>🌍 World States Database (Capital, Phone, Email & Tech)</h3>
-<div class="inp"><input type="text" id="searchCountry" placeholder="Search state by name..." onkeyup="filterCountries()"></div>
+<h3>🌍 পৃথিবীর সকল রাষ্ট্রের তালিকা ও তথ্য</h3>
+<div class="inp"><input type="text" id="searchCountry" placeholder="রাষ্ট্রের নাম লিখে খুঁজুন..." onkeyup="filterCountries()"></div>
 <div class="scroll-box" id="countryList"></div>
 </div>
 </div>
@@ -196,7 +207,7 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <!-- 8. WORLD BANKS HUB -->
 <div id="banksView" class="hidden">
 <div class="card square-box">
-<h3>🏦 World Central & Major Banks Directory</h3>
+<h3>🏦 সারাবিশ্বের সমস্ত ব্যাংকের বিবরণ</h3>
 <div class="scroll-box" id="bankListContainer"></div>
 </div>
 </div>
@@ -204,12 +215,11 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <!-- 9. 150+ EMERGENCY ALERTS HUB -->
 <div id="alerts150View" class="hidden">
 <div class="card square-box">
-<h3>🚨 150+ Global Emergency Alert Processor</h3>
+<h3>🚨 ১৫০+ গ্লোবাল ইমার্জেন্সি অ্যালার্ট প্রসেসর</h3>
 <div class="grid3">
-<button class="btn btnAlert" onclick="triggerAlert150('Earthquake Warning', '🌍 Richter Scale 6.5 P-Wave Seismic Event Detected!')">🌍 Earthquake</button>
-<button class="btn btnAlert" onclick="triggerAlert150('Missile Warning', '🚀 Air Defense Intercept Warning Activated!')">🚀 Missile Threat</button>
-<button class="btn btnAlert" onclick="triggerAlert150('Fire Hazard', '🔥 Regional Thermal Sensor Alarm Tripped!')">🔥 Fire Warning</button>
-<button class="btn btnAlert" onclick="triggerAlert150('Cyber Attack', '🛡️ Quantum Shield Active - Cyber Threat Neutralized!')">🛡️ Cyber Attack</button>
+<button class="btn btnAlert" onclick="triggerAlert150('ভূমিকম্প সতর্কতা', '🌍 রিখটার স্কেলে ৬.৫ ভূমিকম্প সনাক্ত!')">🌍 ভূমিকম্প</button>
+<button class="btn btnAlert" onclick="triggerAlert150('মিসাইল সতর্কতা', '🚀 এয়ার ডিফেন্স অ্যালার্ট সক্রিয়!')">🚀 মিসাইল হামলা</button>
+<button class="btn btnAlert" onclick="triggerAlert150('অগ্নি সতর্কতা', '🔥 আঞ্চলিক ফায়ার ওয়ার্নিং সংকেত!')">🔥 আগুন অ্যালার্ট</button>
 </div>
 <div class="scroll-box" id="alertLogsContainer" style="margin-top:10px;"></div>
 </div>
@@ -218,15 +228,15 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <!-- 10. GPS RADAR & COMPASS HUB -->
 <div id="radarView" class="hidden">
 <div class="card square-box" id="radarCardBlock">
-<h3>🧭 Real-Time GPS Radar & Compass</h3>
+<h3>🧭 রিয়েল-টাইম জিপিএস রাডার ও কম্পাস</h3>
 <div style="font-size:50px; margin:10px 0;" id="compassGraphic">🧭</div>
 <div class="okBox">
-<b>📍 Coordinates:</b> <span id="realGpsCoords">Click Scan to Acquire GPS Lock</span><br>
-<b>🧭 Compass Heading:</b> 0° North (Satellite Sync Active)
+<b>📍 অক্ষাংশ/দ্রাঘিমাংশ:</b> <span id="realGpsCoords">স্ক্যান করার নির্দেশ দিন</span><br>
+<b>🧭 কম্পাস হেডিং:</b> 0° North (Satellite Synced)
 </div>
 <div class="grid2">
-<button class="btn" onclick="startLiveGps()">📡 Scan Device GPS Coordinates</button>
-<button class="btn btn2" onclick="makeElementFullScreen('radarCardBlock')">🖥️ Radar Fullscreen</button>
+<button class="btn" onclick="startLiveGps()">📡 ডিভাইস জিপিএস স্ক্যান করুন</button>
+<button class="btn btn2" onclick="makeElementFullScreen('radarCardBlock')">🖥️ রাডার ফুল স্ক্রিন</button>
 </div>
 </div>
 </div>
@@ -234,39 +244,39 @@ body{background:#020208;color:#e0f7fc;padding:6px;overflow-x:hidden}
 <!-- 11. KIDS HUB -->
 <div id="kidsView" class="hidden">
 <div class="card square-box">
-<h3>🧸 Kids Entertainment & Learning</h3>
-<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/kJQP7kiw5Fk', 'Baby Shark Rhymes')">🎶 Nursery Rhymes</button>
+<h3>🧸 শিশুদের বিনোদন ও কার্টুন লার্নিং</h3>
+<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/kJQP7kiw5Fk', 'Baby Shark Songs')">🎶 শিশুতোষ গান</button>
 </div>
 </div>
 
 <!-- 12. DISCOVERY HUB -->
 <div id="discoveryView" class="hidden">
 <div class="card square-box">
-<h3>🔭 Discovery, Oceans & Space Science</h3>
-<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/JGwWNGJdvx8', 'Planet Earth II Discovery')">🦁 Wildlife & Earth</button>
+<h3>🔭 ডিসকভারি ও স্পেস সায়েন্স</h3>
+<button class="btn btn2" onclick="playStream('tv', 'https://www.youtube.com/embed/JGwWNGJdvx8', 'Planet Earth II Discovery')">🦁 ওয়াইল্ডলাইফ</button>
 </div>
 </div>
 
 <!-- 13. SETTINGS & LANGUAGE HUB -->
 <div id="settingsView" class="hidden">
 <div class="card square-box">
-<h3>⚙️ Application Settings & Language Switcher</h3>
-<p style="font-size:11px; margin-bottom:10px;">Switch application display interface language:</p>
+<h3>⚙️ অ্যাপ সেটিংস ও ভাষা অপশন (English Interface)</h3>
 <div class="grid2">
-<button class="btn" onclick="setLanguage('en')">🇬🇧 English Language (Active)</button>
+<button class="btn" onclick="setLanguage('en')">🇬🇧 English Language</button>
 <button class="btn btn2" onclick="setLanguage('bn')">🇧🇩 বাংলা ভাষা (Bengali)</button>
 </div>
 </div>
 </div>
 
 <script>
-let currentLanguage = 'en';
 let generatedOtp = null;
 
+// Menu Nav Scroll
 function scrollNav(amount) {
     document.getElementById('navContainer').scrollBy({ left: amount, behavior: 'smooth' });
 }
 
+// Section Switcher
 function show(id) {
     ['home','auth','news','tvradio','women','leaders','worldstates','banks','alerts150','radar','kids','discovery','settings'].forEach(v => {
         let el = document.getElementById(v+'View');
@@ -279,14 +289,35 @@ function show(id) {
     if(id === 'news') loadTrendingNews();
 }
 
+// Image Preview for Profile Avatar
+function previewImage(event, targetId) {
+    let reader = new FileReader();
+    reader.onload = function() {
+        let output = document.getElementById(targetId);
+        output.style.backgroundImage = 'url(' + reader.result + ')';
+        output.innerText = '';
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+// Image Preview for Profile Cover
+function previewCover(event, targetId) {
+    let reader = new FileReader();
+    reader.onload = function() {
+        let output = document.getElementById(targetId);
+        output.style.backgroundImage = 'url(' + reader.result + ')';
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+
 // Fullscreen API Helper
 function makeElementFullScreen(elemId) {
     let elem = document.getElementById(elemId);
     if (elem.requestFullscreen) {
         elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) { /* Safari */
+    } else if (elem.webkitRequestFullscreen) {
         elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { /* IE11 */
+    } else if (elem.msRequestFullscreen) {
         elem.msRequestFullscreen();
     }
 }
@@ -294,39 +325,39 @@ function makeElementFullScreen(elemId) {
 // OTP Code Generator
 function sendOtpCode() {
     let phone = document.getElementById('regPhoneInput').value;
-    if(!phone) { alert('Please enter your phone number first.'); return; }
+    if(!phone) { alert('দয়া করে আপনার ফোন নম্বর লিখুন।'); return; }
     generatedOtp = Math.floor(100000 + Math.random() * 900000);
-    document.getElementById('otpStatus').innerText = "🔑 OTP Sent! Mock OTP Code: " + generatedOtp;
-    alert("OTP Verification Code sent to " + phone + "\nYour OTP is: " + generatedOtp);
+    document.getElementById('otpStatus').innerText = "🔑 প্রেরিত OTP কোড: " + generatedOtp;
+    alert("আপনার নম্বরে প্রেরিত ওটিপি কোড: " + generatedOtp);
 }
 
 // Registration Execution
 function executeRegistration() {
     let name = document.getElementById('regNameInput').value;
     let email = document.getElementById('regEmailInput').value;
+    let phone = document.getElementById('regPhoneInput').value;
     let userOtp = document.getElementById('otpInput').value;
+    let tier = document.getElementById('accTierSelect').value;
     
-    if(!name || !email) { alert('Please fill in your Name and Gmail.'); return; }
+    if(!name || !email) { alert('আপনার নাম ও জিমেইল ঘরটি পূরণ করুন।'); return; }
     if(generatedOtp && userOtp != generatedOtp) {
-        alert('Invalid OTP Code! Please check and try again.');
+        alert('ভুল ওটিপি কোড! আবার চেষ্টা করুন।');
         return;
     }
     
+    let tierText = tier == '1' ? 'ব্যক্তিগত (Free)' : (tier == '2' ? 'ব্যবসায়ীক (1$)' : (tier == '3' ? 'VIP (10$)' : 'VVIP (20$ + টাকা)'));
+    
     document.getElementById('displayName').innerText = name;
-    document.getElementById('displayAvatar').innerText = name.charAt(0).toUpperCase();
-    document.getElementById('authMsg').innerHTML = `<div class="okBox">✅ Account Registered & OTP Verified Successfully!</div>`;
+    document.getElementById('infoName').innerText = name;
+    document.getElementById('infoEmail').innerText = email;
+    if(phone) document.getElementById('infoPhone').innerText = phone;
+    document.getElementById('displayTier').innerText = tierText;
+    
+    document.getElementById('authMsg').innerHTML = `<div class="okBox">✅ অ্যাকাউন্ট সফলভাবে রেজিস্টার্ড ও ওটিপি ভেরিফাইড হয়েছে!</div>`;
+    alert('অভিনন্দন! আপনার অ্যাকাউন্ট সিঙ্ক্রোনাইজেশন সম্পন্ন হয়েছে।');
 }
 
-// Media Channels Filter & Streaming
-const mediaChannels = [
-    {name: "🇧🇩 Somoy TV Live News", type: "tv", url: "https://www.youtube.com/embed/9Auq9mYxFEE"},
-    {name: "🌍 Al Jazeera Live English", type: "tv", url: "https://www.youtube.com/embed/86YLFOog4GM"},
-    {name: "🕋 Makkah Live TV 24/7", type: "tv", url: "https://www.youtube.com/embed/38Zv2VjRz0o"},
-    {name: "📻 BBC World Service Radio", type: "radio", url: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"},
-    {name: "🕋 Quran Makkah AM/FM Radio", type: "radio", url: "https://quran.icecast.infomaniak.ch/quran-64.mp3"},
-    {name: "📻 Bangladesh Betar AM/FM", type: "radio", url: "https://icecast2.edume.eu:8000/betar"}
-];
-
+// Streaming Media
 function playStream(type, url, title) {
     let iframe = document.getElementById('mainIframePlayer');
     let audio = document.getElementById('mainAudioPlayer');
@@ -341,36 +372,25 @@ function playStream(type, url, title) {
         iframe.style.display = 'none';
         audio.style.display = 'block';
         audio.src = url;
-        audio.play().catch(() => alert('Radio stream loading...'));
+        audio.play().catch(() => alert('রেডিও সম্প্রচার প্লে করা হচ্ছে...'));
         tEl.innerText = "📻 " + title;
     }
 }
 
-function filterMediaChannels() {
-    let q = document.getElementById('searchMediaInput').value.toLowerCase();
-    let container = document.getElementById('mediaButtonsContainer');
-    let filtered = mediaChannels.filter(c => c.name.toLowerCase().includes(q));
-    let html = '';
-    filtered.forEach(c => {
-        html += `<button class="btn btn2" onclick="playStream('${c.type}', '${c.url}', '${c.name}')">${c.name}</button>`;
-    });
-    container.innerHTML = html || '<div class="alertBox">No matching channels found.</div>';
-}
-
-// News Loader
+// Trending News Loader
 function loadTrendingNews() {
     document.getElementById('newsBox').innerHTML = `
-        <div class="okBox">🔥 <b>Global Headline #1:</b> Quantum Computing Breakthrough Announced in Global AI Summit.</div>
-        <div class="okBox">🔥 <b>Global Headline #2:</b> New International Remote Work Visas & Digital Payoneer Updates.</div>
-        <div class="okBox">🔥 <b>Global Headline #3:</b> NASA Artemis Lunar Base Mission Synchronized successfully.</div>
+        <div class="okBox">🔥 <b>খবর ১:</b> বৈশ্বিক কোয়ান্টাম ও এআই প্রসেসর নেটওয়ার্ক সম্পূর্ণ চালুকৃত।</div>
+        <div class="okBox">🔥 <b>খবর ২:</b> আন্তর্জাতিক পে-আউট ও পাইওনিয়ার অ্যাকাউন্ট ভেরিফিকেশনের নতুন পলিসি।</div>
+        <div class="okBox">🔥 <b>খবর ৩:</b> নাসার নতুন স্যাটেলাইট রাডার নেটওয়ার্কের সফল উন্মোচন।</div>
     `;
 }
 
 // World Leaders Data
 const leadersData = [
-    {country: "Bangladesh 🇧🇩", leader: "Chief Adviser / Govt", phone: "+880 2-9566000", email: "info@pmo.gov.bd", tech: "Fintech & AI Node", avatar: "🇧🇩"},
-    {country: "USA 🇺🇸", leader: "President / White House", phone: "+1 202-456-1111", email: "contact@whitehouse.gov", tech: "NASA, Quantum & Defense", avatar: "🇺🇸"},
-    {country: "UK 🇬🇧", leader: "Prime Minister Office", phone: "+44 20 7925 0918", email: "action@number10.gov.uk", tech: "Cyber Security & Biotech", avatar: "🇬🇧"}
+    {country: "বাংলাদেশ 🇧🇩", leader: "প্রধান উপদেষ্টা / সরকার", phone: "+880 2-9566000", email: "info@pmo.gov.bd", tech: "ফিনটেক ও এআই হাব", avatar: "🇧🇩"},
+    {country: "যুক্তরাষ্ট্র 🇺🇸", leader: "প্রেসিডেন্ট Executive Office", phone: "+1 202-456-1111", email: "contact@whitehouse.gov", tech: "নাসা, কোয়ান্টাম ও ডিফেন্স", avatar: "🇺🇸"},
+    {country: "যুক্তরাজ্য 🇬🇧", leader: "প্রধানমন্ত্রী Office", phone: "+44 20 7925 0918", email: "action@number10.gov.uk", tech: "সাইবার সিকিউরিটি ও বায়োটেক", avatar: "🇬🇧"}
 ];
 
 function loadLeadersData() {
@@ -381,7 +401,7 @@ function loadLeadersData() {
             <div>
                 <b style="color:#00d4ff">${l.country}</b> - ${l.leader}<br>
                 📞 ${l.phone} | ✉️ ${l.email}<br>
-                ⚡ <b>Technology:</b> ${l.tech}
+                ⚡ <b>প্রযুক্তি:</b> ${l.tech}
             </div>
         </div>`;
     });
@@ -390,9 +410,9 @@ function loadLeadersData() {
 
 // Countries Data
 const countries = [
-    {name: "Bangladesh", phone: "+880", email: "info@gov.bd", tech: "IT Hub"},
-    {name: "United States", phone: "+1", email: "contact@usa.gov", tech: "AI & Space"},
-    {name: "Saudi Arabia", phone: "+966", email: "info@ksa.gov.sa", tech: "Smart City"}
+    {name: "বাংলাদেশ", phone: "+880", email: "info@gov.bd", tech: "IT Hub"},
+    {name: "যুক্তরাষ্ট্র", phone: "+1", email: "contact@usa.gov", tech: "AI & Space"},
+    {name: "সৌদি আরব", phone: "+966", email: "info@ksa.gov.sa", tech: "Smart City"}
 ];
 
 function loadCountriesData() {
@@ -414,12 +434,12 @@ function filterCountries() {
             <b style="color:#00d4ff">${c.name}</b> | 📞 ${c.phone} | ✉️ ${c.email} | ⚡ ${c.tech}
         </div>`;
     });
-    document.getElementById('countryList').innerHTML = html || '<div class="alertBox">No states found.</div>';
+    document.getElementById('countryList').innerHTML = html || '<div class="alertBox">কোনো তথ্য পাওয়া যায়নি।</div>';
 }
 
 // Banks Data
 const banks = [
-    {name: "Bangladesh Bank (Central Bank)", phone: "+880 2-9530330", email: "info@bb.org.bd"},
+    {name: "বাংলাদেশ ব্যাংক (Central Bank)", phone: "+880 2-9530330", email: "info@bb.org.bd"},
     {name: "Federal Reserve (USA)", phone: "+1 202-452-3000", email: "info@frb.gov"},
     {name: "European Central Bank", phone: "+49 69 13440", email: "info@ecb.europa.eu"}
 ];
@@ -439,9 +459,9 @@ function triggerAlert150(type, msg) {
     let logBox = document.getElementById('alertLogsContainer');
     let time = new Date().toLocaleTimeString();
     let alertItem = `<div class="alertBox">
-        <b>🚨 [Alert Session #${Math.floor(Math.random()*900+100)}]: ${type}</b><br>
+        <b>🚨 [অ্যালার্ট আইডি #${Math.floor(Math.random()*900+100)}]: ${type}</b><br>
         ${msg}<br>
-        <small>⏰ Time: ${time} | GPS: Sat-Locked</small>
+        <small>⏰ সময়: ${time} | GPS: Sat-Locked</small>
     </div>`;
     logBox.innerHTML = alertItem + logBox.innerHTML;
     if('vibrate' in navigator) navigator.vibrate([300, 100, 300]);
@@ -452,7 +472,7 @@ function startLiveGps() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
             document.getElementById('realGpsCoords').innerText = position.coords.latitude.toFixed(4) + "° N, " + position.coords.longitude.toFixed(4) + "° E";
-            alert('📡 Device GPS Position Locked Successfully!');
+            alert('📡 আপনার ডিভাইসের জিপিএস পজিশন নিখুঁতভাবে লক করা হয়েছে!');
         }, function(error) {
             document.getElementById('realGpsCoords').innerText = "23.8103° N, 90.4125° E (Sat-Proxy)";
         });
@@ -463,21 +483,18 @@ function startLiveGps() {
 
 // Language Switcher Function
 function setLanguage(lang) {
-    currentLanguage = lang;
     if(lang === 'en') {
-        document.getElementById('dashTitle').innerText = "📋 User Profile Information";
         document.getElementById('menuHome').innerText = "Dashboard";
         document.getElementById('menuAuth').innerText = "🔐 Account & OTP";
         document.getElementById('menuNews').innerText = "🔥 Trending News";
-        document.getElementById('menuTvRadio').innerText = "📺 500+ Live TV & 📻 Radio (AM/FM)";
-        alert("App settings updated to English.");
+        document.getElementById('menuTvRadio').innerText = "📺 500+ Live TV & 📻 Radio";
+        alert("Interface updated to English.");
     } else {
-        document.getElementById('dashTitle').innerText = "📋 ব্যবহারকারীর প্রোফাইল তথ্য";
         document.getElementById('menuHome').innerText = "ড্যাশবোর্ড";
         document.getElementById('menuAuth').innerText = "🔐 একাউন্ট ও ওটিপি";
         document.getElementById('menuNews').innerText = "🔥 আলোচিত খবর";
         document.getElementById('menuTvRadio').innerText = "📺 লাইভ টিভি ও রেডিও";
-        alert("অ্যাপের ভাষা বাংলায় পরিবর্তন করা হয়েছে।");
+        alert("ইন্টারফেস বাংলায় রূপান্তর করা হয়েছে।");
     }
 }
 </script>
