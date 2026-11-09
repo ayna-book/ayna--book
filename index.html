@@ -9,6 +9,8 @@
 
 <!-- HLS.js Support for Live Streams -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<!-- FontAwesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -150,7 +152,7 @@ a:hover{text-decoration:underline}
 .media-filter button{padding:8px 14px;border-radius:20px;border:1px solid #00d4ff55;background:#161b22;color:#fff;font-size:12px}
 .media-filter button.active{background:linear-gradient(90deg,#00d4ff,#7a00ff);border-color:#00d4ff}
 .media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.channel-card{background:#0c1c38;border:1px solid #00d4ff33;border-radius:12px;padding:12px;cursor:pointer;transition:0.2s}
+.channel-card{background:#0c1c38;border:1px solid #00d4ff33;border-radius:12px;padding:12px;cursor:pointer;transition:0.2s;display:flex;align-items:center;justify-content:space-between}
 .channel-card:hover{border-color:#00d4ff;background:#132a52;transform:translateY(-2px)}
 .channel-card b{font-size:13px;color:#fff;display:block}
 .channel-card small{color:#00d4ff;font-size:11px}
@@ -171,7 +173,6 @@ a:hover{text-decoration:underline}
 .country-title{color:#ffd700;font-size:18px;font-weight:bold;margin:10px 0}
 .person-name{font-size:15px;font-weight:bold;margin:6px 0;color:#fff}
 .person-role{color:#00d4ff;font-size:12px;margin-bottom:8px}
-.leader-details{background:#051124;border-radius:9px;padding:8px;margin-top:10px;text-align:center;font-size:12px;color:#a8c5df}
 
 footer{text-align:center;padding:25px;color:#8ca9ca;margin-top:20px;border-top:1px solid #00d4ff33}
 
@@ -263,37 +264,37 @@ footer{text-align:center;padding:25px;color:#8ca9ca;margin-top:20px;border-top:1
  </div>
 </section>
 
-<!-- 8K MEDIA & TV/RADIO -->
+<!-- 8K MEDIA & TV/RADIO CENTER -->
 <section id="media" class="view">
  <div class="card">
   <div class="media-header">
    <h2>📺 8K ULTRA WORLD LIVE TV & RADIO CENTER</h2>
-   <p class="muted">বিশ্বের স্যাটেলাইট চ্যানেল ও এফএম রেডিও স্ট্রিমিং</p>
+   <p class="muted">বিশ্বের স্যাটেলাইট চ্যানেল, এইচএলএস (HLS) স্ট্রিম ও এফএম রেডিও কেন্দ্র</p>
   </div>
 
   <div class="player-box">
    <div class="player-info">
     <div>
      <span class="live-indicator"></span>
-     <b id="currentChannelTitle">NASA TV Live Stream</b>
+     <b id="currentChannelTitle">Al Jazeera English (TV)</b>
     </div>
     <small id="currentChannelCat" class="muted">GLOBAL • TV</small>
    </div>
    <div id="playerContainer">
-    <iframe id="videoIframe" src="https://www.youtube.com/embed/21X5lGlDOfg?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    <video id="hlsVideo" controls style="display:none;"></video>
+    <iframe id="videoIframe" src="https://www.youtube.com/embed/gCNeDWCI010?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <video id="hlsVideo" controls autoplay style="display:none;"></video>
     <audio id="radioAudio" crossorigin="anonymous" controls style="display:none;"></audio>
    </div>
   </div>
 
   <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-   <button class="secondary" style="flex:1" onclick="playPreset('nasa')">🚀 NASA TV</button>
-   <button class="secondary" style="flex:1" onclick="playPreset('aljazeera')">📰 Al Jazeera</button>
-   <button class="secondary" style="flex:1" onclick="playPreset('quran')">🕋 Quran Radio</button>
-   <button class="secondary" style="flex:1" onclick="playPreset('bbc')">📻 BBC Radio</button>
+   <button class="secondary" style="flex:1" onclick="playPreset('aljazeera')">📰 Al Jazeera (HLS)</button>
+   <button class="secondary" style="flex:1" onclick="playPreset('france24')">🌐 France 24 (HLS)</button>
+   <button class="secondary" style="flex:1" onclick="playPreset('nasa')">🚀 NASA TV (HLS)</button>
+   <button class="secondary" style="flex:1" onclick="playPreset('bbc_radio')">📻 BBC Radio</button>
   </div>
 
-  <input type="text" id="channelSearch" placeholder="🔍 চ্যানেল বা রেডিও খুঁজুন (যেমন: Somoy, BBC, Quran)..." onkeyup="filterChannels()">
+  <input type="text" id="channelSearch" placeholder="🔍 চ্যানেল বা রেডিও খুঁজুন (যেমন: Somoy, France 24, BBC, Lofi)..." onkeyup="filterChannels()">
   
   <div class="media-filter">
    <button class="active" onclick="filterCategory('all', this)">🌐 সব চ্যানেল</button>
@@ -394,7 +395,7 @@ footer{text-align:center;padding:25px;color:#8ca9ca;margin-top:20px;border-top:1
  </div>
 </section>
 
-<!-- GLOBAL MATRIMONY & IMMIGRATION (বিয়ে-শাদী ও ইমিগ্রেশন ডিরেক্টরি) -->
+<!-- GLOBAL MATRIMONY & IMMIGRATION -->
 <section id="matrimony" class="view">
  <div class="card">
   <h2>💍 GLOBAL MATRIMONY & IMMIGRATION DIRECTORY</h2>
@@ -525,16 +526,18 @@ function startQuantum() {
   }, 1000);
 }
 
-// --- Media & Channel Engine ---
+// --- Integrated Media & Channel Engine (HLS + YouTube + Audio) ---
 const channels = [
-  { name: "NASA TV Live", cat: "tv", type: "youtube", src: "https://www.youtube.com/embed/21X5lGlDOfg?autoplay=1", icon: "🚀", country: "Global" },
-  { name: "Somoy TV Live", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/9Auq9mYxFEE?autoplay=1", icon: "🇧🇩", country: "Bangladesh" },
-  { name: "Al Jazeera English", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/gCNeDWCI010?autoplay=1", icon: "📰", country: "Qatar" },
-  { name: "BBC News Live", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/8Z5R6U4D4eU?autoplay=1", icon: "🇬🇧", country: "UK" },
-  { name: "France 24 English", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/h3MuIUNCCzI?autoplay=1", icon: "🌐", country: "France" },
-  { name: "Holy Quran Radio", cat: "islamic", type: "audio", src: "https://stream.radiojar.com/8s5u8spb87uvv", icon: "🕋", country: "Saudi Arabia" },
-  { name: "BBC World Radio", cat: "radio", type: "audio", src: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service", icon: "📻", country: "UK" },
-  { name: "Bangladesh Betar", cat: "radio", type: "audio", src: "http://stream.zeno.fm/462s78y784zuv", icon: "🎙️", country: "Bangladesh" }
+  { id: 1, name: "Al Jazeera English (TV)", cat: "news", type: "hls", src: "https://live-hls-web-aje.getaj.net/AJE/03.m3u8", icon: "📺", country: "Global" },
+  { id: 2, name: "France 24 English (TV)", cat: "news", type: "hls", src: "https://static.france24.com/live/F24_EN_HI_HLS/live_web.m3u8", icon: "🌐", country: "France" },
+  { id: 3, name: "NASA TV Public (TV)", cat: "tv", type: "hls", src: "https://nasa-i.akamaihd.net/hls/live/508565/NASA-TV-HQ/master.m3u8", icon: "🚀", country: "USA" },
+  { id: 4, name: "Somoy TV Live", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/9Auq9mYxFEE?autoplay=1", icon: "🇧🇩", country: "Bangladesh" },
+  { id: 5, name: "BBC News Live", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/8Z5R6U4D4eU?autoplay=1", icon: "🇬🇧", country: "UK" },
+  { id: 6, name: "BBC World Service (Radio)", cat: "radio", type: "audio", src: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service", icon: "📻", country: "UK" },
+  { id: 7, name: "VOA Bangla Radio", cat: "radio", type: "hls", src: "https://voahls-i.akamaihd.net/hls/live/597371/tv-audio/playlist.m3u8", icon: "🎧", country: "USA/BN" },
+  { id: 8, name: "Holy Quran Radio", cat: "islamic", type: "audio", src: "https://stream.radiojar.com/8s5u8spb87uvv", icon: "🕋", country: "Saudi Arabia" },
+  { id: 9, name: "Bangladesh Betar", cat: "radio", type: "audio", src: "http://stream.zeno.fm/462s78y784zuv", icon: "🎙️", country: "Bangladesh" },
+  { id: 10, name: "Chillout Lofi Beats", cat: "radio", type: "audio", src: "https://stream.zeno.fm/f3wvbbqmdg8uv", icon: "🎵", country: "Global" }
 ];
 
 const iframe = document.getElementById('videoIframe');
@@ -554,6 +557,17 @@ function playMedia(channel) {
   if(channel.type === 'youtube') {
     iframe.style.display = 'block';
     iframe.src = channel.src;
+  } else if(channel.type === 'hls' || channel.src.endsWith('.m3u8')) {
+    hlsVid.style.display = 'block';
+    if (Hls.isSupported()) {
+      hlsInstance = new Hls();
+      hlsInstance.loadSource(channel.src);
+      hlsInstance.attachMedia(hlsVid);
+      hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => { hlsVid.play(); });
+    } else if (hlsVid.canPlayType('application/vnd.apple.mpegurl')) {
+      hlsVid.src = channel.src;
+      hlsVid.play();
+    }
   } else if(channel.type === 'audio') {
     audioEl.style.display = 'block';
     audioEl.src = channel.src;
@@ -562,20 +576,30 @@ function playMedia(channel) {
 }
 
 function playPreset(key) {
-  if(key === 'nasa') playMedia(channels[0]);
-  if(key === 'aljazeera') playMedia(channels[2]);
-  if(key === 'quran') playMedia(channels[5]);
-  if(key === 'bbc') playMedia(channels[6]);
+  if(key === 'aljazeera') playMedia(channels[0]);
+  if(key === 'france24') playMedia(channels[1]);
+  if(key === 'nasa') playMedia(channels[2]);
+  if(key === 'bbc_radio') playMedia(channels[5]);
 }
 
 function renderChannels(items) {
   const grid = document.getElementById('channelsGrid');
   grid.innerHTML = '';
+  if(items.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;" class="muted">কোনো চ্যানেল পাওয়া যায়নি</div>';
+    return;
+  }
   items.forEach(ch => {
     const card = document.createElement('div');
     card.className = 'channel-card';
     card.onclick = () => playMedia(ch);
-    card.innerHTML = `<b>${ch.icon} ${ch.name}</b><small>${ch.country} • ${ch.cat.toUpperCase()}</small>`;
+    card.innerHTML = `
+      <div>
+        <b>${ch.icon} ${ch.name}</b>
+        <small>${ch.country} • ${ch.cat.toUpperCase()}</small>
+      </div>
+      <i class="fa-solid fa-play" style="color:#00d4ff;font-size:12px"></i>
+    `;
     grid.appendChild(card);
   });
 }
@@ -583,7 +607,7 @@ function renderChannels(items) {
 function filterCategory(cat, btnElement) {
   document.querySelectorAll('.media-filter button').forEach(b => b.classList.remove('active'));
   btnElement.classList.add('active');
-  renderChannels(cat === 'all' ? channels : channels.filter(c => c.cat === cat));
+  renderChannels(cat === 'all' ? channels : channels.filter(c => c.cat === cat || (cat === 'tv' && (c.type==='hls'||c.type==='youtube'))));
 }
 
 function filterChannels() {
@@ -714,7 +738,7 @@ function toggleLeaderLang() {
   renderLeaders();
 }
 
-// --- Global Matrimony Engine (বিয়ে-শাদী বায়োডাটা হাব) ---
+// --- Global Matrimony Engine ---
 let biodataList = [
   { name: "Kamrul Islam", gender: "Groom", country: "Bangladesh", profession: "Software Engineer" },
   { name: "Nusrat Jahan", gender: "Bride", country: "UK", profession: "Doctor" }
@@ -848,10 +872,12 @@ function getLocation() {
   }
   navigator.geolocation.getCurrentPosition(pos => {
     locStr = `Lat: ${pos.coords.latitude.toFixed(4)}, Lon: ${pos.coords.longitude.toFixed(4)}`;
-    document.getElementById('myLoc').innerText = locStr;
+    const myLocEl = document.getElementById('myLoc');
+    if(myLocEl) myLocEl.innerText = locStr;
     if(res) res.innerHTML = `<div class="status">Latitude: ${pos.coords.latitude} <br> Longitude: ${pos.coords.longitude}</div>`;
   }, err => {
-    document.getElementById('myLoc').innerText = locStr;
+    const myLocEl = document.getElementById('myLoc');
+    if(myLocEl) myLocEl.innerText = locStr;
   });
 }
 
