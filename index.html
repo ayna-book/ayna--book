@@ -87,26 +87,10 @@ body{
   animation:rot 2.5s linear infinite;
 }
 @keyframes rot{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-.blip{
-  position:absolute;width:9px;height:9px;
-  background:#ffd700;border-radius:50%;
-  box-shadow:0 0 10px #ffd700;
-  animation:blink 1.2s infinite;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
 
-.live-indicator{
-  width:10px;height:10px;background:#ff2a2a;
-  border-radius:50%;display:inline-block;
-  animation:pulse .8s infinite;margin-right:6px;
-}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
-
-.story-ring {
-  background: linear-gradient(45deg, #ffd700, #ff5a8e, #00d4ff);
-  padding: 2px;
-  border-radius: 50%;
-}
+.channel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.channel-btn { background: #0a1730; border: 1px solid rgba(0, 212, 255, 0.3); color: white; padding: 12px; border-radius: 12px; cursor: pointer; text-align: left; transition: 0.2s; font-size: 12px; font-weight: 600; }
+.channel-btn:hover { background: #00adb5; border-color: #00d4ff; color: #000; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #020817; }
@@ -130,16 +114,13 @@ body{
    </div>
   </div>
 
-  <!-- Action Bar -->
+  <!-- Action Bar with Call Icons -->
   <div class="flex items-center gap-1.5 sm:gap-2">
-   <button onclick="goBackHistory()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 border border-slate-800 text-cyan-400 flex items-center justify-center hover:bg-slate-800" title="ব্যাক">
-     <i class="fa-solid fa-arrow-left text-xs sm:text-sm"></i>
+   <button onclick="startCall('audio')" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 border border-slate-800 text-emerald-400 flex items-center justify-center hover:bg-slate-800" title="অডিও কল">
+     <i class="fa-solid fa-phone text-xs sm:text-sm"></i>
    </button>
-   <button onclick="switchTab('search')" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 border border-slate-800 text-cyan-400 flex items-center justify-center hover:bg-slate-800" title="অনুসন্ধান">
-     <i class="fa-solid fa-magnifying-glass text-xs sm:text-sm"></i>
-   </button>
-   <button onclick="startVoiceInput()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 border border-slate-800 text-amber-400 flex items-center justify-center hover:bg-slate-800" title="মাইক্রোফোন">
-     <i class="fa-solid fa-microphone text-xs sm:text-sm"></i>
+   <button onclick="startCall('video')" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 border border-slate-800 text-cyan-400 flex items-center justify-center hover:bg-slate-800" title="ভিডিও কল">
+     <i class="fa-solid fa-video text-xs sm:text-sm"></i>
    </button>
    <button onclick="switchTab('messages')" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 border border-slate-800 text-pink-400 flex items-center justify-center relative hover:bg-slate-800" title="মেসেঞ্জার">
      <i class="fa-solid fa-comments text-xs sm:text-sm"></i>
@@ -155,50 +136,52 @@ body{
    <button onclick="switchTab('radar')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="radar">📡 রাডার ৩৬০°</button>
    <button onclick="switchTab('alerts')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-red-950/80 text-red-300 border border-red-500/40 whitespace-nowrap" data-view="alerts">🚨 ১৫০+ অ্যালার্ট</button>
    <button onclick="switchTab('islamic')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="islamic">🕋 ইসলামিক সাইট</button>
-   <button onclick="switchTab('market')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="market">🛒 বেচাকেনার হাট</button>
-   <button onclick="switchTab('matrimony')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="matrimony">💍 বিয়ে শাদী ও ভিসা</button>
-   <button onclick="switchTab('payments')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="payments">💳 পেমেন্ট গেটওয়ে</button>
-   <button onclick="switchTab('recipes')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="recipes">🍲 রান্না ও ফ্যাশন</button>
-   <button onclick="switchTab('leaders')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="leaders">🏛️ রাষ্ট্রনেতা ডিরেক্টরি</button>
-   <button onclick="switchTab('quantum')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="quantum">⚛️ কোয়ান্টাম নোড</button>
-   <button onclick="switchTab('account')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="account">🔐 প্রোফাইল ও অ্যাকাউন্ট</button>
+   <button onclick="switchTab('account')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="account">🔐 অ্যাকাউন্ট</button>
  </div>
 </header>
 
 <main class="max-w-7xl mx-auto px-3 sm:px-4 py-4 flex flex-col gap-5">
 
-<!-- 1. DASHBOARD HOME VIEW -->
+<!-- 1. DASHBOARD HOME VIEW & MEDIA POSTING -->
 <section id="home" class="view active space-y-4">
  <div class="ayna-card p-5 sm:p-6 rounded-2xl text-center bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 border border-cyan-500/40 shadow-xl">
   <h1 class="text-2xl sm:text-4xl font-extrabold text-amber-400 drop-shadow-md">AYNA BOOK OMEGA V10000</h1>
   <h3 class="text-xs sm:text-base font-semibold text-cyan-400 mt-1">ULTRA HD + 8K WORLD SAFETY OS & MEDIA HUB</h3>
-  <p class="text-xs text-slate-400 mt-1">MY WORLD. MY STORY. MY AYNA BOOK.</p>
   <button class="mt-4 px-6 py-3 w-full rounded-xl font-extrabold text-black bg-gradient-to-r from-amber-400 via-pink-500 to-cyan-400 shadow-lg hover:opacity-95 text-xs sm:text-sm" onclick="activateAllSystems()">
     ⚡ ১-চাপে অল সিস্টেম অ্যাক্টিভেট ও স্টারলিংক ৮কে চালু ⚡
   </button>
  </div>
 
- <!-- User Profile Summary Card -->
- <div class="ayna-glass p-4 sm:p-5 rounded-2xl border border-cyan-500/30 text-center">
-  <div class="relative w-24 h-24 mx-auto mb-2">
-   <img id="userHomeAvatar" src="https://placehold.co/120x120/0a1730/00d4ff?text=User" class="w-full h-full rounded-full border-2 border-amber-400 object-cover shadow-lg shadow-amber-400/20">
-  </div>
-  <h2 id="homeName" class="text-lg font-bold text-white">Guest Member</h2>
-  <p class="text-xs text-emerald-400 mt-1"><span id="userAccountID">AYNA-GUEST</span> | <span class="live-indicator"></span> <span id="netStatus">Online Connected</span></p>
-
-  <div class="grid grid-cols-3 gap-2 mt-3 text-xs">
-   <div class="bg-slate-900/90 p-2.5 rounded-xl border border-cyan-500/20"><b id="totalAcc" class="text-sm text-white">1</b><br><span class="text-slate-400 text-[10px]">অ্যাকোউন্টস</span></div>
-   <div class="bg-slate-900/90 p-2.5 rounded-xl border border-cyan-500/20"><b id="sysStateText" class="text-sm text-emerald-400">Standby</b><br><span class="text-slate-400 text-[10px]">সিস্টেম</span></div>
-   <div class="bg-slate-900/90 p-2.5 rounded-xl border border-cyan-500/20"><b class="text-sm text-amber-400">8K DSP</b><br><span class="text-slate-400 text-[10px]">বিশ্বসেরা সাউন্ড</span></div>
-  </div>
- </div>
-
  <!-- Post Creator Box -->
- <div class="ayna-glass p-3.5 rounded-2xl border border-cyan-500/30 space-y-3">
+ <div class="ayna-glass p-4 rounded-2xl border border-cyan-500/30 space-y-3">
   <div class="flex items-center gap-3">
-   <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow">AB</div>
-   <input type="text" id="postText" placeholder="আপনার মনে কি চলছে? ৮কে ভিডিও ও ছবি শেয়ার করুন..." class="w-full bg-slate-900 border border-slate-800 rounded-full px-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400">
-   <button onclick="addNewPost()" class="px-4 py-2 bg-cyan-500 text-black font-bold text-xs rounded-full shadow">পোস্ট</button>
+   <div id="posterAvatarPreview" class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow overflow-hidden">AB</div>
+   <textarea id="postText" placeholder="আপনার মনে কি চলছে? ছবি, ভিডিও বা অডিও সহ পোস্ট করুন..." rows="2" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 resize-none"></textarea>
+  </div>
+
+  <div id="mediaPreviewContainer" class="hidden relative rounded-xl overflow-hidden bg-black max-h-48 flex items-center justify-center border border-slate-800">
+   <img id="imagePreviewTarget" class="max-h-48 object-contain hidden">
+   <video id="videoPreviewTarget" class="max-h-48 object-contain hidden" controls></video>
+   <audio id="audioPreviewTarget" class="w-full hidden" controls></audio>
+   <button onclick="clearAttachedMedia()" class="absolute top-2 right-2 bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs shadow"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+   <div class="flex items-center gap-3 text-xs">
+    <label class="cursor-pointer text-cyan-400 hover:text-cyan-300 flex items-center gap-1 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+      <i class="fa-solid fa-image"></i> ছবি
+      <input type="file" accept="image/*" class="hidden" onchange="attachMediaFile(event, 'image')">
+    </label>
+    <label class="cursor-pointer text-pink-400 hover:text-pink-300 flex items-center gap-1 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+      <i class="fa-solid fa-video"></i> ভিডিও
+      <input type="file" accept="video/*" class="hidden" onchange="attachMediaFile(event, 'video')">
+    </label>
+    <label class="cursor-pointer text-amber-400 hover:text-amber-300 flex items-center gap-1 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+      <i class="fa-solid fa-microphone"></i> অডিও
+      <input type="file" accept="audio/*" class="hidden" onchange="attachMediaFile(event, 'audio')">
+    </label>
+   </div>
+   <button onclick="addNewPostWithMedia()" class="px-5 py-2 bg-cyan-500 text-black font-bold text-xs rounded-xl shadow hover:bg-cyan-400">পোস্ট করুন</button>
   </div>
  </div>
 
@@ -206,235 +189,141 @@ body{
  <div id="feedContainer" class="space-y-4"></div>
 </section>
 
-<!-- 2. ULTRA HD 8K MEDIA, TV & RADIO HUB WITH BIG SCREEN & SPEAKER BOX -->
+<!-- 2. ULTRA HD 8K MEDIA, TV & RADIO HUB -->
 <section id="media" class="view space-y-4">
- <div class="ayna-glass p-4 sm:p-5 rounded-2xl border border-cyan-500/30">
-  <div class="text-center mb-3">
-   <h2 class="text-lg sm:text-2xl font-bold text-amber-400">📺 ULTRA HD + 8K LIVE TV & RADIO HUB</h2>
-   <p class="text-xs text-slate-400">বিশ্বসেরা সাউন্ড প্রসেসিং ডাবল-স্পিকার এবং বড় পর্দা মোড যুক্ত</p>
+ <div class="ayna-glass p-4 sm:p-5 rounded-2xl border border-cyan-500/30 space-y-4">
+  <div class="text-center mb-2">
+   <h2 class="text-lg sm:text-2xl font-bold text-amber-400">🌍 বাংলাদেশ ও বিশ্বব্যাপী লাইভ টিভি ও রেডিও</h2>
+   <p class="text-xs text-slate-400 mt-1">ইউটিউব ও এইচএলএস (HLS) সমর্থিত সরাসরি লাইভ স্ট্রিম প্লেয়ার</p>
   </div>
 
-  <!-- Big Screen Player with Sound Box Surround -->
-  <div id="mainPlayerFrame" class="bg-black border-4 border-cyan-500/60 rounded-2xl overflow-hidden shadow-2xl mb-4 relative">
-   <div class="p-2.5 bg-slate-900 border-b border-slate-800 flex justify-between items-center text-xs">
-    <div class="flex items-center gap-2">
-     <span class="live-indicator"></span>
-     <b id="currentChannelTitle" class="text-white">Al Jazeera English (TV)</b>
-     <span class="bg-gradient-to-r from-red-600 to-pink-600 text-white text-[9px] px-2 py-0.5 rounded font-bold">ULTRA HD 8K</span>
-    </div>
-    <button onclick="toggleFullScreen()" class="px-3 py-1 bg-cyan-500 text-black font-bold rounded text-xs"><i class="fa-solid fa-expand"></i> বড় পর্দা (Fullscreen)</button>
-   </div>
+  <!-- Player Box -->
+  <div class="bg-black border-2 border-cyan-500/60 rounded-2xl p-4 text-center shadow-xl">
+   <h3 id="now-playing" class="text-sm font-bold text-cyan-300 border-b border-cyan-500/30 pb-2 mb-3">মিডিয়া সিলেক্ট করুন</h3>
+   <!-- YouTube Player -->
+   <iframe id="ytPlayer" class="w-full aspect-video rounded-lg bg-black hidden" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+   <!-- HLS TV Player -->
+   <video id="tvPlayer" controls autoplay class="w-full max-h-[400px] rounded-lg bg-black hidden"></video>
+   <!-- Audio Radio Player -->
+   <audio id="radioPlayer" controls autoplay class="w-full mt-3 hidden"></audio>
+  </div>
 
-   <div id="playerContainer" class="relative aspect-video flex items-center justify-center bg-slate-950">
-    <iframe id="videoIframe" class="w-full h-full" src="https://www.youtube.com/embed/gCNeDWCI010?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    <video id="hlsVideo" class="w-full h-full object-contain hidden" controls autoplay></video>
+  <!-- Search & Category Filters -->
+  <div class="ayna-glass p-3 rounded-xl flex flex-wrap gap-2 items-center justify-between">
+    <input type="text" id="searchInput" onkeyup="filterChannels()" placeholder="🔍 চ্যানেল বা দেশের নাম লিখে খুঁজুন..." class="bg-slate-900 border border-slate-700 px-3 py-2 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-400 flex-1 min-w-[200px]">
     
-    <!-- Radio Sound Box Display -->
-    <div id="audioVisualizer" class="hidden flex-col items-center justify-center p-6 text-center w-full">
-      <div class="flex items-center justify-center gap-8 mb-4">
-        <div class="w-24 h-24 rounded-full bg-slate-900 border-4 border-cyan-400 flex items-center justify-center shadow-lg shadow-cyan-500/40 animate-pulse">
-           <i class="fa-solid fa-volume-high text-4xl text-cyan-300"></i>
-        </div>
-        <div class="w-28 h-28 rounded-full bg-cyan-950 border-4 border-amber-400 flex items-center justify-center shadow-lg shadow-amber-400/40 animate-spin" style="animation-duration: 8s;">
-           <i class="fa-solid fa-radio text-5xl text-amber-400"></i>
-        </div>
-        <div class="w-24 h-24 rounded-full bg-slate-900 border-4 border-cyan-400 flex items-center justify-center shadow-lg shadow-cyan-500/40 animate-pulse">
-           <i class="fa-solid fa-volume-high text-4xl text-cyan-300"></i>
-        </div>
-      </div>
-      <h4 id="radioTitle" class="text-base font-bold text-amber-400">৮কে গ্লোবাল রেডিও প্লেয়ার</h4>
-      <p class="text-xs text-emerald-400 mt-1">🔊 বিশ্বসেরা ৯.১ ডলবি ডিজিটাল হাই-ডেফিনিশন ডাবল স্পিকার সাউন্ড</p>
-      <audio id="radioAudio" class="mt-4 w-72" controls crossorigin="anonymous"></audio>
+    <div class="flex gap-2">
+      <button onclick="loadCountry('all')" class="px-3 py-1.5 bg-cyan-600 text-white font-bold text-xs rounded-lg">🌐 সব</button>
+      <button onclick="loadCountry('bd')" class="px-3 py-1.5 bg-emerald-700 text-white font-bold text-xs rounded-lg">🇧🇩 বাংলাদেশ</button>
+      <button onclick="loadCountry('global')" class="px-3 py-1.5 bg-indigo-700 text-white font-bold text-xs rounded-lg">🌍 আন্তর্জাতিক</button>
     </div>
-   </div>
   </div>
 
-  <input type="text" id="channelSearch" placeholder="🔍 চ্যানেল বা রেডিও খুঁজুন (যেমন: Somoy, France 24, BBC, Quran)..." onkeyup="filterChannels()" class="w-full px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 mb-3">
-  
-  <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none mb-3 text-xs" id="mediaFilters">
-   <button class="px-3 py-1.5 rounded-full bg-cyan-500 text-black font-bold whitespace-nowrap active" onclick="filterCategory('all', this)">🌐 সব চ্যানেল</button>
-   <button class="px-3 py-1.5 rounded-full bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" onclick="filterCategory('tv', this)">📺 লাইভ টিভি (8K)</button>
-   <button class="px-3 py-1.5 rounded-full bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" onclick="filterCategory('news', this)">📰 সংবাদ</button>
-   <button class="px-3 py-1.5 rounded-full bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" onclick="filterCategory('radio', this)">📻 লাইভ রেডিও (DSP)</button>
-   <button class="px-3 py-1.5 rounded-full bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" onclick="filterCategory('islamic', this)">🕋 ইসলামিক</button>
+  <!-- TV Channel List -->
+  <div class="space-y-2">
+    <h3 class="text-sm font-bold text-cyan-400 border-b border-cyan-500/30 pb-1 flex justify-between">
+      <span>📺 টেলিভিশন চ্যানেলসমূহ</span>
+      <span id="tvCount" class="text-xs text-slate-400"></span>
+    </h3>
+    <div id="tvChannels" class="channel-grid"></div>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5" id="channelsGrid"></div>
-
-  <!-- Sound Equalizer Panel -->
-  <div class="mt-5 p-4 rounded-xl bg-slate-900/90 border border-cyan-500/30 text-xs space-y-3">
-   <h3 class="font-bold text-cyan-300 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> World-Class 9.1 Surround & Dolby Audio DSP</h3>
-   <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-    <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-center">
-     <label class="text-slate-400 block mb-1">Ultra Bass Boost: <span id="bassVal" class="text-cyan-400 font-bold">12</span> dB</label>
-     <input type="range" min="0" max="20" value="12" oninput="updateAudioDSP('bass', this.value)" class="w-full accent-cyan-400">
-    </div>
-    <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-center">
-     <label class="text-slate-400 block mb-1">Crisp Treble: <span id="trebleVal" class="text-cyan-400 font-bold">8</span> dB</label>
-     <input type="range" min="0" max="20" value="8" oninput="updateAudioDSP('treble', this.value)" class="w-full accent-cyan-400">
-    </div>
-    <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-center">
-     <label class="text-slate-400 block mb-1">3D Speaker Box Depth: <span id="surroundVal" class="text-cyan-400 font-bold">95</span>%</label>
-     <input type="range" min="0" max="100" value="95" oninput="updateAudioDSP('surround', this.value)" class="w-full accent-cyan-400">
-    </div>
-   </div>
+  <!-- Radio Station List -->
+  <div class="space-y-2 pt-2">
+    <h3 class="text-sm font-bold text-amber-400 border-b border-amber-500/30 pb-1 flex justify-between">
+      <span>📻 রেডিও স্টেশনসমূহ</span>
+      <span id="radioCount" class="text-xs text-slate-400"></span>
+    </h3>
+    <div id="radioChannels" class="channel-grid"></div>
   </div>
  </div>
 </section>
 
-<!-- 3. RADAR 360 & DIGITAL COMPASS -->
+<!-- 3. RADAR 360 -->
 <section id="radar" class="view space-y-4">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
   <h3 class="text-sm font-bold text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-radar"></i> RADAR 360° - QUANTUM FREQUENCY SCAN</h3>
-  <div class="radar" id="radarBox">
-    <div class="radar-line"></div>
-    <div class="absolute top-2 left-2 text-[10px] font-mono text-emerald-400 bg-black/60 p-1.5 rounded">
-      GPS: <span id="radarGPS">Lat: 23.8103, Lon: 90.4125</span><br>
-      STARLINK NODE: CONNECTED
-    </div>
-  </div>
-  <div id="radarLog" class="font-mono text-[11px] bg-black p-3 rounded-lg border border-emerald-500/30 max-h-28 overflow-y-auto text-emerald-300"></div>
-  <button class="w-full py-2.5 bg-slate-900 border border-cyan-500/40 text-cyan-300 rounded-xl text-xs font-bold" onclick="addBlip()">➕ নতুন টার্গেট রাডারে যুক্ত করুন</button>
+  <div class="radar" id="radarBox"><div class="radar-line"></div></div>
  </div>
 </section>
 
-<!-- 4. EMERGENCY ALERTS SYSTEM -->
+<!-- 4. EMERGENCY ALERTS -->
 <section id="alerts" class="view space-y-4">
  <div class="ayna-glass p-5 rounded-2xl border-2 border-red-500/60 space-y-4">
-  <div class="text-center">
-   <h2 class="text-xl font-bold text-red-500">🚨 EMERGENCY ALERT SYSTEM</h2>
-   <p class="text-xs text-slate-400">১০ মিনিট পূর্ব পূর্বাভাস ও জিপিএস স্বয়ংক্রিয় সংকেত</p>
-  </div>
-  <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-   <button class="p-3 bg-red-950/80 border border-red-500/40 text-white font-bold rounded-xl animate-pulse" onclick="triggerAlert('fire','🔥 আগুন! ১০ মিনিট পূর্বে পূর্বাভাস जारी')">🔥 আগুন Alert</button>
-   <button class="p-3 bg-red-950/80 border border-red-500/40 text-white font-bold rounded-xl animate-pulse" onclick="triggerAlert('missile','🚀 মিসাইল সতর্কতা!')">🚀 মিসাইল সতর্কতা</button>
-  </div>
-  <div id="alertLive" class="space-y-2"></div>
+  <h2 class="text-xl font-bold text-red-500">🚨 EMERGENCY ALERT SYSTEM</h2>
  </div>
 </section>
 
 <!-- 5. ISLAMIC CORNER -->
 <section id="islamic" class="view space-y-4">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
-  <div class="text-center">
-   <h2 class="text-xl font-bold text-amber-400"><i class="fa-solid fa-mosque"></i> ইসলামিক নূরানী কর্নার</h2>
-  </div>
-  <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-2">
-   <b class="text-amber-300 text-sm block">📖 আল-কোরআন লাইভ তিলাওয়াত</b>
-   <audio controls class="w-full mt-2 h-9"><source src="https://stream.zeno.fm/3s714f2427zuv" type="audio/mpeg"></audio>
-  </div>
+  <h2 class="text-xl font-bold text-amber-400"><i class="fa-solid fa-mosque"></i> ইসলামিক নূরানী কর্নার</h2>
  </div>
 </section>
 
-<!-- 6. MARKETPLACE -->
-<section id="market" class="view space-y-4">
- <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
-  <h2 class="text-xl font-bold text-amber-400">🛒 বেচাকেনার হাট (Marketplace)</h2>
- </div>
-</section>
-
-<!-- 7. GLOBAL MATRIMONY -->
-<section id="matrimony" class="view space-y-4">
- <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
-  <h2 class="text-xl font-bold text-white">💍 GLOBAL MATRIMONY & IMMIGRATION DIRECTORY</h2>
- </div>
-</section>
-
-<!-- 8. PAYMENTS -->
-<section id="payments" class="view space-y-4">
- <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
-  <h2 class="text-xl font-bold text-cyan-400">💳 পেমেন্ট গেটওয়ে</h2>
- </div>
-</section>
-
-<!-- 9. RECIPES -->
-<section id="recipes" class="view space-y-4">
- <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
-  <h2 class="text-xl font-bold text-emerald-400">🍲 রান্না ও ফ্যাশন</h2>
- </div>
-</section>
-
-<!-- 10. REAL-TIME AI TRANSLATOR & MESSENGER -->
+<!-- 6. REAL-TIME AI MESSENGER WITH CALL BUTTONS -->
 <section id="messages" class="view space-y-4">
  <div class="ayna-glass p-4 sm:p-5 rounded-2xl border border-cyan-500/30 space-y-3 text-xs">
-  <div class="flex justify-between items-center">
-   <h2 class="text-sm font-bold text-pink-400"><i class="fa-solid fa-comments"></i> রিয়েল-টাইম এআই মেসেঞ্জার, অডিও ও ভিডিও পোস্ট</h2>
-   <button onclick="goBackHistory()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-arrow-left"></i></button>
-  </div>
-  <div class="h-64 bg-slate-950 rounded-xl border border-slate-800 p-3 flex flex-col justify-between">
-   <div id="chatLog" class="space-y-2 overflow-y-auto">
-    <div class="bg-slate-900 p-2.5 rounded-lg max-w-[85%] text-white">হ্যালো! Ultra HD 8K ইন্টারফেসে স্বাগতম।</div>
+  <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+   <h2 class="text-sm font-bold text-pink-400 flex items-center gap-2">
+     <i class="fa-solid fa-comments"></i> রিয়েল-টাইম এআই মেসেঞ্জার ও ভয়েস চ্যাট
+   </h2>
+   <div class="flex items-center gap-2">
+    <button onclick="startCall('audio')" class="p-2 bg-slate-900 border border-slate-800 text-emerald-400 rounded-lg hover:bg-slate-800" title="অডিও কল">
+      <i class="fa-solid fa-phone text-sm"></i>
+    </button>
+    <button onclick="startCall('video')" class="p-2 bg-slate-900 border border-slate-800 text-cyan-400 rounded-lg hover:bg-slate-800" title="ভিডিও কল">
+      <i class="fa-solid fa-video text-sm"></i>
+    </button>
    </div>
-   <div class="flex gap-2 pt-2 border-t border-slate-800">
-    <input type="text" id="msgInput" placeholder="মেসেজ লিখুন..." class="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs">
-    <button onclick="sendChatMessage()" class="px-3 bg-cyan-500 text-black font-bold rounded-lg"><i class="fa-solid fa-paper-plane"></i></button>
+  </div>
+
+  <div class="h-80 bg-slate-950 rounded-xl border border-slate-800 p-3 flex flex-col justify-between">
+   <div id="chatLog" class="space-y-3 overflow-y-auto pr-1">
+    <div class="bg-slate-900 p-2.5 rounded-lg max-w-[85%] text-white">হ্যালো! Ultra HD 8K মেসেঞ্জারে স্বাগতম।</div>
+   </div>
+
+   <div class="space-y-2 pt-2 border-t border-slate-800">
+    <div id="chatMediaPreview" class="hidden relative bg-slate-900 p-2 rounded-lg flex items-center justify-between">
+     <span id="chatMediaName" class="text-cyan-300 truncate">ফাইল যুক্ত হয়েছে</span>
+     <button onclick="clearChatMedia()" class="text-red-400 font-bold px-2">×</button>
+    </div>
+    <div class="flex gap-2 items-center">
+     <label class="cursor-pointer text-cyan-400 hover:text-cyan-300 p-2 bg-slate-900 rounded-lg border border-slate-800">
+      <i class="fa-solid fa-paperclip text-sm"></i>
+      <input type="file" accept="image/*,video/*,audio/*" class="hidden" onchange="attachChatFile(event)">
+     </label>
+     <input type="text" id="msgInput" placeholder="মেসেজ লিখুন..." class="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-400">
+     <button onclick="sendChatMessage()" class="px-4 py-2 bg-cyan-500 text-black font-bold rounded-lg hover:bg-cyan-400"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
    </div>
   </div>
  </div>
 </section>
 
-<!-- 11. LEADERS DIRECTORY -->
-<section id="leaders" class="view space-y-4">
- <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
-  <h2 class="text-xl font-bold text-white">🏛️ WORLD LEADERS DIRECTORY</h2>
- </div>
-</section>
-
-<!-- 12. QUANTUM SUPERCOMPUTER -->
-<section id="quantum" class="view space-y-4">
- <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
-  <h2 class="text-xl font-bold text-cyan-400">⚛️ QUANTUM SUPERCOMPUTER</h2>
- </div>
-</section>
-
-<!-- 13. ACCOUNT MANAGEMENT (PROFILE PHOTO, PASSWORD & RE-PASSWORD) -->
+<!-- 7. ACCOUNT MANAGEMENT -->
 <section id="account" class="view">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-3 text-xs">
-  <h2 class="text-xl font-bold text-white">🔐 প্রোফাইল, রেজিস্ট্রেশন ও পাসওয়ার্ড রি-টাইপ প্যানেল</h2>
-  <p class="text-slate-400">ছবি আপলোড করুন এবং পুনরায় পাসওয়ার্ড নিশ্চিত করে নিরাপদ অ্যাকাউন্ট তৈরি করুন</p>
-
+  <h2 class="text-xl font-bold text-white">🔐 প্রোফাইল ও অ্যাকাউন্ট প্যানেল</h2>
   <div id="authFormArea" class="space-y-3">
-   <!-- Profile Image Upload Field -->
    <div class="flex flex-col items-center justify-center space-y-2">
-    <img id="avatarPreview" src="https://placehold.co/100x100/0a1730/00d4ff?text=Upload+Photo" class="w-20 h-20 rounded-full border-2 border-cyan-400 object-cover shadow-md">
+    <img id="avatarPreview" src="https://placehold.co/100x100/0a1730/00d4ff?text=Upload" class="w-20 h-20 rounded-full border-2 border-cyan-400 object-cover shadow-md">
     <label class="px-3 py-1 bg-slate-800 text-cyan-300 rounded border border-slate-700 cursor-pointer hover:bg-slate-700">
       📸 ছবি আপলোড করুন
       <input type="file" accept="image/*" class="hidden" onchange="previewProfilePhoto(event)">
     </label>
    </div>
-
    <input id="nName" placeholder="পূর্ণ নাম (Full Name)" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none">
-   <input id="nEmail" type="email" placeholder="ইমেইল অথবা ফোন (Email/Phone)" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none">
-   
-   <!-- Password Field -->
-   <div class="relative">
-    <input id="p1" type="password" placeholder="পাসওয়ার্ড (Password)" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none">
-    <span class="absolute right-3 top-2.5 cursor-pointer text-slate-400" onclick="togglePass('p1')">👁️</span>
-   </div>
-
-   <!-- Re-Password Field -->
-   <div class="relative">
-    <input id="pRe" type="password" placeholder="পুনরায় পাসওয়ার্ড দিন (Re-enter Password)" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none">
-    <span class="absolute right-3 top-2.5 cursor-pointer text-slate-400" onclick="togglePass('pRe')">👁️</span>
-   </div>
-
-   <button class="w-full py-3 rounded-xl font-bold text-black bg-cyan-400 shadow-md" onclick="registerWithRePass()">🚀 ছবি সহ রেজিস্টার ও সাইনআপ করুন</button>
-   <button class="w-full py-3 rounded-xl font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700" onclick="loginExistingAcc()">🔑 সাইন ইন / লগইন করুন</button>
+   <input id="nEmail" type="email" placeholder="ইমেইল অথবা ফোন" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none">
+   <input id="p1" type="password" placeholder="পাসওয়ার্ড" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none">
+   <input id="pRe" type="password" placeholder="পুনরায় পাসওয়ার্ড দিন" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none">
+   <button class="w-full py-3 rounded-xl font-bold text-black bg-cyan-400 shadow-md" onclick="registerWithRePass()">🚀 রেজিস্টার করুন</button>
   </div>
-
   <div id="userProfileArea" class="hidden space-y-3 p-4 bg-slate-900 rounded-xl border border-cyan-500/30 text-center">
    <img id="loggedInAvatar" src="" class="w-20 h-20 rounded-full border-2 border-amber-400 object-cover mx-auto shadow-md">
    <h3 id="loggedInUserName" class="text-base font-bold text-white">স্বাগতম</h3>
-   <p id="loggedInUserEmail" class="text-slate-400 text-[11px]"></p>
-   <button class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl" onclick="logoutAccount()">🚪 লগআউট (Logout)</button>
+   <button class="w-full py-2.5 bg-red-600 text-white font-bold rounded-xl" onclick="logoutAccount()">🚪 লগআউট</button>
   </div>
- </div>
-</section>
-
-<!-- SEARCH VIEW -->
-<section id="search" class="view space-y-4">
- <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-3 text-xs">
-  <input type="text" placeholder="সারাবিশ্বের যেকোনো বিষয় অনুসন্ধান করুন..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white focus:outline-none">
  </div>
 </section>
 
@@ -442,27 +331,58 @@ body{
 
 <!-- Bottom Mobile Navigation Bar -->
 <nav class="fixed bottom-0 left-0 w-full bg-slate-950/95 backdrop-blur-md border-t border-slate-800 flex justify-around py-2 z-50 text-[11px] text-slate-400">
-    <button onclick="switchTab('home')" class="flex flex-col items-center gap-0.5 hover:text-cyan-400">
-        <i class="fa-solid fa-house text-base"></i><span>হোম</span>
-    </button>
-    <button onclick="switchTab('media')" class="flex flex-col items-center gap-0.5 hover:text-cyan-400">
-        <i class="fa-solid fa-tv text-base"></i><span>৮কে টিভি</span>
-    </button>
-    <button onclick="switchTab('radar')" class="flex flex-col items-center gap-0.5 hover:text-cyan-400">
-        <i class="fa-solid fa-radar text-base"></i><span>রাডার</span>
-    </button>
-    <button onclick="switchTab('alerts')" class="flex flex-col items-center gap-0.5 hover:text-red-400">
-        <i class="fa-solid fa-triangle-exclamation text-base"></i><span>জরুরি</span>
-    </button>
-    <button onclick="switchTab('messages')" class="flex flex-col items-center gap-0.5 hover:text-pink-400">
-        <i class="fa-solid fa-comments text-base"></i><span>মেসেজ</span>
-    </button>
+    <button onclick="switchTab('home')" class="flex flex-col items-center gap-0.5 hover:text-cyan-400"><i class="fa-solid fa-house text-base"></i><span>হোম</span></button>
+    <button onclick="switchTab('media')" class="flex flex-col items-center gap-0.5 hover:text-cyan-400"><i class="fa-solid fa-tv text-base"></i><span>৮কে টিভি</span></button>
+    <button onclick="switchTab('radar')" class="flex flex-col items-center gap-0.5 hover:text-cyan-400"><i class="fa-solid fa-radar text-base"></i><span>রাডার</span></button>
+    <button onclick="switchTab('messages')" class="flex flex-col items-center gap-0.5 hover:text-pink-400"><i class="fa-solid fa-comments text-base"></i><span>মেসেজ</span></button>
 </nav>
 
-<!-- JavaScript Application Engine -->
+<!-- Unified Application Engine -->
 <script>
-let historyStack = ['home'];
 let currentUploadedAvatar = "https://placehold.co/120x120/0a1730/00d4ff?text=User";
+let attachedMediaData = { type: null, url: null };
+let chatAttachedData = null;
+let hlsInstance = null;
+
+// বাংলাদেশ ও আন্তর্জাতিক চ্যানেলের সুসংহত ডেটাবেজ
+const fullDirectory = {
+  bd: {
+    tv: [
+      { name: "Somoy TV", url: "https://www.youtube.com/embed/9Auq9mYxFEE?autoplay=1", type: "yt" },
+      { name: "Jamuna TV", url: "https://www.youtube.com/embed/2g811Ko7gB8?autoplay=1", type: "yt" },
+      { name: "Independent TV", url: "https://www.youtube.com/embed/P6f9x7d9h0M?autoplay=1", type: "yt" },
+      { name: "Channel 24", url: "https://www.youtube.com/embed/7Vd1SbdC704?autoplay=1", type: "yt" },
+      { name: "BTV World", url: "https://live-btv.akamaized.net/hls/live/2033478/btv/master.m3u8", type: "hls" }
+    ],
+    radio: [
+      { name: "Bangladesh Betar", url: "https://stream.zeno.fm/f382k62u94zuv" },
+      { name: "Radio Foorti 88.0 FM", url: "https://stream.zeno.fm/87v2u0m7808uv" },
+      { name: "Radio Today 89.6 FM", url: "https://stream.zeno.fm/4v3m1k9y508uv" },
+      { name: "Dhaka FM 90.4 FM", url: "https://stream.zeno.fm/p2m9v28994zuv" }
+    ]
+  },
+  global: {
+    tv: [
+      { name: "Al Jazeera English", url: "https://live-hls-web-aje.getaj.net/AJE/index.m3u8", type: "hls" },
+      { name: "France 24 English", url: "https://static.france24.com/live/F24_EN_LO_HLS/live_tv.m3u8", type: "hls" },
+      { name: "NASA TV HD", url: "https://ntv1.akamaized.net/hls/live/2014756/NASA-TV-HD-1/master.m3u8", type: "hls" },
+      { name: "DW English", url: "https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8", type: "hls" }
+    ],
+    radio: [
+      { name: "BBC World Service", url: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service" },
+      { name: "Voice of America (VOA)", url: "https://voa-ingest.akamaized.net/hls/live/2034445/stream_1/index.m3u8" },
+      { name: "Holy Quran Radio", url: "https://stream.zeno.fm/3s714f2427zuv" }
+    ]
+  }
+};
+
+let currentTVList = [];
+let currentRadioList = [];
+
+const ytPlayer = document.getElementById('ytPlayer');
+const tvPlayer = document.getElementById('tvPlayer');
+const radioPlayer = document.getElementById('radioPlayer');
+const nowPlayingTitle = document.getElementById('now-playing');
 
 function switchTab(viewId) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -475,96 +395,223 @@ function switchTab(viewId) {
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function goBackHistory() {
-  switchTab('home');
-}
-
 function activateAllSystems() {
-  document.getElementById('sysStateText').innerText = "ONLINE 100%";
-  alert("⚡ 8K ULTRA HD SYSTEM ACTIVATED!\n🔊 World Class Dolby Sound Enabled!");
+  alert("⚡ 8K ULTRA HD SYSTEM ACTIVATED!");
 }
 
-// Media Center & Big Screen Functions
-const channels = [
-  { id: 1, name: "Al Jazeera English (TV)", cat: "news", type: "hls", src: "https://live-hls-web-aje.getaj.net/AJE/index.m3u8", icon: "📺", country: "Global" },
-  { id: 2, name: "France 24 English (TV)", cat: "news", type: "hls", src: "https://static.france24.com/live/F24_EN_LO_HLS/live_tv.m3u8", icon: "🌐", country: "France" },
-  { id: 3, name: "NASA TV 8K Live (TV)", cat: "tv", type: "hls", src: "https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8", icon: "🚀", country: "USA" },
-  { id: 4, name: "Somoy TV Live 8K", cat: "news", type: "youtube", src: "https://www.youtube.com/embed/9Auq9mYxFEE?autoplay=1", icon: "🇧🇩", country: "Bangladesh" },
-  { id: 5, name: "Holy Quran Radio (DSP)", cat: "radio", type: "audio", src: "https://stream.zeno.fm/3s714f2427zuv", icon: "📻", country: "Saudi Arabia" }
-];
-
-const iframe = document.getElementById('videoIframe');
-const hlsVid = document.getElementById('hlsVideo');
-const audioVis = document.getElementById('audioVisualizer');
-const audioEl = document.getElementById('radioAudio');
-let hlsInstance = null;
-
-function playMedia(channel) {
-  document.getElementById('currentChannelTitle').innerText = channel.name;
-  iframe.classList.add('hidden'); iframe.src = '';
-  hlsVid.classList.add('hidden'); hlsVid.pause();
-  audioVis.classList.add('hidden'); audioVis.classList.remove('flex'); audioEl.pause();
-
-  if(channel.type === 'youtube') {
-    iframe.classList.remove('hidden');
-    iframe.src = channel.src;
-  } else if(channel.type === 'hls' || channel.src.endsWith('.m3u8')) {
-    hlsVid.classList.remove('hidden');
-    if (Hls.isSupported()) {
-      hlsInstance = new Hls();
-      hlsInstance.loadSource(channel.src);
-      hlsInstance.attachMedia(hlsVid);
-      hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => { hlsVid.play(); });
-    } else if (hlsVid.canPlayType('application/vnd.apple.mpegurl')) {
-      hlsVid.src = channel.src;
-      hlsVid.play();
-    }
-  } else if(channel.type === 'audio') {
-    audioVis.classList.remove('hidden');
-    audioVis.classList.add('flex');
-    document.getElementById('radioTitle').innerText = channel.name;
-    audioEl.src = channel.src;
-    audioEl.play().catch(e => console.log(e));
-  }
+function startCall(type) {
+  alert(`📞 ${type === 'video' ? 'ভিডিও' : 'অডিও'} কল শুরু হচ্ছে...`);
 }
 
-function toggleFullScreen() {
-  const elem = document.getElementById('mainPlayerFrame');
-  if (!document.fullscreenElement) {
-    elem.requestFullscreen().catch(err => alert(`বড় পর্দা চালু করা যায়নি: ${err.message}`));
+// দেশভিত্তিক চ্যানেল লোড করার ফাংশন
+function loadCountry(region) {
+  let tvData = [];
+  let radioData = [];
+
+  if(region === 'all') {
+    Object.keys(fullDirectory).forEach(key => {
+      tvData = tvData.concat(fullDirectory[key].tv);
+      radioData = radioData.concat(fullDirectory[key].radio);
+    });
   } else {
-    document.exitFullscreen();
+    tvData = fullDirectory[region].tv;
+    radioData = fullDirectory[region].radio;
   }
+
+  currentTVList = tvData;
+  currentRadioList = radioData;
+  renderMediaList(tvData, radioData);
 }
 
-function renderChannels(items) {
-  const grid = document.getElementById('channelsGrid');
-  grid.innerHTML = '';
-  items.forEach(ch => {
-    const card = document.createElement('div');
-    card.className = 'ayna-glass p-3 rounded-xl border border-cyan-500/20 flex items-center justify-between cursor-pointer hover:border-cyan-400';
-    card.onclick = () => playMedia(ch);
-    card.innerHTML = `<div><b class="text-xs text-white block">${ch.icon} ${ch.name}</b><span class="text-[10px] text-cyan-400">${ch.country} • ${ch.cat.toUpperCase()}</span></div><i class="fa-solid fa-play text-cyan-400 text-xs"></i>`;
-    grid.appendChild(card);
+function renderMediaList(tvList, radioList) {
+  const tvContainer = document.getElementById('tvChannels');
+  const radioContainer = document.getElementById('radioChannels');
+  
+  if(!tvContainer || !radioContainer) return;
+  tvContainer.innerHTML = '';
+  radioContainer.innerHTML = '';
+
+  document.getElementById('tvCount').innerText = `${tvList.length}টি পাওয়া গেছে`;
+  document.getElementById('radioCount').innerText = `${radioList.length}টি পাওয়া গেছে`;
+
+  tvList.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'channel-btn';
+    btn.innerText = `📺 ${item.name}`;
+    btn.onclick = () => playTV(item.name, item.url, item.type);
+    tvContainer.appendChild(btn);
+  });
+
+  radioList.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'channel-btn';
+    btn.innerText = `📻 ${item.name}`;
+    btn.onclick = () => playRadio(item.name, item.url);
+    radioContainer.appendChild(btn);
   });
 }
 
-function filterCategory(cat, btnElement) {
-  renderChannels(cat === 'all' ? channels : channels.filter(c => c.cat === cat || (cat === 'tv' && (c.type==='hls'||c.type==='youtube'))));
+// লাইভ টিভি ও ইউটিউব স্ট্রিম চালানোর লজিক
+function playTV(name, url, type) {
+  radioPlayer.pause();
+  radioPlayer.classList.add('hidden');
+  tvPlayer.pause();
+  tvPlayer.classList.add('hidden');
+  ytPlayer.classList.add('hidden');
+  ytPlayer.src = '';
+
+  if(hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+  nowPlayingTitle.innerText = `Now Playing TV: ${name}`;
+
+  if(type === 'yt') {
+    ytPlayer.classList.remove('hidden');
+    ytPlayer.src = url;
+  } else {
+    tvPlayer.classList.remove('hidden');
+    if (Hls.isSupported()) {
+      hlsInstance = new Hls();
+      hlsInstance.loadSource(url);
+      hlsInstance.attachMedia(tvPlayer);
+      hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => tvPlayer.play());
+    } else if (tvPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+      tvPlayer.src = url;
+      tvPlayer.play();
+    }
+  }
+}
+
+// লাইভ রেডিও চালানোর লজিক
+function playRadio(name, url) {
+  tvPlayer.pause();
+  tvPlayer.classList.add('hidden');
+  ytPlayer.classList.add('hidden');
+  ytPlayer.src = '';
+  if(hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+
+  radioPlayer.classList.remove('hidden');
+  nowPlayingTitle.innerText = `Now Playing Radio: ${name}`;
+  radioPlayer.src = url;
+  radioPlayer.play();
 }
 
 function filterChannels() {
-  const query = document.getElementById('channelSearch').value.toLowerCase();
-  renderChannels(channels.filter(c => c.name.toLowerCase().includes(query)));
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const filteredTV = currentTVList.filter(item => item.name.toLowerCase().includes(query));
+  const filteredRadio = currentRadioList.filter(item => item.name.toLowerCase().includes(query));
+  renderMediaList(filteredTV, filteredRadio);
 }
 
-function updateAudioDSP(type, val) {
-  if(type === 'bass') document.getElementById('bassVal').innerText = val;
-  if(type === 'treble') document.getElementById('trebleVal').innerText = val;
-  if(type === 'surround') document.getElementById('surroundVal').innerText = val;
+// অডিও, ভিডিও ও ইমেজ পোস্ট লজিক
+function attachMediaFile(event, type) {
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    attachedMediaData = { type: type, url: e.target.result };
+    const container = document.getElementById('mediaPreviewContainer');
+    const imgTarget = document.getElementById('imagePreviewTarget');
+    const vidTarget = document.getElementById('videoPreviewTarget');
+    const audTarget = document.getElementById('audioPreviewTarget');
+
+    container.classList.remove('hidden');
+    imgTarget.classList.add('hidden');
+    vidTarget.classList.add('hidden');
+    audTarget.classList.add('hidden');
+
+    if(type === 'image') {
+      imgTarget.src = e.target.result; imgTarget.classList.remove('hidden');
+    } else if(type === 'video') {
+      vidTarget.src = e.target.result; vidTarget.classList.remove('hidden');
+    } else if(type === 'audio') {
+      audTarget.src = e.target.result; audTarget.classList.remove('hidden');
+    }
+  }
+  reader.readAsDataURL(file);
 }
 
-// Profile Photo & Re-Password Registration
+function clearAttachedMedia() {
+  attachedMediaData = { type: null, url: null };
+  document.getElementById('mediaPreviewContainer').classList.add('hidden');
+}
+
+function addNewPostWithMedia() {
+  const text = document.getElementById('postText').value.trim();
+  if(!text && !attachedMediaData.url) return alert('⚠️ কিছু লিখুন অথবা ফাইল যুক্ত করুন!');
+
+  const currentUser = JSON.parse(localStorage.getItem('ayna_current_user')) || { name: 'Guest Member', avatar: currentUploadedAvatar };
+  const feed = document.getElementById('feedContainer');
+
+  let mediaHtml = '';
+  if(attachedMediaData.type === 'image') {
+    mediaHtml = `<img src="${attachedMediaData.url}" class="w-full rounded-xl mt-2 max-h-72 object-cover">`;
+  } else if(attachedMediaData.type === 'video') {
+    mediaHtml = `<video src="${attachedMediaData.url}" class="w-full rounded-xl mt-2 max-h-72 object-contain bg-black" controls></video>`;
+  } else if(attachedMediaData.type === 'audio') {
+    mediaHtml = `<audio src="${attachedMediaData.url}" class="w-full mt-2" controls></audio>`;
+  }
+
+  const postCard = document.createElement('div');
+  postCard.className = 'ayna-glass p-4 rounded-2xl border border-cyan-500/30 space-y-3 text-xs';
+  postCard.innerHTML = `
+    <div class="flex items-center gap-2.5">
+      <img src="${currentUser.avatar}" class="w-9 h-9 rounded-full border border-amber-400 object-cover">
+      <div><b>${currentUser.name}</b><span class="text-[10px] text-slate-400 block">এইমাত্র • 8K Verified</span></div>
+    </div>
+    <p class="text-white">${text}</p>
+    ${mediaHtml}
+  `;
+
+  feed.prepend(postCard);
+  document.getElementById('postText').value = '';
+  clearAttachedMedia();
+}
+
+// মেসেঞ্জার লজিক
+function attachChatFile(event) {
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    chatAttachedData = { name: file.name, url: e.target.result, type: file.type };
+    document.getElementById('chatMediaName').innerText = `📎 ${file.name}`;
+    document.getElementById('chatMediaPreview').classList.remove('hidden');
+  }
+  reader.readAsDataURL(file);
+}
+
+function clearChatMedia() {
+  chatAttachedData = null;
+  document.getElementById('chatMediaPreview').classList.add('hidden');
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if(!text && !chatAttachedData) return;
+
+  const log = document.getElementById('chatLog');
+  let mediaTag = '';
+  if(chatAttachedData) {
+    if(chatAttachedData.type.startsWith('image/')) {
+      mediaTag = `<img src="${chatAttachedData.url}" class="max-w-xs rounded-lg mt-1">`;
+    } else if(chatAttachedData.type.startsWith('audio/')) {
+      mediaTag = `<audio src="${chatAttachedData.url}" class="w-full mt-1" controls></audio>`;
+    } else {
+      mediaTag = `<video src="${chatAttachedData.url}" class="max-w-xs rounded-lg mt-1" controls></video>`;
+    }
+  }
+
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'bg-cyan-950/80 border border-cyan-500/30 p-2.5 rounded-lg max-w-[85%] ml-auto text-white space-y-1';
+  msgDiv.innerHTML = `<p>${text}</p>${mediaTag}`;
+  log.appendChild(msgDiv);
+
+  input.value = '';
+  clearChatMedia();
+  log.scrollTop = log.scrollHeight;
+}
+
+// প্রোফাইল ও অ্যাকাউন্ট ইনিশিয়ালাইজেশন
 function previewProfilePhoto(event) {
   const reader = new FileReader();
   reader.onload = function() {
@@ -580,48 +627,19 @@ function registerWithRePass() {
   const pass = document.getElementById('p1').value;
   const rePass = document.getElementById('pRe').value;
 
-  if(!name || !email || !pass || !rePass) return alert('⚠️ দয়া করে সমস্ত ঘর সঠিকভাবে পূরণ করুন!');
-  if(pass !== rePass) return alert('⚠️ পাসওয়ার্ড এবং রি-পাসওয়ার্ড (Re-enter Password) মেলেনি!');
+  if(!name || !email || !pass || !rePass) return alert('⚠️ সমস্ত ঘর পূরণ করুন!');
+  if(pass !== rePass) return alert('⚠️ পাসওয়ার্ড মেলেনি!');
 
-  const userObj = {
-    name: name,
-    email: email,
-    pass: pass,
-    avatar: currentUploadedAvatar,
-    id: 'AYNA-' + Math.floor(100000 + Math.random()*900000)
-  };
-
-  const all = JSON.parse(localStorage.getItem('ayna_all_accounts') || '[]');
-  all.push(userObj);
-  localStorage.setItem('ayna_all_accounts', JSON.stringify(all));
+  const userObj = { name, email, pass, avatar: currentUploadedAvatar, id: 'AYNA-' + Math.floor(100000 + Math.random()*900000) };
   localStorage.setItem('ayna_current_user', JSON.stringify(userObj));
-
-  alert('✅ ছবি ও পাসওয়ার্ড নিশ্চিতকরণ সহ অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
+  alert('✅ অ্যাকাউন্ট তৈরি সম্পন্ন!');
   refreshAccountState();
-  refreshHome();
-}
-
-function loginExistingAcc() {
-  const email = document.getElementById('nEmail').value;
-  const pass = document.getElementById('p1').value;
-  const all = JSON.parse(localStorage.getItem('ayna_all_accounts') || '[]');
-  
-  const found = all.find(acc => (acc.email === email || acc.name === email) && acc.pass === pass);
-  if(found) {
-    localStorage.setItem('ayna_current_user', JSON.stringify(found));
-    alert('🔑 লগইন সফল হয়েছে: ' + found.name);
-    refreshAccountState();
-    refreshHome();
-  } else {
-    alert('⚠️ তথ্য ভুল অথবা অ্যাকাউন্ট পাওয়া যায়নি!');
-  }
 }
 
 function logoutAccount() {
   localStorage.removeItem('ayna_current_user');
   alert('🚪 লগআউট সম্পন্ন হয়েছে!');
   refreshAccountState();
-  refreshHome();
 }
 
 function refreshAccountState() {
@@ -633,8 +651,8 @@ function refreshAccountState() {
     authForm.classList.add('hidden');
     profileArea.classList.remove('hidden');
     document.getElementById('loggedInUserName').innerText = current.name;
-    document.getElementById('loggedInUserEmail').innerText = `${current.email} | ID: ${current.id}`;
-    document.getElementById('loggedInAvatar').src = current.avatar || currentUploadedAvatar;
+    document.getElementById('loggedInAvatar').src = current.avatar;
+    document.getElementById('posterAvatarPreview').innerHTML = `<img src="${current.avatar}" class="w-full h-full object-cover rounded-full">`;
   } else {
     authForm.classList.remove('hidden');
     profileArea.classList.add('hidden');
@@ -642,24 +660,11 @@ function refreshAccountState() {
 }
 
 function refreshHome() {
-  const currentUser = JSON.parse(localStorage.getItem('ayna_current_user'));
-  if(currentUser) {
-    document.getElementById('homeName').innerText = currentUser.name;
-    document.getElementById('userAccountID').innerText = currentUser.id;
-    if(currentUser.avatar) document.getElementById('userHomeAvatar').src = currentUser.avatar;
-  }
+    loadCountry('all');
+    refreshAccountState();
 }
 
-function togglePass(id) {
-  const el = document.getElementById(id);
-  el.type = el.type === "password" ? "text" : "password";
-}
-
-window.onload = function() {
-  renderChannels(channels);
-  refreshAccountState();
-  refreshHome();
-};
+window.onload = refreshHome;
 </script>
 </body>
 </html>
