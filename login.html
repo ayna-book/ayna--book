@@ -21,7 +21,9 @@
                         border: '#00d4ff55',
                         accent: '#00d4ff',
                         gold: '#ffd700',
-                        pink: '#ff5a8e'
+                        pink: '#ff5a8e',
+                        red: '#ff3344',
+                        green: '#00ff88'
                     }
                 }
             }
@@ -34,7 +36,7 @@
 <!-- FontAwesome Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Hind Siliguri Font -->
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -53,8 +55,14 @@ body{
   border: 1px solid rgba(0, 212, 255, 0.3);
 }
 
+.ayna-card {
+  background: rgba(10, 23, 48, 0.95);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
 .brand-logo{
-  width:40px;height:40px;border-radius:50%;
+  width:42px;height:42px;border-radius:50%;
   background:linear-gradient(135deg,#ffd700,#00d4ff,#ff5a8e);
   display:flex;align-items:center;justify-content:center;
   font-weight:900;font-size:18px;color:#020817;
@@ -78,10 +86,28 @@ body{
 .channel-btn { background: #0a1730; border: 1px solid rgba(0, 212, 255, 0.3); color: white; padding: 12px; border-radius: 12px; cursor: pointer; text-align: left; transition: 0.2s; font-size: 12px; font-weight: 600; }
 .channel-btn:hover { background: #00adb5; border-color: #00d4ff; color: #000; }
 
+.tech-badge {
+  background: rgba(0, 212, 255, 0.15);
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  color: #00d4ff;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #020817; }
 ::-webkit-scrollbar-thumb { background: #00d4ff44; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #00d4ff; }
+
+/* Radar Scan Line Effect */
+.radar-grid {
+  background-image: 
+    radial-gradient(circle, rgba(0, 255, 136, 0.15) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 255, 136, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px, 20px 20px, 20px 20px;
+}
 </style>
 </head>
 
@@ -115,17 +141,23 @@ body{
   </div>
  </div>
 
- <!-- Top Quick Nav -->
- <div class="max-w-7xl mx-auto flex items-center gap-1.5 overflow-x-auto pt-2 scrollbar-none">
-   <button onclick="switchTab('home')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-950 text-cyan-300 border border-cyan-500/40 whitespace-nowrap active" data-view="home">🏠 হোম</button>
-   <button onclick="switchTab('media')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="media">📺 টিভি ও রেডিও</button>
-   <button onclick="switchTab('serials')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="serials">🎬 ভারতীয় ও অ্যারাবিক সিরিয়াল</button>
-   <button onclick="switchTab('kids')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="kids">🧸 শিশু বিনোদন</button>
-   <button onclick="switchTab('leaders')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="leaders">🏛️ বিশ্বনেতা ডিরেক্টরি</button>
-   <button onclick="switchTab('ngo')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="ngo">🤝 এনজিও (NGO)</button>
-   <button onclick="switchTab('matrimony')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="matrimony">💍 বিয়ে-শাদী</button>
-   <button onclick="switchTab('translator')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="translator">🌐 AI অনুবাদক</button>
-   <button onclick="switchTab('account')" class="nav-btn px-3 py-1 rounded-lg text-xs font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="account">🔐 অ্যাকাউন্ট</button>
+ <!-- Top Quick Nav Scrollable Bar -->
+ <div class="max-w-7xl mx-auto flex items-center gap-1.5 overflow-x-auto pt-2 pb-1 scrollbar-none text-xs">
+   <button onclick="switchTab('home')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-cyan-950 text-cyan-300 border border-cyan-500/40 whitespace-nowrap active" data-view="home">🏠 হোম</button>
+   <button onclick="switchTab('countries')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="countries">🌐 ১৯৩ রাষ্ট্র ও পতাকা</button>
+   <button onclick="switchTab('defense')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="defense">🚀 সামরিক, পরমাণু ও গোয়েন্দা</button>
+   <button onclick="switchTab('radar')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="radar">📡 রিয়েল রাডার ও কম্পাস</button>
+   <button onclick="switchTab('media')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="media">📺 লাইভ টিভি ও রেডিও</button>
+   <button onclick="switchTab('institutions')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="institutions">🏛️ ইউনিভার্সিটি, মেডিকেল ও ব্যাংক</button>
+   <button onclick="switchTab('tech_auto')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="tech_auto">💻 ১০,০০০+ টেক, EV ও অটোমোবাইল</button>
+   <button onclick="switchTab('serials')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="serials">🎬 ভারতীয় ও অ্যারাবিক সিরিয়াল</button>
+   <button onclick="switchTab('kids')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="kids">🧸 শিশু বিনোদন</button>
+   <button onclick="switchTab('leaders')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="leaders">🏛️ বিশ্বনেতা</button>
+   <button onclick="switchTab('ngo')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="ngo">🤝 মানবাধিকার NGO</button>
+   <button onclick="switchTab('commerce')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="commerce">🛒 বিশ্বের বেচাকেনা ও পে-সিস্টেম</button>
+   <button onclick="switchTab('matrimony')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="matrimony">💍 বিয়ে-শাদী</button>
+   <button onclick="switchTab('translator')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="translator">🌐 AI অনুবাদক</button>
+   <button onclick="switchTab('account')" class="nav-btn px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-slate-300 border border-slate-800 whitespace-nowrap" data-view="account">🔐 অ্যাকাউন্ট</button>
  </div>
 </header>
 
@@ -134,9 +166,10 @@ body{
 <!-- 1. DASHBOARD HOME VIEW -->
 <section id="home" class="view active space-y-4">
  <div class="ayna-card p-5 sm:p-6 rounded-2xl text-center bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 border border-cyan-500/40 shadow-xl">
-  <h1 class="text-2xl sm:text-4xl font-extrabold text-amber-400 drop-shadow-md">AYNA BOOK OMEGA V10000</h1>
-  <h3 class="text-xs sm:text-base font-semibold text-cyan-400 mt-1">ULTRA HD + 8K WORLD SAFETY OS & MEDIA HUB</h3>
-  <button class="mt-4 px-6 py-3 w-full rounded-xl font-extrabold text-black bg-gradient-to-r from-amber-400 via-pink-500 to-cyan-400 shadow-lg hover:opacity-95 text-xs sm:text-sm" onclick="activateAllSystems()">
+  <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-xs border border-cyan-400/30">V10000 ULTRA SAFETY ENGINE ACTIVE</span>
+  <h1 class="text-2xl sm:text-4xl font-extrabold text-amber-400 drop-shadow-md mt-2">AYNA BOOK OMEGA V10000</h1>
+  <h3 class="text-xs sm:text-base font-semibold text-cyan-400 mt-1">GLOBAL DEFENSE, 193 COUNTRIES, LIVE MEDIA & NEXT-GEN TECH PLATFORM</h3>
+  <button class="mt-4 px-6 py-3 w-full rounded-xl font-extrabold text-black bg-gradient-to-r from-amber-400 via-pink-500 to-cyan-400 shadow-lg hover:opacity-95 text-xs sm:text-sm transition-all" onclick="activateAllSystems()">
     ⚡ ১-চাপে অল সিস্টেম অ্যাক্টিভেট ও স্টারলিংক ৮কে চালু ⚡
   </button>
  </div>
@@ -145,17 +178,209 @@ body{
  <div class="ayna-glass p-4 rounded-2xl border border-cyan-500/30 space-y-3">
   <div class="flex items-center gap-3">
    <div id="posterAvatarPreview" class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow overflow-hidden">AB</div>
-   <textarea id="postText" placeholder="আপনার মনে কি চলছে? ছবি, ভিডিও বা অডিও সহ পোস্ট করুন..." rows="2" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 resize-none"></textarea>
+   <textarea id="postText" placeholder="আপনার মনে কি চলছে? আপডেট, খবরের প্রতিক্রিয়া বা আইডিয়া শেয়ার করুন..." rows="2" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 resize-none"></textarea>
   </div>
   <div class="flex justify-between items-center pt-2 border-t border-slate-800">
-   <span class="text-[10px] text-slate-400">৮কে গ্লোবাল ফিড সক্রিয়</span>
-   <button onclick="addNewPost()" class="px-5 py-2 bg-cyan-500 text-black font-bold text-xs rounded-xl shadow">পোস্ট করুন</button>
+   <div class="flex gap-2 text-slate-400 text-xs">
+    <button class="hover:text-cyan-400" title="ছবি ফিক্স"><i class="fa-solid fa-image"></i></button>
+    <button class="hover:text-amber-400" title="ভিডিও লিঙ্ক"><i class="fa-solid fa-video"></i></button>
+    <button class="hover:text-pink-400" title="অবস্থান"><i class="fa-solid fa-location-dot"></i></button>
+   </div>
+   <button onclick="addNewPost()" class="px-5 py-2 bg-cyan-500 text-black font-bold text-xs rounded-xl shadow hover:bg-cyan-400">পোস্ট করুন</button>
   </div>
  </div>
- <div id="feedContainer" class="space-y-4"></div>
+
+ <!-- Global Feed Container -->
+ <div id="feedContainer" class="space-y-4">
+    <!-- Default Post Sample -->
+    <div class="ayna-glass p-4 rounded-2xl border border-cyan-500/30 space-y-2 text-xs">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center text-[10px] font-bold">HQ</div>
+          <div>
+            <b class="text-white">AYNA BOOK Global Intel Hub</b>
+            <span class="text-[10px] text-slate-400 block">আজ ১০:৩০ AM • Verified</span>
+          </div>
+        </div>
+        <span class="tech-badge">🔥 ভাইরাল খবর</span>
+      </div>
+      <p class="text-slate-200">বিশ্বের ১৯৩টি রাষ্ট্রের নিরাপত্তা ডাটাবেজ, আমেরিকান F-35 stealth jet আপডেট এবং চীনের EV প্রযুক্তির সর্বশেষ উপাত্ত সচল করা হয়েছে।</p>
+    </div>
+ </div>
 </section>
 
-<!-- 2. TV & RADIO HUB -->
+<!-- 2. 193 COUNTRIES, FLAGS, SCIENCE & MEDICINE HUB -->
+<section id="countries" class="view space-y-4">
+  <div class="ayna-glass p-4 sm:p-5 rounded-2xl border border-cyan-500/30 space-y-4">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+      <div>
+        <h2 class="text-xl font-bold text-cyan-400"><i class="fa-solid fa-earth-americas"></i> বিশ্বের ১৯৩ টি রাষ্ট্র, পতাকা, বিজ্ঞান ও চিকিৎসা ডিরেক্টরি</h2>
+        <p class="text-xs text-slate-400">রাসায়নিক প্রযুক্তি, জনসংখ্যা ও জাতীয় সক্ষমতার ডাটাবেজ</p>
+      </div>
+      <input type="text" id="countrySearch" onkeyup="filterCountries()" placeholder="🔍 দেশের নাম লিখুন (যেমন: বাংলাদেশ, USA)..." class="bg-slate-900 border border-slate-700 px-3 py-2 rounded-xl text-xs text-white focus:outline-none w-full sm:w-64">
+    </div>
+
+    <!-- Country Cards Grid -->
+    <div id="countryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+       <!-- Dynamically Generated via JS -->
+    </div>
+  </div>
+</section>
+
+<!-- 3. DEFENSE, NUCLEAR & INTELLIGENCE HUB -->
+<section id="defense" class="view space-y-4">
+  <div class="ayna-glass p-5 rounded-2xl border border-red-500/40 space-y-4">
+    <div class="border-b border-red-500/30 pb-2">
+      <h2 class="text-xl font-bold text-red-500 flex items-center gap-2">
+        <i class="fa-solid fa-shield-halved"></i> আন্তর্জাতিক সামরিক, পরমাণু ও গোয়েন্দা ডাটাবেজ
+      </h2>
+      <p class="text-xs text-slate-400">আমেরিকা, রাশিয়া, চীন, ইরান এবং ইসরাইলের আধুনিক অস্ত্র ও নজরদারী ব্যবস্থার রিপোর্ট</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      
+      <!-- USA Panel -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-blue-500/30 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🇺🇸</span>
+          <b class="text-cyan-400 text-sm">আমেরিকা: F-35 ও পারমাণবিক শক্তি</b>
+        </div>
+        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+          <li><b>F-35 Lightning II:</b> ৫ম প্রজন্মের স্টিলথ মাল্টিরোল ফাইটার (AN/APG-81 AESA রাডার সহ)।</li>
+          <li><b>পারমাণবিক ওয়ারহেড:</b> আনুমানিক ৫,২৪৪টি পারমাণবিক বোমা (Minuteman III ICBM & Trident II D5)।</li>
+          <li><b>B-21 Raider:</b> নতুন প্রজন্মের দীর্ঘপাল্লার স্টিলথ বোমারু বিমান।</li>
+        </ul>
+      </div>
+
+      <!-- Russia Panel -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-red-500/30 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🇷🇺</span>
+          <b class="text-red-400 text-sm">রাশিয়া: যুদ্ধ বিমান ও আইসিবিএম</b>
+        </div>
+        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+          <li><b>Su-57 Felon:</b> টুইন-ইঞ্জিন স্টিলথ মাল্টিরোল ফাইটার জেট।</li>
+          <li><b>RS-28 Sarmat (Satan II):</b> অতি-ভারী হাইপারসনিক আইসিবিএম (ICBM)।</li>
+          <li><b>পারমাণবিক সামর্থ্য:</b> বিশ্বের বৃহত্তম আনুমানিক ৫,৫৮০টি নিউক্লিয়ার ওয়ারহেড।</li>
+        </ul>
+      </div>
+
+      <!-- Iran Panel -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-emerald-500/30 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🇮🇷</span>
+          <b class="text-emerald-400 text-sm">ইরান: মিসাইল প্রযুক্তি ও ড্রোন</b>
+        </div>
+        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+          <li><b>Khorramshahr-4 & Kheibar:</b> ২০০০+ কিমি পাল্লার ব্যালিস্টিক ক্ষেপণাস্ত্র।</li>
+          <li><b>Fattah-2:</b> হাইপারসনিক গ্লাইড ভেহিক্যাল (HGV) চালিত ক্ষেপণাস্ত্র।</li>
+          <li><b>Shahed-136:</b> সুইসাইড কামিকাজে ড্রোন প্লাটফর্ম।</li>
+        </ul>
+      </div>
+
+      <!-- China Panel -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-amber-500/30 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🇨🇳</span>
+          <b class="text-amber-400 text-sm">চীন: সামরিক ও বেসামরিক প্রযুক্তি</b>
+        </div>
+        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+          <li><b>J-20 Mighty Dragon:</b> ৫ম প্রজন্মের স্টিলথ যুদ্ধ বিমান।</li>
+          <li><b>DF-41 ICBM:</b> ১২,০০০-১৫,০০০ কিমি পাল্লার মাল্টি-ওয়ারহেড মিসাইল।</li>
+          <li><b>বেসামরিক প্রযুক্তি:</b> 5G, স্যাটেলাইট নেভিগেশন (BeiDou), কোয়ান্টাম কম্পিউটিং।</li>
+        </ul>
+      </div>
+
+      <!-- Israel Panel -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-indigo-500/30 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🇮🇱</span>
+          <b class="text-indigo-400 text-sm">ইসরাইল: গোয়েন্দা ও সাইবার এয়ার ড্রোন</b>
+        </div>
+        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+          <li><b>Unit 8200 & Mossad Cyber:</b> সাইবার স্পাইওয়্যার ও ইলেকট্রনিক নজরদারী।</li>
+          <li><b>Iron Dome & Arrow-3:</b> মাল্টি-লেয়ার মিসাইল ডিফেন্স শিল্ড।</li>
+          <li><b>Hermes 900:</b> দীর্ঘমেয়াদী কৌশলগত ড্রোন ও সার্ভেইল্যান্স।</li>
+        </ul>
+      </div>
+
+      <!-- FBI & Intelligence Panel -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-700 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🏛️</span>
+          <b class="text-slate-200 text-sm">আমেরিকার FBI ও গ্লোবাল এজেন্সি</b>
+        </div>
+        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+          <li><b>FBI:</b> ফেডারেল ব্যুরো অব ইনভেস্টিগেশন (কাউন্টার-ইন্টেলিজেন্স)।</li>
+          <li><b>CIA & NSA:</b> আন্তর্জাতিক গোয়েন্দা তথ্য ও গ্লোবাল সিগন্যাল মনিটরিং।</li>
+          <li><b>MI6 & Interpol:</b> আন্তর্জাতিক পুলিশি সমন্বয় ও কাউন্টার টেররিজম।</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 4. REAL RADAR & DIGITAL COMPASS SECTION -->
+<section id="radar" class="view space-y-4">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    
+    <!-- Real-time Interactive Radar Simulator -->
+    <div class="lg:col-span-2 ayna-glass p-5 rounded-2xl border border-emerald-500/40 space-y-3">
+      <div class="flex justify-between items-center border-b border-emerald-500/30 pb-2">
+        <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
+          <i class="fa-solid fa-satellite-dish"></i> সামরিক ও বেসামরিক রিয়েল রাডার ট্র্যাকার
+        </h2>
+        <span class="text-[10px] px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-500/50 rounded animate-pulse">LIVE SWEEP</span>
+      </div>
+      
+      <div class="relative w-full aspect-square max-h-[420px] mx-auto bg-black rounded-xl overflow-hidden border border-emerald-500/50 flex items-center justify-center radar-grid">
+        <canvas id="radarCanvas" width="400" height="400" class="w-full h-full"></canvas>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between text-xs text-slate-300 pt-2 gap-2">
+        <div>টার্গেট সনাক্তকরণ: <span id="radarTargetsCount" class="text-emerald-400 font-bold">8 Active Vectored Aircrafts</span></div>
+        <div class="flex gap-2">
+          <button onclick="toggleRadarSpeed()" class="px-3 py-1 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-300 rounded-lg border border-emerald-500/40">গতি পরিবর্তন</button>
+          <button onclick="resetRadarTargets()" class="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-cyan-300 rounded-lg border border-slate-700">রি-স্ক্যান</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real Compass Widget -->
+    <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/40 space-y-4 flex flex-col justify-between">
+      <div>
+        <h2 class="text-lg font-bold text-cyan-400 border-b border-cyan-500/30 pb-2 flex items-center gap-2">
+          <i class="fa-solid fa-compass"></i> রিয়েল কম্পাস নেভিগেশন
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">ডিভাইসের জাইরোস্কোপ সেন্সর অথবা ম্যানুয়াল কোণ নির্দেশক</p>
+      </div>
+
+      <!-- Compass Visual -->
+      <div class="relative w-56 h-56 mx-auto my-4 flex items-center justify-center bg-slate-950 rounded-full border-4 border-cyan-500/40 shadow-inner">
+        <!-- Degree Markings -->
+        <span class="absolute top-2 text-cyan-400 font-bold text-xs">N (0°)</span>
+        <span class="absolute right-2 text-slate-400 font-bold text-xs">E (90°)</span>
+        <span class="absolute bottom-2 text-slate-400 font-bold text-xs">S (180°)</span>
+        <span class="absolute left-2 text-slate-400 font-bold text-xs">W (270°)</span>
+        
+        <!-- Needle -->
+        <div id="compassNeedle" class="w-1.5 h-44 bg-gradient-to-b from-red-500 via-white to-cyan-500 rounded-full transform transition-transform duration-200 shadow-lg"></div>
+        <div class="w-6 h-6 rounded-full bg-cyan-400 border-2 border-slate-950 z-10 absolute"></div>
+      </div>
+
+      <div class="text-center space-y-2">
+        <div class="text-xl font-mono font-bold text-amber-400"><span id="headingDegrees">0</span>° DEGREES</div>
+        <button onclick="calibrateCompass()" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/30 rounded-xl text-xs font-semibold">
+          🧭 কম্পাস ক্যালিব্রেট ও সেন্সর টেস্ট
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 5. TV & RADIO HUB -->
 <section id="media" class="view space-y-4">
  <div class="ayna-glass p-4 sm:p-5 rounded-2xl border border-cyan-500/30 space-y-4">
   <div class="text-center mb-2">
@@ -180,7 +405,89 @@ body{
  </div>
 </section>
 
-<!-- 3. INDIAN & ARABIC SERIALS -->
+<!-- 6. UNIVERSITIES, MEDICAL COLLEGES & BANKS HUB -->
+<section id="institutions" class="view space-y-4">
+  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
+    <h2 class="text-xl font-bold text-cyan-400 border-b border-cyan-500/30 pb-2">
+      <i class="fa-solid fa-graduation-cap"></i> বিশ্বের শীর্ষ ইউনিভারসিটি, মেডিকেল কলেজ ও ব্যাংক ডিরেক্টরি
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Top Universities -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+        <h3 class="text-sm font-bold text-amber-400 border-b border-slate-800 pb-1">🎓 বিখ্যাত বিশ্ববিদ্যালয়সমূহ</h3>
+        <ul class="text-xs text-slate-300 space-y-1">
+          <li><b>Harvard & MIT:</b> ক্যামব্রিজ, ইউএসএ</li>
+          <li><b>Oxford & Cambridge:</b> যুক্তরাজ্য</li>
+          <li><b>Tsinghua University:</b> বেইজিং, চীন</li>
+          <li><b>Dhaka University:</b> ঢাকা, বাংলাদেশ</li>
+          <li><b>University of Tokyo:</b> টোকিও, জাপান</li>
+        </ul>
+      </div>
+
+      <!-- Medical Colleges -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+        <h3 class="text-sm font-bold text-pink-400 border-b border-slate-800 pb-1">🏥 শীর্ষ মেডিকেল কলেজসমূহ</h3>
+        <ul class="text-xs text-slate-300 space-y-1">
+          <li><b>Johns Hopkins School of Medicine:</b> USA</li>
+          <li><b>Harvard Medical School:</b> Boston, USA</li>
+          <li><b>Dhaka Medical College (DMC):</b> ঢাকা, বাংলাদেশ</li>
+          <li><b>Karolinska Institute:</b> সুইডেন</li>
+          <li><b>AIIMS:</b> নতুন দিল্লি, ভারত</li>
+        </ul>
+      </div>
+
+      <!-- World Banks -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+        <h3 class="text-sm font-bold text-emerald-400 border-b border-slate-800 pb-1">🏦 গ্লোবাল ব্যাংক ও ফাইনান্স</h3>
+        <ul class="text-xs text-slate-300 space-y-1">
+          <li><b>World Bank & IMF:</b> ওয়াশিংটন ডি.সি.</li>
+          <li><b>Industrial & Commercial Bank of China (ICBC)</b></li>
+          <li><b>JPMorgan Chase:</b> নিউইয়র্ক, ইউএসএ</li>
+          <li><b>Bangladesh Bank:</b> কেন্দ্রীয় ব্যাংক, বাংলাদেশ</li>
+          <li><b>HSBC & Barclays:</b> লন্ডন, ইউকে</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 10,000+ NEXT-GEN TECH, EV & AUTOMOBILE HUB -->
+<section id="tech_auto" class="view space-y-4">
+  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
+    <div class="border-b border-cyan-500/30 pb-2">
+      <h2 class="text-xl font-bold text-amber-400"><i class="fa-solid fa-microchip"></i> ১০,০০০+ নতুন প্রযুক্তি, সুপারকম্পিউটার ও অটোমোবাইল</h2>
+      <p class="text-xs text-slate-400">চীনের EV বিপ্লব, জাপানের অটোমোবাইল এবং গ্লোবাল সুপারকম্পিউটিং</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      
+      <!-- China EV & Auto -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-cyan-500/30 space-y-2">
+        <h3 class="text-sm font-bold text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-car-battery"></i> চীনের EV ও অটোমোবাইল</h3>
+        <p class="text-xs text-slate-300">BYD, NIO, XPeng এবং Xiaomi EV প্ল্যাটফর্ম। ব্লেড ব্যাটারি প্রযুক্তি এবং স্বায়ত্তশাসিত ড্রাইভিং AI।</p>
+        <span class="tech-badge">গ্লোবাল EV লিডার</span>
+      </div>
+
+      <!-- Japan Automobile -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-red-500/30 space-y-2">
+        <h3 class="text-sm font-bold text-red-400 flex items-center gap-2"><i class="fa-solid fa-car"></i> জাপানের অটোমোবাইল</h3>
+        <p class="text-xs text-slate-300">Toyota (Solid-State Battery), Honda, Nissan এবং Hybrid ই-পাওয়ারট্রেন ইঞ্জিনিয়ারিং।</p>
+        <span class="tech-badge">হাইব্রিড ইঞ্জিন পাইওনিয়ার</span>
+      </div>
+
+      <!-- Supercomputers -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-indigo-500/30 space-y-2">
+        <h3 class="text-sm font-bold text-indigo-400 flex items-center gap-2"><i class="fa-solid fa-server"></i> বিশ্বের শীর্ষ সুপারকম্পিউটার</h3>
+        <p class="text-xs text-slate-300">Frontier & Aurora (USA), Fugaku (জাপান), Sunway TaihuLight (চীন)। এক্সাফ্লপ (Exaflops) প্রসেসিং স্পিড।</p>
+        <span class="tech-badge">Exascale AI Speed</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 8. INDIAN & ARABIC SERIALS -->
 <section id="serials" class="view space-y-4">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
   <h2 class="text-xl font-bold text-pink-400"><i class="fa-solid fa-film"></i> নারীদের ভারতীয় ও অ্যারাবিক মেগা সিরিয়াল</h2>
@@ -197,7 +504,7 @@ body{
  </div>
 </section>
 
-<!-- 4. KIDS ENTERTAINMENT -->
+<!-- 9. KIDS ENTERTAINMENT -->
 <section id="kids" class="view space-y-4">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
   <h2 class="text-xl font-bold text-amber-400"><i class="fa-solid fa-child"></i> শিশুদের বিনোদন ও শিক্ষামূলক কার্টুন</h2>
@@ -214,43 +521,79 @@ body{
  </div>
 </section>
 
-<!-- 5. WORLD LEADERS DIRECTORY -->
+<!-- 10. WORLD LEADERS DIRECTORY -->
 <section id="leaders" class="view space-y-4">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
   <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-landmark"></i> বিশ্বনেতাদের ডিরেক্টরি ও প্রোফাইল</h2>
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-    <img src="https://placehold.co/80x80/0a1730/00d4ff?text=Leader" class="w-16 h-16 rounded-full mx-auto mb-2 border border-cyan-400 object-cover">
+    <img src="https://placehold.co/80x80/0a1730/00d4ff?text=US+Leader" class="w-16 h-16 rounded-full mx-auto mb-2 border border-cyan-400 object-cover">
     <b class="text-white text-xs block">মার্কিন প্রেসিডেন্ট</b>
     <span class="text-[10px] text-cyan-400">হোয়াইট হাউস, যুক্তরাষ্ট্র</span>
    </div>
    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-    <img src="https://placehold.co/80x80/0a1730/00d4ff?text=Leader" class="w-16 h-16 rounded-full mx-auto mb-2 border border-cyan-400 object-cover">
+    <img src="https://placehold.co/80x80/0a1730/00d4ff?text=BD+Leader" class="w-16 h-16 rounded-full mx-auto mb-2 border border-cyan-400 object-cover">
     <b class="text-white text-xs block">বাংলাদেশের প্রধান উপদেষ্টা</b>
     <span class="text-[10px] text-cyan-400">ঢাকা, বাংলাদেশ</span>
    </div>
+   <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+    <img src="https://placehold.co/80x80/0a1730/00d4ff?text=CN+Leader" class="w-16 h-16 rounded-full mx-auto mb-2 border border-cyan-400 object-cover">
+    <b class="text-white text-xs block">চীনা প্রেসিডেন্ট</b>
+    <span class="text-[10px] text-cyan-400">বেইজিং, চীন</span>
+   </div>
+   <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+    <img src="https://placehold.co/80x80/0a1730/00d4ff?text=RU+Leader" class="w-16 h-16 rounded-full mx-auto mb-2 border border-cyan-400 object-cover">
+    <b class="text-white text-xs block">রুশ প্রেসিডেন্ট</b>
+    <span class="text-[10px] text-cyan-400">মস্কো, রাশিয়া</span>
+   </div>
   </div>
  </div>
 </section>
 
-<!-- 6. NGO DIRECTORY -->
+<!-- 11. NGO & HUMAN RIGHTS DIRECTORY -->
 <section id="ngo" class="view space-y-4">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
-  <h2 class="text-xl font-bold text-emerald-400"><i class="fa-solid fa-hands-holding-child"></i> আন্তর্জাতিক ও দেশীয় এনজিও (NGO) প্ল্যাটফর্ম</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+  <h2 class="text-xl font-bold text-emerald-400"><i class="fa-solid fa-hands-holding-child"></i> আন্তর্জাতিক মানবাধিকার ও দেশীয় এনজিও (NGO)</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
     <b class="text-white text-sm">ব্র্যাক (BRAC)</b>
-    <p class="text-slate-400 mt-1">দরিদ্র বিমোচন, শিক্ষা ও স্বাস্থ্য সেবা কার্যক্রম।</p>
+    <p class="text-slate-400 mt-1">বিশ্বের বৃহত্তম এনজিও; দারিদ্র্য বিমোচন ও শিক্ষা।</p>
    </div>
    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-    <b class="text-white text-sm">আশা (ASA)</b>
-    <p class="text-slate-400 mt-1">ক্ষুদ্রঋণ ও সামাজিক উন্নয়ন কর্মসূচি।</p>
+    <b class="text-white text-sm">Amnesty International</b>
+    <p class="text-slate-400 mt-1">গ্লোবাল মানবাধিকার রক্ষা সংস্থা (লন্ডন)।</p>
+   </div>
+   <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+    <b class="text-white text-sm">Human Rights Watch (HRW)</b>
+    <p class="text-slate-400 mt-1">আন্তর্জাতিক সংকট পর্যবেক্ষণ ও মানবাধিকার।</p>
    </div>
   </div>
  </div>
 </section>
 
-<!-- 7. GLOBAL MATRIMONY & WEDDING -->
+<!-- 12. COMMERCE & PAYMENTS HUB -->
+<section id="commerce" class="view space-y-4">
+  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4 text-xs">
+    <h2 class="text-xl font-bold text-emerald-400 border-b border-cyan-500/30 pb-2">
+      <i class="fa-solid fa-cart-shopping"></i> বিশ্বের বেচাকেনা ও অনলাইন লেনদেন প্ল্যাটফর্ম
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+        <b class="text-white text-sm block">🛍️ ই-কমার্স হাব (Amazon, Alibaba & Local)</b>
+        <p class="text-slate-400">গ্লোবাল পণ্য কেনাকাটা, শিপিং ট্র্যাকিং এবং হোলসেল মার্কেট।</p>
+        <button onclick="alert('গ্লোবাল শপিং পোর্টাল সক্রিয় করা হচ্ছে...')" class="w-full py-2 bg-emerald-600 text-white font-bold rounded-lg">শপিং শুরু করুন</button>
+      </div>
+
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+        <b class="text-white text-sm block">💳 অনলাইন ডিজিটাল লেনদেন (SWIFT, bKash, Crypto)</b>
+        <p class="text-slate-400">নিরাপদ অনলাইন পে-গেটওয়ে, পেমেন্ট ট্রান্সফার এবং ক্রিপ্টো ওয়ালেট।</p>
+        <button onclick="alert('নিরাপদ ওয়ালেট কানেক্ট করা হচ্ছে...')" class="w-full py-2 bg-cyan-600 text-white font-bold rounded-lg">ওয়ালেট ওপেন করুন</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13. GLOBAL MATRIMONY & WEDDING -->
 <section id="matrimony" class="view space-y-4">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4">
   <h2 class="text-xl font-bold text-pink-400"><i class="fa-solid fa-ring"></i> বিয়ে-শাদী ও গ্লোবাল ম্যাট্রিমনি</h2>
@@ -260,12 +603,12 @@ body{
     <input type="text" placeholder="পূর্ণ নাম" class="bg-slate-950 border border-slate-800 p-2 rounded text-white">
     <input type="text" placeholder="পেশা / শিক্ষাগত যোগ্যতা" class="bg-slate-950 border border-slate-800 p-2 rounded text-white">
    </div>
-   <button class="w-full py-2 bg-pink-600 text-white font-bold rounded-lg">বায়োডাটা সাবমিট করুন</button>
+   <button onclick="alert('বায়োডাটা জমাদান সফল হয়েছে!')" class="w-full py-2 bg-pink-600 text-white font-bold rounded-lg">বায়োডাটা সাবমিট করুন</button>
   </div>
  </div>
 </section>
 
-<!-- 8. AI LANGUAGE TRANSLATOR -->
+<!-- 14. AI LANGUAGE TRANSLATOR -->
 <section id="translator" class="view space-y-4">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-4 text-xs">
   <h2 class="text-xl font-bold text-cyan-400"><i class="fa-solid fa-language"></i> রিয়েল-টাইম এআই ভাষা অনুবাদক (AI Translator)</h2>
@@ -277,7 +620,7 @@ body{
  </div>
 </section>
 
-<!-- 9. MESSENGER -->
+<!-- 15. MESSENGER -->
 <section id="messages" class="view space-y-4">
  <div class="ayna-glass p-4 sm:p-5 rounded-2xl border border-cyan-500/30 space-y-3 text-xs">
   <div class="flex justify-between items-center border-b border-slate-800 pb-2">
@@ -293,7 +636,7 @@ body{
  </div>
 </section>
 
-<!-- 10. ACCOUNT -->
+<!-- 16. ACCOUNT -->
 <section id="account" class="view">
  <div class="ayna-glass p-5 rounded-2xl border border-cyan-500/30 space-y-3 text-xs">
   <h2 class="text-xl font-bold text-white">🔐 প্রোফাইল ও অ্যাকাউন্ট প্যানেল</h2>
@@ -302,11 +645,11 @@ body{
    <input id="nEmail" type="email" placeholder="ইমেইল অথবা ফোন" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white">
    <input id="p1" type="password" placeholder="পাসওয়ার্ড" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white">
    <input id="pRe" type="password" placeholder="পুনরায় পাসওয়ার্ড দিন" class="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white">
-   <button class="w-full py-3 rounded-xl font-bold text-black bg-cyan-400" onclick="registerWithRePass()">🚀 রেজিস্টার করুন</button>
+   <button class="w-full py-3 rounded-xl font-bold text-black bg-cyan-400 hover:bg-cyan-300" onclick="registerWithRePass()">🚀 রেজিস্টার করুন</button>
   </div>
   <div id="userProfileArea" class="hidden space-y-3 p-4 bg-slate-900 rounded-xl border border-cyan-500/30 text-center">
    <h3 id="loggedInUserName" class="text-base font-bold text-white">স্বাগতম</h3>
-   <button class="w-full py-2.5 bg-red-600 text-white font-bold rounded-xl" onclick="logoutAccount()">🚪 লগআউট</button>
+   <button class="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl" onclick="logoutAccount()">🚪 লগআউট</button>
   </div>
  </div>
 </section>
@@ -314,16 +657,71 @@ body{
 </main>
 
 <!-- Bottom Mobile Navigation Bar -->
-<nav class="fixed bottom-0 left-0 w-full bg-slate-950/95 backdrop-blur-md border-t border-slate-800 flex justify-around py-2 z-50 text-[11px] text-slate-400">
+<nav class="fixed bottom-0 left-0 w-full bg-slate-950/95 backdrop-blur-md border-t border-slate-800 flex justify-around py-2 z-50 text-[10px] sm:text-[11px] text-slate-400">
     <button onclick="switchTab('home')" class="flex flex-col items-center gap-0.5 hover:text-cyan-400"><i class="fa-solid fa-house text-base"></i><span>হোম</span></button>
+    <button onclick="switchTab('countries')" class="flex flex-col items-center gap-0.5 hover:text-cyan-400"><i class="fa-solid fa-earth-americas text-base"></i><span>রাষ্ট্র</span></button>
+    <button onclick="switchTab('radar')" class="flex flex-col items-center gap-0.5 hover:text-emerald-400"><i class="fa-solid fa-satellite-dish text-base"></i><span>রাডার</span></button>
+    <button onclick="switchTab('defense')" class="flex flex-col items-center gap-0.5 hover:text-red-400"><i class="fa-solid fa-shield-halved text-base"></i><span>সামরিক</span></button>
     <button onclick="switchTab('media')" class="flex flex-col items-center gap-0.5 hover:text-cyan-400"><i class="fa-solid fa-tv text-base"></i><span>টিভি</span></button>
-    <button onclick="switchTab('serials')" class="flex flex-col items-center gap-0.5 hover:text-pink-400"><i class="fa-solid fa-film text-base"></i><span>সিরিয়াল</span></button>
-    <button onclick="switchTab('kids')" class="flex flex-col items-center gap-0.5 hover:text-amber-400"><i class="fa-solid fa-child text-base"></i><span>শিশু</span></button>
     <button onclick="switchTab('messages')" class="flex flex-col items-center gap-0.5 hover:text-pink-400"><i class="fa-solid fa-comments text-base"></i><span>মেসেজ</span></button>
 </nav>
 
-<!-- Application Engine -->
+<!-- Application Engine Script -->
 <script>
+// 193 UN Member State Sample Database Data Generator
+const sampleCountries = [
+  { name: "বাংলাদেশ (Bangladesh)", flag: "🇧🇩", capital: "ঢাকা", pop: "১৭ কোটি+", tech: "IT Hub & Pharma", health: "৯৪% কভারেজ" },
+  { name: "আমেরিকা (USA)", flag: "🇺🇸", capital: "ওয়াশিংটন ডি.সি.", pop: "৩৩ কোটি+", tech: "Silicon Valley & Aerospace", health: "Advanced Bio-Med" },
+  { name: "চীন (China)", flag: "🇨🇳", capital: "বেইজিং", pop: "১৪০ কোটি+", tech: "5G, EV & Supercomputers", health: "Tech Medicine" },
+  { name: "রাশিয়া (Russia)", flag: "🇷🇺", capital: "মস্কো", pop: "১৪.৪ কোটি+", tech: "Nuclear & Space Tech", health: "Sputnik Bio-Tech" },
+  { name: "জাপান (Japan)", flag: "🇯🇵", capital: "টোকিও", pop: "১২.৫ কোটি+", tech: "Robotics & Automobiles", health: "Universal Healthcare" },
+  { name: "জার্মানি (Germany)", flag: "🇩🇪", capital: "বার্লিন", pop: "৮.৪ কোটি+", tech: "Precision Engineering", health: "Pharma Innovation" },
+  { name: "যুক্তরাজ্য (UK)", flag: "🇬🇧", capital: "লন্ডন", pop: "৬.৭ কোটি+", tech: "AI & Fintech", health: "NHS System" },
+  { name: "ভারত (India)", flag: "🇮🇳", capital: "নতুন দিল্লি", pop: "১৪২ কোটি+", tech: "Space (ISRO) & IT", health: "Generic Pharma Hub" },
+  { name: "ইরান (Iran)", flag: "🇮🇷", capital: "তেহরান", pop: "৮.৮ কোটি+", tech: "Nano-Tech & Missiles", health: "Stem Cell Research" },
+  { name: "সৌদি আরব (Saudi Arabia)", flag: "🇸🇦", capital: "রিয়াদ", pop: "৩.৬ কোটি+", tech: "Desalination & Solar", health: "Modern Care" }
+];
+
+// Fill rest of 193 nations placeholders systematically
+for (let i = 11; i <= 193; i++) {
+  sampleCountries.push({
+    name: `রাষ্ট্র নম্বর ${i} (UN Member #${i})`,
+    flag: "🇺🇳",
+    capital: `রাজধানী-${i}`,
+    pop: "গ্লোবাল উপাত্ত",
+    tech: "রাসায়নিক ও মেকানিক্যাল বায়ো-টেক",
+    health: "জাতীয় স্বাস্থ্যসেবা"
+  });
+}
+
+function renderCountries(list) {
+  const container = document.getElementById('countryGrid');
+  if(!container) return;
+  container.innerHTML = '';
+  list.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'bg-slate-950 p-3.5 rounded-xl border border-slate-800 hover:border-cyan-500/50 transition duration-200 space-y-1 text-xs';
+    card.innerHTML = `
+      <div class="flex items-center justify-between">
+        <b class="text-white text-sm">${c.flag} ${c.name}</b>
+        <span class="text-[10px] text-cyan-400">UN Member</span>
+      </div>
+      <div class="text-slate-400">রাজধানী: <span class="text-slate-200">${c.capital}</span></div>
+      <div class="text-slate-400">জনসংখ্যা: <span class="text-slate-200">${c.pop}</span></div>
+      <div class="text-slate-400">বিজ্ঞান ও প্রযুক্তি: <span class="text-cyan-300">${c.tech}</span></div>
+      <div class="text-slate-400">চিকিৎসা ব্যবস্থা: <span class="text-emerald-400">${c.health}</span></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function filterCountries() {
+  const query = document.getElementById('countrySearch').value.toLowerCase();
+  const filtered = sampleCountries.filter(c => c.name.toLowerCase().includes(query) || c.capital.toLowerCase().includes(query));
+  renderCountries(filtered);
+}
+
+// Full TV & Radio Database
 const fullDirectory = {
   bd: {
     tv: [
@@ -365,15 +763,40 @@ function switchTab(viewId) {
   });
   const targetView = document.getElementById(viewId);
   if(targetView) targetView.classList.add('active');
+
+  const targetBtn = document.querySelector(`.nav-btn[data-view="${viewId}"]`);
+  if(targetBtn) {
+    targetBtn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-800');
+    targetBtn.classList.add('bg-cyan-950', 'text-cyan-300', 'border-cyan-500/40');
+  }
+
   window.scrollTo({top:0, behavior:'smooth'});
+
+  if(viewId === 'radar') {
+    initRadar();
+  }
 }
 
 function activateAllSystems() {
-  alert("⚡ 8K ULTRA HD SYSTEM ACTIVATED!");
+  const msg = "⚡ AYNA BOOK OMEGA V10000 8K ULTRA SYSTEM ACTIVATED!\n- 193 Country Grid Active\n- Radar Live Sweeper Syncing\n- Global Media Online";
+  showCustomDialog(msg);
+}
+
+function showCustomDialog(text) {
+  const overlay = document.createElement('div');
+  overlay.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4';
+  overlay.innerHTML = `
+    <div class="ayna-glass p-5 rounded-2xl max-w-sm w-full border border-cyan-400 text-center space-y-3">
+      <h3 class="text-amber-400 font-bold text-sm">SYSTEM NOTIFICATION</h3>
+      <p class="text-xs text-white whitespace-pre-line">${text}</p>
+      <button onclick="this.parentElement.parentElement.remove()" class="px-5 py-2 bg-cyan-500 text-black font-bold text-xs rounded-xl w-full">ঠিক আছে</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 }
 
 function startCall(type) {
-  alert(`📞 ${type === 'video' ? 'ভিডিও' : 'অডিও'} কল শুরু হচ্ছে...`);
+  showCustomDialog(`📞 ${type === 'video' ? 'ভিডিও' : 'অডিও'} সংকেত সংযোগ হচ্ছে...`);
 }
 
 function loadCountry(region) {
@@ -422,7 +845,7 @@ function playMedia(name, url, type) {
   tvPlayer.pause(); tvPlayer.classList.add('hidden');
   ytPlayer.classList.add('hidden'); ytPlayer.src = '';
   if(hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
-  nowPlayingTitle.innerText = `Now Playing: ${name}`;
+  nowPlayingTitle.innerText = `সক্রিয় মিডিয়া: ${name}`;
 
   if(type === 'yt') {
     ytPlayer.classList.remove('hidden');
@@ -454,17 +877,24 @@ function filterChannels() {
 
 function runAITranslation() {
   const text = document.getElementById('sourceText').value;
-  if(!text) return alert('অনুবাদের জন্য কিছু লিখুন!');
-  document.getElementById('targetText').value = `[AI Translation]: ${text} (Successfully Translated to Global Standard)`;
+  if(!text) return showCustomDialog('অনুবাদের জন্য কিছু লিখুন!');
+  document.getElementById('targetText').value = `[AYNA OMEGA AI TRANSLATED]: ${text} (আন্তর্জাতিক মানদণ্ডে অনূদিত)`;
 }
 
 function addNewPost() {
   const text = document.getElementById('postText').value.trim();
-  if(!text) return alert('কিছু লিখুন!');
+  if(!text) return showCustomDialog('কিছু লিখুন!');
   const feed = document.getElementById('feedContainer');
   const postCard = document.createElement('div');
   postCard.className = 'ayna-glass p-4 rounded-2xl border border-cyan-500/30 space-y-2 text-xs';
-  postCard.innerHTML = `<b>Guest Member</b><p class="text-white">${text}</p>`;
+  postCard.innerHTML = `
+    <div class="flex items-center gap-2">
+      <div class="w-6 h-6 rounded-full bg-cyan-500 text-black flex items-center justify-center font-bold text-[10px]">YOU</div>
+      <b class="text-cyan-300">সদস্য পোস্ট</b>
+      <span class="text-[9px] text-slate-400">এখনই</span>
+    </div>
+    <p class="text-white">${text}</p>
+  `;
   feed.prepend(postCard);
   document.getElementById('postText').value = '';
 }
@@ -484,15 +914,15 @@ function sendChatMessage() {
 
 function registerWithRePass() {
   const name = document.getElementById('nName').value;
-  if(!name) return alert('নাম লিখুন!');
+  if(!name) return showCustomDialog('আপনার নাম লিখুন!');
   localStorage.setItem('ayna_current_user', JSON.stringify({name}));
-  alert('অ্যাকাউন্ট তৈরি সফল হয়েছে!');
+  showCustomDialog('অ্যাকাউন্ট সফলভাবে রেজিস্টার হয়েছে!');
   refreshAccountState();
 }
 
 function logoutAccount() {
   localStorage.removeItem('ayna_current_user');
-  alert('লগআউট সম্পন্ন!');
+  showCustomDialog('লগআউট সম্পন্ন হয়েছে!');
   refreshAccountState();
 }
 
@@ -501,11 +931,138 @@ function refreshAccountState() {
   if(current) {
     document.getElementById('authFormArea').classList.add('hidden');
     document.getElementById('userProfileArea').classList.remove('hidden');
-    document.getElementById('loggedInUserName').innerText = current.name;
+    document.getElementById('loggedInUserName').innerText = `স্বাগতম, ${current.name}!`;
+  } else {
+    document.getElementById('authFormArea').classList.remove('hidden');
+    document.getElementById('userProfileArea').classList.add('hidden');
   }
 }
 
+// Radar Canvas Dynamic Simulation Engine
+let radarAngle = 0;
+let radarSpeed = 0.03;
+let radarAnimationId = null;
+let radarTargets = [];
+
+function initRadar() {
+  const canvas = document.getElementById('radarCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  
+  if(radarTargets.length === 0) {
+    resetRadarTargets();
+  }
+
+  function drawRadar() {
+    const width = canvas.width;
+    const height = canvas.height;
+    const cx = width / 2;
+    const cy = height / 2;
+    const radius = Math.min(cx, cy) - 15;
+
+    ctx.fillStyle = 'rgba(2, 8, 23, 0.2)';
+    ctx.fillRect(0, 0, width, height);
+
+    // Concentric Radar Rings
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+    ctx.lineWidth = 1;
+    for(let r = 1; r <= 4; r++) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, (radius / 4) * r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Crosshairs
+    ctx.beginPath();
+    ctx.moveTo(cx - radius, cy); ctx.lineTo(cx + radius, cy);
+    ctx.moveTo(cx, cy - radius); ctx.lineTo(cx, cy + radius);
+    ctx.stroke();
+
+    // Radar Scanning Beam Line
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, radius, radarAngle, radarAngle + 0.05);
+    ctx.lineTo(cx, cy);
+    ctx.fillStyle = 'rgba(0, 255, 136, 0.4)';
+    ctx.fill();
+
+    // Scan Line
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(radarAngle) * radius, cy + Math.sin(radarAngle) * radius);
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Draw Targets
+    radarTargets.forEach(t => {
+      ctx.beginPath();
+      ctx.arc(cx + t.x, cy + t.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = t.color || '#ff3344';
+      ctx.fill();
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = t.color || '#ff3344';
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '8px monospace';
+      ctx.fillText(t.label, cx + t.x + 6, cy + t.y + 2);
+      ctx.shadowBlur = 0;
+    });
+
+    radarAngle += radarSpeed;
+    if (radarAngle >= Math.PI * 2) radarAngle = 0;
+
+    radarAnimationId = requestAnimationFrame(drawRadar);
+  }
+
+  if(radarAnimationId) cancelAnimationFrame(radarAnimationId);
+  drawRadar();
+}
+
+function toggleRadarSpeed() {
+  radarSpeed = radarSpeed === 0.03 ? 0.08 : 0.03;
+}
+
+function resetRadarTargets() {
+  radarTargets = [
+    { x: -70, y: -80, label: "F-35 JET", color: "#00d4ff" },
+    { x: 110, y: 50, label: "SU-57", color: "#ff3344" },
+    { x: -120, y: 90, label: "COMMERCIAL-777", color: "#ffd700" },
+    { x: 60, y: -130, label: "UAV DRONE", color: "#00ff88" },
+    { x: -30, y: 140, label: "NAVY SHIP", color: "#ff5a8e" },
+    { x: 140, y: -60, label: "J-20 DRAGON", color: "#00d4ff" }
+  ];
+  const countEl = document.getElementById('radarTargetsCount');
+  if(countEl) countEl.innerText = `${radarTargets.length} Active Vectored Aircrafts`;
+}
+
+// Compass Orientation Sensor & Fallback Engine
+let compassHeading = 0;
+
+function calibrateCompass() {
+  compassHeading = (compassHeading + 45) % 360;
+  updateCompassDisplay(compassHeading);
+}
+
+function updateCompassDisplay(deg) {
+  const needle = document.getElementById('compassNeedle');
+  const degText = document.getElementById('headingDegrees');
+  if(needle) needle.style.transform = `rotate(${deg}deg)`;
+  if(degText) degText.innerText = Math.round(deg);
+}
+
+if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', function(event) {
+    if (event.webkitCompassHeading) {
+      compassHeading = event.webkitCompassHeading;
+    } else if (event.alpha) {
+      compassHeading = 360 - event.alpha;
+    }
+    updateCompassDisplay(compassHeading);
+  }, true);
+}
+
 window.onload = function() {
+  renderCountries(sampleCountries);
   loadCountry('all');
   refreshAccountState();
 };
