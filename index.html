@@ -21,1514 +21,297 @@
   font-family: "Optimistic Mono", ui-monospace, monospace;
 }
 </style><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AYNA BOOK OMEGA V10000 - V2 Modern</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>body{font-family:'Hind Siliguri',sans-serif;background:#020817;color:#eaf7ff;font-size:19px} input,select,textarea{font-size:21px!important;padding:16px!important} .btn{padding:16px!important;font-size:20px!important} .glass{border-radius:20px!important} .glass{background:rgba(10,23,48,.9);border:1px solid #00d4ff55;border-radius:16px} .btn{padding:14px;border-radius:14px;font-weight:800} .eye{cursor:pointer}</style></head>
-<body class="p-3 max-w-3xl mx-auto">
-<header class="text-center py-4"><h1 class="text-3xl font-black text-amber-400">AYNA BOOK OMEGA V10000</h1><p class="text-cyan-300">🔥 Firebase Connected • 4G to 10G • World Famous App</p>
-<div class="flex gap-2 justify-center mt-3 flex-wrap"><button onclick="goHome()" class="btn bg-amber-400 text-black">🏠 হোম - সব ফিচার</button><button onclick="show('account')" class="btn bg-cyan-400 text-black">🔐 অ্যাকাউন্ট</button><button onclick="show('media')" class="btn bg-slate-800">📺 টিভি / সিরিয়াল</button><button onclick="show('voice')" class="btn bg-slate-800">🔊 ভয়েস / নামাজ</button><button onclick="show('holiday')" class="btn bg-slate-800">🎉 ছুটি</button><button onclick="show('alerts')" class="btn bg-slate-800">🚨 ১৫০+ অ্যালার্ট</button><button onclick="show('embassy')" class="btn bg-slate-800">🏛️ ১৯৩ এম্বাসি</button><button onclick="show('world')" class="btn bg-emerald-600 text-white">🌍 বিশ্ব রেডিও/টিভি</button></div></header>
-<!-- HOME DASHBOARD - 1,2,3... BIG BOXES -->
-<section id="homeDash" class="space-y-3">
-<div class="glass p-4 text-center"><h2 class="text-2xl font-black">🏠 AYNA BOOK - সব ফিচার ১,২,৩... সিরিয়ালি</h2><p class="text-slate-300 text-lg">যেটা ইচ্ছা, ওই বড় বাক্সে চাপ দিলেই চালু হবে</p></div>
-<div class="grid grid-cols-1 gap-3" id="dashGrid"></div>
-</section>
-<script>
-const dashItems=[
- {n:"অ্যাকাউন্ট - নাম, জিমেইল, ফোন, পাসওয়ার্ড", d:"লগইন / রেজিস্টার / OTP / Forget Password", tab:"account", icon:"🔐", color:"bg-cyan-500 text-black"},
- {n:"বিশ্ব রেডিও + টিভি", d:"৩০,০০০+ রেডিও + ১০,০০০+ টিভি সরাসরি", tab:"world", icon:"🌍", color:"bg-emerald-500 text-black"},
- {n:"টিভি / সিরিয়াল", d:"ভারতীয় + অ্যারাবিয়ান সিরিয়াল, বাংলা নাটক", tab:"media", icon:"📺", color:"bg-pink-500 text-white"},
- {n:"ভয়েস ঘড়ি + নামাজ", d:"প্রতি ঘণ্টায় নারীর কণ্ঠে সময়, নামাজের ১০ মিনিট আগে পুরুষের কণ্ঠে", tab:"voice", icon:"🔊", color:"bg-amber-400 text-black"},
- {n:"সরকারি ছুটি", d:"সকাল ৯টায় নারীর কণ্ঠে ছুটির ঘোষণা", tab:"holiday", icon:"🎉", color:"bg-purple-500 text-white"},
- {n:"১৫০+ অ্যালার্ট", d:"999, ফায়ার, পুলিশ, অ্যাম্বুলেন্স - ১ চাপে কল", tab:"alerts", icon:"🚨", color:"bg-red-600 text-white"},
- {n:"১৯৩ এম্বাসি", d:"বিশ্বের সব দেশের দূতাবাস ডিরেক্টরি", tab:"embassy", icon:"🏛️", color:"bg-indigo-500 text-white"},
- {n:"সরকারি কর্মকর্তা ডিরেক্টরি - অফিসিয়াল", d:"ছবি, নাম, পদবী, অফিসের ফোন/ইমেইল (ব্যক্তিগত নয়)", tab:"officials", icon:"🏛️", color:"bg-slate-700 text-white"},
- {n:"উন্নত প্রযুক্তি - চিকিৎসা, শিক্ষা, সামরিক", d:"স্বাস্থ্য, কারিগরি, শিক্ষা, বেসামরিক প্রযুক্তি", tab:"tech", icon:"🚀", color:"bg-cyan-700 text-white"},
- {n:"নিরাপত্তা ও AI মডারেশন", d:"বিদ্বেষমূলক কনটেন্ট AI শনাক্ত + অ্যাডমিনকে জানাবে", tab:"safetyAI", icon:"🛡️", color:"bg-emerald-700 text-white"},
-
-];
-document.getElementById('dashGrid').innerHTML = dashItems.map((it,i)=>`
-<button onclick="show('${it.tab}')" class="glass p-5 text-left flex items-center gap-4 hover:scale-[1.01] transition" style="min-height:110px">
-<div class="text-5xl font-black text-amber-400 w-14 shrink-0">${i+1}.</div>
-<div class="flex-1"><div class="text-2xl font-black leading-tight">${it.icon} ${it.n}</div><div class="text-lg text-slate-300 mt-1">${it.d}</div></div>
-<div class="text-3xl">▶</div>
-</button>`).join('');
-// show() কে override করে dashboard লুকানো
-const _origShow = show;
-show = function(id){
-  document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
-  let el=document.getElementById(id); if(el) el.classList.remove('hidden');
-  document.getElementById('homeDash').classList.add('hidden');
-  window.scrollTo({top:0, behavior:'smooth'});
-};
-// Header logo / Home বাটনে চাপ দিলে dashboard ফিরে আসবে
-function goHome(){ document.querySelectorAll('section').forEach(s=>s.classList.add('hidden')); document.getElementById('homeDash').classList.remove('hidden'); window.scrollTo({top:0}); }
-</script>
-
-
-<!-- ACCOUNT -->
-<section id="account" class="glass p-5 space-y-3">
-<h2 class="text-2xl font-bold">🔐 প্রোফাইল ও অ্যাকাউন্ট</h2>
-<div class="flex gap-2"><button onclick="setMode('login')" id="bLogin" class="btn flex-1 bg-cyan-500 text-black">পুরনো অ্যাকাউন্ট লগইন</button><button onclick="setMode('register')" id="bReg" class="btn flex-1 bg-slate-800">নতুন অ্যাকাউন্ট</button></div>
-<div class="text-center"><img id="av" src="https://placehold.co/440x440/0a1730/00d4ff?text=Upload+Big+Photo" class="w-56 h-56 rounded-[28px] mx-auto border-4 border-cyan-400 object-cover shadow-2xl" style="width:220px;height:220px"><br><label class="text-cyan-300 underline cursor-pointer">📸 ছবি নির্বাচন করুন<input type="file" class="hidden" onchange="document.getElementById('av').src=URL.createObjectURL(this.files[0])"></label></div>
-<input id="fName" placeholder="👤 পূর্ণ নাম" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<input id="fEmail" placeholder="📧 জিমেইল (example@gmail.com)" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<input id="fPhone" placeholder="📞 ফোন (01XXXXXXXXX)" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<div class="relative"><input id="fPass" type="password" placeholder="🔒 পাসওয়ার্ড" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 pr-12"><span class="eye absolute right-3 top-3 text-2xl" onclick="toggle('fPass',this)">👁️</span></div>
-<div id="rePassBox" class="relative"><input id="fRePass" type="password" placeholder="🔒 পুনরায় পাসওয়ার্ড দিন" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 pr-12"><span class="eye absolute right-3 top-3 text-2xl" onclick="toggle('fRePass',this)">👁️</span></div>
-<div id="otpBox" class="hidden"><input id="fOtp" placeholder="🔑 OTP - ৪ ডিজিট (ডেমো: 1234)" class="w-full p-3 rounded-xl bg-slate-900 border border-amber-500"></div>
-<button id="mainBtn" onclick="handleAuth()" class="btn w-full bg-cyan-400 text-black text-xl">🚀 রেজিস্টার করুন</button>
-<button onclick="sendOtp()" class="btn w-full bg-amber-400 text-black">📩 OTP পাঠান</button>
-<button onclick="forgetPass()" class="w-full underline text-cyan-300 text-lg">❓ Forget Password? জিমেইলে রিসেট লিংক পাঠান</button>
-<p id="msg" class="text-center text-emerald-300 font-bold"></p>
-<div class="bg-slate-900 p-3 rounded-xl text-base">✅ লেখা বড় করা হয়েছে (১৯px) • পাসওয়ার্ড দেখা/লুকানো • OTP • Forget • Login/Register একই পেজে</div>
-</section>
-
-
-<!-- MEDIA / SERIAL - FIXED V4 -->
-<section id="media" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-bold">📺 রিয়েল টিভি + রেডিও - FIXED</h2>
-<div class="bg-red-950 p-3 rounded-xl text-base">⚠️ কেন আগে চলতো না? ১) YouTube Channel ID ভুল ছিল ২) HLS লিংক মরে গেছে ৩) YouTube Embed ব্লক করে। তাই এখন ২ ভাবে চালাবো: প্রথমে প্লেয়ারে চেষ্টা, না চললে হলুদ বাটনে অফিসিয়াল YouTube-এ খুলবে - ১০০% চলবে।</div>
-
-<h3 class="font-bold text-cyan-300">📺 এখন চলছে:</h3>
-<p id="nowPlaying" class="bg-slate-900 p-3 rounded-xl">কোনো চ্যানেল বেছে নিন 👇</p>
-<div class="bg-black rounded-xl overflow-hidden"><video id="tvPlayer" controls playsinline class="w-full aspect-video"></video></div>
-<audio id="radioPlayer" controls class="w-full"></audio>
-<button id="openOfficialBtn" onclick="openOfficial()" class="btn w-full bg-amber-400 text-black hidden">▶ YouTube / অফিসিয়াল সাইটে খুলুন (না চললে এটা চাপুন)</button>
-
-<h3 class="font-bold">📻 রেডিও - এগুলো ১০০% চলে (চাপ দিলেই বাজবে)</h3>
-<div class="grid gap-2">
-<button onclick="playRadio('BBC World Service','https://stream.live.vc.bbcmedia.co.uk/bbc_world_service','https://www.bbc.com/sounds/play/live:bbc_world_service')" class="btn bg-slate-900 text-left">🌍 BBC World Service</button>
-<button onclick="playRadio('BBC Bangla','https://stream.live.vc.bbcmedia.co.uk/bbc_bengali','https://www.bbc.com/bengali')" class="btn bg-slate-900 text-left">🇧🇩 BBC Bangla</button>
-<button onclick="playRadio('Holy Quran 24/7','https://stream.zeno.fm/3s714f2427zuv','https://zeno.fm/radio/holy-quran/')" class="btn bg-slate-900 text-left">🕌 Holy Quran Radio 24/7</button>
-<button onclick="playRadio('Radio Foorti','https://stream.zeno.fm/87v2u0m7808uv','https://www.radiofoorti.fm/')" class="btn bg-slate-900 text-left">🎵 Radio Foorti 88.0</button>
-<button onclick="playRadio('Bangladesh Betar','https://stream.zeno.fm/f382k62u94zuv','https://www.betar.gov.bd/')" class="btn bg-slate-900 text-left">🇧🇩 Bangladesh Betar</button>
-</div>
-
-<h3 class="font-bold">📺 টিভি - লাইভ</h3>
-<div class="grid gap-2">
-<button onclick="playTV('Al Jazeera English','https://live-hls-web-aje.getaj.net/AJE/index.m3u8','https://www.aljazeera.com/live/')" class="btn bg-slate-900 text-left">🌍 Al Jazeera English (HLS - প্লেয়ারে চলে)</button>
-<button onclick="playTV('France 24 English','https://static.france24.com/live/F24_EN_LO_HLS/live_tv.m3u8','https://www.france24.com/en/live')" class="btn bg-slate-900 text-left">🇫🇷 France 24 English</button>
-<button onclick="playTV('DW News','https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8','https://www.dw.com/en/media-center/live-tv/s-100825')" class="btn bg-slate-900 text-left">🇩🇪 DW News</button>
-<button onclick="playTV('NASA TV','https://ntv1.akamaized.net/hls/live/2014756/NASA-TV-HD-1/master.m3u8','https://www.nasa.gov/nasatv/')" class="btn bg-slate-900 text-left">🚀 NASA TV</button>
-<button onclick="openOfficialDirect('https://www.youtube.com/@somoynews/live')" class="btn bg-slate-900 text-left">🇧🇩 Somoy TV - YouTube-এ খুলবে (Embed ব্লক তাই সরাসরি)</button>
-<button onclick="openOfficialDirect('https://www.youtube.com/@jamunatv/live')" class="btn bg-slate-900 text-left">🇧🇩 Jamuna TV - YouTube-এ খুলবে</button>
-<button onclick="openOfficialDirect('https://www.youtube.com/@BBCNews/live')" class="btn bg-slate-900 text-left">🌍 BBC News - YouTube-এ খুলবে</button>
-</div>
-
-<h3 class="font-bold text-pink-300 text-xl">🎬 ভারতীয় ও অ্যারাবিয়ান সিরিয়াল</h3>
-<div class="grid gap-2"><button onclick="openOfficialDirect('https://www.youtube.com/results?search_query=indian+serial+today+episode')" class="btn bg-pink-950 text-left">🇮🇳 ভারতীয় সিরিয়াল</button><button onclick="openOfficialDirect('https://www.youtube.com/results?search_query=arabic+series+today+episode')" class="btn bg-pink-950 text-left">🌙 অ্যারাবিয়ান সিরিয়াল</button></div>
-</section>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script>
-let currentOfficial='https://www.youtube.com/';
-let hls=null;
-function openOfficial(){ window.open(currentOfficial,'_blank'); }
-function openOfficialDirect(u){ window.open(u,'_blank'); }
-function playRadio(name,url,official){
-  document.getElementById('nowPlaying').innerText='📻 এখন বাজছে: '+name;
-  let a=document.getElementById('radioPlayer'); let v=document.getElementById('tvPlayer'); v.pause();
-  currentOfficial=official; document.getElementById('openOfficialBtn').classList.remove('hidden');
-  a.src=url; a.play().then(()=>{document.getElementById('nowPlaying').innerText='✅ বাজছে: '+name}).catch(()=>{document.getElementById('nowPlaying').innerText='⚠️ এই রেডিও ব্রাউজারে ব্লক - হলুদ বাটনে অফিসিয়াল সাইটে খুলুন';});
-}
-function playTV(name,url,official){
-  document.getElementById('nowPlaying').innerText='📺 লোড হচ্ছে: '+name+'...';
-  let v=document.getElementById('tvPlayer'); let a=document.getElementById('radioPlayer'); a.pause();
-  currentOfficial=official; document.getElementById('openOfficialBtn').classList.remove('hidden');
-  if(hls){ try{hls.destroy()}catch(e){} hls=null; }
-  if(window.Hls && Hls.isSupported()){
-    hls=new Hls(); hls.loadSource(url); hls.attachMedia(v);
-    hls.on(Hls.Events.MANIFEST_PARSED, ()=>{ v.play(); document.getElementById('nowPlaying').innerText='✅ চলছে: '+name; });
-    hls.on(Hls.Events.ERROR, (e,d)=>{ if(d.fatal) document.getElementById('nowPlaying').innerText='⚠️ এই HLS এখন অফলাইন - হলুদ বাটনে অফিসিয়াল সাইটে খুলুন'; });
-  } else if(v.canPlayType('application/vnd.apple.mpegurl')){ v.src=url; v.play(); }
-  else { document.getElementById('nowPlaying').innerText='⚠️ ব্রাউজারে HLS চলে না - হলুদ বাটনে খুলুন'; }
-}
-</script>
-
-<!-- VOICE -->
-<section id="voice" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-bold">🔊 ভয়েস ঘড়ি + নামাজ অ্যালার্ট</h2>
-<label class="flex gap-2 items-center"><input type="checkbox" id="hourly" checked class="w-6 h-6"> প্রতি ১ ঘণ্টা পর পর নারীর কণ্ঠে সময় বলবে</label>
-<label class="flex gap-2 items-center"><input type="checkbox" id="namazAlert" checked class="w-6 h-6"> নামাজের ১০ মিনিট আগে পুরুষের কণ্ঠে বলবে</label>
-<div class="flex gap-2"><select id="lang" class="p-3 bg-slate-900 rounded-xl flex-1"><option value="bn">বাংলা</option><option value="en">English</option></select><button onclick="speakNow()" class="btn bg-cyan-400 text-black">▶ এখন সময় বলুন</button></div>
-<h3 class="font-bold">⏰ নিজের সময় লিখুন</h3><input id="customTime" type="time" class="p-3 bg-slate-900 rounded-xl w-full"><input id="customMsg" placeholder="কী বলবে? যেমন: অফিস মিটিং" class="p-3 bg-slate-900 rounded-xl w-full"><button onclick="saveCustom()" class="btn w-full bg-emerald-500 text-black">💾 সময় সেভ করুন</button><p id="customList" class="text-slate-300"></p>
-<h3 class="font-bold">🕌 আজকের নামাজ (চট্টগ্রাম - উদাহরণ)</h3><div class="grid grid-cols-5 gap-1 text-center text-sm"><div class="bg-slate-900 p-2 rounded">ফজর<br>04:52</div><div class="bg-slate-900 p-2 rounded">জোহর<br>12:08</div><div class="bg-slate-900 p-2 rounded">আসর<br>04:15</div><div class="bg-slate-900 p-2 rounded">মাগরিব<br>05:42</div><div class="bg-slate-900 p-2 rounded">এশা<br>07:00</div></div>
-<button onclick="testNamaz()" class="btn w-full bg-amber-400 text-black">🕌 নামাজের ১০ মিনিট আগের ভয়েস টেস্ট করুন (পুরুষ কণ্ঠ)</button>
-</section>
-
-<!-- HOLIDAY -->
-<section id="holiday" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-bold">🎉 সরকারি ছুটি - সকাল ৯টা ঘোষণা</h2>
-<p>ছুটির দিনে সকাল ৯টায় নারীর কণ্ঠে বলবে:</p><div class="bg-slate-900 p-4 rounded-xl">“আজ ১২ তারিখ, শবেবরাত উপলক্ষে ১ দিন সরকারি অফিস, আদালত, স্কুল বন্ধ থাকবে।”</div>
-<button onclick="speakHoliday()" class="btn w-full bg-pink-500 text-white">🔊 ছুটির ঘোষণা শুনুন (নারীর কণ্ঠ)</button>
-<h3 class="font-bold">🏛️ সরকারি অফিস - অফিসিয়াল যোগাযোগ (ব্যক্তিগত নম্বর নয়)</h3><p class="text-slate-300 text-base">শুধু সরকারি ওয়েবসাইটে দেওয়া অফিসের ঠিকানা / অফিসিয়াল ইমেইল দেখানো হবে। যেমন: জেলা প্রশাসকের কার্যালয়, চট্টগ্রাম - www.chittagong.gov.bd</p>
-</section>
-
-<script>
-let mode='register';
-function show(id){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
-function setMode(m){mode=m;document.getElementById('rePassBox').style.display=m=='register'?'block':'none';document.getElementById('otpBox').classList.toggle('hidden',m!='register');document.getElementById('mainBtn').innerText=m=='register'?'🚀 রেজিস্টার করুন':'🔓 লগইন করুন';document.getElementById('bLogin').className='btn flex-1 '+(m=='login'?'bg-cyan-500 text-black':'bg-slate-800');document.getElementById('bReg').className='btn flex-1 '+(m=='register'?'bg-cyan-500 text-black':'bg-slate-800')}
-function toggle(id,el){let e=document.getElementById(id);e.type=e.type=='password'?'text':'password';el.textContent=e.type=='password'?'👁️':'🙈'}
-function sendOtp(){document.getElementById('msg').innerText='✅ OTP পাঠানো হয়েছে (ডেমো OTP: 1234) - আসল অ্যাপে Firebase Phone Auth দিয়ে যাবে';document.getElementById('otpBox').classList.remove('hidden')}
-function handleAuth(){let n=document.getElementById('fName').value.trim(),em=document.getElementById('fEmail').value.trim(),ph=document.getElementById('fPhone').value.trim(),p=document.getElementById('fPass').value,rp=document.getElementById('fRePass').value;if(!n||!em||!ph||!p) return alert('⚠️ নাম, জিমেইল, ফোন, পাসওয়ার্ড সব পূরণ করুন');if(mode=='register'&&p!==rp) return alert('⚠️ পাসওয়ার্ড ও রি-পাসওয়ার্ড মিলছে না');if(mode=='register'&&document.getElementById('fOtp').value!=='1234') return alert('⚠️ সঠিক OTP দিন (ডেমো: 1234)');localStorage.setItem('ayna_user',JSON.stringify({n,em,ph}));document.getElementById('msg').innerText=mode=='register'?'✅ রেজিস্টার সফল! Firebase-এ সেভ হবে':'✅ লগইন সফল! স্বাগতম '+n;alert(document.getElementById('msg').innerText)}
-function forgetPass(){let em=document.getElementById('fEmail').value;if(!em) return alert('আগে জিমেইল লিখুন');alert('✅ '+em+' -এ পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে (Firebase sendPasswordResetEmail)')}
-function openTV(u){window.open(u,'_blank')}
-function speak(text, female){let u=new SpeechSynthesisUtterance(text);u.lang=document.getElementById('lang')?.value=='en'?'en-US':'bn-BD';let vs=speechSynthesis.getVoices();let v=vs.find(v=>v.lang.includes('bn'))||vs.find(v=>v.lang.includes('en'));if(v) u.voice=v;u.pitch=female?1.2:0.7;u.rate=0.95;speechSynthesis.speak(u)}
-function speakNow(){let d=new Date(),h=d.getHours(),amp=h>=12?'বিকাল/রাত':'সকাল',hh=h%12||12;let bn=document.getElementById('lang').value=='bn';speak(bn?`এখন সময় ${amp} ${hh} টা`:`Now time is ${hh} o'clock`,true)}
-function testNamaz(){speak('আর ১০ মিনিট পর ফজরের আজান হবে, নামাজের প্রস্তুতি নিন',false)}
-function speakHoliday(){speak('আজ ১২ তারিখ, শবেবরাত উপলক্ষে আজ একদিন সরকারি অফিস আদালত স্কুল বন্ধ থাকবে',true)}
-function saveCustom(){let t=document.getElementById('customTime').value,m=document.getElementById('customMsg').value||'সময় হয়েছে';if(!t) return alert('সময় দিন');document.getElementById('customList').innerText='✅ সেভ: '+t+' - '+m;localStorage.setItem('ayna_custom',t+'|'+m)}
-// প্রতি ঘণ্টায় নারীর কণ্ঠে সময়
-setInterval(()=>{let d=new Date();if(d.getMinutes()==0&&document.getElementById('hourly')?.checked) speakNow()},60000);
-setMode('register');
-</script>
-<!-- ALERTS -->
-<section id="alerts" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-bold text-red-400">🚨 EMERGENCY ALERT SYSTEM - ১৫০+ হটলাইন</h2>
-<input id="alertSearch" onkeyup="filterAlerts()" placeholder="🔍 জরুরি সার্ভিস খুঁজুন... যেমন: ফায়ার, পুলিশ, অ্যাম্বুলেন্স" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<div id="alertsList" class="grid gap-2"></div>
-<p class="text-sm text-slate-400">১৫০+ অ্যালার্টের সবগুলোই এই লিস্টে আছে। প্রতিটার পাশে কল বাটন আছে।</p>
-</section>
-
-<!-- EMBASSY -->
-<section id="embassy" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-bold text-amber-400">🏛️ ১৯৩ জাতিসংঘ দেশের দূতাবাস ডিরেক্টরি</h2>
-<input id="embSearch" onkeyup="filterEmb()" placeholder="🔍 দেশের নাম লিখুন... যেমন: India, USA, Saudi" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<select id="regionFilter" onchange="filterEmb()" class="w-full p-3 bg-slate-900 rounded-xl"><option value="all">🌍 সব মহাদেশ</option><option value="Asia">🌏 এশিয়া</option><option value="Europe">🌍 ইউরোপ</option><option value="Americas">🌎 আমেরিকা</option><option value="Africa">🌍 আফ্রিকা</option><option value="Oceania">🌏 ওশেনিয়া</option></select>
-<div id="embList" class="grid gap-2"></div>
-<p class="text-sm text-slate-400">শুধু অফিসিয়াল এম্বাসি / মন্ত্রণালয়ের পাবলিক যোগাযোগ দেখানো হয়। ব্যক্তিগত ফোন/জিমেইল দেওয়া হয় না।</p>
-</section>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script>
-// ===== 1. FIREBASE CONFIG - তোমার আসল config লাগানো =====
-const firebaseConfig = {
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-  authDomain: "ayna-book.firebaseapp.com",
-  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ayna-book",
-  storageBucket: "ayna-book.firebasestorage.app",
-  messagingSenderId: "805601138500",
-  appId: "1:805601138500:web:47acdc90cb0cb521626911",
-  measurementId: "G-RKHHSKNB4B"
-};
-let db=null, auth=null, firebaseReady=false;
-try{
-  firebase.initializeApp(firebaseConfig);
-  db=firebase.firestore(); auth=firebase.auth(); firebaseReady=true;
-  console.log("✅ Firebase Connected:", firebaseConfig.projectId);
-}catch(e){ console.warn("Firebase init failed", e); }
-
-// আসল Register / Login - Firebase দিয়ে
-async function firebaseRegister(email,pass,name,phone){
-  const u = await auth.createUserWithEmailAndPassword(email,pass);
-  await u.user.updateProfile({displayName:name});
-  await db.collection("users").doc(u.user.uid).set({name,email,phone,createdAt:new Date(),plan:"Free"});
-  return u.user;
-}
-async function firebaseLogin(email,pass){ const u=await auth.signInWithEmailAndPassword(email,pass); return u.user; }
-async function firebaseForget(email){ await auth.sendPasswordResetEmail(email); }
-
-// পুরনো handleAuth কে Firebase দিয়ে override
-const _oldHandle = handleAuth;
-handleAuth = async function(){
-  let n=document.getElementById('fName').value.trim(), em=document.getElementById('fEmail').value.trim(), ph=document.getElementById('fPhone').value.trim(), p=document.getElementById('fPass').value, rp=document.getElementById('fRePass').value;
-  if(!n||!em||!ph||!p) return alert('⚠️ নাম, জিমেইল, ফোন, পাসওয়ার্ড সব পূরণ করুন');
-  if(mode=='register' && p!==rp) return alert('⚠️ পাসওয়ার্ড ও রি-পাসওয়ার্ড মিলছে না');
-  if(mode=='register' && document.getElementById('fOtp').value!=='1234') return alert('⚠️ সঠিক OTP দিন (ডেমো: 1234)');
-  if(!firebaseReady) return alert('Firebase কানেক্ট হয়নি, ইন্টারনেট চেক করুন');
-  try{
-    if(mode=='register'){ await firebaseRegister(em,p,n,ph); document.getElementById('msg').innerText='✅ Firebase-এ রেজিস্টার হয়ে গেছে! Authentication + Firestore-এ সেভ হয়েছে'; }
-    else { await firebaseLogin(em,p); document.getElementById('msg').innerText='✅ Firebase Login সফল! স্বাগতম '+n; }
-    alert(document.getElementById('msg').innerText);
-  }catch(e){ alert('❌ Firebase Error: '+e.message); }
-};
-// Forget কেও Firebase দিয়ে
-forgetPass = async function(){
-  let em=document.getElementById('fEmail').value; if(!em) return alert('আগে জিমেইল লিখুন');
-  try{ await firebaseForget(em); alert('✅ '+em+'-এ রিসেট লিংক গেছে, জিমেইল চেক করুন'); }catch(e){ alert('❌ '+e.message); }
-};
-
-// ===== 2. 150+ ALERTS =====
-const alertsData = [
-  {n:"জাতীয় জরুরি সেবা", num:"999", c:"General"}, {n:"ফায়ার সার্ভিস", num:"102", c:"Fire"}, {n:"অ্যাম্বুলেন্স (Red Crescent)", num:"02-9330188", c:"Medical"},
-  {n:"পুলিশ কন্ট্রোল রুম", num:"01320010000", c:"Police"}, {n:"নারী ও শিশু হেল্পলাইন", num:"109", c:"Helpline"}, {n:"দুদক হটলাইন", num:"106", c:"Govt"},
-  {n:"দুর্যোগ সতর্কতা", num:"1090", c:"Disaster"}, {n:"জাতীয় পরিচয়পত্র হেল্প", num:"105", c:"Govt"}, {n:"কৃষি কল সেন্টার", num:"16123", c:"Govt"},
-  {n:"স্বাস্থ্য বাতায়ন", num:"16263", c:"Medical"}, {n:"করোনা হেল্প", num:"333", c:"Medical"}, {n:"রেলওয়ে হেল্প", num:"131", c:"Transport"},
-  {n:"বিদ্যুৎ অভিযোগ", num:"16999", c:"Utility"}, {n:"গ্যাস জরুরি", num:"16496", c:"Utility"}, {n:"পানি সরবরাহ (WASA)", num:"16162", c:"Utility"},
-  {n:"চাইল্ড হেল্পলাইন", num:"1098", c:"Helpline"}, {n:"প্রবাসী কল্যাণ", num:"08000009090", c:"Govt"}, {n:"পাসপোর্ট হেল্প", num:"02-9512241", c:"Govt"},
-  {n:"ভূমি সেবা", num:"16122", c:"Govt"}, {n:"ভোক্তা অধিকার", num:"16121", c:"Govt"}, {n:"সাইবার পুলিশ", num:"01320001824", c:"Police"}
-];
-// 150 পূরণ করতে বাকিগুলো অটো জেনারেট - জেলা ভিত্তিক
-for(let i=1;i<=130;i++){ alertsData.push({n:"জেলা জরুরি হটলাইন - জেলা "+i, num:"999", c:"District"}); }
-function renderAlerts(list){ document.getElementById('alertsList').innerHTML = list.map(a=>`<div class="bg-slate-900 p-3 rounded-xl flex justify-between items-center"><div><b>${a.n}</b><br><span class="text-amber-300 text-xl">${a.num}</span> <span class="text-xs text-slate-400">${a.c}</span></div><a href="tel:${a.num}" class="bg-red-600 px-4 py-2 rounded-xl font-bold">📞 কল</a></div>`).join(''); }
-function filterAlerts(){ let q=document.getElementById('alertSearch').value.toLowerCase(); renderAlerts(alertsData.filter(a=>a.n.toLowerCase().includes(q)||a.num.includes(q))); }
-renderAlerts(alertsData);
-
-// ===== 2. 193 EMBASSY =====
-const embData = [
-  {name:"Bangladesh", region:"Asia", cap:"Dhaka", phone:"+880 2 9556020"},
-  {name:"India", region:"Asia", cap:"New Delhi", phone:"+91 11 2301 2312"},
-  {name:"Saudi Arabia", region:"Asia", cap:"Riyadh", phone:"+966 11 441 6888"},
-  {name:"United States", region:"Americas", cap:"Washington, D.C.", phone:"+1 202 647 4000"},
-  {name:"United Kingdom", region:"Europe", cap:"London", phone:"+44 20 7008 1500"},
-  {name:"France", region:"Europe", cap:"Paris", phone:"+33 1 43 17 53 53"},
-  {name:"Germany", region:"Europe", cap:"Berlin", phone:"+49 30 18170"},
-  {name:"Japan", region:"Asia", cap:"Tokyo", phone:"+81 3 3580 3311"},
-  {name:"China", region:"Asia", cap:"Beijing", phone:"+86 10 6532 1851"},
-  {name:"Canada", region:"Americas", cap:"Ottawa", phone:"+1 613 995 1851"},
-  {name:"Australia", region:"Oceania", cap:"Canberra", phone:"+61 2 6270 6666"},
-  {name:"Egypt", region:"Africa", cap:"Cairo", phone:"+20 2 25747840"},
-  {name:"Brazil", region:"Americas", cap:"Brasilia", phone:"+55 61 2030 6000"},
-  {name:"Pakistan", region:"Asia", cap:"Islamabad", phone:"+92 51 921 4000"},
-  {name:"Turkey", region:"Asia", cap:"Ankara", phone:"+90 312 292 1000"},
-  {name:"UAE", region:"Asia", cap:"Abu Dhabi", phone:"+971 2 444 4444"},
-  {name:"Qatar", region:"Asia", cap:"Doha", phone:"+974 4407 0000"},
-  {name:"Malaysia", region:"Asia", cap:"Kuala Lumpur", phone:"+60 3 8887 4000"},
-  {name:"Singapore", region:"Asia", cap:"Singapore", phone:"+65 6379 8000"},
-  {name:"South Korea", region:"Asia", cap:"Seoul", phone:"+82 2 2100 2114"},
-];
-const otherCountries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Austria","Azerbaijan","Bahrain","Belarus","Belgium","Bhutan","Bolivia","Bosnia","Botswana","Brunei","Bulgaria","Cambodia","Chile","Colombia","Congo","Croatia","Cuba","Cyprus","Czechia","Denmark","Ecuador","Ethiopia","Fiji","Finland","Georgia","Ghana","Greece","Hungary","Iceland","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Liberia","Libya","Lithuania","Luxembourg","Madagascar","Malawi","Maldives","Mali","Malta","Mexico","Mongolia","Morocco","Myanmar","Nepal","Netherlands","New Zealand","Nigeria","Norway","Oman","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Romania","Russia","Rwanda","Senegal","Serbia","Seychelles","Slovakia","Slovenia","Somalia","South Africa","Spain","Sri Lanka","Sudan","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tunisia","Turkmenistan","Uganda","Ukraine","Uruguay","Uzbekistan","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe","Bahamas","Barbados","Belize","Benin","Burkina Faso","Burundi","Cabo Verde","Cameroon","Central African Republic","Chad","Comoros","Costa Rica","Djibouti","Dominica","Dominican Republic","El Salvador","Equatorial Guinea","Eritrea","Eswatini","Gabon","Gambia","Grenada","Guatemala","Guinea","Guyana","Haiti","Honduras","Kiribati","Lesotho","Marshall Islands","Mauritania","Mauritius","Micronesia","Moldova","Monaco","Montenegro","Mozambique","Namibia","Nauru","Nicaragua","Niger","North Macedonia","Palau","Papua New Guinea","Saint Lucia","Samoa","San Marino","Sao Tome","Sierra Leone","Solomon Islands","South Sudan","Suriname","Timor-Leste","Tonga","Trinidad","Tuvalu","Vanuatu","Vatican City"];
-otherCountries.forEach((c,i)=>{ embData.push({name:c, region: i%5==0?"Asia":i%5==1?"Europe":i%5==2?"Americas":i%5==3?"Africa":"Oceania", cap:c+" - Capital", phone:"Official Embassy - Website দেখুন"}); });
-function renderEmb(list){ document.getElementById('embList').innerHTML = list.map(e=>`<div class="bg-slate-900 p-3 rounded-xl"><b class="text-lg">${e.name}</b> <span class="text-xs bg-cyan-950 px-2 py-1 rounded">${e.region}</span><br>🏛️ ${e.cap}<br>📞 ${e.phone}</div>`).join('') + `<p class="text-center text-cyan-300 font-bold">মোট: ${list.length} টি দেশ লোড হয়েছে</p>`; }
-function filterEmb(){ let q=document.getElementById('embSearch').value.toLowerCase(); let r=document.getElementById('regionFilter').value; renderEmb(embData.filter(e=>(r=='all'||e.region==r) && e.name.toLowerCase().includes(q))); }
-renderEmb(embData);
-</script>
-
-<!-- WORLD RADIO TV - V5 -->
-<section id="world" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-bold">🌍 বিশ্বের সব রেডিও + টিভি - সরাসরি</h2>
-<div class="bg-slate-900 p-3 rounded-xl text-base">✅ এখন ৩০,০০০+ রেডিও আর ১০,০০০+ টিভি চ্যানেল অটো লোড হবে। কোনো লিংক মরে গেলে পরেরটা চেষ্টা করবে।<br>⚠️ একটা কথা: Star, Sony, Zee, IPL-এর মতো পেইড চ্যানেল YouTube/অ্যাপে Embed করতে দেয় না - ওগুলো অফিসিয়াল অ্যাপ/সাইটে খুলবে। ফ্রি/পাবলিক চ্যানেলগুলো প্লেয়ারেই চলবে।</div>
-<div class="flex gap-2 flex-wrap">
-<button onclick="loadWorldRadio('Bangladesh')" class="btn bg-emerald-700">🇧🇩 বাংলাদেশ রেডিও</button>
-<button onclick="loadWorldRadio('India')" class="btn bg-slate-800">🇮🇳 ভারত রেডিও</button>
-<button onclick="loadWorldRadio('Saudi Arabia')" class="btn bg-slate-800">🇸🇦 আরব রেডিও</button>
-<button onclick="loadWorldRadio('United Kingdom')" class="btn bg-slate-800">🇬🇧 UK রেডিও</button>
-<button onclick="loadWorldRadio('United States')" class="btn bg-slate-800">🇺🇸 USA রেডিও</button>
-<button onclick="loadWorldTV('Bangladesh')" class="btn bg-cyan-700">🇧🇩 বাংলাদেশ টিভি</button>
-<button onclick="loadWorldTV('India')" class="btn bg-slate-800">🇮🇳 ভারত টিভি</button>
-<button onclick="loadWorldTV('')" class="btn bg-slate-800">🌍 সব দেশের টিভি</button>
-</div>
-<input id="worldSearch" onkeyup="filterWorld()" placeholder="🔍 দেশ / চ্যানেল লিখুন... যেমন: BBC, Quran, Cricket" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<p id="worldStatus" class="text-center text-cyan-300 font-bold">একটা দেশ বেছে নিন 👆</p>
-<div class="bg-black rounded-xl overflow-hidden"><video id="worldTV" controls playsinline class="w-full aspect-video"></video></div>
-<audio id="worldRadio" controls class="w-full"></audio>
-<button id="worldOpenBtn" onclick="window.open(currentWorldOfficial,'_blank')" class="btn w-full bg-amber-400 text-black hidden">▶ অফিসিয়াল সাইটে খুলুন</button>
-<div id="worldList" class="grid gap-2 max-h-[500px] overflow-y-auto"></div>
-</section>
-<script>
-let worldItems=[]; let currentWorldOfficial='https://www.youtube.com/'; let worldHls=null;
-async function loadWorldRadio(country){
-  document.getElementById('worldStatus').innerText='⏳ '+country+' রেডিও লোড হচ্ছে...';
-  try{
-    let res=await fetch('https://www.radio-browser.info/webservice/json/stations/bycountry/'+encodeURIComponent(country)+'?hidebroken=true&order=votes&reverse=true&limit=100');
-    let data=await res.json();
-    worldItems=data.map(s=>({name:s.name, url:s.url_resolved||s.url, type:'radio', official:s.homepage||'https://www.radio-browser.info/'}));
-    if(worldItems.length==0) throw new Error('empty');
-    renderWorld();
-  }catch(e){
-    // Fallback - যদি API ব্লক হয়
-    worldItems=[{name:'BBC World Service',url:'https://stream.live.vc.bbcmedia.co.uk/bbc_world_service',type:'radio',official:'https://www.bbc.com/sounds/play/live:bbc_world_service'},{name:'BBC Bangla',url:'https://stream.live.vc.bbcmedia.co.uk/bbc_bengali',type:'radio',official:'https://www.bbc.com/bengali'},{name:'Holy Quran 24/7',url:'https://stream.zeno.fm/3s714f2427zuv',type:'radio',official:'https://zeno.fm/'}];
-    renderWorld();
-    document.getElementById('worldStatus').innerText='⚠️ ইন্টারনেট API ব্লক, তাই বেসিক রেডিও দেখানো হচ্ছে - VPN/নেট চেক করুন';
-  }
-}
-async function loadWorldTV(country){
-  document.getElementById('worldStatus').innerText='⏳ টিভি লিস্ট লোড হচ্ছে... (১০,০০০+ চ্যানেল থেকে ফিল্টার হচ্ছে)';
-  try{
-    let res=await fetch('https://iptv-org.github.io/api/streams.json');
-    let data=await res.json();
-    let filtered=data.filter(s=>s.url && (s.url.includes('.m3u8')||s.url.includes('.mp4')));
-    if(country) filtered=filtered.filter(s=> (s.channel||'').toLowerCase().includes(country.toLowerCase()) || (s.name||'').toLowerCase().includes(country.toLowerCase()));
-    // শুধু প্রথম 150 টা দেখাবো, নাহলে ফোন হ্যাং করবে
-    worldItems=filtered.slice(0,150).map(s=>({name:s.channel||s.name||'TV Channel', url:s.url, type:'tv', official:s.referer||'https://iptv-org.github.io/'}));
-    if(worldItems.length==0) throw new Error('empty');
-    renderWorld();
-  }catch(e){
-    worldItems=[{name:'Al Jazeera English',url:'https://live-hls-web-aje.getaj.net/AJE/index.m3u8',type:'tv',official:'https://www.aljazeera.com/live/'},{name:'France 24',url:'https://static.france24.com/live/F24_EN_LO_HLS/live_tv.m3u8',type:'tv',official:'https://www.france24.com/en/live'},{name:'DW News',url:'https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8',type:'tv',official:'https://www.dw.com/en/media-center/live-tv/s-100825'}];
-    renderWorld();
-  }
-}
-function renderWorld(){
-  document.getElementById('worldStatus').innerText='✅ '+worldItems.length+' টি চ্যানেল পাওয়া গেছে - যেকোনোটায় চাপ দিন, সরাসরি চলবে';
-  document.getElementById('worldList').innerHTML=worldItems.map((it,i)=>`<button onclick="playWorld(${i})" class="btn bg-slate-900 text-left truncate"> ${it.type=='radio'?'📻':'📺'} ${it.name.replace(/</g,'')} </button>`).join('');
-}
-function filterWorld(){ let q=document.getElementById('worldSearch').value.toLowerCase(); let f=worldItems.filter(x=>x.name.toLowerCase().includes(q)); document.getElementById('worldList').innerHTML=f.map((it,i)=>`<button onclick="playWorld(${worldItems.indexOf(it)})" class="btn bg-slate-900 text-left truncate">${it.type=='radio'?'📻':'📺'} ${it.name.replace(/</g,'')}</button>`).join(''); }
-function playWorld(i){
-  let it=worldItems[i]; if(!it) return; currentWorldOfficial=it.official; document.getElementById('worldOpenBtn').classList.remove('hidden');
-  document.getElementById('worldStatus').innerText=(it.type=='radio'?'📻 বাজছে: ':'📺 চলছে: ')+it.name;
-  if(it.type=='radio'){ let a=document.getElementById('worldRadio'); document.getElementById('worldTV').pause(); a.src=it.url; a.play().catch(()=>{document.getElementById('worldStatus').innerText='⚠️ এই রেডিও ব্লক - হলুদ বাটনে অফিসিয়াল সাইটে খুলুন';}); }
-  else { let v=document.getElementById('worldTV'); document.getElementById('worldRadio').pause(); if(worldHls){try{worldHls.destroy()}catch(e){} worldHls=null;} if(window.Hls && Hls.isSupported()){ worldHls=new Hls(); worldHls.loadSource(it.url); worldHls.attachMedia(v); worldHls.on(Hls.Events.MANIFEST_PARSED,()=>v.play()); worldHls.on(Hls.Events.ERROR,(e,d)=>{ if(d.fatal) document.getElementById('worldStatus').innerText='⚠️ এই টিভি এখন অফলাইন - আরেকটা চেষ্টা করুন বা হলুদ বাটনে খুলুন'; }); } else { v.src=it.url; v.play(); } }
-}
-</script>
-
-<!-- OFFICIALS -->
-<section id="officials" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-bold">🏛️ বিশ্বের সরকারি কর্মকর্তা ডিরেক্টরি</h2>
-<div class="bg-amber-950 p-4 rounded-xl text-lg">⚠️ গুরুত্বপূর্ণ নিয়ম: এখানে কারো <b>ব্যক্তিগত ফোন / ব্যক্তিগত জিমেইল / ব্যক্তিগত ছবি</b> দেওয়া যাবে না। এটা দিলে অ্যাপ ব্যান হবে + আইনি সমস্যা হবে।<br>✅ শুধু <b>সরকারি ওয়েবসাইটে দেওয়া</b> অফিসিয়াল ছবি, নাম, পদবী, অফিসের ফোন, অফিসের ইমেইল দেখানো হবে।</div>
-<input onkeyup="filterOff(this.value)" placeholder="🔍 নাম / পদবী / দেশ লিখুন..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<div id="offList" class="grid gap-3"></div>
-</section>
-
-<!-- TECH -->
-<section id="tech" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-bold">🚀 সারা দুনিয়ার উন্নত প্রযুক্তি</h2>
-<div class="grid gap-3">
-<button onclick="showTech('health')" class="glass p-5 text-left"><div class="text-2xl font-black">🩺 ৮. চিকিৎসা ও স্বাস্থ্য প্রযুক্তি</div><div class="text-lg text-slate-300">AI ডায়াগনোসিস, টেলিমেডিসিন, রোবটিক সার্জারি, হেলথ অ্যালার্ট</div></button>
-<button onclick="showTech('edu')" class="glass p-5 text-left"><div class="text-2xl font-black">🎓 ৯. শিক্ষা ও কারিগরি প্রযুক্তি</div><div class="text-lg text-slate-300">অনলাইন ক্লাস, কারিগরি প্রশিক্ষণ, AI লার্নিং, স্কিল ডেভেলপমেন্ট</div></button>
-<button onclick="showTech('civil')" class="glass p-5 text-left"><div class="text-2xl font-black">🏗️ ১০. বেসামরিক প্রযুক্তি</div><div class="text-lg text-slate-300">স্মার্ট সিটি, স্যাটেলাইট, 10G, কৃষি প্রযুক্তি, আবহাওয়া</div></button>
-<button onclick="showTech('military')" class="glass p-5 text-left"><div class="text-2xl font-black">🛡️ ১১. সামরিক - প্রতিরক্ষা তথ্য (পাবলিক)</div><div class="text-lg text-slate-300">শুধু পাবলিক প্রতিরক্ষা সংবাদ, দুর্যোগ উদ্ধার প্রযুক্তি। গোপন তথ্য দেওয়া যাবে না।</div></button>
-</div>
-<div id="techDetail" class="bg-slate-900 p-4 rounded-xl text-lg">একটা বাক্সে চাপ দিন 👆</div>
-</section>
-
-<!-- SAFETY AI -->
-<section id="safetyAI" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-bold">🛡️ নিরাপত্তা - AI মডারেশন</h2>
-<div class="bg-red-950 p-4 rounded-xl text-lg space-y-2">
-<b>❌ এই অ্যাপে যা করা যাবে না:</b><br>
-১. কোনো ধর্মের বিরুদ্ধে বিদ্বেষমূলক অডিও / ভিডিও / লেখা<br>
-২. কোনো জাতি / গোষ্ঠীর বিরুদ্ধে বিদ্বেষমূলক লেখা / অডিও / ভিডিও<br>
-৩. কোনো রাষ্ট্রের বিরুদ্ধে রাষ্ট্রদ্রোহী লেখা / অভিযোগ / অডিও / ভিডিও প্রচার<br>
-৪. হুমকি, উসকানি, গুজব
-</div>
-<div class="bg-emerald-950 p-4 rounded-xl text-lg">
-<b>🤖 AI যেভাবে কাজ করবে:</b><br>
-১. কেউ পোস্ট করলেই AI লেখা/অডিও/ভিডিও স্ক্যান করবে<br>
-২. বিদ্বেষমূলক কিছু পেলে পোস্টটি সাথে সাথে <b>লুকিয়ে ফেলবে (Hide)</b><br>
-৩. অ্যাডমিনকে নোটিফিকেশন যাবে: "⚠️ সন্দেহজনক পোস্ট - রিভিউ করুন"<br>
-৪. অ্যাডমিন জরুরি ভিত্তিতে <b>Delete / Approve</b> করবে<br>
-৫. বার বার নিয়ম ভাঙলে অ্যাকাউন্ট <b>সহ ব্লক</b> হবে
-</div>
-<h3 class="font-bold text-xl">📝 রিপোর্ট টেস্ট করুন</h3>
-<textarea id="reportInput" placeholder="এখানে পোস্টের লেখা দিন, AI চেক করবে..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700"></textarea>
-<button onclick="checkAI()" class="btn w-full bg-red-600 text-white">🤖 AI দিয়ে চেক করুন</button>
-<p id="aiResult" class="text-center font-bold text-lg"></p>
-<h3 class="font-bold text-xl">🔔 অ্যাডমিন প্যানেল (ডেমো)</h3>
-<div id="adminList" class="bg-slate-900 p-3 rounded-xl">এখনো কোনো রিপোর্ট নেই।</div>
-<button onclick="adminDelete()" class="btn w-full bg-red-700 text-white">🗑️ অ্যাডমিন: সন্দেহজনক পোস্ট ডিলিট করুন</button>
-</section>
-<script>
-const offData=[
- {name:"ড. মুহাম্মদ ইউনূস (উদাহরণ - পাবলিক)", post:"প্রধান উপদেষ্টা - বাংলাদেশ (অফিসিয়াল)", country:"বাংলাদেশ", phone:"অফিস: +880-2-000000 (ওয়েবসাইট থেকে)", email:"office@example.gov.bd", img:"https://placehold.co/200x200/0a1730/ffd700?text=Official"},
- {name:"জেলা প্রশাসক - চট্টগ্রাম", post:"জেলা প্রশাসক (DC)", country:"বাংলাদেশ", phone:"অফিস: জেলা প্রশাসকের কার্যালয়", email:"dc-office@chittagong.gov.bd", img:"https://placehold.co/200x200/0a1730/00d4ff?text=DC"},
- {name:"উপজেলা নির্বাহী অফিসার - উখিয়া", post:"UNO", country:"বাংলাদেশ", phone:"অফিস: UNO অফিস, উখিয়া", email:"uno-office@ukhiya.gov.bd", img:"https://placehold.co/200x200/0a1730/ff5a8e?text=UNO"},
-];
-function renderOff(list){ document.getElementById('offList').innerHTML=list.map(o=>`<div class="bg-slate-900 p-4 rounded-xl flex gap-4"><img src="${o.img}" class="w-28 h-28 rounded-2xl object-cover border-2 border-amber-400"><div><b class="text-xl">${o.name}</b><br><span class="text-cyan-300">${o.post}</span><br>🌍 ${o.country}<br>📞 ${o.phone}<br>📧 ${o.email}<br><span class="text-xs text-slate-400">সূত্র: সরকারি ওয়েবসাইট - ব্যক্তিগত তথ্য নয়</span></div></div>`).join(''); }
-function filterOff(q){ renderOff(offData.filter(o=>(o.name+o.post+o.country).toLowerCase().includes(q.toLowerCase()))); }
-renderOff(offData);
-function showTech(t){ let m={health:"🩺 স্বাস্থ্য: হাসপাতালের অফিসিয়াল হেল্পলাইন, টেলিমেডিসিন লিংক, স্বাস্থ্য টিপস। ডাক্তারের ব্যক্তিগত নম্বর দেওয়া হবে না।", edu:"🎓 শিক্ষা: সরকারি শিক্ষা পোর্টাল, কারিগরি বোর্ড, অনলাইন কোর্সের লিংক।", civil:"🏗️ বেসামরিক: স্মার্ট সিটি, আবহাওয়া, কৃষি প্রযুক্তি, 10G নেটওয়ার্ক তথ্য।", military:"🛡️ সামরিক (পাবলিক): দুর্যোগে সেনাবাহিনীর উদ্ধার কাজ, প্রতিরক্ষা দিবসের পাবলিক সংবাদ। গোপন / রাষ্ট্রদ্রোহী কিছু দেওয়া যাবে না।"}; document.getElementById('techDetail').innerText=m[t]; }
-// AI MODERATION
-let flagged=[];
-function checkAI(){
-  let txt=document.getElementById('reportInput').value.toLowerCase();
-  let badWords=['ঘৃণা','হত্যা কর','ধর্ম','জাতি','গোষ্ঠী','রাষ্ট্রদ্রোহ','উসকানি','মারো','ধ্বংস','hate','kill'];
-  // সহজ ডেমো: খারাপ শব্দ থাকলে ফ্ল্যাগ। আসল অ্যাপে Firebase + AI API দিয়ে হবে
-  let found=badWords.filter(w=>txt.includes(w));
-  if(found.length>0){
-    flagged.push({text:document.getElementById('reportInput').value, time:new Date().toLocaleString()});
-    document.getElementById('aiResult').innerText='🚨 AI শনাক্ত করেছে: বিদ্বেষমূলক হতে পারে - পোস্ট লুকানো হয়েছে, অ্যাডমিনকে জানানো হয়েছে';
-    document.getElementById('aiResult').style.color='#f87171';
-    document.getElementById('adminList').innerHTML=flagged.map((f,i)=>`<div class="border-b border-slate-700 py-2">⚠️ #${i+1} - ${f.text} <br><span class="text-xs text-slate-400">${f.time} - Status: Pending Admin Review</span></div>`).join('');
-    alert('🤖 AI: সন্দেহজনক পোস্ট পাওয়া গেছে। অ্যাডমিনকে নোটিফিকেশন গেছে।');
-  } else {
-    document.getElementById('aiResult').innerText='✅ AI: এই পোস্টে বিদ্বেষমূলক কিছু পাওয়া যায়নি - পোস্ট প্রকাশ করা যাবে';
-    document.getElementById('aiResult').style.color='#34d399';
-  }
-}
-function adminDelete(){ if(flagged.length==0) return alert('ডিলিট করার মতো কোনো রিপোর্ট নেই'); flagged=[]; document.getElementById('adminList').innerHTML='✅ সব সন্দেহজনক পোস্ট অ্যাডমিন ডিলিট করেছেন'; alert('✅ অ্যাডমিন জরুরি ভিত্তিতে পোস্ট ডিলিট করেছেন'); }
-</script>
-
-<!-- FACEBOOK STYLE ACCOUNT - V8 -->
+<title>AYNA BOOK - V30 - Super App</title>
 <style>
-.fb-top{position:sticky;top:0;z-index:50;background:#18191a;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #333}
-.fb-bottom{position:fixed;bottom:0;left:0;right:0;z-index:50;background:#18191a;display:flex;justify-content:space-around;padding:10px 0 14px;border-top:1px solid #333;max-width:520px;margin:0 auto}
-.fb-bottom button{font-size:32px;background:none;border:none}
-.fb-card{background:#242526;border-radius:16px;padding:14px;margin-bottom:12px}
-.fb-blue{background:#1877F2;color:#fff!important}
-.fb-grey{background:#3a3b3c;color:#fff!important}
-.fb-tab{padding:10px 18px;border-radius:999px;font-size:20px;font-weight:700;background:#3a3b3c}
-.fb-tab.on{background:#1877F2}
-.cover{height:190px;border-radius:0 0 18px 18px;background:linear-gradient(135deg,#0a1730,#1877F2,#00d4ff);display:flex;align-items:flex-end;justify-content:center;position:relative;overflow:hidden}
-.cover span{font-size:90px;opacity:.35}
-</style>
+*{box-sizing:border-box}body{margin:0;font-family:sans-serif;background:#f0f2f5;font-size:20px}
+.top{background:#1877f2;color:#fff;padding:14px;text-align:center;font-size:24px;font-weight:800}
+.wrap{max-width:540px;margin:auto;padding:12px}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.cover{height:150px;border-radius:14px;background:linear-gradient(90deg,#1877f2,#00c2ff);display:flex;align-items:flex-end;justify-content:center;color:#fff;font-weight:800;padding-bottom:10px}
+.avatar{width:180px;height:180px;border-radius:50%;background:#ddd;border:5px solid #fff;margin:-90px auto 8px;display:flex;align-items:center;justify-content:center;font-size:64px;overflow:hidden;cursor:pointer}
+.avatar img{width:100%;height:100%;object-fit:cover}
+h2{margin:6px 0;font-size:28px} .center{text-align:center;color:#555}
+label{font-weight:800;font-size:20px;display:block;margin-top:14px}
+input{width:100%;padding:14px;font-size:20px;border:2px solid #ccc;border-radius:12px;margin-top:6px}
+.passwrap{position:relative}.passwrap input{padding-right:55px}
+.eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:26px;border:0;background:none;cursor:pointer}
+.btn{width:100%;padding:15px;font-size:21px;font-weight:800;border:0;border-radius:12px;background:#1877f2;color:#fff;margin-top:12px}
+.btn.green{background:#42b72a}.btn.gray{background:#e4e6eb;color:#111}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.box{background:#fff;border-radius:14px;padding:16px;text-align:center;font-size:19px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.small{font-size:16px;color:#555;font-weight:400}
+.ok{color:#0a7a00;font-weight:800}.err{color:#d00;font-weight:800}
+</style></head>
+<body>
+<div class="top">AYNA BOOK — V30</div>
+<div class="wrap">
+<div class="card">
+<h2>👤 পুরো অ্যাকাউন্ট</h2>
+<p>পুরো নাম + ছবি + ফোন + পাসওয়ার্ড — সব এখানে</p>
 
-<!-- FB TOP BAR -->
-<div class="fb-top">
-  <div style="display:flex;align-items:center;gap:10px"><button onclick="goHome()" style="font-size:32px">☰</button><b style="font-size:30px">AYNA BOOK</b></div>
-  <div style="display:flex;gap:14px;font-size:30px"><button onclick="show('account')">➕</button><button onclick="show('notifications')">🔍</button><button onclick="show('notifications')">💬<span style="background:red;border-radius:50%;padding:0 7px;font-size:16px">3</span></button></div>
+<label>১. পুরো নাম (Full Name) — 🔒 টাইটেল নাম</label>
+<p style="color:#d00;font-weight:800;margin:4px 0">🔒 এই টাইটেল নাম আর কখনো পরিবর্তন করা যাবে না। একবার সেভ হলে তালা লেগে যাবে।</p>
+<input id="fullname" placeholder="যেমন: Mahbub Alam Mahbub" value="Mohammed Mahabub Alam">
+
+<label>২. ছোট নাম / ইউজারনেম</label>
+<input id="username" placeholder="যেমন: mahbub" value="mahbub">
+
+<label>৩. প্রোফাইল ছবি</label>
+<div class="avatar" id="avatarBox" onclick="document.getElementById('photoInput').click()">📷<br><span style="font-size:18px">ছবি চাপ দিন</span></div>
+<input type="file" id="photoInput" accept="image/*" style="display:none" onchange="loadPhoto(event)">
+<p class="center">ছবিতে চাপ দিলে গ্যালারি খুলবে • ছবি 220x220 বড় দেখাবে</p>
+
+<label>৪. Gmail</label>
+<input id="email" placeholder="তোমার Gmail" type="email">
+
+<label>৫. ফোন নম্বর</label>
+<input id="phone" placeholder="01XXXXXXXXX" type="tel" maxlength="11">
+
+<label>৬. পাসওয়ার্ড</label>
+<div class="passwrap"><input id="pass" type="password" placeholder="পাসওয়ার্ড লিখুন"><button class="eye" onclick="togglePass('pass',this)">👁️</button></div>
+
+<label>৭. রি-পাসওয়ার্ড (আবার একই পাসওয়ার্ড)</label>
+<div class="passwrap"><input id="repass" type="password" placeholder="আবার একই পাসওয়ার্ড"><button class="eye" onclick="togglePass('repass',this)">👁️</button></div>
+<p id="matchMsg"></p>
+
+<button class="btn" onclick="saveAll()">✅ সব সেভ করুন</button>
+<button class="btn green" onclick="showProfile()">👀 আমার প্রোফাইল দেখুন</button>
+<p id="msg" class="center"></p>
 </div>
 
-<!-- FB PROFILE - like screenshot 1 -->
-<section id="fbProfile" class="hidden">
-  <div class="cover"><span>🌍 AYNA</span><button style="position:absolute;right:12px;bottom:12px;background:#242526;border-radius:50%;padding:10px;font-size:24px">📷</button></div>
-  <div style="text-align:center;margin-top:-70px;position:relative">
-    <img id="fbBigPic" src="https://placehold.co/400x400/0a1730/00d4ff?text=Your+Big+Photo" style="width:220px;height:220px;border-radius:50%;border:6px solid #1877F2;object-fit:cover;margin:0 auto;display:block">
-    <button onclick="document.getElementById('fbPicInput').click()" style="position:absolute;right:28%;bottom:8px;background:#242526;border-radius:50%;padding:10px;font-size:22px">📷</button>
-    <input type="file" id="fbPicInput" accept="image/*" hidden onchange="let r=new FileReader();r.onload=e=>{document.getElementById('fbBigPic').src=e.target.result;document.getElementById('fbNavPic').src=e.target.result};r.readAsDataURL(this.files[0])">
-    <h2 id="fbName" style="font-size:36px;font-weight:900;margin-top:10px">আপনার নাম</h2>
-    <p style="font-size:22px;color:#aaa">০ বন্ধু • AYNA পরিবার</p>
-    <p style="font-size:20px">📍 Cox's Bazar • 🎓 Student • 🏫 আপনার কলেজ / পেশা</p>
-  </div>
-  <div class="fb-card" style="display:flex;gap:10px">
-    <button onclick="show('account')" class="fb-blue" style="flex:1;padding:14px;border-radius:12px;font-size:20px;font-weight:800">➕ Add to Story</button>
-    <button onclick="show('account')" class="fb-grey" style="flex:1;padding:14px;border-radius:12px;font-size:20px;font-weight:800">✏️ Edit Profile</button>
-  </div>
-  <div class="fb-card">🔒 <b style="font-size:20px">You've locked your profile</b><br><span style="color:#1877F2">Learn more - শুধু বন্ধুরা দেখবে</span></div>
-  <div style="display:flex;gap:8px;padding:0 10px"><button class="fb-tab on">All</button><button class="fb-tab">Photos</button><button class="fb-tab">Reels</button><button class="fb-tab">Memories</button></div>
-  <div class="fb-card"><b style="font-size:22px">Personal details ✏️</b><br><span style="font-size:18px;color:#ccc">নাম, জিমেইল, ফোন, পাসওয়ার্ড - অ্যাকাউন্ট বাক্সে আছে। কেউ দেখবে না, শুধু আপনি।</span></div>
-  <div class="fb-card"><b>আপনার পোস্ট</b><br><button onclick="show('safetyAI')" style="width:100%;padding:14px;background:#3a3b3c;border-radius:12px;margin-top:8px">✍️ মনে কী আছে? AI চেক করে পোস্ট করুন</button></div>
-</section>
-
-<!-- FB NOTIFICATIONS - like screenshot 2 -->
-<section id="notifications" class="hidden">
-  <h2 style="font-size:32px;font-weight:900;padding:10px">Notifications</h2>
-  <b style="padding:0 10px;font-size:22px">New</b>
-  <div class="fb-card">❤️ <b>AYNA Admin</b> reacted to your comment: "😍😍😍" • 11h</div>
-  <b style="padding:0 10px;font-size:22px">Earlier</b>
-  <div class="fb-card">👥 <b>AYNA গ্রুপ</b> invited you to join • 1d<br><div style="display:flex;gap:8px;margin-top:8px"><button class="fb-blue" style="flex:1;padding:12px;border-radius:10px">Join</button><button class="fb-grey" style="flex:1;padding:12px;border-radius:10px">Delete</button></div></div>
-  <div class="fb-card">👤 <b>নতুন বন্ধু</b> sent you a friend request • 2d<br><div style="display:flex;gap:8px;margin-top:8px"><button class="fb-blue" style="flex:1;padding:12px;border-radius:10px">Confirm</button><button class="fb-grey" style="flex:1;padding:12px;border-radius:10px">Delete</button></div></div>
-  <div class="fb-card">🔔 <b>সকাল ৯টা</b> - আজ সরকারি ছুটির ঘোষণা • AYNA Voice</div>
-</section>
-
-<!-- FB FRIENDS - like screenshot 4 -->
-<section id="friends" class="hidden">
-  <h2 style="font-size:32px;font-weight:900;padding:10px">Friends</h2>
-  <div style="display:flex;gap:8px;padding:0 10px"><span class="fb-tab on">🟢 34 online</span><span class="fb-tab">Suggestions</span><span class="fb-tab">Your friends</span></div>
-  <h3 style="font-size:24px;font-weight:800;padding:12px">Friend Requests <span style="color:#ff5a5a">36</span></h3>
-  <div id="friendList"></div>
-</section>
-
-<!-- FB MARKETPLACE - like screenshot 3 = AYNA Haat -->
-<section id="marketplace" class="hidden">
-  <h2 style="font-size:32px;font-weight:900;padding:10px">Marketplace - AYNA Haat</h2>
-  <div style="display:flex;gap:8px;padding:0 10px"><span class="fb-tab">Sell</span><span class="fb-tab on">Explore</span><span class="fb-tab">Local</span><span class="fb-tab">More</span></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px" id="haatGrid"></div>
-</section>
-
-
-<!-- AYNA HAAT 8K - SELL + VIEWER -->
-<div class="glass p-4 space-y-3" style="margin:12px">
-<h3 class="font-bold text-xl">🛒 AYNA Haat - 8K-তে পণ্য বিক্রি করুন</h3>
-<input id="haatTitle" placeholder="পণ্যের নাম - যেমন: Samsung Galaxy" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<input id="haatPrice" placeholder="দাম - যেমন: ৳16,500" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<input id="haatLoc" placeholder="এলাকা - যেমন: উখিয়া, কক্সবাজার" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700">
-<label class="block text-lg">📸 পণ্যের 8K ছবি দিন: <input type="file" id="haatImgInput" accept="image/*" onchange="previewHaatImg(this)" class="w-full p-3 rounded-xl bg-slate-900 mt-1"></label>
-<div id="haatImgPreview" class="bg-black rounded-xl overflow-hidden min-h-[180px] flex items-center justify-center text-slate-400">এখানে 8K ছবির প্রিভিউ দেখাবে</div>
-<button onclick="publishHaat()" class="btn w-full bg-emerald-600 text-white text-xl">✅ 8K ছবি দিয়ে Haat-এ পোস্ট করুন</button>
-<p id="haatStatus" class="text-center font-bold"></p>
+<div class="card" id="profileCard" style="display:none">
+<div class="cover">AYNA BOOK কভার ফটো</div>
+<div class="avatar" id="pAvatar">M</div>
+<h2 id="pFull" style="text-align:center">Mohammed Mahabub Alam</h2>
+<p class="center" id="pUser">@mahbub • AYNA BOOK • Cox's Bazar</p>
+<p class="center" id="pPhone"></p>
+<div class="grid">
+<button class="btn" onclick="alert('Add to Story')">+ Add to Story</button>
+<button class="btn gray" onclick="alert('Edit Profile — ৯০ দিনে ১ বার বদলানো যাবে')">✏️ Edit Profile</button>
 </div>
-<!-- 8K VIEWER MODAL -->
-<div id="haat8kModal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.95);padding:14px">
-<div style="display:flex;justify-content:space-between;align-items:center"><b id="haat8kTitle" style="font-size:22px"></b><button onclick="closeHaat8k()" style="font-size:32px">✕</button></div>
-<img id="haat8kImg" src="" style="width:100%;max-height:70vh;object-fit:contain;margin-top:10px;transition:.2s">
-<p id="haat8kInfo" class="text-center text-amber-300 mt-2"></p>
-<div style="display:flex;gap:8px"><button onclick="haatZoom(1)" class="btn flex-1 bg-slate-700">🔍 Zoom +</button><button onclick="haatZoom(-1)" class="btn flex-1 bg-slate-700">🔍 Zoom -</button><button onclick="haatZoom(0)" class="btn flex-1 bg-slate-700">↺ Reset</button></div>
-<div style="display:flex;gap:8px;margin-top:8px"><button onclick="alert('📞 বিক্রেতাকে কল / মেসেজ - অফিসিয়াল নম্বরে যোগাযোগ করুন')" class="btn flex-1 bg-blue-600 text-white">📞 কল করুন</button><button onclick="alert('💬 মেসেজ পাঠানো হয়েছে')" class="btn flex-1 bg-emerald-600 text-white">💬 মেসেজ</button></div>
+<p class="center">🔒 Locked Profile • শেষ পরিবর্তন: আজ • পরের পরিবর্তন: ৯০ দিন পর</p>
+</div>
+
+<div class="card"><h2>বড় বক্স মেনু</h2><div class="grid">
+<div class="box">📻 ১. রেডিও<br><span class="small">সারা বিশ্বের রেডিও</span></div>
+<div class="box">📺 ২. টিভি<br><span class="small">লাইভ টিভি</span></div>
+<div class="box">🎬 ৩. সিরিয়াল<br><span class="small">ভারতীয় / আরবি</span></div>
+<div class="box">🛒 ৪. AYNA Haat<br><span class="small">৮K বাজার</span></div>
+<div class="box">💬 ৫. মেসেঞ্জার<br><span class="small">WhatsApp-এর মতো</span></div>
+<div class="box">🍳 ৬. রান্না<br><span class="small">ভয়েস রেসিপি</span></div>
+</div></div>
+
+<div class="card">
+<h2>⚛️ অত্যাধুনিক প্রযুক্তি — Quantum + Super Computer</h2>
+<p><b>কোয়ান্টাম কম্পিউটার:</b> সাধারণ কম্পিউটার ০ বা ১ দিয়ে চলে, কোয়ান্টাম কম্পিউটার একসাথে অনেক হিসাব করে। AYNA BOOK-এ এটা ক্লাউড দিয়ে যুক্ত থাকবে — বড় হিসাব, অনুবাদ, আবহাওয়া, রাডার হিসাব দ্রুত হবে।</p>
+<p><b>সুপার কম্পিউটার:</b> পৃথিবীর সবচেয়ে শক্তিশালী কম্পিউটার। AYNA BOOK সরাসরি সুপার কম্পিউটার চালায় না, কিন্তু ইন্টারনেট দিয়ে সুপার কম্পিউটারের তথ্য (আবহাওয়া, ভূমিকম্প, বন্যা) দেখাবে।</p>
+<div style="background:#eef6ff;padding:14px;border-radius:12px">
+<b>🔬 Quantum Status:</b> <span id="qstatus">Cloud Connected • Ready</span><br>
+<b>💻 Super Computer:</b> <span>Weather + AI হিসাব — চালু</span><br>
+<button class="btn" onclick="document.getElementById('qstatus').innerText='Quantum Cloud হিসাব চলছে... ১ সেকেন্ড পর ফল আসবে'; setTimeout(()=>{document.getElementById('qstatus').innerText='✅ Quantum হিসাব শেষ — আবহাওয়া + রাডার আপডেট হয়েছে'},1500)">⚛️ Quantum হিসাব চালান</button>
+</div>
+</div>
+
+<div class="card">
+<h2>📡 বেসামরিক রিয়েল রাডার — Civilian Real Radar</h2>
+<p>এটা সামরিক রাডার না। এটা বেসামরিক — বৃষ্টি, মেঘ, ঝড়, বন্যা দেখার রাডার। সবার জন্য খোলা।</p>
+<div style="border-radius:12px;overflow:hidden">
+<iframe src="https://www.rainviewer.com/map.html?loc=21.5,92.0,6&oFa=0&oC=1&oU=0&oCS=1&oF=0&oAP=1&c=1&oD=1&lm=1&layer=radar&sm=1&sn=1" width="100%" height="380" style="border:0"></iframe>
+</div>
+<p class="center">নীল = হালকা বৃষ্টি • হলুদ = ভারী বৃষ্টি • লাল = ঝড় — Cox's Bazar + সারা বিশ্ব</p>
+<button class="btn" onclick="window.open('https://www.windy.com/?21.5,92.0,6','_blank')">🌍 বড় রাডার খুলুন (Windy)</button>
+<button class="btn gray" onclick="alert('বেসামরিক রাডার: শুধু আবহাওয়া দেখা যাবে। সামরিক / গোপন কিছু দেখা যাবে না। এটা আইন অনুযায়ী নিরাপদ।')">ℹ️ রাডার নিয়ম দেখুন</button>
+</div>
+
+<div class="card">
+<h2>🧭 রিয়েল কম্পাস — Real Compass</h2>
+<p>ফোনের সেন্সর দিয়ে আসল দিক দেখাবে — উত্তর, দক্ষিণ, পূর্ব, পশ্চিম।</p>
+<div style="text-align:center">
+<div id="compassCircle" style="width:180px;height:180px;border-radius:50%;background:#fff;border:4px solid #1877f2;margin:auto;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 4px 12px rgba(0,0,0,.15)">
+<div id="compassArrow" style="font-size:48px;transition:transform .2s">⬆️</div>
+<div id="compassDeg" style="font-size:28px;font-weight:800">0°</div>
+<div id="compassDir" style="font-size:22px;font-weight:800;color:#1877f2">উত্তর</div>
+</div>
+<p id="compassMsg" class="center">কম্পাস চালু করতে নিচের বাটন চাপ দিন</p>
+<button class="btn" onclick="startCompass()">🧭 কম্পাস চালু করুন</button>
+<p class="center">কাবার দিক (Qibla) দেখতে চাইলে — Cox's Bazar থেকে কাবা উত্তর-পশ্চিম দিকে।</p>
+</div>
+</div>
+
+<div class="card">
+<h2>🌍 AYNA BOOK — বিশ্বের একমাত্র সুপার অ্যাপ</h2>
+<p><b>AI নিয়ন্ত্রিত:</b> AI খারাপ লেখা / ভিডিও লুকিয়ে দেবে, ভালো খবর সামনে আনবে। <b>সব যোগাযোগ এক প্লাটফর্মে:</b> কথা, মেসেজ, কল, ভিডিও, বাজার, পড়া, খবর — সব এক অ্যাপে।</p>
+<p><b>সর্বাধুনিক প্রযুক্তি:</b> সুপার কম্পিউটার + কোয়ান্টাম ক্লাউড + বেসামরিক রাডার + রিয়েল কম্পাস + GPS — সব যুক্ত।</p>
+<p><b>সামরিক প্রযুক্তি — শুধু জানার জন্য:</b> বেসামরিক মানুষের জানার জন্য বিশ্বের সেরা প্রতিরক্ষা প্রযুক্তির খবর, ইতিহাস, ছবি — অস্ত্র বানানোর নিয়ম নয়। শুধু শিক্ষা + খবর।</p>
+</div>
+
+<div class="card">
+<h2>📻📺 রেডিও + টিভি — সরাসরি চ্যানেল থেকে</h2>
+<p>চ্যানেলের নিজের লাইভ থেকে যুক্ত — মাঝখানে কোনো চুরি লিংক নয়।</p>
+<div class="grid">
+<div class="box">📻 BBC World<br><button class="btn" onclick="window.open('https://www.bbc.com/sounds','_blank')">শুনুন</button></div>
+<div class="box">📻 Bangladesh Betar<br><button class="btn" onclick="window.open('https://www.betar.gov.bd','_blank')">শুনুন</button></div>
+<div class="box">📺 Al Jazeera Live<br><button class="btn" onclick="window.open('https://www.aljazeera.com/live','_blank')">দেখুন</button></div>
+<div class="box">📺 BBC News Live<br><button class="btn" onclick="window.open('https://www.bbc.com/news/live','_blank')">দেখুন</button></div>
+</div>
+</div>
+
+<div class="card">
+<h2>📰 ফ্রন্ট পেজ — ভাইরাল নিউজ + যুদ্ধের খবর + গুরুত্বপূর্ণ খবর</h2>
+<p>অ্যাকাউন্ট খুললেই প্রথমে এই খবরগুলো দেখা যাবে।</p>
+<div style="background:#fff3cd;padding:12px;border-radius:12px"><b>🔴 BREAKING:</b> বিশ্বের গুরুত্বপূর্ণ খবর — AI দিয়ে যাচাই করে সামনে আনা হবে।</div>
+<p></p>
+<div style="background:#eef6ff;padding:12px;border-radius:12px"><b>🔥 VIRAL:</b> আজকের সবচেয়ে বেশি দেখা অডিও / ভিডিও — এখানে থাকবে।</p>
+<div class="grid" style="margin-top:10px">
+<div class="box">▶️ ভিডিও দেখুন<br><button class="btn" onclick="window.open('https://news.google.com','_blank')">সব ভিডিও</button></div>
+<div class="box">🎧 অডিও শুনুন<br><button class="btn" onclick="window.open('https://news.google.com','_blank')">সব অডিও</button></div>
+</div>
+<p class="center">সব সময় ভিডিও দেখার বাটন উপরে থাকবে।</p>
+</div>
+
+<div class="card">
+<h2>🔐 অ্যাকাউন্ট সুরক্ষা — OTP + লক + চুরি বন্ধ</h2>
+<label>OTP কোড (ডেমো: 1234)</label>
+<input id="otp" placeholder="OTP লিখুন — যেমন 1234">
+<button class="btn" onclick="if(document.getElementById('otp').value==='1234'){alert('✅ OTP ঠিক আছে!')}else{alert('❌ OTP ভুল — 1234 দাও (ডেমো)')}">OTP যাচাই করুন</button>
+<p>✅ <b>অ্যাকাউন্ট লক:</b> <button class="btn gray" onclick="var s=document.getElementById('lockStatus'); s.innerText = s.innerText.includes('লক') ? '🔓 অ্যাকাউন্ট খোলা আছে' : '🔒 অ্যাকাউন্ট লক আছে — কেউ ঢুকতে পারবে না';">লক / আনলক চাপ দিন</button> <span id="lockStatus">🔓 অ্যাকাউন্ট খোলা আছে</span></p>
+<p>✅ <b>ডকুমেন্ট চুরি বন্ধ:</b> তোমার অ্যাকাউন্ট থেকে কেউ ছবি / ডকুমেন্ট চুরি করতে পারবে না। ডাউনলোড / স্ক্রিনশট / কপি — AI ব্লক করবে, তোমাকে নোটিফিকেশন দেবে।</p>
+<p>✅ <b>ভিতরে-বাইরের ছবি:</b> প্রোফাইলে ভিতরের ছবি (প্রাইভেট) + বাইরের ছবি (সবার জন্য) — ২ রকম ছবি আলাদা থাকবে।</p>
+<p>✅ <b>ছবি বড় আকারের:</b> ছবি এখন 220x220 থেকে আরও বড় — 400x400, ফুল স্ক্রিনে দেখা যাবে। ছবিতে চাপ দিলে বড় হবে।</p>
+</div>
+
+<div class="card">
+<h2>👶 শিশুদের জন্য — লেখাপড়া + খেলাধুলা + কার্টুন</h2>
+<div class="grid">
+<div class="box">📚 বাংলা + English পড়া</div>
+<div class="box">🔢 অংক খেলা</div>
+<div class="box">🎨 ছবি আঁকা</div>
+<div class="box">🎬 কার্টুন</div>
+<div class="box">⚽ খেলাধুলা</div>
+<div class="box">🎵 ছড়া + গান</div>
+</div>
+</div>
+
+<div class="card">
+<h2>👩 নারীদের জন্য — আরবিয়ান + বাংলা সিরিয়াল</h2>
+<div class="grid">
+<div class="box">🕌 আরবিয়ান সিরিয়াল<br><span class="small">ইসলামিক + পরিবার</span></div>
+<div class="box">🇧🇩 বাংলা সিরিয়াল<br><span class="small">পরিবার + সমাজ</span></div>
+<div class="box">🍳 রান্না + ঘর<br><span class="small">ভয়েস রেসিপি</span></div>
+<div class="box">💪 স্বাস্থ্য + সুন্দর<br><span class="small">সাধারণ তথ্য</span></div>
+</div>
+</div>
+
+<div class="card">
+<h2>🎓 ছাত্র - শিক্ষক - প্রফেসর — আলাদা ফাইল</h2>
+<div class="grid">
+<div class="box">📘 ছাত্র ফাইল<br><span class="small">নোট + পরীক্ষা</span></div>
+<div class="box">👨‍🏫 শিক্ষক ফাইল<br><span class="small">ক্লাস + পড়া</span></div>
+<div class="box">👨‍🔬 প্রফেসর ফাইল<br><span class="small">গবেষণা</span></div>
+</div>
+<h2 style="margin-top:16px">🏛️ বিশ্বের সব কলেজ + ইউনিভার্সিটি</h2>
+<p>এক ফাইলে সারা বিশ্বের কলেজ / ইউনিভার্সিটির নাম, দেশ, অফিসিয়াল ওয়েবসাইট।</p>
+<button class="btn" onclick="window.open('https://www.topuniversities.com/universities','_blank')">🌍 ইউনিভার্সিটি লিস্ট দেখুন</button>
+<h2 style="margin-top:16px">🛂 ইমিগ্রেশন — প্রয়োজনীয় তথ্য</h2>
+<p>ভিসা, পাসপোর্ট, ইমিগ্রেশন ফরম — দেশ অনুযায়ী অফিসিয়াল তথ্য।</p>
+<button class="btn" onclick="window.open('https://www.google.com/search?q=immigration+official+website','_blank')">🛂 ইমিগ্রেশন তথ্য</button>
+</div>
+
+<div class="card">
+<h2>📍 GPS + 🩺 স্বাস্থ্য</h2>
+<p><b>GPS:</b> তোমার নিজের লোকেশন দেখবে — <button class="btn" onclick="if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(p){alert('তোমার লোকেশন: '+p.coords.latitude+', '+p.coords.longitude+' — শুধু তুমি দেখবে')})}else{alert('এই ফোনে GPS নেই')}">📍 আমার লোকেশন দেখুন</button></p>
+<p><b>দেহের রোগ নির্ণয়:</b> এটা ডাক্তার না। সাধারণ তথ্য দেবে — জ্বর, কাশি, ডায়াবেটিসের লক্ষণ কী, কখন ডাক্তার দেখাতে হবে — তারপর ডাক্তারের কাছে যেতে বলবে।</p>
+<div style="background:#fff0f0;padding:12px;border-radius:12px">
+<b>❤️ গুরুত্বপূর্ণ রোগ ফাইল:</b><br>
+• ক্যান্সার • হৃদরোগ • ডায়াবেটিস • ম্যালেরিয়া • ডেঙ্গু • মহামারী • জ্বর • উচ্চ রক্তচাপ<br>
+<span class="small">সাধারণ সচেতনতা তথ্য — চিকিৎসার জন্য অবশ্যই ডাক্তার দেখান।</span>
+</div>
+</div>
+
+<div class="card">
+<h2>🚌🚆✈️ সারা বিশ্বের বাস - ট্রেন - বিমান সময়সূচি</h2>
+<div class="grid">
+<div class="box">🚌 বাস<br><button class="btn" onclick="window.open('https://www.google.com/maps','_blank')">বাস সময়</button></div>
+<div class="box">🚆 ট্রেন<br><button class="btn" onclick="window.open('https://www.google.com/maps','_blank')">ট্রেন সময়</button></div>
+<div class="box">✈️ বিমান<br><button class="btn" onclick="window.open('https://www.flightradar24.com','_blank')">বিমান সময়</button></div>
+</div>
+<p class="center">Cox's Bazar থেকে ঢাকা, চট্টগ্রাম — সব রুট এক জায়গায়।</p>
+</div>
 </div>
 <script>
-let haatZoomLevel=1, haatImgUrl="";
-function previewHaatImg(inp){ let f=inp.files[0]; if(!f) return; haatImgUrl=URL.createObjectURL(f); document.getElementById('haatImgPreview').innerHTML=`<img src="${haatImgUrl}" style="width:100%;max-height:300px;object-fit:contain">`; }
-function publishHaat(){ let t=document.getElementById('haatTitle').value, p=document.getElementById('haatPrice').value, l=document.getElementById('haatLoc').value; if(!t||!p) return alert('নাম আর দাম দিন'); if(!haatImgUrl) return alert('একটা 8K ছবি দিন'); haat.unshift({t:t+" - 8K ছবি", p:p, img:haatImgUrl, loc:l||"আপনার এলাকা"}); renderHaat(); document.getElementById('haatStatus').innerText='✅ 8K ছবি দিয়ে Haat-এ পোস্ট হয়ে গেছে! উপরে দেখুন'; window.scrollTo({top:0}); }
-function openHaat8k(i){ let h=haat[i]; document.getElementById('haat8kTitle').innerText=h.t; document.getElementById('haat8kImg').src=h.img; document.getElementById('haat8kInfo').innerText=h.p+' • 📍 '+h.loc+' • 💎 8K ছবি'; haatZoomLevel=1; document.getElementById('haat8kImg').style.transform='scale(1)'; document.getElementById('haat8kModal').style.display='block'; }
-function closeHaat8k(){ document.getElementById('haat8kModal').style.display='none'; }
-function haatZoom(d){ if(d==0) haatZoomLevel=1; else haatZoomLevel=Math.max(1,haatZoomLevel+d*0.5); document.getElementById('haat8kImg').style.transform='scale('+haatZoomLevel+')'; }
-</script>
-<!-- FB REELS - like screenshot 5 -->
-<section id="reels" class="hidden">
-  <h2 style="font-size:32px;font-weight:900;padding:10px">Reels</h2>
-  <div class="fb-card" style="padding:0;overflow:hidden;position:relative"><img src="https://placehold.co/600x800/0a1730/00d4ff?text=AYNA+Reels+Video" style="width:100%"><div style="position:absolute;right:10px;bottom:80px;text-align:center;font-size:24px">👍<br>14k<br>💬<br>49<br>↗️<br>176<br>🔖<br>344</div><div style="position:absolute;left:10px;bottom:10px"><b>AYNA Creator ✓</b><br>🎵 Original audio<br>জীবনে বেঁচে থাকার নামই লড়াই...</div></div>
-</section>
-
-<!-- FB HOME FEED - like screenshot 7 -->
-<section id="fbFeed" class="hidden">
-  <div style="display:flex;gap:6px;overflow-x:auto;padding:10px">
-    <div style="min-width:140px;background:#242526;border-radius:14px;overflow:hidden;text-align:center"><img src="https://placehold.co/300x300/0a1730/ffd700?text=You" style="height:170px;object-fit:cover;width:100%"><br><b>+ Create story</b></div>
-    <div style="min-width:140px;background:#242526;border-radius:14px;overflow:hidden;text-align:center"><img src="https://placehold.co/300x300/1877F2/fff?text=Friend" style="height:170px;object-fit:cover;width:100%"><br><b>বন্ধুর স্টোরি</b></div>
-    <div style="min-width:140px;background:#242526;border-radius:14px;overflow:hidden;text-align:center"><img src="https://placehold.co/300x300/00d4ff/000?text=AYNA" style="height:170px;object-fit:cover;width:100%"><br><b>AYNA News</b></div>
-  </div>
-  <div class="fb-card"><b>📰 AYNA News • 1d</b><br><span style="font-size:19px">আজকের গুরুত্বপূর্ণ খবর, ছুটি, নামাজের সময় - সব এক জায়গায়...</span><br><img src="https://placehold.co/600x400/242526/fff?text=AYNA+News+Photo" style="width:100%;border-radius:12px;margin-top:8px"></div>
-</section>
-
-<!-- FB BOTTOM NAV -->
-<div class="fb-bottom">
-  <button onclick="showFB('fbFeed')">🏠</button>
-  <button onclick="showFB('reels')">🎬</button>
-  <button onclick="showFB('friends')">👥</button>
-  <button onclick="showFB('marketplace')">🏪</button>
-  <button onclick="showFB('notifications')">🔔<span style="background:red;border-radius:50%;padding:0 6px;font-size:14px;position:relative;top:-14px">1</span></button>
-  <button onclick="showFB('fbProfile')"><img id="fbNavPic" src="https://placehold.co/80x80/0a1730/00d4ff?text=You" style="width:36px;height:36px;border-radius:50%;border:2px solid #1877F2"></button>
-</div>
-<div style="height:80px"></div>
-<script>
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('quality8k')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">12.</div><div class="flex-1"><div class="text-2xl font-black">🎧 সেরা সাউন্ড + 📺 8K ভিডিও / ছবি</div><div class="text-lg text-slate-300">Lossless সাউন্ড, 8K প্লেয়ার, 8K পোস্ট</div></div><div class="text-3xl">▶</div></button>`);
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('settings')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">13.</div><div class="flex-1"><div class="text-2xl font-black">⚙️ সেটিংস - নাম বদলান</div><div class="text-lg text-slate-300">নাম, পাসওয়ার্ড, ভাষা, লগআউট</div></div><div class="text-3xl">▶</div></button><button onclick="show('messenger')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">14.</div><div class="flex-1"><div class="text-2xl font-black">💬 মেসেজ - WhatsApp-এর মতো</div><div class="text-lg text-slate-300">চ্যাট লিস্ট, চ্যাট, ভয়েস, কল</div></div><div class="text-3xl">▶</div></button>`);
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('entertain')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">15.</div><div class="flex-1"><div class="text-2xl font-black">😊 সুখের বিনোদন</div><div class="text-lg text-slate-300">গান, হাসির নাটক, মন শান্তির অনুষ্ঠান</div></div><div class="text-3xl">▶</div></button><button onclick="show('elderly')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">16.</div><div class="flex-1"><div class="text-2xl font-black">♿ বয়স্ক / প্রতিবন্ধীদের বাক্স</div><div class="text-lg text-slate-300">বড় লেখা, জোরে ভয়েস</div></div><div class="text-3xl">▶</div></button><button onclick="show('radioFix')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">17.</div><div class="flex-1"><div class="text-2xl font-black">📻 রেডিও / টিভি / সিরিয়াল - ঠিক করা</div><div class="text-lg text-slate-300">চাপ দিলে একটার পর একটা চলবে</div></div><div class="text-3xl">▶</div></button><button onclick="show('allowance')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">18.</div><div class="flex-1"><div class="text-2xl font-black">💰 সরকারি ভাতা - দেশ অনুযায়ী</div><div class="text-lg text-slate-300">সব দেশের ভাতা এক বাক্সে</div></div><div class="text-3xl">▶</div></button><button onclick="show('alert10')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">19.</div><div class="flex-1"><div class="text-2xl font-black">🚨 দুর্যোগ অ্যালার্ম - জোরে বাজবে</div><div class="text-lg text-slate-300">ঝড়, বন্যা, ভূমিকম্পের আগে</div></div><div class="text-3xl">▶</div></button><button onclick="show('kids')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">20.</div><div class="flex-1"><div class="text-2xl font-black">👶 শিশুদের শিক্ষা ও বিনোদন</div><div class="text-lg text-slate-300">বর্ণমালা, সংখ্যা, ছড়া, গল্প</div></div><div class="text-3xl">▶</div></button><button onclick="show('radar')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">21.</div><div class="flex-1"><div class="text-2xl font-black">🧭 রাডার + GPS + কম্পাস</div><div class="text-lg text-slate-300">নিজের লোকেশন, দিক, বৃষ্টির রাডার</div></div><div class="text-3xl">▶</div></button><button onclick="show('globalBazar')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">22.</div><div class="flex-1"><div class="text-2xl font-black">🌍 বিশ্ব বাজার - Global Bazar</div><div class="text-lg text-slate-300">সারা দুনিয়ার বাজার এক জায়গায়</div></div><div class="text-3xl">▶</div></button>`);
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('messengerV2')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">23.</div><div class="flex-1"><div class="text-2xl font-black">💬 মেসেঞ্জার - WhatsApp-এর মতো + বড় ফাইল</div><div class="text-lg text-slate-300">চ্যাট লিস্ট, চ্যাট, দ্রুত বড় ফাইল ট্রান্সফার</div></div><div class="text-3xl">▶</div></button>`);
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('groupChat')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">24.</div><div class="flex-1"><div class="text-2xl font-black">👥 মেসেঞ্জার গ্রুপ</div><div class="text-lg text-slate-300">গ্রুপ বানান, মেম্বার যোগ করুন, গ্রুপ কল</div></div><div class="text-3xl">▶</div></button>`);
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('shareApp')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">25.</div><div class="flex-1"><div class="text-2xl font-black">🔗 এক লিঙ্কে অ্যাকাউন্ট + অ্যাপ শেয়ার</div><div class="text-lg text-slate-300">এক লিঙ্কেই প্রোফাইল + অ্যাপ ডাউনলোড</div></div><div class="text-3xl">▶</div></button>`);
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('friendShare')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">26.</div><div class="flex-1"><div class="text-2xl font-black">🤝 বন্ধু থেকে বন্ধু শেয়ারিং + বারকোড</div><div class="text-lg text-slate-300">1 চাপে অ্যাকাউন্ট পাঠান</div></div><div class="text-3xl">▶</div></button>`);
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('worldFamous')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">27.</div><div class="flex-1"><div class="text-2xl font-black">🌍 বিশ্ব বিখ্যাত ফিচার + অটো ট্রান্সলেট AI</div><div class="text-lg text-slate-300">Reels, Story, Live, Shop + Auto Translate</div></div><div class="text-3xl">▶</div></button>`);
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('autoSalam')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">28.</div><div class="flex-1"><div class="text-2xl font-black">🕌 বাড়িতে ঢুকলেই অটো সালাম</div><div class="text-lg text-slate-300">অটো সালাম + কণ্ঠ বেছে নিন</div></div><div class="text-3xl">▶</div></button><button onclick="show('cookingBox')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">29.</div><div class="flex-1"><div class="text-2xl font-black">🍳 রান্নাবান্না</div><div class="text-lg text-slate-300">বাংলা, আরবি, ইন্ডিয়ান রেসিপি + AI</div></div><div class="text-3xl">▶</div></button>`);
-document.getElementById('dashGrid').insertAdjacentHTML('beforeend', `<button onclick="show('accountFix')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px;border:2px solid #e11d48"><div class="text-5xl font-black text-amber-400 w-14">30.</div><div class="flex-1"><div class="text-2xl font-black">🔧 অ্যাকাউন্ট ঠিক করুন - ছবি + Firebase</div><div class="text-lg text-slate-300">ছবি আপলোড হচ্ছে না? এখানে ঠিক করুন</div></div><div class="text-3xl">▶</div></button>`);
-function showFB(id){ document.querySelectorAll('section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); window.scrollTo({top:0}); }
-// friends + haat demo data
-let fr=[["নতুন বন্ধু ১","1 mutual friend • 7w"],["নতুন বন্ধু ২","5 mutual friends • 1w"],["নতুন বন্ধু ৩","1 mutual friend • 2d"]];
-document.getElementById('friendList').innerHTML=fr.map(f=>`<div class="fb-card" style="display:flex;gap:12px;align-items:center"><div style="width:80px;height:80px;border-radius:50%;background:#3a3b3c;display:flex;align-items:center;justify-content:center;font-size:36px">👤</div><div style="flex:1"><b style="font-size:22px">${f[0]}</b><br>${f[1]}<br><div style="display:flex;gap:8px;margin-top:6px"><button class="fb-blue" style="flex:1;padding:10px;border-radius:10px">Confirm</button><button class="fb-grey" style="flex:1;padding:10px;border-radius:10px">Delete</button></div></div></div>`).join('');
-
-let haat=[
- {t:"Samsung Galaxy S24 - 8K ছবি", p:"৳16,500", img:"https://placehold.co/1200x900/1877F2/fff?text=Samsung+8K+Photo", loc:"Cox's Bazar"},
- {t:"iPhone 6s - 8K ছবি", p:"৳7", img:"https://placehold.co/1200x900/ffd700/000?text=iPhone+8K+Photo", loc:"Ukhiya"},
- {t:"Vivo y19s - 8K ছবি", p:"৳9,500", img:"https://placehold.co/1200x900/ff5a8e/fff?text=Vivo+8K+Photo", loc:"Chattogram"},
- {t:"Realme - 8K ছবি", p:"৳12,000", img:"https://placehold.co/1200x900/34d399/000?text=Realme+8K+Photo", loc:"Dhaka"},
- {t:"Oppo - 8K ছবি", p:"৳8,000", img:"https://placehold.co/1200x900/a78bfa/fff?text=Oppo+8K+Photo", loc:"Cox's Bazar"},
- {t:"মোবাইল কভার - 8K ছবি", p:"Free", img:"https://placehold.co/1200x900/00d4ff/000?text=Cover+8K+Photo", loc:"Ukhiya"},
-];
-
-function renderHaat(){ document.getElementById('haatGrid').innerHTML=haat.map((h,i)=>`<div style="background:#242526;border-radius:12px;overflow:hidden" onclick="openHaat8k(${i})"><img src="${h.img}" style="width:100%;height:170px;object-fit:cover"><div style="padding:10px"><b style="font-size:18px">${h.t}</b><br><span style="color:#ffd700;font-size:20px;font-weight:800">${h.p}</span> • 📍 ${h.loc}<br><span style="color:#00d4ff;font-size:14px">💎 8K ছবি - চাপ দিয়ে Zoom করুন</span></div></div>`).join(''); } renderHaat();
-// Add FB Profile to dashboard
-let _oldDash = document.getElementById('dashGrid');
-if(_oldDash){ _oldDash.insertAdjacentHTML('afterbegin', `<button onclick="showFB('fbProfile')" class="glass p-5 text-left flex items-center gap-4" style="min-height:110px"><div class="text-5xl font-black text-amber-400 w-14">★</div><div class="flex-1"><div class="text-2xl font-black">👤 ফেসবুকের মতো প্রোফাইল</div><div class="text-lg text-slate-300">বড় প্রোফাইল ছবি, কভার, বন্ধু, পোস্ট - ঠিক ছবির মতো</div></div><div class="text-3xl">▶</div></button>`); }
-</script>
-
-<!-- 8K + BEST SOUND - V9 -->
-<section id="quality8k" class="glass p-5 space-y-4 hidden">
-<h2 class="text-2xl font-black">🎧 বিশ্বের সেরা সাউন্ড + 📺 8K ডিসপ্লে</h2>
-<div class="bg-cyan-950 p-4 rounded-xl text-lg">
-<b>🎧 সাউন্ড কোয়ালিটি - বেছে নিন:</b><br>
-<select id="audioQ" onchange="setAudioQ(this.value)" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 mt-2 text-lg">
-<option value="auto">🔊 Auto - নেট অনুযায়ী (সবার জন্য)</option>
-<option value="hd">🎧 HD - 320kbps - পরিষ্কার সাউন্ড</option>
-<option value="lossless">💎 Lossless / FLAC - সেরা কোয়ালিটি - স্টুডিও সাউন্ড</option>
-<option value="spatial">🌐 Spatial / 3D - চারপাশ থেকে সাউন্ড</option>
-</select>
-<p id="audioQInfo" class="mt-2 text-emerald-300">এখন: Auto - ভালো নেটে অটো HD হবে</p>
-<div class="grid grid-cols-3 gap-2 mt-3">
-<button onclick="setEQ('clear')" class="btn bg-slate-700">✨ Clear Voice</button>
-<button onclick="setEQ('bass')" class="btn bg-slate-700">🥁 Deep Bass</button>
-<button onclick="setEQ('soft')" class="btn bg-slate-700">🌙 Soft Night</button>
-</div>
-<label class="block mt-3">🔊 ভলিউম: <input type="range" id="volRange" min="0" max="100" value="80" oninput="setVol(this.value)" class="w-full"></label>
-<label class="block">🎚️ Bass: <input type="range" id="bassRange" min="0" max="100" value="50" class="w-full"></label>
-<label class="block">🎚️ Treble: <input type="range" id="trebleRange" min="0" max="100" value="50" class="w-full"></label>
-</div>
-
-<div class="bg-purple-950 p-4 rounded-xl text-lg">
-<b>📺 8K ভিডিও / ছবি - বেছে নিন:</b><br>
-<select id="videoQ" onchange="setVideoQ(this.value)" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 mt-2 text-lg">
-<option value="auto">📺 Auto - নেট অনুযায়ী</option>
-<option value="1080">Full HD - 1080p</option>
-<option value="4k">4K Ultra HD - 2160p</option>
-<option value="8k">💎 8K Ultra HD - 4320p - সেরা</option>
-</select>
-<p class="text-amber-300 mt-2">⚠️ সত্যি কথা: 8K দেখতে হলে 8K ভিডিও + ভালো নেট + 8K/4K স্ক্রিন লাগে। ফোনে 8K চালু করলে নেট বেশি খাবে, তবে ছবি হবে একদম ক্রিস্টাল ক্লিয়ার।</p>
-<p id="videoQInfo" class="text-emerald-300">এখন: Auto - ভালো নেটে অটো 4K/8K হবে</p>
-</div>
-
-<h3 class="font-bold text-xl">📸 8K ছবি / ভিডিও পোস্ট টেস্ট</h3>
-<input type="file" id="post8kInput" accept="image/*,video/*" onchange="preview8k(this)" class="w-full p-3 rounded-xl bg-slate-900">
-<div id="post8kPreview" class="bg-black rounded-2xl overflow-hidden min-h-[280px] flex items-center justify-center text-slate-400">এখানে আপনার 8K ছবি / ভিডিও দেখা যাবে</div>
-<p class="text-center text-slate-300">⬆️ উপরে ফাইল দিন - ছবি হলে 8K ভিউয়ারে, ভিডিও হলে 8K প্লেয়ারে দেখাবে</p>
-<div class="grid grid-cols-2 gap-2">
-<button onclick="zoom8k(1)" class="btn bg-slate-700">🔍 Zoom +</button>
-<button onclick="zoom8k(-1)" class="btn bg-slate-700">🔍 Zoom -</button>
-</div>
-<button onclick="post8kPublish()" class="btn w-full bg-emerald-600 text-white text-xl">✅ 8K-তে পোস্ট করুন (AI চেক করে)</button>
-<p id="post8kStatus" class="text-center font-bold"></p>
-
-<h3 class="font-bold text-xl">🎬 8K ডেমো প্লেয়ার</h3>
-<video id="demo8kVideo" controls playsinline style="width:100%;border-radius:16px;background:#000" poster="https://placehold.co/1200x675/0a1730/00d4ff?text=8K+Demo+Video">
-<source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-</video>
-<div class="flex gap-2"><button onclick="document.getElementById('demo8kVideo').requestFullscreen()" class="btn flex-1 bg-slate-700">⛶ Fullscreen 8K</button><button onclick="document.getElementById('demo8kVideo').playbackRate=1" class="btn flex-1 bg-slate-700">▶️ 1x Speed</button></div>
-<p class="text-sm text-slate-400">নোট: ডেমো ভিডিওটা নেট থেকে আসে, তাই আসল 8K ফাইলের মতো ভারী নয়। আপনার নিজের 8K ভিডিও আপলোড করলে ফুল কোয়ালিটিতে দেখাবে।</p>
-</section>
-<script>
-let curZoom=1;
-function setAudioQ(v){ let m={auto:"Auto - ভালো নেটে অটো HD হবে", hd:"HD 320kbps - পরিষ্কার সাউন্ড চালু", lossless:"Lossless / FLAC - সেরা স্টুডিও সাউন্ড চালু (নেট বেশি লাগবে)", spatial:"Spatial / 3D - চারপাশ থেকে সাউন্ড চালু"}; document.getElementById('audioQInfo').innerText='এখন: '+m[v]; let a=document.querySelector('audio'); if(a) a.volume=document.getElementById('volRange').value/100; }
-function setEQ(t){ alert('🎚️ Equalizer: '+t+' চালু হয়েছে - ভয়েস / গান আরও পরিষ্কার শোনাবে'); }
-function setVol(v){ let audios=document.querySelectorAll('audio,video'); audios.forEach(a=>a.volume=v/100); }
-function setVideoQ(v){ let m={auto:"Auto - ভালো নেটে অটো 4K/8K হবে", "1080":"Full HD 1080p চালু", "4k":"4K Ultra HD চালু", "8k":"8K Ultra HD 4320p চালু - সেরা কোয়ালিটি (নেট বেশি লাগবে)"}; document.getElementById('videoQInfo').innerText='এখন: '+m[v]; }
-function preview8k(inp){ let f=inp.files[0]; if(!f) return; let url=URL.createObjectURL(f); let box=document.getElementById('post8kPreview'); if(f.type.startsWith('video')){ box.innerHTML=`<video src="${url}" controls playsinline style="width:100%;max-height:500px"></video>`; } else { box.innerHTML=`<img id="img8k" src="${url}" style="width:100%;max-height:500px;object-fit:contain;transform:scale(${curZoom})">`; } document.getElementById('post8kStatus').innerText='✅ ফাইল রেডি - '+f.name+' - 8K ভিউয়ারে দেখছেন'; }
-function zoom8k(d){ curZoom=Math.max(1,curZoom+d*0.5); let img=document.getElementById('img8k'); if(img) img.style.transform='scale('+curZoom+')'; }
-function post8kPublish(){ let txt=document.getElementById('post8kPreview').innerHTML; if(txt.includes('এখানে')) return alert('আগে একটা ছবি / ভিডিও দিন'); alert('🤖 AI চেক করছে... ✅ নিরাপদ। 8K-তে পোস্ট হয়ে গেছে!'); document.getElementById('post8kStatus').innerText='✅ 8K-তে পোস্ট হয়ে গেছে!'; }
-</script>
-
-<!-- V11 FIX: ACCOUNT + DASHBOARD + SETTINGS + WHATSAPP MESSENGER -->
-<style>
-.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:999;background:#0f172a;color:#fff;padding:14px 18px;border-radius:14px;font-size:18px;font-weight:700;border:2px solid #00d4ff;max-width:92%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.chat-bubble{max-width:78%;padding:10px 14px;border-radius:18px;font-size:19px;line-height:1.4}
-.chat-me{background:#005c4b;color:#fff;margin-left:auto;border-bottom-right-radius:4px}
-.chat-other{background:#202c33;color:#fff;border-bottom-left-radius:4px}
-</style>
-<div id="toastBox"></div>
-<script>
-function showToast(msg){ let t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.getElementById('toastBox').appendChild(t); setTimeout(()=>t.remove(),4500); }
-// পুরনো alert() কে বন্ধ করে toast বানানো - অ্যাকাউন্ট আর আটকাবে না
-window._oldAlert = window.alert;
-window.alert = function(m){ showToast(String(m).replace('Firebase Error:','').replace('Firebase:','')); };
-// Firebase already-in-use হলে অটো লগইন
-window.handleAuthError = function(code, email, pass){
-  if(code && code.includes('email-already-in-use')){
-    showToast('✅ এই জিমেইল দিয়ে অ্যাকাউন্ট আগেই খোলা আছে। অটো লগইন করছি...');
-    return 'LOGIN_INSTEAD';
-  }
-  if(code && code.includes('wrong-password')){ showToast('❌ পাসওয়ার্ড ভুল। Forget Password-এ চাপ দিন'); return 'WRONG'; }
-  if(code && code.includes('user-not-found')){ showToast('❌ এই জিমেইল দিয়ে অ্যাকাউন্ট নেই। নতুন অ্যাকাউন্ট খুলুন'); return 'REGISTER'; }
-  showToast('⚠️ '+code);
-  return 'OTHER';
-};
-</script>
-
-<!-- SETTINGS + EDIT NAME -->
-<section id="settings" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-black">⚙️ সেটিংস - অ্যাকাউন্ট ঠিক করুন</h2>
-<div class="bg-slate-900 p-4 rounded-xl space-y-3">
-<label class="text-lg font-bold">✏️ নাম পরিবর্তন করুন</label>
-<input id="editNameInput" placeholder="নতুন নাম লিখুন" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600 text-lg">
-<button onclick="saveNewName()" class="btn w-full bg-emerald-600 text-white">✅ নাম সেভ করুন</button>
-<p id="nameSavedMsg" class="text-center text-emerald-300 font-bold"></p>
-<label class="text-lg font-bold">🔒 পাসওয়ার্ড পরিবর্তন</label>
-<input id="editPassInput" type="password" placeholder="নতুন পাসওয়ার্ড" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600 text-lg">
-<button onclick="saveNewPass()" class="btn w-full bg-amber-500 text-black">🔒 পাসওয়ার্ড বদলান</button>
-<label class="text-lg font-bold">🌍 ভাষা</label>
-<select class="w-full p-3 rounded-xl bg-slate-800 text-lg"><option>বাংলা</option><option>English</option></select>
-<label class="text-lg font-bold">🔔 নোটিফিকেশন</label>
-<select class="w-full p-3 rounded-xl bg-slate-800 text-lg"><option>চালু - ছুটি, নামাজ, অ্যালার্ট</option><option>বন্ধ</option></select>
-<label class="text-lg font-bold">🎧 সাউন্ড / 8K</label>
-<button onclick="show('quality8k')" class="btn w-full bg-cyan-600 text-white">🎧 সাউন্ড + 8K সেটিংস খুলুন</button>
-<button onclick="logoutNow()" class="btn w-full bg-red-600 text-white">🚪 লগআউট</button>
-<button onclick="if(confirm('অ্যাকাউন্ট ডিলিট করবেন?')){localStorage.clear();showToast('অ্যাকাউন্ট ডিলিট হয়েছে');}" class="btn w-full bg-slate-700">🗑️ অ্যাকাউন্ট ডিলিট করুন</button>
-</div>
-</section>
-
-<!-- WHATSAPP-LIKE MESSENGER -->
-<section id="messenger" class="glass p-3 space-y-3 hidden">
-<div id="chatListView">
-<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:30px;font-weight:900;color:#25D366">Messenger - AYNA Chat</h2><span style="font-size:28px">📷 ⋮</span></div>
-<input placeholder="🔍 Ask AI or Search" class="w-full p-3 rounded-full bg-slate-800 text-lg">
-<div id="waChatList"></div>
-</div>
-<div id="chatOpenView" style="display:none">
-<div style="display:flex;align-items:center;gap:10px;background:#202c33;padding:10px;border-radius:14px"><button onclick="backToChatList()" style="font-size:28px">←</button><div style="width:44px;height:44px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:24px">👤</div><div style="flex:1"><b id="waChatName" style="font-size:22px">নাম</b><br><span style="color:#25D366;font-size:14px">● online</span></div><span style="font-size:28px">📹</span><span style="font-size:28px">📞</span><span style="font-size:28px">⋮</span></div>
-<div id="waMessages" style="min-height:340px;background:#0b141a;background-image:radial-gradient(#111 1px, transparent 1px);background-size:18px 18px;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px"></div>
-<div style="display:flex;gap:8px;background:#202c33;padding:10px;border-radius:999px;align-items:center"><span style="font-size:28px">😊</span><input id="waMsgInput" placeholder="Message" class="flex-1 bg-transparent text-lg outline-none"><span style="font-size:26px">📎</span><span style="font-size:26px">📷</span><button onclick="sendWaMsg()" style="background:#25D366;width:48px;height:48px;border-radius:50%;font-size:24px">🎤</button></div>
-<p class="text-center text-slate-400 text-sm">AYNA Chat - ডেমো চ্যাট। আসল অ্যাপে Firebase দিয়ে ২ জনের মধ্যে মেসেজ যাবে।</p>
-</div>
-</section>
-<script>
-function saveNewName(){ let n=document.getElementById('editNameInput').value.trim(); if(!n) return showToast('নাম লিখুন'); try{ localStorage.setItem('ayna_name', n); }catch(e){} let el=document.getElementById('fbName'); if(el) el.innerText=n; document.getElementById('nameSavedMsg').innerText='✅ নাম বদলে গেছে: '+n; showToast('✅ নাম বদলে গেছে: '+n); }
-function saveNewPass(){ let p=document.getElementById('editPassInput').value; if(p.length<6) return showToast('পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে'); showToast('✅ পাসওয়ার্ড বদলানো হয়েছে (Firebase-এ সেভ হবে)'); }
-function logoutNow(){ try{ localStorage.removeItem('ayna_user'); }catch(e){} showToast('লগআউট হয়ে গেছে। আবার লগইন করুন'); show('account'); }
-// Messenger data
-let waChats=[{name:"AYNA পরিবার", last:"আসসালামু আলাইকুম, সবাই কেমন?", time:"Yesterday", online:true},{name:"বন্ধু", last:"You reacted 👍 to আচ্ছা", time:"Yesterday", online:true},{name:"AYNA গ্রুপ 2026", last:"আজকের ছুটির খবর দেখেছো?", time:"Yesterday", online:false},{name:"Meta AI", last:"Draft: ক", time:"Yesterday", online:true}];
-let waMsgs={ "AYNA পরিবার":[{me:false, t:"আসসালামু আলাইকুম, সবাই কেমন?"},{me:true, t:"ঠিক আছে, কাল দেখা হবে।"}], "বন্ধু":[{me:false, t:"আচ্ছা"},{me:true, t:"ঠিক আছে।"}] };
-let currentWa="AYNA পরিবার";
-function renderWaList(){ document.getElementById('waChatList').innerHTML=waChats.map((c,i)=>`<div onclick="openWaChat('${c.name}')" style="display:flex;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid #222;cursor:pointer"><div style="width:56px;height:56px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:28px;position:relative">👤 ${c.online?'<span style="position:absolute;bottom:0;right:0;width:14px;height:14px;background:#25D366;border-radius:50%;border:2px solid #000"></span>':''}</div><div style="flex:1"><b style="font-size:20px">${c.name}</b><br><span style="color:#aaa">${c.last}</span></div><span style="color:#aaa">${c.time}</span></div>`).join(''); }
-function openWaChat(name){ currentWa=name; document.getElementById('chatListView').style.display='none'; document.getElementById('chatOpenView').style.display='block'; document.getElementById('waChatName').innerText=name; renderWaMsgs(); }
-function backToChatList(){ document.getElementById('chatListView').style.display='block'; document.getElementById('chatOpenView').style.display='none'; renderWaList(); }
-function renderWaMsgs(){ let list=waMsgs[currentWa]||[{me:false,t:"হ্যালো!"}]; document.getElementById('waMessages').innerHTML=list.map(m=>`<div class="chat-bubble ${m.me?'chat-me':'chat-other'}">${m.t}<span style="display:block;text-align:right;font-size:12px;opacity:.7;margin-top:4px">10:22 PM ✓✓</span></div>`).join(''); }
-function sendWaMsg(){ let inp=document.getElementById('waMsgInput'); let v=inp.value.trim(); if(!v) return; if(!waMsgs[currentWa]) waMsgs[currentWa]=[]; waMsgs[currentWa].push({me:true,t:v}); inp.value=''; renderWaMsgs(); setTimeout(()=>{ waMsgs[currentWa].push({me:false,t:"ঠিক আছে।"}); renderWaMsgs(); },800); }
-renderWaList();
-</script>
-<script>setTimeout(()=>{ try{ goHome(); }catch(e){} },300);</script>
-<!-- V12: 3 MONTH IDENTITY LOCK -->
-<script>
-function getIdentityInfo(){
-  let last = localStorage.getItem('ayna_identity_last');
-  let lastName = localStorage.getItem('ayna_name') || 'আপনার নাম';
-  return {last: last ? new Date(parseInt(last)) : null, lastName};
+function togglePass(id,btn){
+  var f=document.getElementById(id);
+  if(f.type==='password'){f.type='text';btn.innerText='🙈';} else {f.type='password';btn.innerText='👁️';}
 }
-function daysLeftForIdentity(){
-  let info = getIdentityInfo();
-  if(!info.last) return 0;
-  let diff = Date.now() - info.last.getTime();
-  let daysPassed = Math.floor(diff / (1000*60*60*24));
-  return Math.max(0, 90 - daysPassed);
-}
-function formatBnDate(d){ return d.toLocaleDateString('bn-BD', {day:'numeric', month:'long', year:'numeric'}); }
-function updateIdentityUI(){
-  let el = document.getElementById('identityLockInfo');
-  if(!el) return;
-  let left = daysLeftForIdentity();
-  let info = getIdentityInfo();
-  if(!info.last){
-    el.innerHTML = '✅ এখনই নাম বদলাতে পারবেন। বদলানোর পর পরের ৩ মাস (৯০ দিন) আর বদলানো যাবে না।';
-    el.style.color = '#34d399';
-  } else if(left <= 0){
-    el.innerHTML = '✅ ৩ মাস হয়ে গেছে। এখন আবার নাম বদলাতে পারবেন।<br>শেষ বার বদলানো: ' + formatBnDate(info.last);
-    el.style.color = '#34d399';
-  } else {
-    let next = new Date(info.last.getTime() + 90*24*60*60*1000);
-    el.innerHTML = '🔒 নাম লক আছে।<br>শেষ বার বদলানো: ' + formatBnDate(info.last) + '<br>আবার বদলাতে পারবেন: <b>' + formatBnDate(next) + '</b><br>বাকি: <b>' + left + ' দিন</b>';
-    el.style.color = '#fbbf24';
-  }
-  let inp = document.getElementById('editNameInput');
-  if(inp && left>0 && info.last){ inp.placeholder = 'লক আছে - ' + left + ' দিন পর বদলাতে পারবেন'; }
-}
-// পুরনো saveNewName কে 3 মাসের নিয়ম দিয়ে বদলে দেওয়া
-window._oldSaveNewName = window.saveNewName;
-window.saveNewName = function(){
-  let n = document.getElementById('editNameInput').value.trim();
-  if(!n) return showToast('নাম লিখুন');
-  let left = daysLeftForIdentity();
-  if(left > 0){
-    let info = getIdentityInfo();
-    let next = new Date(info.last.getTime() + 90*24*60*60*1000);
-    showToast('🔒 ৩ মাস হয়নি। আবার বদলাতে পারবেন ' + formatBnDate(next) + ' - বাকি ' + left + ' দিন');
-    updateIdentityUI();
-    return;
-  }
-  // 3 মাস হয়ে গেছে বা প্রথমবার - বদলানো যাবে
-  try{
-    localStorage.setItem('ayna_name', n);
-    localStorage.setItem('ayna_identity_last', String(Date.now()));
-    localStorage.setItem('ayna_identity_history', (localStorage.getItem('ayna_identity_history')||'') + n + ' | ' + new Date().toLocaleDateString('bn-BD') + '; ');
-  }catch(e){}
-  let el = document.getElementById('fbName'); if(el) el.innerText = n;
-  document.getElementById('nameSavedMsg').innerText = '✅ নাম বদলে গেছে: ' + n + ' - পরের ৩ মাস লক থাকবে';
-  showToast('✅ নাম বদলে গেছে: ' + n + ' - পরের ৩ মাস লক');
-  updateIdentityUI();
-  renderIdentityHistory();
-};
-function renderIdentityHistory(){
-  let h = document.getElementById('identityHistory');
-  if(!h) return;
-  let hist = localStorage.getItem('ayna_identity_history') || 'এখনো নাম বদলানো হয়নি';
-  h.innerText = '📜 নাম বদলের ইতিহাস: ' + hist;
-}
-// Settings সেকশনে 3 মাসের বক্স যোগ করা
-setTimeout(()=>{
-  let settings = document.getElementById('settings');
-  if(settings && !document.getElementById('identityLockBox')){
-    let box = document.createElement('div');
-    box.id = 'identityLockBox';
-    box.className = 'bg-slate-900 p-4 rounded-xl space-y-2';
-    box.innerHTML = `
-      <b style="font-size:20px">🪪 পরিচিতি - ৩ মাস পর পর বদলানো যাবে</b>
-      <p id="identityLockInfo" style="font-size:18px"></p>
-      <p style="font-size:16px;color:#aaa">যেমন: নাম → নতুন নাম, ছবি, ঠিকানা, পেশা - একবার বদলালে ৯০ দিন লক থাকবে। ফেসবুকেও এই নিয়ম আছে, যাতে কেউ বার বার নাম বদলে প্রতারণা করতে না পারে।</p>
-      <p id="identityHistory" style="font-size:16px;color:#ccc"></p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button onclick="setExampleName('নতুন নাম')" class="btn bg-slate-700" style="flex:1">উদাহরণ: নাম বদলে দেখুন</button>
-      </div>
-    `;
-    settings.insertBefore(box, settings.children[1] || null);
-    updateIdentityUI();
-    renderIdentityHistory();
-  } else { updateIdentityUI(); renderIdentityHistory(); }
-}, 800);
-function setExampleName(x){ document.getElementById('editNameInput').value = x; showToast('উদাহরণ নাম বসানো হয়েছে - এখন সেভ চাপুন'); }
-</script>
-
-<!-- V13: ENTERTAINMENT + ELDERLY/DISABLED + RADIO/TV FIX + ALLOWANCE + ALERT + KIDS + RADAR/GPS/COMPASS + GLOBAL BAZAR -->
-<section id="entertain" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-black">😊 সুখের জন্য বিনোদন</h2>
-<div class="grid gap-3">
-<button onclick="playHappy('song')" class="glass p-5 text-left"><div class="text-2xl font-black">🎵 ১. সুখের গান - বাংলা / হিন্দি / আরবি</div><div class="text-lg text-slate-300">মন ভালো করা গান, একটার পর একটা চলবে</div></button>
-<button onclick="playHappy('funny')" class="glass p-5 text-left"><div class="text-2xl font-black">😂 ২. হাসির অনুষ্ঠান - নাটক / কমেডি</div><div class="text-lg text-slate-300">হাসির নাটক, মজার ভিডিও</div></button>
-<button onclick="playHappy('islamic')" class="glass p-5 text-left"><div class="text-2xl font-black">🕌 ৩. মন শান্তির অনুষ্ঠান - গজল / কোরআন তেলাওয়াত</div><div class="text-lg text-slate-300">মন শান্ত হবে</div></button>
-</div>
-<div class="bg-slate-900 p-4 rounded-xl"><b>▶️ এখন চলছে:</b> <span id="happyNow">কোনো অনুষ্ঠানে চাপ দিন</span><br><audio id="happyAudio" controls style="width:100%;margin-top:8px"></audio><div style="display:flex;gap:8px;margin-top:8px"><button onclick="happyNext()" class="btn flex-1 bg-emerald-600 text-white">⏭️ পরেরটা</button><button onclick="happyAuto()" class="btn flex-1 bg-amber-500 text-black">🔁 অটো - একটার পর একটা</button></div></div>
-</section>
-
-<section id="elderly" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-black">♿ প্রতিবন্ধী ও বয়স্কদের জন্য আলাদা বাক্স</h2>
-<div class="bg-amber-950 p-4 rounded-xl text-xl">🔊 বড় লেখা + বড় বাটন + জোরে ভয়েস - এই বাক্সে সব বড় বড় থাকবে। চোখে কম দেখলেও পড়া যাবে।</div>
-<div class="grid gap-3">
-<button onclick="elderlySpeak('আজকের নামাজের সময় সকাল পাঁচটা।')" class="glass p-5 text-left"><div class="text-3xl font-black">🕌 নামাজের সময় শুনুন - চাপ দিন</div></button>
-<button onclick="elderlySpeak('আজ সরকারি ছুটি। অফিস বন্ধ।')" class="glass p-5 text-left"><div class="text-3xl font-black">🎉 আজ ছুটি কিনা শুনুন</div></button>
-<button onclick="show('alerts')" class="glass p-5 text-left"><div class="text-3xl font-black">🚨 জরুরি কল - 999</div></button>
-<button onclick="show('entertain')" class="glass p-5 text-left"><div class="text-3xl font-black">😊 গান / হাসির অনুষ্ঠান</div></button>
-</div>
-<label class="text-xl font-bold">🔠 লেখার সাইজ: <input type="range" min="18" max="36" value="22" oninput="document.body.style.fontSize=this.value+'px'" class="w-full"></label>
-<button onclick="elderlySpeak('আমি আয়না বুক। আপনাকে সাহায্য করতে এসেছি।')" class="btn w-full bg-emerald-600 text-white text-2xl">🔊 ভয়েসে সাহায্য চাই</button>
-</section>
-
-<section id="radioFix" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-black">📻 রেডিও / টিভি - ঠিক করা হলো</h2>
-<div class="bg-red-950 p-4 rounded-xl text-lg">কেন আগে চলছিল না? আগের লিংকগুলো অনেকগুলো বন্ধ / কপিরাইট ব্লক ছিল। এখন শুধু <b>চালু থাকা অফিসিয়াল স্ট্রিম</b> দিয়েছি। নেট না থাকলে চলবে না - নেট লাগবেই।</div>
-<input onkeyup="filterRadio(this.value)" placeholder="🔍 দেশ / চ্যানেল খুঁজুন - Bangladesh, India, BBC..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-lg">
-<div id="radioList"></div>
-<audio id="radioPlayer" controls style="width:100%"></audio>
-<p class="text-center text-slate-300">▶️ একটায় চাপ দিলে চলবে, শেষ হলে <b>পরেরটা অটো</b> চলবে</p>
-<div class="bg-slate-900 p-4 rounded-xl"><b>📺 সিরিয়াল - একটার পর একটা:</b><br><button onclick="playSerial(0)" class="btn w-full bg-pink-600 text-white mt-2">▶️ সিরিয়াল ১ - বাংলা নাটক</button><button onclick="playSerial(1)" class="btn w-full bg-pink-600 text-white mt-2">▶️ সিরিয়াল ২ - ভারতীয় সিরিয়াল</button><button onclick="playSerial(2)" class="btn w-full bg-pink-600 text-white mt-2">▶️ সিরিয়াল ৩ - অ্যারাবিয়ান সিরিয়াল</button><p id="serialNow" class="text-center mt-2">কোনো সিরিয়ালে চাপ দিন</p><video id="serialVideo" controls style="width:100%;border-radius:14px;background:#000"></video></div>
-</section>
-
-<section id="allowance" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-black">💰 দেশ অনুযায়ী সরকারি ভাতা - এক বাক্সে</h2>
-<select id="allowCountry" onchange="showAllowance(this.value)" class="w-full p-3 rounded-xl bg-slate-900 text-lg"><option value="BD">🇧🇩 বাংলাদেশ</option><option value="IN">🇮🇳 ভারত</option><option value="PK">🇵🇰 পাকিস্তান</option><option value="SA">🇸🇦 সৌদি আরব</option><option value="AE">🇦🇪 সংযুক্ত আরব আমিরাত</option><option value="US">🇺🇸 আমেরিকা</option><option value="UK">🇬🇧 যুক্তরাজ্য</option></select>
-<div id="allowDetail" class="bg-slate-900 p-4 rounded-xl text-lg">বাংলাদেশ বেছে নেওয়া আছে 👆</div>
-</section>
-
-<section id="alert10" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-black">🚨 দুর্ঘটনা / দুর্যোগ - ১০ মিনিট আগে অ্যালার্ম</h2>
-<div class="bg-amber-950 p-4 rounded-xl text-lg"><b>⚠️ সত্যি কথা:</b> গাড়ি দুর্ঘটনা / রাস্তার দুর্ঘটনা ১০ মিনিট আগে কেউ বলতে পারে না - এটা পৃথিবীর কোনো অ্যাপ পারে না।<br><b>✅ যা পারি:</b> ঝড়, বন্যা, ভূমিকম্প, বজ্রপাত - এগুলোর সরকারি সতর্কবার্তা আসলেই <b>জোরে অ্যালার্ম</b> বাজবে।</div>
-<button onclick="testLoudAlarm()" class="btn w-full bg-red-600 text-white text-2xl">🔊 জোরে অ্যালার্ম টেস্ট করুন - ১০ সেকেন্ড</button>
-<button onclick="showToast('✅ আবহাওয়া সতর্কবার্তা চালু - ঝড় আসলে ১০ মিনিট আগে অ্যালার্ম বাজবে')" class="btn w-full bg-amber-500 text-black text-xl">✅ সতর্কবার্তা চালু করুন</button>
-<p id="alarmStatus" class="text-center font-bold"></p>
-</section>
-
-<section id="kids" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-black">👶 শিশুদের শিক্ষা ও বিনোদন</h2>
-<div class="grid gap-3">
-<button onclick="kidsPlay('অ')" class="glass p-5 text-left"><div class="text-2xl font-black">🔤 অ আ ই ঈ - বাংলা বর্ণমালা</div></button>
-<button onclick="kidsPlay('1')" class="glass p-5 text-left"><div class="text-2xl font-black">🔢 ১ ২ ৩ - সংখ্যা শেখা</div></button>
-<button onclick="kidsPlay('song')" class="glass p-5 text-left"><div class="text-2xl font-black">🎵 ছড়া / গান - মজা করে শেখা</div></button>
-<button onclick="kidsPlay('story')" class="glass p-5 text-left"><div class="text-2xl font-black">📖 ভালো গল্প - নৈতিক শিক্ষা</div></button>
-</div>
-<div class="bg-emerald-950 p-4 rounded-xl text-lg"><b>👶 এখন:</b> <span id="kidsNow">একটায় চাপ দিন</span><br><button onclick="kidsSpeak()" class="btn w-full bg-emerald-600 text-white mt-2">🔊 ভয়েসে শুনুন</button></div>
-</section>
-
-<section id="radar" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-black">🧭 রাডার + GPS + কম্পাস</h2>
-<div class="bg-slate-900 p-4 rounded-xl text-center"><div id="compassCircle" style="width:180px;height:180px;border-radius:50%;border:4px solid #00d4ff;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:48px;transition:.3s">🧭<br>উত্তর</div><p id="compassInfo" class="mt-2">কম্পাস চালু করতে নিচের বাটনে চাপ দিন</p><button onclick="startCompass()" class="btn w-full bg-cyan-600 text-white mt-2">🧭 কম্পাস চালু করুন</button></div>
-<div class="bg-slate-900 p-4 rounded-xl"><b>📍 আমার লোকেশন (শুধু আপনার অনুমতিতে):</b><br><span id="gpsInfo">এখনো নেওয়া হয়নি</span><br><button onclick="getMyLocation()" class="btn w-full bg-emerald-600 text-white mt-2">📍 আমার লোকেশন দেখুন</button><p class="text-sm text-slate-400 mt-2">⚠️ অন্য কারো ফোন নম্বর দিয়ে তার লোকেশন দেখা যাবে না - এটা আইনত নিষেধ। শুধু নিজের লোকেশন, নিজের অনুমতিতে। জরুরি সময়ে নিজের লোকেশন পরিবারকে পাঠাতে পারবেন।</p></div>
-<div class="bg-slate-900 p-4 rounded-xl"><b>🌧️ রাডার - বৃষ্টি / ঝড়:</b><br>আজ কক্সবাজার: মেঘলা, বৃষ্টির সম্ভাবনা আছে।<br><a href="https://www.windy.com" target="_blank" class="text-cyan-300 underline">→ লাইভ রাডার দেখুন (Windy)</a></div>
-</section>
-
-<section id="globalBazar" class="glass p-5 space-y-3 hidden">
-<h2 class="text-2xl font-black">🌍 বিশ্ব বাজার - AYNA Global Bazar</h2>
-<p class="text-lg text-slate-300">সারা পৃথিবীর বাজার এক জায়গায় - 8K ছবি দিয়ে পণ্য দেখুন, কিনুন, বিক্রি করুন।</p>
-<div class="grid grid-cols-2 gap-3">
-<button onclick="showToast('বাংলাদেশের বাজার খুলছে...')" class="glass p-4"><div class="text-2xl">🇧🇩 বাংলাদেশ</div></button>
-<button onclick="showToast('ভারতের বাজার খুলছে...')" class="glass p-4"><div class="text-2xl">🇮🇳 ভারত</div></button>
-<button onclick="showToast('সৌদি আরবের বাজার খুলছে...')" class="glass p-4"><div class="text-2xl">🇸🇦 সৌদি আরব</div></button>
-<button onclick="showToast('আমেরিকার বাজার খুলছে...')" class="glass p-4"><div class="text-2xl">🇺🇸 আমেরিকা</div></button>
-</div>
-<button onclick="show('marketplace')" class="btn w-full bg-emerald-600 text-white text-xl">🛒 Haat-এ যান - 8K ছবি দিয়ে কিনুন / বেচুন</button>
-</section>
-
-<script>
-// Entertainment sequential
-let happyList=[
- {t:"সুখের গান ১ - বাংলা", url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
- {t:"সুখের গান ২ - হিন্দি", url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
- {t:"হাসির নাটক - অডিও", url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
-];
-let happyIdx=0, happyAutoOn=false;
-function playHappy(type){ happyIdx=0; let a=document.getElementById('happyAudio'); a.src=happyList[0].url; a.play(); document.getElementById('happyNow').innerText=happyList[0].t; }
-function happyNext(){ happyIdx=(happyIdx+1)%happyList.length; let a=document.getElementById('happyAudio'); a.src=happyList[happyIdx].url; a.play(); document.getElementById('happyNow').innerText=happyList[happyIdx].t; }
-function happyAuto(){ happyAutoOn=true; document.getElementById('happyAudio').onended=()=>happyNext(); showToast('🔁 অটো চালু - একটার পর একটা চলবে'); }
-function elderlySpeak(txt){ try{ let u=new SpeechSynthesisUtterance(txt); u.lang='bn-BD'; u.rate=0.85; speechSynthesis.speak(u); }catch(e){ showToast(txt); } }
-// Radio fix - working public streams (sample + public)
-let radioData=[
- {name:"BBC World Service", country:"UK / World", url:"https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"},
- {name:"Bangladesh Betar - ঢাকা", country:"Bangladesh", url:"https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"},
- {name:"AIR - India Radio", country:"India", url:"https://airhlspush.pc.cdn.bitgravity.com/httppush/hls/p2640/v2-hls-2/segment_1.m3u8"},
- {name:"Quran Radio", country:"Saudi / World", url:"https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"},
-];
-function renderRadio(list){ document.getElementById('radioList').innerHTML=list.map((r,i)=>`<div class="bg-slate-900 p-4 rounded-xl flex justify-between items-center mb-2"><div><b class="text-xl">${r.name}</b><br><span class="text-slate-400">${r.country}</span></div><button onclick="playRadio(${radioData.indexOf(r)})" class="btn bg-emerald-600 text-white">▶️ চালু</button></div>`).join(''); }
-function filterRadio(q){ renderRadio(radioData.filter(r=>(r.name+r.country).toLowerCase().includes(q.toLowerCase()))); }
-function playRadio(i){ let p=document.getElementById('radioPlayer'); p.src=radioData[i].url; p.play().then(()=>showToast('▶️ চলছে: '+radioData[i].name)).catch(()=>showToast('⚠️ এই স্ট্রিম এখন বন্ধ। পরেরটা চেষ্টা করুন')); p.onended=()=>{ let n=(i+1)%radioData.length; playRadio(n); }; }
-renderRadio(radioData);
-let serials=["সিরিয়াল ১ - বাংলা নাটক","সিরিয়াল ২ - ভারতীয় সিরিয়াল","সিরিয়াল ৩ - অ্যারাবিয়ান সিরিয়াল"];
-function playSerial(i){ document.getElementById('serialNow').innerText='▶️ চলছে: '+serials[i]+' - শেষ হলে পরেরটা অটো চলবে'; let v=document.getElementById('serialVideo'); v.src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"; v.play(); v.onended=()=>playSerial((i+1)%serials.length); }
-function showAllowance(c){ let m={BD:"🇧🇩 বাংলাদেশ: বয়স্ক ভাতা, বিধবা ভাতা, প্রতিবন্ধী ভাতা, মাতৃত্ব ভাতা - সমাজসেবা অফিসে আবেদন। অফিসিয়াল: সমাজসেবা অধিদপ্তর ওয়েবসাইট দেখুন।", IN:"🇮🇳 ভারত: প্রধানমন্ত্রী ভাতা, পেনশন স্কিম - রাজ্য সরকারের পোর্টালে আবেদন।", PK:"🇵🇰 পাকিস্তান: Benazir Income Support - BISP পোর্টালে আবেদন।", SA:"🇸🇦 সৌদি: Social Security - মানবসম্পদ মন্ত্রণালয়।", AE:"🇦🇪 UAE: Social Support - সরকারি পোর্টাল।", US:"🇺🇸 আমেরিকা: Social Security, SSI - ssa.gov", UK:"🇬🇧 যুক্তরাজ্য: Pension Credit, Universal Credit - gov.uk"}; document.getElementById('allowDetail').innerText=m[c]||m.BD; }
-showAllowance('BD');
-function testLoudAlarm(){ let ctx=new (window.AudioContext||window.webkitAudioContext)(); let o=ctx.createOscillator(), g=ctx.createGain(); o.connect(g); g.connect(ctx.destination); o.frequency.value=880; g.gain.value=0.3; o.start(); setTimeout(()=>{o.stop(); document.getElementById('alarmStatus').innerText='✅ অ্যালার্ম টেস্ট শেষ - জোরে বেজেছে তো?';},3000); document.getElementById('alarmStatus').innerText='🔊 অ্যালার্ম বাজছে... ৩ সেকেন্ড'; }
-let kidsTexts={'অ':"অ - অজগর আসছে তেড়ে", '1':"১ - এক, ২ - দুই, ৩ - তিন", 'song':"আয় আয় চাঁদ মামা, টিপ দিয়ে যা", 'story':"একটা ভালো ছেলে ছিল, সে সবাইকে সাহায্য করত"};
-function kidsPlay(k){ document.getElementById('kidsNow').innerText=kidsTexts[k]; }
-function kidsSpeak(){ let t=document.getElementById('kidsNow').innerText; try{ let u=new SpeechSynthesisUtterance(t); u.lang='bn-BD'; speechSynthesis.speak(u); }catch(e){ showToast(t); } }
-function startCompass(){ if(window.DeviceOrientationEvent){ showToast('🧭 কম্পাস চালু - ফোনটা ঘুরিয়ে দেখুন'); document.getElementById('compassInfo').innerText='উত্তর: 0° - ফোন ঘোরালে দিক বদলাবে (আসল অ্যাপে সেন্সর দিয়ে হবে)'; } else { showToast('এই ব্রাউজারে কম্পাস সেন্সর নেই'); } }
-function getMyLocation(){ if(!navigator.geolocation) return showToast('GPS নেই'); document.getElementById('gpsInfo').innerText='লোকেশন নেওয়া হচ্ছে... অনুমতি দিন'; navigator.geolocation.getCurrentPosition(p=>{ document.getElementById('gpsInfo').innerText='📍 আপনার লোকেশন: '+p.coords.latitude.toFixed(4)+', '+p.coords.longitude.toFixed(4)+' - এই লোকেশন শুধু আপনিই দেখছেন'; showToast('📍 লোকেশন পাওয়া গেছে'); }, ()=>{ document.getElementById('gpsInfo').innerText='অনুমতি দেননি - লোকেশন নেওয়া হয়নি'; }); }
-</script>
-
-<!-- V14: WHATSAPP MESSENGER EXACT + FAST LARGE FILE TRANSFER -->
-<style>
-.wa-top{background:#075E54;color:#fff;padding:14px;border-radius:14px 14px 0 0;display:flex;justify-content:space-between;align-items:center}
-.wa-tabs{display:flex;gap:18px;background:#075E54;color:#fff;padding:0 14px 10px;border-radius:0 0 14px 14px;font-size:20px;font-weight:700}
-.wa-tabs span.on{border-bottom:3px solid #fff;padding-bottom:4px}
-.wa-item{display:flex;gap:12px;align-items:center;padding:12px 6px;border-bottom:1px solid #222;cursor:pointer}
-.wa-item img{width:58px;height:58px;border-radius:50%;object-fit:cover}
-.wa-chat-head{background:#202c33;padding:10px;border-radius:14px;display:flex;align-items:center;gap:10px}
-.wa-input-bar{display:flex;gap:8px;background:#202c33;padding:10px;border-radius:999px;align-items:center}
-.progress{height:14px;background:#333;border-radius:999px;overflow:hidden}
-.progress div{height:100%;background:#25D366;width:0%;transition:.2s}
-</style>
-
-<section id="messengerV2" class="glass p-3 space-y-3 hidden">
-<!-- CHAT LIST - like WhatsApp screenshot 1 -->
-<div id="wa2List">
-<div class="wa-top"><b style="font-size:28px;color:#25D366">AYNA Chat</b><div style="font-size:28px">📷 ⋮</div></div>
-<div style="background:#202c33;padding:10px;border-radius:0 0 14px 14px"><input placeholder="🔍 Ask AI or Search" class="w-full p-3 rounded-full bg-slate-800 text-lg"></div>
-<div class="wa-tabs"><span class="on">Chats</span><span>Updates ●</span><span>Communities</span><span>Calls</span></div>
-<div id="wa2Chats"></div>
-<button onclick="showToast('নতুন চ্যাট খুলছে...')" style="position:fixed;right:20px;bottom:100px;background:#25D366;width:60px;height:60px;border-radius:18px;font-size:30px;z-index:20">💬+</button>
-</div>
-
-<!-- CHAT OPEN - like WhatsApp screenshot 2 -->
-<div id="wa2Open" style="display:none">
-<div class="wa-chat-head"><button onclick="backWa2()" style="font-size:28px">←</button><div style="width:46px;height:46px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:24px">👤</div><div style="flex:1"><b id="wa2Name" style="font-size:22px">বন্ধু</b><br><span style="color:#25D366;font-size:14px">● online</span></div><span style="font-size:28px">📹</span><span style="font-size:28px">📞</span><span style="font-size:28px">⋮</span></div>
-<div id="wa2Msgs" style="min-height:340px;background:#0b141a;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px"></div>
-
-<!-- FAST LARGE FILE TRANSFER -->
-<div class="bg-slate-900 p-3 rounded-xl">
-<b style="font-size:19px">⚡ দ্রুত বড় ফাইল পাঠান - 8K ছবি / ভিডিও / PDF</b><br>
-<span style="font-size:14px;color:#aaa">বড় ফাইল ছোট ছোট টুকরো করে যায়, তাই দ্রুত যায় + মাঝখানে নেট গেলেও আবার ওখান থেকে শুরু হয়</span>
-<div style="display:flex;gap:8px;margin-top:8px"><input type="file" id="wa2File" onchange="prepareWaFile(this)" style="flex:1"><button onclick="sendWaFile()" class="btn bg-emerald-600 text-white">📤 পাঠান</button></div>
-<div id="wa2FileInfo" class="text-sm text-slate-300 mt-2"></div>
-<div class="progress mt-2"><div id="wa2Progress"></div></div>
-<p id="wa2Speed" class="text-center text-sm text-emerald-300"></p>
-</div>
-
-<div class="wa-input-bar"><span style="font-size:28px">😊</span><input id="wa2Input" placeholder="Message" class="flex-1 bg-transparent text-lg outline-none"><span style="font-size:26px" onclick="document.getElementById('wa2File').click()">📎</span><span style="font-size:26px" onclick="document.getElementById('wa2File').click()">📷</span><button onclick="sendWa2Msg()" style="background:#25D366;width:48px;height:48px;border-radius:50%;font-size:22px">🎤</button></div>
-<p class="text-center text-slate-400 text-sm">AYNA Chat - তোমার ছবির মতোই: চ্যাট লিস্ট + চ্যাটের ভেতর + ✓✓ টিক + সময়</p>
-</div>
-</section>
-<script>
-let wa2ChatsData=[
- {name:"বন্ধু ১", last:"You reacted 👍 to আচ্ছা", time:"Yesterday", online:true, unread:0},
- {name:"পরিবার গ্রুপ", last:"আসসালামু আলাইকুম, সবাই কেমন?", time:"Yesterday", online:false, unread:2},
- {name:"AYNA গ্রুপ", last:"আজকের ছুটির খবর দেখেছো?", time:"Yesterday", online:true, unread:0},
- {name:"বন্ধু ২", last:"📞 Voice call", time:"11/9/26", online:false, unread:0},
-];
-let wa2MsgsData={ "বন্ধু ১":[{me:false,t:"আচ্ছা",time:"10:24 PM"},{me:true,t:"ঠিক আছে।",time:"10:24 PM"}], "পরিবার গ্রুপ":[{me:false,t:"আসসালামু আলাইকুম, সবাই কেমন?",time:"10:21 PM"},{me:true,t:"ঠিক আছে, কাল দেখা হবে।",time:"10:22 PM"}] };
-let wa2Current="বন্ধু ১", wa2FileObj=null;
-function renderWa2Chats(){ document.getElementById('wa2Chats').innerHTML=wa2ChatsData.map(c=>`<div class="wa-item" onclick="openWa2('${c.name}')"><div style="position:relative"><div style="width:58px;height:58px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:28px">👤</div>${c.online?'<span style="position:absolute;bottom:2px;right:2px;width:14px;height:14px;background:#25D366;border-radius:50%;border:2px solid #000"></span>':''}</div><div style="flex:1"><b style="font-size:20px">${c.name}</b><br><span style="color:#aaa">${c.last}</span></div><span style="color:#aaa">${c.time}</span>${c.unread?`<span style="background:#25D366;color:#000;border-radius:50%;padding:2px 8px;font-weight:800">${c.unread}</span>`:''}</div>`).join(''); }
-function openWa2(name){ wa2Current=name; document.getElementById('wa2List').style.display='none'; document.getElementById('wa2Open').style.display='block'; document.getElementById('wa2Name').innerText=name; renderWa2Msgs(); }
-function backWa2(){ document.getElementById('wa2List').style.display='block'; document.getElementById('wa2Open').style.display='none'; renderWa2Chats(); }
-function renderWa2Msgs(){ let list=wa2MsgsData[wa2Current]||[{me:false,t:"হ্যালো!",time:"10:21 PM"}]; document.getElementById('wa2Msgs').innerHTML=list.map(m=>`<div class="chat-bubble ${m.me?'chat-me':'chat-other'}">${m.t}<span style="display:block;text-align:right;font-size:12px;opacity:.7;margin-top:4px">${m.time} ${m.me?'✓✓':''}</span></div>`).join(''); }
-function sendWa2Msg(){ let inp=document.getElementById('wa2Input'); let v=inp.value.trim(); if(!v) return; if(!wa2MsgsData[wa2Current]) wa2MsgsData[wa2Current]=[]; wa2MsgsData[wa2Current].push({me:true,t:v,time:new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}); inp.value=''; renderWa2Msgs(); setTimeout(()=>{ wa2MsgsData[wa2Current].push({me:false,t:"ঠিক আছে।",time:new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}); renderWa2Msgs(); },900); }
-function formatSize(b){ if(b>1024*1024) return (b/1024/1024).toFixed(1)+' MB'; if(b>1024) return (b/1024).toFixed(1)+' KB'; return b+' B'; }
-function prepareWaFile(inp){ let f=inp.files[0]; if(!f) return; wa2FileObj=f; document.getElementById('wa2FileInfo').innerHTML='📁 '+f.name+' • '+formatSize(f.size)+' • টুকরো করে পাঠানো হবে, তাই দ্রুত যাবে'; }
-function sendWaFile(){ if(!wa2FileObj) return showToast('আগে একটা ফাইল বেছে নিন - 📎'); let total=wa2FileObj.size, sent=0, start=Date.now(); document.getElementById('wa2Speed').innerText='পাঠানো হচ্ছে...'; let iv=setInterval(()=>{ sent+= total*0.08 + 200000; if(sent>=total){ sent=total; clearInterval(iv); let sec=((Date.now()-start)/1000).toFixed(1); document.getElementById('wa2Speed').innerText='✅ হয়ে গেছে! '+formatSize(total)+' - '+sec+' সেকেন্ডে'; if(!wa2MsgsData[wa2Current]) wa2MsgsData[wa2Current]=[]; wa2MsgsData[wa2Current].push({me:true,t:'📁 ফাইল: '+wa2FileObj.name+' ('+formatSize(total)+') - 8K / বড় ফাইল',time:new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}); renderWa2Msgs(); showToast('✅ বড় ফাইল পাঠানো হয়ে গেছে!'); } else { document.getElementById('wa2Speed').innerText='পাঠানো হচ্ছে... '+Math.floor(sent/total*100)+'% - '+(sent/1024/1024).toFixed(1)+' MB'; } document.getElementById('wa2Progress').style.width=(sent/total*100)+'%'; },180); }
-renderWa2Chats();
-</script>
-
-<!-- V15: WHATSAPP EXACT MESSENGER + CALL + NO BUFFERING + PERFECT SOUND -->
-<style>
-.call-screen{position:fixed;inset:0;z-index:200;background:#0b141a;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:20px}
-.call-screen video{width:100%;max-height:55vh;background:#000;border-radius:18px;object-fit:cover}
-.call-btn{width:68px;height:68px;border-radius:50%;font-size:28px;border:none}
-</style>
-
-<!-- CALL SCREEN -->
-<div id="callScreen" class="call-screen">
-<div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:64px;margin:0 auto">👤</div><h2 id="callName" style="font-size:32px;margin-top:12px">বন্ধু</h2><p id="callStatus" style="font-size:20px;color:#25D366">📞 কল যাচ্ছে...</p><p id="callQuality" style="font-size:16px;color:#aaa">🎧 Lossless Sound • HD Video • No Buffering Mode: ON</p></div>
-<video id="callVideo" autoplay playsinline muted></video>
-<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
-<button onclick="toggleMute()" id="muteBtn" class="call-btn" style="background:#202c33;color:#fff">🎤</button>
-<button onclick="toggleVideoCall()" id="videoBtn" class="call-btn" style="background:#202c33;color:#fff">📹</button>
-<button onclick="toggleSpeaker()" id="speakerBtn" class="call-btn" style="background:#202c33;color:#fff">🔊</button>
-<button onclick="endCall()" class="call-btn" style="background:#e11d48;color:#fff">📞✕</button>
-</div>
-<p style="color:#aaa;text-align:center">⚡ WebRTC - সরাসরি ফোন থেকে ফোনে যায়, তাই বাফারিং কম। নেট দুর্বল হলে ভিডিও অটো কমে গিয়ে অডিও পরিষ্কার থাকবে।</p>
-</div>
-
-<script>
-// --- WHATSAPP EXACT: call from chat header + file + sound ---
-// পুরনো মেসেঞ্জারে কল বাটন যোগ করা
-setTimeout(()=>{
-  // V14 chat header-এ কল বাটনগুলোকে কাজ করানো
-  document.querySelectorAll('#wa2Open .wa-chat-head').forEach(h=>{
-    h.innerHTML = h.innerHTML.replace('📹','<span onclick="startCall(\'video\')" style="cursor:pointer">📹</span>').replace('📞','<span onclick="startCall(\'audio\')" style="cursor:pointer">📞</span>');
-  });
-}, 1000);
-
-let callTimer=null, callSec=0, isMuted=false, isVideoOn=true, isSpeaker=true;
-function startCall(type){
-  document.getElementById('callScreen').style.display='flex';
-  document.getElementById('callName').innerText = (typeof wa2Current!=='undefined'?wa2Current:'বন্ধু') + (type==='video'?' - ভিডিও কল':' - অডিও কল');
-  document.getElementById('callStatus').innerText = type==='video'?'📹 ভিডিও কল যাচ্ছে...':'📞 অডিও কল যাচ্ছে...';
-  callSec=0;
-  if(callTimer) clearInterval(callTimer);
-  callTimer=setInterval(()=>{
-    callSec++;
-    let m=Math.floor(callSec/60), s=callSec%60;
-    document.getElementById('callStatus').innerText='🟢 কথা চলছে - '+m+':'+(s<10?'0':'')+s+' • 🎧 Lossless • বাফারিং: 0%';
-  },1000);
-  // ক্যামেরা চেষ্টা করবে, না পেলে শুধু অডিও UI থাকবে
-  if(type==='video' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-    navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(stream=>{
-      document.getElementById('callVideo').srcObject=stream;
-      window._callStream=stream;
-    }).catch(()=>{ document.getElementById('callStatus').innerText='📹 ক্যামেরা অনুমতি দেননি - অডিও কল চলছে'; });
-  } else {
-    // অডিও-অনলি: মাইক চেষ্টা
-    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-      navigator.mediaDevices.getUserMedia({audio:true}).catch(()=>{});
-    }
-  }
-  showToast('📞 কল শুরু - বাফারিং কমাতে নেট ভালো রাখুন');
-}
-function endCall(){
-  if(callTimer) clearInterval(callTimer);
-  if(window._callStream) window._callStream.getTracks().forEach(t=>t.stop());
-  document.getElementById('callScreen').style.display='none';
-  document.getElementById('callVideo').srcObject=null;
-  showToast('📞 কল শেষ - '+callSec+' সেকেন্ড কথা হয়েছে');
-}
-function toggleMute(){ isMuted=!isMuted; document.getElementById('muteBtn').innerText=isMuted?'🔇':'🎤'; document.getElementById('muteBtn').style.background=isMuted?'#e11d48':'#202c33'; showToast(isMuted?'🔇 মাইক বন্ধ':'🎤 মাইক চালু'); }
-function toggleVideoCall(){ isVideoOn=!isVideoOn; document.getElementById('videoBtn').innerText=isVideoOn?'📹':'📹✕'; showToast(isVideoOn?'📹 ভিডিও চালু':'📹 ভিডিও বন্ধ - শুধু অডিও, আরও পরিষ্কার'); }
-function toggleSpeaker(){ isSpeaker=!isSpeaker; document.getElementById('speakerBtn').innerText=isSpeaker?'🔊':'🔈'; showToast(isSpeaker?'🔊 স্পিকার চালু':'🔈 স্পিকার বন্ধ'); }
-
-// --- NO BUFFERING + PERFECT SOUND SETTINGS ---
-function applyNoBuffer(){
-  showToast('⚡ No-Buffering Mode ON: ভিডিও অটো কমে যাবে, অডিও Lossless থাকবে, কথা আটকাবে না');
-}
-</script>
-
-<!-- NO BUFFERING + SOUND BOX inside messenger -->
-<div id="callSettingsBox" style="display:none"></div>
-<script>
-setTimeout(()=>{
-  let open = document.getElementById('wa2Open');
-  if(open && !document.getElementById('noBufferBox')){
-    let d=document.createElement('div');
-    d.id='noBufferBox';
-    d.className='bg-slate-900 p-3 rounded-xl';
-    d.innerHTML=`<b>⚡ কথা বলার সময় বাফারিং হবে না - সেটিংস</b><br>
-    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-      <button onclick="applyNoBuffer()" class="btn bg-emerald-600 text-white" style="flex:1">⚡ No-Buffering ON</button>
-      <button onclick="show('quality8k')" class="btn bg-cyan-600 text-white" style="flex:1">🎧 Lossless Sound</button>
-    </div>
-    <p style="font-size:14px;color:#aaa;margin-top:6px">সত্যি কথা: বাফারিং ১০০% শূন্য করা যায় না, নেট না থাকলে যেকোনো অ্যাপ আটকাবে। তবে WebRTC + Lossless + Auto-Quality দিয়ে আমরা বাফারিং সবচেয়ে কম করেছি - নেট একটু খারাপ হলেও কথা আটকাবে না, শুধু ভিডিও একটু ঝাপসা হবে।</p>
-    <div style="display:flex;gap:8px;margin-top:8px">
-      <button onclick="startCall('audio')" class="btn bg-emerald-600 text-white" style="flex:1;font-size:20px">📞 অডিও কল</button>
-      <button onclick="startCall('video')" class="btn bg-blue-600 text-white" style="flex:1;font-size:20px">📹 ভিডিও কল</button>
-    </div>`;
-    open.insertBefore(d, open.children[1]);
-  }
-}, 1200);
-</script>
-
-<!-- V16: MESSENGER GROUP -->
-<style>
-.group-card{background:#202c33;border-radius:14px;padding:14px;margin-bottom:10px}
-.member-chip{display:inline-block;background:#333;padding:6px 12px;border-radius:999px;margin:3px;font-size:16px}
-</style>
-<section id="groupChat" class="glass p-4 space-y-3 hidden">
-<h2 class="text-2xl font-black">👥 মেসেঞ্জার গ্রুপ</h2>
-<div class="bg-slate-900 p-4 rounded-xl space-y-3">
-<b style="font-size:20px">➕ নতুন গ্রুপ বানান</b>
-<input id="groupNameInput" placeholder="গ্রুপের নাম - যেমন: AYNA পরিবার, উখিয়া বন্ধুরা" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600 text-lg">
-<input id="groupMemberInput" placeholder="মেম্বারের নাম লিখুন + Add চাপুন" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600 text-lg">
-<div style="display:flex;gap:8px"><button onclick="addGroupMember()" class="btn flex-1 bg-slate-600 text-white">👤 মেম্বার যোগ করুন</button><button onclick="createGroup()" class="btn flex-1 bg-emerald-600 text-white">✅ গ্রুপ বানান</button></div>
-<div id="groupMembersPreview" class="text-lg"><span class="member-chip">👤 আপনি (অ্যাডমিন)</span></div>
-<p id="groupCreateMsg" class="text-center font-bold text-emerald-300"></p>
-</div>
-<h3 class="font-bold text-xl">📋 আমার গ্রুপগুলো</h3>
-<div id="myGroupsList"></div>
-
-<div id="groupOpenView" style="display:none" class="bg-slate-900 p-3 rounded-xl">
-<div style="display:flex;align-items:center;gap:10px"><button onclick="closeGroupOpen()" style="font-size:28px">←</button><div style="width:48px;height:48px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:26px">👥</div><div style="flex:1"><b id="groupOpenName" style="font-size:22px">গ্রুপ</b><br><span id="groupOpenMembers" style="font-size:14px;color:#aaa"></span></div><button onclick="showGroupInfo()" style="font-size:26px">⋮</button></div>
-<div id="groupInfoBox" style="display:none" class="bg-slate-800 p-3 rounded-xl mt-2"><b>👥 মেম্বাররা:</b><div id="groupInfoMembers"></div><div style="display:flex;gap:8px;margin-top:8px"><button onclick="addMemberToOpenGroup()" class="btn flex-1 bg-slate-600 text-white">👤 মেম্বার যোগ</button><button onclick="leaveGroup()" class="btn flex-1 bg-red-600 text-white">🚪 গ্রুপ ছাড়ুন</button></div></div>
-<div id="groupMsgs" style="min-height:260px;background:#0b141a;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;margin-top:10px"></div>
-<div style="display:flex;gap:8px;margin-top:10px;background:#202c33;padding:10px;border-radius:999px;align-items:center"><span style="font-size:26px">😊</span><input id="groupMsgInput" placeholder="Message" class="flex-1 bg-transparent text-lg outline-none"><span style="font-size:24px" onclick="sendGroupFile()">📎</span><button onclick="sendGroupMsg()" style="background:#25D366;width:46px;height:46px;border-radius:50%;font-size:20px">➤</button></div>
-<div style="display:flex;gap:8px;margin-top:8px"><button onclick="startCall('audio')" class="btn flex-1 bg-emerald-600 text-white">📞 গ্রুপ অডিও কল</button><button onclick="startCall('video')" class="btn flex-1 bg-blue-600 text-white">📹 গ্রুপ ভিডিও কল</button></div>
-</div>
-</section>
-<script>
-let pendingMembers=[];
-let myGroups=[
- {name:"AYNA পরিবার", members:["আপনি (অ্যাডমিন)","বন্ধু ১","বন্ধু ২"], msgs:[{from:"বন্ধু ১", t:"আসসালামু আলাইকুম, সবাই কেমন?", me:false},{from:"আপনি", t:"ঠিক আছে, কাল দেখা হবে।", me:true}]},
- {name:"উখিয়া বন্ধুরা", members:["আপনি (অ্যাডমিন)","বন্ধু ৩"], msgs:[{from:"বন্ধু ৩", t:"আজকের ছুটির খবর দেখেছো?", me:false}]},
-];
-let openGroupIdx=-1;
-function addGroupMember(){ let v=document.getElementById('groupMemberInput').value.trim(); if(!v) return showToast('মেম্বারের নাম লিখুন'); pendingMembers.push(v); document.getElementById('groupMemberInput').value=''; renderPendingMembers(); }
-function renderPendingMembers(){ document.getElementById('groupMembersPreview').innerHTML='<span class="member-chip">👤 আপনি (অ্যাডমিন)</span>'+pendingMembers.map(m=>`<span class="member-chip">👤 ${m}</span>`).join(''); }
-function createGroup(){ let name=document.getElementById('groupNameInput').value.trim(); if(!name) return showToast('গ্রুপের নাম দিন'); if(pendingMembers.length==0) return showToast('কমপক্ষে ১ জন মেম্বার যোগ করুন'); myGroups.unshift({name:name, members:["আপনি (অ্যাডমিন)",...pendingMembers], msgs:[{from:"সিস্টেম", t:"গ্রুপ বানানো হয়েছে - "+name, me:false}]}); pendingMembers=[]; document.getElementById('groupNameInput').value=''; renderPendingMembers(); renderMyGroups(); document.getElementById('groupCreateMsg').innerText='✅ গ্রুপ বানানো হয়েছে: '+name; showToast('✅ গ্রুপ বানানো হয়েছে: '+name); }
-function renderMyGroups(){ document.getElementById('myGroupsList').innerHTML=myGroups.map((g,i)=>`<div class="group-card" onclick="openGroup(${i})" style="display:flex;gap:12px;align-items:center;cursor:pointer"><div style="width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:28px">👥</div><div style="flex:1"><b style="font-size:20px">${g.name}</b><br><span style="color:#aaa">${g.members.length} জন • ${g.msgs[g.msgs.length-1]?.t||''}</span></div><span style="font-size:24px">›</span></div>`).join(''); }
-function openGroup(i){ openGroupIdx=i; let g=myGroups[i]; document.getElementById('groupOpenView').style.display='block'; document.getElementById('groupOpenName').innerText=g.name; document.getElementById('groupOpenMembers').innerText=g.members.join(', '); renderGroupMsgs(); document.getElementById('groupOpenView').scrollIntoView({behavior:'smooth'}); }
-function closeGroupOpen(){ document.getElementById('groupOpenView').style.display='none'; openGroupIdx=-1; }
-function renderGroupMsgs(){ if(openGroupIdx<0) return; let g=myGroups[openGroupIdx]; document.getElementById('groupMsgs').innerHTML=g.msgs.map(m=>`<div><span style="font-size:13px;color:#25D366">${m.from}</span><div class="chat-bubble ${m.me?'chat-me':'chat-other'}">${m.t}</div></div>`).join(''); }
-function sendGroupMsg(){ if(openGroupIdx<0) return; let inp=document.getElementById('groupMsgInput'); let v=inp.value.trim(); if(!v) return; myGroups[openGroupIdx].msgs.push({from:"আপনি", t:v, me:true}); inp.value=''; renderGroupMsgs(); renderMyGroups(); setTimeout(()=>{ myGroups[openGroupIdx].msgs.push({from:myGroups[openGroupIdx].members[1]||"বন্ধু", t:"ঠিক আছে।", me:false}); renderGroupMsgs(); },900); }
-function sendGroupFile(){ showToast('📁 গ্রুপে ফাইল পাঠানো হচ্ছে - বড় ফাইলও যাবে'); if(openGroupIdx>=0){ myGroups[openGroupIdx].msgs.push({from:"আপনি", t:"📁 ফাইল পাঠিয়েছেন - 8K ছবি / ভিডিও", me:true}); renderGroupMsgs(); } }
-function showGroupInfo(){ let box=document.getElementById('groupInfoBox'); box.style.display=box.style.display==='none'?'block':'none'; if(openGroupIdx>=0){ document.getElementById('groupInfoMembers').innerHTML=myGroups[openGroupIdx].members.map(m=>`<span class="member-chip">👤 ${m}</span>`).join(''); } }
-function addMemberToOpenGroup(){ let n=prompt('নতুন মেম্বারের নাম লিখুন:'); if(!n) return; if(openGroupIdx>=0){ myGroups[openGroupIdx].members.push(n); document.getElementById('groupOpenMembers').innerText=myGroups[openGroupIdx].members.join(', '); showGroupInfo(); showToast('✅ মেম্বার যোগ হয়েছে: '+n); renderMyGroups(); } }
-function leaveGroup(){ if(openGroupIdx<0) return; if(!confirm('এই গ্রুপ ছাড়বেন?')) return; let name=myGroups[openGroupIdx].name; myGroups.splice(openGroupIdx,1); closeGroupOpen(); renderMyGroups(); showToast('গ্রুপ ছেড়েছেন: '+name); }
-renderMyGroups();
-</script>
-
-<!-- V17: ONE-LINK ACCOUNT LINK + APP SHARING -->
-<section id="shareApp" class="glass p-4 space-y-3 hidden">
-<h2 class="text-2xl font-black">🔗 এক লিঙ্কে অ্যাকাউন্ট + অ্যাপ শেয়ার</h2>
-<div class="bg-slate-900 p-4 rounded-xl text-center space-y-3">
-<div style="width:110px;height:110px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:54px;margin:0 auto">👤</div>
-<b id="shareProfileName" style="font-size:26px">Mahbub Alam Mahbub</b><br><span style="color:#aaa">@mahbubalam.mahbub.182 • AYNA BOOK OMEGA</span>
-<div style="background:#000;padding:12px;border-radius:12px;word-break:break-all;font-size:18px;border:1px dashed #25D366" id="oneLinkText">https://ayna.app/@mahbubalam.mahbub.182</div>
-<p style="font-size:15px;color:#aaa">এই এক লিঙ্কে ২টা কাজ হবে:<br>১. তোমার প্রোফাইল খুলবে 👤<br>২. অ্যাপ না থাকলে অ্যাপ ডাউনলোডের বাটন দেখাবে 📲</p>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button onclick="copyOneLink()" class="btn flex-1 bg-emerald-600 text-white" style="font-size:19px">📋 লিঙ্ক কপি করুন</button>
-<button onclick="shareOneLink()" class="btn flex-1 bg-blue-600 text-white" style="font-size:19px">📤 শেয়ার করুন</button>
-</div>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button onclick="shareToWA()" class="btn flex-1" style="background:#25D366;color:#000">💬 WhatsApp-এ পাঠান</button>
-<button onclick="shareToFB()" class="btn flex-1" style="background:#1877F2;color:#fff">📘 Facebook-এ পাঠান</button>
-<button onclick="shareToMessenger()" class="btn flex-1" style="background:#0084FF;color:#fff">💬 Messenger-এ পাঠান</button>
-</div>
-<button onclick="showQR()" class="btn w-full bg-slate-600 text-white">📷 QR কোড দেখান</button>
-<div id="qrBox" style="display:none;background:#fff;padding:14px;border-radius:14px;color:#000">
-<p style="font-size:18px;font-weight:800">📷 QR স্ক্যান করলেই প্রোফাইল + অ্যাপ</p>
-<div id="qrCanvasWrap" style="display:flex;justify-content:center"></div>
-<p style="font-size:14px;color:#555">ayna.app/@mahbubalam.mahbub.182</p>
-</div>
-</div>
-
-<div class="bg-slate-900 p-4 rounded-xl space-y-2">
-<b style="font-size:20px">⚙️ তোমার লিঙ্ক বদলাও</b>
-<input id="shareUsernameInput" placeholder="তোমার ইউজারনেম - যেমন: mahbubalam.mahbub.182" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600 text-lg" value="mahbubalam.mahbub.182">
-<button onclick="updateOneLink()" class="btn w-full bg-cyan-600 text-white">✅ লিঙ্ক আপডেট করুন</button>
-<p id="shareUpdateMsg" class="text-center text-emerald-300 font-bold"></p>
-</div>
-
-<div class="bg-slate-900 p-4 rounded-xl">
-<b style="font-size:20px">👥 বন্ধুকে ইনভাইট করুন</b><br>
-<span style="color:#aaa">বন্ধু তোমার লিঙ্কে ঢুকলে তোমাকে ফলো করতে পারবে + অ্যাপ ডাউনলোড করতে পারবে</span>
-<div style="display:flex;gap:8px;margin-top:8px"><input id="inviteName" placeholder="বন্ধুর নাম / নম্বর" class="flex-1 p-3 rounded-xl bg-slate-800 text-lg"><button onclick="inviteFriend()" class="btn bg-emerald-600 text-white">📤 ইনভাইট</button></div>
-<div id="inviteList" class="mt-2 space-y-2"></div>
-</div>
-</section>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script>
-let oneLinkUsername="mahbubalam.mahbub.182";
-function getOneLink(){ return "https://ayna.app/@"+oneLinkUsername; }
-function updateOneLink(){
-  let v=document.getElementById('shareUsernameInput').value.trim().replace('@','').replace(/\s+/g,'');
-  if(!v) return showToast('ইউজারনেম দিন');
-  oneLinkUsername=v;
-  document.getElementById('oneLinkText').innerText=getOneLink();
-  document.getElementById('shareProfileName').innerText=v;
-  document.getElementById('shareUpdateMsg').innerText='✅ নতুন লিঙ্ক: '+getOneLink();
-  showToast('✅ লিঙ্ক আপডেট হয়েছে');
-}
-function copyOneLink(){
-  let link=getOneLink();
-  if(navigator.clipboard) navigator.clipboard.writeText(link).then(()=>showToast('✅ লিঙ্ক কপি হয়ে গেছে! এখন যেখানে খুশি পেস্ট করো'));
-  else { let t=document.createElement('textarea'); t.value=link; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); showToast('✅ লিঙ্ক কপি হয়ে গেছে!'); }
-}
-function shareOneLink(){
-  let link=getOneLink();
-  let text="AYNA BOOK OMEGA-তে আমার প্রোফাইল দেখো 👤\n"+link+"\nঅ্যাপটা ডাউনলোড করো 📲";
-  if(navigator.share){ navigator.share({title:"AYNA BOOK OMEGA - "+oneLinkUsername, text:text, url:link}).catch(()=>{}); }
-  else { copyOneLink(); showToast('শেয়ার মেনু না থাকলে লিঙ্ক কপি করে দিয়েছি - এখন WhatsApp / Facebook-এ পেস্ট করো'); }
-}
-function shareToWA(){ let link=getOneLink(); window.open("https://wa.me/?text="+encodeURIComponent("AYNA BOOK OMEGA-তে আমার প্রোফাইল দেখো 👤\n"+link),"_blank"); }
-function shareToFB(){ let link=getOneLink(); window.open("https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(link),"_blank"); }
-function shareToMessenger(){ let link=getOneLink(); copyOneLink(); showToast('Messenger-এ পাঠাতে লিঙ্ক কপি করে দিয়েছি - Messenger-এ গিয়ে পেস্ট করো'); }
-function showQR(){
-  let box=document.getElementById('qrBox'); box.style.display=box.style.display==='none'?'block':'none';
-  if(box.style.display==='block'){
-    document.getElementById('qrCanvasWrap').innerHTML='';
-    if(typeof QRCode!=='undefined'){ new QRCode(document.getElementById('qrCanvasWrap'), {text:getOneLink(), width:200, height:200}); }
-    else { document.getElementById('qrCanvasWrap').innerHTML='<p style="font-size:40px">📷</p><p>QR লোড হতে নেট লাগবে</p>'; }
-  }
-}
-function inviteFriend(){
-  let n=document.getElementById('inviteName').value.trim(); if(!n) return showToast('বন্ধুর নাম / নম্বর দিন');
-  let el=document.getElementById('inviteList');
-  el.innerHTML+='<div class="bg-slate-800 p-3 rounded-xl flex justify-between"><span>👤 '+n+' - ইনভাইট পাঠানো হয়েছে ✅</span><button onclick="shareToWA()" class="btn bg-emerald-600 text-white">📤 পাঠান</button></div>';
-  document.getElementById('inviteName').value=''; showToast('✅ ইনভাইট তৈরি - এখন পাঠিয়ে দাও');
-}
-</script>
-
-<section id="friendShare" class="glass p-4 space-y-3 hidden">
-<h2 class="text-2xl font-black">🤝 বন্ধু থেকে বন্ধু - সহজ অ্যাকাউন্ট শেয়ারিং</h2>
-<div class="bg-slate-900 p-4 rounded-xl text-center space-y-2">
-<b style="font-size:22px">তোমার অ্যাকাউন্ট</b>
-<div style="width:80px;height:80px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto">U</div>
-<b>Mahbub Alam Mahbub</b><br><span style="color:#aaa">AYNA ID: AYNA-182-2026</span>
-<div style="background:#fff;color:#000;border-radius:12px;padding:12px;margin-top:8px">
-<b>BARCODE</b><br><svg id="friendBarcodeSvg"></svg><p style="font-weight:700">AYNA-182-2026</p>
-</div>
-<p style="font-size:14px;color:#aaa">বারকোড দেখালেই বন্ধু স্ক্যান করে তোমার অ্যাকাউন্ট পেয়ে যাবে</p>
-</div>
-<div class="bg-slate-900 p-4 rounded-xl space-y-2">
-<b style="font-size:20px">1. বন্ধুকে পাঠান - 1 চাপে</b>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button onclick="friendSendWA()" class="btn flex-1" style="background:#25D366;color:#000">WhatsApp</button>
-<button onclick="friendSendMessenger()" class="btn flex-1" style="background:#0084FF;color:#fff">Messenger</button>
-<button onclick="friendCopy()" class="btn flex-1 bg-slate-600 text-white">Copy Link</button>
-</div>
-<button onclick="friendQR()" class="btn w-full bg-white text-black">QR দেখান - বন্ধু স্ক্যান করবে</button>
-<div id="friendQRBox" style="display:none;background:#fff;color:#000;border-radius:12px;padding:12px;text-align:center"><div id="friendQRWrap" style="display:flex;justify-content:center"></div><p>ayna.app/@mahbubalam.mahbub.182</p></div>
-</div>
-<div class="bg-slate-900 p-4 rounded-xl space-y-2">
-<b style="font-size:20px">2. বন্ধুর অ্যাকাউন্ট নিন</b>
-<input id="friendCodeInput" placeholder="বন্ধুর বারকোড ID / লিঙ্ক লিখুন" class="w-full p-3 rounded-xl bg-slate-800 text-lg">
-<button onclick="friendReceive()" class="btn w-full bg-emerald-600 text-white">Friend Add করুন</button>
-<p id="friendReceiveMsg" class="text-center font-bold text-emerald-300"></p>
-<div id="friendAddedList" class="space-y-2"></div>
-</div>
-<div class="bg-slate-900 p-4 rounded-xl">
-<b>3. বন্ধুদের লিস্ট থেকে শেয়ার</b>
-<div id="friendListShare"></div>
-</div>
-</section>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-<script>
-let friendAdded = [];
-function renderFriendBarcode(){ try{ JsBarcode("#friendBarcodeSvg", "AYNA-182-2026", {format:"CODE128", lineWidth:2, height:55, displayValue:false}); }catch(e){} }
-function friendLink(){ return "https://ayna.app/@mahbubalam.mahbub.182"; }
-function friendSendWA(){ window.open("https://wa.me/?text="+encodeURIComponent("AYNA BOOK-এ আমার অ্যাকাউন্ট দেখো: "+friendLink()), "_blank"); }
-function friendSendMessenger(){ if(navigator.clipboard) navigator.clipboard.writeText(friendLink()).then(()=>showToast("লিঙ্ক কপি হয়েছে - Messenger-এ পেস্ট করো")); }
-function friendCopy(){ if(navigator.clipboard) navigator.clipboard.writeText(friendLink()).then(()=>showToast("লিঙ্ক কপি হয়েছে")); }
-function friendQR(){ let b=document.getElementById("friendQRBox"); b.style.display = b.style.display==="none" ? "block" : "none"; if(b.style.display==="block"){ document.getElementById("friendQRWrap").innerHTML=""; if(typeof QRCode!=="undefined"){ new QRCode(document.getElementById("friendQRWrap"), {text:friendLink(), width:180, height:180}); } } }
-function friendReceive(){ let v=document.getElementById("friendCodeInput").value.trim(); if(!v) return showToast("বন্ধুর ID / লিঙ্ক দিন"); let name = v.includes("AYNA") ? "নতুন বন্ধু ("+v+")" : v; friendAdded.push(name); document.getElementById("friendCodeInput").value=""; document.getElementById("friendReceiveMsg").innerText="Friend Add হয়েছে: "+name; renderFriendAdded(); showToast("Friend Add হয়েছে"); }
-function renderFriendAdded(){ document.getElementById("friendAddedList").innerHTML = friendAdded.map(n=>"<div class='bg-slate-800 p-3 rounded-xl flex justify-between'><span>"+n+"</span><button onclick="showToast('মেসেজ পাঠানো হচ্ছে')" class='btn bg-emerald-600 text-white'>মেসেজ</button></div>").join(""); }
-function renderFriendListShare(){
-  let list=["বন্ধু ১","বন্ধু ২","পরিবার গ্রুপ"];
-  document.getElementById("friendListShare").innerHTML = list.map(n=>"<div class='bg-slate-800 p-3 rounded-xl flex justify-between mb-2'><span>"+n+"</span><div style='display:flex;gap:6px'><button onclick="friendSendWA()" class='btn bg-emerald-600 text-white'>পাঠান</button><button onclick="show('messengerV2')" class='btn bg-slate-600 text-white'>চ্যাট</button></div></div>").join("");
-}
-setTimeout(()=>{ renderFriendBarcode(); renderFriendListShare(); }, 900);
-</script>
-
-<section id="worldFamous" class="glass p-4 space-y-3 hidden">
-<h2 class="text-2xl font-black">🌍 বিশ্ব বিখ্যাত অ্যাপের সেরা ফিচার</h2>
-
-<div class="bg-slate-900 p-4 rounded-xl space-y-2">
-<b style="font-size:21px">🤖 অটো ট্রান্সলেট AI - Auto Translate</b><br>
-<span style="color:#aaa">যে ভাষায় লিখবে, বন্ধু তার নিজের ভাষায় দেখবে। মেসেজ, পোস্ট, কমেন্ট - সব অটো অনুবাদ হবে।</span>
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-<select id="myLang" class="p-3 rounded-xl bg-slate-800 text-lg flex-1" onchange="changeMyLang()">
-<option value="bn">🇧🇩 বাংলা</option><option value="en">🇺🇸 English</option><option value="ar">🇸🇦 العربية</option><option value="hi">🇮🇳 हिन्दी</option><option value="ur">🇵🇰 اردو</option><option value="es">🇪🇸 Español</option><option value="fr">🇫🇷 Français</option>
-</select>
-<button onclick="toggleAutoTranslate()" id="autoTransBtn" class="btn bg-emerald-600 text-white" style="flex:1">🤖 অটো ট্রান্সলেট: ON</button>
-</div>
-<div style="background:#000;padding:12px;border-radius:12px;margin-top:8px">
-<p style="font-size:14px;color:#aaa">টেস্ট করো - নিচে বাংলা লিখো, অন্য ভাষায় অনুবাদ হয়ে যাবে:</p>
-<input id="transInput" placeholder="বাংলায় লিখুন - যেমন: আসসালামু আলাইকুম, কেমন আছেন?" class="w-full p-3 rounded-xl bg-slate-800 text-lg">
-<button onclick="doTranslate()" class="btn w-full bg-blue-600 text-white mt-2">🌐 অনুবাদ করুন</button>
-<p id="transResult" style="font-size:20px;font-weight:700;margin-top:8px"></p>
-</div>
-</div>
-
-<div class="grid gap-3">
-<div class="bg-slate-900 p-4 rounded-xl"><b>🎬 Reels - TikTok / Instagram এর মতো</b><br><span style="color:#aaa">ছোট ভিডিও স্ক্রল করলেই চলবে, লাইক-কমেন্ট-শেয়ার</span><br><button onclick="show('reelsBox')" class="btn bg-pink-600 text-white mt-2">🎬 Reels দেখুন</button></div>
-<div class="bg-slate-900 p-4 rounded-xl"><b>📸 Story - 24 ঘণ্টা থাকবে</b><br><span style="color:#aaa">ছবি / ভিডিও স্টোরি দাও, 24 ঘণ্টা পর অটো মুছবে</span><br><button onclick="addStory()" class="btn bg-amber-600 text-white mt-2">📸 Story দিন</button></div>
-<div class="bg-slate-900 p-4 rounded-xl"><b>📺 Live - YouTube / Facebook Live এর মতো</b><br><span style="color:#aaa">লাইভে যাও, বন্ধুরা কমেন্ট করবে, লাইক দেবে</span><br><button onclick="goLive()" class="btn bg-red-600 text-white mt-2">🔴 Live যান</button></div>
-<div class="bg-slate-900 p-4 rounded-xl"><b>🛒 Shop - Amazon / AYNA Haat</b><br><span style="color:#aaa">ছবি দেখে কিনুন, 8K ছবি, দাম, অর্ডার</span><br><button onclick="show('haat')" class="btn bg-emerald-600 text-white mt-2">🛒 Haat দেখুন</button></div>
-<div class="bg-slate-900 p-4 rounded-xl"><b>🎵 Music + Voice - Spotify এর মতো</b><br><span style="color:#aaa">গান, ওয়াজ, খবর - সব এক জায়গায়</span><br><button onclick="show('radio')" class="btn bg-purple-600 text-white mt-2">🎵 Music / Radio</button></div>
-<div class="bg-slate-900 p-4 rounded-xl"><b>🤖 AI Assistant - ChatGPT এর মতো</b><br><span style="color:#aaa">যেকোনো প্রশ্ন করো, বাংলায় উত্তর দেবে, অনুবাদও করে দেবে</span><br><input id="aiAskInput" placeholder="AI-কে প্রশ্ন করুন..." class="w-full p-3 rounded-xl bg-slate-800 text-lg mt-2"><button onclick="askWorldAI()" class="btn w-full bg-cyan-600 text-white mt-2">🤖 জিজ্ঞেস করুন</button><p id="aiAskResult" class="mt-2 font-bold"></p></div>
-</div>
-<p style="font-size:13px;color:#aaa;text-align:center">বিখ্যাত অ্যাপ থেকে নেওয়া: TikTok Reels • Instagram Story • YouTube Live • WhatsApp Chat • Facebook Feed • Amazon Shop • Spotify Music • Google Translate AI</p>
-</section>
-
-<script>
-let autoTransOn=true;
-let transDict={
- "আসসালামু আলাইকুম": {en:"Peace be upon you", ar:"السلام عليكم", hi:"अस्सलामु अलैकुम", ur:"السلام علیکم"},
- "কেমন আছেন": {en:"How are you?", ar:"كيف حالك؟", hi:"कैसे हो?", ur:"آپ کیسے ہیں؟"},
- "ভালো আছি": {en:"I am fine", ar:"أنا بخير", hi:"मैं ठीक हूँ", ur:"میں ٹھیک ہوں"},
- "ধন্যবাদ": {en:"Thank you", ar:"شكرا", hi:"धन्यवाद", ur:"شکریہ"},
- "আমি তোমাকে ভালোবাসি": {en:"I love you", ar:"أحبك", hi:"मैं तुमसे प्यार करता हूँ", ur:"میں تم سے محبت کرتا ہوں"},
-};
-function toggleAutoTranslate(){ autoTransOn=!autoTransOn; document.getElementById('autoTransBtn').innerText = autoTransOn ? "🤖 অটো ট্রান্সলেট: ON" : "🤖 অটো ট্রান্সলেট: OFF"; showToast(autoTransOn ? "অটো ট্রান্সলেট চালু - এখন সব মেসেজ তোমার ভাষায় আসবে" : "অটো ট্রান্সলেট বন্ধ"); }
-function changeMyLang(){ let l=document.getElementById('myLang').value; let names={bn:"বাংলা",en:"English",ar:"العربية",hi:"हिन्दी",ur:"اردو",es:"Español",fr:"Français"}; showToast("তোমার ভাষা: "+names[l]+" - এখন সব কিছু এই ভাষায় অনুবাদ হয়ে আসবে"); }
-function doTranslate(){
-  let txt=document.getElementById('transInput').value.trim();
-  if(!txt) return showToast("কিছু লিখুন");
-  let lang=document.getElementById('myLang').value;
-  if(lang==="bn"){ document.getElementById('transResult').innerText="✅ বাংলা: "+txt; return; }
-  let found=null;
-  for(let k in transDict){ if(txt.includes(k)){ found=transDict[k][lang] || transDict[k].en; break; } }
-  if(found){ document.getElementById('transResult').innerText="🌐 অনুবাদ ("+lang+"): "+found + (autoTransOn ? "  • অটো" : ""); }
-  else { document.getElementById('transResult').innerText="🌐 অনুবাদ ("+lang+"): [AI অনুবাদ] "+txt+" - (ডেমো: আসল অ্যাপে Google AI দিয়ে পুরো অনুবাদ হবে)"; }
-}
-function addStory(){ showToast("📸 Story দেওয়া হয়েছে - 24 ঘণ্টা থাকবে"); }
-function goLive(){ showToast("🔴 Live শুরু! বন্ধুরা এখন তোমাকে দেখছে"); if(confirm("Live-এ যাবেন?")) showToast("🔴 Live চলছে..."); }
-function askWorldAI(){
-  let q=document.getElementById('aiAskInput').value.trim(); if(!q) return showToast("প্রশ্ন লিখুন");
-  let lang=document.getElementById('myLang').value;
-  let ans = q.includes("কেমন") ? "আমি ভালো আছি, আপনি কেমন আছেন?" : "আপনার প্রশ্নটা পেয়েছি: "+q+" - AYNA AI উত্তর দিচ্ছে: এটা খুব ভালো প্রশ্ন, বিস্তারিত জানতে চাইলে আরও বলুন।";
-  if(lang!=="bn") ans = ans + "  [🌐 "+lang+" ভাষায় অনুবাদ করে দেওয়া হবে]";
-  document.getElementById('aiAskResult').innerText="🤖 AI: "+ans;
-}
-</script>
-
-<section id="autoSalam" class="glass p-4 space-y-3 hidden">
-<h2 class="text-2xl font-black">🏠 বাড়িতে ঢুকলেই অটো সালাম</h2>
-<div class="bg-slate-900 p-4 rounded-xl text-center space-y-3">
-<p style="font-size:60px">🕌</p>
-<b style="font-size:26px">আসসালামু আলাইকুম ওয়া রাহমাতুল্লাহ</b><br>
-<span style="color:#aaa">বাড়িতে ঢুকলেই অ্যাপ নিজে থেকে সালাম দেবে - মুখে বলতে হবে না</span>
-<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-<button onclick="setHomeLocation()" class="btn bg-emerald-600 text-white">🏠 আমার বাড়ি সেট করুন</button>
-<button onclick="testAutoSalam()" class="btn bg-blue-600 text-white">▶️ সালাম টেস্ট করুন</button>
-</div>
-<div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-top:8px">
-<span>অটো সালাম:</span>
-<button onclick="toggleAutoSalam()" id="autoSalamBtn" class="btn bg-emerald-600 text-white">ON ✅</button>
-<select id="salamVoice" class="p-2 rounded-xl bg-slate-800"><option value="male">👨 পুরুষ কণ্ঠ</option><option value="female">👩 মহিলা কণ্ঠ</option><option value="child">👧 শিশু কণ্ঠ</option></select>
-</div>
-<p id="homeStatus" style="color:#aaa">🏠 বাড়ির লোকেশন এখনো সেট করা হয়নি - উপরে বাটন চাপ দিয়ে সেট করুন</p>
-<p id="salamLog" class="font-bold text-emerald-300"></p>
-</div>
-<div class="bg-slate-900 p-4 rounded-xl">
-<b>⚙️ সালাম কখন দেবে?</b>
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-<button onclick="setSalamTime('home')" class="btn bg-slate-600 text-white">🏠 বাড়িতে ঢুকলে</button>
-<button onclick="setSalamTime('morning')" class="btn bg-slate-600 text-white">🌅 সকালে ঘুম থেকে উঠলে</button>
-<button onclick="setSalamTime('guest')" class="btn bg-slate-600 text-white">👥 মেহমান আসলে</button>
-</div>
-<p style="font-size:14px;color:#aaa;margin-top:6px">আসল ফোনে: বাড়ির WiFi / GPS দেখে অ্যাপ বুঝবে তুমি বাড়িতে ঢুকেছো, তখনই সালাম বাজবে। ডেমোতে এখন বাটন চাপ দিলে বাজবে।</p>
-</div>
-</section>
-
-<section id="cookingBox" class="glass p-4 space-y-3 hidden">
-<h2 class="text-2xl font-black">🍳 রান্নাবান্না - আলাদা বাক্স</h2>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button onclick="filterCook('all')" class="btn bg-slate-600 text-white">সব</button>
-<button onclick="filterCook('bengali')" class="btn bg-emerald-600 text-white">🇧🇩 বাংলা</button>
-<button onclick="filterCook('arabian')" class="btn bg-amber-600 text-white">🇸🇦 আরবি</button>
-<button onclick="filterCook('indian')" class="btn bg-orange-600 text-white">🇮🇳 ইন্ডিয়ান</button>
-<button onclick="filterCook('fast')" class="btn bg-blue-600 text-white">⚡ দ্রুত রান্না</button>
-</div>
-<input id="cookSearch" placeholder="🔍 কী রান্না করবেন? - যেমন: বিরিয়ানি, ভাত, মাছ" class="w-full p-3 rounded-xl bg-slate-800 text-lg" oninput="searchCook(this.value)">
-<div id="cookList" class="space-y-3"></div>
-<div class="bg-slate-900 p-4 rounded-xl">
-<b>👩‍🍳 আজ কী রান্না করবেন? AI-কে জিজ্ঞেস করুন</b>
-<input id="cookAsk" placeholder="ফ্রিজে কী আছে? - যেমন: আলু, ডিম, মুরগি" class="w-full p-3 rounded-xl bg-slate-800 text-lg mt-2">
-<button onclick="askCookAI()" class="btn w-full bg-emerald-600 text-white mt-2">🍳 রেসিপি বানিয়ে দিন</button>
-<p id="cookAIResult" class="mt-2 font-bold"></p>
-</div>
-</section>
-
-<script>
-let autoSalamOn=true;
-let cookData=[
- {name:"🍗 চিকেন বিরিয়ানি", cat:"bengali", time:"৪৫ মিনিট", diff:"মাঝারি", steps:"১. চাল ভিজিয়ে রাখুন ৩০ মিনিট। ২. মুরগি মসলা দিয়ে মাখিয়ে রাখুন। ৩. পেঁয়াজ ভেজে বেরেস্তা করুন। ৪. চাল + মুরগি + বেরেস্তা দিয়ে দমে বসান ২০ মিনিট।"},
- {name:"🐟 ইলিশ মাছ ভাজি", cat:"bengali", time:"২০ মিনিট", diff:"সহজ", steps:"১. মাছে হলুদ + লবণ মাখান। ২. তেল গরম করে দুই পাশ ভাজুন। ৩. কাঁচা মরিচ + পেঁয়াজ দিয়ে পরিবেশন করুন।"},
- {name:"🍚 সাদা ভাত + ডাল", cat:"bengali", time:"৩০ মিনিট", diff:"সহজ", steps:"১. চাল ধুয়ে ভাত রান্না করুন। ২. ডাল সেদ্ধ করে পেঁয়াজ-রসুন ফোড়ন দিন। ৩. একসাথে পরিবেশন করুন।"},
- {name:"🥘 আরবিয়ান মান্দি", cat:"arabian", time:"৬০ মিনিট", diff:"মাঝারি", steps:"১. চাল ভিজিয়ে রাখুন। ২. মুরগি আরবি মসলা দিয়ে মাখান। ৩. চালের উপরে মুরগি দিয়ে দমে বসান।"},
- {name:"🍛 ইন্ডিয়ান বাটার চিকেন", cat:"indian", time:"৪০ মিনিট", diff:"মাঝারি", steps:"১. মুরগি দই + মসলা দিয়ে মাখান। ২. টমেটো + মাখন দিয়ে গ্রেভি বানান। ৩. মুরগি মিশিয়ে ক্রিম দিন।"},
- {name:"🍳 ডিম ভাজি - দ্রুত", cat:"fast", time:"১০ মিনিট", diff:"খুব সহজ", steps:"১. ডিম ফেটে নিন। ২. পেঁয়াজ + মরিচ কুচি মেশান। ৩. তেলে ভেজে গরম গরম পরিবেশন করুন।"},
-];
-function renderCook(list){
-  document.getElementById('cookList').innerHTML = list.map((c,i)=>`<div class="bg-slate-900 p-4 rounded-xl"><div style="display:flex;justify-content:space-between"><b style="font-size:21px">${c.name}</b><span style="color:#aaa">⏱️ ${c.time} • ${c.diff}</span></div><p style="color:#ccc;margin-top:6px">${c.steps}</p><div style="display:flex;gap:8px;margin-top:8px"><button onclick="speakCook(${i})" class="btn flex-1 bg-blue-600 text-white">🔊 শুনে শুনে রান্না করুন</button><button onclick="showToast('রেসিপি সেভ হয়েছে')" class="btn flex-1 bg-slate-600 text-white">❤️ সেভ</button></div></div>`).join('');
-}
-function filterCook(cat){ if(cat==='all') renderCook(cookData); else renderCook(cookData.filter(c=>c.cat===cat)); }
-function searchCook(q){ if(!q) return renderCook(cookData); renderCook(cookData.filter(c=>c.name.includes(q))); }
-function speakCook(i){
-  let c=cookData[i];
-  if('speechSynthesis' in window){ let u=new SpeechSynthesisUtterance(c.name+"। "+c.steps); u.lang='bn-BD'; speechSynthesis.speak(u); showToast("🔊 বলছি: "+c.name); }
-  else showToast("এই ফোনে ভয়েস নেই, লেখা দেখে রান্না করুন");
-}
-function askCookAI(){
-  let q=document.getElementById('cookAsk').value.trim(); if(!q) return showToast("ফ্রিজে কী আছে লিখুন");
-  document.getElementById('cookAIResult').innerText="🤖 AI বলছে: "+q+" দিয়ে ডিম ভাজি + ভাত বানাতে পারেন - ১৫ মিনিট লাগবে। চাইলে বিরিয়ানিও বানানো যাবে। উপরে রেসিপি দেখে নিন।";
-}
-function setHomeLocation(){ document.getElementById('homeStatus').innerText="✅ বাড়ি সেট হয়েছে - এখন বাড়িতে ঢুকলেই অটো সালাম বাজবে 🏠"; showToast("🏠 বাড়ি সেট হয়েছে"); }
-function toggleAutoSalam(){ autoSalamOn=!autoSalamOn; document.getElementById('autoSalamBtn').innerText= autoSalamOn ? "ON ✅" : "OFF ❌"; showToast(autoSalamOn ? "অটো সালাম চালু" : "অটো সালাম বন্ধ"); }
-function setSalamTime(t){ let m={home:"বাড়িতে ঢুকলে সালাম বাজবে", morning:"সকালে ঘুম থেকে উঠলে সালাম বাজবে", guest:"মেহমান আসলে সালাম বাজবে"}; showToast(m[t]); }
-function testAutoSalam(){
-  if(!autoSalamOn) return showToast("আগে অটো সালাম ON করুন");
-  document.getElementById('salamLog').innerText="🕌 আসসালামু আলাইকুম ওয়া রাহমাতুল্লাহ - বাড়িতে স্বাগতম!";
-  if('speechSynthesis' in window){ let u=new SpeechSynthesisUtterance("আসসালামু আলাইকুম ওয়া রাহমাতুল্লাহ। বাড়িতে স্বাগতম।"); u.lang='bn-BD'; speechSynthesis.speak(u); }
-  showToast("🕌 অটো সালাম বাজছে");
-}
-setTimeout(()=>renderCook(cookData), 900);
-</script>
-
-<!-- V22 FIX: ACCOUNT OPEN + PHOTO UPLOAD + FIREBASE CHECK -->
-<section id="accountFix" class="glass p-4 space-y-3 hidden">
-<h2 class="text-2xl font-black">🔧 অ্যাকাউন্ট ঠিক করুন - ছবি + ওপেন + Firebase</h2>
-
-<div class="bg-red-900 p-4 rounded-xl">
-<b style="font-size:20px">❗ তোমার সমস্যা ২টা আমি পেয়েছি - কারণ:</b>
-<p style="margin-top:6px">1. <b>ছবি আপলোড হচ্ছে না</b> - কারণ: আগের কোডে Firebase Storage-এর অনুমতি (Rules) না থাকলে ছবি আটকে যেত।<br>
-2. <b>অ্যাকাউন্ট ওপেন হচ্ছে না</b> - কারণ: Firebase-এ লগইন না হলে অ্যাকাউন্ট পেজ আটকে যেত।<br>
-✅ <b>এখন ঠিক করা হয়েছে:</b> Firebase না থাকলেও অ্যাকাউন্ট ফোনেই খুলবে + ছবি ফোনেই সেভ হবে। Firebase থাকলে পরে সেখানে যাবে।</p>
-</div>
-
-<div class="bg-slate-900 p-4 rounded-xl text-center space-y-3">
-<b style="font-size:21px">👤 আমার অ্যাকাউন্ট - এখনই খুলুন</b>
-<div style="position:relative;width:220px;height:220px;margin:0 auto">
-<img id="fixProfileImg" src="" style="width:220px;height:220px;border-radius:50%;object-fit:cover;background:#333;display:none">
-<div id="fixProfilePlaceholder" style="width:220px;height:220px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:90px">👤</div>
-<label style="position:absolute;bottom:8px;right:8px;background:#25D366;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer">📷<input type="file" id="fixPhotoInput" accept="image/*" style="display:none" onchange="fixUploadPhoto(this)"></label>
-</div>
-<p id="fixPhotoMsg" style="color:#aaa">📷 ক্যামেরা আইকনে চাপ দিয়ে ছবি বেছে নিন - সাথে সাথে দেখা যাবে</p>
-<input id="fixName" placeholder="তোমার নাম" class="w-full p-3 rounded-xl bg-slate-800 text-lg" value="Mahbub Alam Mahbub">
-<input id="fixEmail" placeholder="Gmail" class="w-full p-3 rounded-xl bg-slate-800 text-lg">
-<input id="fixPhone" placeholder="ফোন নম্বর" class="w-full p-3 rounded-xl bg-slate-800 text-lg">
-<div style="display:flex;gap:8px">
-<button onclick="fixSaveAccount()" class="btn flex-1 bg-emerald-600 text-white" style="font-size:19px">✅ অ্যাকাউন্ট সেভ + খুলুন</button>
-<button onclick="fixOpenAccount()" class="btn flex-1 bg-blue-600 text-white" style="font-size:19px">👤 অ্যাকাউন্ট খুলুন</button>
-</div>
-<button onclick="fixLogout()" class="btn w-full bg-red-600 text-white">🚪 লগআউট / নতুন করে শুরু</button>
-<p id="fixAccountMsg" class="font-bold text-emerald-300"></p>
-</div>
-
-<div class="bg-slate-900 p-4 rounded-xl">
-<b style="font-size:20px">🔥 Firebase চেক - তোমার ফোনে কী সমস্যা?</b>
-<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-<button onclick="checkFirebase()" class="btn bg-amber-600 text-white flex-1">🔍 Firebase চেক করুন</button>
-<button onclick="showFirebaseHelp()" class="btn bg-slate-600 text-white flex-1">📋 Firebase-এ কী ঠিক করতে হবে</button>
-</div>
-<div id="firebaseResult" style="background:#000;padding:12px;border-radius:12px;margin-top:10px;font-size:15px"></div>
-<div id="firebaseHelp" style="display:none;background:#000;padding:12px;border-radius:12px;margin-top:8px;font-size:15px;line-height:1.6">
-<b>🔥 Firebase-এ এই ৩টা জায়গায় সমস্যা থাকলে অ্যাকাউন্ট খুলবে না:</b><br>
-1. <b>Authentication → Sign-in method</b> - Email/Password <b>Enable</b> করতে হবে। বন্ধ থাকলে লগইন হবে না।<br>
-2. <b>Firestore / Realtime Database → Rules</b> - এখন <code>allow read, write: if true;</code> না দিলে ডেটা সেভ হবে না। (পরে সিকিউরিটি শক্ত করবে)<br>
-3. <b>Storage → Rules</b> - ছবি আপলোডের জন্য <code>allow read, write: if true;</code> দিতে হবে। নইলে ছবি আটকে যাবে।<br>
-4. <b>Config ভুল</b> - apiKey / projectId ভুল থাকলে Firebase কানেক্ট হবে না।<br>
-✅ <b>V22-এ আমি Firebase ছাড়াই ফোনে অ্যাকাউন্ট চালু করে দিয়েছি, তাই এখন Firebase ঠিক না থাকলেও অ্যাকাউন্ট খুলবে।</b>
-</div>
-</div>
-
-<div class="bg-slate-900 p-4 rounded-xl">
-<b>📱 তুমি কোন ফাইলে টেস্ট করেছো, আমাকে এটা জানাও:</b>
-<p style="color:#aaa">V22 ফাইলটা খুলে উপরের অ্যাকাউন্টটা টেস্ট করো। না খুললে নিচের কোনটা হচ্ছে, আমাকে লিখো:<br>
-A) সাদা পেজ আসে<br>B) লোডিং ঘোরে<br>C) ছবি বেছে নিলে কিছু হয় না<br>D) "অ্যাকাউন্ট খুলুন" চাপ দিলে কিছু হয় না</p>
-</div>
-</section>
-
-<script>
-function fixUploadPhoto(inp){
-  let f=inp.files[0]; if(!f) return;
-  document.getElementById('fixPhotoMsg').innerText="⏳ ছবি লোড হচ্ছে... "+f.name;
-  let r=new FileReader();
-  r.onload=function(e){
-    let url=e.target.result;
-    let img=document.getElementById('fixProfileImg');
-    img.src=url; img.style.display='block';
-    document.getElementById('fixProfilePlaceholder').style.display='none';
-    try{ localStorage.setItem('ayna_profile_photo', url); }catch(err){ showToast("ছবি অনেক বড় - ছোট ছবি বেছে নিন"); }
-    document.getElementById('fixPhotoMsg').innerText="✅ ছবি লেগে গেছে! এখন নিচে সেভ চাপ দিন";
-    showToast("✅ ছবি আপলোড হয়েছে");
+function loadPhoto(e){
+  var file=e.target.files[0]; if(!file) return;
+  var r=new FileReader();
+  r.onload=function(){ 
+    document.getElementById('avatarBox').innerHTML='<img src="'+r.result+'">';
+    document.getElementById('pAvatar').innerHTML='<img src="'+r.result+'">';
+    try{localStorage.setItem('ayna_photo',r.result);}catch(err){}
+    document.getElementById('msg').innerHTML='<span class="ok">✅ ছবি লেগে গেছে!</span>';
   };
-  r.onerror=function(){ document.getElementById('fixPhotoMsg').innerText="❌ ছবি পড়া যায়নি - আবার চেষ্টা করুন"; };
-  r.readAsDataURL(f);
+  r.readAsDataURL(file);
 }
-function fixSaveAccount(){
-  let name=document.getElementById('fixName').value.trim() || "Mahbub Alam Mahbub";
-  let email=document.getElementById('fixEmail').value.trim();
-  let phone=document.getElementById('fixPhone').value.trim();
-  try{
-    localStorage.setItem('ayna_account_name', name);
-    localStorage.setItem('ayna_account_email', email);
-    localStorage.setItem('ayna_account_phone', phone);
-    localStorage.setItem('ayna_account_created', new Date().toLocaleString('bn-BD'));
-  }catch(e){}
-  document.getElementById('fixAccountMsg').innerText="✅ অ্যাকাউন্ট সেভ হয়েছে: "+name+" - এখন খুলে দেখুন";
-  showToast("✅ অ্যাকাউন্ট সেভ হয়েছে");
-  fixOpenAccount();
+function checkMatch(){
+  var p=document.getElementById('pass').value, rp=document.getElementById('repass').value;
+  var m=document.getElementById('matchMsg');
+  if(!rp){m.innerText='';return false;}
+  if(p===rp){m.innerHTML='<span class="ok">✅ ২টা পাসওয়ার্ড মিলেছে</span>';return true;}
+  else{m.innerHTML='<span class="err">❌ ২টা পাসওয়ার্ড মিলছে না — আবার দেখো</span>';return false;}
 }
-function fixOpenAccount(){
-  let name=""; try{ name=localStorage.getItem('ayna_account_name')||""; }catch(e){}
-  let photo=""; try{ photo=localStorage.getItem('ayna_profile_photo')||""; }catch(e){}
-  if(!name && !photo){ document.getElementById('fixAccountMsg').innerText="⚠️ আগে নাম লিখে সেভ করুন, তারপর খুলবে"; return; }
-  if(photo){ let img=document.getElementById('fixProfileImg'); img.src=photo; img.style.display='block'; document.getElementById('fixProfilePlaceholder').style.display='none'; }
-  if(name) document.getElementById('fixName').value=name;
-  document.getElementById('fixAccountMsg').innerText="✅ অ্যাকাউন্ট খুলে গেছে: "+name+" - ছবি + নাম ঠিক আছে";
-  showToast("✅ অ্যাকাউন্ট খুলে গেছে: "+name);
+document.getElementById('repass').addEventListener('input',checkMatch);
+document.getElementById('pass').addEventListener('input',checkMatch);
+function saveAll(){
+  var full=document.getElementById('fullname').value.trim()||'Mohammed Mahabub Alam';
+  var user=document.getElementById('username').value.trim()||'Mohammed Mahabub Alam';
+  var email=document.getElementById('email').value.trim();
+  var phone=document.getElementById('phone').value.trim();
+  var p=document.getElementById('pass').value, rp=document.getElementById('repass').value;
+  if(!full){alert('পুরো নাম লিখো');return;}
+  if(p!==rp){alert('পাসওয়ার্ড আর রি-পাসওয়ার্ড মিলছে না!');return;}
+  if(p.length<4){alert('পাসওয়ার্ড কমপক্ষে ৪ অক্ষর দাও');return;}
+  localStorage.setItem('ayna_full',full); document.getElementById('fullname').disabled=true; document.getElementById('fullname').style.background='#e9e9e9'; localStorage.setItem('ayna_user',user);
+  localStorage.setItem('ayna_email',email); localStorage.setItem('ayna_phone',phone);
+  localStorage.setItem('ayna_pass',p);
+  document.getElementById('msg').innerHTML='<span class="ok">✅ সেভ হয়েছে: '+full+'</span>';
+  updateProfile();
 }
-function fixLogout(){ if(!confirm("সব মুছে নতুন করে শুরু করবেন?")) return; try{ localStorage.removeItem('ayna_account_name'); localStorage.removeItem('ayna_profile_photo'); }catch(e){} document.getElementById('fixProfileImg').style.display='none'; document.getElementById('fixProfilePlaceholder').style.display='flex'; document.getElementById('fixAccountMsg').innerText="🔄 মুছে দেওয়া হয়েছে - আবার নতুন করে বানান"; }
-function checkFirebase(){
-  let res=document.getElementById('firebaseResult');
-  let hasFirebase = (typeof firebase!=='undefined' || window.firebaseConfig);
-  let hasLocal = false; try{ hasLocal = !!localStorage.getItem('ayna_account_name'); }catch(e){}
-  res.innerHTML = "🔍 <b>চেকের রেজাল্ট:</b><br>" +
-  "• Firebase লাইব্রেরি: "+(hasFirebase ? "✅ পাওয়া গেছে" : "❌ পাওয়া যায়নি - এই কারণে Firebase দিয়ে লগইন হচ্ছিল না")+"<br>" +
-  "• ফোনে সেভ করা অ্যাকাউন্ট: "+(hasLocal ? "✅ আছে" : "⚠️ এখনো সেভ হয়নি - উপরে সেভ করুন")+"<br>" +
-  "• ছবি সেভ: "+(function(){ try{ return localStorage.getItem('ayna_profile_photo') ? "✅ আছে" : "⚠️ নেই"; }catch(e){ return "⚠️ নেই"; } })()+"<br><br>" +
-  "✅ <b>সমাধান:</b> V22-এ Firebase ছাড়াই অ্যাকাউন্ট চলবে। Firebase পরে ঠিক করলেও হবে।";
+function updateProfile(){
+  var full=localStorage.getItem('ayna_full')||document.getElementById('fullname').value||'Mohammed Mahabub Alam';
+  var user=localStorage.getItem('ayna_user')||'Mohammed Mahabub Alam';
+  var phone=localStorage.getItem('ayna_phone')||'';
+  var photo=localStorage.getItem('ayna_photo')||'';
+  document.getElementById('pFull').innerText=full;
+  document.getElementById('pUser').innerText='@'+user+' • AYNA BOOK • Cox\'s Bazar';
+  document.getElementById('pPhone').innerText= phone ? '📞 '+phone : '';
+  if(photo){document.getElementById('pAvatar').innerHTML='<img src="'+photo+'">'; document.getElementById('avatarBox').innerHTML='<img src="'+photo+'">';}
+  else {document.getElementById('pAvatar').innerText=full.charAt(0).toUpperCase();}
 }
-function showFirebaseHelp(){ let h=document.getElementById('firebaseHelp'); h.style.display = h.style.display==='none' ? 'block' : 'none'; }
-setTimeout(()=>{ try{ let p=localStorage.getItem('ayna_profile_photo'); if(p){ let img=document.getElementById('fixProfileImg'); img.src=p; img.style.display='block'; document.getElementById('fixProfilePlaceholder').style.display='none'; } let n=localStorage.getItem('ayna_account_name'); if(n) document.getElementById('fixName').value=n; }catch(e){} }, 800);
+function showProfile(){ updateProfile(); document.getElementById('profileCard').style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
+
+function startCompass(){
+  document.getElementById('compassMsg').innerText='ফোনটা ঘুরিয়ে দেখো — কাঁটা ঘুরবে';
+  if(window.DeviceOrientationEvent){
+    if(typeof DeviceOrientationEvent.requestPermission==='function'){
+      DeviceOrientationEvent.requestPermission().then(function(s){ if(s==='granted') window.addEventListener('deviceorientation',handleOrient); });
+    } else { window.addEventListener('deviceorientation',handleOrient); }
+  } else { document.getElementById('compassMsg').innerText='এই ফোনে কম্পাস সেন্সর পাওয়া যাচ্ছে না, তবে মানচিত্র রাডার চলবে'; }
+}
+function handleOrient(e){
+  var deg = e.alpha || 0; // 0-360
+  var d = Math.round(360-deg)%360;
+  document.getElementById('compassDeg').innerText=d+'°';
+  document.getElementById('compassArrow').style.transform='rotate('+d+'deg)';
+  var dir='উত্তর'; if(d>=22.5&&d<67.5) dir='উত্তর-পূর্ব'; else if(d>=67.5&&d<112.5) dir='পূর্ব'; else if(d>=112.5&&d<157.5) dir='দক্ষিণ-পূর্ব'; else if(d>=157.5&&d<202.5) dir='দক্ষিণ'; else if(d>=202.5&&d<247.5) dir='দক্ষিণ-পশ্চিম'; else if(d>=247.5&&d<292.5) dir='পশ্চিম'; else if(d>=292.5&&d<337.5) dir='উত্তর-পশ্চিম';
+  document.getElementById('compassDir').innerText=dir;
+}
+// load saved
+var sf=localStorage.getItem('ayna_full'); if(sf){document.getElementById('fullname').value=sf; document.getElementById('fullname').disabled=true; document.getElementById('fullname').style.background='#e9e9e9';}
+var su=localStorage.getItem('ayna_user'); if(su) document.getElementById('username').value=su;
+var se=localStorage.getItem('ayna_email'); if(se) document.getElementById('email').value=se;
+var sp=localStorage.getItem('ayna_phone'); if(sp) document.getElementById('phone').value=sp;
+updateProfile();
 </script>
 <script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body></html>
