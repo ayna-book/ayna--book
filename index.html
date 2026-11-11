@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn"><head><style>
+<html lang="en"><head><style>
 @font-face {
   font-family: "Optimistic";
   font-style: normal;
@@ -21,297 +21,115 @@
   font-family: "Optimistic Mono", ui-monospace, monospace;
 }
 </style><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AYNA BOOK - V30 - Super App</title>
+<title>AYNA BOOK</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:sans-serif;background:#f0f2f5;font-size:20px}
-.top{background:#1877f2;color:#fff;padding:14px;text-align:center;font-size:24px;font-weight:800}
-.wrap{max-width:540px;margin:auto;padding:12px}
-.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-.cover{height:150px;border-radius:14px;background:linear-gradient(90deg,#1877f2,#00c2ff);display:flex;align-items:flex-end;justify-content:center;color:#fff;font-weight:800;padding-bottom:10px}
-.avatar{width:180px;height:180px;border-radius:50%;background:#ddd;border:5px solid #fff;margin:-90px auto 8px;display:flex;align-items:center;justify-content:center;font-size:64px;overflow:hidden;cursor:pointer}
-.avatar img{width:100%;height:100%;object-fit:cover}
-h2{margin:6px 0;font-size:28px} .center{text-align:center;color:#555}
-label{font-weight:800;font-size:20px;display:block;margin-top:14px}
-input{width:100%;padding:14px;font-size:20px;border:2px solid #ccc;border-radius:12px;margin-top:6px}
-.passwrap{position:relative}.passwrap input{padding-right:55px}
-.eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:26px;border:0;background:none;cursor:pointer}
-.btn{width:100%;padding:15px;font-size:21px;font-weight:800;border:0;border-radius:12px;background:#1877f2;color:#fff;margin-top:12px}
-.btn.green{background:#42b72a}.btn.gray{background:#e4e6eb;color:#111}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.box{background:#fff;border-radius:14px;padding:16px;text-align:center;font-size:19px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.small{font-size:16px;color:#555;font-weight:400}
-.ok{color:#0a7a00;font-weight:800}.err{color:#d00;font-weight:800}
+*{box-sizing:border-box}body{background:#020817;color:#eaf7ff;font-family:'Hind Siliguri',Arial,sans-serif;padding-bottom:90px}
+.glass{background:rgba(10,23,48,.85);backdrop-filter:blur(14px);border:1px solid rgba(0,212,255,.3)}
+.view{display:none}.view.active{display:block}
+.nav-btn.active{background:#083344;color:#67e8f9;border-color:#06b6d4}
+.star{color:#22ff88;font-size:.65em;vertical-align:super;animation:starGlow 1s infinite;text-shadow:0 0 12px #22ff88}
+@keyframes starGlow{0%,49%{opacity:.25;text-shadow:0 0 2px #22ff88}50%,100%{opacity:1;text-shadow:0 0 18px #22ff88,0 0 35px #22ff88,0 0 55px #00ff66}}
+.hero{font-size:42px;font-weight:900;letter-spacing:1px;text-align:center}
+.hero .star{font-size:22px}
+.locked{opacity:.6}input,textarea,select{color:#fff}
 </style></head>
 <body>
-<div class="top">AYNA BOOK — V30</div>
-<div class="wrap">
-<div class="card">
-<h2>👤 পুরো অ্যাকাউন্ট</h2>
-<p>পুরো নাম + ছবি + ফোন + পাসওয়ার্ড — সব এখানে</p>
+<header class="sticky top-0 z-40 glass px-3 py-3">
+<div class="max-w-7xl mx-auto flex justify-between items-center">
+<h1 class="text-2xl font-black">AYNA BOOK<span class="star">★</span></h1>
+<span class="px-2 py-1 bg-emerald-950 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold rounded-lg">10G Turbo</span>
+</div>
+<div class="max-w-7xl mx-auto flex gap-1.5 overflow-x-auto pt-2">
+<button onclick="tab('home')" class="nav-btn active px-3 py-1.5 rounded-lg text-xs bg-slate-900 border border-slate-800" data-v="home">Home Feed</button>
+<button onclick="tab('media')" class="nav-btn px-3 py-1.5 rounded-lg text-xs bg-slate-900 border border-slate-800" data-v="media">TV & Radio</button>
+<button onclick="tab('sub')" class="nav-btn px-3 py-1.5 rounded-lg text-xs bg-amber-950 text-amber-300 border border-amber-500/40" data-v="sub">4 Accounts & Payment</button>
+<button onclick="tab('radar')" class="nav-btn px-3 py-1.5 rounded-lg text-xs bg-slate-900 border border-slate-800" data-v="radar">Radar</button>
+<button onclick="tab('embassy')" class="nav-btn px-3 py-1.5 rounded-lg text-xs bg-slate-900 border border-slate-800" data-v="embassy">193 Embassy</button>
+<button onclick="tab('dash')" class="nav-btn px-3 py-1.5 rounded-lg text-xs bg-slate-900 border border-slate-800" data-v="dash">Dashboard & Settings</button>
+</div></header>
 
-<label>১. পুরো নাম (Full Name) — 🔒 টাইটেল নাম</label>
-<p style="color:#d00;font-weight:800;margin:4px 0">🔒 এই টাইটেল নাম আর কখনো পরিবর্তন করা যাবে না। একবার সেভ হলে তালা লেগে যাবে।</p>
-<input id="fullname" placeholder="যেমন: Mahbub Alam Mahbub" value="Mohammed Mahabub Alam">
+<main class="max-w-7xl mx-auto px-3 py-4 space-y-4">
+<!-- HOME -->
+<section id="home" class="view active space-y-3">
+<div class="glass p-4 rounded-2xl text-center"><p class="text-xs text-cyan-300">Hello, I am Tota Mon 🦜 - Your Ayna Book Friend</p><p class="text-[11px] text-slate-400">International Super App - Loved Worldwide</p></div>
+<div class="glass p-4 rounded-2xl space-y-2"><textarea id="postText" rows="2" placeholder="What is on your mind? Post text, photo, video or audio..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs"></textarea>
+<input type="file" accept="image/*" onchange="previewImg(event)" class="text-xs"><img id="postImg" class="hidden w-full rounded-xl">
+<button onclick="addPost()" class="w-full py-2 bg-cyan-500 text-black font-bold text-xs rounded-xl">Post Now</button></div>
+<div id="feed" class="space-y-3"></div></section>
 
-<label>২. ছোট নাম / ইউজারনেম</label>
-<input id="username" placeholder="যেমন: mahbub" value="mahbub">
+<!-- MEDIA -->
+<section id="media" class="view space-y-3"><div class="glass p-4 rounded-2xl">
+<h2 class="font-bold text-amber-400 text-center">Live TV & Radio - By Country</h2>
+<div class="bg-black border-2 border-cyan-500/60 rounded-2xl p-3 text-center mt-3"><p id="now" class="text-cyan-300 text-sm">Select a channel</p><iframe id="yt" class="w-full aspect-video rounded-lg hidden" allowfullscreen></iframe><video id="tv" controls class="w-full aspect-video rounded-lg hidden"></video></div>
+<div class="grid grid-cols-2 gap-2 mt-3">
+<button onclick="play('https://www.youtube.com/embed/9Auq9mYxFEE?autoplay=1','yt')" class="bg-slate-900 border border-cyan-500/30 p-3 rounded-xl text-xs text-left">🇧🇩 Somoy TV Live</button>
+<button onclick="play('https://www.youtube.com/embed/2g811Ko7gB8?autoplay=1','yt')" class="bg-slate-900 border border-cyan-500/30 p-3 rounded-xl text-xs text-left">🇧🇩 Jamuna TV Live</button>
+<button onclick="play('https://live-hls-web-aje.getaj.net/AJE/index.m3u8','tv')" class="bg-slate-900 border border-cyan-500/30 p-3 rounded-xl text-xs text-left">🌍 Al Jazeera English</button>
+<button onclick="play('https://ntv1.akamaized.net/hls/live/2014756/NASA-TV-HD-1/master.m3u8','tv')" class="bg-slate-900 border border-cyan-500/30 p-3 rounded-xl text-xs text-left">🚀 NASA HD</button>
+</div><audio controls class="w-full mt-3"><source src="https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"></audio><p class="text-[11px] text-slate-400 mt-1">BBC World Service Radio</p></div></section>
 
-<label>৩. প্রোফাইল ছবি</label>
-<div class="avatar" id="avatarBox" onclick="document.getElementById('photoInput').click()">📷<br><span style="font-size:18px">ছবি চাপ দিন</span></div>
-<input type="file" id="photoInput" accept="image/*" style="display:none" onchange="loadPhoto(event)">
-<p class="center">ছবিতে চাপ দিলে গ্যালারি খুলবে • ছবি 220x220 বড় দেখাবে</p>
+<!-- SUBSCRIPTION -->
+<section id="sub" class="view"><div class="glass p-5 rounded-2xl space-y-4"><h2 class="text-center font-bold text-amber-400">4 Account Subscription Plans</h2>
+<div class="grid md:grid-cols-4 gap-3 text-center">
+<div class="bg-slate-900 p-4 rounded-xl"><b>1. Personal Free</b><p class="text-cyan-400 text-xl font-bold">FREE</p><button onclick="plan('Personal Free')" class="w-full bg-slate-800 py-2 rounded-lg text-xs mt-2">Select</button></div>
+<div class="bg-slate-900 p-4 rounded-xl border border-cyan-500/50"><b>2. Business</b><p class="text-amber-400 text-xl font-bold">$10 / 1200 BDT</p><button onclick="plan('Business')" class="w-full bg-cyan-500 text-black py-2 rounded-lg text-xs mt-2">Upgrade</button></div>
+<div class="bg-slate-900 p-4 rounded-xl border border-amber-500/50"><b>3. VIP</b><p class="text-amber-400 text-xl font-bold">$15 / 1800 BDT</p><button onclick="plan('VIP')" class="w-full bg-amber-500 text-black py-2 rounded-lg text-xs mt-2">Upgrade</button></div>
+<div class="bg-slate-900 p-4 rounded-xl border border-pink-500/50"><b>4. VVIP</b><p class="text-pink-400 text-xl font-bold">$25 / 3000 BDT</p><button onclick="plan('VVIP')" class="w-full bg-pink-500 py-2 rounded-lg text-xs mt-2">Upgrade</button></div></div>
+<div class="bg-slate-950 p-4 rounded-xl text-xs space-y-2"><b>Payment: bKash / Nagad / PayPal / Payoneer - [Your Number Here]</b><input id="trx" placeholder="Transaction ID (TrxID)" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-lg"><button onclick="pay()" class="w-full py-3 bg-emerald-500 text-black font-bold rounded-xl">Confirm Payment</button><p id="planMsg" class="text-cyan-300"></p></div></div></section>
 
-<label>৪. Gmail</label>
-<input id="email" placeholder="তোমার Gmail" type="email">
+<!-- RADAR -->
+<section id="radar" class="view"><div class="glass p-5 rounded-2xl text-center space-y-3"><h2 class="font-bold text-emerald-400">RADAR 360° - Earth to NASA | Land to Sea | Sea to Mountain</h2>
+<div class="flex justify-center gap-2"><button onclick="zone('NASA Deep Space')" class="px-3 py-1.5 bg-indigo-900 rounded-lg text-xs">NASA Station</button><button onclick="zone('Maritime Sea Route')" class="px-3 py-1.5 bg-cyan-900 rounded-lg text-xs">Sea Margin</button><button onclick="zone('Mountain Peak Radar')" class="px-3 py-1.5 bg-emerald-900 rounded-lg text-xs">Mountain Field</button></div>
+<canvas id="rc" width="300" height="300" class="mx-auto bg-slate-950 rounded-full border-2 border-emerald-500/60"></canvas><p id="rz" class="text-amber-400 text-xs font-bold">Zone Active: Global Earth Network</p></div></section>
 
-<label>৫. ফোন নম্বর</label>
-<input id="phone" placeholder="01XXXXXXXXX" type="tel" maxlength="11">
+<!-- EMBASSY -->
+<section id="embassy" class="view"><div class="glass p-5 rounded-2xl"><h2 class="font-bold text-amber-400">193 UN Member Embassies</h2><input oninput="searchEmb(this.value)" placeholder="Search country..." class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-xs mt-3"><div id="emb" class="grid md:grid-cols-3 gap-3 mt-3"></div></div></section>
 
-<label>৬. পাসওয়ার্ড</label>
-<div class="passwrap"><input id="pass" type="password" placeholder="পাসওয়ার্ড লিখুন"><button class="eye" onclick="togglePass('pass',this)">👁️</button></div>
+<!-- DASHBOARD -->
+<section id="dash" class="view space-y-4">
+<div class="glass p-6 rounded-2xl text-center"><div class="hero">AYNA BOOK<span class="star">★</span></div><p class="text-xs text-cyan-400 mt-1">DASHBOARD • International Super App</p></div>
+<div class="grid grid-cols-4 gap-2 text-center text-xs"><div class="glass p-3 rounded-xl"><b id="cF">1.2K</b><p>Followers</p></div><div class="glass p-3 rounded-xl"><b id="cP">128</b><p>Posts</p></div><div class="glass p-3 rounded-xl"><b>45</b><p>Sales</p></div><div class="glass p-3 rounded-xl"><b>98K</b><p>Views</p></div></div>
+<div class="glass p-5 rounded-2xl space-y-3 text-xs"><h2 class="text-lg font-bold">Dashboard Settings - Set Your Profile As You Like</h2>
+<p class="text-amber-300">Rule: Full Name NEVER changes. All other options can change only once every 3 months.</p>
+<label>Full Name (Locked Forever) 🔒</label><input value="Mohammed Mahabub Alam" disabled class="locked w-full p-2.5 bg-slate-900 border rounded-lg">
+<label>Username (Changeable every 3 months)</label><input id="uName" value="mahbub" class="w-full p-2.5 bg-slate-900 border rounded-lg"><p>Last Changed: 2026-08-11 | Next Change In: <b id="count">90 days</b> <button onclick="simulate()" class="bg-slate-800 px-2 py-1 rounded">Simulate 3 Months Passed</button></p>
+<label>Email</label><input value="your@email.com" class="w-full p-2.5 bg-slate-900 border rounded-lg">
+<label>Phone</label><input placeholder="Your phone" class="w-full p-2.5 bg-slate-900 border rounded-lg">
+<label>Bio</label><textarea class="w-full p-2.5 bg-slate-900 border rounded-lg">Welcome to Ayna Book</textarea>
+<label>Country / City</label><input value="Bangladesh / Cox's Bazar" class="w-full p-2.5 bg-slate-900 border rounded-lg">
+<label>Profile Photo</label><input type="file" accept="image/*" onchange="previewAvatar(event)"><img id="av" src="https://placehold.co/100x100/0a1730/00d4ff?text=Photo" class="w-20 h-20 rounded-full border-2 border-cyan-400 object-cover mt-2">
+<label>Cover Photo</label><input type="file" accept="image/*" onchange="previewCover(event)"><img id="cv" class="w-full h-28 object-cover rounded-xl mt-2 hidden">
+<label>Password</label><div class="flex"><input id="pw" type="password" value="123456" class="flex-1 p-2.5 bg-slate-900 border rounded-lg"><button onclick="pw.type=pw.type=='password'?'text':'password'" class="px-3 bg-slate-800 rounded-lg ml-1">Show</button></div>
+<label>Privacy / Notifications / Theme</label><select class="w-full p-2.5 bg-slate-900 border rounded-lg"><option>Public</option><option>Friends Only</option><option>Private</option></select>
+<button onclick="saveProfile()" class="w-full py-3 bg-cyan-500 text-black font-bold rounded-xl">Save Profile Settings</button><p id="saveMsg" class="text-emerald-400"></p>
+<button onclick="otp()" class="w-full py-3 bg-amber-500 text-black font-bold rounded-xl">Send OTP & Register</button></div>
+<div class="glass p-4 rounded-2xl"><h3 class="font-bold">Marketplace</h3><div class="grid grid-cols-2 gap-2 mt-2"><div class="bg-slate-900 p-3 rounded-xl">📱 Phone - 15000 BDT <button onclick="this.innerText='❤️ Saved'" class="block mt-1 text-xs bg-slate-800 px-2 py-1 rounded">🤍 Heart</button></div><div class="bg-slate-900 p-3 rounded-xl">⌚ Watch - 2500 BDT <button onclick="this.innerText='❤️ Saved'" class="block mt-1 text-xs bg-slate-800 px-2 py-1 rounded">🤍 Heart</button></div></div></div>
+</section></main>
 
-<label>৭. রি-পাসওয়ার্ড (আবার একই পাসওয়ার্ড)</label>
-<div class="passwrap"><input id="repass" type="password" placeholder="আবার একই পাসওয়ার্ড"><button class="eye" onclick="togglePass('repass',this)">👁️</button></div>
-<p id="matchMsg"></p>
+<div id="otpM" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50"><div class="bg-slate-900 border border-cyan-500/40 rounded-2xl p-6 text-center w-full max-w-sm"><h3>OTP Verification</h3><input id="otpIn" maxlength="4" placeholder="1234" class="w-full p-3 bg-slate-950 border rounded-xl text-center text-2xl font-bold text-cyan-400 mt-3"><button onclick="verify()" class="w-full py-2.5 bg-cyan-400 text-black font-bold rounded-xl mt-3">Verify</button></div></div>
 
-<button class="btn" onclick="saveAll()">✅ সব সেভ করুন</button>
-<button class="btn green" onclick="showProfile()">👀 আমার প্রোফাইল দেখুন</button>
-<p id="msg" class="center"></p>
-</div>
-
-<div class="card" id="profileCard" style="display:none">
-<div class="cover">AYNA BOOK কভার ফটো</div>
-<div class="avatar" id="pAvatar">M</div>
-<h2 id="pFull" style="text-align:center">Mohammed Mahabub Alam</h2>
-<p class="center" id="pUser">@mahbub • AYNA BOOK • Cox's Bazar</p>
-<p class="center" id="pPhone"></p>
-<div class="grid">
-<button class="btn" onclick="alert('Add to Story')">+ Add to Story</button>
-<button class="btn gray" onclick="alert('Edit Profile — ৯০ দিনে ১ বার বদলানো যাবে')">✏️ Edit Profile</button>
-</div>
-<p class="center">🔒 Locked Profile • শেষ পরিবর্তন: আজ • পরের পরিবর্তন: ৯০ দিন পর</p>
-</div>
-
-<div class="card"><h2>বড় বক্স মেনু</h2><div class="grid">
-<div class="box">📻 ১. রেডিও<br><span class="small">সারা বিশ্বের রেডিও</span></div>
-<div class="box">📺 ২. টিভি<br><span class="small">লাইভ টিভি</span></div>
-<div class="box">🎬 ৩. সিরিয়াল<br><span class="small">ভারতীয় / আরবি</span></div>
-<div class="box">🛒 ৪. AYNA Haat<br><span class="small">৮K বাজার</span></div>
-<div class="box">💬 ৫. মেসেঞ্জার<br><span class="small">WhatsApp-এর মতো</span></div>
-<div class="box">🍳 ৬. রান্না<br><span class="small">ভয়েস রেসিপি</span></div>
-</div></div>
-
-<div class="card">
-<h2>⚛️ অত্যাধুনিক প্রযুক্তি — Quantum + Super Computer</h2>
-<p><b>কোয়ান্টাম কম্পিউটার:</b> সাধারণ কম্পিউটার ০ বা ১ দিয়ে চলে, কোয়ান্টাম কম্পিউটার একসাথে অনেক হিসাব করে। AYNA BOOK-এ এটা ক্লাউড দিয়ে যুক্ত থাকবে — বড় হিসাব, অনুবাদ, আবহাওয়া, রাডার হিসাব দ্রুত হবে।</p>
-<p><b>সুপার কম্পিউটার:</b> পৃথিবীর সবচেয়ে শক্তিশালী কম্পিউটার। AYNA BOOK সরাসরি সুপার কম্পিউটার চালায় না, কিন্তু ইন্টারনেট দিয়ে সুপার কম্পিউটারের তথ্য (আবহাওয়া, ভূমিকম্প, বন্যা) দেখাবে।</p>
-<div style="background:#eef6ff;padding:14px;border-radius:12px">
-<b>🔬 Quantum Status:</b> <span id="qstatus">Cloud Connected • Ready</span><br>
-<b>💻 Super Computer:</b> <span>Weather + AI হিসাব — চালু</span><br>
-<button class="btn" onclick="document.getElementById('qstatus').innerText='Quantum Cloud হিসাব চলছে... ১ সেকেন্ড পর ফল আসবে'; setTimeout(()=>{document.getElementById('qstatus').innerText='✅ Quantum হিসাব শেষ — আবহাওয়া + রাডার আপডেট হয়েছে'},1500)">⚛️ Quantum হিসাব চালান</button>
-</div>
-</div>
-
-<div class="card">
-<h2>📡 বেসামরিক রিয়েল রাডার — Civilian Real Radar</h2>
-<p>এটা সামরিক রাডার না। এটা বেসামরিক — বৃষ্টি, মেঘ, ঝড়, বন্যা দেখার রাডার। সবার জন্য খোলা।</p>
-<div style="border-radius:12px;overflow:hidden">
-<iframe src="https://www.rainviewer.com/map.html?loc=21.5,92.0,6&oFa=0&oC=1&oU=0&oCS=1&oF=0&oAP=1&c=1&oD=1&lm=1&layer=radar&sm=1&sn=1" width="100%" height="380" style="border:0"></iframe>
-</div>
-<p class="center">নীল = হালকা বৃষ্টি • হলুদ = ভারী বৃষ্টি • লাল = ঝড় — Cox's Bazar + সারা বিশ্ব</p>
-<button class="btn" onclick="window.open('https://www.windy.com/?21.5,92.0,6','_blank')">🌍 বড় রাডার খুলুন (Windy)</button>
-<button class="btn gray" onclick="alert('বেসামরিক রাডার: শুধু আবহাওয়া দেখা যাবে। সামরিক / গোপন কিছু দেখা যাবে না। এটা আইন অনুযায়ী নিরাপদ।')">ℹ️ রাডার নিয়ম দেখুন</button>
-</div>
-
-<div class="card">
-<h2>🧭 রিয়েল কম্পাস — Real Compass</h2>
-<p>ফোনের সেন্সর দিয়ে আসল দিক দেখাবে — উত্তর, দক্ষিণ, পূর্ব, পশ্চিম।</p>
-<div style="text-align:center">
-<div id="compassCircle" style="width:180px;height:180px;border-radius:50%;background:#fff;border:4px solid #1877f2;margin:auto;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 4px 12px rgba(0,0,0,.15)">
-<div id="compassArrow" style="font-size:48px;transition:transform .2s">⬆️</div>
-<div id="compassDeg" style="font-size:28px;font-weight:800">0°</div>
-<div id="compassDir" style="font-size:22px;font-weight:800;color:#1877f2">উত্তর</div>
-</div>
-<p id="compassMsg" class="center">কম্পাস চালু করতে নিচের বাটন চাপ দিন</p>
-<button class="btn" onclick="startCompass()">🧭 কম্পাস চালু করুন</button>
-<p class="center">কাবার দিক (Qibla) দেখতে চাইলে — Cox's Bazar থেকে কাবা উত্তর-পশ্চিম দিকে।</p>
-</div>
-</div>
-
-<div class="card">
-<h2>🌍 AYNA BOOK — বিশ্বের একমাত্র সুপার অ্যাপ</h2>
-<p><b>AI নিয়ন্ত্রিত:</b> AI খারাপ লেখা / ভিডিও লুকিয়ে দেবে, ভালো খবর সামনে আনবে। <b>সব যোগাযোগ এক প্লাটফর্মে:</b> কথা, মেসেজ, কল, ভিডিও, বাজার, পড়া, খবর — সব এক অ্যাপে।</p>
-<p><b>সর্বাধুনিক প্রযুক্তি:</b> সুপার কম্পিউটার + কোয়ান্টাম ক্লাউড + বেসামরিক রাডার + রিয়েল কম্পাস + GPS — সব যুক্ত।</p>
-<p><b>সামরিক প্রযুক্তি — শুধু জানার জন্য:</b> বেসামরিক মানুষের জানার জন্য বিশ্বের সেরা প্রতিরক্ষা প্রযুক্তির খবর, ইতিহাস, ছবি — অস্ত্র বানানোর নিয়ম নয়। শুধু শিক্ষা + খবর।</p>
-</div>
-
-<div class="card">
-<h2>📻📺 রেডিও + টিভি — সরাসরি চ্যানেল থেকে</h2>
-<p>চ্যানেলের নিজের লাইভ থেকে যুক্ত — মাঝখানে কোনো চুরি লিংক নয়।</p>
-<div class="grid">
-<div class="box">📻 BBC World<br><button class="btn" onclick="window.open('https://www.bbc.com/sounds','_blank')">শুনুন</button></div>
-<div class="box">📻 Bangladesh Betar<br><button class="btn" onclick="window.open('https://www.betar.gov.bd','_blank')">শুনুন</button></div>
-<div class="box">📺 Al Jazeera Live<br><button class="btn" onclick="window.open('https://www.aljazeera.com/live','_blank')">দেখুন</button></div>
-<div class="box">📺 BBC News Live<br><button class="btn" onclick="window.open('https://www.bbc.com/news/live','_blank')">দেখুন</button></div>
-</div>
-</div>
-
-<div class="card">
-<h2>📰 ফ্রন্ট পেজ — ভাইরাল নিউজ + যুদ্ধের খবর + গুরুত্বপূর্ণ খবর</h2>
-<p>অ্যাকাউন্ট খুললেই প্রথমে এই খবরগুলো দেখা যাবে।</p>
-<div style="background:#fff3cd;padding:12px;border-radius:12px"><b>🔴 BREAKING:</b> বিশ্বের গুরুত্বপূর্ণ খবর — AI দিয়ে যাচাই করে সামনে আনা হবে।</div>
-<p></p>
-<div style="background:#eef6ff;padding:12px;border-radius:12px"><b>🔥 VIRAL:</b> আজকের সবচেয়ে বেশি দেখা অডিও / ভিডিও — এখানে থাকবে।</p>
-<div class="grid" style="margin-top:10px">
-<div class="box">▶️ ভিডিও দেখুন<br><button class="btn" onclick="window.open('https://news.google.com','_blank')">সব ভিডিও</button></div>
-<div class="box">🎧 অডিও শুনুন<br><button class="btn" onclick="window.open('https://news.google.com','_blank')">সব অডিও</button></div>
-</div>
-<p class="center">সব সময় ভিডিও দেখার বাটন উপরে থাকবে।</p>
-</div>
-
-<div class="card">
-<h2>🔐 অ্যাকাউন্ট সুরক্ষা — OTP + লক + চুরি বন্ধ</h2>
-<label>OTP কোড (ডেমো: 1234)</label>
-<input id="otp" placeholder="OTP লিখুন — যেমন 1234">
-<button class="btn" onclick="if(document.getElementById('otp').value==='1234'){alert('✅ OTP ঠিক আছে!')}else{alert('❌ OTP ভুল — 1234 দাও (ডেমো)')}">OTP যাচাই করুন</button>
-<p>✅ <b>অ্যাকাউন্ট লক:</b> <button class="btn gray" onclick="var s=document.getElementById('lockStatus'); s.innerText = s.innerText.includes('লক') ? '🔓 অ্যাকাউন্ট খোলা আছে' : '🔒 অ্যাকাউন্ট লক আছে — কেউ ঢুকতে পারবে না';">লক / আনলক চাপ দিন</button> <span id="lockStatus">🔓 অ্যাকাউন্ট খোলা আছে</span></p>
-<p>✅ <b>ডকুমেন্ট চুরি বন্ধ:</b> তোমার অ্যাকাউন্ট থেকে কেউ ছবি / ডকুমেন্ট চুরি করতে পারবে না। ডাউনলোড / স্ক্রিনশট / কপি — AI ব্লক করবে, তোমাকে নোটিফিকেশন দেবে।</p>
-<p>✅ <b>ভিতরে-বাইরের ছবি:</b> প্রোফাইলে ভিতরের ছবি (প্রাইভেট) + বাইরের ছবি (সবার জন্য) — ২ রকম ছবি আলাদা থাকবে।</p>
-<p>✅ <b>ছবি বড় আকারের:</b> ছবি এখন 220x220 থেকে আরও বড় — 400x400, ফুল স্ক্রিনে দেখা যাবে। ছবিতে চাপ দিলে বড় হবে।</p>
-</div>
-
-<div class="card">
-<h2>👶 শিশুদের জন্য — লেখাপড়া + খেলাধুলা + কার্টুন</h2>
-<div class="grid">
-<div class="box">📚 বাংলা + English পড়া</div>
-<div class="box">🔢 অংক খেলা</div>
-<div class="box">🎨 ছবি আঁকা</div>
-<div class="box">🎬 কার্টুন</div>
-<div class="box">⚽ খেলাধুলা</div>
-<div class="box">🎵 ছড়া + গান</div>
-</div>
-</div>
-
-<div class="card">
-<h2>👩 নারীদের জন্য — আরবিয়ান + বাংলা সিরিয়াল</h2>
-<div class="grid">
-<div class="box">🕌 আরবিয়ান সিরিয়াল<br><span class="small">ইসলামিক + পরিবার</span></div>
-<div class="box">🇧🇩 বাংলা সিরিয়াল<br><span class="small">পরিবার + সমাজ</span></div>
-<div class="box">🍳 রান্না + ঘর<br><span class="small">ভয়েস রেসিপি</span></div>
-<div class="box">💪 স্বাস্থ্য + সুন্দর<br><span class="small">সাধারণ তথ্য</span></div>
-</div>
-</div>
-
-<div class="card">
-<h2>🎓 ছাত্র - শিক্ষক - প্রফেসর — আলাদা ফাইল</h2>
-<div class="grid">
-<div class="box">📘 ছাত্র ফাইল<br><span class="small">নোট + পরীক্ষা</span></div>
-<div class="box">👨‍🏫 শিক্ষক ফাইল<br><span class="small">ক্লাস + পড়া</span></div>
-<div class="box">👨‍🔬 প্রফেসর ফাইল<br><span class="small">গবেষণা</span></div>
-</div>
-<h2 style="margin-top:16px">🏛️ বিশ্বের সব কলেজ + ইউনিভার্সিটি</h2>
-<p>এক ফাইলে সারা বিশ্বের কলেজ / ইউনিভার্সিটির নাম, দেশ, অফিসিয়াল ওয়েবসাইট।</p>
-<button class="btn" onclick="window.open('https://www.topuniversities.com/universities','_blank')">🌍 ইউনিভার্সিটি লিস্ট দেখুন</button>
-<h2 style="margin-top:16px">🛂 ইমিগ্রেশন — প্রয়োজনীয় তথ্য</h2>
-<p>ভিসা, পাসপোর্ট, ইমিগ্রেশন ফরম — দেশ অনুযায়ী অফিসিয়াল তথ্য।</p>
-<button class="btn" onclick="window.open('https://www.google.com/search?q=immigration+official+website','_blank')">🛂 ইমিগ্রেশন তথ্য</button>
-</div>
-
-<div class="card">
-<h2>📍 GPS + 🩺 স্বাস্থ্য</h2>
-<p><b>GPS:</b> তোমার নিজের লোকেশন দেখবে — <button class="btn" onclick="if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(p){alert('তোমার লোকেশন: '+p.coords.latitude+', '+p.coords.longitude+' — শুধু তুমি দেখবে')})}else{alert('এই ফোনে GPS নেই')}">📍 আমার লোকেশন দেখুন</button></p>
-<p><b>দেহের রোগ নির্ণয়:</b> এটা ডাক্তার না। সাধারণ তথ্য দেবে — জ্বর, কাশি, ডায়াবেটিসের লক্ষণ কী, কখন ডাক্তার দেখাতে হবে — তারপর ডাক্তারের কাছে যেতে বলবে।</p>
-<div style="background:#fff0f0;padding:12px;border-radius:12px">
-<b>❤️ গুরুত্বপূর্ণ রোগ ফাইল:</b><br>
-• ক্যান্সার • হৃদরোগ • ডায়াবেটিস • ম্যালেরিয়া • ডেঙ্গু • মহামারী • জ্বর • উচ্চ রক্তচাপ<br>
-<span class="small">সাধারণ সচেতনতা তথ্য — চিকিৎসার জন্য অবশ্যই ডাক্তার দেখান।</span>
-</div>
-</div>
-
-<div class="card">
-<h2>🚌🚆✈️ সারা বিশ্বের বাস - ট্রেন - বিমান সময়সূচি</h2>
-<div class="grid">
-<div class="box">🚌 বাস<br><button class="btn" onclick="window.open('https://www.google.com/maps','_blank')">বাস সময়</button></div>
-<div class="box">🚆 ট্রেন<br><button class="btn" onclick="window.open('https://www.google.com/maps','_blank')">ট্রেন সময়</button></div>
-<div class="box">✈️ বিমান<br><button class="btn" onclick="window.open('https://www.flightradar24.com','_blank')">বিমান সময়</button></div>
-</div>
-<p class="center">Cox's Bazar থেকে ঢাকা, চট্টগ্রাম — সব রুট এক জায়গায়।</p>
-</div>
-</div>
 <script>
-function togglePass(id,btn){
-  var f=document.getElementById(id);
-  if(f.type==='password'){f.type='text';btn.innerText='🙈';} else {f.type='password';btn.innerText='👁️';}
-}
-function loadPhoto(e){
-  var file=e.target.files[0]; if(!file) return;
-  var r=new FileReader();
-  r.onload=function(){ 
-    document.getElementById('avatarBox').innerHTML='<img src="'+r.result+'">';
-    document.getElementById('pAvatar').innerHTML='<img src="'+r.result+'">';
-    try{localStorage.setItem('ayna_photo',r.result);}catch(err){}
-    document.getElementById('msg').innerHTML='<span class="ok">✅ ছবি লেগে গেছে!</span>';
-  };
-  r.readAsDataURL(file);
-}
-function checkMatch(){
-  var p=document.getElementById('pass').value, rp=document.getElementById('repass').value;
-  var m=document.getElementById('matchMsg');
-  if(!rp){m.innerText='';return false;}
-  if(p===rp){m.innerHTML='<span class="ok">✅ ২টা পাসওয়ার্ড মিলেছে</span>';return true;}
-  else{m.innerHTML='<span class="err">❌ ২টা পাসওয়ার্ড মিলছে না — আবার দেখো</span>';return false;}
-}
-document.getElementById('repass').addEventListener('input',checkMatch);
-document.getElementById('pass').addEventListener('input',checkMatch);
-function saveAll(){
-  var full=document.getElementById('fullname').value.trim()||'Mohammed Mahabub Alam';
-  var user=document.getElementById('username').value.trim()||'Mohammed Mahabub Alam';
-  var email=document.getElementById('email').value.trim();
-  var phone=document.getElementById('phone').value.trim();
-  var p=document.getElementById('pass').value, rp=document.getElementById('repass').value;
-  if(!full){alert('পুরো নাম লিখো');return;}
-  if(p!==rp){alert('পাসওয়ার্ড আর রি-পাসওয়ার্ড মিলছে না!');return;}
-  if(p.length<4){alert('পাসওয়ার্ড কমপক্ষে ৪ অক্ষর দাও');return;}
-  localStorage.setItem('ayna_full',full); document.getElementById('fullname').disabled=true; document.getElementById('fullname').style.background='#e9e9e9'; localStorage.setItem('ayna_user',user);
-  localStorage.setItem('ayna_email',email); localStorage.setItem('ayna_phone',phone);
-  localStorage.setItem('ayna_pass',p);
-  document.getElementById('msg').innerHTML='<span class="ok">✅ সেভ হয়েছে: '+full+'</span>';
-  updateProfile();
-}
-function updateProfile(){
-  var full=localStorage.getItem('ayna_full')||document.getElementById('fullname').value||'Mohammed Mahabub Alam';
-  var user=localStorage.getItem('ayna_user')||'Mohammed Mahabub Alam';
-  var phone=localStorage.getItem('ayna_phone')||'';
-  var photo=localStorage.getItem('ayna_photo')||'';
-  document.getElementById('pFull').innerText=full;
-  document.getElementById('pUser').innerText='@'+user+' • AYNA BOOK • Cox\'s Bazar';
-  document.getElementById('pPhone').innerText= phone ? '📞 '+phone : '';
-  if(photo){document.getElementById('pAvatar').innerHTML='<img src="'+photo+'">'; document.getElementById('avatarBox').innerHTML='<img src="'+photo+'">';}
-  else {document.getElementById('pAvatar').innerText=full.charAt(0).toUpperCase();}
-}
-function showProfile(){ updateProfile(); document.getElementById('profileCard').style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
-
-function startCompass(){
-  document.getElementById('compassMsg').innerText='ফোনটা ঘুরিয়ে দেখো — কাঁটা ঘুরবে';
-  if(window.DeviceOrientationEvent){
-    if(typeof DeviceOrientationEvent.requestPermission==='function'){
-      DeviceOrientationEvent.requestPermission().then(function(s){ if(s==='granted') window.addEventListener('deviceorientation',handleOrient); });
-    } else { window.addEventListener('deviceorientation',handleOrient); }
-  } else { document.getElementById('compassMsg').innerText='এই ফোনে কম্পাস সেন্সর পাওয়া যাচ্ছে না, তবে মানচিত্র রাডার চলবে'; }
-}
-function handleOrient(e){
-  var deg = e.alpha || 0; // 0-360
-  var d = Math.round(360-deg)%360;
-  document.getElementById('compassDeg').innerText=d+'°';
-  document.getElementById('compassArrow').style.transform='rotate('+d+'deg)';
-  var dir='উত্তর'; if(d>=22.5&&d<67.5) dir='উত্তর-পূর্ব'; else if(d>=67.5&&d<112.5) dir='পূর্ব'; else if(d>=112.5&&d<157.5) dir='দক্ষিণ-পূর্ব'; else if(d>=157.5&&d<202.5) dir='দক্ষিণ'; else if(d>=202.5&&d<247.5) dir='দক্ষিণ-পশ্চিম'; else if(d>=247.5&&d<292.5) dir='পশ্চিম'; else if(d>=292.5&&d<337.5) dir='উত্তর-পশ্চিম';
-  document.getElementById('compassDir').innerText=dir;
-}
-// load saved
-var sf=localStorage.getItem('ayna_full'); if(sf){document.getElementById('fullname').value=sf; document.getElementById('fullname').disabled=true; document.getElementById('fullname').style.background='#e9e9e9';}
-var su=localStorage.getItem('ayna_user'); if(su) document.getElementById('username').value=su;
-var se=localStorage.getItem('ayna_email'); if(se) document.getElementById('email').value=se;
-var sp=localStorage.getItem('ayna_phone'); if(sp) document.getElementById('phone').value=sp;
-updateProfile();
-</script>
-<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body></html>
+function tab(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.v==id))}
+let posts=[{n:'Tota Mon',t:'Welcome to AYNA BOOK - International Super App!',l:128},{n:'Ayna Book Team',t:'Live TV, Radar, Embassy, Marketplace - all in one place.',l:96}];
+function render(){document.getElementById('feed').innerHTML=posts.map((p,i)=>`<div class="glass p-4 rounded-2xl"><b>${p.n}</b><p class="text-xs mt-1">${p.t}</p><div class="flex gap-3 mt-2 text-xs"><button onclick="like(${i},this)">🤍 Like ${p.l}</button><button onclick="comment(this)">💬 Comment</button><button>↗️ Share</button><button>💬 Messenger</button></div></div>`).join('')}
+function like(i,el){posts[i].l++;render()}function comment(el){let c=prompt('Write comment:');if(c)alert('Comment added: '+c)}
+function addPost(){let t=document.getElementById('postText').value;if(!t)return alert('Write something');posts.unshift({n:'You',t:t,l:0});document.getElementById('postText').value='';render()}
+function previewImg(e){let r=new FileReader();r.onload=()=>{let im=document.getElementById('postImg');im.src=r.result;im.classList.remove('hidden')};r.readAsDataURL(e.target.files[0])}
+function previewAvatar(e){let r=new FileReader();r.onload=()=>document.getElementById('av').src=r.result;r.readAsDataURL(e.target.files[0])}
+function previewCover(e){let r=new FileReader();r.onload=()=>{let im=document.getElementById('cv');im.src=r.result;im.classList.remove('hidden')};r.readAsDataURL(e.target.files[0])}
+function play(u,type){let yt=document.getElementById('yt'),tv=document.getElementById('tv');yt.classList.add('hidden');tv.classList.add('hidden');if(type=='yt'){yt.src=u;yt.classList.remove('hidden')}else{tv.src=u;tv.classList.remove('hidden');tv.play()}document.getElementById('now').innerText='Now Playing';tab('media')}
+function plan(n){document.getElementById('planMsg').innerText='You selected '+n+' plan';tab('sub')}
+function pay(){let t=document.getElementById('trx').value;if(!t)return alert('Enter TrxID');alert('Payment submitted! Account will upgrade soon.')}
+function zone(z){document.getElementById('rz').innerText='Zone Active: '+z}
+function otp(){document.getElementById('otpM').style.display='flex'}function verify(){let c=document.getElementById('otpIn').value;if(c.length!=4)return alert('Enter 4 digit OTP');document.getElementById('otpM').style.display='none';alert('Account Verified & Registered!')}
+function saveProfile(){document.getElementById('saveMsg').innerText='Profile saved! Next change available after 3 months.'}
+function simulate(){document.getElementById('count').innerText='0 days - You can change now!';alert('3 months simulated - you can now change settings.')}
+let countries=['Bangladesh','India','USA','UK','Canada','Australia','Japan','China','France','Germany','Italy','Spain','Turkey','UAE','Saudi Arabia','Malaysia','Singapore','Thailand','Nepal','Pakistan','Sri Lanka','Indonesia','South Korea','Russia','Egypt','Brazil','Netherlands','Sweden','Norway','Switzerland'];
+function renderEmb(f=''){document.getElementById('emb').innerHTML=countries.filter(c=>c.toLowerCase().includes(f.toLowerCase())).map(c=>`<div class="bg-slate-900 p-3 rounded-xl text-xs"><b>🏛️ ${c} Embassy</b><p>Embassy of ${c} • Dhaka</p><p class="text-slate-400">Contact: [Embassy Contact]</p></div>`).join('')}
+function searchEmb(v){renderEmb(v)}
+// radar
+let cv=document.getElementById('rc'),ctx=cv.getContext('2d'),a=0;function draw(){ctx.fillStyle='rgba(2,8,23,.12)';ctx.fillRect(0,0,300,300);let cx=150,cy=150;ctx.strokeStyle='#00ff88';ctx.beginPath();ctx.arc(cx,cy,90,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,140,a,a+.3);ctx.lineTo(cx,cy);ctx.fillStyle='rgba(0,255,136,.2)';ctx.fill();a+=.04;requestAnimationFrame(draw)}draw();render();renderEmb();
+</script><script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body></html>
