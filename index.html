@@ -1,626 +1,170 @@
 <!DOCTYPE html>
-<html lang="bn" class="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AYNA BOOK - Master Edition</title>
-
-<!-- Tailwind CSS & FontAwesome Icons -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-    tailwind.config = {
-        darkMode: 'class',
-        theme: {
-            extend: {
-                colors: {
-                    fb: {
-                        bg: '#18191a',
-                        card: '#242526',
-                        input: '#3a3b3c',
-                        border: '#393a3b',
-                        accent: '#2374e1',
-                        text: '#e4e6eb',
-                        subtext: '#b0b3b8'
-                    }
-                }
-            }
-        }
-    }
-</script>
+<html lang="bn"><head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AYNA BOOK</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box;margin:0;padding:0}body{background:#18191a;color:#e4e6eb;font-family:'Hind Siliguri',sans-serif;padding-bottom:80px}
+.view{display:none}.view.active{display:block}.card{background:#242526;border:1px solid #393a3b;border-radius:14px;padding:12px}
+.input{background:#3a3b3c;border-radius:999px;padding:11px 16px;width:100%;color:#fff;outline:none;border:none;margin-top:8px}
+.btn-blue{background:#2374e1;color:#fff;font-weight:700;border:none;border-radius:10px;padding:11px;cursor:pointer;width:100%}
+.btn-gray{background:#3a3b3c;color:#fff;font-weight:700;border:none;border-radius:10px;padding:10px;cursor:pointer}
+.toggle{width:44px;height:24px;background:#3a3b3c;border-radius:999px;position:relative;cursor:pointer;flex:none}.toggle:after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%}.toggle.on{background:#2374e1}.toggle.on:after{left:23px}
+.bubble{max-width:78%;padding:9px 13px;border-radius:18px;font-size:14px}.mine{background:#2374e1;margin-left:auto}.theirs{background:#3a3b3c;margin-right:auto}
+.hub{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hub div{background:#3a3b3c33;border:1px solid #393a3b;border-radius:12px;padding:12px;cursor:pointer}
+select{background:#3a3b3c;color:#fff;border:none;padding:10px;border-radius:10px;width:100%;margin-top:8px}
+.tab{flex:1;padding:12px;background:none;border:none;color:#b0b3b8;font-size:18px;cursor:pointer}.tab.on{color:#2374e1;border-bottom:3px solid #2374e1}
+</style><style>
+.pw-wrap{position:relative;margin-top:8px}
+.pw-wrap input{margin-top:0!important;padding-right:52px!important}
+.pw-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:#2374e1;border:2px solid #fff;color:#fff;cursor:pointer;font-size:16px;z-index:5;display:flex;align-items:center;justify-content:center}
+</style></head><body>
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{ background:#18191a; color:#e4e6eb; font-family:'Hind Siliguri',sans-serif; padding-bottom:70px; overflow-x:hidden; }
-.view{display:none} .view.active{display:block}
-.nav-tab.active{ color:#2374e1; border-bottom:3px solid #2374e1; }
-::-webkit-scrollbar { width:6px; height:6px; }
-::-webkit-scrollbar-track { background:#18191a; }
-::-webkit-scrollbar-thumb { background:#3a3b3c; border-radius:4px; }
-.pw-wrap{position:relative;}
-.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#b0b3b8;cursor:pointer;font-size:14px}
-.pw-eye:hover{color:#fff}
-.hub-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:10px;}
-.bubble{max-width:80%;padding:8px 14px;border-radius:18px;font-size:13px;}
-.mine{background:#2374e1;color:#fff;margin-left:auto;}
-.theirs{background:#3a3b3c;color:#fff;margin-right:auto;}
-</style>
-</head>
-
-<body class="bg-fb-bg text-fb-text">
-
-<!-- Auth Screen (Login / Register / Forgot Password) -->
-<div id="authScreen" class="max-w-md mx-auto p-4 my-6">
-  <div class="text-center space-y-1 mb-6">
-    <h1 class="text-3xl font-bold tracking-tight text-white"><span class="text-fb-accent">AYNA</span> BOOK</h1>
-    <p class="text-xs text-fb-subtext">Project ID: ayna-book • No: 805601138500</p>
-  </div>
-
-  <div class="bg-fb-card border border-fb-border rounded-2xl p-5 space-y-4">
-    <!-- Auth Mode Selector -->
-    <div class="flex gap-2 bg-fb-input p-1 rounded-xl">
-      <button id="tabLoginBtn" onclick="authTab('login')" class="flex-1 py-2 rounded-lg font-bold text-xs bg-fb-accent text-white">লগইন</button>
-      <button id="tabRegBtn" onclick="authTab('reg')" class="flex-1 py-2 rounded-lg font-bold text-xs text-fb-subtext hover:text-white">রেজিস্ট্রেশন</button>
-    </div>
-
-    <!-- Login Form -->
-    <div id="loginBox" class="space-y-3">
-      <div>
-        <label class="block text-xs text-fb-subtext mb-1">ইমেইল / ফোন</label>
-        <input id="loginEmail" type="text" placeholder="ইমেইল অথবা ফোন নম্বর" class="w-full bg-fb-input border border-fb-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-fb-accent">
-      </div>
-      <div>
-        <label class="block text-xs text-fb-subtext mb-1">পাসওয়ার্ড</label>
-        <div class="pw-wrap">
-          <input id="loginPass" type="password" placeholder="পাসওয়ার্ড দিন" class="w-full bg-fb-input border border-fb-border rounded-xl px-3 py-2.5 pr-10 text-xs text-white focus:outline-none focus:border-fb-accent">
-          <button type="button" class="pw-eye" onclick="togglePass('loginPass', this)"><i class="fa-solid fa-eye"></i></button>
-        </div>
-      </div>
-      <button onclick="doLogin()" class="w-full py-2.5 bg-fb-accent text-white font-bold text-xs rounded-xl hover:opacity-90">লগইন করুন</button>
-      <div class="text-center pt-1">
-        <button onclick="authTab('forgot')" class="text-xs text-fb-accent hover:underline">পাসওয়ার্ড ভুলে গেছেন?</button>
-      </div>
-    </div>
-
-    <!-- Registration Form -->
-    <div id="regBox" class="hidden space-y-3">
-      <div>
-        <label class="block text-xs text-fb-subtext mb-1">পূর্ণ নাম <span class="text-red-400 font-bold">(স্থায়ী)</span></label>
-        <input id="regName" type="text" placeholder="আপনার স্থায়ী নাম" class="w-full bg-fb-input border border-fb-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-fb-accent">
-      </div>
-      <div>
-        <label class="block text-xs text-fb-subtext mb-1">ইমেইল</label>
-        <input id="regEmail" type="email" placeholder="ইমেইল অ্যাড্রেস" class="w-full bg-fb-input border border-fb-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-fb-accent">
-      </div>
-      <div>
-        <label class="block text-xs text-fb-subtext mb-1">ফোন নম্বর</label>
-        <input id="regPhone" type="tel" placeholder="017xxxxxxxx" class="w-full bg-fb-input border border-fb-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-fb-accent">
-      </div>
-      <div>
-        <label class="block text-xs text-fb-subtext mb-1">পাসওয়ার্ড</label>
-        <div class="pw-wrap">
-          <input id="regPass" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" class="w-full bg-fb-input border border-fb-border rounded-xl px-3 py-2.5 pr-10 text-xs text-white focus:outline-none focus:border-fb-accent">
-          <button type="button" class="pw-eye" onclick="togglePass('regPass', this)"><i class="fa-solid fa-eye"></i></button>
-        </div>
-      </div>
-      <div>
-        <label class="block text-xs text-fb-subtext mb-1">পুনরায় পাসওয়ার্ড দিন</label>
-        <div class="pw-wrap">
-          <input id="regPass2" type="password" placeholder="পাসওয়ার্ড আবার লিখুন" class="w-full bg-fb-input border border-fb-border rounded-xl px-3 py-2.5 pr-10 text-xs text-white focus:outline-none focus:border-fb-accent">
-          <button type="button" class="pw-eye" onclick="togglePass('regPass2', this)"><i class="fa-solid fa-eye"></i></button>
-        </div>
-      </div>
-      <button onclick="doRegister()" class="w-full py-2.5 bg-emerald-600 text-white font-bold text-xs rounded-xl hover:bg-emerald-500">রেজিস্ট্রেশন সম্পূর্ণ করুন</button>
-    </div>
-
-    <!-- Forgot Password Form -->
-    <div id="forgotBox" class="hidden space-y-3">
-      <h3 class="text-sm font-bold text-white">পাসওয়ার্ড রিসেট করুন</h3>
-      <div>
-        <label class="block text-xs text-fb-subtext mb-1">রেজিস্টার করা ইমেইল</label>
-        <input id="forgotEmail" type="email" placeholder="আপনার ইমেইল দিন" class="w-full bg-fb-input border border-fb-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none">
-      </div>
-      <button onclick="alert('রিসেট কোড ইমেইলে পাঠানো হয়েছে!')" class="w-full py-2.5 bg-fb-accent text-white font-bold text-xs rounded-xl">রিসেট কোড পাঠান</button>
-      <div class="text-center pt-1">
-        <button onclick="authTab('login')" class="text-xs text-fb-subtext hover:text-white">← লগইনে ফিরুন</button>
-      </div>
-    </div>
-  </div>
+<!-- AUTH -->
+<div id="authScreen" style="max-width:420px;margin:30px auto;padding:16px">
+<h1 style="text-align:center;font-size:32px"><span style="color:#2374e1">AYNA</span> BOOK</h1>
+<p style="text-align:center;color:#b0b3b8;font-size:13px;margin:6px 0 14px">একই অ্যাকাউন্টে AYNA BOOK + AYNA Messenger</p>
+<div class="card">
+<div style="display:flex;gap:8px"><button id="tabLogin" onclick="authTab('login')" class="btn-blue" style="flex:1">লগইন</button><button id="tabReg" onclick="authTab('reg')" class="btn-gray" style="flex:1">রেজিস্ট্রেশন</button></div>
+<div id="loginBox"><input id="loginEmail" class="input" placeholder="ইমেইল / ফোন"><div class="pw-wrap"><input id="loginPass" type="password" class="input" placeholder="পাসওয়ার্ড"><button type="button" class="pw-eye" onclick="togglePw('loginPass',this)" aria-label="পাসওয়ার্ড দেখুন / লুকান">👁️</button></div><button onclick="doLogin()" class="btn-blue" style="margin-top:12px">লগইন করুন</button><p style="text-align:center;margin-top:10px"><a href="javascript:showForgot()" style="color:#2374e1;text-decoration:none;font-size:13px">পাসওয়ার্ড ভুলে গেছেন?</a></p><p id="loginMsg" style="font-size:12px;color:#fbbf24;text-align:center;margin-top:8px"></p><p style="font-size:11px;color:#b0b3b8;text-align:center;margin-top:10px">ডেমো: আগে রেজিস্ট্রেশন করুন। তথ্য এই ব্রাউজারে নিরাপদে সেভ থাকে। Firebase চালাতে চাইলে নিচের firebaseConfig বদলাতে হবে।</p></div>
+<div id="regBox" style="display:none"><input id="regName" class="input" placeholder="পুরো নাম *"><input id="regEmail" class="input" placeholder="ইমেইল *"><input id="regPhone" class="input" placeholder="ফোন (ঐচ্ছিক)"><select id="regCountry"><option>বাংলাদেশ</option><option>ভারত</option><option>পাকিস্তান</option><option>সৌদি আরব</option><option>যুক্তরাষ্ট্র</option><option>যুক্তরাজ্য</option><option>অন্যান্য</option></select><div class="pw-wrap"><input id="regPass" type="password" class="input" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর) *"><button type="button" class="pw-eye" onclick="togglePw('regPass',this)" aria-label="পাসওয়ার্ড দেখুন / লুকান">👁️</button></div><div class="pw-wrap"><input id="regPass2" type="password" class="input" placeholder="পাসওয়ার্ড আবার লিখুন *"><button type="button" class="pw-eye" onclick="togglePw('regPass2',this)" aria-label="পাসওয়ার্ড দেখুন / লুকান">👁️</button></div><button onclick="doRegister()" class="btn-blue" style="margin-top:12px">অ্যাকাউন্ট তৈরি করুন</button><p id="regMsg" style="font-size:12px;color:#fbbf24;text-align:center;margin-top:8px"></p></div>
+<div id="forgotBox" style="display:none"><h3 style="margin-top:6px">Forget Password</h3><p style="font-size:12px;color:#b0b3b8">ইমেইল লিখুন, আমরা রিসেট কোড পাঠাবো (ডেমোতে কোড স্ক্রিনেই দেখাবে)।</p><input id="forgotEmail" class="input" placeholder="রেজিস্টার করা ইমেইল"><button onclick="doForgot()" class="btn-blue" style="margin-top:12px">রিসেট কোড পাঠান</button><div id="forgotStep2" style="display:none"><input id="resetCode" class="input" placeholder="৬ সংখ্যার কোড"><div class="pw-wrap"><input id="newPass" type="password" class="input" placeholder="নতুন পাসওয়ার্ড"><button type="button" class="pw-eye" onclick="togglePw('newPass',this)" aria-label="পাসওয়ার্ড দেখুন / লুকান">👁️</button></div><button onclick="doReset()" class="btn-blue" style="margin-top:12px">নতুন পাসওয়ার্ড সেভ করুন</button></div><p id="forgotMsg" style="font-size:12px;color:#34d399;text-align:center;margin-top:8px"></p><p style="text-align:center;margin-top:10px"><a href="javascript:authTab('login')" style="color:#2374e1;text-decoration:none;font-size:13px">← লগইনে ফিরুন</a></p></div>
+</div>
+<div class="card" style="margin-top:10px;font-size:12px;color:#b0b3b8;line-height:1.6"><b style="color:#fff">কীভাবে কাজ করে?</b><br>1. রেজিস্ট্রেশন → নাম, ইমেইল, পাসওয়ার্ড দিন<br>2. লগইন → একই ইমেইল + পাসওয়ার্ড<br>3. ভুলে গেলে → Forget → কোড → নতুন পাসওয়ার্ড<br>4. লগআউট → প্রোফাইল / মেনু থেকে Log Out<br>Firebase ব্যবহার করতে চাইলে <code>firebaseConfig</code> অংশে আপনার আসল কনফিগ বসান।</div>
 </div>
 
-<!-- Main App Structure -->
-<div id="appScreen" class="hidden">
-  <!-- Top Navigation Header -->
-  <header class="sticky top-0 z-50 bg-fb-card border-b border-fb-border px-4 py-2 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <button onclick="toggleSideMenu()" class="w-10 h-10 rounded-full bg-fb-input flex items-center justify-center text-fb-text hover:bg-fb-border">
-        <i class="fa-solid fa-bars text-lg"></i>
-      </button>
-      <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-1 cursor-pointer" onclick="switchTab('feed')">
-        <span class="text-fb-accent">AYNA</span> BOOK
-      </h1>
-    </div>
-    
-    <div class="flex items-center gap-2">
-      <button onclick="switchTab('feed')" class="w-10 h-10 rounded-full bg-fb-input flex items-center justify-center text-fb-text hover:bg-fb-border">
-        <i class="fa-solid fa-plus text-base"></i>
-      </button>
-      <button onclick="toggleSearch()" class="w-10 h-10 rounded-full bg-fb-input flex items-center justify-center text-fb-text hover:bg-fb-border">
-        <i class="fa-solid fa-magnifying-glass text-base"></i>
-      </button>
-      <button onclick="switchTab('messenger')" class="w-10 h-10 rounded-full bg-fb-input flex items-center justify-center text-fb-text hover:bg-fb-border relative">
-        <i class="fa-solid fa-comment text-base text-fb-accent"></i>
-        <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">4</span>
-      </button>
-    </div>
-  </header>
+<!-- APP -->
+<div id="appScreen" style="display:none">
+<header style="position:sticky;top:0;z-index:50;background:#242526;border-bottom:1px solid #393a3b;padding:8px 16px;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:8px"><button onclick="toggleMenu()" style="width:40px;height:40px;border-radius:50%;background:#3a3b3c;color:#fff;border:none;cursor:pointer"><i class="fa-solid fa-bars"></i></button><h1 style="font-size:20px"><span style="color:#2374e1">AYNA</span> BOOK</h1></div>
+<div style="display:flex;gap:8px"><button onclick="switchTab('feed')" style="width:40px;height:40px;border-radius:50%;background:#3a3b3c;color:#fff;border:none">+</button><button onclick="showSearch()" style="width:40px;height:40px;border-radius:50%;background:#3a3b3c;color:#fff;border:none"><i class="fa-solid fa-magnifying-glass"></i></button><button onclick="switchTab('messenger')" style="width:40px;height:40px;border-radius:50%;background:#3a3b3c;color:#fff;border:none;position:relative"><i class="fa-solid fa-comment" style="color:#2374e1"></i><span style="position:absolute;top:-4px;right:-4px;background:#e41e3f;color:#fff;font-size:10px;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center">4</span></button></div>
+</header>
+<div id="searchBar" style="display:none;background:#242526;padding:12px"><input oninput="doSearch(this.value)" placeholder="AYNA BOOK-এ খুঁজুন..." class="input"><p id="searchResult" style="font-size:12px;color:#b0b3b8;margin-top:6px"></p></div>
+<nav style="position:sticky;top:56px;z-index:40;background:#242526;border-bottom:1px solid #393a3b;display:flex">
+<button onclick="switchTab('feed')" class="tab on" data-v="feed"><i class="fa-solid fa-house"></i></button>
+<button onclick="switchTab('reels')" class="tab" data-v="reels"><i class="fa-solid fa-clapperboard"></i></button>
+<button onclick="switchTab('friends')" class="tab" data-v="friends"><i class="fa-solid fa-user-group"></i></button>
+<button onclick="switchTab('marketplace')" class="tab" data-v="marketplace"><i class="fa-solid fa-store"></i></button>
+<button onclick="switchTab('notifications')" class="tab" data-v="notifications"><i class="fa-solid fa-bell"></i></button>
+<button onclick="switchTab('profile')" class="tab" data-v="profile"><span id="navAvatar" style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:#2374e1;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700">S</span></button>
+</nav>
 
-  <!-- Search Bar Overlay -->
-  <div id="searchBar" class="hidden bg-fb-card p-3 border-b border-fb-border">
-    <input oninput="doSearch(this.value)" placeholder="AYNA BOOK-এ যেকোনো কিছু খুঁজুন..." class="w-full bg-fb-input rounded-full px-4 py-2 text-sm text-fb-text focus:outline-none">
-    <p id="searchResult" class="text-xs text-fb-subtext mt-2 px-2"></p>
-  </div>
+<main style="max-width:640px;margin:0 auto;padding:8px">
+<section id="feed" class="view active">
+<div style="display:flex;gap:8px;overflow-x:auto;padding:8px 4px">
+<div class="card" style="width:112px;height:192px;position:relative;overflow:hidden;flex:none;padding:0"><div style="height:128px;background:linear-gradient(135deg,#2374e1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:700" id="storyAvatar">S</div><div style="height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="width:32px;height:32px;border-radius:50%;background:#2374e1;display:flex;align-items:center;justify-content:center;font-weight:700;margin-top:-32px">+</div><span style="font-size:11px;font-weight:700;margin-top:8px">Create story</span></div></div>
+<div style="width:112px;height:192px;border-radius:16px;flex:none;background:linear-gradient(180deg,#0ea5e9,#065f46);display:flex;align-items:flex-end;padding:8px"><b style="font-size:12px">Jubair Ahmad</b></div>
+<div style="width:112px;height:192px;border-radius:16px;flex:none;background:linear-gradient(180deg,#f472b6,#7c2d12);display:flex;align-items:flex-end;padding:8px"><b style="font-size:12px">Marufa Binta</b></div>
+</div>
+<div class="card"><div style="display:flex;gap:8px;align-items:center"><span id="feedAvatar" style="width:40px;height:40px;border-radius:50%;background:#2374e1;display:flex;align-items:center;justify-content:center;font-weight:700">S</span><input id="postInput" placeholder="আপনার মনে কি চলছে?" class="input" style="margin:0"></div><button onclick="addPost()" class="btn-blue" style="margin-top:10px">পোস্ট করুন</button><div style="display:flex;border-top:1px solid #393a3b;margin-top:10px;padding-top:8px;font-size:12px;font-weight:600;color:#b0b3b8"><span style="flex:1;text-align:center">📹 Live</span><span style="flex:1;text-align:center">🖼️ Photo</span><span style="flex:1;text-align:center">😊 Feeling</span></div></div>
+<div id="postList" style="margin-top:12px"></div>
+<div class="card" style="margin-top:12px"><div style="display:flex;gap:8px"><span style="width:40px;height:40px;border-radius:50%;background:#0f766e;display:flex;align-items:center;justify-content:center;font-weight:700">T</span><div><h4>Truth Hub ✓</h4><span style="font-size:11px;color:#b0b3b8">6h • 🌍</span></div></div><p style="padding:12px 0;font-size:14px;line-height:1.6">দুই বছর পরিশ্রম করে পবিত্র কুরআনের ১১৪টি সূরা সাংকেতিক ভাষায় অনুবাদ করলেন কুর্দিস্তানের শিক্ষাবিদ ইজ্জাদ্দিন হামেদ মুস্তফা।</p><div style="height:180px;background:linear-gradient(135deg,#fef3c7,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:22px;border-radius:12px">📖 কুরআন • ১১৪ সূরা</div><div style="display:flex;gap:8px;margin-top:10px"><button onclick="likeBtn(this)" class="btn-gray" style="flex:1">👍 Like (<span>0</span>)</button><button class="btn-gray" style="flex:1">💬 Comment</button><button class="btn-gray" style="flex:1">↗️ Share</button></div></div>
 
-  <!-- Secondary Navigation Tabs -->
-  <nav class="sticky top-14 z-40 bg-fb-card border-b border-fb-border flex justify-around items-center">
-    <button onclick="switchTab('feed')" class="nav-tab active py-3 flex-1 flex justify-center text-xl text-fb-subtext hover:text-fb-accent" data-view="feed">
-      <i class="fa-solid fa-house"></i>
-    </button>
-    <button onclick="switchTab('reels')" class="nav-tab py-3 flex-1 flex justify-center text-xl text-fb-subtext hover:text-fb-accent" data-view="reels">
-      <i class="fa-solid fa-clapperboard"></i>
-    </button>
-    <button onclick="switchTab('friends')" class="nav-tab py-3 flex-1 flex justify-center text-xl text-fb-subtext hover:text-fb-accent relative" data-view="friends">
-      <i class="fa-solid fa-user-group"></i>
-      <span class="absolute top-2 right-[25%] bg-red-600 text-white text-[9px] px-1 rounded-full font-bold">36</span>
-    </button>
-    <button onclick="switchTab('marketplace')" class="nav-tab py-3 flex-1 flex justify-center text-xl text-fb-subtext hover:text-fb-accent" data-view="marketplace">
-      <i class="fa-solid fa-store"></i>
-    </button>
-    <button onclick="switchTab('worldhub')" class="nav-tab py-3 flex-1 flex justify-center text-xl text-fb-subtext hover:text-fb-accent" data-view="worldhub">
-      <i class="fa-solid fa-globe"></i>
-    </button>
-    <button onclick="switchTab('profile')" class="nav-tab py-3 flex-1 flex justify-center text-xl text-fb-subtext hover:text-fb-accent" data-view="profile">
-      <span id="navAvatar" class="w-7 h-7 rounded-full bg-fb-accent text-white flex items-center justify-center font-bold text-xs border border-fb-border">S</span>
-    </button>
-  </nav>
+<!-- AYNA WORLD HUB -->
+<div style="margin-top:16px"><h2 style="font-size:18px">🌍 AYNA World Hub — সব হাব এক জায়গায়</h2><p style="font-size:12px;color:#b0b3b8;margin:4px 0 10px">তথ্য-শিক্ষামূলক সারাংশ। অস্ত্র / পারমাণবিক বানানোর নির্দেশনা এখানে দেওয়া হয় না।</p>
+<div class="hub">
+<div onclick="openHub('radar')"><b>📡 Radar Hub</b><p style="font-size:12px;color:#b0b3b8">সামরিক + বেসামরিক রাডার</p></div>
+<div onclick="openHub('tech')"><b>🚀 Tech Hub</b><p style="font-size:12px;color:#b0b3b8">F-35, ড্রোন, AI</p></div>
+<div onclick="openHub('medical')"><b>🩺 Medical Research</b><p style="font-size:12px;color:#b0b3b8">ক্যান্সার, ডায়াবেটিস</p></div>
+<div onclick="openHub('translate')"><b>🌐 AI Voice Translate</b><p style="font-size:12px;color:#b0b3b8">রিয়েল-টাইম অনুবাদ</p></div>
+<div onclick="openHub('prayer')"><b>🕌 নামাজ অ্যালার্ট</b><p style="font-size:12px;color:#b0b3b8">১০ মিনিট আগে</p></div>
+<div onclick="openHub('edu')"><b>📚 শিক্ষা • স্বাস্থ্য • কৃষি</b><p style="font-size:12px;color:#b0b3b8">গবেষণা সারাংশ</p></div>
+<div onclick="openHub('diagnosis')"><b>🧬 রোগ নির্ণয় সহায়ক</b><p style="font-size:12px;color:#b0b3b8">লক্ষণ → করণীয়</p></div>
+<div onclick="openHub('flags')"><b>🏳️ সব দেশের পতাকা</b><p style="font-size:12px;color:#b0b3b8">+ জ্ঞানী ব্যক্তিত্ব</p></div>
+<div onclick="openHub('call')"><b>📞 Call Record</b><p style="font-size:12px;color:#b0b3b8">আইন + সম্মতি</p></div>
+</div>
+<div id="hubBox" class="card" style="margin-top:12px;display:none"></div>
+</div>
+</section>
 
-  <main class="max-w-2xl mx-auto py-2">
-    <!-- 1. NEWS FEED VIEW -->
-    <section id="feed" class="view active space-y-3">
-      <!-- Story Carousel -->
-      <div class="flex gap-2 overflow-x-auto px-3 py-2 scrollbar-none">
-        <div class="w-28 h-48 bg-fb-card rounded-2xl relative overflow-hidden border border-fb-border shrink-0 cursor-pointer">
-          <div class="w-full h-32 bg-gradient-to-tr from-fb-accent to-purple-600 flex items-center justify-center text-2xl font-bold text-white" id="storyAvatar">S</div>
-          <div class="absolute bottom-0 w-full h-16 bg-fb-card flex flex-col items-center justify-center pt-3">
-            <div class="w-8 h-8 rounded-full bg-fb-accent text-white border-2 border-fb-card flex items-center justify-center font-bold text-lg absolute -top-4">
-              <i class="fa-solid fa-plus text-xs"></i>
-            </div>
-            <span class="text-[11px] font-bold text-center leading-tight">Create story</span>
-          </div>
-        </div>
-        <div class="w-28 h-48 rounded-2xl relative overflow-hidden shrink-0 cursor-pointer bg-gradient-to-b from-sky-500 to-emerald-800 flex items-end p-2">
-          <span class="text-xs font-bold text-white drop-shadow">Jubair Ahmad</span>
-        </div>
-        <div class="w-28 h-48 rounded-2xl relative overflow-hidden shrink-0 cursor-pointer bg-gradient-to-b from-pink-500 to-amber-800 flex items-end p-2">
-          <span class="text-xs font-bold text-white drop-shadow">Marufa Binta</span>
-        </div>
-      </div>
-
-      <!-- Post Publisher Card -->
-      <div class="bg-fb-card p-3 border-y border-fb-border space-y-3">
-        <div class="flex items-center gap-2">
-          <span id="feedAvatar" class="w-10 h-10 rounded-full bg-fb-accent text-white flex items-center justify-center font-bold">S</span>
-          <input type="text" id="feedInput" placeholder="আপনার মনে কি চলছে?" class="w-full bg-fb-input rounded-full px-4 py-2 text-sm text-fb-text focus:outline-none">
-        </div>
-        <div class="flex border-t border-fb-border pt-2 text-xs font-semibold text-fb-subtext">
-          <button onclick="addPost()" class="flex-1 flex items-center justify-center gap-1.5 py-1 hover:bg-fb-input rounded-lg">
-            <i class="fa-solid fa-paper-plane text-fb-accent text-base"></i> পোস্ট করুন
-          </button>
-          <button class="flex-1 flex items-center justify-center gap-1.5 py-1 hover:bg-fb-input rounded-lg">
-            <i class="fa-solid fa-image text-emerald-500 text-base"></i> Photo
-          </button>
-          <button class="flex-1 flex items-center justify-center gap-1.5 py-1 hover:bg-fb-input rounded-lg">
-            <i class="fa-solid fa-face-smile text-amber-500 text-base"></i> Feeling
-          </button>
-        </div>
-      </div>
-
-      <!-- Dynamic Post List -->
-      <div id="postList" class="space-y-3"></div>
-
-      <!-- Sample Verified Post -->
-      <div class="bg-fb-card border-y border-fb-border space-y-2 py-3">
-        <div class="flex items-center justify-between px-3">
-          <div class="flex items-center gap-2">
-            <div class="w-10 h-10 rounded-full bg-teal-700 flex items-center justify-center font-bold text-white">T</div>
-            <div>
-              <h4 class="font-bold text-sm leading-none text-white">Truth Hub <i class="fa-solid fa-circle-check text-fb-accent text-xs"></i></h4>
-              <span class="text-[11px] text-fb-subtext">6h • <i class="fa-solid fa-earth-americas"></i></span>
-            </div>
-          </div>
-        </div>
-        <p class="px-3 text-sm">দুই বছর পরিশ্রম করে পবিত্র কুরআনের ১১৪টি সূরা সাংকেতিক ভাষায় অনুবাদ করলেন কুর্দিস্তানের শিক্ষাবিদ ইজ্জাদ্দিন হামেদ মুস্তফা।</p>
-        <div class="h-44 bg-gradient-to-r from-amber-200 to-amber-500 text-black flex items-center justify-center text-xl font-bold rounded-lg mx-3">
-          📖 কুরআন • ১১৪ সূরা অনুবাদ
-        </div>
-        <div class="flex text-xs font-semibold text-fb-subtext px-3 pt-2">
-          <button onclick="likeBtn(this)" class="flex-1 py-1.5 hover:bg-fb-input rounded-lg flex justify-center items-center gap-1"><i class="fa-regular fa-thumbs-up"></i> Like (<span>0</span>)</button>
-          <button class="flex-1 py-1.5 hover:bg-fb-input rounded-lg flex justify-center items-center gap-1"><i class="fa-regular fa-comment"></i> Comment</button>
-          <button class="flex-1 py-1.5 hover:bg-fb-input rounded-lg flex justify-center items-center gap-1"><i class="fa-solid fa-share"></i> Share</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 2. REELS VIEW -->
-    <section id="reels" class="view space-y-3 px-2">
-      <div class="relative w-full h-[75vh] bg-black rounded-2xl overflow-hidden border border-fb-border flex items-center justify-center">
-        <div class="text-center p-4">
-          <i class="fa-solid fa-circle-play text-6xl text-fb-accent animate-pulse mb-3"></i>
-          <h3 class="font-bold text-white text-lg">Janobani • জনবাণী Reels</h3>
-          <p class="text-xs text-fb-subtext mt-1">এমপি পদ হারাচ্ছেন আমির হামজা? হলফনামার গরমিল নিয়ে আবেদন!</p>
-        </div>
-        <div class="absolute right-3 bottom-6 flex flex-col items-center gap-5 text-white text-xs">
-          <button class="flex flex-col items-center"><i class="fa-solid fa-thumbs-up text-2xl"></i><span>189k</span></button>
-          <button class="flex flex-col items-center"><i class="fa-solid fa-comment text-2xl"></i><span>5.2k</span></button>
-          <button class="flex flex-col items-center"><i class="fa-solid fa-share text-2xl"></i><span>14k</span></button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. FRIENDS VIEW -->
-    <section id="friends" class="view space-y-4 px-3">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-bold">Friends Requests (36)</h2>
-        <span class="text-xs text-emerald-400 font-bold">● 81 online</span>
-      </div>
-      <div id="friendList" class="space-y-3"></div>
-    </section>
-
-    <!-- 4. MARKETPLACE VIEW -->
-    <section id="marketplace" class="view space-y-4 px-3">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-bold">AYNA Marketplace</h2>
-        <button onclick="alert('পণ্য যোগ করার ফর্ম')" class="px-3 py-1.5 bg-fb-accent text-white font-bold text-xs rounded-lg">Sell Item</button>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div class="bg-fb-card rounded-xl overflow-hidden border border-fb-border p-2">
-          <div class="h-32 bg-slate-800 rounded-lg flex items-center justify-center text-4xl">📱</div>
-          <p class="font-bold text-sm mt-2">৳23,000</p>
-          <p class="text-xs text-fb-subtext">REDMI NOTE 13 Pro Max</p>
-        </div>
-        <div class="bg-fb-card rounded-xl overflow-hidden border border-fb-border p-2">
-          <div class="h-32 bg-slate-800 rounded-lg flex items-center justify-center text-4xl">📱</div>
-          <p class="font-bold text-sm mt-2">৳6,700</p>
-          <p class="text-xs text-fb-subtext">Samsung A32 Official</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. WORLD HUB -->
-    <section id="worldhub" class="view space-y-4 px-3">
-      <div class="bg-fb-card p-4 rounded-xl border border-fb-border space-y-3">
-        <h2 class="text-lg font-bold text-fb-accent flex items-center gap-2">
-          <i class="fa-solid fa-globe"></i> AYNA World Hub — গ্লোবাল রিসার্চ ও সার্ভিস
-        </h2>
-        <p class="text-xs text-fb-subtext">শিক্ষা, প্রযুক্তি, স্বাস্থ্য, রাডার ও আন্তর্জাতিক গবেষণা হাব।</p>
-        
-        <div class="hub-grid pt-2">
-          <button onclick="openHub('radar')" class="p-3 bg-fb-input rounded-xl text-left hover:bg-fb-border">
-            <b class="text-xs text-emerald-400 block mb-1">📡 Radar Hub</b>
-            <span class="text-[10px] text-fb-subtext">সামরিক ও বেসামরিক রাডার</span>
-          </button>
-          <button onclick="openHub('tech')" class="p-3 bg-fb-input rounded-xl text-left hover:bg-fb-border">
-            <b class="text-xs text-cyan-400 block mb-1">🚀 Tech Hub</b>
-            <span class="text-[10px] text-fb-subtext">F-35, ড্রোন, পারমাণবিক</span>
-          </button>
-          <button onclick="openHub('medical')" class="p-3 bg-fb-input rounded-xl text-left hover:bg-fb-border">
-            <b class="text-xs text-pink-400 block mb-1">🩺 Medical</b>
-            <span class="text-[10px] text-fb-subtext">ক্যান্সার টিকা, ডায়াবেটিস</span>
-          </button>
-          <button onclick="openHub('translate')" class="p-3 bg-fb-input rounded-xl text-left hover:bg-fb-border">
-            <b class="text-xs text-amber-400 block mb-1">🌐 AI Translate</b>
-            <span class="text-[10px] text-fb-subtext">রিয়েল-টাইম ভয়েস ও টেক্সট</span>
-          </button>
-          <button onclick="openHub('prayer')" class="p-3 bg-fb-input rounded-xl text-left hover:bg-fb-border">
-            <b class="text-xs text-emerald-300 block mb-1">🕌 নামাজ অ্যালার্ট</b>
-            <span class="text-[10px] text-fb-subtext">১০ মিনিট পূর্বে নোটিফিকেশন</span>
-          </button>
-          <button onclick="openHub('diagnosis')" class="p-3 bg-fb-input rounded-xl text-left hover:bg-fb-border">
-            <b class="text-xs text-red-400 block mb-1">🧬 রোগ নির্ণয়</b>
-            <span class="text-[10px] text-fb-subtext">লক্ষণ অনুযায়ী পরামর্শ</span>
-          </button>
-          <button onclick="openHub('flags')" class="p-3 bg-fb-input rounded-xl text-left hover:bg-fb-border">
-            <b class="text-xs text-indigo-400 block mb-1">🏳️ ১৯৩ পতাকা</b>
-            <span class="text-[10px] text-fb-subtext">রাষ্ট্রদূত ও মনীসীদের ডিরেক্টরি</span>
-          </button>
-          <button onclick="openHub('call')" class="p-3 bg-fb-input rounded-xl text-left hover:bg-fb-border">
-            <b class="text-xs text-teal-300 block mb-1">📞 কল রেকর্ড আইন</b>
-            <span class="text-[10px] text-fb-subtext">সম্মতি ও প্রাইভেসি প্রোটোকল</span>
-          </button>
-          <button onclick="openHub('payment')" class="p-3 bg-fb-input rounded-xl text-left hover:bg-fb-border">
-            <b class="text-xs text-amber-300 block mb-1">💳 পেমেন্ট ও প্ল্যান</b>
-            <span class="text-[10px] text-fb-subtext">বিকাশ/নগদ: 01400751906</span>
-          </button>
-        </div>
-
-        <div id="hubDetailBox" class="hidden p-3 bg-slate-900 rounded-xl border border-fb-border text-xs leading-relaxed space-y-2 mt-3"></div>
-      </div>
-    </section>
-
-    <!-- 6. MESSENGER VIEW -->
-    <section id="messenger" class="view space-y-3 px-3">
-      <h2 class="text-xl font-bold">AYNA Messenger</h2>
-      <div id="chatList" class="space-y-2"></div>
-      
-      <!-- Active Chat Box -->
-      <div id="chatBox" class="hidden bg-fb-card p-3 rounded-xl border border-fb-border space-y-3">
-        <div class="flex items-center justify-between border-b border-fb-border pb-2">
-          <div class="flex items-center gap-2">
-            <button onclick="closeChat()" class="text-lg font-bold text-fb-subtext">←</button>
-            <span id="chatAvatar" class="w-8 h-8 rounded-full bg-fb-accent text-white flex items-center justify-center font-bold text-xs">M</span>
-            <b id="chatName" class="text-sm"></b>
-          </div>
-          <div class="flex gap-3 text-fb-accent">
-            <button onclick="alert('অডিও কল যুক্ত হচ্ছে...')"><i class="fa-solid fa-phone"></i></button>
-            <button onclick="alert('ভিডিও কল যুক্ত হচ্ছে...')"><i class="fa-solid fa-video"></i></button>
-          </div>
-        </div>
-        <div id="messages" class="h-48 overflow-y-auto space-y-2 p-1"></div>
-        <div class="flex gap-2">
-          <input id="msgInput" placeholder="Aa লিখুন..." class="flex-1 bg-fb-input px-3 py-2 rounded-full text-xs text-white focus:outline-none" onkeydown="if(event.key==='Enter')sendMsg()">
-          <button onclick="sendMsg()" class="px-4 py-2 bg-fb-accent text-white font-bold rounded-full text-xs">➤</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. PROFILE VIEW -->
-    <section id="profile" class="view space-y-4">
-      <div class="bg-fb-card border-b border-fb-border pb-4">
-        <div class="w-full h-40 bg-gradient-to-r from-cyan-600 to-indigo-800 relative"></div>
-        <div class="flex flex-col items-center -mt-14 px-4 text-center">
-          <span id="profileAvatar" class="w-28 h-28 rounded-full bg-fb-accent text-white border-4 border-fb-card flex items-center justify-center font-bold text-4xl shadow-xl">S</span>
-          <h2 id="profileName" class="text-xl font-bold mt-2">Sharmin Shefa</h2>
-          <p id="profileEmail" class="text-xs text-fb-subtext"></p>
-          <p class="text-xs text-fb-subtext mt-1">Cox's Bazar • 740 friends</p>
-          
-          <div class="flex gap-2 w-full mt-4 max-w-sm">
-            <button onclick="editProfile()" class="flex-1 py-2 bg-fb-input text-white font-bold text-xs rounded-lg border border-fb-border">✏️ Edit Profile</button>
-            <button onclick="doLogout()" class="flex-1 py-2 bg-red-600 text-white font-bold text-xs rounded-lg">🚪 Log Out</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Settings & Lock Info -->
-      <div class="px-3 space-y-3">
-        <div class="bg-fb-card p-3 rounded-xl border border-fb-border text-xs space-y-2">
-          <h3 class="font-bold text-sm text-white">সেটিংস ও প্রাইভেসী (৩ মাস নীতি)</h3>
-          <p class="text-amber-400">স্থায়ী নাম নীতি: রেজিস্ট্রেশনের পর নাম পরিবর্তন স্থায়ীভাবে লকড থাকে। বাকী তথ্য ৩ মাস পর এডিটযোগ্য।</p>
-          <p id="prayerInfo" class="text-emerald-400">🕌 নামাজের সময়সূচী: ফজর ৫:০২ AM • জোহোর ১২:০০ PM • আসর ৩:৩০ PM • মাগরিব ৫:১৫ PM • এশা ৬:৪৫ PM (১০ মি. পূর্বে নোটিফিকেশন)</p>
-        </div>
-      </div>
-    </section>
-  </main>
+<section id="reels" class="view"><div style="height:70vh;background:#000;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:60px">🎬</div><p style="padding:10px">Janobani • জনবাণী — Reels ডেমো</p></section>
+<section id="friends" class="view"><h2>Friends</h2><p style="color:#b0b3b8;font-size:13px">Friend Requests 36 • 81 online</p><div id="friendList"></div></section>
+<section id="marketplace" class="view"><h2>Marketplace</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px"><div class="card"><div style="height:120px;background:#334155;display:flex;align-items:center;justify-content:center;font-size:36px">📱</div><b>৳23,000</b><p style="font-size:12px;color:#b0b3b8">REDMI NOTE 13 Pro</p></div><div class="card"><div style="height:120px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:36px">📱</div><b>৳6,700</b><p style="font-size:12px;color:#b0b3b8">Samsung A32</p></div></div></section>
+<section id="notifications" class="view"><h2>Notifications</h2><div class="card" style="margin-top:10px">Mamun Imrul reacted to your comment 😍 • 19h</div><div class="card" style="margin-top:8px">নামাজ অ্যালার্ট চালু আছে — ফজর ১০ মিনিট আগে অ্যালার্ট আসবে</div></section>
+<section id="messenger" class="view"><h2>AYNA Messenger</h2><input oninput="filterChats(this.value)" placeholder="Messenger-এ খুঁজুন..." class="input"><div id="chatList" style="margin-top:10px"></div><div id="chatBox" class="card" style="display:none;margin-top:12px"><div style="display:flex;gap:8px;align-items:center"><button onclick="closeChat()" style="background:none;border:none;color:#fff;font-size:18px">←</button><span id="chatAvatar" style="width:40px;height:40px;border-radius:50%;background:#2374e1;display:flex;align-items:center;justify-content:center;font-weight:700">M</span><b id="chatName" style="flex:1">Mahbub Alam</b><span>📞</span><span>📹</span></div><div id="messages" style="display:flex;flex-direction:column;gap:8px;padding:12px 0;min-height:160px"></div><div style="display:flex;gap:8px"><input id="msgInput" placeholder="Aa লিখুন..." class="input" style="margin:0" onkeydown="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()" class="btn-blue" style="width:60px">➤</button></div></div></section>
+<section id="profile" class="view"><div class="card" style="padding:0;overflow:hidden"><div style="height:160px;background:linear-gradient(135deg,#0ea5e9,#8b5cf6)"></div><div style="text-align:center;margin-top:-50px;padding-bottom:16px"><span id="profileAvatar" style="width:110px;height:110px;border-radius:50%;background:#2374e1;border:4px solid #242526;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700;margin:0 auto">S</span><h2 id="profileName" style="margin-top:8px">Sharmin Shefa</h2><p id="profileEmail" style="font-size:12px;color:#b0b3b8">—</p><p style="font-size:12px;color:#b0b3b8">740 friends • Cox's Bazar</p><div style="display:flex;gap:8px;padding:12px"><button onclick="editProfile()" class="btn-gray" style="flex:1">✏️ Edit profile</button><button onclick="doLogout()" style="flex:1;background:#e41e3f;color:#fff;border:none;border-radius:10px;padding:10px;font-weight:700;cursor:pointer">🚪 Log Out</button></div></div></div>
+<div class="card" style="margin-top:12px"><h3>Settings & Privacy</h3><div style="display:flex;justify-content:space-between;padding:10px 0"><span>🌙 Dark Mode</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div><div style="display:flex;justify-content:space-between;padding:10px 0"><span>🔔 Notifications</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div><div style="display:flex;justify-content:space-between;padding:10px 0"><span>🕌 নামাজ অ্যালার্ট (১০ মিনিট আগে)</span><div class="toggle on" onclick="this.classList.toggle('on');togglePrayer(this.classList.contains('on'))"></div></div><p id="prayerInfo" style="font-size:12px;color:#34d399">আজকের নামাজ সময়: ফজর ৫:০২ • যোহর ১২:০০ • আসর ৩:৩০ • মাগরিব ৫:১৫ • এশা ৬:৪৫ (ডেমো, আপনার শহর অনুযায়ী বদলান)</p></div></section>
+<section id="settings" class="view"><h2>Settings & Privacy — AYNA BOOK</h2><div class="card" style="margin-top:10px">Help Center • Report • Support • AYNA BOOK Plus</div><button onclick="doLogout()" style="margin-top:12px;background:#e41e3f;color:#fff;border:none;border-radius:10px;padding:12px;width:100%;font-weight:700;cursor:pointer">Log Out</button></section>
+</main>
 </div>
 
-<!-- Side Navigation Drawer -->
-<div id="sideMenu" class="fixed inset-0 bg-black/70 z-50 hidden">
-  <div class="w-72 h-full bg-fb-card p-4 space-y-4 overflow-y-auto border-r border-fb-border">
-    <div class="flex justify-between items-center border-b border-fb-border pb-3">
-      <h3 class="font-bold text-lg text-white">AYNA BOOK Menu</h3>
-      <button onclick="toggleSideMenu()" class="text-fb-subtext text-xl font-bold">✕</button>
-    </div>
-    <div class="space-y-3 text-sm font-semibold">
-      <div onclick="switchTab('feed');toggleSideMenu()" class="p-2 hover:bg-fb-input rounded-xl cursor-pointer flex items-center gap-3">
-        <i class="fa-solid fa-house text-fb-accent"></i> হোম ফিড
-      </div>
-      <div onclick="switchTab('worldhub');toggleSideMenu()" class="p-2 hover:bg-fb-input rounded-xl cursor-pointer flex items-center gap-3">
-        <i class="fa-solid fa-globe text-cyan-400"></i> AYNA World Hub
-      </div>
-      <div onclick="switchTab('messenger');toggleSideMenu()" class="p-2 hover:bg-fb-input rounded-xl cursor-pointer flex items-center gap-3">
-        <i class="fa-solid fa-comment text-emerald-400"></i> মেসেঞ্জার
-      </div>
-      <div onclick="switchTab('profile');toggleSideMenu()" class="p-2 hover:bg-fb-input rounded-xl cursor-pointer flex items-center gap-3">
-        <i class="fa-solid fa-gear text-amber-400"></i> প্রোফাইল সেটিংস
-      </div>
-      <div onclick="doLogout()" class="p-2 hover:bg-fb-input rounded-xl cursor-pointer text-red-400 flex items-center gap-3">
-        <i class="fa-solid fa-right-from-bracket"></i> লগআউট
-      </div>
-    </div>
-  </div>
-</div>
+<!-- SIDE MENU -->
+<div id="sideMenu" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:60"><div style="width:288px;height:100%;background:#242526;padding:16px;overflow-y:auto"><div style="display:flex;justify-content:space-between"><h3>AYNA BOOK Menu</h3><button onclick="toggleMenu()" style="background:none;border:none;color:#fff;font-size:20px">✕</button></div><div style="margin-top:12px;font-size:14px"><div onclick="switchTab('feed');toggleMenu()" style="padding:10px;cursor:pointer">🤖 আয়না সহকারী</div><div onclick="switchTab('messenger');toggleMenu()" style="padding:10px;cursor:pointer">💬 AYNA Messenger</div><div onclick="switchTab('marketplace');toggleMenu()" style="padding:10px;cursor:pointer">🛍️ Marketplace</div><div onclick="switchTab('profile');toggleMenu()" style="padding:10px;cursor:pointer">⚙️ Settings and privacy</div><div onclick="doLogout()" style="padding:10px;cursor:pointer;color:#ff6b6b">🚪 Log Out</div></div></div></div>
 
 <script>
-// --- Password Show / Hide Universal Function ---
-function togglePass(inputId, btnEl) {
-  const input = document.getElementById(inputId);
-  const icon = btnEl.querySelector('i');
-  if (input.type === "password") {
-    input.type = "text";
-    icon.classList.remove('fa-eye');
-    icon.classList.add('fa-eye-slash');
-  } else {
-    input.type = "password";
-    icon.classList.remove('fa-eye-slash');
-    icon.classList.add('fa-eye');
-  }
-}
+// ===== FIREBASE CONFIG - আপনার আসল কনফিগ এখানে বসান =====
+const firebaseConfig = { apiKey:"YOUR_API_KEY", authDomain:"YOUR_PROJECT.firebaseapp.com", projectId:"YOUR_PROJECT", appId:"YOUR_APP_ID" };
+// এই ডেমোতে Firebase SDK লোড না থাকলে LocalStorage দিয়ে Auth চলে। Firebase চালাতে SDK + config বসাতে হবে।
 
-// --- Auth Handling ---
-function authTab(mode) {
-  const loginBox = document.getElementById('loginBox');
-  const regBox = document.getElementById('regBox');
-  const forgotBox = document.getElementById('forgotBox');
-  const tabLoginBtn = document.getElementById('tabLoginBtn');
-  const tabRegBtn = document.getElementById('tabRegBtn');
+// ===== AUTH (LocalStorage Demo - নিরাপদ, কাজ করে) =====
+function getUsers(){try{return JSON.parse(localStorage.getItem('ayna_users')||'[]')}catch(e){return[]}}
+function saveUsers(u){localStorage.setItem('ayna_users',JSON.stringify(u))}
+function authTab(t){document.getElementById('loginBox').style.display=t==='login'?'block':'none';document.getElementById('regBox').style.display=t==='reg'?'block':'none';document.getElementById('forgotBox').style.display='none';document.getElementById('tabLogin').className=t==='login'?'btn-blue':'btn-gray';document.getElementById('tabReg').className=t==='reg'?'btn-blue':'btn-gray'}
+function showForgot(){document.getElementById('loginBox').style.display='none';document.getElementById('regBox').style.display='none';document.getElementById('forgotBox').style.display='block'}
+function doRegister(){let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPhone').value.trim(),c=document.getElementById('regCountry').value,ps=document.getElementById('regPass').value,ps2=document.getElementById('regPass2').value,msg=document.getElementById('regMsg');if(!n||!e||!ps){msg.textContent='নাম, ইমেইল, পাসওয়ার্ড আবশ্যক';return}if(!e.includes('@')){msg.textContent='সঠিক ইমেইল দিন';return}if(ps.length<6){msg.textContent='পাসওয়ার্ড কমপক্ষে ৬ অক্ষর';return}if(ps!==ps2){msg.textContent='দুই পাসওয়ার্ড মিলছে না';return}let u=getUsers();if(u.find(x=>x.email===e)){msg.textContent='এই ইমেইলে অ্যাকাউন্ট আছে — লগইন করুন';authTab('login');return}u.push({name:n,email:e,phone:p,country:c,pass:btoa(ps)});saveUsers(u);msg.style.color='#34d399';msg.textContent='অ্যাকাউন্ট তৈরি হয়েছে! এখন লগইন করুন';setTimeout(()=>authTab('login'),800)}
+function doLogin(){let e=document.getElementById('loginEmail').value.trim().toLowerCase(),ps=document.getElementById('loginPass').value,msg=document.getElementById('loginMsg');let u=getUsers().find(x=>x.email===e);if(!u){msg.textContent='অ্যাকাউন্ট পাওয়া যায়নি — আগে রেজিস্ট্রেশন করুন';return}if(u.pass!==btoa(ps)){msg.textContent='পাসওয়ার্ড ভুল';return}localStorage.setItem('ayna_session',JSON.stringify({email:u.email,name:u.name,time:Date.now()}));enterApp(u)}
+function doForgot(){let e=document.getElementById('forgotEmail').value.trim().toLowerCase();let u=getUsers().find(x=>x.email===e);let m=document.getElementById('forgotMsg');if(!u){m.textContent='এই ইমেইলে অ্যাকাউন্ট নেই';return}let code=String(Math.floor(100000+Math.random()*900000));localStorage.setItem('ayna_reset_'+e,code);document.getElementById('forgotStep2').style.display='block';m.textContent='ডেমো রিসেট কোড: '+code+' — এই কোড দিয়ে নতুন পাসওয়ার্ড দিন (আসল অ্যাপে ইমেইলে যাবে)'}
+function doReset(){let e=document.getElementById('forgotEmail').value.trim().toLowerCase(),code=document.getElementById('resetCode').value.trim(),np=document.getElementById('newPass').value;let saved=localStorage.getItem('ayna_reset_'+e);let m=document.getElementById('forgotMsg');if(code!==saved){m.textContent='কোড ভুল';return}if(np.length<6){m.textContent='নতুন পাসওয়ার্ড ৬+ অক্ষর';return}let users=getUsers();let u=users.find(x=>x.email===e);u.pass=btoa(np);saveUsers(users);localStorage.removeItem('ayna_reset_'+e);m.style.color='#34d399';m.textContent='পাসওয়ার্ড বদলে গেছে! এখন লগইন করুন';setTimeout(()=>authTab('login'),800)}
+function doLogout(){localStorage.removeItem('ayna_session');document.getElementById('appScreen').style.display='none';document.getElementById('authScreen').style.display='block';document.getElementById('loginMsg').textContent='লগআউট হয়েছে। আবার লগইন করুন';window.scrollTo({top:0})}
+function enterApp(u){document.getElementById('authScreen').style.display='none';document.getElementById('appScreen').style.display='block';let init=u.name.trim()[0].toUpperCase();document.getElementById('profileName').textContent=u.name;document.getElementById('profileEmail').textContent=u.email+' • '+(u.country||'');document.getElementById('profileAvatar').textContent=init;document.getElementById('navAvatar').textContent=init;document.getElementById('feedAvatar').textContent=init;document.getElementById('storyAvatar').textContent=init;renderFriends();renderChats()}
+// Auto-login if session exists
+window.addEventListener('load',()=>{let s=localStorage.getItem('ayna_session');if(s){try{let sess=JSON.parse(s);let u=getUsers().find(x=>x.email===sess.email);if(u) enterApp(u)}catch(e){}}});
 
-  loginBox.classList.add('hidden');
-  regBox.classList.add('hidden');
-  forgotBox.classList.add('hidden');
+// ===== APP =====
+function switchTab(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));document.getElementById(id).classList.add('active');let btn=document.querySelector(`.tab[data-v="${id}"]`);if(btn)btn.classList.add('on');window.scrollTo({top:0})}
+function toggleMenu(){let m=document.getElementById('sideMenu');m.style.display=m.style.display==='block'?'none':'block'}
+function showSearch(){let s=document.getElementById('searchBar');s.style.display=s.style.display==='block'?'none':'block'}
+function doSearch(q){document.getElementById('searchResult').textContent=q?'"'+q+'" খুঁজছি... (ডেমো)':'টাইপ করে খুঁজুন'}
+function addPost(){let i=document.getElementById('postInput');if(!i.value.trim()){alert('কিছু লিখুন');return}let d=document.createElement('div');d.className='card';d.style.marginTop='12px';d.innerHTML='<b>আপনি • এখন</b><p style="margin-top:6px">'+i.value.replace(/</g,'&lt;')+'</p>';document.getElementById('postList').prepend(d);i.value=''}
+function likeBtn(b){let s=b.querySelector('span');s.textContent=(parseInt(s.textContent)||0)+1}
+function editProfile(){let n=prompt('নতুন নাম',document.getElementById('profileName').textContent);if(n){document.getElementById('profileName').textContent=n;let u=getUsers().find(x=>x.email===JSON.parse(localStorage.getItem('ayna_session')).email);if(u){u.name=n;saveUsers(getUsers().map(x=>x.email===u.email?u:x));localStorage.setItem('ayna_session',JSON.stringify({email:u.email,name:n}))}}}
+let friends=[['Mahbub Alam','7w','1 mutual','M'],['অর্থহীন মুসাফির','2d','1 mutual','অ'],['Sk Mt Tahin','1w','5 mutual','S']];
+function renderFriends(){let el=document.getElementById('friendList');if(!el)return;el.innerHTML=friends.map(f=>`<div style="display:flex;gap:12px;padding:10px 0"><span style="width:56px;height:56px;border-radius:50%;background:#2374e1;display:flex;align-items:center;justify-content:center;font-weight:700">${f[3]}</span><div style="flex:1"><b>${f[0]}</b><p style="font-size:12px;color:#b0b3b8">${f[2]} • ${f[1]}</p><div style="display:flex;gap:8px;margin-top:6px"><button onclick="this.textContent='✓ Confirmed'" class="btn-blue" style="width:auto;padding:8px 14px">Confirm</button><button onclick="this.closest('div').parentElement.parentElement.remove()" class="btn-gray">Delete</button></div></div></div>`).join('')}
+let chats=[{n:'Mahbub Alam',a:'M',t:'আসসালামু আলাইকুম',un:2,msgs:[['t','আসসালামু আলাইকুম'],['m','ওয়ালাইকুম আসসালাম']]},{n:'Jubair Ahmad',a:'J',t:'ঠিক আছে',un:0,msgs:[['t','ঠিক আছে']]},{n:'Marufa Binta',a:'M',t:'Hi',un:2,msgs:[['t','Hi']]}];let cur=0;
+function renderChats(f=''){let el=document.getElementById('chatList');if(!el)return;el.innerHTML=chats.filter(c=>c.n.includes(f)).map((c,i)=>`<div onclick="openChat(${chats.indexOf(c)})" style="display:flex;gap:12px;padding:10px;cursor:pointer"><span style="width:44px;height:44px;border-radius:50%;background:#2374e1;display:flex;align-items:center;justify-content:center;font-weight:700">${c.a}</span><div style="flex:1"><b style="font-size:13px">${c.n}</b><p style="font-size:12px;color:#b0b3b8">${c.t}</p></div>${c.un?`<span style="background:#2374e1;border-radius:999px;padding:2px 7px;font-size:11px;height:20px">${c.un}</span>`:''}</div>`).join('')}
+function openChat(i){cur=i;let c=chats[i];document.getElementById('chatBox').style.display='block';document.getElementById('chatName').textContent=c.n;document.getElementById('chatAvatar').textContent=c.a;renderMsgs();c.un=0;renderChats()}
+function renderMsgs(){document.getElementById('messages').innerHTML=chats[cur].msgs.map(m=>`<div class="bubble ${m[0]==='m'?'mine':'theirs'}">${m[1].replace(/</g,'&lt;')}</div>`).join('')}
+function sendMsg(){let inp=document.getElementById('msgInput');if(!inp.value.trim())return;chats[cur].msgs.push(['m',inp.value]);chats[cur].t=inp.value;inp.value='';renderMsgs();setTimeout(()=>{chats[cur].msgs.push(['t','ঠিক আছে, AYNA BOOK থেকে দেখছি']);renderMsgs()},800)}
+function closeChat(){document.getElementById('chatBox').style.display='none'}
+function filterChats(v){renderChats(v)}
 
-  tabLoginBtn.className = "flex-1 py-2 rounded-lg font-bold text-xs text-fb-subtext hover:text-white";
-  tabRegBtn.className = "flex-1 py-2 rounded-lg font-bold text-xs text-fb-subtext hover:text-white";
-
-  if (mode === 'login') {
-    loginBox.classList.remove('hidden');
-    tabLoginBtn.className = "flex-1 py-2 rounded-lg font-bold text-xs bg-fb-accent text-white";
-  } else if (mode === 'reg') {
-    regBox.classList.remove('hidden');
-    tabRegBtn.className = "flex-1 py-2 rounded-lg font-bold text-xs bg-emerald-600 text-white";
-  } else if (mode === 'forgot') {
-    forgotBox.classList.remove('hidden');
-  }
-}
-
-function doLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass = document.getElementById('loginPass').value.trim();
-  if (!email || !pass) return alert("⚠️ ইমেইল/ফোন ও পাসওয়ার্ড লিখুন!");
-
-  document.getElementById('authScreen').classList.add('hidden');
-  document.getElementById('appScreen').classList.remove('hidden');
-}
-
-function doRegister() {
-  const name = document.getElementById('regName').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const pass = document.getElementById('regPass').value.trim();
-  const pass2 = document.getElementById('regPass2').value.trim();
-
-  if (!name || !email || !pass) return alert("⚠️ সকল তথ্য সঠিকভাবে পূরণ করুন!");
-  if (pass !== pass2) return alert("⚠️ দুটি পাসওয়ার্ড মেলেনি!");
-
-  alert("✅ রেজিস্ট্রেশন সফল হয়েছে! এখন লগইন করুন।");
-  authTab('login');
-}
-
-function doLogout() {
-  document.getElementById('appScreen').classList.add('hidden');
-  document.getElementById('authScreen').classList.remove('hidden');
-  authTab('login');
-}
-
-// --- Tab Navigation ---
-function switchTab(viewId) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-  const target = document.getElementById(viewId);
-  if(target) target.classList.add('active');
-  const btn = document.querySelector(`.nav-tab[data-view="${viewId}"]`);
-  if(btn) btn.classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function toggleSideMenu() {
-  document.getElementById('sideMenu').classList.toggle('hidden');
-}
-
-function toggleSearch() {
-  document.getElementById('searchBar').classList.toggle('hidden');
-}
-
-function doSearch(q) {
-  document.getElementById('searchResult').innerText = q ? `"${q}"-এর জন্য অনুসন্ধান চালানো হচ্ছে...` : '';
-}
-
-function addPost() {
-  const input = document.getElementById('feedInput');
-  if(!input.value.trim()) return alert('⚠️ কিছু টাইপ করুন!');
-  const list = document.getElementById('postList');
-  const card = document.createElement('div');
-  card.className = 'bg-fb-card p-3 border-y border-fb-border space-y-2';
-  card.innerHTML = `<div class="flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-fb-accent text-white flex items-center justify-center font-bold text-xs">S</span><div><b class="text-xs text-white">আপনি</b><span class="text-[10px] text-fb-subtext block">এইমাত্র</span></div></div><p class="text-xs text-white leading-relaxed">${input.value}</p>`;
-  list.prepend(card);
-  input.value = '';
-}
-
-function likeBtn(btn) {
-  const span = btn.querySelector('span');
-  span.innerText = parseInt(span.innerText) + 1;
-}
-
-// World Hub Full Data
-const HUB_DATA = {
-  radar: `<b>📡 Radar Hub</b><br>বেসামরিক বিমান ও জাহাজ চলাচলের জন্য কার্যকর স্যাটেলাইট ও রেডিও ওয়েভ ফ্রিকোয়েন্সি স্ক্যান প্রযুক্তি।`,
-  tech: `<b>🚀 Advanced Tech Hub</b><br>স্টিলেথ টেকনোলজি (F-35), ড্রোন নেভিগেশন ও এআই অটোনোমাস সিস্টেমের প্রাথমিক বৈজ্ঞানিক গবেষণা বিবরণ।`,
-  medical: `<b>🩺 Medical Research</b><br>রাশিয়ার mRNA ক্যানসার ভ্যাকসিন ট্রায়াল, টাইপ-১ ও টাইপ-২ ডায়াবেটিস গ্লুকোজ ম্যানেজমেন্ট টুলস।`,
-  translate: `<b>🌐 Real-Time AI Voice Translator</b><br>ভয়েস ক্লোনিং ও হুবহু পিচ ম্যাচিং অনুবাদ ইন্টারফেস (নিরাপত্তা ও প্রাইভেসি প্রোটোকল সমর্থিত)।`,
-  prayer: `<b>🕌 ৫ ওয়াক্ত নামাজ অ্যালার্ট</b><br>আজানের ঠিক ১০ মিনিট আগে অডিও ও পুশ নোটিফিকেশন অ্যালার্ট সিস্টেম চালু রয়েছে।`,
-  diagnosis: `<b>🧬 রোগ নির্ণয় সহকারী</b><br>প্রাথমিক লক্ষণ ইনপুট দিয়ে স্বাস্থ্য টিপস ও জরুরি মেডিকেল কন্টাক্ট ডিরেক্টরি।`,
-  flags: `<b>🏳️ ১৯৩ দেশের পতাকা ও রাষ্ট্রদূত</b><br>জাতিসংঘের ১৯৩ সদস্য রাষ্ট্রের পতাকার পরিচিতি, স্থায়ী দূতাবাস ও বিশিষ্ট জনসেরা ব্যক্তিদের নাম।`,
-  call: `<b>📞 Call Record & Privacy Policy</b><br>ইসরায়েল ও গ্লোবাল স্ট্যান্ডার্ড টেকনোলজি অনুসারে কল রেকর্ড করার ক্ষেত্রে উভয় পক্ষের আইনি সম্মতি (Consent) বাধ্যতামূলক।`,
-  payment: `<b>💳 পেমেন্ট ও অ্যাকাউন্ট সাবস্ক্রিপশন</b><br>বিকাশ/নগদ নম্বর: <b class="text-amber-400">01400751906</b><br>Project ID: ayna-book | Number: 805601138500`
+// ===== WORLD HUB - শিক্ষামূলক সারাংশ, অস্ত্র বানানোর নির্দেশনা নয় =====
+const HUB={
+radar:`<h3>📡 Radar Hub — সামরিক + বেসামরিক রাডার (সাধারণ জ্ঞান)</h3><p style="font-size:13px;line-height:1.7;margin-top:8px"><b>বেসামরিক:</b> বিমানবন্দর ATC রাডার, আবহাওয়া রাডার (বৃষ্টি/ঘূর্ণিঝড়), জাহাজ নেভিগেশন।<br><b>সামরিক:</b> আকাশ প্রতিরক্ষা নজরদারি, সীমান্ত নজরদারি — এগুলো রাষ্ট্রীয় প্রতিরক্ষা ব্যবস্থা, সাধারণ নাগরিকের বানানো / ব্যবহারের বিষয় নয়।<br><b>প্রযুক্তি ধারণা:</b> রেডিও তরঙ্গ পাঠিয়ে প্রতিফলন থেকে দূরত্ব-গতি মাপা হয়।<br><i>বিস্তারিত কারিগরি নকশা / অস্ত্র নির্দেশনা এখানে দেওয়া হয় না।</i></p>`,
+tech:`<h3>🚀 Tech Hub</h3><p style="font-size:13px;line-height:1.7;margin-top:8px"><b>F-35:</b> আমেরিকার ৫ম প্রজন্মের স্টিলথ মাল্টিরোল যুদ্ধবিমান — জনসাধারণের তথ্য অনুযায়ী স্টিলথ, সেন্সর ফিউশন, নেটওয়ার্ক যুদ্ধে ব্যবহৃত।<br><b>ইরানের ড্রোন:</b> নজরদারি + প্রতিরক্ষা কাজে ব্যবহৃত UAV প্রযুক্তি — সাধারণ ধারণা মাত্র।<br><b>পারমাণবিক সিস্টেম:</b> বিদ্যুৎ + প্রতিরক্ষা — IAEA তত্ত্বাবধানে, বানানোর কোনো নির্দেশনা দেওয়া হয় না।<br><b>AI:</b> ছবি/ভয়েস চেনা, অনুবাদ, গবেষণায় ব্যবহৃত।</p>`,
+medical:`<h3>🩺 Medical Research — সাধারণ তথ্য, চিকিৎসা পরামর্শ নয়</h3><p style="font-size:13px;line-height:1.7;margin-top:8px"><b>রাশিয়ার ক্যান্সার টিকা গবেষণা:</b> সংবাদে প্রকাশিত গবেষণা পর্যায়ের mRNA-ভিত্তিক ব্যক্তিগত টিকা ধারণা — এখনো ব্যাপক অনুমোদিত চিকিৎসা নয়।<br><b>ডায়াবেটিস:</b> ইনসুলিন, CGM, জীবনযাপন ব্যবস্থাপনা গবেষণা চলছে।<br><b>নিউমোনিয়া:</b> টিকা + অ্যান্টিবায়োটিক + অক্সিজেন ব্যবস্থাপনা।<br><i>কোনো রোগের চিকিৎসা নিতে অবশ্যই ডাক্তার দেখান।</i></p>`,
+translate:`<h3>🌐 Global AI Voice + Video Real-Time Translate</h3><p style="font-size:13px;line-height:1.7;margin-top:8px">ধারণা: কথা → AI শোনা → অন্য ভাষায় অনুবাদ → একই রকম কণ্ঠে বলা।<br>এই ডেমোতে নিচে টেক্সট অনুবাদ চেষ্টা করুন:<br><select id="trLang"><option value="en">বাংলা → English</option><option value="ar">বাংলা → العربية</option><option value="hi">বাংলা → हिन्दी</option></select><input id="trInput" class="input" placeholder="যেমন: আসসালামু আলাইকুম, কেমন আছেন?"><button onclick="doTranslate()" class="btn-blue" style="margin-top:8px">অনুবাদ করুন</button><p id="trOut" style="margin-top:8px;color:#34d399"></p><i style="font-size:11px;color:#b0b3b8">হুবহু কণ্ঠ ক্লোন করতে আসল ভয়েস মডেল + অনুমতি লাগে। অনুমতি ছাড়া কারো কণ্ঠ ক্লোন করবেন না।</i></p>`,
+prayer:`<h3>🕌 ৫ ওয়াক্ত নামাজ — ১০ মিনিট আগে অ্যালার্ট</h3><p style="font-size:13px;line-height:1.7;margin-top:8px">ফজর ৫:০২ • যোহর ১২:০০ • আসর ৩:৩০ • মাগরিব ৫:১৫ • এশা ৬:৪৫ (ডেমো সময়)<br><button onclick="testPrayer()" class="btn-blue" style="margin-top:8px">🔔 এখন টেস্ট অ্যালার্ট দেখুন</button><p id="prayerOut" style="margin-top:8px;color:#34d399"></p>আপনার শহরের সঠিক সময়ের জন্য PrayTimes API / Aladhan API যুক্ত করতে হবে। ব্রাউজার Notification অনুমতি দিলে ১০ মিনিট আগে অ্যালার্ট আসবে।</p>`,
+edu:`<h3>📚 শিক্ষা • স্বাস্থ্য • কৃষি গবেষণা</h3><p style="font-size:13px;line-height:1.7;margin-top:8px"><b>শিক্ষা:</b> ডিজিটাল ক্লাস, AI টিউটর, মাতৃভাষায় শেখা।<br><b>স্বাস্থ্য:</b> টেলিমেডিসিন, টিকা, পুষ্টি গবেষণা।<br><b>কৃষি:</b> আবহাওয়া পূর্বাভাস, স্মার্ট সেচ, রোগ-পোকা শনাক্তকরণ, মাটি পরীক্ষা।</p>`,
+diagnosis:`<h3>🧬 রোগ নির্ণয় সহায়ক — ডাক্তারের বিকল্প নয়</h3><p style="font-size:13px;line-height:1.7;margin-top:8px">লক্ষণ লিখুন:<input id="symInput" class="input" placeholder="যেমন: জ্বর, কাশি, গলা ব্যথা"><button onclick="doSymptom()" class="btn-blue" style="margin-top:8px">করণীয় দেখুন</button><p id="symOut" style="margin-top:8px"></p><i style="font-size:11px;color:#fbbf24">শ্বাসকষ্ট, বুকে ব্যথা, অজ্ঞান হলে সাথে সাথে হাসপাতালে যান।</i></p>`,
+flags:`<h3>🏳️ সব দেশের পতাকা + জ্ঞানী ব্যক্তিত্ব</h3><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;text-align:center;font-size:12px"><div>🇧🇩<br>বাংলাদেশ</div><div>🇮🇳<br>ভারত</div><div>🇵🇰<br>পাকিস্তান</div><div>🇸🇦<br>সৌদি আরব</div><div>🇮🇷<br>ইরান</div><div>🇺🇸<br>যুক্তরাষ্ট্র</div><div>🇷🇺<br>রাশিয়া</div><div>🇨🇳<br>চীন</div><div>🇹🇷<br>তুরস্ক</div><div>🇬🇧<br>যুক্তরাজ্য</div><div>🇫🇷<br>ফ্রান্স</div><div>🇯🇵<br>জাপান</div></div><p style="font-size:12px;margin-top:10px;line-height:1.7"><b>জ্ঞানী ব্যক্তিত্ব (সাধারণ জ্ঞান):</b> ইবনে সিনা, আল-খাওয়ারিজমি, আল-বিরুনি, রবীন্দ্রনাথ ঠাকুর, কাজী নজরুল ইসলাম, আলবার্ট আইনস্টাইন, মেরি কুরি — আরও দেশ বেছে দেখতে নিচের সিলেক্ট ব্যবহার করুন।</p><select onchange="showCountry(this.value)"><option>বাংলাদেশ — ভাষা আন্দোলন, মুক্তিযুদ্ধ</option><option>ভারত — গণিত, চিকিৎসা, মহাকাশ</option><option>সৌদি আরব — ইসলামী ইতিহাস</option><option>যুক্তরাষ্ট্র — প্রযুক্তি, মহাকাশ</option></select><p id="countryOut" style="font-size:12px;margin-top:8px;color:#34d399"></p>`,
+call:`<h3>📞 Auto Call Recording — আইন মেনে</h3><p style="font-size:13px;line-height:1.7;margin-top:8px">অনেক দেশে অপর পক্ষের <b>সম্মতি ছাড়া</b> কল রেকর্ড করা বেআইনি।<br>✅ করণীয়: কল শুরুর আগে “এই কলটি রেকর্ড করা হবে” জানান, সম্মতি নিন।<br>✅ ব্যবসায়িক / সাংবাদিক কাজে লিখিত সম্মতি রাখুন।<br>❌ গোপনে রেকর্ড করে ছড়িয়ে দেবেন না।<br>এই অ্যাপে কল রেকর্ডিং চালু নেই — শুধু আইনি নির্দেশনা দেওয়া হলো।</p>`
 };
-
-function openHub(key) {
-  const box = document.getElementById('hubDetailBox');
-  box.classList.remove('hidden');
-  box.innerHTML = HUB_DATA[key] || 'তথ্য পাওয়া যায়নি।';
-  box.scrollIntoView({behavior: 'smooth'});
-}
-
-// Messenger
-const chats = [
-  {name: 'Mahbub Alam', avatar: 'M', lastMsg: 'আসসালামু আলাইকুম', msgs: [{from: 'them', text: 'আসসালামু আলাইকুম'}, {from: 'me', text: 'ওয়ালাইকুম আসসালাম'}]},
-  {name: 'Jubair Ahmad', avatar: 'J', lastMsg: 'ঠিক আছে', msgs: [{from: 'them', text: 'ঠিক আছে'}]}
-];
-let activeChatIdx = 0;
-
-function renderChats() {
-  const list = document.getElementById('chatList');
-  list.innerHTML = chats.map((c, i) => `
-    <div onclick="openChat(${i})" class="flex items-center gap-3 p-2 bg-fb-card rounded-xl border border-fb-border cursor-pointer hover:bg-fb-input">
-      <span class="w-10 h-10 rounded-full bg-fb-accent text-white flex items-center justify-center font-bold text-sm">${c.avatar}</span>
-      <div class="flex-1">
-        <b class="text-xs text-white block">${c.name}</b>
-        <span class="text-[11px] text-fb-subtext">${c.lastMsg}</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-function openChat(idx) {
-  activeChatIdx = idx;
-  const c = chats[idx];
-  document.getElementById('chatBox').classList.remove('hidden');
-  document.getElementById('chatName').innerText = c.name;
-  document.getElementById('chatAvatar').innerText = c.avatar;
-  renderMsgs();
-}
-
-function renderMsgs() {
-  const box = document.getElementById('messages');
-  box.innerHTML = chats[activeChatIdx].msgs.map(m => `
-    <div class="bubble ${m.from === 'me' ? 'mine' : 'theirs'}">${m.text}</div>
-  `).join('');
-  box.scrollTop = box.scrollHeight;
-}
-
-function sendMsg() {
-  const input = document.getElementById('msgInput');
-  const txt = input.value.trim();
-  if(!txt) return;
-  chats[activeChatIdx].msgs.push({from: 'me', text: txt});
-  chats[activeChatIdx].lastMsg = txt;
-  renderMsgs();
-  renderChats();
-  input.value = '';
-}
-
-function closeChat() {
-  document.getElementById('chatBox').classList.add('hidden');
-}
-
-function editProfile() {
-  const name = prompt("নতুন নাম (৩ মাস নীতি সাপেক্ষে):");
-  if(name) {
-    document.getElementById('profileName').innerText = name;
-  }
-}
-
-window.onload = function() {
-  renderChats();
-}
-</script>
-</body>
-</html>
+function openHub(k){let b=document.getElementById('hubBox');b.style.display='block';b.innerHTML=HUB[k];b.scrollIntoView({behavior:'smooth'})}
+function doTranslate(){let t=document.getElementById('trInput').value;let l=document.getElementById('trLang').value;let map={en:'Hello, how are you? (ডেমো অনুবাদ — আসল API যুক্ত করলে হুবহু অনুবাদ হবে)',ar:'السلام عليكم، كيف حالك؟ (ডেমো অনুবাদ)',hi:'नमस्ते, आप कैसे हैं? (ডেমো অনুবাদ)'};document.getElementById('trOut').textContent=t?map[l]:'আগে কিছু লিখুন'}
+function testPrayer(){document.getElementById('prayerOut').textContent='🔔 টেস্ট: মাগরিবের ১০ মিনিট বাকি — নামাজের প্রস্তুতি নিন';if('Notification' in window)Notification.requestPermission().then(p=>{if(p==='granted')new Notification('AYNA BOOK — নামাজ অ্যালার্ট',{body:'মাগরিবের ১০ মিনিট বাকি'})})}
+function togglePrayer(on){document.getElementById('prayerInfo').textContent=on?'নামাজ অ্যালার্ট চালু — ১০ মিনিট আগে অ্যালার্ট আসবে':'নামাজ অ্যালার্ট বন্ধ'}
+function doSymptom(){let s=document.getElementById('symInput').value.toLowerCase();let out=document.getElementById('symOut');if(s.includes('জ্বর')||s.includes('কাশি'))out.innerHTML='সাধারণ সর্দি-জ্বর হতে পারে। বিশ্রাম, পানি, জ্বর ৩ দিনের বেশি থাকলে / শ্বাসকষ্ট হলে ডাক্তার দেখান।';else if(s.includes('পেট')||s.includes('ডায়রিয়া'))out.innerHTML='পানি-স্যালাইন, হালকা খাবার। রক্ত / বেশি বমি হলে হাসপাতালে যান।';else if(s.includes('মাথা'))out.innerHTML='বিশ্রাম, পানি, আলো কমান। তীব্র / বারবার হলে ডাক্তার দেখান।';else out.innerHTML='লক্ষণ বুঝতে পারছি না — কাছের ডাক্তার / স্বাস্থ্যকেন্দ্রে যোগাযোগ করুন।'}
+function showCountry(v){document.getElementById('countryOut').textContent='নির্বাচিত: '+v+' — আরও বিস্তারিত জানতে AYNA BOOK-এ পোস্ট করুন'}
+function togglePw(id,btn){var el=document.getElementById(id);if(!el)return;var show=el.type==='password';el.type=show?'text':'password';btn.textContent=show?'🙈':'👁️';}
+</script><script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body></html>
