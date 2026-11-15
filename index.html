@@ -117,7 +117,7 @@ async function doLogin(){let phone=document.getElementById('loginPhone').value;l
 async function doUpdate(){let np=document.getElementById('newPass').value;try{if(db) await db.ref('users/'+currentPhone+'/password').set(np)}catch(e){}let u=JSON.parse(localStorage.getItem('ayna_user')||'{}');u.password=np;localStorage.setItem('ayna_user',JSON.stringify(u));currentPass=np;alert('Password Updated - Success')}
 function doLogout(){currentPhone="";currentPass="";localStorage.removeItem('ayna_user');showPage('loginPage')}
 function doUnlock(){let entered=document.getElementById('unlockPass').value;let saved=localStorage.getItem('ayna_user');let realPass=currentPass;if(saved){try{let u=JSON.parse(saved);realPass=u.password;currentPhone=u.phone;currentPass=u.password}catch(e){}}if(entered!==""&&entered===realPass){showPage('homePage')}else{document.getElementById('unlockMsg').innerText='Wrong Password'}}
-window.onload=function(){let saved=localStorage.getItem('ayna_user');if(saved){let u=JSON.parse(saved);currentPhone=u.phone;currentPass=u.password;updateID(u);if(localStorage.getItem('ayna_lock_opt')==='1'){showPage('lockPage')}else{showPage('homePage')}}}
+window.onload=function(){let saved=localStorage.getItem('ayna_user');if(saved){let u=JSON.parse(saved);currentPhone=u.phone;currentPass=u.password;updateID(u);if(localStorage.getItem('ayna_lock_opt')==='1'){showPage('lockPage')}else{showPage('homePage')}
 </script>
 </body>
 </html>
