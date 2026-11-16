@@ -1,46 +1,82 @@
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 
 import {
   getAuth,
-  setPersistence,
-  browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
 import {
-  getFirestore
-} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+  getDatabase,
+  ref,
+  set,
+  get,
+  update,
+  push,
+  onValue
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 
 import {
-  getDatabase
-} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  setDoc,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-// AYNA BOOK - Firebase Configuration
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
+
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "YOUR_DATABASE_URL",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+  authDomain: "ayna-book.firebaseapp.com",
+  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ayna-book",
+  storageBucket: "ayna-book.firebasestorage.app",
+  messagingSenderId: "805601138500",
+  appId: "1:805601138500:web:81a9adacbedbc5f3626911",
+  measurementId: "G-JWBYNXSBMZ"
 };
 
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
-const db = getFirestore(app);
-const realtimeDB = getDatabase(app);
-
-const authPersistence = setPersistence(
-  auth,
-  browserLocalPersistence
-);
+const database = getDatabase(app);
+const firestore = getFirestore(app);
+const storage = getStorage(app);
 
 export {
   app,
   auth,
-  db,
-  realtimeDB,
-  authPersistence
+  database,
+  firestore,
+  storage,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  ref,
+  set,
+  get,
+  update,
+  push,
+  onValue,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  setDoc,
+  onSnapshot,
+  storageRef,
+  uploadBytes,
+  getDownloadURL
 };
