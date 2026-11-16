@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK - 5 Trillion Quantum 8-Page Edition</title>
+    <title>AYNA BOOK - Full Screen Quantum & Live Ticker Edition</title>
     <style>
         :root {
             --bg-dark: #070b14;
@@ -20,6 +20,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            user-select: none;
         }
 
         body {
@@ -28,40 +29,42 @@
             font-family: 'Segoe UI', 'SolaimanLipi', system-ui, sans-serif;
             font-size: 20px;
             line-height: 1.65;
-            padding-bottom: 100px;
+            overflow-x: hidden;
+            height: 100vh;
         }
 
-        /* অথেনটিকেশন / লগইন ও রেজিস্ট্রেশন ওভারলে */
+        /* ফুল স্ক্রিন রেজিস্ট্রেশন ওভারলে */
         #authOverlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(7, 11, 20, 0.97);
-            z-index: 3000;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #070b14, #0f172a, #1e1b4b);
+            z-index: 5000;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 20px;
             overflow-y: auto;
         }
 
-        .auth-card {
-            background: var(--card-bg);
+        .auth-card-fullscreen {
+            background: rgba(17, 24, 39, 0.95);
             border: 2px solid var(--primary-glow);
-            border-radius: 24px;
-            padding: 25px;
+            border-radius: 28px;
+            padding: 35px 25px;
             width: 100%;
-            max-width: 520px;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
+            max-width: 600px;
+            box-shadow: 0 0 50px rgba(56, 189, 248, 0.5);
+            backdrop-filter: blur(10px);
         }
 
         .auth-title {
-            font-size: 26px;
+            font-size: 30px;
             font-weight: 900;
             text-align: center;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
             background: linear-gradient(to right, #38bdf8, #facc15);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -72,51 +75,51 @@
             background: #090d16;
             border: 1px solid #334155;
             color: #fff;
-            padding: 12px 14px;
-            border-radius: 12px;
-            font-size: 17px;
-            margin-bottom: 12px;
+            padding: 15px;
+            border-radius: 14px;
+            font-size: 18px;
+            margin-bottom: 15px;
         }
 
         .password-wrapper {
             position: relative;
             width: 100%;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
 
         .password-wrapper .auth-input {
             margin-bottom: 0;
-            padding-right: 48px;
+            padding-right: 50px;
         }
 
         .toggle-pass-btn {
             position: absolute;
-            right: 12px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--primary-glow);
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
         }
 
         .payment-box {
-            background: rgba(250, 204, 21, 0.1);
+            background: rgba(250, 204, 21, 0.12);
             border: 1px dashed var(--accent-gold);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 14px;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 15px;
             color: var(--accent-gold);
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
-        /* নেভিগেশন ও হেডার */
+        /* কোয়ান্টাম হেডার */
         .quantum-navbar {
             background: linear-gradient(90deg, #090d16, #1e1b4b, #090d16);
             border-bottom: 2px solid var(--primary-glow);
-            padding: 12px 18px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -124,25 +127,23 @@
             top: 0;
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(56, 189, 248, 0.25);
-            flex-wrap: wrap;
-            gap: 8px;
         }
 
         .brand-title-wrapper {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .brand-title {
-            font-size: 25px;
+            font-size: 26px;
             font-weight: 900;
             background: linear-gradient(to right, #38bdf8, #facc15);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* ১৬px জলজন্তু স্টার ১ সেকেন্ড পর পর সাদা আলো */
+        /* ১৬px জলজন্তু স্টার অ্যানিমেশন */
         .aquatic-glowing-star {
             width: 16px;
             height: 16px;
@@ -156,7 +157,7 @@
             100% { transform: scale(1.3); box-shadow: 0 0 15px #fff, 0 0 25px #38bdf8; opacity: 1; }
         }
 
-        /* ৮টি পেইজের নেভিগেশন ট্যাব বার */
+        /* ফুল স্ক্রিন ট্যাব নেভিগেশন */
         .page-tabs-nav {
             display: flex;
             overflow-x: auto;
@@ -167,15 +168,17 @@
             position: sticky;
             top: 62px;
             z-index: 999;
+            scrollbar-width: none;
         }
+        .page-tabs-nav::-webkit-scrollbar { display: none; }
 
         .page-tab-btn {
             background: #1e293b;
             color: #cbd5e1;
             border: 1px solid #334155;
-            padding: 10px 14px;
+            padding: 10px 16px;
             border-radius: 12px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             white-space: nowrap;
@@ -186,14 +189,15 @@
             background: linear-gradient(90deg, #0284c7, #7c3aed);
             color: #fff;
             border-color: var(--primary-glow);
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
         }
 
         .app-container {
-            max-width: 760px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 15px;
+            padding: 20px 15px;
             display: none;
+            min-height: 85vh;
         }
 
         .app-page {
@@ -206,46 +210,61 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateX(15px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        /* ব্রেকিং নিউজ টিকার */
-        .breaking-ticker {
-            background: linear-gradient(90deg, #dc2626, #991b1b);
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 18px;
+        /* প্রোফাইলের নিচে চলমান লাইভ রেডিও, টিভি ও তাজা খবরের টিকার (Running Ticker) */
+        .live-ticker-banner {
+            background: linear-gradient(90deg, #0f172a, #1e1b4b, #0f172a);
+            border: 1px solid var(--primary-glow);
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 22px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.25);
         }
 
-        /* কার্ড এবং বাটন স্টাইল */
+        .ticker-badge {
+            background: #dc2626;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 900;
+            white-space: nowrap;
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; box-shadow: 0 0 10px #dc2626; }
+            100% { opacity: 0.8; }
+        }
+
         .card-box {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            border-radius: 22px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
 
         .btn-media {
             background: #1e293b;
             color: #e2e8f0;
             border: 1px solid #334155;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 15px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             transition: 0.2s;
         }
 
@@ -258,210 +277,119 @@
             background: linear-gradient(90deg, #0284c7, #7c3aed);
             color: #fff;
             border: none;
-            padding: 12px 22px;
-            border-radius: 12px;
-            font-size: 17px;
+            padding: 14px 26px;
+            border-radius: 14px;
+            font-size: 18px;
             font-weight: 800;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
         }
 
-        /* প্রোফাইল কার্ড */
-        .cover-photo-wrapper {
-            position: relative;
-            height: 200px;
-            border-radius: 16px 16px 0 0;
-            overflow: hidden;
-        }
-
-        .cover-photo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .edit-cover-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(0,0,0,0.7);
-            color: #fff;
-            border: 1px solid #fff;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .profile-info-bar {
-            padding: 0 15px 15px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-top: -55px;
-            position: relative;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .profile-pic {
-            width: 115px;
-            height: 115px;
-            border-radius: 50%;
-            border: 4px solid var(--card-bg);
-            object-fit: cover;
-        }
-
-        .edit-profile-btn {
-            position: absolute;
-            bottom: 4px;
-            right: 4px;
-            background: var(--primary-glow);
-            color: #000;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* পোস্ট ও ত্রি-ডট মেনু */
-        .composer-input {
+        /* বড় লেখার পেইজ (পেইজ ১) */
+        .composer-input-large {
             width: 100%;
             background: #090d16;
             border: 1px solid #334155;
-            border-radius: 14px;
+            border-radius: 16px;
             color: #fff;
-            font-size: 20px;
-            padding: 14px;
-            min-height: 90px;
-            margin-bottom: 12px;
+            font-size: 22px;
+            padding: 18px;
+            min-height: 160px;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+
+        .cover-photo-wrapper {
+            position: relative;
+            height: 220px;
+            border-radius: 18px 18px 0 0;
+            overflow: hidden;
+        }
+
+        .cover-photo { width: 100%; height: 100%; object-fit: cover; }
+        .edit-cover-btn {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(0,0,0,0.7); color: #fff; border: 1px solid #fff;
+            padding: 8px 14px; border-radius: 10px; font-size: 14px; cursor: pointer;
+        }
+
+        .profile-info-bar {
+            padding: 0 20px 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: -65px;
+            position: relative;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .profile-pic {
+            width: 130px; height: 130px; border-radius: 50%;
+            border: 5px solid var(--card-bg); object-fit: cover;
+        }
+
+        .edit-profile-btn {
+            position: absolute; bottom: 5px; right: 5px;
+            background: var(--primary-glow); color: #000; border: none;
+            width: 34px; height: 34px; border-radius: 50%; font-weight: bold; cursor: pointer;
         }
 
         .menu-container { position: relative; }
         .three-dot-btn {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #fff;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
+            background: #1e293b; border: 1px solid #334155; color: #fff;
+            width: 38px; height: 38px; border-radius: 50%; font-size: 18px; cursor: pointer;
         }
 
         .dropdown-menu {
-            position: absolute;
-            right: 0;
-            top: 38px;
-            background: #1e293b;
-            border: 1px solid var(--primary-glow);
-            border-radius: 12px;
-            display: none;
-            z-index: 100;
-            width: 155px;
-            overflow: hidden;
+            position: absolute; right: 0; top: 42px; background: #1e293b;
+            border: 1px solid var(--primary-glow); border-radius: 14px; display: none; z-index: 100; width: 160px; overflow: hidden;
         }
-
         .dropdown-menu button {
-            width: 100%;
-            background: none;
-            border: none;
-            color: #fff;
-            padding: 10px 14px;
-            text-align: left;
-            font-size: 15px;
-            cursor: pointer;
+            width: 100%; background: none; border: none; color: #fff;
+            padding: 12px 16px; text-align: left; font-size: 16px; cursor: pointer;
         }
-
         .dropdown-menu button:hover { background: #334155; }
 
         .post-actions-bar {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            margin-top: 12px;
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px;
         }
-
         .action-btn {
-            background: #0f172a;
-            border: 1px solid #1e293b;
-            color: #e2e8f0;
-            padding: 9px 4px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
+            background: #0f172a; border: 1px solid #1e293b; color: #e2e8f0;
+            padding: 10px 6px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; text-align: center;
         }
 
-        /* রাডার ও কম্পাস অ্যানিমেশন স্টাইল */
+        /* রাডার অ্যানিমেশন */
         .radar-circle {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 3px solid #22c55e;
-            margin: 15px auto;
-            position: relative;
-            background: radial-gradient(circle, rgba(34,197,94,0.2) 0%, rgba(7,11,20,0.9) 70%);
-            overflow: hidden;
+            width: 200px; height: 200px; border-radius: 50%; border: 3px solid #22c55e;
+            margin: 20px auto; position: relative; background: radial-gradient(circle, rgba(34,197,94,0.2) 0%, rgba(7,11,20,0.95) 70%); overflow: hidden;
         }
-
         .radar-sweep {
-            width: 50%;
-            height: 50%;
-            background: linear-gradient(45deg, rgba(34,197,94,0.8), transparent);
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform-origin: 0% 100%;
-            animation: radarSpin 2.5s linear infinite;
+            width: 50%; height: 50%; background: linear-gradient(45deg, rgba(34,197,94,0.8), transparent);
+            position: absolute; top: 0; left: 50%; transform-origin: 0% 100%; animation: radarSpin 2.5s linear infinite;
         }
+        @keyframes radarSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        @keyframes radarSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* মার্কেটপ্লেস গ্রিড */
         .market-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 18px;
         }
-
-        .market-item {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 14px;
-            padding: 12px;
-        }
+        .market-item { background: #0f172a; border: 1px solid #334155; border-radius: 16px; padding: 15px; }
 
         .toast-notification {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(90deg, #0284c7, #7c3aed);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 17px;
-            font-weight: bold;
-            display: none;
-            z-index: 4000;
-            text-align: center;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(90deg, #0284c7, #7c3aed); color: #fff; padding: 14px 28px;
+            border-radius: 35px; font-size: 18px; font-weight: bold; display: none; z-index: 6000; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
-    <!-- লগইন ও রেজিস্ট্রেশন ওভারলে -->
+    <!-- ফুল স্ক্রিন রেজিস্ট্রেশন ও লগইন ওভারলে -->
     <div id="authOverlay">
-        <div class="auth-card">
+        <div class="auth-card-fullscreen">
             <div class="auth-title">AYNA BOOK REGISTRATION</div>
-            <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 14px;">৫ ট্রিলিয়ন কোয়ান্টাম • ৮টি পূর্ণাঙ্গ পেইজ এডিশন</p>
+            <p style="text-align: center; color: var(--text-muted); font-size: 16px; margin-bottom: 20px;">৫ ট্রিলিয়ন কোয়ান্টাম • ফুল স্ক্রিন ও টাচ জেসচার এডিশন</p>
             
             <input type="text" id="regName" class="auth-input" placeholder="আপনার পুরো নাম (স্থায়ী একাউন্ট টাইটেল)">
             <input type="tel" id="regPhone" class="auth-input" placeholder="ফোন নাম্বার">
@@ -486,10 +414,10 @@
 
             <div id="paymentInstructions" class="payment-box" style="display: none;">
                 💳 পেমেন্ট পাঠান: <b>01400751906</b> (বিকাশ, নগদ, রকেট, উপায়, পাইওনিয়ার, পেপাল)
-                <input type="text" id="trxId" class="auth-input" placeholder="TrxID দিন" style="margin-top: 8px; margin-bottom: 0;">
+                <input type="text" id="trxId" class="auth-input" placeholder="TrxID দিন" style="margin-top: 10px; margin-bottom: 0;">
             </div>
 
-            <button class="btn-post-quantum" style="width: 100%;" onclick="handleRegisterLogin()">🚀 একাউন্ট রেজিস্টার ও লগইন করুন</button>
+            <button class="btn-post-quantum" style="width: 100%; margin-top: 10px;" onclick="handleRegisterLogin()">🚀 একাউন্ট রেজিস্টার ও লগইন করুন</button>
         </div>
     </div>
 
@@ -499,29 +427,29 @@
             <div class="aquatic-glowing-star" title="16px Aquatic Glowing Star"></div>
             <div class="brand-title">AYNA BOOK</div>
         </div>
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <button class="btn-media" style="padding: 6px 10px; font-size: 13px;" onclick="playWorldClassSound()">🔊 Hi-Fi সাউন্ড</button>
-            <button class="btn-media" style="padding: 6px 10px; font-size: 13px;" onclick="toggleSecurityPanel()">🔐 পাসওয়ার্ড</button>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="btn-media" style="padding: 8px 12px; font-size: 14px;" onclick="playWorldClassSound()">🔊 Hi-Fi সাউন্ড</button>
+            <button class="btn-media" style="padding: 8px 12px; font-size: 14px;" onclick="toggleSecurityPanel()">🔐 পাসওয়ার্ড</button>
         </div>
     </header>
 
-    <!-- ৮টি আলাদা পেইজের নেভিগেশন বার -->
+    <!-- ফুল স্ক্রিন ট্যাব নেভিগেশন -->
     <nav class="page-tabs-nav" id="pageTabsNav" style="display: none;">
-        <button class="page-tab-btn active" onclick="switchPage('page-1', this)">১. ✍️ লেখালেখি</button>
-        <button class="page-tab-btn" onclick="switchPage('page-2', this)">২. 🎬 ভিডিও দেখা</button>
-        <button class="page-tab-btn" onclick="switchPage('page-3', this)">৩. 📺 রেডিও ও টিভি</button>
-        <button class="page-tab-btn" onclick="switchPage('page-4', this)">৪. 🛍️ মার্কেটিং প্লেস</button>
-        <button class="page-tab-btn" onclick="switchPage('page-5', this)">৫. 📍 GPS, রাডার ও কম্পাস</button>
-        <button class="page-tab-btn" onclick="switchPage('page-6', this)">৬. 💬 AYNA MESSENGER</button>
-        <button class="page-tab-btn" onclick="switchPage('page-7', this)">৭. 🔔 নোটিফিকেশন</button>
-        <button class="page-tab-btn" onclick="switchPage('page-8', this)">৮. 👁️ ভিউ ও রিয়্যাক্ট</button>
+        <button class="page-tab-btn active" onclick="switchPage(0, this)">১. ✍️ বড় লেখার পেইজ</button>
+        <button class="page-tab-btn" onclick="switchPage(1, this)">২. 🎬 ভিডিও দেখা</button>
+        <button class="page-tab-btn" onclick="switchPage(2, this)">৩. 📺 রেডিও ও টিভি</button>
+        <button class="page-tab-btn" onclick="switchPage(3, this)">৪. 🛍️ মার্কেটপ্লেস</button>
+        <button class="page-tab-btn" onclick="switchPage(4, this)">৫. 📍 GPS, রাডার ও কম্পাস</button>
+        <button class="page-tab-btn" onclick="switchPage(5, this)">৬. 💬 AYNA MESSENGER</button>
+        <button class="page-tab-btn" onclick="switchPage(6, this)">৭. 🔔 নোটিফিকেশন</button>
+        <button class="page-tab-btn" onclick="switchPage(7, this)">৮. 👁️ ভিউ ও রিয়্যাক্ট</button>
     </nav>
 
     <div class="app-container" id="mainAppContainer">
 
-        <!-- পাসওয়ার্ড পরিবর্তন ও দেখানো/লুকানো বক্স -->
+        <!-- পাসওয়ার্ড সেটিংস প্যানেল -->
         <div id="securityPanel" class="card-box" style="display: none; border-color: var(--primary-glow);">
-            <h4 style="color: var(--primary-glow); margin-bottom: 10px;">🔐 পাসওয়ার্ড ব্যবস্থাপনা (১১ সংখ্যা)</h4>
+            <h4 style="color: var(--primary-glow); margin-bottom: 12px;">🔐 পাসওয়ার্ড ব্যবস্থাপনা (১১ সংখ্যা)</h4>
             <div class="password-wrapper">
                 <input type="password" id="currentSavedPass" class="auth-input" readonly>
                 <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('currentSavedPass', this)">👁️</button>
@@ -533,47 +461,46 @@
             <button class="btn-post-quantum" onclick="updateAccountPassword()">💾 পাসওয়ার্ড সেভ করুন</button>
         </div>
 
-        <!-- ব্রেকিং নিউজ টিকার -->
-        <div class="breaking-ticker">
-            <span>🔴 BREAKING NEWS:</span>
-            <marquee scrollamount="5" style="font-size: 16px;">AYNA BOOK-এ ৮টি আলাদা পেইজ, সচল অডিও/ভিডিও/লাইভ ভিডিও রেকর্ডিং ও প্লেব্যাক, ৫ ট্রিলিয়ন কোয়ান্টাম এবং GPS রাডার যুক্ত হয়েছে!</marquee>
-        </div>
-
-        <!-- ==================== পেইজ ১: লেখালেখি ও প্রোফাইল ==================== -->
-        <div id="page-1" class="app-page active-page">
-            <!-- প্রোফাইল কার্ড -->
+        <!-- ==================== পেইজ ১: বড় লেখার পেইজ ও প্রোফাইল ==================== -->
+        <div id="page-0" class="app-page active-page">
             <div class="card-box" style="padding: 0; overflow: hidden;">
                 <div class="cover-photo-wrapper">
                     <img id="displayCoverImg" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80" class="cover-photo">
                     <button class="edit-cover-btn" onclick="changeCoverPhoto()">📷 কভার এডিট</button>
                 </div>
                 <div class="profile-info-bar">
-                    <div style="display: flex; align-items: flex-end; gap: 12px;">
+                    <div style="display: flex; align-items: flex-end; gap: 15px;">
                         <div style="position: relative;">
                             <img id="displayProfileImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" class="profile-pic">
                             <button class="edit-profile-btn" onclick="changeProfilePhoto()">✎</button>
                         </div>
                         <div>
-                            <h2 id="displayUserName" style="font-size: 24px;">AYNA Official User</h2>
-                            <p id="displayAccType" style="font-size: 14px; color: var(--accent-gold);">AYNA ID: 2026-10000001</p>
+                            <h2 id="displayUserName" style="font-size: 26px;">AYNA Official User</h2>
+                            <p id="displayAccType" style="font-size: 15px; color: var(--accent-gold);">AYNA ID: 2026-10000001</p>
                         </div>
                     </div>
                     <button class="btn-media" style="border-color: var(--primary-glow);" onclick="instantShareAccount()">⚡ QR ও ID শেয়ার</button>
                 </div>
             </div>
 
-            <!-- সচল অডিও, ভিডিও, লাইভ ভিডিও পোস্ট কম্পোজার -->
+            <!-- প্রোফাইলের ঠিক নিচে চলমান লাইভ রেডিও, টিভি ও তাজা খবরের টিকার (Running Ticker) -->
+            <div class="live-ticker-banner">
+                <div class="ticker-badge">🔴 LIVE NEWS & RADIO</div>
+                <marquee scrollamount="6" style="font-size: 17px; color: var(--accent-gold); font-weight: bold;">
+                    📡 [লাইভ টিভি]: যমুনা ও সময় টিভিতে সংবাদ চলছে | 📻 [লাইভ রেডিও]: বাংলাদেশ বেতার ও ফুর্তি FM-এ ক্রিস্টাল ক্লিয়ার অডিও সম্প্রচার হচ্ছে | ⚡ [তাজা খবর]: ৫ ট্রিলিয়ন কোয়ান্টাম ও ফুল স্ক্রিন টাচ জেসচার আপডেট সফলভাবে কার্যকর!
+                </marquee>
+            </div>
+
+            <!-- বড় লেখার পোস্ট কম্পোজার -->
             <div class="card-box">
-                <textarea id="postInput" class="composer-input" placeholder="আপনার মনের কথা লিখুন..."></textarea>
+                <textarea id="postInput" class="composer-input-large" placeholder="আপনার মনের বড় লেখাটি এখানে লিখুন... (অডিও, ভিডিও, লাইভ ভিডিও সহ)"></textarea>
                 
-                <!-- মিডিয়া প্রিভিউ বক্স (সচল অডিও/ভিডিও/লাইভ ক্যামেরা) -->
-                <div id="liveMediaPreview" style="margin-bottom: 12px; display: none;">
-                    <video id="liveCameraStream" autoplay muted playsinline style="width: 100%; border-radius: 12px; display: none; max-height: 280px; background: #000;"></video>
-                    <div id="attachedMediaLabel" style="color: var(--accent-gold); font-size: 15px; font-weight: bold;"></div>
+                <div id="liveMediaPreview" style="margin-bottom: 15px; display: none;">
+                    <video id="liveCameraStream" autoplay muted playsinline style="width: 100%; border-radius: 14px; display: none; max-height: 320px; background: #000;"></video>
+                    <div id="attachedMediaLabel" style="color: var(--accent-gold); font-size: 16px; font-weight: bold; margin-top: 8px;"></div>
                 </div>
 
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between;">
-                    <!-- সচল ছবি ও ভিডিও আপলোড ইনপুট -->
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between;">
                     <label class="btn-media">
                         🖼️ 8K ছবি
                         <input type="file" accept="image/*" style="display:none;" onchange="handleMediaUpload(this, 'image')">
@@ -591,15 +518,14 @@
                 </div>
             </div>
 
-            <!-- ফিড কন্টেইনার -->
             <div id="feedContainer">
-                <article class="card-box" id="post-1" data-likes="1520" data-views="5400">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                <article class="card-box" id="post-1" data-likes="1850" data-views="6200">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover;">
                             <div>
-                                <div style="font-weight: 800;">AYNA BOOK Global</div>
-                                <div style="font-size: 13px; color: var(--text-muted);">এইমাত্র • 5 Trillion Quantum</div>
+                                <div style="font-weight: 800; font-size: 18px;">AYNA BOOK Global</div>
+                                <div style="font-size: 14px; color: var(--text-muted);">এইমাত্র • 5 Trillion Quantum</div>
                             </div>
                         </div>
                         <div class="menu-container">
@@ -612,13 +538,13 @@
                         </div>
                     </div>
 
-                    <p id="text-post-1" style="font-size: 21px; margin-bottom: 12px;">
-                        AYNA BOOK-এ স্বাগতম! অডিও, ভিডিও, লাইভ ভিডিও এবং ৮টি আলাদা পেইজ এখন সম্পূর্ণ সচল।
+                    <p id="text-post-1" style="font-size: 22px; margin-bottom: 14px;">
+                        AYNA BOOK-এ প্রোফাইলের নিচে সফলভাবে লাইভ রেডিও, টিভি ও তাজা খবরের চলমান টিকার যুক্ত করা হয়েছে!
                     </p>
 
-                    <div style="display: flex; justify-content: space-between; font-size: 14px; color: var(--text-muted); border-bottom: 1px solid #1f2937; padding-bottom: 8px;">
-                        <span id="like-count-post-1">👍 ১,৫২০ লাইক</span>
-                        <span id="view-count-post-1">👁️ ৫,৪০০ ভিউয়ার্স</span>
+                    <div style="display: flex; justify-content: space-between; font-size: 15px; color: var(--text-muted); border-bottom: 1px solid #1f2937; padding-bottom: 10px;">
+                        <span id="like-count-post-1">👍 ১,৮৫০ লাইক</span>
+                        <span id="view-count-post-1">👁️ ৬,২০০ ভিউয়ার্স</span>
                     </div>
 
                     <div class="post-actions-bar">
@@ -629,13 +555,12 @@
                         <button class="action-btn" onclick="copyPostText('text-post-1')">📋 কপি</button>
                     </div>
 
-                    <!-- কমেন্ট বক্স -->
-                    <div id="comments-post-1" style="margin-top: 12px; border-top: 1px dashed #334155; padding-top: 10px;">
+                    <div id="comments-post-1" style="display:none; margin-top: 14px; border-top: 1px dashed #334155; padding-top: 12px;">
                         <div id="comment-list-post-1">
-                            <div style="display: flex; justify-content: space-between; background: #090d16; padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 16px;" id="comm-1">
-                                <span>💬 অসাধারণ সব ফিচার ও কোয়ান্টাম স্পিড!</span>
+                            <div style="display: flex; justify-content: space-between; background: #090d16; padding: 10px 14px; border-radius: 12px; margin-bottom: 8px; font-size: 17px;" id="comm-1">
+                                <span>💬 অসাধারণ চলমান টিকার ও ডিজাইন!</span>
                                 <div class="menu-container">
-                                    <button class="three-dot-btn" style="width:26px;height:26px;font-size:13px;" onclick="toggleMenu('menu-comm-1')">⋮</button>
+                                    <button class="three-dot-btn" style="width:28px;height:28px;font-size:14px;" onclick="toggleMenu('menu-comm-1')">⋮</button>
                                     <div id="menu-comm-1" class="dropdown-menu">
                                         <button onclick="editComment('comm-1')">✏️ এডিট</button>
                                         <button onclick="deleteComment('comm-1')" style="color:#f87171;">🗑️ ডিলিট</button>
@@ -643,8 +568,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="display: flex; gap: 8px; margin-top: 8px;">
-                            <input type="text" id="input-comm-post-1" class="auth-input" style="margin-bottom: 0; padding: 8px;" placeholder="কমেন্ট লিখুন...">
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <input type="text" id="input-comm-post-1" class="auth-input" style="margin-bottom: 0; padding: 10px;" placeholder="কমেন্ট লিখুন...">
                             <button class="btn-media" onclick="addComment('post-1')">পোস্ট</button>
                         </div>
                     </div>
@@ -652,59 +577,59 @@
             </div>
         </div>
 
-        <!-- ==================== পেইজ ২: ভিডিও দেখা (8K Video & Reels) ==================== -->
-        <div id="page-2" class="app-page">
+        <!-- ==================== পেইজ ২: ভিডিও দেখা ==================== -->
+        <div id="page-1" class="app-page">
             <div class="card-box">
-                <h3 style="color: var(--primary-glow); margin-bottom: 12px;">🎬 ৮K আল্ট্রা HD ভিডিও ও রিলস স্ট্রিম</h3>
-                <video controls style="width: 100%; border-radius: 14px; background: #000; margin-bottom: 12px;" poster="https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=80">
+                <h3 style="color: var(--primary-glow); margin-bottom: 14px;">🎬 ৮K আল্ট্রা HD ভিডিও ও রিলস স্ট্রিম</h3>
+                <video controls style="width: 100%; border-radius: 16px; background: #000; margin-bottom: 14px;" poster="https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=80">
                     <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                 </video>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>🔥 ট্রেন্ডিং ৮K কোয়ান্টাম প্রকৃতি ভিডিও</span>
-                    <button class="btn-media" onclick="notify('❤️ ভিডিওতে রিয়্যাক্ট যুক্ত হয়েছে!')">❤️ লাইক (12.4K)</button>
+                    <span style="font-size: 18px;">🔥 ট্রেন্ডিং কোয়ান্টাম রিলস ভিডিও</span>
+                    <button class="btn-media" onclick="notify('❤️ ভিডিওতে রিয়্যাক্ট যুক্ত হয়েছে!')">❤️ লাইক (15.8K)</button>
                 </div>
             </div>
         </div>
 
-        <!-- ==================== পেইজ ৩: রেডিও ও টিভি (দেশ অনুযায়ী) ==================== -->
-        <div id="page-3" class="app-page">
+        <!-- ==================== পেইজ ৩: রেডিও ও টিভি ==================== -->
+        <div id="page-2" class="app-page">
             <div class="card-box">
-                <h3 style="color: var(--primary-glow); margin-bottom: 12px;">📺 দেশ অনুযায়ী লাইভ টিভি ও রেডিও</h3>
-                <select class="auth-select" onchange="notify('🌍 দেশ পরিবর্তন করা হয়েছে: ' + this.value)">
-                    <option value="বাংলাদেশ (Bangladesh)">🇧🇩 বাংলাদেশ (Bangladesh Live TV & Radio)</option>
-                    <option value="ভারত (India)">🇮🇳 ভারত (India Live Channels)</option>
-                    <option value="সৌদি আরব (Saudi Arabia)">🇸🇦 সৌদি আরব (Makkah & Madinah Live)</option>
-                    <option value="যুক্তরাষ্ট্র (USA)">🇺🇸 যুক্তরাষ্ট্র (USA Global News)</option>
+                <h3 style="color: var(--primary-glow); margin-bottom: 14px;">📺 দেশ অনুযায়ী লাইভ টিভি ও রেডিও</h3>
+                <select class="auth-select" onchange="notify('🌍 দেশ পরিবর্তন: ' + this.value)">
+                    <option value="বাংলাদেশ">🇧🇩 বাংলাদেশ (Bangladesh Live TV & Radio)</option>
+                    <option value="ভারত">🇮🇳 ভারত (India Live Channels)</option>
+                    <option value="সৌদি আরব">🇸🇦 সৌদি আরব (Makkah & Madinah Live)</option>
+                    <option value="যুক্তরাষ্ট্র">🇺🇸 যুক্তরাষ্ট্র (USA Global News)</option>
                 </select>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
-                    <button class="btn-media" style="justify-content: center; padding: 15px;" onclick="playRadioTone('যমুনা টিভি লাইভ')">📺 যমুনা টিভি LIVE</button>
-                    <button class="btn-media" style="justify-content: center; padding: 15px;" onclick="playRadioTone('সময় টিভি লাইভ')">📺 সময় টিভি LIVE</button>
-                    <button class="btn-media" style="justify-content: center; padding: 15px;" onclick="playRadioTone('বাংলাদেশ বেতার FM')">📻 বাংলাদেশ বেতার FM</button>
-                    <button class="btn-media" style="justify-content: center; padding: 15px;" onclick="playRadioTone('রেডিও ফুর্তি 88.0')">📻 রেডিও ফুর্তি 88.0</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px;">
+                    <button class="btn-media" style="justify-content: center; padding: 18px;" onclick="playRadioTone('যমুনা টিভি লাইভ')">📺 যমুনা টিভি LIVE</button>
+                    <button class="btn-media" style="justify-content: center; padding: 18px;" onclick="playRadioTone('সময় টিভি লাইভ')">📺 সময় টিভি LIVE</button>
+                    <button class="btn-media" style="justify-content: center; padding: 18px;" onclick="playRadioTone('বাংলাদেশ বেতার FM')">📻 বাংলাদেশ বেতার FM</button>
+                    <button class="btn-media" style="justify-content: center; padding: 18px;" onclick="playRadioTone('রেডিও ফুর্তি 88.0')">📻 রেডিও ফুর্তি 88.0</button>
                 </div>
-                <div id="tvRadioStatus" style="margin-top: 15px; padding: 12px; background: #090d16; border-radius: 10px; color: var(--accent-gold); text-align: center;">
+                <div id="tvRadioStatus" style="margin-top: 18px; padding: 14px; background: #090d16; border-radius: 12px; color: var(--accent-gold); text-align: center; font-size: 17px;">
                     📡 চ্যানেল নির্বাচন করে লাইভ সম্প্রচার উপভোগ করুন
                 </div>
             </div>
         </div>
 
         <!-- ==================== পেইজ ৪: মার্কেটিং প্লেস ==================== -->
-        <div id="page-4" class="app-page">
+        <div id="page-3" class="app-page">
             <div class="card-box">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 style="color: var(--primary-glow);">🛍️ AYNA মার্কেটিং প্লেস</h3>
-                    <button class="btn-post-quantum" style="padding: 8px 14px; font-size: 14px;" onclick="addMarketProduct()">+ পণ্য যোগ করুন</button>
+                    <button class="btn-post-quantum" style="padding: 10px 16px; font-size: 15px;" onclick="addMarketProduct()">+ পণ্য যোগ করুন</button>
                 </div>
                 <div class="market-grid" id="marketGrid">
                     <div class="market-item">
-                        <div style="font-weight: bold; color: var(--accent-gold);">📱 iPhone 16 Pro Max (8K)</div>
-                        <div style="font-size: 16px; margin: 6px 0;">মূল্য: ৳১,৪৫,০০০</div>
+                        <div style="font-weight: bold; color: var(--accent-gold); font-size: 18px;">📱 iPhone 16 Pro Max (8K)</div>
+                        <div style="font-size: 17px; margin: 8px 0;">মূল্য: ৳১,৪৫,০০০</div>
                         <button class="btn-media" style="width: 100%; justify-content: center;" onclick="notify('💬 বিক্রেতার সাথে চ্যাট চালু হয়েছে!')">কিনুন / মেসেজ</button>
                     </div>
                     <div class="market-item">
-                        <div style="font-weight: bold; color: var(--accent-gold);">⌚ Quantum Smart Watch</div>
-                        <div style="font-size: 16px; margin: 6px 0;">মূল্য: ৳৪,৫০০</div>
+                        <div style="font-weight: bold; color: var(--accent-gold); font-size: 18px;">⌚ Quantum Smart Watch</div>
+                        <div style="font-size: 17px; margin: 8px 0;">মূল্য: ৳৪,৫০০</div>
                         <button class="btn-media" style="width: 100%; justify-content: center;" onclick="notify('💬 বিক্রেতার সাথে চ্যাট চালু হয়েছে!')">কিনুন / মেসেজ</button>
                     </div>
                 </div>
@@ -712,19 +637,19 @@
         </div>
 
         <!-- ==================== পেইজ ৫: GPS, রাডার ও কম্পাস ==================== -->
-        <div id="page-5" class="app-page">
+        <div id="page-4" class="app-page">
             <div class="card-box" style="text-align: center;">
-                <h3 style="color: var(--primary-glow); margin-bottom: 10px;">📍 লাইভ GPS, কোয়ান্টাম রাডার ও কম্পাস</h3>
+                <h3 style="color: var(--primary-glow); margin-bottom: 12px;">📍 লাইভ GPS, কোয়ান্টাম রাডার ও কম্পাস</h3>
                 
                 <div class="radar-circle">
                     <div class="radar-sweep"></div>
                 </div>
 
-                <p id="gpsCoordsText" style="color: var(--accent-gold); font-weight: bold; margin-bottom: 12px;">
+                <p id="gpsCoordsText" style="color: var(--accent-gold); font-weight: bold; margin-bottom: 15px; font-size: 18px;">
                     স্যাটেলাইট স্ট্যাটাস: স্ক্যান করার জন্য নিচের বাটনে চাপুন
                 </p>
 
-                <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
                     <button class="btn-post-quantum" onclick="activateGPSLocation()">📍 লাইভ GPS অবস্থান নির্ণয়</button>
                     <button class="btn-media" onclick="notify('🧭 কম্পাস ক্যালিব্রেটেড: উত্তর দিক (0° North) নির্ভুল')">🧭 কম্পাস রিফ্রেশ</button>
                 </div>
@@ -732,12 +657,12 @@
         </div>
 
         <!-- ==================== পেইজ ৬: AYNA MESSENGER ==================== -->
-        <div id="page-6" class="app-page">
+        <div id="page-5" class="app-page">
             <div class="card-box" style="border-color: var(--accent-purple);">
-                <h3 style="color: #38bdf8; margin-bottom: 8px;">💬 AYNA MESSENGER GLOBAL AI</h3>
-                <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 14px;">৭,০০০+ ভাষা অটো-ট্রান্সলেটর এবং সুপার-ফাস্ট ফাইল আদান-প্রদান</p>
+                <h3 style="color: #38bdf8; margin-bottom: 10px;">💬 AYNA MESSENGER GLOBAL AI</h3>
+                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 16px;">৭,০০০+ ভাষা অটো-ট্রান্সলেটর এবং সুপার-ফাস্ট ফাইল আদান-প্রদান</p>
 
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;">
                     <select id="worldAllLangs" class="auth-select" style="margin-bottom: 0; flex: 1;">
                         <option value="bn">🇧🇩 বাংলা (Bengali)</option>
                         <option value="en">🇺🇸 ইংরেজি (English)</option>
@@ -753,10 +678,10 @@
                 </div>
 
                 <div id="chatBoxGlobal">
-                    <div style="background: #1e293b; padding: 14px; border-radius: 14px; border-left: 4px solid var(--primary-glow);">
-                        <div style="font-size: 14px; color: var(--text-muted);">বন্ধু (Global Message):</div>
-                        <div>"Hello! Sending 8K files at 5 Trillion Quantum speed."</div>
-                        <div id="aiGlobalTranslatedOutput" style="color: var(--accent-gold); margin-top: 6px; font-weight: bold;">
+                    <div style="background: #1e293b; padding: 16px; border-radius: 16px; border-left: 5px solid var(--primary-glow);">
+                        <div style="font-size: 15px; color: var(--text-muted);">বন্ধু (Global Message):</div>
+                        <div style="font-size: 18px; margin: 6px 0;">"Hello! Sending 8K files at 5 Trillion Quantum speed."</div>
+                        <div id="aiGlobalTranslatedOutput" style="color: var(--accent-gold); font-weight: bold; font-size: 18px;">
                             🤖 AI অনুবাদ: "হ্যালো! ৫ ট্রিলিয়ন কোয়ান্টাম গতিতে ৮কে ফাইল পাঠাচ্ছি।"
                         </div>
                     </div>
@@ -765,41 +690,41 @@
         </div>
 
         <!-- ==================== পেইজ ৭: নোটিফিকেশন ==================== -->
-        <div id="page-7" class="app-page">
+        <div id="page-6" class="app-page">
             <div class="card-box">
-                <h3 style="color: var(--primary-glow); margin-bottom: 12px;">🔔 সাম্প্রতিক নোটিফিকেশনসমূহ</h3>
-                <div style="background: #090d16; padding: 12px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #22c55e;">
+                <h3 style="color: var(--primary-glow); margin-bottom: 14px;">🔔 সাম্প্রতিক নোটিফিকেশনসমূহ</h3>
+                <div style="background: #090d16; padding: 14px; border-radius: 14px; margin-bottom: 12px; border-left: 5px solid #22c55e; font-size: 18px;">
                     ✅ আপনার ৫ ট্রিলিয়ন কোয়ান্টাম অ্যাকাউন্ট সফলভাবে ভেরিফাইড হয়েছে।
                 </div>
-                <div style="background: #090d16; padding: 12px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--primary-glow);">
-                    👍 ১,৫২০ জন আপনার পোস্টে লাইক এবং রিয়্যাক্ট দিয়েছেন।
+                <div style="background: #090d16; padding: 14px; border-radius: 14px; margin-bottom: 12px; border-left: 5px solid var(--primary-glow); font-size: 18px;">
+                    👍 ১,৮৫০ জন আপনার পোস্টে লাইক এবং রিয়্যাক্ট দিয়েছেন।
                 </div>
-                <div style="background: #090d16; padding: 12px; border-radius: 12px; border-left: 4px solid var(--accent-gold);">
-                    🌐 AYNA Messenger-এ নতুন AI ভয়েস ট্রান্সলেটর আপডেট যুক্ত হয়েছে।
+                <div style="background: #090d16; padding: 14px; border-radius: 14px; border-left: 5px solid var(--accent-gold); font-size: 18px;">
+                    🌐 AYNA Messenger-এ নতুন ফুল স্ক্রিন টাচ জেসচার আপডেট যুক্ত হয়েছে।
                 </div>
             </div>
         </div>
 
         <!-- ==================== পেইজ ৮: ভিউ ও রিয়্যাক্ট ড্যাশবোর্ড ==================== -->
-        <div id="page-8" class="app-page">
+        <div id="page-7" class="app-page">
             <div class="card-box">
-                <h3 style="color: var(--primary-glow); margin-bottom: 14px;">👁️ লাইভ ভিউয়ার ও রিয়্যাক্ট অ্যানালিটিক্স</h3>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: center;">
-                    <div style="background: #090d16; padding: 16px; border-radius: 14px; border: 1px solid #334155;">
-                        <div style="font-size: 28px; font-weight: 900; color: var(--primary-glow);">৫,৪০০+</div>
-                        <div style="font-size: 15px; color: var(--text-muted);">👁️ মোট পোস্ট ভিউয়ার্স</div>
+                <h3 style="color: var(--primary-glow); margin-bottom: 16px;">👁️ লাইভ ভিউয়ার ও রিয়্যাক্ট অ্যানালিটিক্স</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: center;">
+                    <div style="background: #090d16; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+                        <div style="font-size: 32px; font-weight: 900; color: var(--primary-glow);">৬,২০০+</div>
+                        <div style="font-size: 16px; color: var(--text-muted); margin-top: 5px;">👁️ মোট পোস্ট ভিউয়ার্স</div>
                     </div>
-                    <div style="background: #090d16; padding: 16px; border-radius: 14px; border: 1px solid #334155;">
-                        <div style="font-size: 28px; font-weight: 900; color: #f43f5e;">১,৫২০+</div>
-                        <div style="font-size: 15px; color: var(--text-muted);">❤️ মোট লাইক ও লাভ রিয়্যাক্ট</div>
+                    <div style="background: #090d16; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+                        <div style="font-size: 32px; font-weight: 900; color: #f43f5e;">১,৮৫০+</div>
+                        <div style="font-size: 16px; color: var(--text-muted); margin-top: 5px;">❤️ মোট লাইক ও লাভ রিয়্যাক্ট</div>
                     </div>
-                    <div style="background: #090d16; padding: 16px; border-radius: 14px; border: 1px solid #334155;">
-                        <div style="font-size: 28px; font-weight: 900; color: var(--accent-gold);">৮৯০</div>
-                        <div style="font-size: 15px; color: var(--text-muted);">😮 ওয়াও ও সুপার রিয়্যাক্ট</div>
+                    <div style="background: #090d16; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+                        <div style="font-size: 32px; font-weight: 900; color: var(--accent-gold);">১,১२०</div>
+                        <div style="font-size: 16px; color: var(--text-muted); margin-top: 5px;">😮 ওয়াও ও সুপার রিয়্যাক্ট</div>
                     </div>
-                    <div style="background: #090d16; padding: 16px; border-radius: 14px; border: 1px solid #334155;">
-                        <div style="font-size: 28px; font-weight: 900; color: #22c55e;">৯৯.৯%</div>
-                        <div style="font-size: 15px; color: var(--text-muted);">⚡ কোয়ান্টাম রিচ স্পিড</div>
+                    <div style="background: #090d16; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
+                        <div style="font-size: 32px; font-weight: 900; color: #22c55e;">৯৯.৯%</div>
+                        <div style="font-size: 16px; color: var(--text-muted); margin-top: 5px;">⚡ কোয়ান্টাম টাচ স্পিড</div>
                     </div>
                 </div>
             </div>
@@ -810,17 +735,55 @@
     <div id="toast" class="toast-notification"></div>
 
     <script>
-        // পেইজ সুইচিং ফাংশন (১ থেকে ৮ নম্বর পেইজ)
-        function switchPage(pageId, btnElement) {
-            document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.page-tab-btn').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById(pageId).classList.add('active-page');
-            btnElement.classList.add('active');
+        // ফুল স্ক্রিন সোয়াইপ / টাচ জেসচার (ডান থেকে বামে এবং বাম থেকে ডানে স্লাইড করে পেইজ পরিবর্তন)
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let currentPageIndex = 0;
+        const totalPages = 8;
+
+        document.getElementById('mainBody').addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.getElementById('mainBody').addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipeGesture();
+        }, false);
+
+        function handleSwipeGesture() {
+            const swipeThreshold = 50;
+            if (touchEndX + swipeThreshold < touchStartX) {
+                if (currentPageIndex < totalPages - 1) {
+                    currentPageIndex++;
+                    navigateToPage(currentPageIndex);
+                }
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+                if (currentPageIndex > 0) {
+                    currentPageIndex--;
+                    navigateToPage(currentPageIndex);
+                }
+            }
+        }
+
+        function switchPage(index, btnElement) {
+            currentPageIndex = index;
+            navigateToPage(index);
+        }
+
+        function navigateToPage(index) {
+            document.querySelectorAll('.app-page').forEach((p, idx) => {
+                p.classList.toggle('active-page', idx === index);
+            });
+            document.querySelectorAll('.page-tab-btn').forEach((b, idx) => {
+                b.classList.toggle('active', idx === index);
+            });
+            const activeBtn = document.querySelectorAll('.page-tab-btn')[index];
+            if (activeBtn) {
+                activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
             playWorldClassSound();
         }
 
-        // পাসওয়ার্ড দেখানো ও লুকানো
         function togglePasswordVisibility(inputId, btnElement) {
             const inputField = document.getElementById(inputId);
             if (inputField.type === "password") {
@@ -882,10 +845,9 @@
             document.getElementById('pageTabsNav').style.display = 'flex';
             document.getElementById('mainAppContainer').style.display = 'block';
 
-            notify(`✨ স্বাগতম ${name}! ৮টি পেইজ ও সব বাটন সচল হয়েছে।`);
+            notify(`✨ স্বাগতম ${name}! লাইভ টিকার ও ফুল স্ক্রিন সচল হয়েছে।`);
         }
 
-        // সচল অডিও, ভিডিও ও ছবি আপলোড হ্যান্ডলার
         let uploadedMediaHTML = "";
         function handleMediaUpload(input, type) {
             if (input.files && input.files[0]) {
@@ -898,17 +860,16 @@
                 label.innerText = `✅ সংযুক্ত ফাইল: ${file.name}`;
 
                 if (type === 'image') {
-                    uploadedMediaHTML = `<img src="${fileURL}" style="width:100%; border-radius:12px; margin-bottom:12px;">`;
+                    uploadedMediaHTML = `<img src="${fileURL}" style="width:100%; border-radius:14px; margin-bottom:14px;">`;
                 } else if (type === 'audio') {
-                    uploadedMediaHTML = `<audio controls src="${fileURL}" style="width:100%; margin-bottom:12px;"></audio>`;
+                    uploadedMediaHTML = `<audio controls src="${fileURL}" style="width:100%; margin-bottom:14px;"></audio>`;
                 } else if (type === 'video') {
-                    uploadedMediaHTML = `<video controls src="${fileURL}" style="width:100%; border-radius:12px; margin-bottom:12px; max-height:320px;"></video>`;
+                    uploadedMediaHTML = `<video controls src="${fileURL}" style="width:100%; border-radius:14px; margin-bottom:14px; max-height:350px;"></video>`;
                 }
                 notify(`✅ ${file.name} সফলভাবে লোড হয়েছে! এবার পোস্ট করুন।`);
             }
         }
 
-        // সচল লাইভ ভিডিও ক্যামেরা স্ট্রিমিং বাটন
         let activeLiveStream = null;
         async function startLiveVideoStream() {
             const previewBox = document.getElementById('liveMediaPreview');
@@ -921,18 +882,16 @@
                 videoEl.style.display = 'block';
                 videoEl.srcObject = activeLiveStream;
                 label.innerText = "🔴 লাইভ ভিডিও ক্যামেরা চালু আছে! পোস্ট বাটনে চাপলে লাইভ শুরু হবে।";
-                uploadedMediaHTML = `<div style="background:#dc2626; color:#fff; padding:6px 12px; border-radius:8px; display:inline-block; font-weight:bold; margin-bottom:8px;">🔴 LIVE STREAMING NOW</div><video autoplay muted playsinline style="width:100%; border-radius:12px; background:#000; max-height:300px;" poster="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80"></video>`;
+                uploadedMediaHTML = `<div style="background:#dc2626; color:#fff; padding:6px 14px; border-radius:8px; display:inline-block; font-weight:bold; margin-bottom:10px;">🔴 LIVE STREAMING NOW</div><video autoplay muted playsinline style="width:100%; border-radius:14px; background:#000; max-height:320px;" poster="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80"></video>`;
                 notify("🔴 লাইভ ভিডিও ক্যামেরা সচল হয়েছে!");
             } catch (err) {
-                // ডিভাইসে ক্যামেরা পারমিশন না থাকলে সিমুলেটেড লাইভ চালু হবে
                 previewBox.style.display = 'block';
                 label.innerText = "🔴 লাইভ ভিডিও ব্রডকাস্ট মোড প্রস্তুত!";
-                uploadedMediaHTML = `<div style="background:#dc2626; color:#fff; padding:6px 12px; border-radius:8px; display:inline-block; font-weight:bold; margin-bottom:8px;">🔴 LIVE BROADCAST (8K QUANTUM)</div>`;
+                uploadedMediaHTML = `<div style="background:#dc2626; color:#fff; padding:6px 14px; border-radius:8px; display:inline-block; font-weight:bold; margin-bottom:10px;">🔴 LIVE BROADCAST (8K QUANTUM)</div>`;
                 notify("🔴 লাইভ ভিডিও ব্রডকাস্ট সক্রিয় করা হয়েছে!");
             }
         }
 
-        // নতুন পোস্ট তৈরি
         function createQuantumPost() {
             const input = document.getElementById('postInput');
             const text = input.value.trim();
@@ -946,13 +905,13 @@
             const userImg = document.getElementById('displayProfileImg').src;
 
             const postHTML = `
-                <article class="card-box" id="${postId}" data-likes="1" data-views="15">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <img src="${userImg}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                <article class="card-box" id="${postId}" data-likes="1" data-views="22">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="${userImg}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover;">
                             <div>
-                                <div style="font-weight: 800;">${userName}</div>
-                                <div style="font-size: 13px; color: var(--text-muted);">এইমাত্র • 5 Trillion Quantum</div>
+                                <div style="font-weight: 800; font-size: 18px;">${userName}</div>
+                                <div style="font-size: 14px; color: var(--text-muted);">এইমাত্র • 5 Trillion Quantum</div>
                             </div>
                         </div>
                         <div class="menu-container">
@@ -966,11 +925,11 @@
                     </div>
 
                     ${uploadedMediaHTML}
-                    <p id="text-${postId}" style="font-size: 21px; margin-bottom: 12px;">${text}</p>
+                    <p id="text-${postId}" style="font-size: 22px; margin-bottom: 14px;">${text}</p>
 
-                    <div style="display: flex; justify-content: space-between; font-size: 14px; color: var(--text-muted); border-bottom: 1px solid #1f2937; padding-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 15px; color: var(--text-muted); border-bottom: 1px solid #1f2937; padding-bottom: 10px;">
                         <span id="like-count-${postId}">👍 ১ লাইক</span>
-                        <span id="view-count-${postId}">👁️ ১৫ ভিউয়ার্স</span>
+                        <span id="view-count-${postId}">👁️ ২২ ভিউয়ার্স</span>
                     </div>
 
                     <div class="post-actions-bar">
@@ -981,10 +940,10 @@
                         <button class="action-btn" onclick="copyPostText('text-${postId}')">📋 কপি</button>
                     </div>
 
-                    <div id="comments-${postId}" style="display:none; margin-top: 12px; border-top: 1px dashed #334155; padding-top: 10px;">
+                    <div id="comments-${postId}" style="display:none; margin-top: 14px; border-top: 1px dashed #334155; padding-top: 12px;">
                         <div id="comment-list-${postId}"></div>
-                        <div style="display: flex; gap: 8px; margin-top: 8px;">
-                            <input type="text" id="input-comm-${postId}" class="auth-input" style="margin-bottom: 0; padding: 8px;" placeholder="কমেন্ট লিখুন...">
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <input type="text" id="input-comm-${postId}" class="auth-input" style="margin-bottom: 0; padding: 10px;" placeholder="কমেন্ট লিখুন...">
                             <button class="btn-media" onclick="addComment('${postId}')">পোস্ট</button>
                         </div>
                     </div>
@@ -1003,7 +962,6 @@
             notify("🚀 পোস্ট সফলভাবে প্রকাশিত হয়েছে!");
         }
 
-        // পোস্ট ও কমেন্ট ম্যানেজমেন্ট
         function toggleMenu(menuId) {
             document.querySelectorAll('.dropdown-menu').forEach(m => { if(m.id !== menuId) m.style.display = 'none'; });
             const menu = document.getElementById(menuId);
@@ -1052,10 +1010,10 @@
             if (!val) return;
             const commId = 'comm-' + Date.now();
             const html = `
-                <div style="display: flex; justify-content: space-between; background: #090d16; padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 16px;" id="${commId}">
+                <div style="display: flex; justify-content: space-between; background: #090d16; padding: 10px 14px; border-radius: 12px; margin-bottom: 8px; font-size: 17px;" id="${commId}">
                     <span>💬 ${val}</span>
                     <div class="menu-container">
-                        <button class="three-dot-btn" style="width:26px;height:26px;font-size:13px;" onclick="toggleMenu('menu-${commId}')">⋮</button>
+                        <button class="three-dot-btn" style="width:28px;height:28px;font-size:14px;" onclick="toggleMenu('menu-${commId}')">⋮</button>
                         <div id="menu-${commId}" class="dropdown-menu">
                             <button onclick="editComment('${commId}')">✏️ এডিট</button>
                             <button onclick="deleteComment('${commId}')" style="color:#f87171;">🗑️ ডিলিট</button>
@@ -1083,7 +1041,6 @@
             notify("📋 লেখা কপি করা হয়েছে!");
         }
 
-        // অন্যান্য পেইজের সচল ফাংশনসমূহ
         function playRadioTone(channelName) {
             document.getElementById('tvRadioStatus').innerText = `🔴 এখন চলছে: ${channelName} (Hi-Fi ক্রিস্টাল সাউন্ড সক্রিয়)`;
             notify(`📡 ${channelName} চালু হয়েছে!`);
@@ -1095,8 +1052,8 @@
             if (title && price) {
                 document.getElementById('marketGrid').insertAdjacentHTML('afterbegin', `
                     <div class="market-item">
-                        <div style="font-weight: bold; color: var(--accent-gold);">🆕 ${title}</div>
-                        <div style="font-size: 16px; margin: 6px 0;">মূল্য: ৳${price}</div>
+                        <div style="font-weight: bold; color: var(--accent-gold); font-size: 18px;">🆕 ${title}</div>
+                        <div style="font-size: 17px; margin: 8px 0;">মূল্য: ৳${price}</div>
                         <button class="btn-media" style="width: 100%; justify-content: center;" onclick="notify('💬 বিক্রেতার সাথে চ্যাট চালু হয়েছে!')">কিনুন / মেসেজ</button>
                     </div>
                 `);
@@ -1143,7 +1100,7 @@
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 document.getElementById('chatBoxGlobal').insertAdjacentHTML('beforeend', `
-                    <div style="background: #1e293b; padding: 12px; border-radius: 12px; margin-top: 10px; border-left: 4px solid var(--accent-gold);">
+                    <div style="background: #1e293b; padding: 14px; border-radius: 14px; margin-top: 12px; border-left: 5px solid var(--accent-gold); font-size: 17px;">
                         ⚡ ফাইল পাঠানো হয়েছে: <b>${file.name}</b>
                     </div>
                 `);
