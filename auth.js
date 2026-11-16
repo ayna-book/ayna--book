@@ -1,106 +1,86 @@
 
+import { auth, db } from "./firebase-config.js";
+
 import {
-  auth,
-  database,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  ref,
-  set
-} from "./firebase-config.js";
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  updateProfile
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-// AYNA BOOK Authentication
-
-const messageBox = document.getElementById("authMessage");
-
-function showMessage(message, success = false) {
-  if (messageBox) {
-    messageBox.textContent = message;
-    messageBox.style.color = success ? "green" : "red";
-  }
-}
+import {
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 // নতুন অ্যাকাউন্ট তৈরি
 export async function registerUser(name, email, password) {
-  try {
-    const result = await createUserWithEmailAndPassword(
-      auth,
-      email.trim(),
-      password
-    );
+  name = name.trim();
+  email = email.trim().toLowerCase();
 
-    const user = result.user;
-
-    // ব্যবহারকারীর তথ্য Realtime Database-এ রাখা
-    await set(ref(database, "users/" + user.uid), {
-      uid: user.uid,
-      name: name.trim(),
-      email: user.email,
-      createdAt: Date.now()
-    });
-
-    showMessage("AYNA BOOK অ্যাকাউন্ট তৈরি হয়েছে!", true);
-    return user;
-
-  } catch (error) {
-    showMessage(error.message);
-    throw error;
+  if (!name || !email || password.length < 8) {
+    throw new Error("নাম, সঠিক Gmail এবং কমপক্ষে ৮ অক্ষরের পাসওয়ার্ড দিন।");
   }
+
+  const result = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+
+  await updateProfile(result.user, {
+    displayName: name
+  });
+
+  await setDoc(doc(db, "users", result.user.uid), {
+    uid: result.user.uid,
+    name,
+    email,
+    bio: "",
+    photo: "",
+    createdAt: serverTimestamp()
+  });
+
+  await sendEmailVerification(result.user);
+
+  return result.user;
 }
 
-// লগইন
+// Gmail দিয়ে লগইন
 export async function loginUser(email, password) {
-  try {
-    const result = await signInWithEmailAndPassword(
-      auth,
-      email.trim(),
-      password
-    );
+  const result = await signInWithEmailAndPassword(
+    auth,
+    email.trim().toLowerCase(),
+    password
+  );
 
-    showMessage("সফলভাবে লগইন হয়েছে!", true);
-    return result.user;
-
-  } catch (error) {
-    showMessage(error.message);
-    throw error;
+  if (!result.user.emailVerified) {
+    await sendEmailVerification(result.user);
+    await signOut(auth);
+    throw new Error("Gmail-এর Inbox থেকে Verification সম্পন্ন করুন।");
   }
+
+  return result.user;
 }
 
 // লগআউট
 export async function logoutUser() {
-  try {
-    await signOut(auth);
-    showMessage("আপনি লগআউট করেছেন।", true);
-  } catch (error) {
-    showMessage(error.message);
-    throw error;
-  }
+  await signOut(auth);
 }
 
 // লগইন অবস্থা পর্যবেক্ষণ
 export function watchAuthState(callback) {
-  return onAuthStateChanged(auth, (user) => {
-    if (typeof callback === "function") {
-      callback(user);
-    }
-  });
+  return onAuthStateChanged(auth, callback);
 }
 
-// লগইন অবস্থা অনুযায়ী UI
-watchAuthState((user) => {
-  const loginArea = document.getElementById("loginArea");
-  const accountArea = document.getElementById("accountArea");
-  const userName = document.getElementById("currentUserName");
-
-  if (user) {
-    if (loginArea) loginArea.style.display = "none";
-    if (accountArea) accountArea.style.display = "block";
-    if (userName) userName.textContent = user.email || "AYNA BOOK User";
-  } else {
-    if (loginArea) loginArea.style.display = "block";
-    if (accountArea) accountArea.style.display = "none";
-  }
-});
-
-console.log("AYNA BOOK Authentication Ready");
+// পাসওয়ার্ড রিসেট
+export async function resetPassword(email) {
+  await sendPasswordResetEmail(
+    auth,
+    email.trim().toLowerCase()
+  );
+}
