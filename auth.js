@@ -1,66 +1,106 @@
+
 import {
-  getAuth,
+  auth,
+  database,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
   onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+  ref,
+  set
+} from "./firebase-config.js";
 
-import { initializeApp, getApps }
-  from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+// AYNA BOOK Authentication
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-  authDomain: "ayna-book.firebaseapp.com",
-  projectId: "ayna-book",
-  storageBucket: "ayna-book.firebasestorage.app",
-  messagingSenderId: "805601138500",
-  appId: "1:805601138500:web:47acdc90cb0cb521626911",
-  measurementId: "G-RKHHSKNB4B"
-};
+const messageBox = document.getElementById("authMessage");
 
-const app = getApps().length
-  ? getApps()[0]
-  : initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-/**
- * লগইন করা ব্যবহারকারীর অবস্থা পর্যবেক্ষণ।
- * ব্যবহারকারী লগইন করলে callback-এ user পাওয়া যাবে।
- * লগইন না থাকলে user হবে null।
- */
-export function watchAuth(callback) {
-  return onAuthStateChanged(auth, callback);
+function showMessage(message, success = false) {
+  if (messageBox) {
+    messageBox.textContent = message;
+    messageBox.style.color = success ? "green" : "red";
+  }
 }
 
-/**
- * বর্তমান ব্যবহারকারী লগইন করেছেন কি না।
- */
-export function getCurrentUser() {
-  return auth.currentUser;
-}
+// নতুন অ্যাকাউন্ট তৈরি
+export async function registerUser(name, email, password) {
+  try {
+    const result = await createUserWithEmailAndPassword(
+      auth,
+      email.trim(),
+      password
+    );
 
-/**
- * লগআউট।
- */
-export async function logoutUser() {
-  await signOut(auth);
-}
+    const user = result.user;
 
-/**
- * লগইন করা ব্যবহারকারী ছাড়া অন্যদের
- * নির্দিষ্ট পেজে প্রবেশ ঠেকানোর প্রাথমিক ব্যবস্থা।
- */
-export function requireLogin(redirectTo = "./login.html") {
-  return new Promise((resolve) => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        resolve(user);
-      } else {
-        window.location.replace(redirectTo);
-        resolve(null);
-      }
+    // ব্যবহারকারীর তথ্য Realtime Database-এ রাখা
+    await set(ref(database, "users/" + user.uid), {
+      uid: user.uid,
+      name: name.trim(),
+      email: user.email,
+      createdAt: Date.now()
     });
+
+    showMessage("AYNA BOOK অ্যাকাউন্ট তৈরি হয়েছে!", true);
+    return user;
+
+  } catch (error) {
+    showMessage(error.message);
+    throw error;
+  }
+}
+
+// লগইন
+export async function loginUser(email, password) {
+  try {
+    const result = await signInWithEmailAndPassword(
+      auth,
+      email.trim(),
+      password
+    );
+
+    showMessage("সফলভাবে লগইন হয়েছে!", true);
+    return result.user;
+
+  } catch (error) {
+    showMessage(error.message);
+    throw error;
+  }
+}
+
+// লগআউট
+export async function logoutUser() {
+  try {
+    await signOut(auth);
+    showMessage("আপনি লগআউট করেছেন।", true);
+  } catch (error) {
+    showMessage(error.message);
+    throw error;
+  }
+}
+
+// লগইন অবস্থা পর্যবেক্ষণ
+export function watchAuthState(callback) {
+  return onAuthStateChanged(auth, (user) => {
+    if (typeof callback === "function") {
+      callback(user);
+    }
   });
 }
 
-export { auth };
+// লগইন অবস্থা অনুযায়ী UI
+watchAuthState((user) => {
+  const loginArea = document.getElementById("loginArea");
+  const accountArea = document.getElementById("accountArea");
+  const userName = document.getElementById("currentUserName");
+
+  if (user) {
+    if (loginArea) loginArea.style.display = "none";
+    if (accountArea) accountArea.style.display = "block";
+    if (userName) userName.textContent = user.email || "AYNA BOOK User";
+  } else {
+    if (loginArea) loginArea.style.display = "block";
+    if (accountArea) accountArea.style.display = "none";
+  }
+});
+
+console.log("AYNA BOOK Authentication Ready");
