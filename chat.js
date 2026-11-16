@@ -1,18 +1,11 @@
 
-"use strict";
+import { auth, db } from "./firebase-config.js";
 
 import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-
-import {
-  getAuth,
-  signInAnonymously,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 import {
-  getFirestore,
   collection,
   addDoc,
   query,
@@ -22,146 +15,68 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
+const $ = id => document.getElementById(id);
 
-/* =====================================
-   1. AYNA BOOK FIREBASE CONFIGURATION
-===================================== */
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-  authDomain: "ayna-book.firebaseapp.com",
-  projectId: "ayna-book",
-  storageBucket: "ayna-book.firebasestorage.app",
-  messagingSenderId: "805601138500",
-  appId: "1:805601138500:web:47acdc90cb0cb521626911",
-  measurementId: "G-RKHHSKNB4B"
-};
-
-
-/* =====================================
-   2. INITIALIZE FIREBASE
-===================================== */
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-
-/* =====================================
-   3. HTML ELEMENTS
-===================================== */
-
-const statusElement = document.getElementById("status");
-const messagesElement = document.getElementById("messages");
-const form = document.getElementById("chatForm");
-const messageInput = document.getElementById("message");
-const sendButton = document.getElementById("sendButton");
-const translateButton = document.getElementById("translate");
-const translationResult = document.getElementById("translationResult");
-
-
-/* =====================================
-   4. CHAT SETTINGS
-===================================== */
+const status = $("status");
+const messages = $("messages");
+const form = $("chatForm");
+const input = $("message");
+const sendButton = $("sendButton");
 
 const ROOM_ID = "general";
 const MAX_MESSAGES = 100;
 
 let currentUser = null;
-let unsubscribeMessages = null;
+let unsubscribe = null;
 let sending = false;
-let signingIn = false;
 
-
-/* =====================================
-   5. STATUS DISPLAY
-===================================== */
-
-function setStatus(message, error = false) {
-  statusElement.textContent = message;
-  statusElement.style.color = error
-    ? "#fca5a5"
-    : "#fbbf24";
+function showStatus(message) {
+  if (status) status.textContent = message;
 }
 
+function showMessages(snapshot) {
+  messages.replaceChildren();
 
-/* =====================================
-   6. DISPLAY MESSAGES
-===================================== */
-
-function displayMessages(list) {
-  messagesElement.replaceChildren();
-
-  if (list.length === 0) {
-    const empty = document.createElement("p");
-
-    empty.textContent =
-      "এখনো কোনো মেসেজ নেই। প্রথম মেসেজটি পাঠান!";
-
-    messagesElement.appendChild(empty);
+  if (snapshot.empty) {
+    messages.textContent = "এখনো কোনো মেসেজ নেই।";
     return;
   }
 
-  for (const item of list) {
+  snapshot.docs.reverse().forEach(item => {
+    const data = item.data();
+
     const bubble = document.createElement("div");
+    bubble.style.padding = "12px";
+    bubble.style.margin = "8px 0";
+    bubble.style.borderRadius = "10px";
+    bubble.style.background = "#10285a";
 
-    bubble.className =
-      item.uid === currentUser?.uid
-        ? "bubble mine"
-        : "bubble";
-
-    const sender = document.createElement("small");
-
-    sender.textContent =
-      item.uid === currentUser?.uid
+    const name = document.createElement("strong");
+    name.textContent =
+      data.uid === currentUser?.uid
         ? "আপনি"
-        : "AYNA BOOK ব্যবহারকারী";
+        : (data.authorName || "AYNA BOOK User");
 
     const text = document.createElement("p");
-
-    // নিরাপদভাবে লেখা দেখানো হচ্ছে।
-    text.textContent = item.text || "";
+    text.textContent = data.text || "";
 
     const time = document.createElement("small");
+    time.textContent = data.createdAt?.toDate
+      ? data.createdAt.toDate().toLocaleString("bn-BD")
+      : "সময় নির্ধারিত হচ্ছে...";
 
-    if (item.createdAt?.toDate) {
-      time.textContent = item.createdAt
-        .toDate()
-        .toLocaleString("bn-BD");
-    } else {
-      time.textContent = "সময় নির্ধারিত হচ্ছে...";
-    }
+    bubble.append(name, text, time);
+    messages.appendChild(bubble);
+  });
 
-    bubble.append(sender, text, time);
-    messagesElement.appendChild(bubble);
-  }
-
-  messagesElement.scrollTop = messagesElement.scrollHeight;
+  messages.scrollTop = messages.scrollHeight;
 }
 
-
-/* =====================================
-   7. LISTEN FOR LIVE MESSAGES
-===================================== */
-
 function listenForMessages() {
-  if (!db || !currentUser) {
-    return;
-  }
-
-  if (unsubscribeMessages) {
-    unsubscribeMessages();
-  }
-
-  setStatus("মেসেজ লোড হচ্ছে...");
-
-  sendButton.disabled = true;
+  if (unsubscribe) unsubscribe();
 
   const messagesRef = collection(
-    db,
-    "rooms",
-    ROOM_ID,
-    "messages"
+    db, "rooms", ROOM_ID, "messages"
   );
 
   const messagesQuery = query(
@@ -170,67 +85,42 @@ function listenForMessages() {
     limit(MAX_MESSAGES)
   );
 
-  unsubscribeMessages = onSnapshot(
+  showStatus("মেসেজ লোড হচ্ছে...");
+
+  unsubscribe = onSnapshot(
     messagesQuery,
-
     snapshot => {
-      const list = snapshot.docs
-        .map(document => ({
-          id: document.id,
-          ...document.data()
-        }))
-        .reverse();
-
-      displayMessages(list);
-
-      setStatus("Firebase সংযুক্ত হয়েছে।");
+      showMessages(snapshot);
+      showStatus("AYNA BOOK মেসেঞ্জার সংযুক্ত হয়েছে।");
       sendButton.disabled = false;
     },
-
     error => {
-      console.error("Message loading error:", error);
-
-      setStatus(
-        "মেসেজ লোড হয়নি। Firestore Database ও Rules পরীক্ষা করুন।",
-        true
-      );
-
+      console.error(error);
+      showStatus("মেসেজ লোড হয়নি: " + error.code);
       sendButton.disabled = true;
     }
   );
 }
 
-
-/* =====================================
-   8. SEND A MESSAGE
-===================================== */
-
 form.addEventListener("submit", async event => {
   event.preventDefault();
 
   if (!currentUser) {
-    setStatus(
-      "লগইন প্রস্তুত নয়। কিছুক্ষণ অপেক্ষা করুন।",
-      true
-    );
+    showStatus("প্রথমে লগইন করুন।");
     return;
   }
 
-  if (sending) {
+  if (sending) return;
+
+  const message = input.value.trim();
+
+  if (!message) {
+    showStatus("মেসেজ লিখুন।");
     return;
   }
 
-  const text = messageInput.value.trim();
-
-  if (!text) {
-    return;
-  }
-
-  if (text.length > 2000) {
-    setStatus(
-      "মেসেজ সর্বোচ্চ ২০০০ অক্ষরের হতে পারবে।",
-      true
-    );
+  if (message.length > 2000) {
+    showStatus("মেসেজ ২০০০ অক্ষরের মধ্যে লিখুন।");
     return;
   }
 
@@ -238,31 +128,22 @@ form.addEventListener("submit", async event => {
   sendButton.disabled = true;
 
   try {
-    const messagesRef = collection(
-      db,
-      "rooms",
-      ROOM_ID,
-      "messages"
+    await addDoc(
+      collection(db, "rooms", ROOM_ID, "messages"),
+      {
+        text: message,
+        uid: currentUser.uid,
+        authorName: currentUser.displayName || "AYNA BOOK User",
+        createdAt: serverTimestamp()
+      }
     );
 
-    await addDoc(messagesRef, {
-      text: text,
-      uid: currentUser.uid,
-      createdAt: serverTimestamp()
-    });
-
-    messageInput.value = "";
-    translationResult.textContent = "";
-
-    setStatus("মেসেজ পাঠানো হয়েছে।");
+    input.value = "";
+    showStatus("মেসেজ পাঠানো হয়েছে।");
 
   } catch (error) {
-    console.error("Message sending error:", error);
-
-    setStatus(
-      "মেসেজ পাঠানো যায়নি। Firebase Rules ও সংযোগ পরীক্ষা করুন।",
-      true
-    );
+    console.error(error);
+    showStatus("মেসেজ পাঠানো যায়নি: " + error.code);
 
   } finally {
     sending = false;
@@ -270,76 +151,24 @@ form.addEventListener("submit", async event => {
   }
 });
 
+onAuthStateChanged(auth, user => {
+  currentUser = user;
 
-/* =====================================
-   9. TRANSLATION BUTTON
-===================================== */
-
-translateButton.addEventListener("click", () => {
-  const text = messageInput.value.trim();
-
-  if (!text) {
-    translationResult.textContent =
-      "প্রথমে অনুবাদের জন্য মেসেজ লিখুন।";
-    return;
+  if (unsubscribe) {
+    unsubscribe();
+    unsubscribe = null;
   }
 
-  translationResult.textContent =
-    "স্বয়ংক্রিয় অনুবাদ চালু করতে নিরাপদ Translation API যুক্ত করতে হবে।";
+  if (user && !user.isAnonymous) {
+    listenForMessages();
+  } else {
+    messages.replaceChildren();
+    messages.textContent = "মেসেঞ্জার ব্যবহার করতে লগইন করুন।";
+    sendButton.disabled = true;
+    showStatus("লগইন করা নেই।");
+  }
 });
 
-
-/* =====================================
-   10. FIREBASE AUTHENTICATION
-===================================== */
-
-onAuthStateChanged(
-  auth,
-
-  user => {
-    if (user) {
-      currentUser = user;
-      signingIn = false;
-      listenForMessages();
-      return;
-    }
-
-    currentUser = null;
-    sendButton.disabled = true;
-
-    if (unsubscribeMessages) {
-      unsubscribeMessages();
-      unsubscribeMessages = null;
-    }
-
-    if (signingIn) {
-      return;
-    }
-
-    signingIn = true;
-
-    setStatus("ব্যবহারকারী সংযোগ তৈরি হচ্ছে...");
-
-    signInAnonymously(auth)
-      .catch(error => {
-        console.error("Authentication error:", error);
-
-        setStatus(
-          "লগইন ব্যর্থ। Firebase Authentication-এ Anonymous চালু করুন।",
-          true
-        );
-      })
-      .finally(() => {
-        signingIn = false;
-      });
-  },
-
-  error => {
-    console.error("Authentication state error:", error);
-
-    setStatus(
-      "Authentication পরীক্ষা করা যাচ্ছে না।",
-      true
-    );
-  }
-);
+window.addEventListener("pagehide", () => {
+  if (unsubscribe) unsubscribe();
+});
