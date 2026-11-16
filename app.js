@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK - Full Screen Quantum & Live Ticker Edition</title>
+    <title>AYNA BOOK - 10 Trillion Quantum Persistent Edition</title>
     <style>
         :root {
             --bg-dark: #070b14;
@@ -30,44 +30,73 @@
             font-size: 20px;
             line-height: 1.65;
             overflow-x: hidden;
-            height: 100vh;
+            min-height: 100vh;
         }
 
-        /* ফুল স্ক্রিন রেজিস্ট্রেশন ওভারলে */
+        /* ১০০% ফুল স্ক্রিন রেজিস্ট্রেশন ও লগইন ওভারলে */
         #authOverlay {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, #070b14, #0f172a, #1e1b4b);
+            background: linear-gradient(135deg, #050811, #0f172a, #1e1b4b);
             z-index: 5000;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
         }
 
         .auth-card-fullscreen {
-            background: rgba(17, 24, 39, 0.95);
+            background: rgba(17, 24, 39, 0.96);
             border: 2px solid var(--primary-glow);
-            border-radius: 28px;
-            padding: 35px 25px;
+            border-radius: 26px;
+            padding: 30px 22px;
             width: 100%;
-            max-width: 600px;
-            box-shadow: 0 0 50px rgba(56, 189, 248, 0.5);
-            backdrop-filter: blur(10px);
+            max-width: 580px;
+            box-shadow: 0 0 60px rgba(56, 189, 248, 0.45);
+            backdrop-filter: blur(12px);
         }
 
         .auth-title {
-            font-size: 30px;
+            font-size: 28px;
             font-weight: 900;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             background: linear-gradient(to right, #38bdf8, #facc15);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        /* রেজিস্ট্রেশন ও লগইন ২টি আলাদা ট্যাব বাটন */
+        .auth-mode-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: #090d16;
+            padding: 6px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            margin-bottom: 20px;
+        }
+
+        .auth-tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .auth-tab-btn.active {
+            background: linear-gradient(90deg, #0284c7, #7c3aed);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
         }
 
         .auth-input, .auth-select {
@@ -75,16 +104,17 @@
             background: #090d16;
             border: 1px solid #334155;
             color: #fff;
-            padding: 15px;
+            padding: 14px 16px;
             border-radius: 14px;
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 17px;
+            margin-bottom: 14px;
+            user-select: text;
         }
 
         .password-wrapper {
             position: relative;
             width: 100%;
-            margin-bottom: 15px;
+            margin-bottom: 14px;
         }
 
         .password-wrapper .auth-input {
@@ -111,7 +141,7 @@
             border-radius: 12px;
             font-size: 15px;
             color: var(--accent-gold);
-            margin-bottom: 15px;
+            margin-bottom: 14px;
             text-align: center;
         }
 
@@ -119,7 +149,7 @@
         .quantum-navbar {
             background: linear-gradient(90deg, #090d16, #1e1b4b, #090d16);
             border-bottom: 2px solid var(--primary-glow);
-            padding: 12px 20px;
+            padding: 12px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -127,23 +157,25 @@
             top: 0;
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(56, 189, 248, 0.25);
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .brand-title-wrapper {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .brand-title {
-            font-size: 26px;
+            font-size: 25px;
             font-weight: 900;
             background: linear-gradient(to right, #38bdf8, #facc15);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* ১৬px জলজন্তু স্টার অ্যানিমেশন */
+        /* ১৬px জলজন্তু স্টার ১ সেকেন্ড পর পর সাদা আলো */
         .aquatic-glowing-star {
             width: 16px;
             height: 16px;
@@ -193,9 +225,9 @@
         }
 
         .app-container {
-            max-width: 800px;
+            max-width: 820px;
             margin: 0 auto;
-            padding: 20px 15px;
+            padding: 18px 14px;
             display: none;
             min-height: 85vh;
         }
@@ -214,7 +246,7 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* প্রোফাইলের নিচে চলমান লাইভ রেডিও, টিভি ও তাজা খবরের টিকার (Running Ticker) */
+        /* প্রোফাইলের নিচে চলমান লাইভ রেডিও, টিভি ও তাজা খবরের টিকার */
         .live-ticker-banner {
             background: linear-gradient(90deg, #0f172a, #1e1b4b, #0f172a);
             border: 1px solid var(--primary-glow);
@@ -239,9 +271,9 @@
         }
 
         @keyframes pulseGlow {
-            0% { opacity: 0.8; }
+            0% { opacity: 0.85; }
             50% { opacity: 1; box-shadow: 0 0 10px #dc2626; }
-            100% { opacity: 0.8; }
+            100% { opacity: 0.85; }
         }
 
         .card-box {
@@ -257,14 +289,14 @@
             background: #1e293b;
             color: #e2e8f0;
             border: 1px solid #334155;
-            padding: 12px 16px;
+            padding: 11px 15px;
             border-radius: 14px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             transition: 0.2s;
         }
 
@@ -285,7 +317,6 @@
             box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
         }
 
-        /* বড় লেখার পেইজ (পেইজ ১) */
         .composer-input-large {
             width: 100%;
             background: #090d16;
@@ -297,11 +328,12 @@
             min-height: 160px;
             margin-bottom: 15px;
             resize: vertical;
+            user-select: text;
         }
 
         .cover-photo-wrapper {
             position: relative;
-            height: 220px;
+            height: 210px;
             border-radius: 18px 18px 0 0;
             overflow: hidden;
         }
@@ -325,7 +357,7 @@
         }
 
         .profile-pic {
-            width: 130px; height: 130px; border-radius: 50%;
+            width: 125px; height: 125px; border-radius: 50%;
             border: 5px solid var(--card-bg); object-fit: cover;
         }
 
@@ -359,7 +391,6 @@
             padding: 10px 6px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; text-align: center;
         }
 
-        /* রাডার অ্যানিমেশন */
         .radar-circle {
             width: 200px; height: 200px; border-radius: 50%; border: 3px solid #22c55e;
             margin: 20px auto; position: relative; background: radial-gradient(circle, rgba(34,197,94,0.2) 0%, rgba(7,11,20,0.95) 70%); overflow: hidden;
@@ -385,39 +416,60 @@
 </head>
 <body id="mainBody">
 
-    <!-- ফুল স্ক্রিন রেজিস্ট্রেশন ও লগইন ওভারলে -->
+    <!-- ১০০% ফুল স্ক্রিন রেজিস্ট্রেশন ও লগইন ওভারলে (২টি অপশনসহ) -->
     <div id="authOverlay">
         <div class="auth-card-fullscreen">
-            <div class="auth-title">AYNA BOOK REGISTRATION</div>
-            <p style="text-align: center; color: var(--text-muted); font-size: 16px; margin-bottom: 20px;">৫ ট্রিলিয়ন কোয়ান্টাম • ফুল স্ক্রিন ও টাচ জেসচার এডিশন</p>
-            
-            <input type="text" id="regName" class="auth-input" placeholder="আপনার পুরো নাম (স্থায়ী একাউন্ট টাইটেল)">
-            <input type="tel" id="regPhone" class="auth-input" placeholder="ফোন নাম্বার">
-            <input type="email" id="regEmail" class="auth-input" placeholder="জিমেইল এড্রেস">
-            
-            <div class="password-wrapper">
-                <input type="password" id="regPass" class="auth-input" placeholder="পাসওয়ার্ড (ঠিক ১১ সংখ্যার)" maxlength="11">
-                <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('regPass', this)">👁️</button>
+            <div class="auth-title">AYNA BOOK QUANTUM</div>
+            <p style="text-align: center; color: var(--text-muted); font-size: 15px; margin-bottom: 18px;">⚡ ১০ ট্রিলিয়ন সুপারফাস্ট কোয়ান্টাম • স্থায়ী অটো-সেভ সিস্টেম</p>
+
+            <!-- ২টি আলাদা অপশন: রেজিস্ট্রেশন এবং লগইন -->
+            <div class="auth-mode-tabs">
+                <button type="button" id="tabRegisterBtn" class="auth-tab-btn active" onclick="switchAuthMode('register')">🆕 রেজিস্ট্রেশন</button>
+                <button type="button" id="tabLoginBtn" class="auth-tab-btn" onclick="switchAuthMode('login')">🔑 লগইন (Login)</button>
             </div>
 
-            <div class="password-wrapper">
-                <input type="password" id="regRePass" class="auth-input" placeholder="রি-পাসওয়ার্ড (১১ সংখ্যার)" maxlength="11">
-                <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('regRePass', this)">👁️</button>
-            </div>
-            
-            <select id="accType" class="auth-select" onchange="togglePaymentInfo()">
-                <option value="ব্যক্তিগত ফ্রি (Free)">১. ব্যক্তিগত ফ্রি ($0 - ১ বছর)</option>
-                <option value="বিজনেসম্যান (Business)">২. বিজনেসম্যান ($15 - ১ বছর)</option>
-                <option value="VIP একাউন্ট">৩. VIP একাউন্ট ($20 - ১ বছর)</option>
-                <option value="VVIP একাউন্ট">৪. VVIP একাউন্ট ($25 - ১ বছর)</option>
-            </select>
+            <!-- ফর্ম ১: নতুন রেজিস্ট্রেশন ফর্ম -->
+            <div id="registerFormBox">
+                <input type="text" id="regName" class="auth-input" placeholder="আপনার পুরো নাম (স্থায়ী একাউন্ট টাইটেল)">
+                <input type="tel" id="regPhone" class="auth-input" placeholder="ফোন নাম্বার">
+                <input type="email" id="regEmail" class="auth-input" placeholder="জিমেইল এড্রেস">
+                
+                <div class="password-wrapper">
+                    <input type="password" id="regPass" class="auth-input" placeholder="পাসওয়ার্ড (ঠিক ১১ সংখ্যার)" maxlength="11">
+                    <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('regPass', this)">👁️</button>
+                </div>
 
-            <div id="paymentInstructions" class="payment-box" style="display: none;">
-                💳 পেমেন্ট পাঠান: <b>01400751906</b> (বিকাশ, নগদ, রকেট, উপায়, পাইওনিয়ার, পেপাল)
-                <input type="text" id="trxId" class="auth-input" placeholder="TrxID দিন" style="margin-top: 10px; margin-bottom: 0;">
+                <div class="password-wrapper">
+                    <input type="password" id="regRePass" class="auth-input" placeholder="রি-পাসওয়ার্ড (১১ সংখ্যার)" maxlength="11">
+                    <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('regRePass', this)">👁️</button>
+                </div>
+                
+                <select id="accType" class="auth-select" onchange="togglePaymentInfo()">
+                    <option value="ব্যক্তিগত ফ্রি (Free)">১. ব্যক্তিগত ফ্রি ($0 - ১ বছর)</option>
+                    <option value="বিজনেসম্যান (Business)">২. বিজনেসম্যান ($15 - ১ বছর)</option>
+                    <option value="VIP একাউন্ট">৩. VIP একাউন্ট ($20 - ১ বছর)</option>
+                    <option value="VVIP একাউন্ট">৪. VVIP একাউন্ট ($25 - ১ বছর)</option>
+                </select>
+
+                <div id="paymentInstructions" class="payment-box" style="display: none;">
+                    💳 পেমেন্ট পাঠান: <b>01400751906</b> (বিকাশ, নগদ, রকেট, উপায়, পাইওনিয়ার, পেপাল)
+                    <input type="text" id="trxId" class="auth-input" placeholder="TrxID দিন" style="margin-top: 10px; margin-bottom: 0;">
+                </div>
+
+                <button type="button" class="btn-post-quantum" style="width: 100%; margin-top: 6px;" onclick="handleRegister()">🚀 রেজিস্ট্রেশন সম্পন্ন করুন</button>
             </div>
 
-            <button class="btn-post-quantum" style="width: 100%; margin-top: 10px;" onclick="handleRegisterLogin()">🚀 একাউন্ট রেজিস্টার ও লগইন করুন</button>
+            <!-- ফর্ম ২: সরাসরি লগইন ফর্ম -->
+            <div id="loginFormBox" style="display: none;">
+                <input type="text" id="loginIdentifier" class="auth-input" placeholder="আপনার সেভ করা ফোন নাম্বার বা জিমেইল">
+                
+                <div class="password-wrapper">
+                    <input type="password" id="loginPass" class="auth-input" placeholder="আপনার ১১ সংখ্যার পাসওয়ার্ড" maxlength="11">
+                    <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('loginPass', this)">👁️</button>
+                </div>
+
+                <button type="button" class="btn-post-quantum" style="width: 100%; margin-top: 6px;" onclick="handleLogin()">🔑 লগইন করে প্রবেশ করুন</button>
+            </div>
         </div>
     </div>
 
@@ -426,10 +478,11 @@
         <div class="brand-title-wrapper">
             <div class="aquatic-glowing-star" title="16px Aquatic Glowing Star"></div>
             <div class="brand-title">AYNA BOOK</div>
+            <span style="font-size: 12px; background: rgba(56,189,248,0.18); border: 1px solid var(--primary-glow); color: var(--primary-glow); padding: 3px 8px; border-radius: 14px; font-weight: bold;">10T Quantum</span>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <button class="btn-media" style="padding: 8px 12px; font-size: 14px;" onclick="playWorldClassSound()">🔊 Hi-Fi সাউন্ড</button>
-            <button class="btn-media" style="padding: 8px 12px; font-size: 14px;" onclick="toggleSecurityPanel()">🔐 পাসওয়ার্ড</button>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn-media" style="padding: 7px 11px; font-size: 13px;" onclick="toggleSecurityPanel()">🔐 পাসওয়ার্ড</button>
+            <button class="btn-media" style="padding: 7px 11px; font-size: 13px; border-color: #f87171; color: #fca5a5;" onclick="logoutAccount()">🚪 লগআউট</button>
         </div>
     </header>
 
@@ -449,7 +502,7 @@
 
         <!-- পাসওয়ার্ড সেটিংস প্যানেল -->
         <div id="securityPanel" class="card-box" style="display: none; border-color: var(--primary-glow);">
-            <h4 style="color: var(--primary-glow); margin-bottom: 12px;">🔐 পাসওয়ার্ড ব্যবস্থাপনা (১১ সংখ্যা)</h4>
+            <h4 style="color: var(--primary-glow); margin-bottom: 12px;">🔐 পাসওয়ার্ড ব্যবস্থাপনা (ফোনে স্থায়ীভাবে সেভকৃত)</h4>
             <div class="password-wrapper">
                 <input type="password" id="currentSavedPass" class="auth-input" readonly>
                 <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('currentSavedPass', this)">👁️</button>
@@ -458,7 +511,7 @@
                 <input type="password" id="newUpdatePass" class="auth-input" placeholder="নতুন ১১ সংখ্যার পাসওয়ার্ড" maxlength="11">
                 <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('newUpdatePass', this)">👁️</button>
             </div>
-            <button class="btn-post-quantum" onclick="updateAccountPassword()">💾 পাসওয়ার্ড সেভ করুন</button>
+            <button class="btn-post-quantum" onclick="updateAccountPassword()">💾 পাসওয়ার্ড আপডেট ও সেভ করুন</button>
         </div>
 
         <!-- ==================== পেইজ ১: বড় লেখার পেইজ ও প্রোফাইল ==================== -->
@@ -483,17 +536,17 @@
                 </div>
             </div>
 
-            <!-- প্রোফাইলের ঠিক নিচে চলমান লাইভ রেডিও, টিভি ও তাজা খবরের টিকার (Running Ticker) -->
+            <!-- প্রোফাইলের নিচে চলমান লাইভ রেডিও, টিভি ও তাজা খবরের টিকার -->
             <div class="live-ticker-banner">
                 <div class="ticker-badge">🔴 LIVE NEWS & RADIO</div>
                 <marquee scrollamount="6" style="font-size: 17px; color: var(--accent-gold); font-weight: bold;">
-                    📡 [লাইভ টিভি]: যমুনা ও সময় টিভিতে সংবাদ চলছে | 📻 [লাইভ রেডিও]: বাংলাদেশ বেতার ও ফুর্তি FM-এ ক্রিস্টাল ক্লিয়ার অডিও সম্প্রচার হচ্ছে | ⚡ [তাজা খবর]: ৫ ট্রিলিয়ন কোয়ান্টাম ও ফুল স্ক্রিন টাচ জেসচার আপডেট সফলভাবে কার্যকর!
+                    📡 [লাইভ টিভি]: যমুনা ও সময় টিভিতে সংবাদ চলছে | 📻 [লাইভ রেডিও]: বাংলাদেশ বেতার ও ফুর্তি FM-এ ক্রিস্টাল ক্লিয়ার অডিও সম্প্রচার হচ্ছে | ⚡ [তাজা খবর]: ১০ ট্রিলিয়ন সুপারফাস্ট কোয়ান্টাম ও স্থায়ী অটো-সেভ সিস্টেম সক্রিয়!
                 </marquee>
             </div>
 
             <!-- বড় লেখার পোস্ট কম্পোজার -->
             <div class="card-box">
-                <textarea id="postInput" class="composer-input-large" placeholder="আপনার মনের বড় লেখাটি এখানে লিখুন... (অডিও, ভিডিও, লাইভ ভিডিও সহ)"></textarea>
+                <textarea id="postInput" class="composer-input-large" placeholder="আপনার মনের বড় লেখাটি এখানে লিখুন... (ফোনে অটো-সেভ হয়ে থাকবে)"></textarea>
                 
                 <div id="liveMediaPreview" style="margin-bottom: 15px; display: none;">
                     <video id="liveCameraStream" autoplay muted playsinline style="width: 100%; border-radius: 14px; display: none; max-height: 320px; background: #000;"></video>
@@ -518,63 +571,7 @@
                 </div>
             </div>
 
-            <div id="feedContainer">
-                <article class="card-box" id="post-1" data-likes="1850" data-views="6200">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover;">
-                            <div>
-                                <div style="font-weight: 800; font-size: 18px;">AYNA BOOK Global</div>
-                                <div style="font-size: 14px; color: var(--text-muted);">এইমাত্র • 5 Trillion Quantum</div>
-                            </div>
-                        </div>
-                        <div class="menu-container">
-                            <button class="three-dot-btn" onclick="toggleMenu('menu-post-1')">⋮</button>
-                            <div id="menu-post-1" class="dropdown-menu">
-                                <button onclick="editPost('post-1')">✏️ এডিট</button>
-                                <button onclick="aiCorrectPost('post-1')">🤖 AI সংশোধন</button>
-                                <button onclick="deletePost('post-1')" style="color: #f87171;">🗑️ ডিলিট</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p id="text-post-1" style="font-size: 22px; margin-bottom: 14px;">
-                        AYNA BOOK-এ প্রোফাইলের নিচে সফলভাবে লাইভ রেডিও, টিভি ও তাজা খবরের চলমান টিকার যুক্ত করা হয়েছে!
-                    </p>
-
-                    <div style="display: flex; justify-content: space-between; font-size: 15px; color: var(--text-muted); border-bottom: 1px solid #1f2937; padding-bottom: 10px;">
-                        <span id="like-count-post-1">👍 ১,৮৫০ লাইক</span>
-                        <span id="view-count-post-1">👁️ ৬,২০০ ভিউয়ার্স</span>
-                    </div>
-
-                    <div class="post-actions-bar">
-                        <button class="action-btn" onclick="likePost('post-1')">👍 লাইক</button>
-                        <button class="action-btn" onclick="toggleCommentBox('post-1')">💬 কমেন্ট</button>
-                        <button class="action-btn" onclick="notify('↗️ শেয়ার সম্পন্ন!')">↗️ শেয়ার</button>
-                        <button class="action-btn" onclick="notify('🔖 সেভ করা হয়েছে!')">🔖 সেভ</button>
-                        <button class="action-btn" onclick="copyPostText('text-post-1')">📋 কপি</button>
-                    </div>
-
-                    <div id="comments-post-1" style="display:none; margin-top: 14px; border-top: 1px dashed #334155; padding-top: 12px;">
-                        <div id="comment-list-post-1">
-                            <div style="display: flex; justify-content: space-between; background: #090d16; padding: 10px 14px; border-radius: 12px; margin-bottom: 8px; font-size: 17px;" id="comm-1">
-                                <span>💬 অসাধারণ চলমান টিকার ও ডিজাইন!</span>
-                                <div class="menu-container">
-                                    <button class="three-dot-btn" style="width:28px;height:28px;font-size:14px;" onclick="toggleMenu('menu-comm-1')">⋮</button>
-                                    <div id="menu-comm-1" class="dropdown-menu">
-                                        <button onclick="editComment('comm-1')">✏️ এডিট</button>
-                                        <button onclick="deleteComment('comm-1')" style="color:#f87171;">🗑️ ডিলিট</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 10px; margin-top: 10px;">
-                            <input type="text" id="input-comm-post-1" class="auth-input" style="margin-bottom: 0; padding: 10px;" placeholder="কমেন্ট লিখুন...">
-                            <button class="btn-media" onclick="addComment('post-1')">পোস্ট</button>
-                        </div>
-                    </div>
-                </article>
-            </div>
+            <div id="feedContainer"></div>
         </div>
 
         <!-- ==================== পেইজ ২: ভিডিও দেখা ==================== -->
@@ -585,8 +582,8 @@
                     <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                 </video>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 18px;">🔥 ট্রেন্ডিং কোয়ান্টাম রিলস ভিডিও</span>
-                    <button class="btn-media" onclick="notify('❤️ ভিডিওতে রিয়্যাক্ট যুক্ত হয়েছে!')">❤️ লাইক (15.8K)</button>
+                    <span style="font-size: 18px;">🔥 ট্রেন্ডিং ১০ ট্রিলিয়ন কোয়ান্টাম রিলস</span>
+                    <button class="btn-media" onclick="notify('❤️ ভিডিওতে রিয়্যাক্ট যুক্ত হয়েছে!')">❤️ লাইক (18.9K)</button>
                 </div>
             </div>
         </div>
@@ -640,15 +637,10 @@
         <div id="page-4" class="app-page">
             <div class="card-box" style="text-align: center;">
                 <h3 style="color: var(--primary-glow); margin-bottom: 12px;">📍 লাইভ GPS, কোয়ান্টাম রাডার ও কম্পাস</h3>
-                
-                <div class="radar-circle">
-                    <div class="radar-sweep"></div>
-                </div>
-
+                <div class="radar-circle"><div class="radar-sweep"></div></div>
                 <p id="gpsCoordsText" style="color: var(--accent-gold); font-weight: bold; margin-bottom: 15px; font-size: 18px;">
                     স্যাটেলাইট স্ট্যাটাস: স্ক্যান করার জন্য নিচের বাটনে চাপুন
                 </p>
-
                 <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
                     <button class="btn-post-quantum" onclick="activateGPSLocation()">📍 লাইভ GPS অবস্থান নির্ণয়</button>
                     <button class="btn-media" onclick="notify('🧭 কম্পাস ক্যালিব্রেটেড: উত্তর দিক (0° North) নির্ভুল')">🧭 কম্পাস রিফ্রেশ</button>
@@ -660,7 +652,7 @@
         <div id="page-5" class="app-page">
             <div class="card-box" style="border-color: var(--accent-purple);">
                 <h3 style="color: #38bdf8; margin-bottom: 10px;">💬 AYNA MESSENGER GLOBAL AI</h3>
-                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 16px;">৭,০০০+ ভাষা অটো-ট্রান্সলেটর এবং সুপার-ফাস্ট ফাইল আদান-প্রদান</p>
+                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 16px;">৭,০০০+ ভাষা অটো-ট্রান্সলেটর এবং ১০ ট্রিলিয়ন কোয়ান্টাম ফাইল ট্রান্সফার</p>
 
                 <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;">
                     <select id="worldAllLangs" class="auth-select" style="margin-bottom: 0; flex: 1;">
@@ -680,9 +672,9 @@
                 <div id="chatBoxGlobal">
                     <div style="background: #1e293b; padding: 16px; border-radius: 16px; border-left: 5px solid var(--primary-glow);">
                         <div style="font-size: 15px; color: var(--text-muted);">বন্ধু (Global Message):</div>
-                        <div style="font-size: 18px; margin: 6px 0;">"Hello! Sending 8K files at 5 Trillion Quantum speed."</div>
+                        <div style="font-size: 18px; margin: 6px 0;">"Hello! Sending 8K files at 10 Trillion Quantum speed."</div>
                         <div id="aiGlobalTranslatedOutput" style="color: var(--accent-gold); font-weight: bold; font-size: 18px;">
-                            🤖 AI অনুবাদ: "হ্যালো! ৫ ট্রিলিয়ন কোয়ান্টাম গতিতে ৮কে ফাইল পাঠাচ্ছি।"
+                            🤖 AI অনুবাদ: "হ্যালো! ১০ ট্রিলিয়ন কোয়ান্টাম গতিতে ৮কে ফাইল পাঠাচ্ছি।"
                         </div>
                     </div>
                 </div>
@@ -694,13 +686,10 @@
             <div class="card-box">
                 <h3 style="color: var(--primary-glow); margin-bottom: 14px;">🔔 সাম্প্রতিক নোটিফিকেশনসমূহ</h3>
                 <div style="background: #090d16; padding: 14px; border-radius: 14px; margin-bottom: 12px; border-left: 5px solid #22c55e; font-size: 18px;">
-                    ✅ আপনার ৫ ট্রিলিয়ন কোয়ান্টাম অ্যাকাউন্ট সফলভাবে ভেরিফাইড হয়েছে।
+                    ✅ আপনার ১০ ট্রিলিয়ন কোয়ান্টাম অ্যাকাউন্ট এই ডিভাইসে স্থায়ীভাবে সেভ হয়েছে।
                 </div>
                 <div style="background: #090d16; padding: 14px; border-radius: 14px; margin-bottom: 12px; border-left: 5px solid var(--primary-glow); font-size: 18px;">
-                    👍 ১,৮৫০ জন আপনার পোস্টে লাইক এবং রিয়্যাক্ট দিয়েছেন।
-                </div>
-                <div style="background: #090d16; padding: 14px; border-radius: 14px; border-left: 5px solid var(--accent-gold); font-size: 18px;">
-                    🌐 AYNA Messenger-এ নতুন ফুল স্ক্রিন টাচ জেসচার আপডেট যুক্ত হয়েছে।
+                    👍 রিফ্রেশ করলেও আপনার তথ্য ও পোস্ট মুছে যাবে না।
                 </div>
             </div>
         </div>
@@ -711,20 +700,20 @@
                 <h3 style="color: var(--primary-glow); margin-bottom: 16px;">👁️ লাইভ ভিউয়ার ও রিয়্যাক্ট অ্যানালিটিক্স</h3>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: center;">
                     <div style="background: #090d16; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
-                        <div style="font-size: 32px; font-weight: 900; color: var(--primary-glow);">৬,২০০+</div>
+                        <div style="font-size: 32px; font-weight: 900; color: var(--primary-glow);">১০,৫০০+</div>
                         <div style="font-size: 16px; color: var(--text-muted); margin-top: 5px;">👁️ মোট পোস্ট ভিউয়ার্স</div>
                     </div>
                     <div style="background: #090d16; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
-                        <div style="font-size: 32px; font-weight: 900; color: #f43f5e;">১,৮৫০+</div>
+                        <div style="font-size: 32px; font-weight: 900; color: #f43f5e;">৩,৪২০+</div>
                         <div style="font-size: 16px; color: var(--text-muted); margin-top: 5px;">❤️ মোট লাইক ও লাভ রিয়্যাক্ট</div>
                     </div>
                     <div style="background: #090d16; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
-                        <div style="font-size: 32px; font-weight: 900; color: var(--accent-gold);">১,১२०</div>
+                        <div style="font-size: 32px; font-weight: 900; color: var(--accent-gold);">১,৮৯০</div>
                         <div style="font-size: 16px; color: var(--text-muted); margin-top: 5px;">😮 ওয়াও ও সুপার রিয়্যাক্ট</div>
                     </div>
                     <div style="background: #090d16; padding: 20px; border-radius: 16px; border: 1px solid #334155;">
-                        <div style="font-size: 32px; font-weight: 900; color: #22c55e;">৯৯.৯%</div>
-                        <div style="font-size: 16px; color: var(--text-muted); margin-top: 5px;">⚡ কোয়ান্টাম টাচ স্পিড</div>
+                        <div style="font-size: 32px; font-weight: 900; color: #22c55e;">10T Q-Speed</div>
+                        <div style="font-size: 16px; color: var(--text-muted); margin-top: 5px;">⚡ ১০ ট্রিলিয়ন কোয়ান্টাম গতি</div>
                     </div>
                 </div>
             </div>
@@ -735,88 +724,46 @@
     <div id="toast" class="toast-notification"></div>
 
     <script>
-        // ফুল স্ক্রিন সোয়াইপ / টাচ জেসচার (ডান থেকে বামে এবং বাম থেকে ডানে স্লাইড করে পেইজ পরিবর্তন)
-        let touchStartX = 0;
-        let touchEndX = 0;
-        let currentPageIndex = 0;
-        const totalPages = 8;
+        const STORAGE_USER_KEY = "ayna_book_user_v10T";
+        const STORAGE_SESSION_KEY = "ayna_book_logged_in_v10T";
+        const STORAGE_POSTS_KEY = "ayna_book_posts_v10T";
 
-        document.getElementById('mainBody').addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, false);
+        // পেইজ লোড বা রিফ্রেশ হওয়ার সাথে সাথে অটো-লগইন চেক (রিফ্রেশ করলে আর রেজিস্ট্রেশন পেইজ আসবে না)
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUserJSON = localStorage.getItem(STORAGE_USER_KEY);
+            const isLoggedIn = localStorage.getItem(STORAGE_SESSION_KEY);
 
-        document.getElementById('mainBody').addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipeGesture();
-        }, false);
-
-        function handleSwipeGesture() {
-            const swipeThreshold = 50;
-            if (touchEndX + swipeThreshold < touchStartX) {
-                if (currentPageIndex < totalPages - 1) {
-                    currentPageIndex++;
-                    navigateToPage(currentPageIndex);
-                }
-            } else if (touchEndX > touchStartX + swipeThreshold) {
-                if (currentPageIndex > 0) {
-                    currentPageIndex--;
-                    navigateToPage(currentPageIndex);
-                }
+            if (savedUserJSON && isLoggedIn === "true") {
+                const userData = JSON.parse(savedUserJSON);
+                applyUserToUI(userData);
+                openMainAppDirectly();
+            } else if (savedUserJSON) {
+                // রেজিস্ট্রেশন করা আছে কিন্তু লগআউট অবস্থায় থাকলে লগইন ট্যাব দেখাবে
+                switchAuthMode('login');
             }
-        }
+            loadSavedPosts();
+        });
 
-        function switchPage(index, btnElement) {
-            currentPageIndex = index;
-            navigateToPage(index);
-        }
+        function switchAuthMode(mode) {
+            const regBox = document.getElementById('registerFormBox');
+            const logBox = document.getElementById('loginFormBox');
+            const tabReg = document.getElementById('tabRegisterBtn');
+            const tabLog = document.getElementById('tabLoginBtn');
 
-        function navigateToPage(index) {
-            document.querySelectorAll('.app-page').forEach((p, idx) => {
-                p.classList.toggle('active-page', idx === index);
-            });
-            document.querySelectorAll('.page-tab-btn').forEach((b, idx) => {
-                b.classList.toggle('active', idx === index);
-            });
-            const activeBtn = document.querySelectorAll('.page-tab-btn')[index];
-            if (activeBtn) {
-                activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-            }
-            playWorldClassSound();
-        }
-
-        function togglePasswordVisibility(inputId, btnElement) {
-            const inputField = document.getElementById(inputId);
-            if (inputField.type === "password") {
-                inputField.type = "text";
-                btnElement.innerText = "🙈";
+            if (mode === 'register') {
+                regBox.style.display = 'block';
+                logBox.style.display = 'none';
+                tabReg.classList.add('active');
+                tabLog.classList.remove('active');
             } else {
-                inputField.type = "password";
-                btnElement.innerText = "👁️";
+                regBox.style.display = 'none';
+                logBox.style.display = 'block';
+                tabLog.classList.add('active');
+                tabReg.classList.remove('active');
             }
         }
 
-        function toggleSecurityPanel() {
-            const panel = document.getElementById('securityPanel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function updateAccountPassword() {
-            const newPass = document.getElementById('newUpdatePass').value;
-            if (newPass.length !== 11) {
-                alert("নতুন পাসওয়ার্ড অবশ্যই ঠিক ১১ সংখ্যার হতে হবে!");
-                return;
-            }
-            document.getElementById('currentSavedPass').value = newPass;
-            document.getElementById('newUpdatePass').value = "";
-            notify("🔐 পাসওয়ার্ড সফলভাবে আপডেট করা হয়েছে!");
-        }
-
-        function togglePaymentInfo() {
-            const type = document.getElementById('accType').value;
-            document.getElementById('paymentInstructions').style.display = type.includes('Free') ? 'none' : 'block';
-        }
-
-        function handleRegisterLogin() {
+        function handleRegister() {
             const name = document.getElementById('regName').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
             const email = document.getElementById('regEmail').value.trim();
@@ -837,15 +784,195 @@
                 return;
             }
 
-            document.getElementById('currentSavedPass').value = pass;
-            document.getElementById('displayUserName').innerText = name;
-            document.getElementById('displayAccType').innerText = `AYNA ID: 2026-10000001 • ${accType}`;
+            const userData = {
+                name,
+                phone,
+                email,
+                pass,
+                accType,
+                profileImg: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+                coverImg: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80"
+            };
 
+            // ফোনের স্টোরেজে স্থায়ীভাবে সেভ করা
+            localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(userData));
+            localStorage.setItem(STORAGE_SESSION_KEY, "true");
+
+            applyUserToUI(userData);
+            openMainAppDirectly();
+            notify(`✨ স্বাগতম ${name}! আপনার তথ্য ফোনে স্থায়ীভাবে সেভ হয়েছে।`);
+        }
+
+        function handleLogin() {
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            const pass = document.getElementById('loginPass').value;
+            const savedUserJSON = localStorage.getItem(STORAGE_USER_KEY);
+
+            if (!savedUserJSON) {
+                alert("এই ফোনে কোনো অ্যাকাউন্ট সেভ করা নেই। প্রথমে 'রেজিস্ট্রেশন' ট্যাবে গিয়ে অ্যাকাউন্ট তৈরি করুন।");
+                switchAuthMode('register');
+                return;
+            }
+
+            const userData = JSON.parse(savedUserJSON);
+            if ((identifier === userData.phone || identifier === userData.email) && pass === userData.pass) {
+                localStorage.setItem(STORAGE_SESSION_KEY, "true");
+                applyUserToUI(userData);
+                openMainAppDirectly();
+                notify(`🔑 লগইন সফল! স্বাগতম ${userData.name}`);
+            } else {
+                alert("ভুল ফোন/জিমেইল অথবা ১১ সংখ্যার পাসওয়ার্ড!");
+            }
+        }
+
+        function logoutAccount() {
+            localStorage.setItem(STORAGE_SESSION_KEY, "false");
+            document.getElementById('authOverlay').style.display = 'flex';
+            document.getElementById('pageTabsNav').style.display = 'none';
+            document.getElementById('mainAppContainer').style.display = 'none';
+            switchAuthMode('login');
+            notify("🚪 লগআউট সম্পন্ন হয়েছে। পুনরায় লগইন করুন।");
+        }
+
+        function applyUserToUI(userData) {
+            document.getElementById('currentSavedPass').value = userData.pass;
+            document.getElementById('displayUserName').innerText = userData.name;
+            document.getElementById('displayAccType').innerText = `AYNA ID: 2026-10000001 • ${userData.accType}`;
+            if (userData.profileImg) document.getElementById('displayProfileImg').src = userData.profileImg;
+            if (userData.coverImg) document.getElementById('displayCoverImg').src = userData.coverImg;
+        }
+
+        function openMainAppDirectly() {
             document.getElementById('authOverlay').style.display = 'none';
             document.getElementById('pageTabsNav').style.display = 'flex';
             document.getElementById('mainAppContainer').style.display = 'block';
+        }
 
-            notify(`✨ স্বাগতম ${name}! লাইভ টিকার ও ফুল স্ক্রিন সচল হয়েছে।`);
+        // পাসওয়ার্ড আপডেট এবং ফোনে সেভ
+        function updateAccountPassword() {
+            const newPass = document.getElementById('newUpdatePass').value;
+            if (newPass.length !== 11) {
+                alert("নতুন পাসওয়ার্ড অবশ্যই ঠিক ১১ সংখ্যার হতে হবে!");
+                return;
+            }
+            const savedUserJSON = localStorage.getItem(STORAGE_USER_KEY);
+            if (savedUserJSON) {
+                const userData = JSON.parse(savedUserJSON);
+                userData.pass = newPass;
+                localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(userData));
+            }
+            document.getElementById('currentSavedPass').value = newPass;
+            document.getElementById('newUpdatePass').value = "";
+            notify("🔐 নতুন পাসওয়ার্ড ফোনে স্থায়ীভাবে সেভ হয়েছে!");
+        }
+
+        // প্রোফাইল ও কভার ছবি পরিবর্তন এবং ফোনে সেভ
+        function changeProfilePhoto() {
+            const url = prompt("প্রোফাইল ছবির নতুন লিংক দিন:");
+            if (url) {
+                document.getElementById('displayProfileImg').src = url;
+                const saved = JSON.parse(localStorage.getItem(STORAGE_USER_KEY) || "{}");
+                saved.profileImg = url;
+                localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(saved));
+                notify("🖼️ প্রোফাইল ছবি স্থায়ীভাবে সেভ হয়েছে!");
+            }
+        }
+
+        function changeCoverPhoto() {
+            const url = prompt("কভার ছবির নতুন লিংক দিন:");
+            if (url) {
+                document.getElementById('displayCoverImg').src = url;
+                const saved = JSON.parse(localStorage.getItem(STORAGE_USER_KEY) || "{}");
+                saved.coverImg = url;
+                localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(saved));
+                notify("🖼️ কভার ছবি স্থায়ীভাবে সেভ হয়েছে!");
+            }
+        }
+
+        // পোস্ট অটো-সেভ ও লোড সিস্টেম
+        function loadSavedPosts() {
+            const savedPosts = JSON.parse(localStorage.getItem(STORAGE_POSTS_KEY) || "[]");
+            const container = document.getElementById('feedContainer');
+            if (savedPosts.length === 0) {
+                container.innerHTML = `
+                    <article class="card-box" id="post-default" data-likes="2450" data-views="10500">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover;">
+                                <div>
+                                    <div style="font-weight: 800; font-size: 18px;">AYNA BOOK Global</div>
+                                    <div style="font-size: 14px; color: var(--text-muted);">এইমাত্র • 10 Trillion Quantum</div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="font-size: 22px; margin-bottom: 14px;">
+                            AYNA BOOK ১০ ট্রিলিয়ন সুপারফাস্ট কোয়ান্টাম প্রযুক্তিতে স্বাগতম! একবার রেজিস্ট্রেশন করলে আপনার ফোনে সবকিছু অটো-সেভ হয়ে থাকবে।
+                        </p>
+                    </article>`;
+            } else {
+                container.innerHTML = savedPosts.join('');
+            }
+        }
+
+        function saveCurrentPostsToStorage() {
+            const articles = Array.from(document.getElementById('feedContainer').children).map(el => el.outerHTML);
+            localStorage.setItem(STORAGE_POSTS_KEY, JSON.stringify(articles));
+        }
+
+        // ফুল স্ক্রিন সোয়াইপ / টাচ জেসচার
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let currentPageIndex = 0;
+        const totalPages = 8;
+
+        document.getElementById('mainBody').addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.getElementById('mainBody').addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            const swipeThreshold = 55;
+            if (touchEndX + swipeThreshold < touchStartX && currentPageIndex < totalPages - 1) {
+                currentPageIndex++;
+                navigateToPage(currentPageIndex);
+            } else if (touchEndX > touchStartX + swipeThreshold && currentPageIndex > 0) {
+                currentPageIndex--;
+                navigateToPage(currentPageIndex);
+            }
+        }, false);
+
+        function switchPage(index) {
+            currentPageIndex = index;
+            navigateToPage(index);
+        }
+
+        function navigateToPage(index) {
+            document.querySelectorAll('.app-page').forEach((p, idx) => p.classList.toggle('active-page', idx === index));
+            document.querySelectorAll('.page-tab-btn').forEach((b, idx) => b.classList.toggle('active', idx === index));
+            const activeBtn = document.querySelectorAll('.page-tab-btn')[index];
+            if (activeBtn) activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            playWorldClassSound();
+        }
+
+        function togglePasswordVisibility(inputId, btnElement) {
+            const inputField = document.getElementById(inputId);
+            if (inputField.type === "password") {
+                inputField.type = "text";
+                btnElement.innerText = "🙈";
+            } else {
+                inputField.type = "password";
+                btnElement.innerText = "👁️";
+            }
+        }
+
+        function toggleSecurityPanel() {
+            const panel = document.getElementById('securityPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function togglePaymentInfo() {
+            const type = document.getElementById('accType').value;
+            document.getElementById('paymentInstructions').style.display = type.includes('Free') ? 'none' : 'block';
         }
 
         let uploadedMediaHTML = "";
@@ -853,20 +980,13 @@
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 const fileURL = URL.createObjectURL(file);
-                const previewBox = document.getElementById('liveMediaPreview');
-                const label = document.getElementById('attachedMediaLabel');
-                
-                previewBox.style.display = 'block';
-                label.innerText = `✅ সংযুক্ত ফাইল: ${file.name}`;
+                document.getElementById('liveMediaPreview').style.display = 'block';
+                document.getElementById('attachedMediaLabel').innerText = `✅ সংযুক্ত ফাইল: ${file.name}`;
 
-                if (type === 'image') {
-                    uploadedMediaHTML = `<img src="${fileURL}" style="width:100%; border-radius:14px; margin-bottom:14px;">`;
-                } else if (type === 'audio') {
-                    uploadedMediaHTML = `<audio controls src="${fileURL}" style="width:100%; margin-bottom:14px;"></audio>`;
-                } else if (type === 'video') {
-                    uploadedMediaHTML = `<video controls src="${fileURL}" style="width:100%; border-radius:14px; margin-bottom:14px; max-height:350px;"></video>`;
-                }
-                notify(`✅ ${file.name} সফলভাবে লোড হয়েছে! এবার পোস্ট করুন।`);
+                if (type === 'image') uploadedMediaHTML = `<img src="${fileURL}" style="width:100%; border-radius:14px; margin-bottom:14px;">`;
+                else if (type === 'audio') uploadedMediaHTML = `<audio controls src="${fileURL}" style="width:100%; margin-bottom:14px;"></audio>`;
+                else if (type === 'video') uploadedMediaHTML = `<video controls src="${fileURL}" style="width:100%; border-radius:14px; margin-bottom:14px; max-height:350px;"></video>`;
+                notify(`✅ ${file.name} লোড হয়েছে!`);
             }
         }
 
@@ -881,14 +1001,14 @@
                 previewBox.style.display = 'block';
                 videoEl.style.display = 'block';
                 videoEl.srcObject = activeLiveStream;
-                label.innerText = "🔴 লাইভ ভিডিও ক্যামেরা চালু আছে! পোস্ট বাটনে চাপলে লাইভ শুরু হবে।";
-                uploadedMediaHTML = `<div style="background:#dc2626; color:#fff; padding:6px 14px; border-radius:8px; display:inline-block; font-weight:bold; margin-bottom:10px;">🔴 LIVE STREAMING NOW</div><video autoplay muted playsinline style="width:100%; border-radius:14px; background:#000; max-height:320px;" poster="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80"></video>`;
-                notify("🔴 লাইভ ভিডিও ক্যামেরা সচল হয়েছে!");
+                label.innerText = "🔴 লাইভ ভিডিও ক্যামেরা চালু আছে!";
+                uploadedMediaHTML = `<div style="background:#dc2626; color:#fff; padding:6px 14px; border-radius:8px; display:inline-block; font-weight:bold; margin-bottom:10px;">🔴 LIVE STREAMING (10T QUANTUM)</div>`;
+                notify("🔴 লাইভ ভিডিও সচল হয়েছে!");
             } catch (err) {
                 previewBox.style.display = 'block';
-                label.innerText = "🔴 লাইভ ভিডিও ব্রডকাস্ট মোড প্রস্তুত!";
-                uploadedMediaHTML = `<div style="background:#dc2626; color:#fff; padding:6px 14px; border-radius:8px; display:inline-block; font-weight:bold; margin-bottom:10px;">🔴 LIVE BROADCAST (8K QUANTUM)</div>`;
-                notify("🔴 লাইভ ভিডিও ব্রডকাস্ট সক্রিয় করা হয়েছে!");
+                label.innerText = "🔴 লাইভ ভিডিও ব্রডকাস্ট প্রস্তুত!";
+                uploadedMediaHTML = `<div style="background:#dc2626; color:#fff; padding:6px 14px; border-radius:8px; display:inline-block; font-weight:bold; margin-bottom:10px;">🔴 LIVE BROADCAST (10T QUANTUM)</div>`;
+                notify("🔴 লাইভ ভিডিও ব্রডকাস্ট সক্রিয়!");
             }
         }
 
@@ -896,7 +1016,7 @@
             const input = document.getElementById('postInput');
             const text = input.value.trim();
             if (!text && !uploadedMediaHTML) {
-                notify("⚠️ কিছু লিখুন বা অডিও/ভিডিও/লাইভ নির্বাচন করুন।");
+                notify("⚠️ কিছু লিখুন বা মিডিয়া নির্বাচন করুন।");
                 return;
             }
 
@@ -905,13 +1025,13 @@
             const userImg = document.getElementById('displayProfileImg').src;
 
             const postHTML = `
-                <article class="card-box" id="${postId}" data-likes="1" data-views="22">
+                <article class="card-box" id="${postId}" data-likes="1" data-views="25">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <img src="${userImg}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover;">
                             <div>
                                 <div style="font-weight: 800; font-size: 18px;">${userName}</div>
-                                <div style="font-size: 14px; color: var(--text-muted);">এইমাত্র • 5 Trillion Quantum</div>
+                                <div style="font-size: 14px; color: var(--text-muted);">এইমাত্র • 10 Trillion Quantum</div>
                             </div>
                         </div>
                         <div class="menu-container">
@@ -929,7 +1049,7 @@
 
                     <div style="display: flex; justify-content: space-between; font-size: 15px; color: var(--text-muted); border-bottom: 1px solid #1f2937; padding-bottom: 10px;">
                         <span id="like-count-${postId}">👍 ১ লাইক</span>
-                        <span id="view-count-${postId}">👁️ ২২ ভিউয়ার্স</span>
+                        <span id="view-count-${postId}">👁️ ২৫ ভিউয়ার্স</span>
                     </div>
 
                     <div class="post-actions-bar">
@@ -951,6 +1071,8 @@
             `;
 
             document.getElementById('feedContainer').insertAdjacentHTML('afterbegin', postHTML);
+            saveCurrentPostsToStorage();
+
             input.value = "";
             uploadedMediaHTML = "";
             document.getElementById('liveMediaPreview').style.display = 'none';
@@ -959,7 +1081,7 @@
                 activeLiveStream.getTracks().forEach(t => t.stop());
                 activeLiveStream = null;
             }
-            notify("🚀 পোস্ট সফলভাবে প্রকাশিত হয়েছে!");
+            notify("🚀 পোস্ট প্রকাশিত ও ফোনে স্থায়ীভাবে সেভ হয়েছে!");
         }
 
         function toggleMenu(menuId) {
@@ -977,17 +1099,25 @@
         function editPost(postId) {
             const el = document.getElementById('text-' + postId);
             const val = prompt("পোস্ট এডিট করুন:", el.innerText);
-            if (val !== null && val.trim() !== "") { el.innerText = val; notify("✏️ এডিট সম্পন্ন!"); }
+            if (val !== null && val.trim() !== "") {
+                el.innerText = val;
+                saveCurrentPostsToStorage();
+                notify("✏️ এডিট সম্পন্ন ও সেভ হয়েছে!");
+            }
         }
 
         function aiCorrectPost(postId) {
             const el = document.getElementById('text-' + postId);
-            if (!el.innerText.includes("[AI সংশোধিত]")) el.innerText += " ✨ [AI সংশোধিত]";
+            if (!el.innerText.includes("[AI সংশোধিত]")) {
+                el.innerText += " ✨ [AI সংশোধিত]";
+                saveCurrentPostsToStorage();
+            }
             notify("🤖 AI সংশোধন সম্পন্ন!");
         }
 
         function deletePost(postId) {
             document.getElementById(postId).remove();
+            saveCurrentPostsToStorage();
             notify("🗑️ পোস্ট ডিলিট করা হয়েছে।");
         }
 
@@ -996,6 +1126,7 @@
             let likes = parseInt(art.getAttribute('data-likes')) + 1;
             art.setAttribute('data-likes', likes);
             document.getElementById(`like-count-${postId}`).innerText = `👍 ${likes} লাইক`;
+            saveCurrentPostsToStorage();
             notify("❤️ লাইক যুক্ত হয়েছে!");
         }
 
@@ -1022,17 +1153,23 @@
                 </div>`;
             document.getElementById(`comment-list-${postId}`).insertAdjacentHTML('beforeend', html);
             input.value = "";
-            notify("💬 কমেন্ট যুক্ত হয়েছে!");
+            saveCurrentPostsToStorage();
+            notify("💬 কমেন্ট যুক্ত ও সেভ হয়েছে!");
         }
 
         function editComment(commId) {
             const span = document.getElementById(commId).querySelector('span');
             const val = prompt("কমেন্ট এডিট করুন:", span.innerText.replace('💬 ', ''));
-            if (val !== null && val.trim() !== "") { span.innerText = "💬 " + val; notify("✏️ কমেন্ট এডিট সম্পন্ন!"); }
+            if (val !== null && val.trim() !== "") {
+                span.innerText = "💬 " + val;
+                saveCurrentPostsToStorage();
+                notify("✏️ কমেন্ট এডিট সম্পন্ন!");
+            }
         }
 
         function deleteComment(commId) {
             document.getElementById(commId).remove();
+            saveCurrentPostsToStorage();
             notify("🗑️ কমেন্ট ডিলিট করা হয়েছে।");
         }
 
@@ -1042,7 +1179,7 @@
         }
 
         function playRadioTone(channelName) {
-            document.getElementById('tvRadioStatus').innerText = `🔴 এখন চলছে: ${channelName} (Hi-Fi ক্রিস্টাল সাউন্ড সক্রিয়)`;
+            document.getElementById('tvRadioStatus').innerText = `🔴 এখন চলছে: ${channelName} (10T Quantum Hi-Fi Audio)`;
             notify(`📡 ${channelName} চালু হয়েছে!`);
         }
 
@@ -1066,22 +1203,12 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(pos => {
                     textEl.innerText = `📍 লাইভ GPS অবস্থান: Latitude ${pos.coords.latitude.toFixed(4)}°, Longitude ${pos.coords.longitude.toFixed(4)}°`;
-                    notify("📍 GPS লোকেশন সফলভাবে নির্ণয় করা হয়েছে!");
+                    notify("📍 GPS লোকেশন নির্ণয় হয়েছে!");
                 }, () => {
                     textEl.innerText = "📍 স্যাটেলাইট GPS সক্রিয়: ঢাকা, বাংলাদেশ (23.8103° N, 90.4125° E)";
                     notify("📍 GPS স্যাটেলাইট কানেক্টেড!");
                 });
             }
-        }
-
-        function changeProfilePhoto() {
-            const url = prompt("প্রোফাইল ছবির নতুন লিংক দিন:");
-            if (url) { document.getElementById('displayProfileImg').src = url; notify("🖼️ প্রোফাইল ছবি আপডেট হয়েছে!"); }
-        }
-
-        function changeCoverPhoto() {
-            const url = prompt("কভার ছবির নতুন লিংক দিন:");
-            if (url) { document.getElementById('displayCoverImg').src = url; notify("🖼️ কভার ছবি আপডেট হয়েছে!"); }
         }
 
         function instantShareAccount() {
@@ -1092,7 +1219,7 @@
         function translateAllLanguages() {
             const sel = document.getElementById('worldAllLangs');
             const langName = sel.options[sel.selectedIndex].text;
-            document.getElementById('aiGlobalTranslatedOutput').innerText = `🤖 AI অনুবাদ (${langName}): সফলভাবে ভাষান্তর সম্পন্ন হয়েছে।`;
+            document.getElementById('aiGlobalTranslatedOutput').innerText = `🤖 AI অনুবাদ (${langName}): ১০ ট্রিলিয়ন কোয়ান্টাম স্পিডে ভাষান্তর সম্পন্ন হয়েছে।`;
             notify(`🌐 '${langName}' ভাষায় অনুবাদ সক্রিয়!`);
         }
 
@@ -1104,7 +1231,7 @@
                         ⚡ ফাইল পাঠানো হয়েছে: <b>${file.name}</b>
                     </div>
                 `);
-                notify(`🚀 ${file.name} সুপার-ফাস্ট গতিতে পাঠানো হয়েছে!`);
+                notify(`🚀 ${file.name} ১০ ট্রিলিয়ন কোয়ান্টাম গতিতে পাঠানো হয়েছে!`);
             }
         }
 
