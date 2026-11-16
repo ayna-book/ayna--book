@@ -1,42 +1,24 @@
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { initializeApp, getApp, getApps } from
+  "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  getAuth
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  update,
-  push,
-  onValue
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+  getFirestore
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  setDoc,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  getDatabase
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
 import {
-  getStorage,
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
+  getStorage
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
   authDomain: "ayna-book.firebaseapp.com",
   databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -47,36 +29,11 @@ const firebaseConfig = {
   measurementId: "G-JWBYNXSBMZ"
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = getApps().length
+  ? getApp()
+  : initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
-const database = getDatabase(app);
-const firestore = getFirestore(app);
-const storage = getStorage(app);
-
-export {
-  app,
-  auth,
-  database,
-  firestore,
-  storage,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  ref,
-  set,
-  get,
-  update,
-  push,
-  onValue,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  setDoc,
-  onSnapshot,
-  storageRef,
-  uploadBytes,
-  getDownloadURL
-};
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const database = getDatabase(app);
+export const storage = getStorage(app);
