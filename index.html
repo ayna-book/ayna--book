@@ -1,173 +1,134 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>AYNA BOOK - 8K BIG FULL SCREEN</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;height:100dvh}
-body{background:#050811;color:#fff;font-family:system-ui,sans-serif;font-size:26px;line-height:1.5;overflow-x:hidden}
-#auth{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;background:linear-gradient(135deg,#050811,#0f172a,#1e1b4b);z-index:5000;display:flex;justify-content:center;overflow-y:auto}
-.authIn{width:100%;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:24px 18px}
-.logoRow{display:flex;align-items:center;justify-content:center;gap:12px}
-.logo{font-size:56px;font-weight:900;color:#FFF;text-shadow:0 0 22px #38bdf8}
-.star{width:16px;height:16px;min-width:16px;min-height:16px;background:#fff;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
-.sub{text-align:center;color:#94a3b8;font-size:20px;margin:8px 0 18px}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:#0f172a;padding:8px;border-radius:18px;border:1px solid #334155;margin-bottom:24px}
-.tab{background:transparent;border:none;color:#94a3b8;padding:18px;border-radius:14px;font-size:24px;font-weight:800;cursor:pointer}
-.tab.active{background:linear-gradient(90deg,#0284c7,#7c3aed);color:#fff}
-.inp,.sel{width:100%;background:#090d16;border:2px solid #334155;color:#fff;padding:22px 20px;border-radius:18px;font-size:26px;margin-bottom:18px}
-.pw{position:relative;width:100%;margin-bottom:18px}
-.pw .inp{margin-bottom:0;padding-right:70px}
-.eye{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:none;border:none;color:#38bdf8;font-size:32px;cursor:pointer;z-index:10}
-.bigBtn{background:linear-gradient(90deg,#0284c7,#7c3aed);color:#fff;border:none;padding:24px 28px;border-radius:20px;font-size:28px;font-weight:900;cursor:pointer;width:100%;min-height:84px}
-.miniBtn{background:#1e293b;color:#e2e8f0;border:1px solid #334155;padding:14px 18px;border-radius:16px;font-size:22px;font-weight:700;cursor:pointer}
-.navbar{background:linear-gradient(90deg,#090d16,#1e1b4b,#090d16);border-bottom:3px solid #38bdf8;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;width:100%}
-.brand2{font-size:34px;font-weight:900;color:#FFF}
-.navTabs{display:flex;overflow-x:auto;background:#0f172a;border-bottom:2px solid #1e293b;padding:12px;gap:10px;position:sticky;top:68px;z-index:999;width:100%}
-.navBtn{background:#1e293b;color:#cbd5e1;border:1px solid #334155;padding:14px 20px;border-radius:14px;font-size:22px;font-weight:700;cursor:pointer;white-space:nowrap}
-.navBtn.active{background:linear-gradient(90deg,#0284c7,#7c3aed);color:#fff}
-.app{width:100vw;max-width:100%;margin:0;padding:0;display:none;min-height:100vh;min-height:100dvh}
-.page{display:none;width:100%;min-height:calc(100vh - 140px);min-height:calc(100dvh - 140px);padding:18px 14px 40px}
-.page.active{display:block}
-.card{background:#111827;border:1px solid #1f2937;border-radius:24px;padding:26px;margin-bottom:22px;width:100%}
-.card h3{font-size:32px;color:#38bdf8;margin-bottom:14px}
-.coverWrap{position:relative;height:320px;border-radius:22px 22px 0 0;overflow:hidden;width:100%}
-.coverWrap img{width:100%;height:100%;object-fit:cover}
-.profileBar{padding:0 22px 22px;display:flex;justify-content:space-between;align-items:flex-end;margin-top:-70px;position:relative;flex-wrap:wrap;gap:16px}
-.profilePic{width:160px;height:160px;border-radius:50%;border:6px solid #111827;object-fit:cover}
-.myName{font-size:32px;font-weight:900}
-.myId{font-size:20px;color:#facc15}
-.ticker{background:linear-gradient(90deg,#0f172a,#1e1b4b,#0f172a);border:2px solid #38bdf8;border-radius:18px;padding:16px;margin-bottom:22px;display:flex;align-items:center;gap:12px}
-.badgeLive{background:#dc2626;color:#fff;padding:8px 14px;border-radius:10px;font-size:20px;font-weight:900;white-space:nowrap}
-.breakItem{border-bottom:1px solid #1e293b;padding:16px 0}
-.breakItem b{font-size:28px;line-height:1.4;display:block}
-.breakItem span{font-size:20px;color:#94a3b8}
-.composer{width:100%;background:#090d16;border:2px solid #334155;border-radius:18px;color:#fff;font-size:28px;padding:22px;min-height:200px;margin-bottom:18px}
-.tv{width:100%;height:420px;min-height:360px;border:0;background:#000;border-radius:16px;display:block}
-.qr{width:200px;height:200px;display:block;margin:14px auto 4px;border:5px solid #FFD700;padding:6px;background:#fff;border-radius:14px}
-.radar{width:260px;height:260px;border-radius:50%;border:4px solid #22c55e;margin:22px auto;position:relative;background:radial-gradient(circle,rgba(34,197,94,.2) 0%,rgba(7,11,20,.95) 70%);overflow:hidden}
-.sweep{width:50%;height:50%;background:linear-gradient(45deg,rgba(34,197,94,.8),transparent);position:absolute;top:0;left:50%;transform-origin:0% 100%;animation:spin 2.5s linear infinite}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.postActions{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}
-.actBtn{background:#0f172a;border:1px solid #1e293b;color:#e2e8f0;padding:14px 6px;border-radius:14px;font-size:20px;font-weight:700;cursor:pointer}
-.threeDot{background:#1e293b;border:1px solid #334155;color:#fff;width:48px;height:48px;border-radius:50%;font-size:24px;cursor:pointer}
-.drop{position:absolute;right:0;top:52px;background:#1e293b;border:1px solid #38bdf8;border-radius:14px;display:none;z-index:100;width:200px;overflow:hidden}
-.drop button{width:100%;background:none;border:none;color:#fff;padding:14px 16px;text-align:left;font-size:22px;cursor:pointer}
-.toast{position:fixed;bottom:34px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#0284c7,#7c3aed);color:#fff;padding:18px 30px;border-radius:40px;font-size:24px;font-weight:bold;display:none;z-index:6000;text-align:center;max-width:92vw}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b49">
+  <title>AYNA BOOK</title>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #071b49;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .card {
+      max-width: 420px;
+      margin: 35px auto;
+      padding: 24px;
+      border: 1px solid #ffd700;
+      border-radius: 18px;
+      background: #10285a;
+    }
+    h1 { color: #ffd700; text-align: center; }
+    input, button {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 0;
+      font-size: 16px;
+    }
+    button {
+      background: #ffd700;
+      color: #071b49;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #status { overflow-wrap: anywhere; }
+  </style>
 </head>
+
 <body>
-<div id="auth"><div class="authIn">
-<div class="logoRow"><div class="star"></div><div class="logo">AYNA BOOK</div></div>
-<p class="sub">⚡ 1 KOTI TRILLION • 8K • FULL SCREEN • V100.0</p>
-<div class="tabs"><button type="button" id="tabReg" class="tab active">🆕 রেজিস্ট্রেশন</button><button type="button" id="tabLog" class="tab">🔑 লগইন</button></div>
-<div id="regBox">
-<input type="text" id="regName" class="inp" placeholder="আপনার পুরো নাম" value="Mohammed Mahabub Alam">
-<input type="tel" id="regPhone" class="inp" placeholder="ফোন নাম্বার (11 digits)" maxlength="11" value="01400751906">
-<input type="email" id="regEmail" class="inp" placeholder="জিমেইল এড্রেস" value="mahbub.uk.cox@gmail.com">
-<div class="pw"><input type="password" id="regPass" class="inp" placeholder="পাসওয়ার্ড (ঠিক ১১ সংখ্যার)" maxlength="11" value="01811820860"><button type="button" class="eye" data-eye="regPass">👁️</button></div>
-<div class="pw"><input type="password" id="regRe" class="inp" placeholder="রি-পাসওয়ার্ড (১১ সংখ্যার)" maxlength="11" value="01811820860"><button type="button" class="eye" data-eye="regRe">👁️</button></div>
-<select id="accType" class="sel"><option>১. ব্যক্তিগত ফ্রি ($0 - ১ বছর)</option><option>২. বিজনেসম্যান ($15 - ১ বছর)</option><option>৩. VIP একাউন্ট ($20 - ১ বছর)</option><option>৪. VVIP একাউন্ট ($25 - ১ বছর)</option></select>
-<button type="button" class="bigBtn" id="btnRegister">🚀 রেজিস্ট্রেশন সম্পন্ন করুন</button>
-</div>
-<div id="loginBox" style="display:none">
-<input type="text" id="loginId" class="inp" placeholder="ফোন নাম্বার বা জিমেইল" value="01400751906">
-<div class="pw"><input type="password" id="loginPass" class="inp" placeholder="আপনার ১১ সংখ্যার পাসওয়ার্ড" maxlength="11" value="01811820860"><button type="button" class="eye" data-eye="loginPass">👁️</button></div>
-<button type="button" class="bigBtn" id="btnLogin">🔑 লগইন করুন</button>
-<button type="button" class="bigBtn" style="background:#16a34a;margin-top:14px" id="btnForce">✅ Login না হলে এখানে চাপ দিন</button>
-</div>
-</div></div>
+  <div class="card">
+    <h1>👁️ AYNA BOOK</h1>
+    <p>MY WORLD. MY STORY. MY AYNA BOOK.</p>
 
-<header class="navbar"><div style="display:flex;align-items:center;gap:12px"><div class="star"></div><div class="brand2">AYNA BOOK</div><span style="font-size:16px;background:rgba(56,189,248,.18);border:1px solid #38bdf8;color:#38bdf8;padding:4px 10px;border-radius:14px;font-weight:bold">8K</span></div><div style="display:flex;gap:10px"><button class="miniBtn" id="btnSec">🔐 পাসওয়ার্ড</button><button class="miniBtn" id="btnLogout" style="border-color:#f87171;color:#fca5a5">🚪 লগআউট</button></div></header>
-<nav class="navTabs" id="navTabs" style="display:none">
-<button class="navBtn active" data-page="0">১. ✍️ বড় লেখা</button><button class="navBtn" data-page="1">২. 🎬 ভিডিও</button><button class="navBtn" data-page="2">৩. 📺 রেডিও ও টিভি</button><button class="navBtn" data-page="3">৪. 🛍️ মার্কেট</button><button class="navBtn" data-page="4">৫. 📍 GPS রাডার</button><button class="navBtn" data-page="5">৬. 💬 MESSENGER</button><button class="navBtn" data-page="6">৭. 🔔 নোটিফিকেশন</button><button class="navBtn" data-page="7">৮. 👁️ ভিউ</button>
-</nav>
-<div class="app" id="mainApp">
-<div id="secPanel" class="card" style="display:none"><h3>🔐 পাসওয়ার্ড ব্যবস্থাপনা</h3><div class="pw"><input type="password" id="curPass" class="inp" readonly><button type="button" class="eye" data-eye="curPass">👁️</button></div><div class="pw"><input type="password" id="newPass" class="inp" placeholder="নতুন ১১ সংখ্যার পাসওয়ার্ড" maxlength="11"><button type="button" class="eye" data-eye="newPass">👁️</button></div><button class="bigBtn" id="btnUpdatePass">💾 পাসওয়ার্ড আপডেট ও সেভ করুন</button></div>
+    <h3>নতুন অ্যাকাউন্ট</h3>
+    <input id="name" placeholder="আপনার নাম">
+    <input id="regEmail" type="email" placeholder="Gmail">
+    <input id="regPassword" type="password" placeholder="পাসওয়ার্ড">
+    <button id="registerBtn">অ্যাকাউন্ট তৈরি</button>
 
-<div id="page-0" class="page active">
-<div class="card" style="padding:0;overflow:hidden"><div class="coverWrap"><img id="coverImg" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80"></div><div class="profileBar"><div style="display:flex;align-items:flex-end;gap:16px"><img id="profImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" class="profilePic"><div><div class="myName" id="myName">Mohammed Mahabub Alam</div><div class="myId">AYNA ID: 2026----10000001</div><div style="font-size:20px;color:#94a3b8">📞 01400751906 • ✉️ mahbub.uk.cox@gmail.com</div><div style="font-size:20px;color:#94a3b8">📍 Ukhiya, Cox's Bazar, Bangladesh</div></div></div><button class="miniBtn" id="btnShareId">⚡ QR ও ID শেয়ার</button></div><img id="myQR" class="qr"><p style="text-align:center;font-size:20px;color:#94a3b8">Scan QR - সব ডিটেইলস ভিতরে</p></div>
-<div class="ticker"><div class="badgeLive">🔴 LIVE</div><marquee scrollamount="7" id="tickerText" style="font-size:24px;color:#facc15;font-weight:bold">📡 যমুনা ও সময় টিভিতে সংবাদ চলছে | 📻 বাংলাদেশ বেতার | ⚡ ১ কোটি ট্রিলিয়ন কোয়ান্টাম সক্রিয়!</marquee></div>
-<div class="card"><h3>🔴 VIRAL BREAKING • <span id="countryTitle">🇧🇩 Bangladesh</span></h3><div id="breakingList"></div><button class="bigBtn" style="margin-top:14px" id="btnBreakRefresh">🔄 Breaking Refresh</button></div>
-<div class="card"><h3>✍️ আপনি কি ভাবছেন?</h3><textarea id="postInput" class="composer" placeholder="আপনার মনের বড় লেখাটি এখানে লিখুন..."></textarea><div id="liveBox" style="margin-bottom:16px;display:none"><video id="liveCam" autoplay muted playsinline style="width:100%;border-radius:16px;display:none;max-height:360px;background:#000"></video><div id="liveLabel" style="color:#facc15;font-size:22px;font-weight:bold;margin-top:8px"></div></div><div style="display:flex;flex-wrap:wrap;gap:12px"><label class="miniBtn" style="padding:18px 20px;font-size:24px">🖼️ 8K ছবি<input type="file" accept="image/*" style="display:none" id="fileImg"></label><label class="miniBtn" style="padding:18px 20px;font-size:24px">🎙️ অডিও<input type="file" accept="audio/*" style="display:none" id="fileAud"></label><label class="miniBtn" style="padding:18px 20px;font-size:24px">🎬 ভিডিও<input type="file" accept="video/*" style="display:none" id="fileVid"></label><button type="button" class="miniBtn" id="btnLive" style="border-color:#ef4444;color:#fca5a5;padding:18px 20px;font-size:24px">🔴 লাইভ ভিডিও - 8K</button><button type="button" class="bigBtn" id="btnPost" style="width:auto;padding:18px 28px;font-size:24px;min-height:72px">🚀 পোস্ট করুন</button></div></div>
-<div id="feed"></div>
-</div>
+    <hr>
 
-<div id="page-1" class="page"><div class="card"><h3>🎬 ৮K ভিডিও ও রিলস - FULL SCREEN</h3><video controls style="width:100%;border-radius:18px;background:#000;margin-bottom:16px" poster="https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=80"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video><button class="miniBtn" id="btnLikeVideo" style="font-size:24px;padding:18px 22px">❤️ লাইক (18.9K)</button></div></div>
+    <h3>লগইন</h3>
+    <input id="loginEmail" type="email" placeholder="Gmail">
+    <input id="loginPassword" type="password" placeholder="পাসওয়ার্ড">
+    <button id="loginBtn">লগইন</button>
+    <button id="resetBtn">পাসওয়ার্ড ভুলে গেছেন?</button>
+    <button id="logoutBtn">লগআউট</button>
 
-<div id="page-2" class="page"><div class="card"><h3>📺 রেডিও + টিভি + রিয়েল ব্রেকিং - চলমান</h3><select id="countrySel" class="sel"><option value="AUTO">🌍 Auto - যে দেশে আছি</option><option value="BD">🇧🇩 Bangladesh</option><option value="IN">🇮🇳 India</option><option value="SA">🇸🇦 Saudi Arabia</option><option value="US">🇺🇸 USA</option><option value="GB">🇬🇧 Britain</option><option value="WORLD">🌍 World</option></select><div style="font-size:24px;font-weight:900;color:#f87171;margin-bottom:12px">🔴 <span id="tvName">যমুনা টিভি - BREAKING LIVE</span></div><iframe id="tvFrame" class="tv" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px"><button class="miniBtn tvBtn" data-tv="jamuna" style="padding:22px;font-size:24px">📺 যমুনা TV LIVE</button><button class="miniBtn tvBtn" data-tv="somoy" style="padding:22px;font-size:24px">📺 সময় TV LIVE</button><button class="miniBtn tvBtn" data-tv="ekattor" style="padding:22px;font-size:24px">📺 একাত্তর TV LIVE</button><button class="miniBtn tvBtn" data-tv=" 【entity-bbc¦canonical_name=BBC】" style="padding:22px;font-size:24px">📺 【entity-BBC¦canonical_name=BBC】 LIVE</button><button class="miniBtn radioBtn" data-radio="বাংলাদেশ বেতার FM" style="padding:22px;font-size:24px">📻 বাংলাদেশ বেতার FM</button><button class="miniBtn radioBtn" data-radio="রেডিও ফুর্তি 88.0" style="padding:22px;font-size:24px">📻 রেডিও ফুর্তি 88.0</button></div><div id="radioStatus" style="margin-top:18px;padding:16px;background:#090d16;border-radius:14px;color:#facc15;text-align:center;font-size:24px">📡 চ্যানেল নির্বাচন করুন - লাইভ চলবে</div><button class="bigBtn" style="margin-top:14px" id="btnFullTV">⛶ FULL SCREEN LIVE TV</button></div><div class="card"><h3>🔴 এই মুহূর্তের রিয়েল ব্রেকিং</h3><div id="breakingList2"></div></div></div>
+    <p id="status">Firebase সংযোগ প্রস্তুত হচ্ছে...</p>
+    <p id="account"></p>
+  </div>
 
-<div id="page-3" class="page"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"><h3>🛍️ AYNA মার্কেট</h3><button class="bigBtn" id="btnAddProduct" style="width:auto;padding:14px 20px;font-size:22px;min-height:64px">+ পণ্য যোগ করুন</button></div><div id="marketGrid"><div class="card"><div style="font-weight:bold;color:#facc15;font-size:24px">📱 iPhone 16 Pro Max (8K)</div><div style="font-size:24px;margin:10px 0">মূল্য: ৳১,৪৫,০০০</div><button class="miniBtn buyBtn" style="width:100%;font-size:24px;padding:18px">কিনুন / মেসেজ</button></div></div></div></div>
+  <script type="module">
+    import {
+      registerUser,
+      loginUser,
+      logoutUser,
+      resetPassword,
+      watchAuthState
+    } from "./auth.js";
 
-<div id="page-4" class="page"><div class="card" style="text-align:center"><h3>📍 লাইভ GPS, রাডার ও কম্পাস</h3><div class="radar"><div class="sweep"></div></div><p id="gpsText" style="color:#facc15;font-weight:bold;font-size:24px;margin-bottom:16px">স্যাটেলাইট: স্ক্যান করতে নিচের বাটনে চাপুন</p><div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap"><button class="bigBtn" id="btnGPS" style="width:auto">📍 লাইভ GPS অবস্থান নির্ণয়</button><button class="miniBtn" id="btnCompass" style="font-size:24px;padding:18px">🧭 কম্পাস রিফ্রেশ</button></div></div></div>
+    const $ = id => document.getElementById(id);
+    const status = message => $("status").textContent = message;
 
-<div id="page-5" class="page"><div class="card"><h3>💬 AYNA MESSENGER GLOBAL AI</h3><div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px"><select id="langSel" class="sel" style="margin-bottom:0;flex:1"><option>🇧🇩 বাংলা</option><option>🇺🇸 English</option><option>🇸🇦 Arabic</option><option>🇮🇳 Hindi</option><option>✨ পৃথিবীর সমস্ত ৭,০০০+ ভাষা</option></select><button class="miniBtn" id="btnTranslate" style="font-size:24px;padding:18px">🎙️ ভাষান্তর</button><label class="miniBtn" style="border-color:#facc15;color:#facc15;font-size:24px;padding:18px">📁 ফাইল পাঠান<input type="file" style="display:none" id="fileChat"></label></div><div id="chatBox"><div style="background:#1e293b;padding:18px;border-radius:16px;border-left:5px solid #38bdf8"><div style="font-size:24px">Hello! Sending 8K files at 1 Koti Trillion speed.</div><div id="transOut" style="color:#facc15;font-weight:bold;font-size:24px">🤖 AI অনুবাদ: হ্যালো! ১ কোটি ট্রিলিয়ন গতিতে ৮কে ফাইল পাঠাচ্ছি।</div></div></div></div></div>
+    $("registerBtn").addEventListener("click", async () => {
+      try {
+        status("অ্যাকাউন্ট তৈরি হচ্ছে...");
+        await registerUser(
+          $("name").value,
+          $("regEmail").value,
+          $("regPassword").value
+        );
+        status("অ্যাকাউন্ট তৈরি হয়েছে। Gmail যাচাই করুন।");
+      } catch (error) {
+        status("সমস্যা: " + (error.message || error.code));
+      }
+    });
 
-<div id="page-6" class="page"><div class="card"><h3>🔔 নোটিফিকেশন</h3><div style="background:#090d16;padding:18px;border-radius:14px;margin-bottom:14px;border-left:5px solid #22c55e;font-size:24px">✅ অ্যাকাউন্ট 8K সিস্টেমে স্থায়ীভাবে সেভ হয়েছে।</div><div style="background:#090d16;padding:18px;border-radius:14px;border-left:5px solid #38bdf8;font-size:24px">👍 রিফ্রেশ করলে আর রেজিস্ট্রেশন পেইজ আসবে না।</div></div></div>
+    $("loginBtn").addEventListener("click", async () => {
+      try {
+        status("লগইন হচ্ছে...");
+        await loginUser(
+          $("loginEmail").value,
+          $("loginPassword").value
+        );
+        status("লগইন সফল!");
+      } catch (error) {
+        status("লগইন সমস্যা: " + (error.message || error.code));
+      }
+    });
 
-<div id="page-7" class="page"><div class="card"><h3>👁️ লাইভ ভিউয়ার ও রিয়্যাক্ট</h3><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;text-align:center"><div style="background:#090d16;padding:26px;border-radius:18px"><div style="font-size:42px;font-weight:900;color:#38bdf8">১০,৫০০+</div><div style="font-size:22px;color:#94a3b8">👁️ মোট ভিউয়ার্স</div></div><div style="background:#090d16;padding:26px;border-radius:18px"><div style="font-size:42px;font-weight:900;color:#f43f5e">৩,৪২০+</div><div style="font-size:22px;color:#94a3b8">❤️ লাইক</div></div><div style="background:#090d16;padding:26px;border-radius:18px"><div style="font-size:42px;font-weight:900;color:#facc15">১,৮৯০</div><div style="font-size:22px;color:#94a3b8">😮 ওয়াও</div></div><div style="background:#090d16;padding:26px;border-radius:18px"><div style="font-size:42px;font-weight:900;color:#22c55e">1 KOTI T</div><div style="font-size:22px;color:#94a3b8">⚡ ১ কোটি ট্রিলিয়ন গতি</div></div></div></div></div>
-</div>
-<div id="toast" class="toast"></div>
-<script>
-(function(){
-var UK="ayna_final_user";var SK="ayna_final_logged";var PK="ayna_final_posts";
-var memUser=null;var curCountry="BD";var isLogin=false;var uploadedHTML="";var liveStream=null;
-function g(k){try{return localStorage.getItem(k)}catch(e){return null}}function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-function el(id){return document.getElementById(id)}
-function notify(m){var t=el('toast');t.textContent=m;t.style.display='block';setTimeout(function(){t.style.display='none'},3000)}
-function makeQR(){var q=el('myQR');if(q)q.src="https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=5&data="+encodeURIComponent("AYNA BOOK | Mohammed Mahabub Alam | 2026----10000001 | 01400751906 | mahbub.uk.cox@gmail.com | Ukhiya, Cox's Bazar, Bangladesh | AYNA-2026-1906 | AYNA-8K-1906")}
-function showApp(u){isLogin=true;el('auth').style.display='none';el('navTabs').style.display='flex';el('mainApp').style.display='block';if(u)applyUser(u);makeQR();var f=el('tvFrame');if(f)f.src="https://www.youtube.com/embed/live_stream?channel=UCN6sm8iHiPd0cnoUardDAnw&autoplay=1&mute=1";loadBreaking();window.scrollTo(0,0)}
-function applyUser(u){try{el('curPass').value=u.pass||""}catch(e){}el('myName').textContent=u.name||"Mohammed Mahabub Alam"}
-function switchAuth(m){var r=el('regBox');var l=el('loginBox');if(m==='register'){r.style.display='block';l.style.display='none';el('tabReg').classList.add('active');el('tabLog').classList.remove('active')}else{r.style.display='none';l.style.display='block';el('tabLog').classList.add('active');el('tabReg').classList.remove('active')}}
-function doForce(){var u=memUser||{name:"Mohammed Mahabub Alam",phone:"01400751906",email:"mahbub.uk.cox@gmail.com",pass:"01811820860"};memUser=u;showApp(u);notify("✅ FORCE LOGIN সফল!")}
-el('tabReg').addEventListener('click',function(){switchAuth('register')});
-el('tabLog').addEventListener('click',function(){switchAuth('login')});
-el('btnRegister').addEventListener('click',function(){var n=el('regName').value.trim();var ph=el('regPhone').value.trim();var em=el('regEmail').value.trim();var p=el('regPass').value;var re=el('regRe').value;if(!n||!ph||!em){alert("নাম, ফোন, জিমেইল পূরণ করুন");return}if(p.length!==11){alert("পাসওয়ার্ড ঠিক ১১ সংখ্যার হতে হবে!");return}if(p!==re){alert("পাসওয়ার্ড মিলছে না!");return}var u={name:n,phone:ph,email:em,pass:p};memUser=u;s(UK,JSON.stringify(u));s(SK,"true");showApp(u);notify("✨ স্বাগতম "+n+"!")});
-el('btnLogin').addEventListener('click',function(){var idv=el('loginId').value.trim();var p=el('loginPass').value;if(idv==="01400751906"&&p==="01811820860"){doForce();return}var sv=g(UK);if(sv){try{var ud=JSON.parse(sv);if((idv===ud.phone||idv===ud.email)&&p===ud.pass){memUser=ud;s(SK,"true");showApp(ud);notify("🔑 লগইন সফল!");return}}catch(e){}}if(idv.length>=10&&p.length===11){doForce();return}alert("ভুল ফোন/জিমেইল অথবা পাসওয়ার্ড!")});
-el('btnForce').addEventListener('click',doForce);
-el('btnLogout').addEventListener('click',function(){isLogin=false;s(SK,"false");el('auth').style.display='flex';el('navTabs').style.display='none';el('mainApp').style.display='none';switchAuth('login');notify("🚪 লগআউট সম্পন্ন।")});
-el('btnSec').addEventListener('click',function(){var p=el('secPanel');p.style.display=p.style.display==='none'?'block':'none'});
-el('btnUpdatePass').addEventListener('click',function(){var np=el('newPass').value;if(np.length!==11){alert("নতুন পাসওয়ার্ড ঠিক ১১ সংখ্যার হতে হবে!");return}if(memUser)memUser.pass=np;el('curPass').value=np;el('newPass').value="";notify("🔐 পাসওয়ার্ড আপডেট হয়েছে!")});
-el('btnShareId').addEventListener('click',function(){if(navigator.clipboard)navigator.clipboard.writeText("https://aynabook.quantum/id/2026----10000001");notify("⚡ ID কপি হয়েছে!")});
-document.querySelectorAll('.eye').forEach(function(b){b.addEventListener('click',function(){var f=el(b.getAttribute('data-eye'));if(!f)return;if(f.type==="password"){f.type="text";b.textContent="🙈"}else{f.type="password";b.textContent="👁️"}})});
-document.querySelectorAll('.navBtn').forEach(function(b){b.addEventListener('click',function(){var i=parseInt(b.getAttribute('data-page'));document.querySelectorAll('.page').forEach(function(p,idx){p.classList.toggle('active',idx===i)});document.querySelectorAll('.navBtn').forEach(function(x,idx){x.classList.toggle('active',idx===i)});b.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})})});
-function loadPosts(){var c=el('feed');var sv=g(PK);if(!sv||sv==="[]"){c.innerHTML='<article class="card"><div style="font-weight:900;font-size:26px">AYNA BOOK Global</div><p style="font-size:28px;margin:14px 0">AYNA BOOK ১ কোটি ট্রিলিয়ন 8K ফুল-স্ক্রিন সংস্করণে স্বাগতম!</p></article>';return}try{c.innerHTML=JSON.parse(sv).join('')}catch(e){}}
-function savePosts(){try{var a=Array.from(el('feed').children).map(function(x){return x.outerHTML});s(PK,JSON.stringify(a))}catch(e){}}
-function bindFile(inputId,type){el(inputId).addEventListener('change',function(){if(this.files&&this.files[0]){var f=this.files[0];var url=URL.createObjectURL(f);el('liveBox').style.display='block';el('liveLabel').textContent="✅ সংযুক্ত: "+f.name;if(type==='image')uploadedHTML='<img src="'+url+'" style="width:100%;border-radius:16px;margin-bottom:16px">';else if(type==='audio')uploadedHTML='<audio controls src="'+url+'" style="width:100%;margin-bottom:16px"></audio>';else uploadedHTML='<video controls src="'+url+'" style="width:100%;border-radius:16px;margin-bottom:16px;max-height:400px"></video>';notify("✅ "+f.name+" লোড হয়েছে!")}});
-el('fileImg').addEventListener('change',function(){if(this.files&&this.files[0]){var f=this.files[0];var url=URL.createObjectURL(f);el('liveBox').style.display='block';el('liveLabel').textContent="✅ সংযুক্ত: "+f.name;uploadedHTML='<img src="'+url+'" style="width:100%;border-radius:16px;margin-bottom:16px">';notify("✅ "+f.name+" লোড হয়েছে!")}});
-el('fileAud').addEventListener('change',function(){if(this.files&&this.files[0]){var f=this.files[0];var url=URL.createObjectURL(f);el('liveBox').style.display='block';el('liveLabel').textContent="✅ সংযুক্ত: "+f.name;uploadedHTML='<audio controls src="'+url+'" style="width:100%;margin-bottom:16px"></audio>';notify("✅ "+f.name+" লোড হয়েছে!")}});
-el('fileVid').addEventListener('change',function(){if(this.files&&this.files[0]){var f=this.files[0];var url=URL.createObjectURL(f);el('liveBox').style.display='block';el('liveLabel').textContent="✅ সংযুক্ত: "+f.name;uploadedHTML='<video controls src="'+url+'" style="width:100%;border-radius:16px;margin-bottom:16px;max-height:400px"></video>';notify("✅ "+f.name+" লোড হয়েছে!")}});
-el('btnLive').addEventListener('click',function(){var box=el('liveBox');var v=el('liveCam');var lab=el('liveLabel');if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(function(st){liveStream=st;box.style.display='block';v.style.display='block';v.srcObject=st;lab.textContent="🔴 লাইভ ভিডিও চালু - 8K!";uploadedHTML='<div style="background:#dc2626;color:#fff;padding:8px 16px;border-radius:10px;display:inline-block;font-weight:bold;margin-bottom:12px;font-size:22px">🔴 LIVE STREAMING 8K</div>';notify("🔴 লাইভ সচল!")}).catch(function(){box.style.display='block';lab.textContent="🔴 লাইভ ব্রডকাস্ট প্রস্তুত!";notify("🔴 লাইভ সক্রিয়!")})}else{box.style.display='block';lab.textContent="🔴 লাইভ ব্রডকাস্ট প্রস্তুত!";notify("🔴 লাইভ সক্রিয়!")}});
-el('btnPost').addEventListener('click',function(){var inp=el('postInput');var txt=inp.value.trim();if(!txt&&!uploadedHTML){notify("⚠️ কিছু লিখুন বা মিডিয়া দিন।");return}var pid='post-'+Date.now();var un=el('myName').textContent;var ui=el('profImg').src;var html='<article class="card" id="'+pid+'" data-likes="1"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="display:flex;align-items:center;gap:14px"><img src="'+ui+'" style="width:64px;height:64px;border-radius:50%;object-fit:cover"><div><div style="font-weight:900;font-size:26px">'+un+'</div><div style="font-size:20px;color:#94a3b8">এইমাত্র • 1 Koti Trillion 8K</div></div></div><div style="position:relative"><button class="threeDot" data-menu="'+pid+'">⋮</button><div id="menu-'+pid+'" class="drop"><button data-edit="'+pid+'">✏️ এডিট</button><button data-del="'+pid+'" style="color:#f87171">🗑️ ডিলিট</button></div></div></div>'+uploadedHTML+'<p id="text-'+pid+'" style="font-size:28px;margin-bottom:16px">'+txt+'</p><div style="display:flex;justify-content:space-between;font-size:20px;color:#94a3b8;border-bottom:1px solid #1f2937;padding-bottom:12px"><span id="like-'+pid+'">👍 ১ লাইক</span><span>👁️ ২৫ ভিউয়ার্স</span></div><div class="postActions"><button class="actBtn" data-like="'+pid+'">👍 লাইক</button><button class="actBtn" data-cmt="'+pid+'">💬 কমেন্ট</button><button class="actBtn" data-share="'+pid+'">↗️ শেয়ার</button><button class="actBtn" data-save="'+pid+'">🔖 সেভ</button><button class="actBtn" data-copy="'+pid+'">📋 কপি</button></div><div id="cmt-'+pid+'" style="display:none;margin-top:16px;border-top:1px dashed #334155;padding-top:14px"><div id="cmtList-'+pid+'"></div><div style="display:flex;gap:10px;margin-top:10px"><input type="text" id="cmtIn-'+pid+'" class="inp" style="margin-bottom:0;padding:14px;font-size:22px" placeholder="কমেন্ট লিখুন..."><button class="miniBtn" data-addcmt="'+pid+'" style="font-size:22px">পোস্ট</button></div></div></article>';el('feed').insertAdjacentHTML('afterbegin',html);savePosts();inp.value="";uploadedHTML="";el('liveBox').style.display='none';el('liveCam').style.display='none';if(liveStream){liveStream.getTracks().forEach(function(t){t.stop()});liveStream=null}notify("🚀 পোস্ট প্রকাশিত!")});
-document.addEventListener('click',function(e){var m=e.target.closest('[data-menu]');if(m){var id=m.getAttribute('data-menu');var menu=el('menu-'+id);document.querySelectorAll('.drop').forEach(function(d){if(d!==menu)d.style.display='none'});menu.style.display=menu.style.display==='block'?'none':'block';return}
-var ed=e.target.closest('[data-edit]');if(ed){var pid=ed.getAttribute('data-edit');var txtEl=el('text-'+pid);var v=prompt("পোস্ট এডিট করুন:",txtEl.textContent);if(v!==null&&v.trim()!==""){txtEl.textContent=v;savePosts();notify("✏️ এডিট সম্পন্ন!")}return}
-var dl=e.target.closest('[data-del]');if(dl){var pid2=dl.getAttribute('data-del');var art=el(pid2);if(art)art.remove();savePosts();notify("🗑️ ডিলিট হয়েছে।");return}
-var lk=e.target.closest('[data-like]');if(lk){var pid3=lk.getAttribute('data-like');var a=el(pid3);var l=parseInt(a.getAttribute('data-likes'))+1;a.setAttribute('data-likes',l);el('like-'+pid3).textContent="👍 "+l+" লাইক";savePosts();notify("❤️ লাইক যুক্ত!");return}
-var cm=e.target.closest('[data-cmt]');if(cm){var pid4=cm.getAttribute('data-cmt');var b=el('cmt-'+pid4);b.style.display=b.style.display==='block'?'none':'block';return}
-var sh=e.target.closest('[data-share]');if(sh){notify("↗️ শেয়ার সম্পন্ন!");return}
-var sv2=e.target.closest('[data-save]');if(sv2){notify("🔖 সেভ হয়েছে!");return}
-var cp=e.target.closest('[data-copy]');if(cp){var pid5=cp.getAttribute('data-copy');if(navigator.clipboard)navigator.clipboard.writeText(el('text-'+pid5).textContent);notify("📋 কপি হয়েছে!");return}
-var ac=e.target.closest('[data-addcmt]');if(ac){var pid6=ac.getAttribute('data-addcmt');var inp2=el('cmtIn-'+pid6);var v2=inp2.value.trim();if(!v2)return;var cid='c-'+Date.now();var h='<div style="display:flex;justify-content:space-between;background:#090d16;padding:12px 16px;border-radius:12px;margin-bottom:10px;font-size:22px"><span>💬 '+v2+'</span><button class="miniBtn" data-delcmt="'+cid+'">✕</button></div>';el('cmtList-'+pid6).insertAdjacentHTML('beforeend',h);inp2.value="";savePosts();notify("💬 কমেন্ট যুক্ত!");return}
-var dc=e.target.closest('[data-delcmt]');if(dc){var cc=el(dc.getAttribute('data-delcmt'));if(cc)cc.remove();savePosts();notify("🗑️ কমেন্ট ডিলিট।");return}
-if(!e.target.closest('.threeDot')){document.querySelectorAll('.drop').forEach(function(d){d.style.display='none'})}});
-var TVS={ekattor:{name:"একাত্তর টিভি",url:"https://www.youtube.com/@ekattortelevision/live"},jamuna:{name:"যমুনা টিভি",url:"https://www.youtube.com/embed/live_stream?channel=UCN6sm8iHiPd0cnoUardDAnw&autoplay=1&mute=1"},somoy:{name:"সময় টিভি",url:"https://www.youtube.com/embed/live_stream?channel=UCxHoBXkY88Tb8z1Ssj6CWsQ&autoplay=1&mute=1"}, 【entity-bbc¦canonical_name=BBC】:{name:" 【entity-BBC News¦canonical_name=BBC】",url:"https://www.youtube.com/embed/live_stream?channel=UC16niRr50-MSBwiO3YDb3RA&autoplay=1&mute=1"}};
-document.querySelectorAll('.tvBtn').forEach(function(b){b.addEventListener('click',function(){var k=b.getAttribute('data-tv');var t=TVS[k];if(!t)return;var f=el('tvFrame');if(f)f.src=t.url;el('tvName').textContent=t.name+" - BREAKING LIVE";el('radioStatus').textContent="🔴 এখন চলছে: "+t.name+" LIVE";notify("📺 "+t.name+" চালু!")})});
-document.querySelectorAll('.radioBtn').forEach(function(b){b.addEventListener('click',function(){var ch=b.getAttribute('data-radio');el('radioStatus').textContent="🔴 এখন চলছে: "+ch;notify("📡 "+ch+" চালু!")})});
-el('btnFullTV').addEventListener('click',function(){var f=el('tvFrame');if(f&&f.requestFullscreen)f.requestFullscreen()});
-el('btnLikeVideo').addEventListener('click',function(){notify("❤️ লাইক যুক্ত হয়েছে!")});
-el('btnAddProduct').addEventListener('click',function(){var t=prompt("পণ্যের নাম:");var p=prompt("মূল্য (৳):");if(t&&p){el('marketGrid').insertAdjacentHTML('afterbegin','<div class="card"><div style="font-weight:bold;color:#facc15;font-size:24px">🆕 '+t+'</div><div style="font-size:24px;margin:10px 0">মূল্য: ৳'+p+'</div><button class="miniBtn buyBtn" style="width:100%;font-size:24px;padding:18px">কিনুন / মেসেজ</button></div>');notify("🛍️ পণ্য যুক্ত হয়েছে!")}});
-el('btnGPS').addEventListener('click',function(){var txt=el('gpsText');if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(pos){txt.textContent="📍 GPS: "+pos.coords.latitude.toFixed(4)+"°, "+pos.coords.longitude.toFixed(4)+"°";notify("📍 GPS নির্ণয় হয়েছে!")},function(){txt.textContent="📍 GPS সক্রিয়: ঢাকা, বাংলাদেশ";notify("📍 GPS কানেক্টেড!")})}});
-el('btnCompass').addEventListener('click',function(){notify("🧭 কম্পাস ক্যালিব্রেটেড")});
-el('btnTranslate').addEventListener('click',function(){notify("🌐 অনুবাদ সক্রিয়!")});
-el('fileChat').addEventListener('change',function(){if(this.files&&this.files[0]){var f=this.files[0];el('chatBox').insertAdjacentHTML('beforeend','<div style="background:#1e293b;padding:16px;border-radius:14px;margin-top:12px;border-left:5px solid #facc15;font-size:22px">⚡ ফাইল পাঠানো হয়েছে: <b>'+f.name+'</b></div>');notify("🚀 "+f.name+" পাঠানো হয়েছে!")}});
-var COUN={BD:{title:"🇧🇩 Bangladesh",lang:"bn",gl:"BD"},IN:{title:"🇮🇳 India",lang:"hi",gl:"IN"},SA:{title:"🇸🇦 Saudi Arabia",lang:"ar",gl:"SA"},US:{title:"🇺🇸 USA",lang:"en",gl:"US"},GB:{title:"🇬🇧 Britain",lang:"en",gl:"GB"},WORLD:{title:"🌍 World",lang:"en",gl:"US"}};
-function loadBreaking(){if(!isLogin)return;var c=COUN[curCountry]||COUN.BD;var list=el('breakingList');var list2=el('breakingList2');if(list)list.innerHTML="<p style='font-size:26px'>Loading Breaking...</p>";var url="https://news.google.com/rss/search?q=breaking%20news&hl="+c.lang+"&gl="+c.gl+"&ceid="+c.gl+":"+c.lang;fetch("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(url)).then(function(r){return r.json()}).then(function(j){if(j&&j.items&&j.items.length>0){var html="";var ticker="🔴 AYNA BOOK BREAKING • 1 KOTI TRILLION 8K • "+c.title+" • ";j.items.slice(0,7).forEach(function(it){var d="";try{d=new Date(it.pubDate).toLocaleString('bn-BD')}catch(e){}html+="<div class='breakItem'><b>🔴 "+it.title+"</b><span>Google News • "+d+" • VERIFIED SOURCE</span><br><a class='miniBtn' href='"+it.link+"' target='_blank' style='display:inline-block;margin-top:8px;text-decoration:none'>📰 পুরো খবর পড়ুন</a></div>";ticker+=it.title+" • "});if(list)list.innerHTML=html;if(list2)list2.innerHTML=html;el('tickerText').textContent=ticker}}).catch(function(){var fb="<div class='breakItem'><b>🔴 Live TV-তে এই মুহূর্তে Breaking চলছে</b><span>যমুনা / সময় / একাত্তর • VERIFIED LIVE</span></div>";if(list)list.innerHTML=fb;if(list2)list2.innerHTML=fb})}
-el('btnBreakRefresh').addEventListener('click',loadBreaking);
-el('countrySel').addEventListener('change',function(){var v=this.value;if(v==="AUTO"){curCountry="BD"}else{curCountry=v}var c=COUN[curCountry];el('countryTitle').textContent=c.title;if(isLogin)loadBreaking();if(v==='BD'){var f=el('tvFrame');if(f)f.src=TVS.jamuna.url}if(v==='WORLD'){var f2=el('tvFrame');if(f2)f2.src=TVS. bbc.url}});
-document.addEventListener('DOMContentLoaded',function(){var sv=g(UK);var logged=g(SK);if(sv){try{memUser=JSON.parse(sv)}catch(e){}}if(sv&&logged==="true"&&memUser){applyUser(memUser);showApp(memUser)}else if(sv){switchAuth('login')}loadPosts();setInterval(function(){if(isLogin)loadBreaking()},30000)});
-})();
-</script>
+    $("resetBtn").addEventListener("click", async () => {
+      try {
+        await resetPassword($("loginEmail").value);
+        status("পাসওয়ার্ড রিসেট ইমেইল পাঠানো হয়েছে।");
+      } catch (error) {
+        status("সমস্যা: " + (error.message || error.code));
+      }
+    });
+
+    $("logoutBtn").addEventListener("click", async () => {
+      try {
+        await logoutUser();
+        status("লগআউট সম্পন্ন হয়েছে।");
+      } catch (error) {
+        status("সমস্যা: " + (error.message || error.code));
+      }
+    });
+
+    watchAuthState(user => {
+      $("account").textContent = user
+        ? "লগইন: " + (user.email || user.uid)
+        : "কোনো অ্যাকাউন্ট লগইন করা নেই।";
+    });
+  </script>
 </body>
 </html>
