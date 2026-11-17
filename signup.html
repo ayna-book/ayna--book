@@ -1,40 +1,639 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সাইন আপ - AYNA APP</title>
-    <style>
-        body { background: #090a0f; color: #fff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-size: 18px; }
-        .box { background: rgba(255,255,255,0.08); border: 2px solid #ffd700; padding: 28px; border-radius: 14px; width: 340px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1.5px solid #b8860b; color: #fff; border-radius: 8px; font-size: 1rem; }
-        button { width: 100%; padding: 14px; background: #ffd700; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; color: #000; font-size: 1.1rem; margin-top: 8px; }
-        a { color: #ffd700; font-size: 0.95rem; text-decoration: none; display: block; margin-top: 14px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05070b">
+  <title>AYNA BOOK — Sign Up</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, "Noto Sans Bengali", sans-serif;
+      color: #fff;
+      background:
+        radial-gradient(circle at top, #182238 0%, #080b12 45%, #030407 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .logo-icon {
+      width: 76px;
+      height: 76px;
+      margin: auto;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: 900;
+      color: #05070b;
+      background: linear-gradient(135deg, #ffd700, #ffb300);
+      box-shadow: 0 0 30px rgba(255, 215, 0, .3);
+    }
+
+    .logo h1 {
+      margin: 12px 0 0;
+      color: #ffd700;
+      letter-spacing: 2px;
+    }
+
+    .logo p {
+      color: #aeb7c7;
+      font-size: 13px;
+    }
+
+    .card {
+      background: rgba(12, 16, 25, .95);
+      border: 1px solid rgba(255, 215, 0, .35);
+      border-radius: 22px;
+      padding: 28px 22px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+    }
+
+    h2 {
+      text-align: center;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #9fa8b8;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      outline: none;
+      background: rgba(255, 255, 255, .06);
+      color: #fff;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #ffd700;
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, .08);
+    }
+
+    .password-box {
+      position: relative;
+    }
+
+    .password-box input {
+      padding-right: 55px;
+    }
+
+    .show {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: #ffd700;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .terms {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      margin: 17px 0;
+      color: #aeb7c7;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .terms input {
+      width: auto;
+      margin-top: 3px;
+      accent-color: #ffd700;
+    }
+
+    .terms a {
+      color: #ffd700;
+      text-decoration: none;
+    }
+
+    .signup {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ffd700, #ffb300);
+      color: #05070b;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .signup:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .message {
+      display: none;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .error {
+      color: #ff8a80;
+      background: rgba(255, 82, 82, .1);
+    }
+
+    .success {
+      color: #69f0ae;
+      background: rgba(0, 230, 118, .1);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 22px 0;
+      color: #687182;
+      font-size: 12px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, .1);
+    }
+
+    .login {
+      text-align: center;
+      color: #aeb7c7;
+      font-size: 14px;
+    }
+
+    .login a {
+      color: #ffd700;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .home {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #8f99aa;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .status {
+      text-align: center;
+      color: #69f0ae;
+      font-size: 12px;
+      margin-top: 18px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #00e676;
+      margin-right: 5px;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="box">
-        <h2 style="color: #ffd700; margin-bottom: 15px;">নতুন অ্যাকাউন্ট খুলুন</h2>
-        <input type="email" id="reg-email" placeholder="আপনার ইমেইল দিন">
-        <input type="password" id="reg-pass" placeholder="নতুন পাসওয়ার্ড দিন (কমপক্ষে ৬ অক্ষর)">
-        <button id="signup-btn">রেজিস্টার করুন</button>
-        <a href="login.html">আগে থেকেই অ্যাকাউন্ট আছে? লগইন করুন</a>
+
+<div class="container">
+
+  <div class="logo">
+    <div class="logo-icon">A</div>
+    <h1>AYNA BOOK</h1>
+    <p>আধুনিক নিরাপদ ডিজিটাল সোশ্যাল প্ল্যাটফর্ম</p>
+  </div>
+
+  <section class="card">
+
+    <h2>✨ Create Account</h2>
+
+    <p class="subtitle">
+      AYNA BOOK-এ আপনার নতুন অ্যাকাউন্ট তৈরি করুন
+    </p>
+
+    <div id="message" class="message"></div>
+
+    <div class="field">
+      <label for="name">👤 Full Name</label>
+
+      <input
+        id="name"
+        type="text"
+        autocomplete="name"
+        placeholder="আপনার নাম লিখুন"
+        required
+      >
     </div>
 
-    <script type="module">
-        import { registerUser } from './auth.js';
-        
-        document.getElementById('signup-btn').addEventListener('click', async () => {
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-pass').value;
-            try {
-                await registerUser(email, pass);
-                alert('অ্যাকাউন্ট তৈরি সফল হয়েছে!');
-                window.location.href = 'index.html';
-            } catch (error) {
-                alert('ত্রুটি: ' + error.message);
-            }
-       });
-    </script>
+    <div class="field">
+      <label for="email">📧 Email Address</label>
+
+      <input
+        id="email"
+        type="email"
+        autocomplete="email"
+        placeholder="আপনার ইমেইল লিখুন"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="password">🔑 Password</label>
+
+      <div class="password-box">
+
+        <input
+          id="password"
+          type="password"
+          autocomplete="new-password"
+          placeholder="কমপক্ষে ৬ অক্ষর"
+          required
+        >
+
+        <button
+          id="showPassword"
+          class="show"
+          type="button"
+        >
+          👁️
+        </button>
+
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="confirmPassword">🔐 Confirm Password</label>
+
+      <div class="password-box">
+
+        <input
+          id="confirmPassword"
+          type="password"
+          autocomplete="new-password"
+          placeholder="পাসওয়ার্ড আবার লিখুন"
+          required
+        >
+
+        <button
+          id="showConfirmPassword"
+          class="show"
+          type="button"
+        >
+          👁️
+        </button>
+
+      </div>
+    </div>
+
+    <label class="terms">
+
+      <input
+        id="terms"
+        type="checkbox"
+      >
+
+      <span>
+        আমি AYNA BOOK-এর
+        <a href="./privacy.html" target="_blank">
+          Privacy Policy
+        </a>
+        এবং
+        <a href="./terms.html" target="_blank">
+          Terms
+        </a>
+        মেনে নিচ্ছি।
+      </span>
+
+    </label>
+
+    <button
+      id="signupButton"
+      class="signup"
+      type="button"
+    >
+      CREATE ACCOUNT
+    </button>
+
+    <div class="divider">
+      অথবা
+    </div>
+
+    <div class="login">
+      ইতিমধ্যে অ্যাকাউন্ট আছে?
+      <a href="./login.html">
+        Login করুন
+      </a>
+    </div>
+
+  </section>
+
+  <div class="status">
+    <span class="dot"></span>
+    Firebase Authentication Ready
+  </div>
+
+  <a class="home" href="./index.html">
+    ← AYNA BOOK Home
+  </a>
+
+</div>
+
+
+<script type="module">
+
+import {
+  registerUser
+} from "./auth.js";
+
+
+const name =
+  document.getElementById("name");
+
+const email =
+  document.getElementById("email");
+
+const password =
+  document.getElementById("password");
+
+const confirmPassword =
+  document.getElementById("confirmPassword");
+
+const terms =
+  document.getElementById("terms");
+
+const signupButton =
+  document.getElementById("signupButton");
+
+const showPassword =
+  document.getElementById("showPassword");
+
+const showConfirmPassword =
+  document.getElementById("showConfirmPassword");
+
+const message =
+  document.getElementById("message");
+
+
+function showMessage(text, type = "error") {
+
+  message.textContent = text;
+
+  message.className =
+    "message show " + type;
+}
+
+
+// ======================================================
+// SHOW / HIDE PASSWORD
+// ======================================================
+
+showPassword.addEventListener(
+  "click",
+  () => {
+
+    if (password.type === "password") {
+
+      password.type = "text";
+      showPassword.textContent = "🙈";
+
+    } else {
+
+      password.type = "password";
+      showPassword.textContent = "👁️";
+
+    }
+
+  }
+);
+
+
+showConfirmPassword.addEventListener(
+  "click",
+  () => {
+
+    if (confirmPassword.type === "password") {
+
+      confirmPassword.type = "text";
+      showConfirmPassword.textContent = "🙈";
+
+    } else {
+
+      confirmPassword.type = "password";
+      showConfirmPassword.textContent = "👁️";
+
+    }
+
+  }
+);
+
+
+// ======================================================
+// REGISTER
+// ======================================================
+
+signupButton.addEventListener(
+  "click",
+  async () => {
+
+    const nameValue =
+      name.value.trim();
+
+    const emailValue =
+      email.value.trim();
+
+    const passwordValue =
+      password.value;
+
+    const confirmValue =
+      confirmPassword.value;
+
+
+    if (!nameValue) {
+
+      showMessage(
+        "আপনার নাম লিখুন।"
+      );
+
+      name.focus();
+
+      return;
+    }
+
+
+    if (!emailValue) {
+
+      showMessage(
+        "আপনার ইমেইল লিখুন।"
+      );
+
+      email.focus();
+
+      return;
+    }
+
+
+    if (passwordValue.length < 6) {
+
+      showMessage(
+        "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।"
+      );
+
+      password.focus();
+
+      return;
+    }
+
+
+    if (passwordValue !== confirmValue) {
+
+      showMessage(
+        "দুইটি পাসওয়ার্ড একই নয়।"
+      );
+
+      confirmPassword.focus();
+
+      return;
+    }
+
+
+    if (!terms.checked) {
+
+      showMessage(
+        "Terms ও Privacy Policy গ্রহণ করুন।"
+      );
+
+      return;
+    }
+
+
+    signupButton.disabled = true;
+
+    signupButton.textContent =
+      "ACCOUNT তৈরি হচ্ছে...";
+
+
+    try {
+
+      const user =
+        await registerUser(
+          nameValue,
+          emailValue,
+          passwordValue
+        );
+
+
+      if (user) {
+
+        showMessage(
+          "✅ Account সফলভাবে তৈরি হয়েছে।",
+          "success"
+        );
+
+
+        setTimeout(() => {
+
+          window.location.href =
+            "./index.html";
+
+        }, 1000);
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Registration failed:",
+        error
+      );
+
+      showMessage(
+        error?.message ||
+        "Account তৈরি করা যায়নি।"
+      );
+
+      signupButton.disabled = false;
+
+      signupButton.textContent =
+        "CREATE ACCOUNT";
+    }
+
+  }
+);
+
+
+// ======================================================
+// ENTER KEY
+// ======================================================
+
+confirmPassword.addEventListener(
+  "keydown",
+  event => {
+
+    if (event.key === "Enter") {
+
+      signupButton.click();
+
+    }
+
+  }
+);
+
+
+console.log(
+  "✅ AYNA BOOK Signup page ready."
+);
+
+</script>
+
 </body>
 </html>
