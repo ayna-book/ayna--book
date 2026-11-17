@@ -1,208 +1,104 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071b49">
-  <meta name="description" content="AYNA BOOK Messenger">
-  <title>AYNA BOOK Messenger</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #071b49;
-      color: #ffffff;
-    }
-
-    header {
-      padding: 22px 12px;
-      text-align: center;
-      background: linear-gradient(
-        120deg,
-        #ec4899,
-        #7c3aed,
-        #06b6d4
-      );
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    header p {
-      margin-bottom: 0;
-    }
-
-    main {
-      max-width: 650px;
-      margin: auto;
-      padding: 15px;
-    }
-
-    .card {
-      background: #102657;
-      border: 1px solid #344b7d;
-      border-radius: 16px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-
-    #status {
-      color: #fbbf24;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    #messages {
-      height: 45vh;
-      min-height: 280px;
-      overflow-y: auto;
-      padding: 10px;
-      background: #081a3d;
-      border-radius: 12px;
-    }
-
-    .bubble {
-      max-width: 90%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 14px;
-      background: #263d70;
-      overflow-wrap: anywhere;
-    }
-
-    .mine {
-      margin-left: auto;
-      background: #8b5cf6;
-    }
-
-    .bubble p {
-      white-space: pre-wrap;
-      margin: 7px 0;
-    }
-
-    .bubble small {
-      display: block;
-      font-size: 11px;
-      opacity: 0.85;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 100px;
-      padding: 13px;
-      border: 1px solid #536b9a;
-      border-radius: 12px;
-      background: #071b49;
-      color: white;
-      font-size: 16px;
-      resize: vertical;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    button {
-      flex: 1;
-      min-width: 120px;
-      padding: 13px;
-      border: 0;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #sendButton {
-      background: #06b6d4;
-      color: #071b49;
-    }
-
-    #translate {
-      background: #f472b6;
-      color: #071b49;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    #translationResult,
-    .note {
-      font-size: 13px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    .note {
-      color: #c6d5f7;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AYNA MESSENGER</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#071b49;color:white;font-family:Arial}
+header{padding:18px;background:#142d5d;border-bottom:2px solid #ffd700}
+h1{color:#ffd700;margin:0}
+main{max-width:700px;margin:auto;padding:15px}
+#messages{height:65vh;overflow-y:auto;background:#102653;border:1px solid #ffd700;border-radius:14px;padding:12px}
+.msg{background:#203c70;border-radius:10px;padding:12px;margin:9px 0;overflow-wrap:anywhere}
+.msg b{color:#ffd700}
+.msg small{display:block;color:#cbd8ed;margin-top:5px}
+form{display:flex;gap:8px;margin-top:12px}
+input{flex:1;min-width:0;padding:15px;border:0;border-radius:10px}
+button{padding:14px;background:#ffd700;color:#071b49;border:0;border-radius:10px;font-weight:bold}
+#status{color:#ffe58a}
+a{color:#ffd700}
+</style>
 </head>
-
 <body>
-  <header>
-    <h1>🪞 AYNA BOOK</h1>
-    <p>Connect. Create. Share.</p>
-    <strong>💬 AYNA BOOK Messenger</strong>
-  </header>
+<header><h1>👁 AYNA MESSENGER</h1></header>
+<main>
+<p id="status">Firebase সংযোগ পরীক্ষা হচ্ছে...</p>
+<div id="messages"></div>
+<form id="sendForm">
+<input id="messageInput" maxlength="1000" placeholder="আপনার মেসেজ লিখুন..." required>
+<button type="submit">পাঠান</button>
+</form>
+<p><a href="index.html">← AYNA BOOK হোম</a></p>
+</main>
+<script type="module">
+import{initializeApp,getApps}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import{getDatabase,ref,push,onValue,query,limitToLast,serverTimestamp}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
-  <main>
-    <section class="card">
-      <h2>অনলাইন মেসেজিং</h2>
-      <p id="status">Firebase সংযোগ পরীক্ষা করা হচ্ছে...</p>
-      <p>চ্যাট রুম: General Chat</p>
-    </section>
+const config={
+ apiKey:"AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+ authDomain:"ayna-book.firebaseapp.com",
+ databaseURL:"https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+ projectId:"ayna-book",
+ storageBucket:"ayna-book.firebasestorage.app",
+ messagingSenderId:"805601138500",
+ appId:"1:805601138500:web:81a9adacbedbc5f3626911"
+};
+const app=getApps().length?getApps()[0]:initializeApp(config);
+const auth=getAuth(app);
+const db=getDatabase(app);
+const chatRef=ref(db,"publicChat");
+let user=null;
 
-    <section class="card">
-      <h3>💬 মেসেজ</h3>
-      <div id="messages" aria-live="polite">
-        মেসেজ লোড হচ্ছে...
-      </div>
-    </section>
+onAuthStateChanged(auth,u=>{
+ user=u;
+ status.textContent=u?"লগইন সফল — মেসেজ পাঠাতে পারবেন।":"আগে AYNA BOOK-এ লগইন করুন।";
+});
 
-    <section class="card">
-      <form id="chatForm">
-        <label for="message">আপনার মেসেজ লিখুন:</label>
+onValue(query(chatRef,limitToLast(100)),snapshot=>{
+ messages.replaceChildren();
+ snapshot.forEach(child=>{
+  const m=child.val();
+  const box=document.createElement("div");
+  box.className="msg";
+  const sender=document.createElement("b");
+  sender.textContent=m.name||"AYNA User";
+  const body=document.createElement("div");
+  body.textContent=m.text||"";
+  const time=document.createElement("small");
+  time.textContent=m.time||"";
+  box.append(sender,body,time);
+  messages.appendChild(box);
+ });
+ messages.scrollTop=messages.scrollHeight;
+},error=>{
+ status.textContent="মেসেজ লোড হয়নি: "+error.message;
+});
 
-        <textarea
-          id="message"
-          maxlength="2000"
-          placeholder="বাংলা বা ইংরেজিতে লিখুন..."
-          required
-        ></textarea>
-
-        <div class="buttons">
-          <button id="sendButton" type="submit" disabled>
-            ➤ মেসেজ পাঠান
-          </button>
-
-          <button id="translate" type="button">
-            🌐 অনুবাদ
-          </button>
-        </div>
-      </form>
-
-      <p id="translationResult"></p>
-
-      <p class="note">
-        এই সংস্করণে একই General Chat রুমের মেসেজ দেখা যাবে।
-        ব্যক্তিগত পাসওয়ার্ড বা গোপন তথ্য শেয়ার করবেন না।
-      </p>
-    </section>
-  </main>
-
-  <script type="module" src="./chat.js"></script>
+sendForm.addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(!user){status.textContent="মেসেজ পাঠাতে আগে লগইন করুন।";return}
+ const text=messageInput.value.trim();
+ if(!text)return;
+ const button=sendForm.querySelector("button");
+ button.disabled=true;
+ try{
+  await push(chatRef,{
+   uid:user.uid,
+   name:user.displayName||user.email||"AYNA User",
+   text:text,
+   time:new Date().toLocaleString("bn-BD"),
+   createdAt:Date.now()
+  });
+  messageInput.value="";
+  status.textContent="মেসেজ পাঠানো হয়েছে।";
+ }catch(error){
+  status.textContent="মেসেজ পাঠানো যায়নি: "+error.message;
+ }finally{button.disabled=false}
+});
+</script>
 </body>
 </html>
