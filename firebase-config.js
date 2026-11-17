@@ -25,4 +25,6 @@ export const firebaseConfig = {
     "G-BM63HG60DK"
 };
 
-console.log("✅ AYNA BOOK Web Firebase configuration loaded");
+console.log(
+  "✅ AYNA BOOK Firebase configuration loaded"
+);
