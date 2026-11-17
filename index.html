@@ -1,692 +1,300 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AYNA BOOK & AYNA MESSENGER - Super App</title>
+    
+    <!-- PWA এবং অ্যাপ আইকন কনফিগারেশন -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-512.png">
+    <meta name="theme-color" content="#0a0a0f">
 
-  <title>AYNA BOOK</title>
+    <!-- আপনার প্রজেক্টের মূল স্টাইলশিটসমূহ -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ayna-ui-patch.css">
 
-  <meta name="description"
-        content="AYNA BOOK - Modern, secure and privacy-focused digital social platform.">
+    <!-- ইনলাইন প্রিমিয়াম গোল্ডেন ফ্রেম ও ফুল-স্ক্রিন স্টাইল -->
+    <style>
+        :root {
+            --gold-primary: #ffd700;
+            --gold-secondary: #b8860b;
+            --bg-dark: #090a0f;
+            --card-bg: rgba(255, 255, 255, 0.05);
+        }
 
-  <meta name="theme-color" content="#0d6efd">
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  <link rel="icon" href="icon-192.png">
-  <link rel="manifest" href="manifest.webmanifest">
+        body {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            border: 3px solid var(--gold-primary);
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.4);
+        }
 
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="ayna-ui-patch.css">
+        /* অ্যানিমেটেড স্টার ব্যাকগ্রাউন্ড ইফেক্ট */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #ffd700, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #ffd700, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: twinkle 4s infinite alternate;
+            z-index: 0;
+        }
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.9; }
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #172033;
-      line-height: 1.6;
-    }
+        /* মেইন কন্টেইনার */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 15px;
+        }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+        /* হেডার ও ব্রেকিং নিউজ টিকার */
+        header {
+            border: 2px solid var(--gold-primary);
+            border-radius: 12px;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    /* HEADER */
+        .brand-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ffd700, #fff8dc, #daa520);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    header {
-      background: linear-gradient(135deg, #0d6efd, #673ab7);
-      color: white;
-      padding: 15px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 3px 15px rgba(0,0,0,.15);
-    }
+        .news-ticker {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid var(--gold-secondary);
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #ffd700;
+        }
 
-    .header-content {
-      max-width: 1100px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
+        /* মডিউল গ্রিড (সব HTML পেজের লিংক) */
+        .section-title {
+            color: var(--gold-primary);
+            font-size: 1.1rem;
+            margin: 12px 0 8px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 4px;
+        }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-    .brand img {
-      width: 50px;
-      height: 50px;
-      border-radius: 15px;
-    }
+        .nav-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--gold-secondary);
+            border-radius: 10px;
+            padding: 14px 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
 
-    .brand h1 {
-      font-size: 24px;
-    }
+        .nav-card:hover, .nav-card:active {
+            border-color: var(--gold-primary);
+            background: rgba(255, 215, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+        }
 
-    .brand p {
-      font-size: 12px;
-      opacity: .9;
-    }
+        /* বটম নেভিগেশন বার */
+        .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1.5px solid var(--gold-primary);
+            border-radius: 15px;
+            padding: 10px;
+        }
 
-    nav {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    nav a {
-      padding: 8px 12px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.15);
-      font-size: 14px;
-    }
-
-    nav a:hover {
-      background: white;
-      color: #0d6efd;
-    }
-
-    /* HERO */
-
-    .hero {
-      max-width: 1100px;
-      margin: 25px auto;
-      padding: 45px 20px;
-      text-align: center;
-      background: linear-gradient(135deg, #ffffff, #eaf2ff);
-      border-radius: 25px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.08);
-    }
-
-    .hero img {
-      width: 110px;
-      height: 110px;
-      border-radius: 28px;
-      margin-bottom: 15px;
-    }
-
-    .hero h2 {
-      font-size: 34px;
-      margin-bottom: 10px;
-      color: #0d6efd;
-    }
-
-    .hero p {
-      max-width: 700px;
-      margin: auto;
-      color: #555;
-    }
-
-    .buttons {
-      margin-top: 25px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      margin: 5px;
-      border-radius: 25px;
-      background: #0d6efd;
-      color: white;
-      font-weight: bold;
-    }
-
-    .btn.secondary {
-      background: #673ab7;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      opacity: .9;
-    }
-
-    /* SECTION */
-
-    .section {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 15px;
-    }
-
-    .section h2 {
-      margin-bottom: 15px;
-      color: #172033;
-    }
-
-    /* CARDS */
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-    }
-
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 18px;
-      box-shadow: 0 5px 20px rgba(0,0,0,.07);
-      transition: .2s;
-      border: 1px solid #edf0f5;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(0,0,0,.12);
-    }
-
-    .card h3 {
-      color: #0d6efd;
-      margin-bottom: 6px;
-      font-size: 18px;
-    }
-
-    .card p {
-      color: #666;
-      font-size: 14px;
-    }
-
-    /* FEATURE */
-
-    .feature {
-      background: linear-gradient(135deg, #0d6efd, #673ab7);
-      color: white;
-      border-radius: 22px;
-      padding: 30px 20px;
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .feature h2 {
-      color: white;
-      margin-bottom: 10px;
-    }
-
-    /* FOOTER */
-
-    footer {
-      margin-top: 40px;
-      background: #101828;
-      color: white;
-      text-align: center;
-      padding: 35px 15px;
-    }
-
-    footer img {
-      width: 55px;
-      border-radius: 15px;
-      margin-bottom: 10px;
-    }
-
-    footer a {
-      color: #9ec5ff;
-      margin: 0 7px;
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 700px) {
-
-      .header-content {
-        flex-direction: column;
-      }
-
-      nav {
-        justify-content: center;
-      }
-
-      .hero {
-        margin: 15px;
-        padding: 35px 15px;
-      }
-
-      .hero h2 {
-        font-size: 28px;
-      }
-
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-    }
-
-    @media (max-width: 420px) {
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .brand h1 {
-        font-size: 21px;
-      }
-
-    }
-  </style>
+        .bottom-nav a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+    </style>
 </head>
-
 <body>
+    <!-- অ্যানিমেটেড স্টার লেয়ার -->
+    <div class="stars"></div>
 
-<!-- HEADER -->
+    <div class="app-container">
+        <!-- শীর্ষ হেডার -->
+        <header>
+            <div class="brand-title">★ AYNA BOOK & ID</div>
+            <div id="user-status" style="font-size: 0.85rem; color: #ffd700;">সংযুক্ত হচ্ছে...</div>
+        </header>
 
-<header>
-  <div class="header-content">
+        <!-- ব্রেকিং নিউজ টিকার -->
+        <div class="news-ticker">
+            <marquee behavior="scroll" direction="left">
+                🔴 ব্রেকিং নিউজ: AYNA সুপার অ্যাপে স্বাগতম! লাইভ টিভি, রেডিও, এআই ট্রান্সলেটর, রাডার এবং গ্লোবাল ডিরেক্টরি এখন সক্রিয়।
+            </marquee>
+        </div>
 
-    <div class="brand">
-      <img src="icon-192.png" alt="AYNA BOOK">
-      <div>
-        <h1>AYNA BOOK</h1>
-        <p>Connect • Share • Create</p>
-      </div>
+        <!-- ১. সোশ্যাল ও মেসেজিং মডিউল -->
+        <div class="section-title">💬 সোশ্যাল ও মেসেজিং (AYNA MESSENGER)</div>
+        <div class="grid-menu">
+            <a href="chat.html" class="nav-card">চ্যাট (Chat)</a>
+            <a href="messages.html" class="nav-card">মেসেজ (Messages)</a>
+            <a href="audio-video-messaging.html" class="nav-card">অডিও-ভিডিও কল</a>
+            <a href="studio.html" class="nav-card">লাইভ স্টুডিও</a>
+            <a href="camera.html" class="nav-card">৮কে ক্যামেরা</a>
+            <a href="profile.html" class="nav-card">আমার প্রোফাইল</a>
+            <a href="public-profile.html" class="nav-card">পাবলিক আইডি</a>
+            <a href="4account.html" class="nav-card">৪ অ্যাকাউন্ট ও সাবস্ক্রিপশন</a>
+        </div>
+
+        <!-- ২. লাইভ মিডিয়া ও নিউজ -->
+        <div class="section-title">📺 লাইভ টিভি, রেডিও ও সংবাদ</div>
+        <div class="grid-menu">
+            <a href="bangla-radio-tv.html" class="nav-card">বাংলা রেডিও ও টিভি</a>
+            <a href="radio-tv.html" class="nav-card">গ্লোবাল রেডিও-টিভি</a>
+            <a href="breaking-news.html" class="nav-card">ব্রেকিং নিউজ</a>
+            <a href="global-alert.html" class="nav-card">গ্লোবাল অ্যালার্ট</a>
+        </div>
+
+        <!-- ৩. নেভিগেশন, রাডার ও টেকনোলজি টুলস -->
+        <div class="section-title">🧭 জিপিএস, রাডার ও অ্যাডভান্সড টুলস</div>
+        <div class="grid-menu">
+            <a href="gps.html" class="nav-card">জিপিএস (GPS)</a>
+            <a href="radar.html" class="nav-card">রাডার (Radar)</a>
+            <a href="military-radar.html" class="nav-card">মিলিটারি রাডার</a>
+            <a href="radar-compass.html" class="nav-card">রাডার কম্পাস</a>
+            <a href="compass.html" class="nav-card">কম্পাস</a>
+            <a href="direction.html" class="nav-card">দিকনির্দেশনা</a>
+            <a href="location-alert.html" class="nav-card">লোকেশন অ্যালার্ট</a>
+            <a href="hourly-clock.html" class="nav-card">ঘণ্টা ঘড়ি</a>
+            <a href="quantum.html" class="nav-card">কোয়ান্টাম সিস্টেম</a>
+            <a href="supercomputer.html" class="nav-card">সুপার কম্পিউটার</a>
+        </div>
+
+        <!-- ৪. ডিরেক্টরি, স্বাস্থ্য ও মার্কেটপ্লেস -->
+        <div class="section-title">🌐 ডিরেক্টরি, স্বাস্থ্য ও সার্ভিস</div>
+        <div class="grid-menu">
+            <a href="bd-directory.html" class="nav-card">বাংলাদেশ ডিরেক্টরি</a>
+            <a href="business-directory.html" class="nav-card">বিজনেস ডিরেক্টরি</a>
+            <a href="currency-exchange.html" class="nav-card">কারেন্সি এক্সচেঞ্জ</a>
+            <a href="medicine-store.html" class="nav-card">মেডিসিন স্টোর</a>
+            <a href="medical-research.html" class="nav-card">মেডিকেল রিসার্চ</a>
+            <a href="world-doctors.html" class="nav-card">বিশ্বের ডাক্তারগণ</a>
+            <a href="world-leaders.html" class="nav-card">বিশ্ব নেতৃবৃন্দ</a>
+            <a href="world-locations.html" class="nav-card">বিশ্বের স্থানসমূহ</a>
+            <a href="countries.html" class="nav-card">দেশসমূহ</a>
+            <a href="ev-vehicles.html" class="nav-card">ইভি যানবাহন (EV)</a>
+            <a href="apple.html" class="nav-card">অ্যাপল হাব</a>
+            <a href="android-hub.html" class="nav-card">অ্যান্ড্রয়েড হাব</a>
+            <a href="google-official-sites.html" class="nav-card">গুগল অফিশিয়াল</a>
+        </div>
+
+        <!-- ৫. সেটিংস ও সিকিউরিটি -->
+        <div class="section-title">⚙️ অ্যাকাউন্ট ও সিকিউরিটি</div>
+        <div class="grid-menu">
+            <a href="login.html" class="nav-card">লগইন (Login)</a>
+            <a href="signup.html" class="nav-card">সাইন আপ (Signup)</a>
+            <a href="register.html" class="nav-card">রেজিস্টার</a>
+            <a href="privacy.html" class="nav-card">প্রাইভেসি পলিসি</a>
+            <a href="privacy-settings.html" class="nav-card">প্রাইভেসি সেটিংস</a>
+            <a href="passwd.html" class="nav-card">পাসওয়ার্ড পরিবর্তন</a>
+            <a href="ownership.html" class="nav-card">মালিকানা (Ownership)</a>
+            <a href="github-firebase-config.html" class="nav-card">সিস্টেম কনফিগ</a>
+        </div>
+
+        <!-- বটম নেভিগেশন -->
+        <nav class="bottom-nav">
+            <a href="index.html">🏠 হোম</a>
+            <a href="chat.html">💬 মেসেঞ্জার</a>
+            <a href="radar-compass.html">🧭 রাডার</a>
+            <a href="profile.html">👤 আইডি</a>
+        </nav>
     </div>
 
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="login.html">Login</a>
-      <a href="register.html">Register</a>
-      <a href="profile.html">Profile</a>
-      <a href="messages.html">Messages</a>
-    </nav>
-
-  </div>
-</header>
-
-
-<!-- HERO -->
-
-<section class="hero">
-
-  <img src="icon-512.png" alt="AYNA BOOK Logo">
-
-  <h2>Welcome to AYNA BOOK</h2>
-
-  <p>
-    A modern, secure and privacy-focused digital social platform
-    designed to connect people, share ideas and create meaningful
-    connections around the world.
-  </p>
-
-  <div class="buttons">
-    <a class="btn" href="login.html">Login</a>
-    <a class="btn secondary" href="register.html">Create Account</a>
-  </div>
-
-</section>
-
-
-<!-- QUICK ACCESS -->
-
-<section class="section">
-
-  <h2>🚀 Quick Access</h2>
-
-  <div class="grid">
-
-    <a class="card" href="login.html">
-      <h3>🔐 Login</h3>
-      <p>Sign in to your AYNA BOOK account.</p>
-    </a>
-
-    <a class="card" href="register.html">
-      <h3>📝 Register</h3>
-      <p>Create a new account.</p>
-    </a>
-
-    <a class="card" href="profile.html">
-      <h3>👤 Profile</h3>
-      <p>Manage your profile.</p>
-    </a>
-
-    <a class="card" href="messages.html">
-      <h3>💬 Messages</h3>
-      <p>Communicate with other users.</p>
-    </a>
-
-  </div>
-
-</section>
-
-
-<!-- SOCIAL -->
-
-<section class="section">
-
-  <h2>🌐 Social</h2>
-
-  <div class="grid">
-
-    <a class="card" href="chat.html">
-      <h3>💬 Chat</h3>
-      <p>Connect and chat with people.</p>
-    </a>
-
-    <a class="card" href="public-profile.html">
-      <h3>👥 Public Profiles</h3>
-      <p>Explore public profiles.</p>
-    </a>
-
-    <a class="card" href="audio-video-messaging.html">
-      <h3>🎥 Audio & Video</h3>
-      <p>Audio and video communication.</p>
-    </a>
-
-    <a class="card" href="4account.html">
-      <h3>⚙️ Account</h3>
-      <p>Manage your account.</p>
-    </a>
-
-  </div>
-
-</section>
-
-
-<!-- NEWS -->
-
-<section class="section">
-
-  <h2>📰 News & Media</h2>
-
-  <div class="grid">
-
-    <a class="card" href="breaking-news.html">
-      <h3>🚨 Breaking News</h3>
-      <p>Latest breaking news.</p>
-    </a>
-
-    <a class="card" href="radio-tv.html">
-      <h3>📺 Radio & TV</h3>
-      <p>Radio and television.</p>
-    </a>
-
-    <a class="card" href="bangla-radio-tv.html">
-      <h3>🇧🇩 Bangla Radio & TV</h3>
-      <p>Bangla media services.</p>
-    </a>
-
-    <a class="card" href="world-leaders.html">
-      <h3>🌍 World Leaders</h3>
-      <p>Information about world leaders.</p>
-    </a>
-
-    <a class="card" href="countries.html">
-      <h3>🌎 Countries</h3>
-      <p>Explore countries around the world.</p>
-    </a>
-
-  </div>
-
-</section>
-
-
-<!-- DIRECTORY -->
-
-<section class="section">
-
-  <h2>📚 Directory</h2>
-
-  <div class="grid">
-
-    <a class="card" href="bd-directory.html">
-      <h3>🇧🇩 Bangladesh Directory</h3>
-      <p>Bangladesh directory.</p>
-    </a>
-
-    <a class="card" href="business-directory.html">
-      <h3>🏢 Business Directory</h3>
-      <p>Business and services.</p>
-    </a>
-
-    <a class="card" href="world-locations.html">
-      <h3>📍 World Locations</h3>
-      <p>Explore worldwide locations.</p>
-    </a>
-
-    <a class="card" href="google-official-sites.html">
-      <h3>🔎 Google Services</h3>
-      <p>Official Google websites.</p>
-    </a>
-
-  </div>
-
-</section>
-
-
-<!-- HEALTH -->
-
-<section class="section">
-
-  <h2>🏥 Health & Medical</h2>
-
-  <div class="grid">
-
-    <a class="card" href="medical-research.html">
-      <h3>🔬 Medical Research</h3>
-      <p>Medical research information.</p>
-    </a>
-
-    <a class="card" href="medicine-store.html">
-      <h3>💊 Medicine Store</h3>
-      <p>Medicine information and services.</p>
-    </a>
-
-    <a class="card" href="world-doctors.html">
-      <h3>👨‍⚕️ World Doctors</h3>
-      <p>Doctors and medical information.</p>
-    </a>
-
-  </div>
-
-</section>
-
-
-<!-- SMART TOOLS -->
-
-<section class="section">
-
-  <h2>🧭 Smart Tools</h2>
-
-  <div class="grid">
-
-    <a class="card" href="gps.html">
-      <h3>📍 GPS</h3>
-      <p>GPS and location tools.</p>
-    </a>
-
-    <a class="card" href="compass.html">
-      <h3>🧭 Compass</h3>
-      <p>Digital compass.</p>
-    </a>
-
-    <a class="card" href="direction.html">
-      <h3>🧭 Direction</h3>
-      <p>Direction tools.</p>
-    </a>
-
-    <a class="card" href="radar.html">
-      <h3>📡 Radar</h3>
-      <p>Radar interface.</p>
-    </a>
-
-    <a class="card" href="radar-compass.html">
-      <h3>📡 Radar Compass</h3>
-      <p>Radar and compass.</p>
-    </a>
-
-    <a class="card" href="hourly-clock.html">
-      <h3>🕐 Clock</h3>
-      <p>Hourly clock.</p>
-    </a>
-
-    <a class="card" href="currency-exchange.html">
-      <h3>💱 Currency</h3>
-      <p>Currency exchange.</p>
-    </a>
-
-    <a class="card" href="camera.html">
-      <h3>📷 Camera</h3>
-      <p>Camera interface.</p>
-    </a>
-
-  </div>
-
-</section>
-
-
-<!-- TECHNOLOGY -->
-
-<section class="section">
-
-  <h2>🚀 Technology</h2>
-
-  <div class="grid">
-
-    <a class="card" href="quantum.html">
-      <h3>⚛️ Quantum</h3>
-      <p>Quantum technology.</p>
-    </a>
-
-    <a class="card" href="supercomputer.html">
-      <h3>💻 Supercomputer</h3>
-      <p>Supercomputer information.</p>
-    </a>
-
-    <a class="card" href="ev-vehicles.html">
-      <h3>🚗 EV Vehicles</h3>
-      <p>Electric vehicle information.</p>
-    </a>
-
-    <a class="card" href="auto-network.html">
-      <h3>🌐 Auto Network</h3>
-      <p>Network services.</p>
-    </a>
-
-  </div>
-
-</section>
-
-
-<!-- PRIVACY -->
-
-<section class="section">
-
-  <h2>🔒 Security & Privacy</h2>
-
-  <div class="grid">
-
-    <a class="card" href="privacy.html">
-      <h3>🔐 Privacy Policy</h3>
-      <p>Read our privacy information.</p>
-    </a>
-
-    <a class="card" href="privacy-settings.html">
-      <h3>⚙️ Privacy Settings</h3>
-      <p>Manage privacy settings.</p>
-    </a>
-
-    <a class="card" href="ownership.html">
-      <h3>©️ Ownership</h3>
-      <p>AYNA BOOK project information.</p>
-    </a>
-
-  </div>
-
-</section>
-
-
-<!-- FEATURE -->
-
-<section class="section">
-
-  <div class="feature">
-
-    <h2>AYNA BOOK</h2>
-
-    <p>
-      Modern • Secure • Private • Global
-    </p>
-
-    <p style="margin-top:10px;">
-      Connect with people. Share your ideas. Create your digital world.
-    </p>
-
-  </div>
-
-</section>
-
-
-<!-- FOOTER -->
-
-<footer>
-
-  <img src="icon-192.png" alt="AYNA BOOK">
-
-  <h2>AYNA BOOK</h2>
-
-  <p>
-    Modern Digital Social Platform
-  </p>
-
-  <br>
-
-  <div>
-    <a href="privacy.html">Privacy</a>
-    |
-    <a href="privacy-settings.html">Privacy Settings</a>
-    |
-    <a href="login.html">Login</a>
-    |
-    <a href="register.html">Register</a>
-  </div>
-
-  <br>
-
-  <p>
-    © 2026 AYNA BOOK. All rights reserved.
-  </p>
-
-</footer>
-
-
-<!-- JAVASCRIPT -->
-
-<script src="firebase-config.js"></script>
-<script src="firebase-init.js"></script>
-<script src="firebase.js"></script>
-<script src="app.js"></script>
-<script src="offline.js"></script>
-
-<script>
-
-  // AYNA BOOK Service Worker
-  if ("serviceWorker" in navigator) {
-
-    window.addEventListener("load", function () {
-
-      navigator.serviceWorker.register("sw.js")
-        .then(function () {
-          console.log("AYNA BOOK Service Worker registered.");
-        })
-        .catch(function (error) {
-          console.log(
-            "Service Worker registration failed:",
-            error
-          );
+    <!-- ফায়ারবেস ও লোকাল সেশন ম্যানেজমেন্ট স্ক্রিপ্ট -->
+    <script type="module">
+        import { auth, db } from './firebase.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const statusEl = document.getElementById('user-status');
+
+        // লোকাল সেশন স্টোরেজ চেক (বারবার লগইন এড়াতে)
+        const savedUser = localStorage.getItem('ayna_user_session');
+        if (savedUser) {
+            const userData = JSON.parse(savedUser);
+            statusEl.textContent = `স্বাগতম, ${userData.email || 'মেম্বার'}`;
+        }
+
+        // ফায়ারবেস অথেনটিকেশন স্টেট লিসেনার
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                localStorage.setItem('ayna_user_session', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email
+                }));
+                statusEl.textContent = `● অনলাইন: ${user.email}`;
+            } else {
+                localStorage.removeItem('ayna_user_session');
+                statusEl.innerHTML = `<a href="login.html" style="color:#ffd700; text-decoration:underline;">লগইন করুন</a>`;
+            }
         });
 
-    });
+        // সার্ভিস ওয়ার্কার রেজিস্ট্রেশন (অফলাইন সাপোর্টের জন্য)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
+            });
+        }
+    </script>
 
-  }
-
-</script>
-
+    <!-- প্রজেক্টের অন্যান্য মূল জাভাস্ক্রিপ্ট ফাইলসমূহ -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="firebase-init.js"></script>
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="connectivity.js"></script>
+    <script type="module" src="translator.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
