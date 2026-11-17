@@ -1,39 +1,57 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1.0">
-
-<meta
-  name="theme-color"
-  content="#05070b">
-
-<meta
-  name="description"
-  content="AYNA BOOK — আধুনিক নিরাপদ ডিজিটাল সোশ্যাল প্ল্যাটফর্ম">
-
-<title>AYNA BOOK</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#05070b">
+<meta name="description" content="AYNA BOOK — আধুনিক নিরাপদ ডিজিটাল সোশ্যাল প্ল্যাটফর্ম">
+<title>AYNA BOOK — Home</title>
 
 <style>
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
   min-height:100vh;
   font-family:Arial,"Noto Sans Bengali",sans-serif;
-  background:
-    radial-gradient(circle at top,#172033,#080b12 45%,#030407);
+  background:radial-gradient(circle at top,#172033,#080b12 45%,#030407);
   color:#fff;
   padding-bottom:75px;
 }
+
+#authLoader{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+  background:#05070b;
+  color:#ffd700;
+  text-align:center;
+  padding:20px;
+}
+
+.loader-logo{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.spinner{
+  width:38px;
+  height:38px;
+  border:4px solid #303746;
+  border-top-color:#ffd700;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#app[hidden]{display:none!important}
 
 header{
   position:sticky;
@@ -76,7 +94,7 @@ header{
 
 .userbar{
   margin-top:10px;
-  display:none;
+  display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
@@ -85,13 +103,7 @@ header{
   background:rgba(255,255,255,.05);
 }
 
-.userbar.show{
-  display:flex;
-}
-
-.user-info{
-  overflow:hidden;
-}
+.user-info{overflow:hidden}
 
 .user-name{
   color:#ffd700;
@@ -114,6 +126,8 @@ header{
   padding:7px 10px;
   cursor:pointer;
 }
+
+.logout:disabled{opacity:.5}
 
 .container{
   max-width:1100px;
@@ -148,9 +162,7 @@ header{
   margin:10px 0 20px;
 }
 
-.search:focus{
-  border-color:#ffd700;
-}
+.search:focus{border-color:#ffd700}
 
 .actions{
   display:flex;
@@ -205,15 +217,9 @@ header{
   background:rgba(255,215,0,.06);
 }
 
-.icon{
-  font-size:28px;
-  margin-bottom:9px;
-}
+.icon{font-size:28px;margin-bottom:9px}
 
-.card h3{
-  font-size:14px;
-  color:#ffd700;
-}
+.card h3{font-size:14px;color:#ffd700}
 
 .card p{
   color:#8f99aa;
@@ -264,133 +270,79 @@ header{
   transform:translateX(-50%);
   z-index:500;
   display:none;
+  max-width:90%;
   padding:12px 16px;
   border-radius:10px;
   background:#121722;
   border:1px solid rgba(255,215,0,.35);
   color:#fff;
   font-size:13px;
+  text-align:center;
 }
 
-.toast.show{
-  display:block;
-}
+.toast.show{display:block}
 
+@media(max-width:380px){
+  .logo{font-size:18px}
+  .hero h1{font-size:28px}
+}
 </style>
 </head>
 
 <body>
 
+<!-- Authentication Loading Screen -->
+<div id="authLoader">
+  <div class="loader-logo">★ AYNA BOOK ★</div>
+  <div class="spinner"></div>
+  <p id="loaderText">আপনার Account যাচাই করা হচ্ছে...</p>
+</div>
+
+<!-- Protected Homepage -->
+<div id="app" hidden>
 
 <header>
-
   <div class="header-top">
-
-    <div class="logo">
-      ★ AYNA BOOK ★
-    </div>
+    <div class="logo">★ AYNA BOOK ★</div>
 
     <div class="firebase">
-
-      <span
-        id="firebaseDot"
-        class="dot">
-      </span>
-
-      <span id="firebaseText">
-        Firebase
-      </span>
-
+      <span id="firebaseDot" class="dot"></span>
+      <span id="firebaseText">Checking...</span>
     </div>
-
   </div>
 
-
-  <div
-    id="userbar"
-    class="userbar">
-
+  <div id="userbar" class="userbar">
     <div class="user-info">
-
-      <div
-        id="userName"
-        class="user-name">
-      </div>
-
-      <div
-        id="userEmail"
-        class="user-email">
-      </div>
-
+      <div id="userName" class="user-name"></div>
+      <div id="userEmail" class="user-email"></div>
     </div>
 
-
-    <button
-      id="logoutButton"
-      class="logout">
-
+    <button id="logoutButton" class="logout" type="button">
       Logout
-
     </button>
-
   </div>
-
 </header>
-
 
 <main class="container">
 
-
   <section class="hero">
-
-    <h1>
-      AYNA BOOK
-    </h1>
-
-    <p>
-      Connect • Share • Create • Communicate
-    </p>
-
+    <h1>AYNA BOOK</h1>
+    <p>Connect • Share • Create • Communicate</p>
   </section>
-
 
   <input
     id="search"
     class="search"
     type="search"
-    placeholder="🔎 AYNA BOOK-এ খুঁজুন...">
-
+    placeholder="🔎 AYNA BOOK-এ খুঁজুন..."
+    aria-label="Search AYNA BOOK features">
 
   <div class="actions">
-
-    <a
-      href="./login.html">
-      🔐 Login
-    </a>
-
-    <a
-      href="./signup.html">
-      📝 Sign Up
-    </a>
-
-    <a
-      href="./profile.html"
-      class="dark">
-      👤 Profile
-    </a>
-
-    <a
-      href="./privacy.html"
-      class="dark">
-      🔒 Privacy
-    </a>
-
+    <a href="./profile.html">👤 Profile</a>
+    <a href="./privacy.html" class="dark">🔒 Privacy</a>
   </div>
 
-
-  <h2 class="section-title">
-    👥 Social
-  </h2>
+  <h2 class="section-title">👥 Social</h2>
 
   <div class="grid">
 
@@ -432,10 +384,7 @@ header{
 
   </div>
 
-
-  <h2 class="section-title">
-    📺 Media & News
-  </h2>
+  <h2 class="section-title">📺 Media & News</h2>
 
   <div class="grid">
 
@@ -465,10 +414,7 @@ header{
 
   </div>
 
-
-  <h2 class="section-title">
-    🚀 Technology
-  </h2>
+  <h2 class="section-title">🚀 Technology</h2>
 
   <div class="grid">
 
@@ -504,10 +450,7 @@ header{
 
   </div>
 
-
-  <h2 class="section-title">
-    🌍 Directory & Services
-  </h2>
+  <h2 class="section-title">🌍 Directory & Services</h2>
 
   <div class="grid">
 
@@ -537,24 +480,9 @@ header{
 
   </div>
 
-
-  <h2 class="section-title">
-    🔒 Account & Security
-  </h2>
+  <h2 class="section-title">🔒 Account & Security</h2>
 
   <div class="grid">
-
-    <a class="card" href="./login.html">
-      <div class="icon">🔐</div>
-      <h3>Login</h3>
-      <p>নিরাপদ Login</p>
-    </a>
-
-    <a class="card" href="./signup.html">
-      <div class="icon">📝</div>
-      <h3>Registration</h3>
-      <p>নতুন অ্যাকাউন্ট</p>
-    </a>
 
     <a class="card" href="./privacy-settings.html">
       <div class="icon">🛡️</div>
@@ -570,48 +498,22 @@ header{
 
   </div>
 
-
-  <div
-    id="empty"
-    class="empty">
-
+  <div id="empty" class="empty">
     🔎 কোনো ফলাফল পাওয়া যায়নি।
-
   </div>
 
 </main>
 
-
 <nav class="bottom">
-
-  <a href="./index.html">
-    <span>🏠</span>
-    Home
-  </a>
-
-  <a href="./chat.html">
-    <span>💬</span>
-    Chat
-  </a>
-
-  <a href="./studio.html">
-    <span>➕</span>
-    Create
-  </a>
-
-  <a href="./profile.html">
-    <span>👤</span>
-    Profile
-  </a>
-
+  <a href="./index.html"><span>🏠</span>Home</a>
+  <a href="./chat.html"><span>💬</span>Chat</a>
+  <a href="./studio.html"><span>➕</span>Create</a>
+  <a href="./profile.html"><span>👤</span>Profile</a>
 </nav>
 
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<div
-  id="toast"
-  class="toast">
 </div>
-
 
 <script type="module">
 
@@ -620,183 +522,150 @@ import {
   logoutUser
 } from "./auth.js";
 
+const app = document.getElementById("app");
+const loader = document.getElementById("authLoader");
+const loaderText = document.getElementById("loaderText");
 
-const userbar =
-  document.getElementById("userbar");
+const userbar = document.getElementById("userbar");
+const userName = document.getElementById("userName");
+const userEmail = document.getElementById("userEmail");
+const logoutButton = document.getElementById("logoutButton");
 
-const userName =
-  document.getElementById("userName");
+const firebaseText = document.getElementById("firebaseText");
+const firebaseDot = document.getElementById("firebaseDot");
 
-const userEmail =
-  document.getElementById("userEmail");
+const search = document.getElementById("search");
+const empty = document.getElementById("empty");
+const toast = document.getElementById("toast");
 
-const logoutButton =
-  document.getElementById("logoutButton");
+let toastTimer;
 
-const firebaseText =
-  document.getElementById("firebaseText");
-
-const firebaseDot =
-  document.getElementById("firebaseDot");
-
-const search =
-  document.getElementById("search");
-
-const empty =
-  document.getElementById("empty");
-
-const toast =
-  document.getElementById("toast");
-
-
-function showToast(text){
-
-  toast.textContent=text;
-
+function showToast(message) {
+  toast.textContent = message;
   toast.classList.add("show");
 
-  setTimeout(()=>{
-
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
     toast.classList.remove("show");
-
-  },2500);
-
+  }, 2500);
 }
 
-
-// Firebase status
-try{
-
-  firebaseText.textContent=
-    "Firebase Connected";
-
-  firebaseDot.style.background=
-    "#00e676";
-
-}catch(error){
-
-  firebaseText.textContent=
-    "Firebase Error";
-
-  firebaseDot.style.background=
-    "#ff5252";
-
+function showLoginPage() {
+  window.location.replace("./login.html");
 }
 
+function showHomepage(user) {
+  userName.textContent =
+    user.displayName || "AYNA BOOK User";
 
-// Auth state
-watchAuthState(
-  user=>{
+  userEmail.textContent = user.email || "";
 
-    if(user){
+  userbar.style.display = "flex";
 
-      userbar.classList.add("show");
+  firebaseText.textContent = "Auth Ready";
+  firebaseDot.style.background = "#00e676";
 
-      userName.textContent=
-        user.displayName ||
-        "AYNA BOOK User";
+  app.hidden = false;
+  loader.style.display = "none";
+}
 
-      userEmail.textContent=
-        user.email || "";
+// Firebase Authentication State Check
+try {
 
-    }else{
+  watchAuthState((user) => {
 
-      userbar.classList.remove("show");
+    if (user) {
+      showHomepage(user);
+    } else {
+      loaderText.textContent =
+        "Login প্রয়োজন। Login পেজে নেওয়া হচ্ছে...";
 
+      showLoginPage();
     }
 
-  }
-);
+  });
+
+} catch (error) {
+
+  console.error("AYNA BOOK Auth Error:", error);
+
+  loaderText.textContent =
+    "Authentication Error. আবার চেষ্টা করুন।";
+
+  firebaseText.textContent = "Auth Error";
+  firebaseDot.style.background = "#ff5252";
+
+}
 
 
 // Logout
-logoutButton.addEventListener(
-  "click",
-  async ()=>{
+logoutButton.addEventListener("click", async () => {
 
-    logoutButton.disabled=true;
+  logoutButton.disabled = true;
+  logoutButton.textContent = "Logging out...";
 
-    const result=
-      await logoutUser();
+  try {
 
+    const result = await logoutUser();
 
-    if(result.success){
+    if (result && result.success === true) {
 
-      showToast(
-        "✅ Logout সফল হয়েছে"
-      );
+      showToast("Logout সফল হয়েছে");
 
-      setTimeout(()=>{
+      window.location.replace("./login.html");
 
-        window.location.href=
-          "./login.html";
-
-      },600);
-
-    }else{
+    } else {
 
       showToast(
-        "❌ "+result.error
+        result?.message ||
+        result?.error ||
+        "Logout করা যায়নি। আবার চেষ্টা করুন।"
       );
 
-      logoutButton.disabled=false;
+      logoutButton.disabled = false;
+      logoutButton.textContent = "Logout";
 
     }
 
-  }
-);
+  } catch (error) {
 
+    console.error("Logout Error:", error);
 
-// Fast search
-search.addEventListener(
-  "input",
-  ()=>{
+    showToast("Logout Error: আবার চেষ্টা করুন");
 
-    const query=
-      search.value
-        .trim()
-        .toLowerCase();
-
-
-    const cards=
-      Array.from(
-        document.querySelectorAll(".card")
-      );
-
-
-    let visible=0;
-
-
-    cards.forEach(card=>{
-
-      const text=
-        card.textContent
-          .toLowerCase();
-
-
-      const match=
-        !query ||
-        text.includes(query);
-
-
-      card.style.display=
-        match ? "" : "none";
-
-
-      if(match){
-        visible++;
-      }
-
-    });
-
-
-    empty.style.display=
-      visible === 0
-        ? "block"
-        : "none";
+    logoutButton.disabled = false;
+    logoutButton.textContent = "Logout";
 
   }
-);
+
+});
+
+
+// Homepage Feature Search
+search.addEventListener("input", () => {
+
+  const query = search.value.trim().toLowerCase();
+
+  const cards = Array.from(
+    document.querySelectorAll(".card")
+  );
+
+  let visible = 0;
+
+  cards.forEach(card => {
+
+    const text = card.textContent.toLowerCase();
+    const match = !query || text.includes(query);
+
+    card.style.display = match ? "" : "none";
+
+    if (match) visible++;
+
+  });
+
+  empty.style.display = visible === 0 ? "block" : "none";
+
+});
 
 </script>
 
