@@ -5,310 +5,559 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#071b49">
-<title>AYNA BOOK | My World My Story</title>
+<title>AYNA BOOK</title>
+
 <style>
-:root{--navy:#071b49;--navy2:#10285a;--gold:#d4af37;--white:#fff}
 *{box-sizing:border-box}
-body{margin:0;background:var(--navy);color:white;font-family:Arial,"Noto Sans Bengali",sans-serif}
-header{background:#061438;border-bottom:2px solid var(--gold);padding:14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
-.brand{display:flex;align-items:center;gap:12px}
-h1{margin:0;font-size:clamp(22px,5vw,34px)}
-.tag{font-size:10px;color:#ffe18a}
-.eye{font-size:40px;position:relative}
-.eye:after{content:"";position:absolute;width:8px;height:8px;background:white;border-radius:50%;left:17px;top:17px;box-shadow:0 0 10px white,0 0 25px white;animation:glow 1s infinite alternate}
-@keyframes glow{to{opacity:.3;transform:scale(.7)}}
-.layout{display:flex;min-height:85vh}
-aside{width:220px;flex-shrink:0;background:#061438;padding:10px;border-right:2px solid var(--gold)}
-nav button{width:100%;text-align:left;background:transparent;color:white;border:1px solid #345080;padding:11px;border-radius:12px;margin:5px 0}
-nav button.active,nav button:hover{background:#17366e;border-color:var(--gold)}
-main{flex:1;min-width:0;padding:15px}
-.page{display:none}.page.active{display:block}
-.card{background:linear-gradient(145deg,#10285a,#071b49);border:1px solid var(--gold);border-radius:16px;padding:17px;margin-bottom:15px}
-h2{color:#ffe18a;margin-top:0}
-input,select,textarea{width:100%;padding:12px;border:1px solid #aaa;border-radius:9px;margin:7px 0 13px;font-size:15px}
-textarea{min-height:85px}
-button{cursor:pointer}
-.gold{background:var(--gold);color:#071b49;border:0;border-radius:9px;padding:12px 17px;font-weight:bold}
-.outline{background:transparent;color:white;border:1px solid var(--gold);border-radius:9px;padding:10px 15px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-.tile{background:#10285a;border:1px solid var(--gold);border-radius:14px;padding:17px}
-.tile h3{color:#ffe18a}
-.price{font-size:25px;color:#ffe18a;font-weight:bold}
-.small{font-size:12px;color:#cbd8f5;line-height:1.7}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#071b49;
+ color:white;
+}
+button,input{font:inherit}
 .hidden{display:none!important}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-#authMessage{color:#ffe18a}
-footer{text-align:center;padding:20px;color:#bdc9e4;font-size:12px}
-@media(max-width:700px){
- aside{width:65px;padding:5px}
- nav button{font-size:0;text-align:center;padding:12px 2px}
- nav button span{font-size:20px}
- main{padding:8px}
+
+/* FULL SCREEN LOGIN */
+#authScreen{
+ min-height:100vh;
+ width:100%;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ padding:15px;
+ background:linear-gradient(145deg,#061332,#102b60,#071b49);
+}
+.auth-card{
+ width:100%;
+ max-width:650px;
+ padding:28px;
+ border:2px solid #ffd700;
+ border-radius:22px;
+ background:#142d5d;
+ box-shadow:0 0 25px #0008;
+}
+.logo{
+ text-align:center;
+ font-size:36px;
+ font-weight:bold;
+ color:#ffd700;
+ margin-bottom:10px;
+}
+.tagline{
+ text-align:center;
+ font-size:15px;
+ margin-bottom:28px;
+ color:#e5edff;
+}
+h2{
+ color:#ffd700;
+ font-size:23px;
+ margin:20px 0;
+}
+.field{margin-bottom:17px}
+.field label{
+ display:block;
+ margin-bottom:8px;
+ font-size:16px;
+}
+.field input{
+ width:100%;
+ height:62px;
+ padding:13px 16px;
+ border:1px solid #ccd6e8;
+ border-radius:13px;
+ background:#fff;
+ color:#111;
+ font-size:17px;
+ outline:none;
+}
+.field input:focus{border:3px solid #ffd700}
+.password-box{position:relative}
+.password-box input{padding-right:65px}
+.eye{
+ position:absolute;
+ right:7px;
+ top:7px;
+ width:50px;
+ height:48px;
+ border:0;
+ border-radius:10px;
+ background:#e5ebf7;
+ font-size:22px;
+ cursor:pointer;
+}
+.action{
+ width:100%;
+ min-height:60px;
+ margin-top:9px;
+ border:0;
+ border-radius:12px;
+ background:#ffd700;
+ color:#071b49;
+ font-size:19px;
+ font-weight:bold;
+ cursor:pointer;
+}
+.action:disabled{opacity:.6}
+.action:active{transform:scale(.99)}
+hr{
+ border:0;
+ border-top:2px solid #aab9d3;
+ margin:25px 0;
+}
+.secondary{
+ width:100%;
+ padding:17px;
+ margin-top:10px;
+ border:0;
+ border-radius:12px;
+ background:#ffd700;
+ color:#071b49;
+ font-weight:bold;
+ font-size:17px;
+ cursor:pointer;
+}
+#message{
+ margin-top:17px;
+ min-height:28px;
+ line-height:1.5;
+ color:#ffe98a;
+ overflow-wrap:anywhere;
+}
+.small{
+ color:#dce6ff;
+ font-size:13px;
+ line-height:1.5;
+}
+
+/* DASHBOARD */
+header{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:15px;
+ border-bottom:2px solid #ffd700;
+ background:#071b49;
+ position:sticky;
+ top:0;
+}
+header h1{color:#ffd700;font-size:25px}
+.logout{
+ background:#d62845;
+ color:white;
+ border:0;
+ border-radius:9px;
+ padding:13px 17px;
+ font-weight:bold;
+}
+#dashboard{min-height:100vh}
+.content{padding:18px}
+.profile{
+ text-align:center;
+ border:2px solid #ffd700;
+ border-radius:18px;
+ padding:25px 12px;
+ background:#142d5d;
+}
+.avatar{
+ width:90px;
+ height:90px;
+ margin:auto auto 12px;
+ border-radius:50%;
+ border:3px solid #ffd700;
+ background:#294578;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:42px;
+}
+.profile h2{margin:10px}
+.profile p{overflow-wrap:anywhere}
+.cards{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+ gap:12px;
+ margin-top:20px;
+}
+.cards a{
+ text-decoration:none;
+ color:white;
+ background:#142d5d;
+ border:1px solid #ffd700;
+ border-radius:13px;
+ padding:22px 10px;
+ text-align:center;
+}
+.cards a:hover{color:#ffd700}
+.section-title{color:#ffd700;margin-top:25px}
+.note{
+ padding:16px;
+ background:#142d5d;
+ border:1px solid #ffd700;
+ border-radius:12px;
+ margin-top:12px;
+}
+footer{
+ text-align:center;
+ padding:22px;
+ color:#dce6ff;
+}
+@media(max-width:500px){
+ .auth-card{padding:20px 15px}
+ .logo{font-size:30px}
+ .field input{height:57px}
+ .action{min-height:56px}
 }
 </style>
 </head>
+
 <body>
 
-<header>
- <div class="brand">
-  <div class="eye">👁</div>
-  <div>
-   <h1>AYNA BOOK</h1>
-   <div class="tag">MY WORLD. MY STORY. MY AYNA BOOK.</div>
-  </div>
- </div>
- <div id="userStatus" class="small">অতিথি ব্যবহারকারী</div>
-</header>
+<section id="authScreen">
+ <div class="auth-card">
 
-<div class="layout">
-<aside>
- <p style="color:#d4af37;font-weight:bold">AYNA DASHBOARD</p>
- <nav>
-  <button class="active" data-page="home"><span>⌂</span> হোম</button>
-  <button data-page="account"><span>🔐</span> Login / Registration</button>
-  <button data-page="plans"><span>💎</span> Account Plans</button>
-  <button data-page="profile"><span>👤</span> প্রোফাইল</button>
-  <button data-page="posts"><span>✍️</span> পোস্ট</button>
-  <button data-page="messenger"><span>💬</span> Messenger</button>
-  <button data-page="library"><span>📖</span> কোরআন ও হাদিস</button>
-  <button data-page="media"><span>📻</span> রেডিও ও টিভি</button>
-  <button data-page="videos"><span>▶️</span> ভিডিও</button>
-  <button data-page="market"><span>🛍️</span> AYNA HAT</button>
-  <button data-page="world"><span>🌍</span> বিশ্ব পরিচিতি</button>
-  <button data-page="kids"><span>🧒</span> শিশু কর্নার</button>
-  <button data-page="women"><span>🌸</span> নারী কর্নার</button>
-  <button data-page="settings"><span>⚙️</span> সেটিংস</button>
- </nav>
-</aside>
+  <div class="logo">👁 AYNA BOOK</div>
+  <div class="tagline">MY WORLD. MY STORY. MY AYNA BOOK.</div>
 
-<main>
-
-<!-- FIRST PAGE -->
-<section id="home" class="page active">
- <div class="card" style="text-align:center">
-  <div class="eye">👁</div>
-  <h2 style="font-size:30px">WELCOME TO AYNA BOOK</h2>
-  <p>MY WORLD. MY STORY. MY AYNA BOOK.</p>
-  <p class="small">Connect. Create. Share. Protect.</p>
-  <div class="actions" style="justify-content:center">
-   <button class="gold" onclick="openPage('account')">LOGIN</button>
-   <button class="outline" onclick="openPage('account')">REGISTRATION</button>
-  </div>
- </div>
- <div class="grid">
-  <div class="tile"><h3>🌐 Global Community</h3>বিশ্বব্যাপী যোগাযোগ</div>
-  <div class="tile"><h3>🎥 8K Media Support</h3>উচ্চ রেজল্যুশনের ছবি ও ভিডিও সাপোর্ট</div>
-  <div class="tile"><h3>💬 AYNA Messenger</h3>মেসেজ ও যোগাযোগ</div>
-  <div class="tile"><h3>🔒 Privacy</h3>গোপনীয়তা ও নিরাপত্তা</div>
- </div>
-</section>
-
-<!-- LOGIN AND REGISTRATION -->
-<section id="account" class="page">
- <div class="card">
-  <h2>নতুন অ্যাকাউন্ট তৈরি</h2>
   <form id="registerForm">
-   <label>আপনার নাম</label>
-   <input id="regName" required placeholder="পূর্ণ নাম">
-   <label>Gmail</label>
-   <input id="regEmail" type="email" required placeholder="example@gmail.com">
-   <label>ফোন নম্বর</label>
-   <input id="regPhone" type="tel" required placeholder="+8801XXXXXXXXX">
-   <label>পাসওয়ার্ড</label>
-   <input id="regPassword" type="password" minlength="8" required>
-   <label>পুনরায় পাসওয়ার্ড</label>
-   <input id="regConfirm" type="password" minlength="8" required>
-   <label><input type="checkbox" id="showPassword" style="width:auto"> পাসওয়ার্ড দেখান</label>
-   <label>অ্যাকাউন্ট নির্বাচন</label>
-   <select id="regPlan">
-    <option value="personal">PERSONAL - FREE</option>
-    <option value="business">BUSINESS - $15 / YEAR</option>
-    <option value="vip">VIP - $15 / YEAR</option>
-    <option value="vvip">VVIP - $20 / YEAR</option>
-   </select>
-   <button class="gold" type="submit">REGISTRATION</button>
-  </form>
- </div>
+   <h2>নতুন অ্যাকাউন্ট তৈরি</h2>
 
- <div class="card">
-  <h2>LOGIN</h2>
+   <div class="field">
+    <label for="name">আপনার নাম</label>
+    <input id="name" type="text" placeholder="আপনার পূর্ণ নাম" required>
+   </div>
+
+   <div class="field">
+    <label for="phone">মোবাইল নম্বর</label>
+    <input id="phone" type="tel" placeholder="মোবাইল নম্বর" required>
+   </div>
+
+   <div class="field">
+    <label for="regEmail">Gmail</label>
+    <input id="regEmail" type="email" placeholder="আপনার Gmail" required>
+   </div>
+
+   <div class="field">
+    <label for="regPass">পাসওয়ার্ড</label>
+    <div class="password-box">
+     <input id="regPass" type="password" minlength="6"
+      placeholder="কমপক্ষে ৬ অক্ষর" required>
+     <button class="eye" type="button"
+      data-eye="regPass" aria-label="পাসওয়ার্ড দেখান">👁</button>
+    </div>
+   </div>
+
+   <div class="field">
+    <label for="confirmPass">পাসওয়ার্ড আবার লিখুন</label>
+    <div class="password-box">
+     <input id="confirmPass" type="password"
+      placeholder="পাসওয়ার্ড নিশ্চিত করুন" required>
+     <button class="eye" type="button"
+      data-eye="confirmPass" aria-label="পাসওয়ার্ড দেখান">👁</button>
+    </div>
+   </div>
+
+   <button class="action" id="registerBtn" type="submit">
+    অ্যাকাউন্ট তৈরি করুন
+   </button>
+  </form>
+
+  <hr>
+
   <form id="loginForm">
-   <label>Gmail</label>
-   <input id="loginEmail" type="email" required>
-   <label>পাসওয়ার্ড</label>
-   <input id="loginPassword" type="password" required>
-   <button class="gold" type="submit">LOGIN</button>
+   <h2>লগইন</h2>
+
+   <div class="field">
+    <label for="loginEmail">Gmail</label>
+    <input id="loginEmail" type="email"
+     placeholder="আপনার Gmail" required>
+   </div>
+
+   <div class="field">
+    <label for="loginPass">পাসওয়ার্ড</label>
+    <div class="password-box">
+     <input id="loginPass" type="password"
+      placeholder="আপনার পাসওয়ার্ড" required>
+     <button class="eye" type="button"
+      data-eye="loginPass" aria-label="পাসওয়ার্ড দেখান">👁</button>
+    </div>
+   </div>
+
+   <button class="action" id="loginBtn" type="submit">
+    লগইন
+   </button>
   </form>
-  <button class="outline" id="logoutButton">LOGOUT</button>
-  <p id="authMessage" class="small"></p>
+
+  <button class="secondary" id="forgotBtn" type="button">
+   পাসওয়ার্ড ভুলে গেছেন?
+  </button>
+
+  <button class="secondary" id="clearBtn" type="button">
+   ফর্ম পরিষ্কার করুন
+  </button>
+
+  <p id="message" role="status" aria-live="polite">
+   Firebase সংযোগ প্রস্তুত হচ্ছে...
+  </p>
+
+  <p class="small">
+   Connect. Create. Share. Protect.
+  </p>
+
  </div>
 </section>
 
-<!-- ACCOUNT PLANS -->
-<section id="plans" class="page">
- <div class="card">
-  <h2>AYNA BOOK MEMBERSHIP</h2>
-  <p class="small">প্রিমিয়াম অ্যাকাউন্টের মেয়াদ ১ বছর। মেয়াদ শেষে নবায়ন করতে হবে।</p>
-  <div class="grid">
-   <div class="tile">
-    <h3>১. PERSONAL</h3>
-    <div class="price">FREE</div>
-    <p>ব্যক্তিগত অ্যাকাউন্ট</p>
-    <button class="gold" onclick="choosePlan('personal')">SELECT</button>
-   </div>
-   <div class="tile">
-    <h3>২. BUSINESS</h3>
-    <div class="price">$15 / Year</div>
-    <p id="businessTaka">টাকার সমমূল্য প্রযোজ্য</p>
-    <button class="gold" onclick="choosePlan('business')">SELECT</button>
-   </div>
-   <div class="tile">
-    <h3>৩. VIP</h3>
-    <div class="price">$15 / Year</div>
-    <p id="vipTaka">টাকার সমমূল্য প্রযোজ্য</p>
-    <button class="gold" onclick="choosePlan('vip')">SELECT</button>
-   </div>
-   <div class="tile">
-    <h3>৪. VVIP</h3>
-    <div class="price">$20 / Year</div>
-    <p id="vvipTaka">টাকার সমমূল্য প্রযোজ্য</p>
-    <button class="gold" onclick="choosePlan('vvip')">SELECT</button>
-   </div>
+<section id="dashboard" class="hidden">
+
+ <header>
+  <h1>👁 AYNA BOOK</h1>
+  <button class="logout" id="logoutBtn">লগআউট</button>
+ </header>
+
+ <div class="content">
+
+  <section class="profile">
+   <div class="avatar">👤</div>
+   <h2 id="profileName">MY PROFILE</h2>
+   <p id="profileEmail"></p>
+   <p>MY WORLD. MY STORY. MY AYNA BOOK.</p>
+  </section>
+
+  <h2 class="section-title">AYNA BOOK DASHBOARD</h2>
+
+  <div class="cards">
+   <a href="profile.html">👤<br>PROFILE</a>
+   <a href="radio-tv.html">📻<br>RADIO & TV</a>
+   <a href="breaking-news.html">📰<br>BREAKING NEWS</a>
+   <a href="global-alert.html">🚨<br>150 GLOBAL ALERT</a>
+   <a href="gps.html">📍<br>GPS</a>
+   <a href="radar.html">📡<br>RADAR</a>
+   <a href="compass.html">🧭<br>COMPASS</a>
+   <a href="hourly-clock.html">🕒<br>HOURLY CLOCK</a>
+   <a href="chat.html">💬<br>MESSENGER</a>
   </div>
+
+  <div class="note">
+   <h3>AYNA BOOK</h3>
+   <p>Connect. Create. Share. Protect.</p>
+  </div>
+
  </div>
 
- <div class="card">
-  <h2>PAYMENT METHODS</h2>
-  <label>পেমেন্ট পদ্ধতি</label>
-  <select id="paymentMethod">
-   <option value="">পদ্ধতি নির্বাচন করুন</option>
-   <option>bKash / বিকাশ</option>
-   <option>Nagad / নগদ</option>
-   <option>Rocket / রকেট</option>
-   <option>Upay / উপায়</option>
-   <option>Payoneer</option>
-   <option>PayPal</option>
-  </select>
-  <p>বাংলাদেশি মোবাইল পেমেন্ট নম্বর:</p>
-  <h2 style="color:#ffe18a">01400751906</h2>
-  <label>ট্রানজেকশন আইডি</label>
-  <input id="transactionId" placeholder="পেমেন্টের Transaction ID">
-  <label>পেমেন্টের পরিমাণ</label>
-  <input id="paymentAmount" type="number" min="0" placeholder="পরিমাণ লিখুন">
-  <button class="gold" id="paymentSubmit">পেমেন্ট যাচাইয়ের আবেদন</button>
-  <p id="paymentMessage" class="small">পেমেন্টের তথ্য যাচাই না হওয়া পর্যন্ত প্রিমিয়াম সুবিধা চালু হবে না।</p>
- </div>
+ <footer>© AYNA BOOK</footer>
 </section>
 
-<section id="profile" class="page">
- <div class="card">
-  <h2>আমার প্রোফাইল</h2>
-  <label>প্রোফাইল ছবি</label><input type="file" accept="image/*">
-  <label>কভার ছবি</label><input type="file" accept="image/*">
-  <textarea placeholder="আপনার পরিচিতি"></textarea>
-  <button class="gold">সংরক্ষণ</button>
- </div>
-</section>
+<script type="module">
 
-<section id="posts" class="page">
- <div class="card">
-  <h2>লেখা, ছবি, অডিও ও ভিডিও পোস্ট</h2>
-  <textarea placeholder="আপনার মনের কথা লিখুন"></textarea>
-  <input type="file" accept="image/*,video/*,audio/*">
-  <button class="gold">পোস্ট প্রকাশ</button>
-  <p class="small">8K ফাইল সমর্থন করতে Storage, ব্যান্ডউইথ এবং উপযুক্ত ভিডিও প্রসেসিং প্রয়োজন।</p>
- </div>
-</section>
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
-<section id="messenger" class="page">
- <div class="card">
-  <h2>AYNA MESSENGER</h2>
-  <textarea placeholder="মেসেজ লিখুন"></textarea>
-  <button class="gold">মেসেজ পাঠান</button>
-  <p>অডিও কল ও ভিডিও কল মডিউল পরবর্তী সংযোগে চালু হবে।</p>
- </div>
-</section>
+import {
+ getAuth,
+ createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,
+ sendPasswordResetEmail,
+ updateProfile,
+ onAuthStateChanged,
+ signOut
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-<section id="library" class="page">
- <div class="card"><h2>কোরআন ও হাদিস</h2><p>আল-কোরআন, সহিহ বুখারি, সহিহ মুসলিম ও তিরমিজি।</p></div>
-</section>
+import {
+ getFirestore,
+ doc,
+ setDoc,
+ serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-<section id="media" class="page">
- <div class="card"><h2>রেডিও ও টিভি</h2><p>অনুমোদিত লাইভ স্ট্রিম সংযুক্ত করা হবে।</p></div>
-</section>
+/* FIREBASE CONFIG */
+const firebaseConfig = {
+ apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+ authDomain: "ayna-book.firebaseapp.com",
+ databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+ projectId: "ayna-book",
+ storageBucket: "ayna-book.firebasestorage.app",
+ messagingSenderId: "805601138500",
+ appId: "1:805601138500:web:81a9adacbedbc5f3626911",
+ measurementId: "G-JWBYNXSBMZ"
+};
 
-<section id="videos" class="page">
- <div class="card"><h2>AYNA BOOK ভিডিও</h2><p>ভিডিও লাইব্রেরি</p></div>
-</section>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-<section id="market" class="page">
- <div class="card"><h2>AYNA HAT</h2><p>অনলাইন বাজার ও ব্যবসা।</p></div>
-</section>
+const authScreen = document.getElementById("authScreen");
+const dashboard = document.getElementById("dashboard");
+const message = document.getElementById("message");
 
-<section id="world" class="page">
- <div class="card"><h2>বিশ্ব পরিচিতি</h2><p>রাষ্ট্র ও সরকারি প্রতিষ্ঠানের প্রকাশ্য তথ্য।</p></div>
-</section>
-
-<section id="kids" class="page">
- <div class="card"><h2>শিশু কর্নার</h2><p>শিক্ষা, গল্প, গণিত ও বিনোদন।</p></div>
-</section>
-
-<section id="women" class="page">
- <div class="card"><h2>নারী কর্নার</h2><p>রান্না, নাটক ও নারী উদ্যোক্তা।</p></div>
-</section>
-
-<section id="settings" class="page">
- <div class="card"><h2>সেটিংস</h2><p>ভাষা, গোপনীয়তা ও নোটিফিকেশন।</p></div>
-</section>
-
-</main>
-</div>
-
-<footer>© AYNA BOOK | Connect. Create. Share. Protect.</footer>
-
-<script>
-const pages=document.querySelectorAll(".page");
-function openPage(id){
- pages.forEach(p=>p.classList.toggle("active",p.id===id));
- document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+function say(text){
+ message.textContent = text;
 }
-document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>openPage(b.dataset.page)));
 
-$("showPassword")?.addEventListener("change",e=>{
- document.getElementById("regPassword").type=e.target.checked?"text":"password";
- document.getElementById("regConfirm").type=e.target.checked?"text":"password";
+function errorText(error){
+ const messages = {
+  "auth/email-already-in-use":"এই Gmail দিয়ে আগে অ্যাকাউন্ট তৈরি হয়েছে।",
+  "auth/invalid-email":"সঠিক Gmail লিখুন।",
+  "auth/weak-password":"পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।",
+  "auth/invalid-credential":"Gmail অথবা পাসওয়ার্ড সঠিক নয়।",
+  "auth/user-not-found":"এই Gmail-এ অ্যাকাউন্ট পাওয়া যায়নি।",
+  "auth/wrong-password":"পাসওয়ার্ড সঠিক নয়।",
+  "auth/network-request-failed":"ইন্টারনেট সংযোগ পরীক্ষা করুন।",
+  "auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করুন।",
+  "auth/operation-not-allowed":"Firebase-এ Email/Password Login চালু করুন।"
+ };
+ return messages[error.code] || error.message || "সমস্যা হয়েছে।";
+}
+
+/* SHOW / HIDE PASSWORD */
+document.querySelectorAll("[data-eye]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  const input=document.getElementById(button.dataset.eye);
+  const showing=input.type==="password";
+  input.type=showing?"text":"password";
+  button.textContent=showing?"🙈":"👁";
+  button.setAttribute(
+   "aria-label",
+   showing?"পাসওয়ার্ড লুকান":"পাসওয়ার্ড দেখান"
+  );
+ });
 });
-function $(id){return document.getElementById(id)}
-let selectedPlan="personal";
-function choosePlan(plan){
- selectedPlan=plan;
- $("regPlan").value=plan;
- openPage("account");
- $("authMessage").textContent="নির্বাচিত অ্যাকাউন্ট: "+plan.toUpperCase();
-}
-$("regPlan").addEventListener("change",e=>selectedPlan=e.target.value);
-$("registerForm").addEventListener("submit",e=>{
- e.preventDefault();
- if($("regPassword").value!==$("regConfirm").value){
-  $("authMessage").textContent="দুটি পাসওয়ার্ড এক নয়।";
+
+/* REGISTRATION */
+document.getElementById("registerForm")
+.addEventListener("submit",async event=>{
+ event.preventDefault();
+
+ const button=document.getElementById("registerBtn");
+ const name=document.getElementById("name").value.trim();
+ const phone=document.getElementById("phone").value.trim();
+ const email=document.getElementById("regEmail").value.trim();
+ const password=document.getElementById("regPass").value;
+ const confirm=document.getElementById("confirmPass").value;
+
+ if(password!==confirm){
+  say("দুটি পাসওয়ার্ড এক নয়।");
   return;
  }
- $("authMessage").textContent="রেজিস্ট্রেশন ফর্ম প্রস্তুত। Firebase Authentication সংযোগ না করা পর্যন্ত অ্যাকাউন্ট তৈরি হবে না।";
-});
-$("loginForm").addEventListener("submit",e=>{
- e.preventDefault();
- $("authMessage").textContent="Firebase Login সংযোগ প্রয়োজন।";
-});
-$("logoutButton").addEventListener("click",()=>{
- $("authMessage").textContent="Firebase Logout সংযোগ প্রয়োজন।";
-});
-$("paymentSubmit").addEventListener("click",()=>{
- if(!$("paymentMethod").value||!$("transactionId").value.trim()||!$("paymentAmount").value){
-  $("paymentMessage").textContent="পেমেন্ট পদ্ধতি, Transaction ID ও পরিমাণ দিন।";
+
+ if(password.length<6){
+  say("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
   return;
  }
- $("paymentMessage").textContent="পেমেন্ট যাচাইয়ের আবেদন তৈরি হয়েছে। প্রশাসকের যাচাই ও নিরাপদ সার্ভার সংযোগ ছাড়া অ্যাকাউন্ট সক্রিয় হবে না।";
+
+ button.disabled=true;
+ button.textContent="অ্যাকাউন্ট তৈরি হচ্ছে...";
+ say("অনুগ্রহ করে অপেক্ষা করুন...");
+
+ try{
+  const result=await createUserWithEmailAndPassword(
+   auth,email,password
+  );
+
+  await updateProfile(result.user,{displayName:name});
+
+  /* Profile save is separate so a database rules issue
+     cannot undo successful account creation. */
+  try{
+   await setDoc(doc(db,"users",result.user.uid),{
+    uid:result.user.uid,
+    name:name,
+    phone:phone,
+    email:email,
+    createdAt:serverTimestamp()
+   });
+  }catch(dbError){
+   console.error("Profile save error:",dbError);
+  }
+
+  say("অ্যাকাউন্ট তৈরি হয়েছে। স্বাগতম AYNA BOOK!");
+
+ }catch(error){
+  say(errorText(error));
+ }finally{
+  button.disabled=false;
+  button.textContent="অ্যাকাউন্ট তৈরি করুন";
+ }
 });
+
+/* LOGIN */
+document.getElementById("loginForm")
+.addEventListener("submit",async event=>{
+ event.preventDefault();
+
+ const button=document.getElementById("loginBtn");
+ const email=document.getElementById("loginEmail").value.trim();
+ const password=document.getElementById("loginPass").value;
+
+ button.disabled=true;
+ button.textContent="লগইন হচ্ছে...";
+ say("আপনার অ্যাকাউন্ট যাচাই হচ্ছে...");
+
+ try{
+  await signInWithEmailAndPassword(auth,email,password);
+  say("লগইন সফল হয়েছে।");
+ }catch(error){
+  say(errorText(error));
+ }finally{
+  button.disabled=false;
+  button.textContent="লগইন";
+ }
+});
+
+/* PASSWORD RESET */
+document.getElementById("forgotBtn")
+.addEventListener("click",async()=>{
+ const email=document.getElementById("loginEmail").value.trim();
+
+ if(!email){
+  say("প্রথমে লগইন ঘরে আপনার Gmail লিখুন।");
+  return;
+ }
+
+ try{
+  await sendPasswordResetEmail(auth,email);
+  say("আপনার Gmail-এ পাসওয়ার্ড Reset Link পাঠানো হয়েছে।");
+ }catch(error){
+  say(errorText(error));
+ }
+});
+
+/* CLEAR FORM */
+document.getElementById("clearBtn")
+.addEventListener("click",()=>{
+ document.getElementById("registerForm").reset();
+ document.getElementById("loginForm").reset();
+ say("ফর্ম পরিষ্কার করা হয়েছে।");
+});
+
+/* LOGOUT */
+document.getElementById("logoutBtn")
+.addEventListener("click",async()=>{
+ try{
+  await signOut(auth);
+  say("আপনি লগআউট করেছেন।");
+ }catch(error){
+  alert(errorText(error));
+ }
+});
+
+/* AUTH STATE */
+onAuthStateChanged(auth,user=>{
+ if(user){
+  authScreen.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+
+  document.getElementById("profileName").textContent=
+   user.displayName || "AYNA BOOK USER";
+
+  document.getElementById("profileEmail").textContent=
+   user.email || "";
+ }else{
+  dashboard.classList.add("hidden");
+  authScreen.classList.remove("hidden");
+ }
+});
+
 </script>
 </body>
 </html>
