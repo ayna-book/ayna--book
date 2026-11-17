@@ -1,32 +1,112 @@
-
-<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AYNA Compass</title>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK - Digital Compass</title>
 <style>
-body{background:#071b49;color:white;font-family:Arial;text-align:center;padding:18px}h1{color:#ffd700}.dial{width:260px;height:260px;border:7px solid #ffd700;border-radius:50%;margin:35px auto;display:flex;align-items:center;justify-content:center;position:relative;background:#142d5d}.needle{font-size:85px;color:#ffdf00;transition:transform .2s}.north{position:absolute;top:12px;color:#ffd700;font-size:22px}button{padding:15px;background:#ffd700;border:0;border-radius:9px;font-weight:bold}
-</style></head><body>
-<h1>🧭 AYNA COMPASS</h1>
-<div class="dial"><span class="north">N</span><div class="needle" id="needle">↑</div></div>
-<h2 id="degree">দিক নির্ধারণ হয়নি</h2>
-<button id="start">কম্পাস চালু করুন</button>
-<p id="info">ফোনে সেন্সর ও অনুমতি প্রয়োজন হতে পারে।</p>
-<p><a href="index.html" style="color:#ffd700">← হোম</a></p>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#071b49;color:#fff;font-family:Arial,"Noto Sans Bengali",sans-serif;text-align:center}
+header{padding:16px;background:#102b63;border-bottom:2px solid #ffd700}
+.logo{font-size:25px;font-weight:bold;color:#ffd700}h1{font-size:22px;margin:8px}
+nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px;background:#0b2458}
+a,button{padding:11px 15px;border:1px solid #ffd700;border-radius:9px;background:#17366f;color:#fff;text-decoration:none;font-size:15px;cursor:pointer}
+main{max-width:700px;margin:auto;padding:16px}
+.dial{width:min(82vw,360px);height:min(82vw,360px);margin:20px auto;position:relative;border:8px solid #d9e5ff;border-radius:50%;background:radial-gradient(circle,#173c78 0 57%,#0b2458 58% 100%);box-shadow:0 0 22px #0008,inset 0 0 18px #0008}
+.ring{position:absolute;inset:9px;border:1px solid #7895c8;border-radius:50%}
+.mark{position:absolute;font-weight:bold;font-size:22px;transform:translate(-50%,-50%)}
+.n{top:9%;left:50%;color:#ff5555}.s{top:91%;left:50%}.e{top:50%;left:91%}.w{top:50%;left:9%}
+.ne{top:21%;left:79%}.se{top:79%;left:79%}.sw{top:79%;left:21%}.nw{top:21%;left:21%}
+.needle{position:absolute;left:50%;top:50%;width:0;height:0;transform:translate(-50%,-50%);transition:transform .15s}
+.needle:before{content:"";position:absolute;left:-5px;top:-126px;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:120px solid #ff4545;filter:drop-shadow(0 0 3px #000)}
+.needle:after{content:"";position:absolute;left:-5px;top:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:105px solid #e7edf9}
+.center{position:absolute;left:50%;top:50%;width:19px;height:19px;border-radius:50%;background:#ffd700;transform:translate(-50%,-50%);border:3px solid white}
+.reading{font-size:30px;color:#ffd700;font-weight:bold;margin:8px}
+.sub{color:#cbd8f5;line-height:1.7}
+.status{background:#10285a;border:1px solid #34558e;padding:14px;border-radius:12px;margin:12px 0;line-height:1.7}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+footer{padding:18px;color:#cbd8f5}
+</style>
+</head>
+<body>
+<header><div class="logo">👁 AYNA BOOK</div><h1>GLOBAL DIGITAL COMPASS</h1><div>ডিজিটাল দিকনির্দেশক</div></header>
+<nav><a href="index.html">⌂ হোম</a><a href="radar.html">🌦️ আবহাওয়া রাডার</a><a href="military-radar.html">📡 সামরিক রাডার তথ্য</a></nav>
+<main>
+<p class="sub">ফোনের দিক-নির্দেশক সেন্সর ব্যবহার করে উত্তর, দক্ষিণ, পূর্ব ও পশ্চিমের দিক দেখুন।</p>
+<div class="dial" aria-label="Compass dial">
+<div class="ring"></div>
+<span class="mark n">N</span><span class="mark ne">NE</span>
+<span class="mark e">E</span><span class="mark se">SE</span>
+<span class="mark s">S</span><span class="mark sw">SW</span>
+<span class="mark w">W</span><span class="mark nw">NW</span>
+<div class="needle" id="needle"></div><div class="center"></div>
+</div>
+<div class="reading" id="degrees">০° — উত্তর</div>
+<div class="status" id="status">কম্পাস চালু করতে নিচের বোতাম চাপুন। ফোনে সেন্সর ও অনুমতি প্রয়োজন।</div>
+<div class="actions">
+<button onclick="startCompass()">🧭 কম্পাস চালু</button>
+<button onclick="stopCompass()">⏹ বন্ধ</button>
+<button onclick="fullScreen()">⛶ ফুল স্ক্রিন</button>
+</div>
+<div class="status sub">
+<b style="color:#ffd700">ব্যবহারের নির্দেশনা</b><br>
+১. ফোনটি সমতলভাবে ধরুন।<br>
+২. কম্পাস চালু করার অনুমতি দিন।<br>
+৩. ফোন ধীরে ঘোরান এবং দিক দেখুন।<br>
+৪. সঠিক ফলের জন্য ধাতব বস্তু ও চুম্বক থেকে দূরে থাকুন; প্রয়োজন হলে ফোন ক্যালিব্রেট করুন।
+</div>
+</main>
+<footer>AYNA BOOK • Connect. Create. Share. Protect.<br><small>সেন্সর-সমর্থন ও ব্রাউজারের অনুমতির ওপর ফল নির্ভর করে।</small></footer>
 <script>
-function update(e){
- let heading=typeof e.webkitCompassHeading==="number"?e.webkitCompassHeading:
- (typeof e.alpha==="number"?(360-e.alpha)%360:null);
- if(heading===null){info.textContent="এই ডিভাইসে কম্পাস সেন্সর পাওয়া যায়নি।";return}
- needle.style.transform="rotate("+heading+"deg)";
- degree.textContent=Math.round(heading)+"° — "+direction(heading);
+let listening=false;
+let lastHeading=0;
+function directionName(deg){
+ const names=['উত্তর','উত্তর-পূর্ব','পূর্ব','দক্ষিণ-পূর্ব','দক্ষিণ','দক্ষিণ-পশ্চিম','পশ্চিম','উত্তর-পশ্চিম'];
+ return names[Math.round(deg/45)%8];
 }
-function direction(d){return ["উত্তর","উত্তর-পূর্ব","পূর্ব","দক্ষিণ-পূর্ব","দক্ষিণ","দক্ষিণ-পশ্চিম","পশ্চিম","উত্তর-পশ্চিম"][Math.round(d/45)%8]}
-start.onclick=async()=>{
+function showHeading(deg){
+ if(!Number.isFinite(deg))return;
+ lastHeading=((deg%360)+360)%360;
+ document.getElementById('needle').style.transform='translate(-50%,-50%) rotate('+lastHeading+'deg)';
+ document.getElementById('degrees').textContent=Math.round(lastHeading)+'° — '+directionName(lastHeading);
+}
+function onOrientation(e){
+ let heading=null;
+ if(typeof e.webkitCompassHeading==='number') heading=e.webkitCompassHeading;
+ else if(typeof e.alpha==='number') heading=360-e.alpha;
+ if(heading!==null)showHeading(heading);
+}
+async function startCompass(){
+ if(!('DeviceOrientationEvent' in window)){
+  document.getElementById('status').textContent='এই ডিভাইস বা ব্রাউজারে দিক-নির্দেশক সেন্সর পাওয়া যায়নি।';
+  return;
+ }
  try{
-  if(typeof DeviceOrientationEvent==="undefined"){info.textContent="এই ব্রাউজারে কম্পাস সমর্থিত নয়।";return}
-  if(typeof DeviceOrientationEvent.requestPermission==="function"){
-   const p=await DeviceOrientationEvent.requestPermission();
-   if(p!=="granted"){info.textContent="সেন্সরের অনুমতি দেওয়া হয়নি।";return}
+  if(typeof DeviceOrientationEvent.requestPermission==='function'){
+   const permission=await DeviceOrientationEvent.requestPermission();
+   if(permission!=='granted'){
+    document.getElementById('status').textContent='সেন্সর ব্যবহারের অনুমতি দেওয়া হয়নি।';
+    return;
+   }
   }
-  window.addEventListener("deviceorientation",update,true);
-  info.textContent="ফোন সমতল রাখুন এবং কম্পাস ক্যালিব্রেট করুন।";
- }catch(e){info.textContent="কম্পাস চালু হয়নি: "+e.message}
-};
-</script></body></html>
+  if(!listening){
+   window.addEventListener('deviceorientation',onOrientation,true);
+   listening=true;
+  }
+  document.getElementById('status').textContent='সেন্সর চালু হয়েছে। ফোন ধীরে ঘোরান।';
+ }catch(err){
+  document.getElementById('status').textContent='সেন্সর চালু করা যায়নি। HTTPS সংযোগ ও ব্রাউজারের অনুমতি পরীক্ষা করুন।';
+ }
+}
+function stopCompass(){
+ if(listening)window.removeEventListener('deviceorientation',onOrientation,true);
+ listening=false;
+ document.getElementById('status').textContent='কম্পাস বন্ধ আছে।';
+}
+async function fullScreen(){
+ try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();}
+ catch(e){document.getElementById('status').textContent='এই ব্রাউজারে ফুল স্ক্রিন সুবিধা পাওয়া যাচ্ছে না।';}
+}
+</script>
+</body>
+</html>
