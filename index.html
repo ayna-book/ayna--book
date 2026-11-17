@@ -1,27 +1,132 @@
-JavaScript
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:12px;background:#071b49;color:white;font-family:Arial,sans-serif;font-size:19px}
+.container{max-width:1100px;margin:auto}
+.logo{width:85px;height:85px;border:3px solid white;border-radius:50%;margin:12px auto;display:grid;place-items:center;font-size:45px;animation:glow 2s infinite alternate}
+@keyframes glow{from{box-shadow:0 0 5px white}to{box-shadow:0 0 28px white,0 0 45px #00d9ff}}
+h1{text-align:center;font-size:35px}
+h2{text-align:center;font-size:26px}
+.tagline{text-align:center;font-size:18px}
+.panel{background:#102b60;border:2px solid #789bd2;border-radius:18px;padding:20px;margin:18px auto;max-width:700px}
+input{width:100%;padding:15px;margin:8px 0;border-radius:10px;border:2px solid #aac8ff;font-size:18px}
+button{padding:15px;border:0;border-radius:11px;background:white;color:#071b49;font-size:18px;font-weight:bold;cursor:pointer;margin:6px 0}
+.full{width:100%}.gold{background:#ffd700}.cyan{background:#00d9ff}
+.password{position:relative}.password input{padding-right:65px}
+.eye{position:absolute;right:5px;top:12px;background:transparent;font-size:22px;margin:0;padding:8px}
+.message{text-align:center;color:#ffe66d;min-height:25px;overflow-wrap:anywhere}
+.hidden{display:none!important}
+.profile{background:#153d7b;border:2px solid white;border-radius:15px;padding:18px;text-align:center;font-size:22px;overflow-wrap:anywhere}
+.ticker{background:white;color:#071b49;padding:15px;border-radius:12px;margin:18px 0;font-size:22px;font-weight:bold}
+.features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.feature{min-height:145px;background:#153d7b;border:2px solid #a8d1ff;border-radius:17px;color:white;text-decoration:none;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:21px;font-weight:bold;padding:12px;box-shadow:0 0 10px #00d9ff}
+.feature span{font-size:39px;margin-bottom:10px}
+.feature:active{transform:scale(.97)}
+.status{text-align:center;color:#bdeaff;font-size:15px}
+footer{text-align:center;padding:25px}
+@media(max-width:480px){body{padding:7px}h1{font-size:29px}.panel{padding:13px}.features{gap:9px}.feature{min-height:130px;font-size:17px;padding:8px}.feature span{font-size:33px}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<section id="authScreen">
+<div class="logo">👁</div>
+<h1>AYNA BOOK</h1>
+<p class="tagline">MY WORLD. MY STORY. MY AYNA BOOK.</p>
+<p class="tagline">Connect. Create. Share. Protect.</p>
+
+<div class="panel">
+<h2>নতুন অ্যাকাউন্ট তৈরি</h2>
+<form id="registerForm">
+<input id="regName" placeholder="আপনার পূর্ণ নাম" required maxlength="60">
+<input id="regPhone" type="tel" placeholder="মোবাইল নম্বর" required>
+<input id="regEmail" type="email" placeholder="Gmail / Email" required>
+<div class="password">
+<input id="regPass" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" required minlength="6">
+<button class="eye" type="button" data-eye="regPass">👁</button>
+</div>
+<div class="password">
+<input id="confirmPass" type="password" placeholder="পুনরায় পাসওয়ার্ড লিখুন" required>
+<button class="eye" type="button" data-eye="confirmPass">👁</button>
+</div>
+<button id="registerBtn" class="full gold" type="submit">REGISTER / ACCOUNT CREATE</button>
+</form>
+</div>
+
+<div class="panel">
+<h2>LOGIN</h2>
+<form id="loginForm">
+<input id="loginEmail" type="email" placeholder="Gmail / Email" required>
+<div class="password">
+<input id="loginPass" type="password" placeholder="Password" required>
+<button class="eye" type="button" data-eye="loginPass">👁</button>
+</div>
+<button id="loginBtn" class="full gold" type="submit">LOGIN</button>
+</form>
+<button id="forgotBtn" class="full cyan" type="button">FORGOT PASSWORD?</button>
+<button id="clearBtn" class="full" type="button">CLEAR</button>
+<p id="message" class="message" aria-live="polite"></p>
+<p id="connectionStatus" class="status">Firebase সংযোগ পরীক্ষা হচ্ছে...</p>
+</div>
+</section>
+
+<section id="dashboard" class="hidden">
+<div class="logo">👁</div>
+<h1>AYNA BOOK</h1>
+<p class="tagline">MY WORLD. MY STORY. MY AYNA BOOK.</p>
+<p class="tagline">Connect. Create. Share. Protect.</p>
+
+<div class="profile">
+<strong>MY PROFILE</strong>
+<p id="profileName">AYNA User</p>
+<p id="profileEmail"></p>
+<button id="logoutBtn" class="gold">LOGOUT</button>
+</div>
+
+<div class="ticker">
+<marquee scrollamount="5">
+🌍 AYNA BOOK GLOBAL HEADLINES • BANGLADESH • WORLD NEWS • TECHNOLOGY • SCIENCE • HUMANITY • GLOBAL SAFETY ALERTS
+</marquee>
+</div>
+
+<div class="features">
+<a class="feature" href="profile.html"><span>👤</span>PROFILE</a>
+<a class="feature" href="countries.html"><span>🌍</span>WORLD COUNTRIES</a>
+<a class="feature" href="radio-tv.html"><span>📻</span>WORLD RADIO & TV</a>
+<a class="feature" href="breaking-news.html"><span>📰</span>BREAKING NEWS</a>
+<a class="feature" href="global-alert.html"><span>🚨</span>150 GLOBAL ALERT</a>
+<a class="feature" href="gps.html"><span>📍</span>GPS LOCATION</a>
+<a class="feature" href="radar.html"><span>📡</span>WEATHER RADAR</a>
+<a class="feature" href="compass.html"><span>🧭</span>COMPASS</a>
+<a class="feature" href="hourly-clock.html"><span>🕒</span>HOURLY CLOCK</a>
+<a class="feature" href="chat.html"><span>💬</span>AYNA MESSENGER</a>
+<a class="feature" href="bd-directory.html"><span>🇧🇩</span>BANGLADESH DIRECTORY</a>
+<a class="feature" href="direction.html"><span>🗺️</span>DIRECTION</a>
+</div>
+
+<footer>AYNA BOOK<br>Connect. Create. Share. Protect.</footer>
+</section>
+</div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-
 import {
- getAuth,
- createUserWithEmailAndPassword,
- signInWithEmailAndPassword,
- sendPasswordResetEmail,
- updateProfile,
- onAuthStateChanged,
- signOut
+ getAuth,createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,sendPasswordResetEmail,
+ updateProfile,onAuthStateChanged,signOut
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-import {
- getFirestore,
- doc,
- setDoc,
- serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import {getFirestore,doc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+ apiKey:"AIzaSyAIW4FK9Il2yct-tOSKUuSodso8KN2UsTA",
  authDomain:"ayna-book.firebaseapp.com",
  databaseURL:"https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
  projectId:"ayna-book",
@@ -31,156 +136,109 @@ const firebaseConfig={
  measurementId:"G-JWBYNXSBMZ"
 };
 
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-
 const authScreen=document.getElementById("authScreen");
 const dashboard=document.getElementById("dashboard");
 const message=document.getElementById("message");
+const connection=document.getElementById("connectionStatus");
 
-function say(text){
- message.textContent=text;
-}
-
-function errorText(error){
+function say(t){message.textContent=t}
+function errorText(e){
  const errors={
- "auth/email-already-in-use":"এই Gmail দিয়ে আগে অ্যাকাউন্ট তৈরি হয়েছে।",
- "auth/invalid-email":"সঠিক Gmail লিখুন।",
- "auth/weak-password":"পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।",
- "auth/invalid-credential":"Gmail অথবা পাসওয়ার্ড সঠিক নয়।",
- "auth/user-not-found":"অ্যাকাউন্ট পাওয়া যায়নি।",
- "auth/network-request-failed":"ইন্টারনেট পরীক্ষা করুন।",
- "auth/too-many-requests":"কিছুক্ষণ পরে চেষ্টা করুন।",
- "auth/operation-not-allowed":"Firebase Email/Password চালু করুন।"
+ "auth/email-already-in-use":"এই ইমেইলে অ্যাকাউন্ট আছে। লগইন করুন।",
+ "auth/invalid-email":"সঠিক ইমেইল লিখুন।",
+ "auth/weak-password":"পাসওয়ার্ড আরও শক্তিশালী করুন।",
+ "auth/invalid-credential":"ইমেইল অথবা পাসওয়ার্ড ভুল।",
+ "auth/network-request-failed":"ইন্টারনেট সংযোগ পরীক্ষা করুন।",
+ "auth/too-many-requests":"কিছুক্ষণ পরে চেষ্টা করুন।"
  };
- return errors[error.code]||error.message||"সমস্যা হয়েছে।";
+ return errors[e.code]||e.message||"সমস্যা হয়েছে।";
 }
 
-/* PASSWORD SHOW */
-document.querySelectorAll("[data-eye]").forEach(button=>{
- button.addEventListener("click",()=>{
-  const input=document.getElementById(button.dataset.eye);
-  const showing=input.type==="password";
-  input.type=showing?"text":"password";
-  button.textContent=showing?"🙈":"👁";
+document.querySelectorAll("[data-eye]").forEach(b=>{
+ b.addEventListener("click",()=>{
+  const f=document.getElementById(b.dataset.eye);
+  f.type=f.type==="password"?"text":"password";
  });
 });
 
-/* REGISTRATION */
-document.getElementById("registerForm").addEventListener("submit",async event=>{
- event.preventDefault();
+let auth,db;
+try{
+ const app=initializeApp(firebaseConfig);
+ auth=getAuth(app);
+ db=getFirestore(app);
+ connection.textContent="Firebase প্রস্তুত";
+}catch(e){
+ connection.textContent="Firebase error: "+e.message;
+}
 
- const button=document.getElementById("registerBtn");
- const name=document.getElementById("name").value.trim();
- const phone=document.getElementById("phone").value.trim();
- const email=document.getElementById("regEmail").value.trim();
- const password=document.getElementById("regPass").value;
- const confirm=document.getElementById("confirmPass").value;
-
- if(password!==confirm){
-  say("দুটি পাসওয়ার্ড এক নয়।");
-  return;
- }
-
- button.disabled=true;
- say("অ্যাকাউন্ট তৈরি হচ্ছে...");
-
- try{
-  const result=await createUserWithEmailAndPassword(auth,email,password);
-  await updateProfile(result.user,{displayName:name});
-
+if(auth){
+ document.getElementById("registerForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const name=document.getElementById("regName").value.trim();
+  const phone=document.getElementById("regPhone").value.trim();
+  const email=document.getElementById("regEmail").value.trim();
+  const pass=document.getElementById("regPass").value;
+  const confirm=document.getElementById("confirmPass").value;
+  const btn=document.getElementById("registerBtn");
+  if(pass!==confirm){say("দুই পাসওয়ার্ড এক নয়।");return}
+  btn.disabled=true;
   try{
-   await setDoc(doc(db,"users",result.user.uid),{
-    uid:result.user.uid,
-    name:name,
-    phone:phone,
-    email:email,
-    createdAt:serverTimestamp()
-   });
-  }catch(dbError){
-   console.error(dbError);
-   say("অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু প্রোফাইল সংরক্ষণ হয়নি।");
+   const result=await createUserWithEmailAndPassword(auth,email,pass);
+   await updateProfile(result.user,{displayName:name});
+   try{
+    await setDoc(doc(db,"users",result.user.uid),{
+     uid:result.user.uid,name,phone,email,createdAt:serverTimestamp()
+    });
+   }catch(dbError){console.error(dbError)}
+   say("অ্যাকাউন্ট তৈরি হয়েছে!");
+  }catch(err){say(errorText(err))}
+  finally{btn.disabled=false}
+ });
+
+ document.getElementById("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const email=document.getElementById("loginEmail").value.trim();
+  const pass=document.getElementById("loginPass").value;
+  const btn=document.getElementById("loginBtn");
+  btn.disabled=true;
+  try{
+   await signInWithEmailAndPassword(auth,email,pass);
+   say("লগইন সফল!");
+  }catch(err){say(errorText(err))}
+  finally{btn.disabled=false}
+ });
+
+ document.getElementById("forgotBtn").addEventListener("click",async()=>{
+  const email=document.getElementById("loginEmail").value.trim();
+  if(!email){say("আগে ইমেইল লিখুন।");return}
+  try{
+   await sendPasswordResetEmail(auth,email);
+   say("পাসওয়ার্ড রিসেট ইমেইল পাঠানো হয়েছে।");
+  }catch(err){say(errorText(err))}
+ });
+
+ document.getElementById("clearBtn").addEventListener("click",()=>{
+  document.getElementById("registerForm").reset();
+  document.getElementById("loginForm").reset();
+  say("");
+ });
+
+ document.getElementById("logoutBtn").addEventListener("click",async()=>{
+  try{await signOut(auth)}catch(err){say(errorText(err))}
+ });
+
+ onAuthStateChanged(auth,user=>{
+  if(user){
+   authScreen.classList.add("hidden");
+   dashboard.classList.remove("hidden");
+   document.getElementById("profileName").textContent=user.displayName||"AYNA User";
+   document.getElementById("profileEmail").textContent=user.email||"";
+  }else{
+   dashboard.classList.add("hidden");
+   authScreen.classList.remove("hidden");
   }
-
-  say("AYNA BOOK অ্যাকাউন্ট তৈরি হয়েছে!");
- }catch(error){
-  say(errorText(error));
- }finally{
-  button.disabled=false;
- }
-});
-
-/* LOGIN */
-document.getElementById("loginForm").addEventListener("submit",async event=>{
- event.preventDefault();
-
- const button=document.getElementById("loginBtn");
- const email=document.getElementById("loginEmail").value.trim();
- const password=document.getElementById("loginPass").value;
-
- button.disabled=true;
- say("লগইন হচ্ছে...");
-
- try{
-  await signInWithEmailAndPassword(auth,email,password);
-  say("লগইন সফল হয়েছে!");
- }catch(error){
-  say(errorText(error));
- }finally{
-  button.disabled=false;
- }
-});
-
-/* PASSWORD RESET */
-document.getElementById("forgotBtn").addEventListener("click",async()=>{
- const email=document.getElementById("loginEmail").value.trim();
-
- if(!email){
-  say("প্রথমে লগইন ঘরে Gmail লিখুন।");
-  return;
- }
-
- try{
-  await sendPasswordResetEmail(auth,email);
-  say("Gmail-এ Password Reset Link পাঠানো হয়েছে।");
- }catch(error){
-  say(errorText(error));
- }
-});
-
-/* CLEAR FORM */
-document.getElementById("clearBtn").addEventListener("click",()=>{
- document.getElementById("registerForm").reset();
- document.getElementById("loginForm").reset();
- say("ফর্ম পরিষ্কার হয়েছে।");
-});
-
-/* LOGOUT */
-document.getElementById("logoutBtn").addEventListener("click",async()=>{
- try{
-  await signOut(auth);
- }catch(error){
-  say(errorText(error));
- }
-});
-
-/* AUTH STATE */
-onAuthStateChanged(auth,user=>{
- if(user){
-  authScreen.classList.add("hidden");
-  dashboard.classList.remove("hidden");
-
-  document.getElementById("profileName").textContent=
-   user.displayName||"AYNA BOOK USER";
-
-  document.getElementById("profileEmail").textContent=
-   user.email||"";
- }else{
-  dashboard.classList.add("hidden");
-  authScreen.classList.remove("hidden");
- }
-});
+ });
+}
 </script>
 </body>
 </html>
