@@ -1,20 +1,125 @@
 
-<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AYNA Radio TV</title>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK - World Radio & TV</title>
 <style>
-body{margin:0;padding:18px;background:#071b49;color:white;font-family:Arial}main{max-width:750px;margin:auto}h1,h2{color:#ffd700}.card{padding:15px;margin:12px 0;border:1px solid #ffd700;border-radius:13px;background:#142d5d}a{color:#ffd700}input,button{padding:13px;border:0;border-radius:8px;margin:5px}button{background:#ffd700;font-weight:bold}iframe{width:100%;height:230px;border:0;border-radius:12px}
-</style></head><body><main>
-<h1>📻 AYNA RADIO & TV</h1><p>বাংলাদেশ ও বিশ্বের রেডিও-টিভি</p>
-<div class="card"><h2>লাইভ প্লেয়ার</h2><video id="player" controls playsinline style="width:100%;max-height:250px"></video><p id="msg">অনুমোদিত MP4/HLS স্ট্রিম URL যোগ করুন।</p>
-<input id="url" type="url" placeholder="স্ট্রিম URL লিখুন"><button id="play">চালু করুন</button></div>
-<div class="card"><h2>চ্যানেলের অফিসিয়াল ওয়েবসাইট</h2>
-<ul>
-<li><a href="https://www.btv.gov.bd/" target="_blank" rel="noopener">বাংলাদেশ টেলিভিশন (BTV)</a></li>
-<li><a href="https://www.betar.gov.bd/" target="_blank" rel="noopener">বাংলাদেশ বেতার</a></li>
-<li><a href="https://www.bbc.com/bengali" target="_blank" rel="noopener">BBC বাংলা</a></li>
-<li><a href="https://www.dw.com/bn" target="_blank" rel="noopener">DW বাংলা</a></li>
-<li><a href="https://www.aljazeera.com/" target="_blank" rel="noopener">Al Jazeera</a></li>
-</ul></div>
-<p><a href="index.html" style="color:#ffd700">← AYNA BOOK হোম</a></p>
-</main><script>
-play.onclick=()=>{let u=url.value.trim();if(!/^https:\/\//i.test(u)){msg.textContent="নিরাপদ HTTPS স্ট্রিম URL দিন।";return}player.src=u;player.play().then(()=>msg.textContent="প্লে হচ্ছে").catch(()=>msg.textContent="এই লিংকটি সরাসরি প্লে নাও হতে পারে; চ্যানেলের ওয়েবসাইট ব্যবহার করুন।")};
-</script></body></html>
+*{box-sizing:border-box}
+body{margin:0;background:#071b49;color:white;font-family:Arial,sans-serif}
+header{padding:18px;text-align:center;background:#102b60;border-bottom:2px solid #ffd700}
+header h1{color:#ffd700;margin:5px;font-size:27px}
+header p{font-size:16px}
+.container{max-width:1100px;margin:auto;padding:18px}
+.back{display:inline-block;color:#ffd700;text-decoration:none;font-size:18px;margin-bottom:15px}
+.search{width:100%;padding:16px;border-radius:12px;border:2px solid #ffd700;font-size:18px;margin:12px 0 20px}
+h2{color:#ffd700;font-size:24px}
+.channels{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.card{background:#142d5d;border:1px solid #ffd700;border-radius:14px;padding:18px}
+.card h3{font-size:20px;margin:0 0 10px;color:#ffe98a}
+.card p{font-size:15px;line-height:1.5}
+.card a{display:inline-block;background:#ffd700;color:#071b49;padding:11px 15px;border-radius:8px;text-decoration:none;font-weight:bold}
+#player{width:100%;background:#000;border:2px solid #ffd700;border-radius:12px;margin-top:12px;display:none}
+.notice{background:#142d5d;padding:15px;border-radius:12px;border:1px solid #ffd700;line-height:1.6}
+footer{text-align:center;padding:25px;color:#ddd}
+</style>
+</head>
+<body>
+<header>
+<h1>👁 AYNA BOOK</h1>
+<p>🌍 WORLD RADIO & TELEVISION</p>
+<p>বাংলাদেশ ও সারাবিশ্বের সম্প্রচার</p>
+</header>
+
+<main class="container">
+<a class="back" href="index.html">← Dashboard</a>
+
+<h2>📺 বিশ্ব টেলিভিশন ও রেডিও</h2>
+<input class="search" id="search" placeholder="দেশ অথবা চ্যানেলের নাম লিখুন...">
+
+<div class="notice">
+<strong>বিশ্ব সম্প্রচার কেন্দ্র</strong><br>
+চ্যানেলের অফিসিয়াল ওয়েবসাইট খুলতে নিচের বাটনে চাপ দিন।
+সব ওয়েবসাইটে সরাসরি ভিডিও চালানো সম্ভব নাও হতে পারে।
+</div>
+
+<h2>🇧🇩 বাংলাদেশ</h2>
+<div class="channels">
+<div class="card"><h3>বাংলাদেশ টেলিভিশন (BTV)</h3><p>বাংলাদেশের জাতীয় টেলিভিশন।</p><a target="_blank" rel="noopener" href="https://www.btv.gov.bd/">চ্যানেল খুলুন</a></div>
+<div class="card"><h3>বাংলাদেশ বেতার</h3><p>জাতীয় রেডিও সম্প্রচার।</p><a target="_blank" rel="noopener" href="https://www.betar.gov.bd/">রেডিও শুনুন</a></div>
+<div class="card"><h3>BBC Bangla</h3><p>বাংলা ভাষায় আন্তর্জাতিক সংবাদ।</p><a target="_blank" rel="noopener" href="https://www.bbc.com/bengali">খবর দেখুন</a></div>
+</div>
+
+<h2>🌏 এশিয়া</h2>
+<div class="channels">
+<div class="card"><h3>NHK World - Japan</h3><p>জাপানের আন্তর্জাতিক সংবাদ ও টিভি।</p><a target="_blank" rel="noopener" href="https://www3.nhk.or.jp/nhkworld/">Watch / Listen</a></div>
+<div class="card"><h3>CGTN - China</h3><p>চীনের আন্তর্জাতিক সংবাদ।</p><a target="_blank" rel="noopener" href="https://www.cgtn.com/">Watch</a></div>
+<div class="card"><h3>DD News - India</h3><p>ভারতের সংবাদ সম্প্রচার।</p><a target="_blank" rel="noopener" href="https://www.ddnews.gov.in/">Watch</a></div>
+<div class="card"><h3>PTV - Pakistan</h3><p>পাকিস্তানের রাষ্ট্রীয় টেলিভিশন।</p><a target="_blank" rel="noopener" href="https://www.ptv.com.pk/">Watch</a></div>
+</div>
+
+<h2>🌍 ইউরোপ</h2>
+<div class="channels">
+<div class="card"><h3>BBC World</h3><p>যুক্তরাজ্যের আন্তর্জাতিক সম্প্রচার।</p><a target="_blank" rel="noopener" href="https://www.bbc.com/">Visit</a></div>
+<div class="card"><h3>DW - Germany</h3><p>জার্মানির আন্তর্জাতিক সংবাদ।</p><a target="_blank" rel="noopener" href="https://www.dw.com/">Watch</a></div>
+<div class="card"><h3>France 24</h3><p>ফ্রান্সের আন্তর্জাতিক সংবাদ।</p><a target="_blank" rel="noopener" href="https://www.france24.com/">Watch</a></div>
+<div class="card"><h3>Euronews</h3><p>ইউরোপীয় সংবাদ সম্প্রচার।</p><a target="_blank" rel="noopener" href="https://www.euronews.com/">Watch</a></div>
+</div>
+
+<h2>🌎 আমেরিকা</h2>
+<div class="channels">
+<div class="card"><h3>VOA</h3><p>যুক্তরাষ্ট্রের আন্তর্জাতিক সম্প্রচার।</p><a target="_blank" rel="noopener" href="https://www.voanews.com/">Listen / Watch</a></div>
+<div class="card"><h3>CBC - Canada</h3><p>কানাডার সংবাদ ও অনুষ্ঠান।</p><a target="_blank" rel="noopener" href="https://www.cbc.ca/">Visit</a></div>
+<div class="card"><h3>NASA TV</h3><p>মহাকাশ ও বিজ্ঞান সম্প্রচার।</p><a target="_blank" rel="noopener" href="https://www.nasa.gov/nasatv/">Watch</a></div>
+</div>
+
+<h2>🌍 মধ্যপ্রাচ্য ও আফ্রিকা</h2>
+<div class="channels">
+<div class="card"><h3>Al Jazeera</h3><p>কাতারের আন্তর্জাতিক সংবাদ।</p><a target="_blank" rel="noopener" href="https://www.aljazeera.com/">Watch</a></div>
+<div class="card"><h3>Al Arabiya</h3><p>আরবি ভাষার সংবাদ সম্প্রচার।</p><a target="_blank" rel="noopener" href="https://www.alarabiya.net/">Visit</a></div>
+<div class="card"><h3>SABC - South Africa</h3><p>দক্ষিণ আফ্রিকার সম্প্রচার কেন্দ্র।</p><a target="_blank" rel="noopener" href="https://www.sabc.co.za/">Visit</a></div>
+<div class="card"><h3>Channels TV - Nigeria</h3><p>নাইজেরিয়ার সংবাদ সম্প্রচার।</p><a target="_blank" rel="noopener" href="https://www.channelstv.com/">Watch</a></div>
+</div>
+
+<h2>🔎 সরাসরি স্ট্রিম প্লেয়ার</h2>
+<p>কোনো চ্যানেল বৈধ সরাসরি HTTPS অডিও বা ভিডিও স্ট্রিম URL দিলে এখানে চালানোর চেষ্টা করতে পারেন।</p>
+<input class="search" id="streamUrl" type="url" placeholder="HTTPS stream URL লিখুন">
+<button id="playBtn" style="padding:14px;background:#ffd700;color:#071b49;border:0;border-radius:9px;font-weight:bold">স্ট্রিম চালান</button>
+<video id="player" controls playsinline></video>
+<p id="status"></p>
+</main>
+
+<footer>© AYNA BOOK - WORLD RADIO & TV</footer>
+
+<script>
+const search=document.getElementById("search");
+search.addEventListener("input",()=>{
+ const q=search.value.toLowerCase();
+ document.querySelectorAll(".card").forEach(card=>{
+  card.style.display=card.textContent.toLowerCase().includes(q)?"block":"none";
+ });
+});
+
+document.getElementById("playBtn").addEventListener("click",()=>{
+ const url=document.getElementById("streamUrl").value.trim();
+ const player=document.getElementById("player");
+ const status=document.getElementById("status");
+
+ if(!url.startsWith("https://")){
+  status.textContent="নিরাপত্তার জন্য HTTPS স্ট্রিম URL ব্যবহার করুন।";
+  return;
+ }
+ player.src=url;
+ player.style.display="block";
+ player.load();
+ player.play().then(()=>{
+  status.textContent="স্ট্রিম চালু হয়েছে।";
+ }).catch(()=>{
+  status.textContent="এই স্ট্রিম ব্রাউজারে চালানো যাচ্ছে না। URL বা স্ট্রিম ফরম্যাট পরীক্ষা করুন।";
+ });
+});
+</script>
+</body>
+</html>
