@@ -1,90 +1,54 @@
 
 /* ======================================================
    AYNA BOOK — FIREBASE INITIALIZATION
-   Firebase App + Authentication + Firestore
+   Firebase SDK Version: 13.4.0
    ====================================================== */
 
-import { initializeApp, getApp, getApps } from
-  "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import {
+  initializeApp,
+  getApp,
+  getApps
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
-import { getAuth } from
-  "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import {
+  getAuth
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-import { getFirestore } from
-  "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import {
+  getFirestore
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
+import {
+  getDatabase
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
-// ======================================================
-// FIREBASE CONFIGURATION
-// ======================================================
+import {
+  getStorage
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-// এখানে Firebase Console থেকে পাওয়া সঠিক তথ্য বসান।
-
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-
-
-// ======================================================
-// VALIDATE CONFIGURATION
-// ======================================================
-
-const requiredFields = [
-  "apiKey",
-  "authDomain",
-  "projectId",
-  "appId"
-];
-
-for (const field of requiredFields) {
-  if (
-    !firebaseConfig[field] ||
-    firebaseConfig[field].startsWith("YOUR_")
-  ) {
-    throw new Error(
-      `AYNA BOOK Firebase configuration missing: ${field}`
-    );
-  }
-}
+import { firebaseConfig } from "./firebase-config.js";
 
 
-// ======================================================
-// INITIALIZE FIREBASE
-// ======================================================
-
-const app = getApps().length
+// Initialize Firebase App only once
+export const app = getApps().length
   ? getApp()
   : initializeApp(firebaseConfig);
 
 
-// ======================================================
-// FIREBASE AUTHENTICATION
-// ======================================================
-
+// Firebase Authentication
 export const auth = getAuth(app);
 
 
-// ======================================================
-// FIRESTORE DATABASE
-// ======================================================
-
+// Cloud Firestore
 export const db = getFirestore(app);
 
 
-// ======================================================
-// EXPORT FIREBASE APP
-// ======================================================
-
-export { app };
+// Realtime Database
+export const database = getDatabase(app);
 
 
-// ======================================================
-// INITIALIZATION COMPLETE
-// ======================================================
+// Firebase Storage
+export const storage = getStorage(app);
 
-console.log("AYNA BOOK Firebase initialized successfully.");
+
+console.log("AYNA BOOK Firebase initialized.");
