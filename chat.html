@@ -1,104 +1,31 @@
-
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AYNA MESSENGER</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#071b49;color:white;font-family:Arial}
-header{padding:18px;background:#142d5d;border-bottom:2px solid #ffd700}
-h1{color:#ffd700;margin:0}
-main{max-width:700px;margin:auto;padding:15px}
-#messages{height:65vh;overflow-y:auto;background:#102653;border:1px solid #ffd700;border-radius:14px;padding:12px}
-.msg{background:#203c70;border-radius:10px;padding:12px;margin:9px 0;overflow-wrap:anywhere}
-.msg b{color:#ffd700}
-.msg small{display:block;color:#cbd8ed;margin-top:5px}
-form{display:flex;gap:8px;margin-top:12px}
-input{flex:1;min-width:0;padding:15px;border:0;border-radius:10px}
-button{padding:14px;background:#ffd700;color:#071b49;border:0;border-radius:10px;font-weight:bold}
-#status{color:#ffe58a}
-a{color:#ffd700}
-</style>
-</head>
-<body>
-<header><h1>👁 AYNA MESSENGER</h1></header>
-<main>
-<p id="status">Firebase সংযোগ পরীক্ষা হচ্ছে...</p>
-<div id="messages"></div>
-<form id="sendForm">
-<input id="messageInput" maxlength="1000" placeholder="আপনার মেসেজ লিখুন..." required>
-<button type="submit">পাঠান</button>
-</form>
-<p><a href="index.html">← AYNA BOOK হোম</a></p>
-</main>
+<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071b49"><title>AYNA MESSENGER</title><style>
+*{box-sizing:border-box}body{margin:0;background:#071b49;color:#fff;font-family:Arial,sans-serif}header{text-align:center;padding:17px;background:#142d5d;border-bottom:2px solid #ffd700}h1{font-size:29px;color:#fff}main{max-width:900px;margin:auto;padding:14px}#status,#callStatus{font-size:17px;color:#ffe98a;line-height:1.6}#messages{height:38vh;min-height:240px;overflow:auto;background:#102653;border:2px solid #ffd700;border-radius:14px;padding:12px}.msg{background:#203c70;border-radius:10px;padding:13px;margin:9px 0;font-size:18px;overflow-wrap:anywhere}.msg small{display:block;color:#dce6ff;margin-top:6px}form,.row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}input{flex:1;min-width:180px;padding:14px;border-radius:10px;border:1px solid #9bb2dc;font-size:17px}button{padding:13px 15px;background:#ffd700;color:#071b49;border:0;border-radius:10px;font-size:16px;font-weight:bold}button:disabled{opacity:.5}.box{background:#142d5d;border:2px solid #ffd700;border-radius:14px;padding:16px;margin-top:16px}video{width:100%;max-height:38vh;background:#000;border-radius:10px;margin-top:10px}#localVideo{max-width:200px;max-height:140px}a{color:#ffd700;font-size:18px}
+</style></head><body><header><h1>👁 AYNA MESSENGER</h1><p>মেসেজ • অডিও কল • HD ভিডিও কল</p></header><main>
+<p id="status">Firebase সংযোগ হচ্ছে...</p><div id="messages"></div>
+<form id="sendForm"><input id="messageInput" maxlength="1000" placeholder="আপনার মেসেজ লিখুন..." required><button>পাঠান</button></form>
+<section class="box"><h2>📞 অডিও / ভিডিও কল</h2><p>অপর AYNA BOOK ব্যবহারকারীর User UID লিখুন। দুজনকেই মেসেঞ্জার পেজ খোলা রাখতে হবে।</p>
+<div class="row"><input id="targetUid" placeholder="অপর ব্যবহারকারীর User UID"><button id="audioCall">অডিও কল</button><button id="videoCall">ভিডিও কল</button></div>
+<p id="callStatus">কলের জন্য মাইক্রোফোন/ক্যামেরার অনুমতি প্রয়োজন।</p><div class="row"><button id="accept" hidden>কল ধরুন</button><button id="reject" hidden>প্রত্যাখ্যান</button><button id="end" hidden>কল শেষ</button></div>
+<video id="remoteVideo" autoplay playsinline></video><video id="localVideo" autoplay muted playsinline></video></section>
+<p><a href="index.html">← AYNA BOOK হোম</a></p></main>
 <script type="module">
 import{initializeApp,getApps}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-import{getDatabase,ref,push,onValue,query,limitToLast,serverTimestamp}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
-
-const config={
- apiKey:"AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
- authDomain:"ayna-book.firebaseapp.com",
- databaseURL:"https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
- projectId:"ayna-book",
- storageBucket:"ayna-book.firebasestorage.app",
- messagingSenderId:"805601138500",
- appId:"1:805601138500:web:81a9adacbedbc5f3626911"
-};
-const app=getApps().length?getApps()[0]:initializeApp(config);
-const auth=getAuth(app);
-const db=getDatabase(app);
-const chatRef=ref(db,"publicChat");
-let user=null;
-
-onAuthStateChanged(auth,u=>{
- user=u;
- status.textContent=u?"লগইন সফল — মেসেজ পাঠাতে পারবেন।":"আগে AYNA BOOK-এ লগইন করুন।";
-});
-
-onValue(query(chatRef,limitToLast(100)),snapshot=>{
- messages.replaceChildren();
- snapshot.forEach(child=>{
-  const m=child.val();
-  const box=document.createElement("div");
-  box.className="msg";
-  const sender=document.createElement("b");
-  sender.textContent=m.name||"AYNA User";
-  const body=document.createElement("div");
-  body.textContent=m.text||"";
-  const time=document.createElement("small");
-  time.textContent=m.time||"";
-  box.append(sender,body,time);
-  messages.appendChild(box);
- });
- messages.scrollTop=messages.scrollHeight;
-},error=>{
- status.textContent="মেসেজ লোড হয়নি: "+error.message;
-});
-
-sendForm.addEventListener("submit",async e=>{
- e.preventDefault();
- if(!user){status.textContent="মেসেজ পাঠাতে আগে লগইন করুন।";return}
- const text=messageInput.value.trim();
- if(!text)return;
- const button=sendForm.querySelector("button");
- button.disabled=true;
- try{
-  await push(chatRef,{
-   uid:user.uid,
-   name:user.displayName||user.email||"AYNA User",
-   text:text,
-   time:new Date().toLocaleString("bn-BD"),
-   createdAt:Date.now()
-  });
-  messageInput.value="";
-  status.textContent="মেসেজ পাঠানো হয়েছে।";
- }catch(error){
-  status.textContent="মেসেজ পাঠানো যায়নি: "+error.message;
- }finally{button.disabled=false}
-});
-</script>
-</body>
-</html>
+import{getDatabase,ref,push,set,update,onValue,onChildAdded,query,limitToLast,remove}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+const cfg={apiKey:"AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",authDomain:"ayna-book.firebaseapp.com",databaseURL:"https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"ayna-book",storageBucket:"ayna-book.firebasestorage.app",messagingSenderId:"805601138500",appId:"1:805601138500:web:81a9adacbedbc5f3626911"};
+const app=getApps().length?getApps()[0]:initializeApp(cfg),auth=getAuth(app),db=getDatabase(app),$=id=>document.getElementById(id);
+let user=null,pc=null,stream=null,callId=null,role=null,callUnsub=null,candidateUnsub=null,incomingUnsub=null,calleeUid=null;
+const chatRef=ref(db,'publicChat'),callPath=id=>ref(db,'calls/'+id);
+function say(t){$('callStatus').textContent=t;}
+onAuthStateChanged(auth,u=>{user=u;$('status').textContent=u?'লগইন হয়েছে। আপনার UID: '+u.uid:'আগে AYNA BOOK-এ লগইন করুন।';if(u)listenIncoming();});
+onValue(query(chatRef,limitToLast(100)),s=>{$('messages').replaceChildren();s.forEach(ch=>{const d=ch.val(),b=document.createElement('div');b.className='msg';const n=document.createElement('b');n.textContent=d.name||'AYNA User';const t=document.createElement('div');t.textContent=d.text||'';const tm=document.createElement('small');tm.textContent=d.time||'';b.append(n,t,tm);$('messages').append(b);});$('messages').scrollTop=$('messages').scrollHeight;},e=>$('status').textContent='মেসেজ লোড হয়নি: '+e.message);
+$('sendForm').onsubmit=async e=>{e.preventDefault();if(!user){$('status').textContent='আগে লগইন করুন।';return;}const t=$('messageInput').value.trim();if(!t)return;try{await push(chatRef,{uid:user.uid,name:user.displayName||user.email||'AYNA User',text:t,time:new Date().toLocaleString('bn-BD'),createdAt:Date.now()});$('messageInput').value='';}catch(x){$('status').textContent='পাঠানো যায়নি: '+x.message;}};
+async function media(video){return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:video?{width:{ideal:1280},height:{ideal:720},frameRate:{ideal:30}}:false});}
+function peer(id,isCaller){pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]});pc.ontrack=e=>$('remoteVideo').srcObject=e.streams[0];pc.onicecandidate=e=>{if(e.candidate)push(ref(db,'calls/'+id+'/'+(isCaller?'callerCandidates':'calleeCandidates')),e.candidate.toJSON()).catch(console.error);};pc.onconnectionstatechange=()=>say('কল সংযোগ: '+pc.connectionState);stream.getTracks().forEach(t=>pc.addTrack(t,stream));candidateUnsub=onChildAdded(ref(db,'calls/'+id+'/'+(isCaller?'calleeCandidates':'callerCandidates')),s=>{if(pc&&s.val())pc.addIceCandidate(new RTCIceCandidate(s.val())).catch(console.warn);});}
+function watchIncoming(){if(incomingUnsub)incomingUnsub();incomingUnsub=onValue(ref(db,'incomingCalls/'+user.uid),s=>{if(!user||callId)return;s.forEach(ch=>{const d=ch.val();if(d&&d.callId&&!callId){callId=d.callId;role='callee';say((d.callerName||'AYNA User')+' আপনাকে '+(d.type==='video'?'ভিডিও':'অডিও')+' কল করছেন।');$('accept').hidden=false;$('reject').hidden=false;}});});}
+async function start(video){if(!user){say('আগে লগইন করুন।');return;}const target=$('targetUid').value.trim();if(!target||target===user.uid){say('অপর ব্যবহারকারীর সঠিক UID লিখুন।');return;}try{say('মাইক্রোফোন/ক্যামেরা চালু হচ্ছে...');stream=await media(video);$('localVideo').srcObject=stream;const r=push(ref(db,'calls'));callId=r.key;role='caller';calleeUid=target;await set(r,{callerUid:user.uid,calleeUid:target,callerName:user.displayName||user.email||'AYNA User',type:video?'video':'audio',status:'ringing',createdAt:Date.now()});await set(ref(db,'incomingCalls/'+target+'/'+callId),{callId,callerUid:user.uid,callerName:user.displayName||user.email||'AYNA User',type:video?'video':'audio',createdAt:Date.now()});peer(callId,true);const offer=await pc.createOffer();await pc.setLocalDescription(offer);await update(r,{offer:{type:offer.type,sdp:offer.sdp}});$('end').hidden=false;say('কল করা হচ্ছে; অপর পক্ষের উত্তর অপেক্ষা করুন।');callUnsub=onValue(r,s=>{const d=s.val();if(d?.answer&&pc&&!pc.currentRemoteDescription)pc.setRemoteDescription(new RTCSessionDescription(d.answer));if(d&&(d.status==='ended'||d.status==='rejected'))finish(false);});}catch(e){say('কল শুরু হয়নি: '+e.message+'। HTTPS ও মাইক্রোফোন/ক্যামেরা অনুমতি পরীক্ষা করুন।');finish(false);}}
+async function accept(){try{const s=await new Promise((resolve,reject)=>{let stop;stop=onValue(callPath(callId),v=>{stop();resolve(v);},reject);});const d=s.val();if(!d?.offer)throw Error('কলের offer পাওয়া যায়নি');await remove(ref(db,'incomingCalls/'+user.uid+'/'+callId));stream=await media(d.type==='video');$('localVideo').srcObject=stream;peer(callId,false);await pc.setRemoteDescription(new RTCSessionDescription(d.offer));const a=await pc.createAnswer();await pc.setLocalDescription(a);await update(callPath(callId),{answer:{type:a.type,sdp:a.sdp},status:'accepted'});$('accept').hidden=true;$('reject').hidden=true;$('end').hidden=false;say('কল সংযুক্ত হচ্ছে...');callUnsub=onValue(callPath(callId),v=>{if(v.val()?.status==='ended')finish(false);});}catch(e){say('কল ধরা যায়নি: '+e.message);finish(false);}}
+async function finish(remote=true){const id=callId;if(id&&user)try{await remove(ref(db,'incomingCalls/'+user.uid+'/'+id));}catch(e){}if(id&&calleeUid)try{await remove(ref(db,'incomingCalls/'+calleeUid+'/'+id));}catch(e){}if(remote&&id)try{await update(callPath(id),{status:'ended'});}catch(e){}if(callUnsub){callUnsub();callUnsub=null;}if(candidateUnsub){candidateUnsub();candidateUnsub=null;}if(pc){pc.close();pc=null;}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}$('localVideo').srcObject=null;$('remoteVideo').srcObject=null;$('accept').hidden=true;$('reject').hidden=true;$('end').hidden=true;callId=null;role=null;calleeUid=null;}
+$('audioCall').onclick=()=>start(false);$('videoCall').onclick=()=>start(true);$('accept').onclick=accept;$('reject').onclick=async()=>{if(callId)try{await update(callPath(callId),{status:'rejected'});}catch(e){}say('কল প্রত্যাখ্যান করা হয়েছে।');finish(false);};$('end').onclick=()=>{say('কল শেষ হয়েছে।');finish(true);};
+window.addEventListener('pagehide',()=>{if(pc)finish(true);});
+</script></body></html>
