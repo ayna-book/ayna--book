@@ -1,16 +1,49 @@
-<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071b49"><title>AYNA BOOK GPS</title><style>
-*{box-sizing:border-box}body{margin:0;background:#071b49;color:#fff;font-family:Arial,sans-serif}header{text-align:center;padding:18px;background:#102b60;border-bottom:2px solid #ffd700}h1{color:#fff;font-size:30px}main{max-width:850px;margin:auto;padding:16px}.panel{background:#142d5d;border:2px solid #ffd700;border-radius:15px;padding:20px;margin:12px 0}h2{font-size:25px;color:#fff}p,#result{font-size:19px;line-height:1.7;overflow-wrap:anywhere}button,a{display:inline-block;padding:14px 17px;margin:5px;border:0;border-radius:10px;background:#ffd700;color:#071b49;font-size:18px;font-weight:bold;text-decoration:none}#mapLink[hidden]{display:none}.muted{color:#dce6ff;font-size:16px}
-</style></head><body><header><h1>👁 AYNA BOOK — GPS</h1><p>আপনার অবস্থান ও মানচিত্র</p></header><main>
-<div class="panel"><h2>📍 বর্তমান অবস্থান</h2><p>ফোনের Location চালু করুন এবং ব্রাউজারে অনুমতি দিন। GPS ব্যবহারের জন্য HTTPS প্রয়োজন।</p>
-<button id="locateBtn">আমার অবস্থান দেখান</button><button id="watchBtn">লাইভ অবস্থান চালু</button><button id="stopBtn">বন্ধ করুন</button>
-<div id="result" role="status">এখনো অবস্থান নেওয়া হয়নি।</div><p id="accuracy" class="muted">নির্ভুলতা: অপেক্ষমাণ</p><a id="mapLink" target="_blank" rel="noopener" hidden>Google Maps-এ খুলুন</a></div>
-<a href="index.html">← AYNA BOOK হোম</a></main>
-<script>
-const resultEl=document.getElementById('result'),accuracyEl=document.getElementById('accuracy'),mapLink=document.getElementById('mapLink');let watchId=null;
-function success(pos){const c=pos.coords,lat=c.latitude,lon=c.longitude;resultEl.textContent='অক্ষাংশ: '+lat.toFixed(6)+' | দ্রাঘিমাংশ: '+lon.toFixed(6);accuracyEl.textContent='নির্ভুলতা: প্রায় '+Math.round(c.accuracy)+' মিটার';mapLink.href='https://www.google.com/maps?q='+lat+','+lon;mapLink.hidden=false;}
-function failure(e){const m={1:'Location অনুমতি দেওয়া হয়নি। Browser Settings থেকে অনুমতি দিন।',2:'অবস্থান পাওয়া যায়নি। ফোনের Location/GPS চালু করুন।',3:'সময় শেষ হয়েছে। আবার চেষ্টা করুন।'};resultEl.textContent=m[e.code]||e.message;}
-const opts={enableHighAccuracy:true,timeout:25000,maximumAge:0};
-document.getElementById('locateBtn').onclick=()=>{if(!window.isSecureContext){resultEl.textContent='HTTPS ওয়েবসাইট খুলুন।';return;}if(!navigator.geolocation){resultEl.textContent='এই ব্রাউজারে GPS সমর্থিত নয়।';return;}resultEl.textContent='অবস্থান খোঁজা হচ্ছে...';navigator.geolocation.getCurrentPosition(success,failure,opts);};
-document.getElementById('watchBtn').onclick=()=>{if(!navigator.geolocation){resultEl.textContent='GPS সমর্থিত নয়।';return;}if(watchId!==null)navigator.geolocation.clearWatch(watchId);resultEl.textContent='লাইভ অবস্থান চালু হচ্ছে...';watchId=navigator.geolocation.watchPosition(success,failure,opts);};
-document.getElementById('stopBtn').onclick=()=>{if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;resultEl.textContent='লাইভ অবস্থান বন্ধ।';};
-</script></body></html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লাইভ জিপিএস - AYNA GPS</title>
+    <style>
+        body { background: #090a0f; color: #fff; font-family: sans-serif; padding: 20px; border: 3px solid #ffd700; min-height: 100vh; margin: 0; font-size: 18px; }
+        .card { background: rgba(255,255,255,0.08); border: 2px solid #ffd700; border-radius: 14px; padding: 20px; text-align: center; margin-top: 20px; }
+        button { padding: 14px 24px; background: #ffd700; color: #000; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 15px; }
+        a.back { color: #ffd700; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+        #coords { margin-top: 18px; font-size: 1.1rem; color: #ffd700; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back">← হোমে ফিরে যান</a>
+    <div class="card">
+        <h2 style="color: #ffd700;">📍 AYNA লাইভ জিপিএস</h2>
+        <p>আপনার বর্তমান অবস্থান জানতে নিচের বাটনে চাপ দিন</p>
+        <button onclick="getLocation()">লোকেশন বের করুন</button>
+        <div id="coords">অপেক্ষা করা হচ্ছে...</div>
+    </div>
+
+    <script>
+        function getLocation() {
+            const output = document.getElementById('coords');
+            if (!navigator.geolocation) {
+                output.textContent = "আপনার ব্রাউজারে জিপিএস সাপোর্ট নেই।";
+                return;
+            }
+            output.textContent = "লোকেশন খোঁজা হচ্ছে...";
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude.toFixed(6);
+                    const lon = pos.coords.longitude.toFixed(6);
+                    output.innerHTML = `
+                        অক্ষাংশ (Latitude): <strong>${lat}</strong><br>
+                        দ্রাঘিমাংশ (Longitude): <strong>${lon}</strong><br><br>
+                        <a href="https://maps.google.com/?q=${lat},${lon}" target="_blank" style="color:#00ffcc; text-decoration:underline;">গুগল ম্যাপে দেখুন</a>
+                    `;
+                },
+                (err) => {
+                    output.textContent = "লোকেশন পারমিশন চালু করুন। (" + err.message + ")";
+                }
+            );
+        }
+    </script>
+</body>
+</html>
