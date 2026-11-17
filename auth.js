@@ -1,35 +1,32 @@
-// ======================================================
-// AYNA BOOK — Authentication
-// Firebase Authentication + Firestore
-// ======================================================
 
-import {
-  auth,
-  db
-} from "./firebase-init.js";
+/* ======================================================
+   AYNA BOOK — AUTHENTICATION SYSTEM
+   Firebase Authentication + Cloud Firestore
+   ====================================================== */
+
+import { auth, db } from "./firebase-init.js";
 
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 import {
   doc,
   setDoc,
-  getDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
 // ======================================================
-// HELPER
+// MESSAGE HELPER
 // ======================================================
 
 function showMessage(message, type = "info") {
-
   console.log(`[AYNA AUTH - ${type}] ${message}`);
 
   const element =
@@ -45,192 +42,272 @@ function showMessage(message, type = "info") {
 
 
 // ======================================================
-// REGISTER
+// ERROR MESSAGE
 // ======================================================
 
-export async function registerUser(
-  name,
-  email,
-  password
-) {
+export function getAuthErrorMessage(error) {
+  const messages = {
+    "auth/email-already-in-use":
+      "এই ইমেইল দিয়ে ইতিমধ্যে অ্যাকাউন্ট খোলা হয়েছে।",
 
+    "auth/invalid-email":
+      "সঠিক ইমেইল ঠিকানা লিখুন।",
+
+    "auth/weak-password":
+      "পাসওয়ার্ড আরও শক্তিশালী করুন।",
+
+    "auth/user-not-found":
+      "এই ইমেইলে কোনো অ্যাকাউন্ট পাওয়া যায়নি।",
+
+    "auth/wrong-password":
+      "পাসওয়ার্ড সঠিক নয়।",
+
+    "auth/invalid-credential":
+      "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।",
+
+    "auth/too-many-requests":
+      "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করুন।",
+
+    "auth/network-request-failed":
+      "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
+
+    "auth/operation-not-allowed":
+      "Firebase Console-এ Email/Password Authentication চালু করুন।",
+
+    "auth/user-disabled":
+      "এই অ্যাকাউন্টটি নিষ্ক্রিয় করা হয়েছে।",
+
+    "permission-denied":
+      "ডেটাবেস অনুমতি পরীক্ষা করুন।"
+  };
+
+  return messages[error?.code] ||
+    error?.message ||
+    "একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+}
+
+
+// ======================================================
+// REGISTER USER
+// ======================================================
+
+export async function registerUser(name, email, password) {
   try {
+    name = String(name || "").trim();
+    email = String(email || "").trim().toLowerCase();
 
     if (!name || !email || !password) {
-      throw new Error(
-        "Name, email and password are required."
-      );
+      throw new Error("নাম, ইমেইল ও পাসওয়ার্ড পূরণ করুন।");
+    }
+
+    if (name.length < 2 || name.length > 60) {
+      throw new Error("নাম ২ থেকে ৬০ অক্ষরের মধ্যে হতে হবে।");
     }
 
     if (password.length < 6) {
-      throw new Error(
-        "Password must contain at least 6 characters."
-      );
+      throw new Error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
     }
 
-    const result =
-      await createUserWithEmailAndPassword(
-        auth,
-        email.trim(),
-        password
-      );
+    const credential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-    const user = result.user;
+    const user = credential.user;
 
-
-    // Update Firebase Auth profile
     await updateProfile(user, {
-      displayName: name.trim()
+      displayName: name
     });
 
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      name: name,
+      email: user.email,
+      photoURL: user.photoURL || "",
+      status: "active",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
 
-    // Create Firestore user document
-    await setDoc(
-      doc(db, "users", user.uid),
-      {
-        uid: user.uid,
+    showMessage("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।", "success");
 
-        name: name.trim(),
-
-        email: user.email,
-
-        photoURL: user.photoURL || "",
-
-        createdAt: serverTimestamp(),
-
-        updatedAt: serverTimestamp(),
-
-        status: "active"
-      },
-      {
-        merge: true
-      }
-    );
-
-
-    showMessage(
-      "Registration successful.",
-      "success"
-    );
-
-
-    return user;
+    return {
+      success: true,
+      user: user,
+      message: "Registration successful."
+    };
 
   } catch (error) {
+    console.error("AYNA Registration Error:", error);
 
-    console.error(
-      "❌ Registration error:",
-      error
-    );
+    const message = getAuthErrorMessage(error);
+    showMessage(message, "error");
 
-    showMessage(
-      getAuthErrorMessage(error),
-      "error"
-    );
-
-    throw error;
+    return {
+      success: false,
+      user: null,
+      message: message,
+      error: error
+    };
   }
 }
 
 
 // ======================================================
-// LOGIN
+// LOGIN USER
 // ======================================================
 
-export async function loginUser(
-  email,
-  password
-) {
-
+export async function loginUser(email, password) {
   try {
+    email = String(email || "").trim().toLowerCase();
 
     if (!email || !password) {
-      throw new Error(
-        "Email and password are required."
-      );
+      throw new Error("ইমেইল ও পাসওয়ার্ড লিখুন।");
     }
 
-    const result =
-      await signInWithEmailAndPassword(
-        auth,
-        email.trim(),
-        password
-      );
+    const credential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-    const user = result.user;
+    const user = credential.user;
 
-
-    // Update last login
     await setDoc(
       doc(db, "users", user.uid),
       {
         lastLoginAt: serverTimestamp(),
-
         updatedAt: serverTimestamp(),
-
         status: "active"
       },
-      {
-        merge: true
-      }
+      { merge: true }
     );
 
+    showMessage("Login successful.", "success");
 
-    showMessage(
-      "Login successful.",
-      "success"
-    );
-
-
-    return user;
+    return {
+      success: true,
+      user: user,
+      message: "Login successful."
+    };
 
   } catch (error) {
+    console.error("AYNA Login Error:", error);
 
-    console.error(
-      "❌ Login error:",
-      error
-    );
+    const message = getAuthErrorMessage(error);
+    showMessage(message, "error");
 
-    showMessage(
-      getAuthErrorMessage(error),
-      "error"
-    );
-
-    throw error;
+    return {
+      success: false,
+      user: null,
+      message: message,
+      error: error
+    };
   }
 }
 
 
 // ======================================================
-// LOGOUT
+// PASSWORD RESET
+// ======================================================
+
+export async function resetPassword(email) {
+  try {
+    email = String(email || "").trim().toLowerCase();
+
+    if (!email) {
+      throw new Error("আপনার ইমেইল ঠিকানা লিখুন।");
+    }
+
+    await sendPasswordResetEmail(auth, email);
+
+    const message =
+      "পাসওয়ার্ড পরিবর্তনের লিংক ইমেইলে পাঠানো হয়েছে।";
+
+    showMessage(message, "success");
+
+    return {
+      success: true,
+      message: message
+    };
+
+  } catch (error) {
+    console.error("AYNA Password Reset Error:", error);
+
+    const message = getAuthErrorMessage(error);
+    showMessage(message, "error");
+
+    return {
+      success: false,
+      message: message,
+      error: error
+    };
+  }
+}
+
+
+// ======================================================
+// LOGOUT USER
 // ======================================================
 
 export async function logoutUser() {
-
   try {
-
     await signOut(auth);
 
-    showMessage(
-      "You have been logged out.",
-      "success"
-    );
+    showMessage("Logout successful.", "success");
+
+    return {
+      success: true,
+      message: "Logout successful."
+    };
 
   } catch (error) {
+    console.error("AYNA Logout Error:", error);
 
-    console.error(
-      "❌ Logout error:",
-      error
-    );
+    const message = getAuthErrorMessage(error);
+    showMessage(message, "error");
 
-    showMessage(
-      "Logout failed.",
-      "error"
-    );
-
-    throw error;
+    return {
+      success: false,
+      message: message,
+      error: error
+    };
   }
 }
 
 
+// ======================================================
+// AUTH STATE LISTENER
+// ======================================================
+
+export function watchAuthState(callback) {
+  return onAuthStateChanged(auth, (user) => {
+    if (typeof callback === "function") {
+      callback(user);
+    }
+  });
+}
+
+
+// ======================================================
+// GET CURRENT USER
+// ======================================================
+
+export function getCurrentUser() {
+  return auth.currentUser;
+}
+
+
+// ======================================================
+// CHECK LOGIN STATUS
+// ======================================================
+
+export function isUserLoggedIn() {
+  return Boolean(auth.currentUser);
+}
+
+
+// ======================================================
+// AYNA BOOK AUTHENTICATION COMPLETE
 // ======================================================
