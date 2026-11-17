@@ -1,0 +1,32 @@
+
+<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AYNA Hourly Clock</title>
+<style>
+body{margin:0;background:#071b49;color:white;font-family:Arial;text-align:center;padding:25px}h1{color:#ffd700}.clock{font-size:48px;font-weight:bold;margin:35px 0;color:#ffd700}.panel{max-width:500px;margin:auto;background:#142d5d;border:1px solid #ffd700;border-radius:16px;padding:22px}button{padding:14px;margin:8px;border:0;border-radius:9px;background:#ffd700;font-weight:bold}
+</style></head><body>
+<h1>🕒 AYNA HOURLY CLOCK</h1>
+<div class="panel"><div id="clock" class="clock">--:--:--</div>
+<p id="date"></p><p id="voiceStatus">প্রতি ঘণ্টায় সময় ঘোষণা বন্ধ।</p>
+<button id="enable">ঘণ্টায় সময় বলা চালু</button>
+<button id="disable">বন্ধ করুন</button>
+</div>
+<p><a href="index.html" style="color:#ffd700">← হোম</a></p>
+<script>
+let enabled=false,lastHour=-1;
+function tick(){
+ const now=new Date();
+ clock.textContent=now.toLocaleTimeString("bn-BD",{hour12:true});
+ date.textContent=now.toLocaleDateString("bn-BD",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+ if(enabled&&now.getMinutes()===0&&now.getSeconds()<3&&lastHour!==now.getHours()){
+  lastHour=now.getHours();
+  if("speechSynthesis" in window){
+   speechSynthesis.cancel();
+   const msg=new SpeechSynthesisUtterance("এখন সময় "+now.toLocaleTimeString("bn-BD",{hour:"numeric",minute:"2-digit"}));
+   msg.lang="bn-BD";speechSynthesis.speak(msg);
+   voiceStatus.textContent="সময় ঘোষণা চালু আছে।";
+  }else voiceStatus.textContent="এই ব্রাউজারে কণ্ঠ ঘোষণা সমর্থিত নয়।";
+ }
+}
+enable.onclick=()=>{enabled=true;voiceStatus.textContent="প্রতি ঘণ্টায় ঘোষণা চালু হয়েছে। পেইজ খোলা রাখতে হবে।"};
+disable.onclick=()=>{enabled=false;speechSynthesis?.cancel();voiceStatus.textContent="ঘোষণা বন্ধ।"};
+setInterval(tick,1000);tick();
+</script></body></html>
