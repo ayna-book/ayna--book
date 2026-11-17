@@ -1,0 +1,20 @@
+
+<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AYNA GPS</title>
+<style>
+body{background:#071b49;color:white;font-family:Arial;padding:18px}main{max-width:650px;margin:auto;background:#142d5d;padding:20px;border:1px solid #ffd700;border-radius:15px}h1{color:#ffd700}button{padding:15px;background:#ffd700;border:0;border-radius:9px;font-weight:bold}p{overflow-wrap:anywhere}a{color:#ffd700}
+</style></head><body><main>
+<h1>📍 AYNA GPS</h1><p>আপনার ফোনের অবস্থান জানার জন্য Location অনুমতি দিন।</p>
+<button id="locate">আমার অবস্থান দেখান</button><div id="result">এখনো অবস্থান নেওয়া হয়নি।</div>
+<p><a id="map" target="_blank" rel="noopener" hidden>ম্যাপে অবস্থান খুলুন</a></p>
+<p><a href="index.html">← হোম</a></p>
+</main><script>
+locate.onclick=()=>{
+ if(!navigator.geolocation){result.textContent="এই ব্রাউজারে GPS সুবিধা নেই।";return}
+ result.textContent="অবস্থান খোঁজা হচ্ছে...";
+ navigator.geolocation.getCurrentPosition(pos=>{
+  const lat=pos.coords.latitude,lon=pos.coords.longitude;
+  result.textContent="অক্ষাংশ: "+lat+" | দ্রাঘিমাংশ: "+lon+" | নির্ভুলতা: প্রায় "+Math.round(pos.coords.accuracy)+" মিটার";
+  map.href="https://www.google.com/maps?q="+lat+","+lon;map.hidden=false;
+ },err=>{result.textContent="অবস্থান পাওয়া যায়নি: "+err.message+"। Location চালু করে HTTPS ওয়েবসাইটে চেষ্টা করুন।"},{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+};
+</script></body></html>
