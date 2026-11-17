@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বাংলা রেডিও ও টিভি - AYNA MEDIA</title>
+    <style>
+        body { background: #090a0f; color: #fff; font-family: sans-serif; padding: 20px; border: 3px solid #ffd700; min-height: 100vh; margin: 0; font-size: 18px; }
+        .card { background: rgba(255,255,255,0.08); border: 2px solid #ffd700; border-radius: 14px; padding: 18px; margin-top: 18px; text-align: center; }
+        .channel-btn { display: block; width: 100%; padding: 14px; margin: 10px 0; background: rgba(255,215,0,0.15); border: 1.5px solid #ffd700; color: #fff; font-size: 1.1rem; font-weight: bold; border-radius: 10px; cursor: pointer; }
+        .channel-btn:hover { background: #ffd700; color: #000; }
+        a.back { color: #ffd700; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+        audio { width: 100%; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back">← হোমে ফিরে যান</a>
+    <div class="card">
+        <h2 style="color: #ffd700;">📻 লাইভ বাংলা রেডিও ও টিভি</h2>
+        <p id="now-playing" style="color: #00ffcc; margin: 10px 0;">যেকোনো একটি চ্যানেল নির্বাচন করুন</p>
+        
+        <audio id="radio-player" controls></audio>
+
+        <button class="channel-btn" onclick="playStream('বাংলাদেশ বেতার (ঢাকা)', 'https://stream.zeno.fm/0r0xa792kwzuv')">📻 বাংলাদেশ বেতার লাইভ</button>
+        <button class="channel-btn" onclick="playStream('রেডিও ফূর্তি / মিউজিক', 'https://stream.zeno.fm/f3wvbbqmdg8uv')">🎵 বাংলা মিউজিক রেডিও</button>
+        <button class="channel-btn" onclick="playStream('ইসলামিক ও কুরআন রেডিও', 'https://stream.zeno.fm/8k7y8w81k98uv')">🕌 আল-কুরআন লাইভ রেডিও</button>
+    </div>
+
+    <script>
+        function playStream(name, url) {
+            const player = document.getElementById('radio-player');
+            const status = document.getElementById('now-playing');
+            status.textContent = "🔊 চলছে: " + name;
+            player.src = url;
+            player.play().catch(e => {
+                status.textContent = "প্লে বাটনে চাপ দিয়ে চালু করুন: " + name;
+            });
+        }
+    </script>
+</body>
+</html>
