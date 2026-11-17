@@ -3,150 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AYNA BOOK & UTILITIES</title>
+    <title>AYNA BOOK & AYNA MESSENGER - Super App</title>
     
-    <!-- PWA এবং মোনাইফেস্ট কনফিগারেশন -->
-    <link rel="manifest" href="manifest.json[span_2](start_span)"[span_2](end_span)>
-    <link rel="icon" type="image/png" href="icon-192.png[span_3](start_span)"[span_3](end_span)>
+    <!-- PWA এবং অ্যাপ আইকন -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon-192.png">
     
-    <!-- আপনার প্রজেক্টের স্টাইল ফাইল -->
-    <link rel="stylesheet" href="styles.css[span_4](start_span)"[span_4](end_span)>
-    <link rel="stylesheet" href="ayna-ui-patch.css[span_5](start_span)"[span_5](end_span)>
+    <!-- আপনার প্রজেক্টের স্টাইলশিট -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ayna-ui-patch.css">
 
     <style>
         :root {
-            --gold: #ffd700;
-            --dark-bg: #090a0f;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --gold-primary: #ffd700;
+            --gold-secondary: #b8860b;
+            --bg-dark: #090a0f;
+            --card-bg: rgba(255, 255, 255, 0.08);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            background: var(--dark-bg);
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
             color: #ffffff;
             min-height: 100vh;
-            padding: 12px;
-            border: 3px solid var(--gold);
+            width: 100vw;
+            overflow-x: hidden;
+            border: 4px solid var(--gold-primary);
+            box-shadow: inset 0 0 25px rgba(255, 215, 0, 0.45);
+            font-size: 18px; /* মূল লেখা বড় করা হয়েছে */
         }
+
+        /* অ্যানিমেটেড স্টার ব্যাকগ্রাউন্ড */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(2.5px 2.5px at 20px 30px, #ffd700, rgba(0,0,0,0)),
+                radial-gradient(2.5px 2.5px at 50px 80px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2.5px 2.5px at 100px 40px, #ffd700, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: twinkle 3.5s infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.95; }
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* বড় হেডার ও ফায়ারবেস স্ট্যাটাস বার */
         header {
-            border: 2px solid var(--gold);
+            border: 2.5px solid var(--gold-primary);
+            border-radius: 14px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: 0 0 18px rgba(255, 215, 0, 0.35);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .brand-title {
+            font-size: 1.7rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ffd700, #fff8dc, #daa520);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .firebase-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid var(--gold-primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            color: var(--gold-primary);
+            font-weight: bold;
+        }
+
+        /* ব্রেকিং নিউজ টিকার */
+        .news-ticker {
+            background: rgba(255, 215, 0, 0.18);
+            border: 1.5px solid var(--gold-secondary);
             border-radius: 10px;
             padding: 12px;
-            background: rgba(0, 0, 0, 0.8);
-            text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
+            font-size: 1.05rem;
+            color: #ffd700;
+            font-weight: 600;
         }
-        h1 { color: var(--gold); font-size: 1.3rem; }
+
+        /* সেকশন হেডিং */
         .section-title {
-            color: var(--gold);
-            font-size: 1rem;
-            margin: 15px 0 8px;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-            padding-bottom: 3px;
+            color: var(--gold-primary);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 18px 0 12px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.4);
+            padding-bottom: 6px;
         }
+
+        /* বড় ফিচার বাক্স (Grid Cards) */
         .grid-menu {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* বাক্সগুলো চওড়া করা হয়েছে */
+            gap: 14px;
+            margin-bottom: 22px;
         }
+
         .nav-card {
             background: var(--card-bg);
-            border: 1px solid #b8860b;
-            border-radius: 8px;
-            padding: 12px 8px;
+            border: 2px solid var(--gold-secondary);
+            border-radius: 14px;
+            padding: 22px 12px; /* বাক্সের উচ্চতা ও ভেতরের জায়গা বড় করা হয়েছে */
             text-align: center;
             text-decoration: none;
-            color: #fff;
-            font-size: 0.85rem;
-            transition: 0.2s;
+            color: #ffffff;
+            font-size: 1.15rem; /* বাক্সের লেখা বড় করা হয়েছে */
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 110px;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
         }
-        .nav-card:hover {
-            border-color: var(--gold);
-            background: rgba(255, 215, 0, 0.15);
+
+        .nav-card span.icon {
+            font-size: 1.8rem; /* আইকন বড় করা হয়েছে */
+        }
+
+        .nav-card:hover, .nav-card:active {
+            border-color: var(--gold-primary);
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.03);
+            box-shadow: 0 0 16px rgba(255, 215, 0, 0.6);
+        }
+
+        /* বড় বটম নেভিগেশন বার */
+        .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.92);
+            border: 2px solid var(--gold-primary);
+            border-radius: 16px;
+            padding: 14px 8px;
+            position: sticky;
+            bottom: 10px;
+        }
+
+        .bottom-nav a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>★ AYNA SUPER APP ★</h1>
-        <p id="auth-status" style="font-size: 0.75rem; color: var(--gold); margin-top: 5px;">লোডিং...</p>
-    </header>
+    <div class="stars"></div>
 
-    <!-- সোশ্যাল ও মেসেজিং মডিউল -->
-    <div class="section-title">💬 সোশ্যাল ও মেসেজিং</div>
-    <div class="grid-menu">
-        <a href="chat.html" class="nav-card">চ্যাট (Chat)</a>[span_6](start_span)[span_6](end_span)
-        <a href="messages.html" class="nav-card">মেসেজেস</a>[span_7](start_span)[span_7](end_span)
-        <a href="audio-video-messaging.html" class="nav-card">অডিও-ভিডিও কল</a>[span_8](start_span)[span_8](end_span)
-        <a href="profile.html" class="nav-card">প্রোফাইল</a>[span_9](start_span)[span_9](end_span)
-        <a href="public-profile.html" class="nav-card">পাবলিক আইডি</a>[span_10](start_span)[span_10](end_span)
+    <div class="app-container">
+        <!-- হেডার ও ফায়ারবেস লাইভ স্ট্যাটাস -->
+        <header>
+            <div class="brand-title">★ AYNA BOOK & ID ★</div>
+            <div id="firebase-status" class="firebase-badge">🔄 ফায়ারবেস সংযোগ হচ্ছে...</div>
+        </header>
+
+        <!-- ব্রেকিং নিউজ টিকার -->
+        <div class="news-ticker">
+            <marquee behavior="scroll" direction="left">
+                🔴 লাইভ আপডেট: AYNA সুপার অ্যাপ ফায়ারবেস সার্ভারের সাথে যুক্ত। মেসেঞ্জার, লাইভ টিভি, রাডার এবং সব সার্ভিস সচল রয়েছে।
+            </marquee>
+        </div>
+
+        <!-- ১. সোশ্যাল ও মেসেজিং -->
+        <div class="section-title">💬 সোশ্যাল ও মেসেজিং</div>
+        <div class="grid-menu">
+            <a href="chat.html" class="nav-card"><span class="icon">💬</span>চ্যাট (Chat)</a>
+            <a href="messages.html" class="nav-card"><span class="icon">✉️</span>মেসেজেস</a>
+            <a href="audio-video-messaging.html" class="nav-card"><span class="icon">📹</span>অডিও-ভিডিও কল</a>
+            <a href="studio.html" class="nav-card"><span class="icon">🎬</span>লাইভ স্টুডিও</a>
+            <a href="camera.html" class="nav-card"><span class="icon">📸</span>৮কে ক্যামেরা</a>
+            <a href="profile.html" class="nav-card"><span class="icon">👤</span>আমার প্রোফাইল</a>
+            <a href="public-profile.html" class="nav-card"><span class="icon">🪪</span>পাবলিক আইডি</a>
+            <a href="4account.html" class="nav-card"><span class="icon">👑</span>৪ অ্যাকাউন্ট</a>
+        </div>
+
+        <!-- ২. লাইভ মিডিয়া ও নিউজ -->
+        <div class="section-title">📺 লাইভ টিভি, রেডিও ও সংবাদ</div>
+        <div class="grid-menu">
+            <a href="bangla-radio-tv.html" class="nav-card"><span class="icon">🇧🇩</span>বাংলা টিভি-রেডিও</a>
+            <a href="radio-tv.html" class="nav-card"><span class="icon">📡</span>গ্লোবাল টিভি</a>
+            <a href="breaking-news.html" class="nav-card"><span class="icon">📰</span>ব্রেকিং নিউজ</a>
+            <a href="global-alert.html" class="nav-card"><span class="icon">🚨</span>গ্লোবাল অ্যালার্ট</a>
+        </div>
+
+        <!-- ৩. নেভিগেশন ও রাডার টুলস -->
+        <div class="section-title">🧭 জিপিএস, রাডার ও টেকনোলজি</div>
+        <div class="grid-menu">
+            <a href="gps.html" class="nav-card"><span class="icon">📍</span>জিপিএস (GPS)</a>
+            <a href="radar.html" class="nav-card"><span class="icon">🛰️</span>রাডার</a>
+            <a href="military-radar.html" class="nav-card"><span class="icon">🛡️</span>মিলিটারি রাডার</a>
+            <a href="radar-compass.html" class="nav-card"><span class="icon">🧭</span>রাডার কম্পাস</a>
+            <a href="compass.html" class="nav-card"><span class="icon">🧭</span>কম্পাস</a>
+            <a href="direction.html" class="nav-card"><span class="icon">🗺️</span>দিকনির্দেশনা</a>
+            <a href="quantum.html" class="nav-card"><span class="icon">⚛️</span>কোয়ান্টাম</a>
+            <a href="supercomputer.html" class="nav-card"><span class="icon">🖥️</span>সুপার কম্পিউটার</a>
+        </div>
+
+        <!-- ৪. ডিরেক্টরি ও সার্ভিস -->
+        <div class="section-title">🌐 ডিরেক্টরি, স্বাস্থ্য ও সার্ভিস</div>
+        <div class="grid-menu">
+            <a href="bd-directory.html" class="nav-card"><span class="icon">📂</span>বাংলাদেশ ডিরেক্টরি</a>
+            <a href="business-directory.html" class="nav-card"><span class="icon">🏢</span>বিজনেস ডিরেক্টরি</a>
+            <a href="currency-exchange.html" class="nav-card"><span class="icon">💱</span>কারেন্সি এক্সচেঞ্জ</a>
+            <a href="medicine-store.html" class="nav-card"><span class="icon">💊</span>মেডিসিন স্টোর</a>
+            <a href="medical-research.html" class="nav-card"><span class="icon">🔬</span>মেডিকেল রিসার্চ</a>
+            <a href="world-doctors.html" class="nav-card"><span class="icon">🩺</span>বিশ্বের ডাক্তার</a>
+            <a href="world-leaders.html" class="nav-card"><span class="icon">🌍</span>বিশ্ব নেতৃবৃন্দ</a>
+            <a href="ev-vehicles.html" class="nav-card"><span class="icon">⚡</span>ইভি যানবাহন</a>
+        </div>
+
+        <!-- ৫. অ্যাকাউন্ট ও সেটিংস -->
+        <div class="section-title">⚙️ অ্যাকাউন্ট ও সিকিউরিটি</div>
+        <div class="grid-menu">
+            <a href="login.html" class="nav-card"><span class="icon">🔑</span>লগইন</a>
+            <a href="signup.html" class="nav-card"><span class="icon">📝</span>সাইন আপ</a>
+            <a href="privacy-settings.html" class="nav-card"><span class="icon">🔒</span>প্রাইভেসি সেটিংস</a>
+            <a href="passwd.html" class="nav-card"><span class="icon">🛡️</span>পাসওয়ার্ড</a>
+            <a href="ownership.html" class="nav-card"><span class="icon">📜</span>মালিকানা</a>
+        </div>
+
+        <!-- বড় বটম নেভিগেশন -->
+        <nav class="bottom-nav">
+            <a href="index.html">🏠 হোম</a>
+            <a href="chat.html">💬 চ্যাট</a>
+            <a href="radar-compass.html">🧭 রাডার</a>
+            <a href="profile.html">👤 আইডি</a>
+        </nav>
     </div>
 
-    <!-- মিডিয়া ও নিউজ -->
-    <div class="section-title">📺 মিডিয়া ও নিউজ</div>
-    <div class="grid-menu">
-        <a href="bangla-radio-tv.html" class="nav-card">বাংলা রেডিও-টিভি</a>[span_11](start_span)[span_11](end_span)
-        <a href="radio-tv.html" class="nav-card">গ্লোবাল রেডিও-টিভি</a>[span_12](start_span)[span_12](end_span)
-        <a href="breaking-news.html" class="nav-card">ব্রেকিং নিউজ</a>[span_13](start_span)[span_13](end_span)
-        <a href="studio.html" class="nav-card">স্টুডিও</a>[span_14](start_span)[span_14](end_span)
-        <a href="camera.html" class="nav-card">ক্যামেরা</a>[span_15](start_span)[span_15](end_span)
-    </div>
-
-    <!-- জিপিএস ও রাডার টুলস -->
-    <div class="section-title">🧭 জিপিএস ও টেক টুলস</div>
-    <div class="grid-menu">
-        <a href="gps.html" class="nav-card">জিপিএস (GPS)</a>[span_16](start_span)[span_16](end_span)
-        <a href="radar.html" class="nav-card">রাডার</a>[span_17](start_span)[span_17](end_span)
-        <a href="radar-compass.html" class="nav-card">রাডার কম্পাস</a>[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)
-        <a href="compass.html" class="nav-card">কম্পাস</a>[span_20](start_span)[span_20](end_span)
-        <a href="supercomputer.html" class="nav-card">সুপার কম্পিউটার</a>[span_21](start_span)[span_21](end_span)
-        <a href="quantum.html" class="nav-card">কোয়ান্টাম সিস্টেম</a>[span_22](start_span)[span_22](end_span)[span_23](start_span)[span_23](end_span)[span_24](start_span)[span_24](end_span)
-    </div>
-
-    <!-- ডিরেক্টরি ও সার্ভিস -->
-    <div class="section-title">🌐 ডিরেক্টরি ও সার্ভিস</div>
-    <div class="grid-menu">
-        <a href="bd-directory.html" class="nav-card">বাংলাদেশ ডিরেক্টরি</a>[span_25](start_span)[span_25](end_span)
-        <a href="business-directory.html" class="nav-card">বিজনেস ডিরেক্টরি</a>[span_26](start_span)[span_26](end_span)
-        <a href="medicine-store.html" class="nav-card">মেডিসিন স্টোর</a>[span_27](start_span)[span_27](end_span)
-        <a href="currency-exchange.html" class="nav-card">কারেন্সি এক্সচেঞ্জ</a>[span_28](start_span)[span_28](end_span)
-        <a href="ev-vehicles.html" class="nav-card">ইভি ভেহিকল</a>[span_29](start_span)[span_29](end_span)
-    </div>
-
-    <!-- সিকিউরিটি ও সেটিংস -->
-    <div class="section-title">⚙️ অ্যাকাউন্ট ও সেটিংস</div>
-    <div class="grid-menu">
-        <a href="login.html" class="nav-card">লগইন</a>[span_30](start_span)[span_30](end_span)
-        <a href="signup.html" class="nav-card">সাইন আপ</a>[span_31](start_span)[span_31](end_span)
-        <a href="privacy.html" class="nav-card">প্রাইভেসি</a>[span_32](start_span)[span_32](end_span)
-        <a href="ownership.html" class="nav-card">মালিকানা</a>[span_33](start_span)[span_33](end_span)[span_34](start_span)[span_34](end_span)
-    </div>
-
-    <!-- ফায়ারবেস এবং লজিক স্ক্রিপ্ট -->
+    <!-- ফায়ারবেস সরাসরি সংযোগ ও রিয়েল-টাইম চেক স্ক্রিপ্ট -->
     <script type="module">
-        import { auth } from './firebase.js';[span_35](start_span)[span_35](end_span)
+        import { auth, db } from './firebase.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { collection, getDocs, limit, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const statusEl = document.getElementById('auth-status');
-        
-        // লোকাল সেশন চেক (বারবার লগইন এড়াতে)
-        const localUser = localStorage.getItem('ayna_user_session');
-        if (localUser) {
-            const data = JSON.parse(localUser);
-            statusEl.textContent = `সক্রিয় ইউজার: ${data.email || 'মেম্বার'}`;
+        const statusBadge = document.getElementById('firebase-status');
+
+        // লোকাল স্টোরেজ থেকে দ্রুত সেশন দেখানো
+        const cachedUser = localStorage.getItem('ayna_user_session');
+        if (cachedUser) {
+            const u = JSON.parse(cachedUser);
+            statusBadge.innerHTML = `🟢 যুক্ত: ${u.email}`;
         }
 
-        onAuthStateChanged(auth, (user) => {
+        // ফায়ারবেস অথেনটিকেশন এবং ডাটাবেস সংযোগ যাচাই
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                localStorage.setItem('ayna_user_session', JSON.stringify({ email: user.email }));
-                statusEl.textContent = `● অনলাইন: ${user.email}`;
+                localStorage.setItem('ayna_user_session', JSON.stringify({ uid: user.uid, email: user.email }));
+                try {
+                    // ফায়ারস্টোর ডাটাবেস কানেকশন টেস্ট
+                    const q = query(collection(db, "ayna_messages"), limit(1));
+                    await getDocs(q);
+                    statusBadge.innerHTML = `🟢 ফায়ারবেস ও ডাটাবেস সক্রিয় (${user.email})`;
+                } catch (e) {
+                    statusBadge.innerHTML = `🟡 লগইন সক্রিয়: ${user.email}`;
+                }
             } else {
-                statusEl.innerHTML = `<a href="login.html" style="color:var(--gold);">লগইন করুন</a>`;[span_36](start_span)[span_36](end_span)
+                localStorage.removeItem('ayna_user_session');
+                statusBadge.innerHTML = `🔴 লগইন করা নেই — <a href="login.html" style="color:#ffd700; text-decoration:underline;">প্রবেশ করুন</a>`;
             }
         });
     </script>
 
-    <!-- প্রজেক্টের এক্সট্রা স্ক্রিপ্ট ফাইল -->
-    <script type="module" src="firebase-config.js[span_37](start_span)"[span_37](end_span)></script>
-    <script type="module" src="app.js[span_38](start_span)"[span_38](end_span)></script>
+    <!-- প্রজেক্টের মূল জাভাস্ক্রিপ্ট ফাইল -->
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
