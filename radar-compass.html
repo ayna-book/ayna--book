@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রাডার কম্পাস - AYNA RADAR</title>
+    <style>
+        body { background: #090a0f; color: #fff; font-family: sans-serif; padding: 20px; border: 3px solid #ffd700; min-height: 100vh; margin: 0; font-size: 18px; text-align: center; }
+        .radar-box { background: rgba(255,255,255,0.08); border: 2px solid #ffd700; border-radius: 50%; width: 250px; height: 250px; margin: 30px auto; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+        .radar-sweep { position: absolute; width: 50%; height: 2px; background: #ffd700; top: 50%; left: 50%; transform-origin: left center; animation: spin 3s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        a.back { color: #ffd700; text-decoration: none; font-weight: bold; font-size: 1.1rem; display: inline-block; margin-top: 10px; }
+        .info { color: #00ffcc; font-size: 1.1rem; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back">← হোমে ফিরে যান</a>
+    <h2 style="color: #ffd700; margin-top: 20px;">🧭 AYNA রাডার কম্পাস</h2>
+    
+    <div class="radar-box">
+        <div class="radar-sweep"></div>
+        <span style="color: #ffd700; font-weight: bold; z-index: 2;">LIVE RADAR</span>
+    </div>
+
+    <div class="info" id="compass-status">কম্পাস সেন্সর রিসিভ হচ্ছে...</div>
+
+    <script>
+        window.addEventListener('deviceorientation', (event) => {
+            const alpha = event.alpha; // কম্পাসের দিক
+            const status = document.getElementById('compass-status');
+            if (alpha !== null) {
+                status.textContent = `দিক (Heading): ${Math.round(alpha)}° ডিগ্রি`;
+            } else {
+                status.textContent = "ডিভাইসে কম্পাস সেন্সর পাওয়া যায়নি।";
+            }
+        });
+    </script>
+</body>
+</html>
