@@ -1,51 +1,153 @@
 // ======================================================
 // AYNA BOOK — Firebase Initialization
-// Firebase SDK 12.5.0
+// Firebase Web SDK 13.4.0
 // ======================================================
-
-import { initializeApp, getApps, getApp } from
-  "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-
-import { getAuth } from
-  "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-import { getFirestore } from
-  "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
-import { getDatabase } from
-  "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
-
-import { getStorage } from
-  "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
-
-import { firebaseConfig } from "./firebase-config.js";
-
 
 // ------------------------------------------------------
 // Firebase App
 // ------------------------------------------------------
 
-const app = getApps().length
-  ? getApp()
-  : initializeApp(firebaseConfig);
+import {
+  initializeApp,
+  getApps,
+  getApp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
 
 // ------------------------------------------------------
-// Firebase Services
+// Firebase Authentication
 // ------------------------------------------------------
 
-const auth = getAuth(app);
-
-const db = getFirestore(app);
-
-const realtimeDB = getDatabase(app);
-
-const storage = getStorage(app);
+import {
+  getAuth
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 
 // ------------------------------------------------------
-// Export
+// Firebase Firestore
 // ------------------------------------------------------
+
+import {
+  getFirestore
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+
+// ------------------------------------------------------
+// Firebase Realtime Database
+// ------------------------------------------------------
+
+import {
+  getDatabase
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+
+// ------------------------------------------------------
+// Firebase Storage
+// ------------------------------------------------------
+
+import {
+  getStorage
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
+
+
+// ------------------------------------------------------
+// AYNA BOOK Firebase Configuration
+// ------------------------------------------------------
+
+import {
+  firebaseConfig
+} from "./firebase-config.js";
+
+
+// ======================================================
+// INITIALIZE FIREBASE
+// ======================================================
+
+let app;
+
+try {
+
+  // Prevent Firebase from being initialized twice
+  if (getApps().length > 0) {
+
+    app = getApp();
+
+  } else {
+
+    app = initializeApp(firebaseConfig);
+
+  }
+
+  console.log(
+    "✅ AYNA BOOK Firebase App initialized"
+  );
+
+} catch (error) {
+
+  console.error(
+    "❌ Firebase App initialization failed:",
+    error
+  );
+
+  throw error;
+}
+
+
+// ======================================================
+// FIREBASE SERVICES
+// ======================================================
+
+let auth;
+let db;
+let realtimeDB;
+let storage;
+
+
+try {
+
+  // Authentication
+  auth = getAuth(app);
+
+  // Firestore
+  db = getFirestore(app);
+
+  // Realtime Database
+  realtimeDB = getDatabase(app);
+
+  // Storage
+  storage = getStorage(app);
+
+
+  console.log(
+    "✅ Firebase Authentication: READY"
+  );
+
+  console.log(
+    "✅ Firestore Database: READY"
+  );
+
+  console.log(
+    "✅ Realtime Database: READY"
+  );
+
+  console.log(
+    "✅ Firebase Storage: READY"
+  );
+
+} catch (error) {
+
+  console.error(
+    "❌ Firebase services initialization failed:",
+    error
+  );
+
+  throw error;
+}
+
+
+// ======================================================
+// EXPORT FIREBASE SERVICES
+// ======================================================
 
 export {
   app,
@@ -56,16 +158,94 @@ export {
 };
 
 
-// ------------------------------------------------------
-// Optional global access
-// ------------------------------------------------------
+// ======================================================
+// GLOBAL AYNA BOOK FIREBASE OBJECT
+// ======================================================
 
 window.AYNA_FIREBASE = {
-  app,
-  auth,
-  db,
-  realtimeDB,
-  storage
+
+  app: app,
+
+  auth: auth,
+
+  db: db,
+
+  realtimeDB: realtimeDB,
+
+  storage: storage
+
 };
 
-console.log("✅ AYNA BOOK Firebase initialized successfully");
+
+// ======================================================
+// CONNECTION INFORMATION
+// ======================================================
+
+window.AYNA_FIREBASE_STATUS = {
+
+  connected: true,
+
+  projectId:
+    firebaseConfig.projectId,
+
+  appId:
+    firebaseConfig.appId,
+
+  sdkVersion:
+    "13.4.0",
+
+  services: {
+
+    authentication: true,
+
+    firestore: true,
+
+    realtimeDatabase: true,
+
+    storage: true
+
+  }
+
+};
+
+
+// ======================================================
+// FINAL STATUS
+// ======================================================
+
+console.log(
+  "=========================================="
+);
+
+console.log(
+  "🚀 AYNA BOOK FIREBASE READY"
+);
+
+console.log(
+  "🔥 SDK: 13.4.0"
+);
+
+console.log(
+  "📌 Project: " +
+  firebaseConfig.projectId
+);
+
+console.log(
+  "🔐 Authentication: READY"
+);
+
+console.log(
+  "🗄️ Firestore: READY"
+);
+
+console.log(
+  "⚡ Realtime Database: READY"
+);
+
+console.log(
+  "📦 Storage: READY"
+);
+
+console.log(
+  "=========================================="
+);
