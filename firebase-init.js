@@ -3,56 +3,27 @@
 // Firebase Web SDK 13.4.0
 // ======================================================
 
-// ------------------------------------------------------
-// Firebase App
-// ------------------------------------------------------
-
 import {
   initializeApp,
   getApps,
   getApp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
-
-// ------------------------------------------------------
-// Firebase Authentication
-// ------------------------------------------------------
-
 import {
   getAuth
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
-
-// ------------------------------------------------------
-// Firebase Firestore
-// ------------------------------------------------------
 
 import {
   getFirestore
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-
-// ------------------------------------------------------
-// Firebase Realtime Database
-// ------------------------------------------------------
-
 import {
   getDatabase
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
-
-// ------------------------------------------------------
-// Firebase Storage
-// ------------------------------------------------------
-
 import {
   getStorage
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
-
-
-// ------------------------------------------------------
-// AYNA BOOK Firebase Configuration
-// ------------------------------------------------------
 
 import {
   firebaseConfig
@@ -60,14 +31,13 @@ import {
 
 
 // ======================================================
-// INITIALIZE FIREBASE
+// INITIALIZE FIREBASE APP
 // ======================================================
 
 let app;
 
 try {
 
-  // Prevent Firebase from being initialized twice
   if (getApps().length > 0) {
 
     app = getApp();
@@ -94,7 +64,7 @@ try {
 
 
 // ======================================================
-// FIREBASE SERVICES
+// INITIALIZE FIREBASE SERVICES
 // ======================================================
 
 let auth;
@@ -102,21 +72,15 @@ let db;
 let realtimeDB;
 let storage;
 
-
 try {
 
-  // Authentication
   auth = getAuth(app);
 
-  // Firestore
   db = getFirestore(app);
 
-  // Realtime Database
   realtimeDB = getDatabase(app);
 
-  // Storage
   storage = getStorage(app);
-
 
   console.log(
     "✅ Firebase Authentication: READY"
@@ -146,7 +110,7 @@ try {
 
 
 // ======================================================
-// EXPORT FIREBASE SERVICES
+// EXPORT
 // ======================================================
 
 export {
@@ -159,7 +123,7 @@ export {
 
 
 // ======================================================
-// GLOBAL AYNA BOOK FIREBASE OBJECT
+// GLOBAL AYNA FIREBASE OBJECT
 // ======================================================
 
 window.AYNA_FIREBASE = {
@@ -178,7 +142,7 @@ window.AYNA_FIREBASE = {
 
 
 // ======================================================
-// CONNECTION INFORMATION
+// FIREBASE STATUS
 // ======================================================
 
 window.AYNA_FIREBASE_STATUS = {
@@ -210,7 +174,7 @@ window.AYNA_FIREBASE_STATUS = {
 
 
 // ======================================================
-// FINAL STATUS
+// CONSOLE STATUS
 // ======================================================
 
 console.log(
@@ -222,7 +186,7 @@ console.log(
 );
 
 console.log(
-  "🔥 SDK: 13.4.0"
+  "🔥 Firebase Web SDK: 13.4.0"
 );
 
 console.log(
