@@ -1,1023 +1,355 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#05070b">
-
   <title>AYNA BOOK — Sign Up</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: Arial, "Noto Sans Bengali", sans-serif;
-      color: #fff;
-
-      background:
-        radial-gradient(
-          circle at top,
-          #182238 0%,
-          #080b12 45%,
-          #030407 100%
-        );
-
+      padding: 24px 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-
-      padding: 20px;
+      background: #05070b;
+      color: #fff;
+      font-family: Arial, sans-serif;
     }
 
-    .container {
+    .signup-box {
       width: 100%;
       max-width: 440px;
+      padding: 30px 24px;
+      background: #10141d;
+      border: 1px solid #333b49;
+      border-radius: 20px;
+      box-shadow: 0 15px 45px #0008;
     }
 
     .logo {
       text-align: center;
-      margin-bottom: 22px;
-    }
-
-    .logo-icon {
-      width: 76px;
-      height: 76px;
-
-      margin: auto;
-
-      border-radius: 50%;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 40px;
-      font-weight: 900;
-
-      color: #05070b;
-
-      background:
-        linear-gradient(
-          135deg,
-          #ffd700,
-          #ffb300
-        );
-
-      box-shadow:
-        0 0 30px rgba(255, 215, 0, .3);
-    }
-
-    .logo h1 {
-      margin: 12px 0 0;
-
-      color: #ffd700;
-
-      letter-spacing: 2px;
-    }
-
-    .logo p {
-      color: #aeb7c7;
-      font-size: 13px;
-    }
-
-    .card {
-      background: rgba(12, 16, 25, .95);
-
-      border:
-        1px solid
-        rgba(255, 215, 0, .35);
-
-      border-radius: 22px;
-
-      padding: 28px 22px;
-
-      box-shadow:
-        0 20px 60px rgba(0, 0, 0, .5);
+      color: #e8bd62;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
     }
 
     h2 {
       text-align: center;
-      margin: 0 0 8px;
+      margin: 10px 0;
     }
 
     .subtitle {
       text-align: center;
-
-      color: #9fa8b8;
-
+      color: #aab1bd;
       font-size: 14px;
-
-      margin-bottom: 24px;
-    }
-
-    .field {
-      margin-bottom: 16px;
+      margin-bottom: 25px;
     }
 
     label {
       display: block;
-
-      margin-bottom: 7px;
-
+      margin: 15px 0 7px;
+      color: #e6c477;
       font-size: 14px;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-
+    input:not([type="checkbox"]) {
       width: 100%;
-
       padding: 14px;
-
-      border-radius: 12px;
-
-      border:
-        1px solid
-        rgba(255, 255, 255, .14);
-
-      outline: none;
-
-      background:
-        rgba(255, 255, 255, .06);
-
-      color: #fff;
-
+      border: 1px solid #394353;
+      border-radius: 10px;
+      background: #080c13;
+      color: white;
       font-size: 15px;
+      outline: none;
     }
 
     input:focus {
-
-      border-color: #ffd700;
-
-      box-shadow:
-        0 0 0 3px
-        rgba(255, 215, 0, .08);
+      border-color: #e8bd62;
     }
 
-    .password-box {
+    .password-wrap {
       position: relative;
     }
 
-    .password-box input {
-      padding-right: 55px;
+    .password-wrap input {
+      padding-right: 65px;
     }
 
-    .show {
+    .toggle {
       position: absolute;
-
-      right: 8px;
+      right: 10px;
       top: 50%;
-
       transform: translateY(-50%);
-
-      border: 0;
-
-      background: transparent;
-
-      color: #ffd700;
-
+      background: none;
+      border: none;
+      color: #e8bd62;
       cursor: pointer;
-
-      font-size: 18px;
     }
 
     .terms {
-
       display: flex;
-
-      gap: 9px;
-
       align-items: flex-start;
-
-      margin: 17px 0;
-
-      color: #aeb7c7;
-
+      gap: 9px;
+      margin: 20px 0;
+      color: #c1c6cf;
       font-size: 13px;
-
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
-    .terms input[type="checkbox"] {
-
-      width: 17px;
-      height: 17px;
-
-      margin-top: 3px;
-
-      accent-color: #ffd700;
-
-      flex-shrink: 0;
+    .terms input {
+      margin-top: 4px;
     }
 
-    .terms a {
-
-      color: #ffd700;
-
+    a {
+      color: #e8bd62;
       text-decoration: none;
     }
 
-    .signup {
-
+    .signup-btn {
       width: 100%;
-
-      padding: 14px;
-
-      border: 0;
-
-      border-radius: 12px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #ffd700,
-          #ffb300
-        );
-
-      color: #05070b;
-
-      font-weight: 800;
-
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f1d38b, #bd8b34);
+      color: #111;
+      font-weight: bold;
       font-size: 16px;
-
       cursor: pointer;
     }
 
-    .signup:disabled {
-
+    .signup-btn:disabled {
       opacity: .6;
-
       cursor: wait;
     }
 
     .message {
-
       display: none;
-
+      margin: 15px 0;
       padding: 12px;
-
-      border-radius: 10px;
-
-      margin-bottom: 16px;
-
-      text-align: center;
-
+      border-radius: 8px;
       font-size: 14px;
+      line-height: 1.5;
     }
 
-    .message.show {
-      display: block;
+    .message.show { display: block; }
+    .message.success {
+      background: #123a29;
+      color: #8df0b5;
     }
 
-    .error {
-
-      color: #ff8a80;
-
-      background:
-        rgba(255, 82, 82, .1);
-    }
-
-    .success {
-
-      color: #69f0ae;
-
-      background:
-        rgba(0, 230, 118, .1);
-    }
-
-    .divider {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 10px;
-
-      margin: 22px 0;
-
-      color: #687182;
-
-      font-size: 12px;
-    }
-
-    .divider::before,
-    .divider::after {
-
-      content: "";
-
-      flex: 1;
-
-      height: 1px;
-
-      background:
-        rgba(255, 255, 255, .1);
+    .message.error {
+      background: #431b20;
+      color: #ffadb5;
     }
 
     .login {
-
       text-align: center;
-
-      color: #aeb7c7;
-
+      color: #aab1bd;
       font-size: 14px;
+      margin-top: 22px;
     }
 
-    .login a {
-
-      color: #ffd700;
-
-      text-decoration: none;
-
-      font-weight: bold;
-    }
-
-    .home {
-
-      display: block;
-
+    .footer {
       text-align: center;
-
-      margin-top: 20px;
-
-      color: #8f99aa;
-
-      text-decoration: none;
-
-      font-size: 13px;
-    }
-
-    .status {
-
-      text-align: center;
-
-      color: #69f0ae;
-
+      margin-top: 22px;
+      color: #707987;
       font-size: 12px;
-
-      margin-top: 18px;
-    }
-
-    .dot {
-
-      display: inline-block;
-
-      width: 7px;
-      height: 7px;
-
-      border-radius: 50%;
-
-      background: #00e676;
-
-      margin-right: 5px;
     }
   </style>
 </head>
 
-
 <body>
 
-<div class="container">
+  <main class="signup-box">
 
+    <div class="logo">AYNA BOOK</div>
+    <h2>Create Account</h2>
+    <p class="subtitle">Join the AYNA BOOK community</p>
 
-  <!-- LOGO -->
+    <form id="signupForm">
 
-  <div class="logo">
-
-    <div class="logo-icon">
-      A
-    </div>
-
-    <h1>
-      AYNA BOOK
-    </h1>
-
-    <p>
-      আধুনিক নিরাপদ ডিজিটাল সোশ্যাল প্ল্যাটফর্ম
-    </p>
-
-  </div>
-
-
-  <!-- SIGNUP CARD -->
-
-  <section class="card">
-
-    <h2>
-      ✨ Create Account
-    </h2>
-
-    <p class="subtitle">
-      AYNA BOOK-এ আপনার নতুন অ্যাকাউন্ট তৈরি করুন
-    </p>
-
-
-    <!-- MESSAGE -->
-
-    <div
-      id="message"
-      class="message">
-    </div>
-
-
-    <!-- NAME -->
-
-    <div class="field">
-
-      <label for="name">
-        👤 Full Name
-      </label>
-
+      <label for="name">Full Name</label>
       <input
         id="name"
         type="text"
+        placeholder="Enter your full name"
+        minlength="2"
+        maxlength="60"
         autocomplete="name"
-        placeholder="আপনার নাম লিখুন"
         required
       >
 
-    </div>
-
-
-    <!-- EMAIL -->
-
-    <div class="field">
-
-      <label for="email">
-        📧 Email Address
-      </label>
-
+      <label for="email">Email Address</label>
       <input
         id="email"
         type="email"
+        placeholder="Enter your email"
         autocomplete="email"
-        placeholder="আপনার ইমেইল লিখুন"
         required
       >
 
-    </div>
-
-
-    <!-- PASSWORD -->
-
-    <div class="field">
-
-      <label for="password">
-        🔑 Password
-      </label>
-
-      <div class="password-box">
-
+      <label for="password">Password</label>
+      <div class="password-wrap">
         <input
           id="password"
           type="password"
+          placeholder="Minimum 6 characters"
+          minlength="6"
           autocomplete="new-password"
-          placeholder="কমপক্ষে ৬ অক্ষর"
           required
         >
-
-        <button
-          id="showPassword"
-          class="show"
-          type="button"
-          aria-label="Show password">
-
-          👁️
-
-        </button>
-
+        <button class="toggle" type="button"
+          data-target="password">Show</button>
       </div>
 
-    </div>
-
-
-    <!-- CONFIRM PASSWORD -->
-
-    <div class="field">
-
-      <label for="confirmPassword">
-        🔐 Confirm Password
-      </label>
-
-      <div class="password-box">
-
+      <label for="confirmPassword">Confirm Password</label>
+      <div class="password-wrap">
         <input
           id="confirmPassword"
           type="password"
+          placeholder="Enter password again"
+          minlength="6"
           autocomplete="new-password"
-          placeholder="পাসওয়ার্ড আবার লিখুন"
           required
         >
-
-        <button
-          id="showConfirmPassword"
-          class="show"
-          type="button"
-          aria-label="Show confirm password">
-
-          👁️
-
-        </button>
-
+        <button class="toggle" type="button"
+          data-target="confirmPassword">Show</button>
       </div>
 
+      <div class="terms">
+        <input id="terms" type="checkbox" required>
+        <span>
+          I agree to the
+          <a href="./terms.html">Terms & Conditions</a>
+          and
+          <a href="./privacy.html">Privacy Policy</a>.
+        </span>
+      </div>
+
+      <div id="message" class="message" role="status"
+        aria-live="polite"></div>
+
+      <button id="signupButton" class="signup-btn" type="submit">
+        Create Account
+      </button>
+
+    </form>
+
+    <p class="login">
+      Already have an account?
+      <a href="./login.html">Login</a>
+    </p>
+
+    <div class="footer">
+      AYNA BOOK — Modern Digital Social Platform
     </div>
 
-
-    <!-- TERMS -->
-
-    <label class="terms">
-
-      <input
-        id="terms"
-        type="checkbox"
-      >
-
-      <span>
-
-        আমি AYNA BOOK-এর
-
-        <a
-          href="./privacy.html"
-          target="_blank">
-
-          Privacy Policy
-
-        </a>
-
-        এবং
-
-        <a
-          href="./terms.html"
-          target="_blank">
-
-          Terms
-
-        </a>
-
-        মেনে নিচ্ছি।
-
-      </span>
-
-    </label>
-
-
-    <!-- SIGNUP BUTTON -->
-
-    <button
-      id="signupButton"
-      class="signup"
-      type="button">
-
-      CREATE ACCOUNT
-
-    </button>
-
-
-    <div class="divider">
-      অথবা
-    </div>
-
-
-    <!-- LOGIN -->
-
-    <div class="login">
-
-      ইতিমধ্যে অ্যাকাউন্ট আছে?
-
-      <a href="./login.html">
-
-        Login করুন
-
-      </a>
-
-    </div>
-
-  </section>
-
-
-  <!-- STATUS -->
-
-  <div class="status">
-
-    <span class="dot"></span>
-
-    Firebase Authentication Ready
-
-  </div>
-
-
-  <!-- HOME -->
-
-  <a
-    class="home"
-    href="./index.html">
-
-    ← AYNA BOOK Home
-
-  </a>
-
-
-</div>
-
-
-
-<!-- ==================================================
-     JAVASCRIPT
-================================================== -->
-
-<script type="module">
-
-import {
-  registerUser
-} from "./auth.js";
-
-
-const nameInput =
-  document.getElementById("name");
-
-
-const emailInput =
-  document.getElementById("email");
-
-
-const passwordInput =
-  document.getElementById("password");
-
-
-const confirmPasswordInput =
-  document.getElementById("confirmPassword");
-
-
-const termsInput =
-  document.getElementById("terms");
-
-
-const signupButton =
-  document.getElementById("signupButton");
-
-
-const showPasswordButton =
-  document.getElementById("showPassword");
-
-
-const showConfirmPasswordButton =
-  document.getElementById(
-    "showConfirmPassword"
-  );
-
-
-const message =
-  document.getElementById("message");
-
-
-
-/* ==================================================
-   MESSAGE
-================================================== */
-
-function showMessage(
-  text,
-  type = "error"
-) {
-
-  message.textContent = text;
-
-  message.className =
-    "message show " + type;
-
-}
-
-
-
-/* ==================================================
-   PASSWORD SHOW / HIDE
-================================================== */
-
-showPasswordButton.addEventListener(
-  "click",
-  () => {
-
-    if (
-      passwordInput.type ===
-      "password"
-    ) {
-
-      passwordInput.type =
-        "text";
-
-      showPasswordButton.textContent =
-        "🙈";
-
-    } else {
-
-      passwordInput.type =
-        "password";
-
-      showPasswordButton.textContent =
-        "👁️";
-
+  </main>
+
+  <script type="module">
+    import { registerUser } from "./auth.js";
+
+    const form = document.getElementById("signupForm");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const confirmInput = document.getElementById("confirmPassword");
+    const termsInput = document.getElementById("terms");
+    const signupButton = document.getElementById("signupButton");
+    const messageBox = document.getElementById("message");
+
+    function showMessage(message, type) {
+      messageBox.textContent = message;
+      messageBox.className = "message show " + type;
     }
 
-  }
-);
-
-
-
-showConfirmPasswordButton.addEventListener(
-  "click",
-  () => {
-
-    if (
-      confirmPasswordInput.type ===
-      "password"
-    ) {
-
-      confirmPasswordInput.type =
-        "text";
-
-      showConfirmPasswordButton.textContent =
-        "🙈";
-
-    } else {
-
-      confirmPasswordInput.type =
-        "password";
-
-      showConfirmPasswordButton.textContent =
-        "👁️";
-
-    }
-
-  }
-);
-
-
-
-/* ==================================================
-   REGISTER
-================================================== */
-
-signupButton.addEventListener(
-  "click",
-  async () => {
-
-    const name =
-      nameInput.value.trim();
-
-
-    const email =
-      emailInput.value.trim();
-
-
-    const password =
-      passwordInput.value;
-
-
-    const confirmPassword =
-      confirmPasswordInput.value;
-
-
-
-    /* NAME */
-
-    if (!name) {
-
-      showMessage(
-        "আপনার নাম লিখুন।"
-      );
-
-      nameInput.focus();
-
-      return;
-
-    }
-
-
-
-    /* EMAIL */
-
-    if (!email) {
-
-      showMessage(
-        "আপনার ইমেইল লিখুন।"
-      );
-
-      emailInput.focus();
-
-      return;
-
-    }
-
-
-
-    /* PASSWORD */
-
-    if (password.length < 6) {
-
-      showMessage(
-        "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।"
-      );
-
-      passwordInput.focus();
-
-      return;
-
-    }
-
-
-
-    /* CONFIRM PASSWORD */
-
-    if (
-      password !==
-      confirmPassword
-    ) {
-
-      showMessage(
-        "দুইটি পাসওয়ার্ড একই নয়।"
-      );
-
-      confirmPasswordInput.focus();
-
-      return;
-
-    }
-
-
-
-    /* TERMS */
-
-    if (!termsInput.checked) {
-
-      showMessage(
-        "Terms ও Privacy Policy গ্রহণ করুন।"
-      );
-
-      return;
-
-    }
-
-
-
-    /* BUTTON */
-
-    signupButton.disabled =
-      true;
-
-    signupButton.textContent =
-      "ACCOUNT তৈরি হচ্ছে...";
-
-
-
-    try {
-
-
-      /*
-       * IMPORTANT:
-       *
-       * Current auth.js returns:
-       *
-       * {
-       *   success: true,
-       *   user: user,
-       *   message: "..."
-       * }
-       *
-       * অথবা error হলে:
-       *
-       * {
-       *   success: false,
-       *   message: "..."
-       * }
-       */
-
-      const result =
-        await registerUser(
-          name,
-          email,
-          password
-        );
-
-
-
-      /* SUCCESS */
-
-      if (
-        result &&
-        result.success === true
-      ) {
+    document.querySelectorAll(".toggle").forEach(button => {
+      button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.target);
+        const visible = input.type === "password";
+
+        input.type = visible ? "text" : "password";
+        button.textContent = visible ? "Hide" : "Show";
+      });
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+      const confirmPassword = confirmInput.value;
+
+      if (name.length < 2) {
+        showMessage("Please enter your full name.", "error");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage("Passwords do not match.", "error");
+        confirmInput.focus();
+        return;
+      }
+
+      if (!termsInput.checked) {
+        showMessage("Please accept the Terms & Conditions.", "error");
+        return;
+      }
+
+      signupButton.disabled = true;
+      signupButton.textContent = "Creating Account...";
+
+      try {
+        const result = await registerUser(name, email, password);
+
+        if (!result || result.success !== true) {
+          showMessage(
+            result?.message || "Registration failed. Please try again.",
+            "error"
+          );
+          return;
+        }
 
         showMessage(
-          result.message ||
-          "✅ Account সফলভাবে তৈরি হয়েছে।",
+          "Account created successfully! Redirecting...",
           "success"
         );
 
+        form.reset();
 
-        /*
-         * Give Firebase a moment
-         * before redirect.
-         */
+        setTimeout(() => {
+          window.location.replace("./index.html");
+        }, 1200);
 
-        setTimeout(
-          () => {
+      } catch (error) {
+        console.error("AYNA BOOK registration error:", error);
 
-            window.location.href =
-              "./index.html";
-
-          },
-          1000
+        showMessage(
+          error?.message || "Something went wrong. Please try again.",
+          "error"
         );
-
-
-        return;
-
+      } finally {
+        if (!messageBox.classList.contains("success")) {
+          signupButton.disabled = false;
+          signupButton.textContent = "Create Account";
+        }
       }
-
-
-
-      /* FAILED */
-
-      showMessage(
-        result?.message ||
-        "Account তৈরি করা যায়নি।"
-      );
-
-
-      signupButton.disabled =
-        false;
-
-      signupButton.textContent =
-        "CREATE ACCOUNT";
-
-
-    } catch (error) {
-
-      console.error(
-        "❌ Registration failed:",
-        error
-      );
-
-
-      showMessage(
-        error?.message ||
-        "Account তৈরি করা যায়নি।"
-      );
-
-
-      signupButton.disabled =
-        false;
-
-      signupButton.textContent =
-        "CREATE ACCOUNT";
-
-    }
-
-  }
-);
-
-
-
-/* ==================================================
-   ENTER KEY
-================================================== */
-
-confirmPasswordInput.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key ===
-      "Enter"
-    ) {
-
-      signupButton.click();
-
-    }
-
-  }
-);
-
-
-
-/* ==================================================
-   INITIAL STATUS
-================================================== */
-
-console.log(
-  "✅ AYNA BOOK Signup page loaded."
-);
-
-console.log(
-  "🔥 Firebase registration handled by auth.js"
-);
-
-</script>
+    });
+  </script>
 
 </body>
 </html>
