@@ -1,897 +1,545 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="theme-color"
-    content="#05070b"
-  >
-
-  <title>AYNA BOOK — Login</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      font-family:
-        Arial,
-        "Noto Sans Bengali",
-        sans-serif;
-
-      background:
-        radial-gradient(
-          circle at top,
-          #172033 0%,
-          #080b12 45%,
-          #030407 100%
-        );
-
-      color: #fff;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      padding: 20px;
-    }
-
-    .stars {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      opacity: .35;
-    }
-
-    .stars::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-
-      background-image:
-        radial-gradient(#fff 1px, transparent 1px);
-
-      background-size: 45px 45px;
-
-      animation: moveStars 25s linear infinite;
-    }
-
-    @keyframes moveStars {
-      from {
-        transform: translateY(0);
-      }
-
-      to {
-        transform: translateY(45px);
-      }
-    }
-
-    .login-container {
-      position: relative;
-      z-index: 2;
-
-      width: 100%;
-      max-width: 430px;
-    }
-
-    .logo {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .logo-icon {
-      width: 76px;
-      height: 76px;
-
-      margin: 0 auto 12px;
-
-      border-radius: 50%;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 38px;
-      font-weight: 900;
-
-      color: #05070b;
-
-      background:
-        linear-gradient(
-          135deg,
-          #ffd700,
-          #ffb300
-        );
-
-      box-shadow:
-        0 0 30px rgba(255,215,0,.35);
-    }
-
-    .logo h1 {
-      color: #ffd700;
-      font-size: 28px;
-      letter-spacing: 2px;
-    }
-
-    .logo p {
-      color: #aeb7c7;
-      font-size: 14px;
-      margin-top: 5px;
-    }
-
-    .card {
-      background:
-        rgba(12,16,25,.94);
-
-      border:
-        1px solid rgba(255,215,0,.35);
-
-      border-radius: 22px;
-
-      padding: 28px 22px;
-
-      box-shadow:
-        0 20px 60px rgba(0,0,0,.5),
-        0 0 30px rgba(255,215,0,.05);
-
-      backdrop-filter: blur(15px);
-    }
-
-    .title {
-      text-align: center;
-      font-size: 23px;
-      margin-bottom: 7px;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #9fa8b8;
-      font-size: 14px;
-      margin-bottom: 25px;
-    }
-
-    .field {
-      margin-bottom: 17px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-size: 14px;
-      color: #e9edf4;
-    }
-
-    input {
-      width: 100%;
-
-      padding: 14px 15px;
-
-      border-radius: 12px;
-
-      border:
-        1px solid rgba(255,255,255,.13);
-
-      outline: none;
-
-      background:
-        rgba(255,255,255,.06);
-
-      color: #fff;
-
-      font-size: 15px;
-
-      transition: .2s;
-    }
-
-    input:focus {
-      border-color: #ffd700;
-
-      box-shadow:
-        0 0 0 3px
-        rgba(255,215,0,.08);
-    }
-
-    input::placeholder {
-      color: #747d8d;
-    }
-
-    .password-box {
-      position: relative;
-    }
-
-    .password-box input {
-      padding-right: 55px;
-    }
-
-    .show-password {
-      position: absolute;
-
-      right: 8px;
-      top: 50%;
-
-      transform: translateY(-50%);
-
-      border: 0;
-      background: transparent;
-
-      color: #ffd700;
-
-      cursor: pointer;
-
-      padding: 8px;
-      font-size: 18px;
-    }
-
-    .forgot {
-      text-align: right;
-      margin-top: -7px;
-      margin-bottom: 20px;
-    }
-
-    .forgot button {
-      border: 0;
-      background: transparent;
-
-      color: #ffd700;
-
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .login-button {
-      width: 100%;
-
-      padding: 14px;
-
-      border: 0;
-      border-radius: 12px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #ffd700,
-          #ffb300
-        );
-
-      color: #05070b;
-
-      font-size: 16px;
-      font-weight: 800;
-
-      cursor: pointer;
-
-      transition: .2s;
-    }
-
-    .login-button:hover {
-      transform: translateY(-1px);
-      box-shadow:
-        0 8px 25px
-        rgba(255,215,0,.2);
-    }
-
-    .login-button:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .message {
-      display: none;
-
-      padding: 12px;
-
-      border-radius: 10px;
-
-      margin-bottom: 16px;
-
-      text-align: center;
-
-      font-size: 14px;
-    }
-
-    .message.success {
-      display: block;
-
-      background:
-        rgba(0,230,118,.1);
-
-      border:
-        1px solid rgba(0,230,118,.3);
-
-      color: #69f0ae;
-    }
-
-    .message.error {
-      display: block;
-
-      background:
-        rgba(255,82,82,.1);
-
-      border:
-        1px solid rgba(255,82,82,.3);
-
-      color: #ff8a80;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      margin: 22px 0;
-
-      color: #687182;
-
-      font-size: 12px;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: rgba(255,255,255,.1);
-    }
-
-    .register-link {
-      text-align: center;
-
-      color: #aeb7c7;
-
-      font-size: 14px;
-    }
-
-    .register-link a {
-      color: #ffd700;
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .back {
-      display: block;
-
-      text-align: center;
-
-      margin-top: 20px;
-
-      color: #8f99aa;
-
-      text-decoration: none;
-
-      font-size: 13px;
-    }
-
-    .back:hover {
-      color: #ffd700;
-    }
-
-    .firebase-status {
-      text-align: center;
-
-      margin-top: 18px;
-
-      font-size: 12px;
-
-      color: #69f0ae;
-    }
-
-    .status-dot {
-      display: inline-block;
-
-      width: 7px;
-      height: 7px;
-
-      border-radius: 50%;
-
-      background: #00e676;
-
-      margin-right: 5px;
-    }
-
-    .loading {
-      position: fixed;
-      inset: 0;
-
-      background: #05070b;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      z-index: 9999;
-
-      transition: opacity .3s;
-    }
-
-    .loading.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .spinner {
-      width: 42px;
-      height: 42px;
-
-      border:
-        3px solid
-        rgba(255,215,0,.15);
-
-      border-top-color: #ffd700;
-
-      border-radius: 50%;
-
-      animation:
-        spin .8s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @media (max-width: 480px) {
-
-      .card {
-        padding: 24px 18px;
-      }
-
-      .logo h1 {
-        font-size: 25px;
-      }
-
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#05070b">
+
+<title>AYNA BOOK — Login</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  color:#fff;
+  background:
+    radial-gradient(circle at top,#182238 0%,#080b12 45%,#030407 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:430px;
+}
+
+.logo{
+  text-align:center;
+  margin-bottom:22px;
+}
+
+.logo-icon{
+  width:76px;
+  height:76px;
+  margin:auto;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  font-weight:900;
+  color:#05070b;
+  background:linear-gradient(135deg,#ffd700,#ffb300);
+  box-shadow:0 0 30px rgba(255,215,0,.3);
+}
+
+.logo h1{
+  margin-top:12px;
+  color:#ffd700;
+  letter-spacing:2px;
+}
+
+.logo p{
+  margin-top:6px;
+  color:#aeb7c7;
+  font-size:13px;
+}
+
+.card{
+  background:rgba(12,16,25,.95);
+  border:1px solid rgba(255,215,0,.35);
+  border-radius:22px;
+  padding:28px 22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#9fa8b8;
+  font-size:14px;
+  margin-bottom:24px;
+}
+
+.field{
+  margin-bottom:17px;
+}
+
+label{
+  display:block;
+  margin-bottom:7px;
+  font-size:14px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);
+  outline:none;
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  font-size:15px;
+}
+
+input:focus{
+  border-color:#ffd700;
+  box-shadow:0 0 0 3px rgba(255,215,0,.08);
+}
+
+.password-box{
+  position:relative;
+}
+
+.password-box input{
+  padding-right:55px;
+}
+
+.show{
+  position:absolute;
+  right:8px;
+  top:50%;
+  transform:translateY(-50%);
+  border:0;
+  background:transparent;
+  color:#ffd700;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.forgot{
+  text-align:right;
+  margin-bottom:20px;
+}
+
+.forgot button{
+  border:0;
+  background:none;
+  color:#ffd700;
+  cursor:pointer;
+}
+
+.login{
+  width:100%;
+  padding:14px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(135deg,#ffd700,#ffb300);
+  color:#05070b;
+  font-weight:800;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.login:disabled{
+  opacity:.6;
+}
+
+.message{
+  display:none;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:16px;
+  text-align:center;
+  font-size:14px;
+}
+
+.message.show{
+  display:block;
+}
+
+.error{
+  color:#ff8a80;
+  background:rgba(255,82,82,.1);
+}
+
+.success{
+  color:#69f0ae;
+  background:rgba(0,230,118,.1);
+}
+
+.divider{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:22px 0;
+  color:#687182;
+  font-size:12px;
+}
+
+.divider:before,
+.divider:after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:rgba(255,255,255,.1);
+}
+
+.register{
+  text-align:center;
+  color:#aeb7c7;
+  font-size:14px;
+}
+
+.register a{
+  color:#ffd700;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.home{
+  display:block;
+  text-align:center;
+  margin-top:20px;
+  color:#8f99aa;
+  text-decoration:none;
+  font-size:13px;
+}
+
+.status{
+  text-align:center;
+  color:#69f0ae;
+  font-size:12px;
+  margin-top:18px;
+}
+
+.dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#00e676;
+  margin-right:5px;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="stars"></div>
+<div class="container">
 
-  <!-- Loading -->
-  <div
-    id="loading"
-    class="loading"
-  >
-    <div class="spinner"></div>
+  <div class="logo">
+    <div class="logo-icon">A</div>
+    <h1>AYNA BOOK</h1>
+    <p>আধুনিক নিরাপদ ডিজিটাল সোশ্যাল প্ল্যাটফর্ম</p>
   </div>
 
+  <section class="card">
 
-  <main class="login-container">
+    <h2>🔐 Login</h2>
 
-    <!-- Logo -->
-    <div class="logo">
+    <p class="subtitle">
+      আপনার AYNA BOOK অ্যাকাউন্টে প্রবেশ করুন
+    </p>
 
-      <div class="logo-icon">
-        A
-      </div>
+    <div id="message" class="message"></div>
 
-      <h1>AYNA BOOK</h1>
+    <div class="field">
+      <label for="email">📧 Email Address</label>
 
-      <p>
-        আধুনিক নিরাপদ ডিজিটাল সোশ্যাল প্ল্যাটফর্ম
-      </p>
-
+      <input
+        id="email"
+        type="email"
+        autocomplete="email"
+        placeholder="আপনার ইমেইল লিখুন">
     </div>
 
+    <div class="field">
 
-    <!-- Login Card -->
-    <section class="card">
+      <label for="password">🔑 Password</label>
 
-      <h2 class="title">
-        🔐 Login
-      </h2>
-
-      <p class="subtitle">
-        আপনার AYNA BOOK অ্যাকাউন্টে প্রবেশ করুন
-      </p>
-
-
-      <!-- Message -->
-      <div
-        id="message"
-        class="message"
-      ></div>
-
-
-      <!-- Email -->
-      <div class="field">
-
-        <label for="email">
-          📧 Email Address
-        </label>
+      <div class="password-box">
 
         <input
-          id="email"
-          type="email"
-          autocomplete="email"
-          placeholder="আপনার ইমেইল লিখুন"
-          required
-        >
-
-      </div>
-
-
-      <!-- Password -->
-      <div class="field">
-
-        <label for="password">
-          🔑 Password
-        </label>
-
-        <div class="password-box">
-
-          <input
-            id="password"
-            type="password"
-            autocomplete="current-password"
-            placeholder="আপনার পাসওয়ার্ড লিখুন"
-            required
-          >
-
-          <button
-            type="button"
-            id="showPassword"
-            class="show-password"
-            aria-label="Show password"
-          >
-            👁️
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <!-- Forgot Password -->
-      <div class="forgot">
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="আপনার পাসওয়ার্ড লিখুন">
 
         <button
-          type="button"
-          id="forgotPassword"
-        >
-          পাসওয়ার্ড ভুলে গেছেন?
+          id="showPassword"
+          class="show"
+          type="button">
+          👁️
         </button>
 
       </div>
 
+    </div>
 
-      <!-- Login -->
+    <div class="forgot">
+
       <button
-        type="button"
-        id="loginButton"
-        class="login-button"
-      >
-        LOGIN
+        id="forgotPassword"
+        type="button">
+        পাসওয়ার্ড ভুলে গেছেন?
       </button>
-
-
-      <div class="divider">
-        অথবা
-      </div>
-
-
-      <!-- Registration -->
-      <div class="register-link">
-
-        নতুন ব্যবহারকারী?
-
-        <a href="./signup.html">
-          অ্যাকাউন্ট তৈরি করুন
-        </a>
-
-      </div>
-
-    </section>
-
-
-    <!-- Firebase status -->
-    <div class="firebase-status">
-
-      <span class="status-dot"></span>
-
-      Firebase Authentication Ready
 
     </div>
 
+    <button
+      id="loginButton"
+      class="login"
+      type="button">
+      LOGIN
+    </button>
 
-    <!-- Back -->
-    <a
-      href="./index.html"
-      class="back"
-    >
-      ← AYNA BOOK Home
-    </a>
+    <div class="divider">
+      অথবা
+    </div>
 
-  </main>
+    <div class="register">
 
+      নতুন ব্যবহারকারী?
 
-  <script type="module">
+      <a href="./signup.html">
+        অ্যাকাউন্ট তৈরি করুন
+      </a>
 
-    // ==================================================
-    // Firebase Authentication
-    // ==================================================
+    </div>
 
-    import {
-      loginUser,
-      resetPassword,
-      watchAuthState
-    } from "./auth.js";
+  </section>
 
+  <div class="status">
+    <span class="dot"></span>
+    Firebase Authentication Ready
+  </div>
 
-    // ==================================================
-    // Elements
-    // ==================================================
+  <a class="home" href="./index.html">
+    ← AYNA BOOK Home
+  </a>
 
-    const emailInput =
-      document.getElementById("email");
-
-    const passwordInput =
-      document.getElementById("password");
-
-    const loginButton =
-      document.getElementById("loginButton");
-
-    const forgotPassword =
-      document.getElementById("forgotPassword");
-
-    const showPassword =
-      document.getElementById("showPassword");
-
-    const message =
-      document.getElementById("message");
-
-    const loading =
-      document.getElementById("loading");
+</div>
 
 
-    // ==================================================
-    // Message
-    // ==================================================
+<script type="module">
 
-    function showMessage(
-      text,
-      type = "error"
-    ) {
+import {
+  loginUser,
+  resetPassword,
+  watchAuthState
+} from "./auth.js";
 
-      message.textContent = text;
 
-      message.className =
-        "message " + type;
+const email =
+  document.getElementById("email");
+
+const password =
+  document.getElementById("password");
+
+const loginButton =
+  document.getElementById("loginButton");
+
+const forgotPassword =
+  document.getElementById("forgotPassword");
+
+const showPassword =
+  document.getElementById("showPassword");
+
+const message =
+  document.getElementById("message");
+
+
+function showMessage(text,type="error"){
+
+  message.textContent=text;
+
+  message.className=
+    "message show "+type;
+
+}
+
+
+loginButton.addEventListener(
+  "click",
+  async ()=>{
+
+    const emailValue=
+      email.value.trim();
+
+    const passwordValue=
+      password.value;
+
+
+    if(!emailValue || !passwordValue){
+
+      showMessage(
+        "ইমেইল ও পাসওয়ার্ড দিন।"
+      );
+
+      return;
+    }
+
+
+    loginButton.disabled=true;
+
+    loginButton.textContent=
+      "LOGIN হচ্ছে...";
+
+
+    const result=
+      await loginUser(
+        emailValue,
+        passwordValue
+      );
+
+
+    if(result.success){
+
+      showMessage(
+        "✅ সফলভাবে Login হয়েছে।",
+        "success"
+      );
+
+
+      setTimeout(()=>{
+
+        window.location.href=
+          "./index.html";
+
+      },700);
+
+    }else{
+
+      showMessage(
+        "❌ "+result.error
+      );
+
+      loginButton.disabled=false;
+
+      loginButton.textContent=
+        "LOGIN";
+    }
+
+  }
+);
+
+
+password.addEventListener(
+  "keydown",
+  event=>{
+
+    if(event.key==="Enter"){
+
+      loginButton.click();
+
+    }
+
+  }
+);
+
+
+showPassword.addEventListener(
+  "click",
+  ()=>{
+
+    if(password.type==="password"){
+
+      password.type="text";
+
+      showPassword.textContent="🙈";
+
+    }else{
+
+      password.type="password";
+
+      showPassword.textContent="👁️";
+
+    }
+
+  }
+);
+
+
+forgotPassword.addEventListener(
+  "click",
+  async ()=>{
+
+    const emailValue=
+      email.value.trim();
+
+
+    if(!emailValue){
+
+      showMessage(
+        "প্রথমে আপনার ইমেইল লিখুন।"
+      );
+
+      email.focus();
+
+      return;
+    }
+
+
+    forgotPassword.disabled=true;
+
+
+    const result=
+      await resetPassword(
+        emailValue
+      );
+
+
+    if(result.success){
+
+      showMessage(
+        "✅ "+result.message,
+        "success"
+      );
+
+    }else{
+
+      showMessage(
+        "❌ "+result.error
+      );
 
     }
 
 
-    // ==================================================
-    // Login
-    // ==================================================
+    forgotPassword.disabled=false;
 
-    loginButton.addEventListener(
-      "click",
-      async () => {
+  }
+);
 
-        const email =
-          emailInput.value.trim();
 
-        const password =
-          passwordInput.value;
+watchAuthState(
+  user=>{
 
+    if(user){
 
-        if (!email || !password) {
-
-          showMessage(
-            "ইমেইল ও পাসওয়ার্ড দিন।"
-          );
-
-          return;
-        }
-
-
-        loginButton.disabled = true;
-
-        loginButton.textContent =
-          "LOGIN হচ্ছে...";
-
-
-        const result =
-          await loginUser(
-            email,
-            password
-          );
-
-
-        if (result.success) {
-
-          showMessage(
-            "✅ সফলভাবে Login হয়েছে।",
-            "success"
-          );
-
-
-          setTimeout(() => {
-
-            window.location.href =
-              "./index.html";
-
-          }, 700);
-
-        } else {
-
-          showMessage(
-            "❌ " + result.error
-          );
-
-          loginButton.disabled = false;
-
-          loginButton.textContent =
-            "LOGIN";
-        }
-
-      }
-    );
-
-
-    // ==================================================
-    // Enter Key Login
-    // ==================================================
-
-    passwordInput.addEventListener(
-      "keydown",
-      (event) => {
-
-        if (event.key === "Enter") {
-
-          loginButton.click();
-
-        }
-
-      }
-    );
-
-
-    // ==================================================
-    // Show / Hide Password
-    // ==================================================
-
-    showPassword.addEventListener(
-      "click",
-      () => {
-
-        if (
-          passwordInput.type ===
-          "password"
-        ) {
-
-          passwordInput.type =
-            "text";
-
-          showPassword.textContent =
-            "🙈";
-
-        } else {
-
-          passwordInput.type =
-            "password";
-
-          showPassword.textContent =
-            "👁️";
-        }
-
-      }
-    );
-
-
-    // ==================================================
-    // Password Reset
-    // ==================================================
-
-    forgotPassword.addEventListener(
-      "click",
-      async () => {
-
-        const email =
-          emailInput.value.trim();
-
-
-        if (!email) {
-
-          showMessage(
-            "প্রথমে আপনার ইমেইল লিখুন।"
-          );
-
-          emailInput.focus();
-
-          return;
-        }
-
-
-        forgotPassword.disabled = true;
-
-        const result =
-          await resetPassword(email);
-
-
-        if (result.success) {
-
-          showMessage(
-            "✅ " + result.message,
-            "success"
-          );
-
-        } else {
-
-          showMessage(
-            "❌ " + result.error
-          );
-        }
-
-
-        forgotPassword.disabled = false;
-
-      }
-    );
-
-
-    // ==================================================
-    // Auth State
-    // ==================================================
-
-    watchAuthState((user) => {
-
-      if (user) {
-
-        console.log(
-          "👤 Logged in:",
-          user.email
-        );
-
-      }
-
-    });
-
-
-    // ==================================================
-    // Remove Loading Screen
-    // ==================================================
-
-    window.addEventListener(
-      "load",
-      () => {
-
-        setTimeout(() => {
-
-          loading.classList.add(
-            "hidden"
-          );
-
-        }, 300);
-
-      }
-    );
-
-
-    // Safety fallback
-    setTimeout(() => {
-
-      loading.classList.add(
-        "hidden"
+      console.log(
+        "👤 Logged in:",
+        user.email
       );
 
-    }, 3000);
+    }
 
-  </script>
+  }
+);
+
+</script>
 
 </body>
 </html>
