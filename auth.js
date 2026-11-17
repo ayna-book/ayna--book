@@ -1,7 +1,8 @@
 
 /* ======================================================
    AYNA BOOK — AUTHENTICATION SYSTEM
-   Firebase Authentication + Cloud Firestore
+   Firebase SDK 13.4.0
+   Authentication + Cloud Firestore
    ====================================================== */
 
 import { auth, db } from "./firebase-init.js";
@@ -13,13 +14,13 @@ import {
   onAuthStateChanged,
   updateProfile,
   sendPasswordResetEmail
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
   doc,
   setDoc,
   serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
 
 // ======================================================
@@ -134,7 +135,7 @@ export async function registerUser(name, email, password) {
 
     return {
       success: true,
-      user: user,
+      user,
       message: "Registration successful."
     };
 
@@ -147,8 +148,8 @@ export async function registerUser(name, email, password) {
     return {
       success: false,
       user: null,
-      message: message,
-      error: error
+      message,
+      error
     };
   }
 }
@@ -188,7 +189,7 @@ export async function loginUser(email, password) {
 
     return {
       success: true,
-      user: user,
+      user,
       message: "Login successful."
     };
 
@@ -201,8 +202,8 @@ export async function loginUser(email, password) {
     return {
       success: false,
       user: null,
-      message: message,
-      error: error
+      message,
+      error
     };
   }
 }
@@ -229,7 +230,7 @@ export async function resetPassword(email) {
 
     return {
       success: true,
-      message: message
+      message
     };
 
   } catch (error) {
@@ -240,8 +241,8 @@ export async function resetPassword(email) {
 
     return {
       success: false,
-      message: message,
-      error: error
+      message,
+      error
     };
   }
 }
@@ -270,8 +271,8 @@ export async function logoutUser() {
 
     return {
       success: false,
-      message: message,
-      error: error
+      message,
+      error
     };
   }
 }
