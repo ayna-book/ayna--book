@@ -1,244 +1,692 @@
-
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#071b49">
-<title>AYNA BOOK</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;padding:12px;background:#071b49;color:white;font-family:Arial,sans-serif;font-size:19px}
-.container{max-width:1100px;margin:auto}
-.logo{width:85px;height:85px;border:3px solid white;border-radius:50%;margin:12px auto;display:grid;place-items:center;font-size:45px;animation:glow 2s infinite alternate}
-@keyframes glow{from{box-shadow:0 0 5px white}to{box-shadow:0 0 28px white,0 0 45px #00d9ff}}
-h1{text-align:center;font-size:35px}
-h2{text-align:center;font-size:26px}
-.tagline{text-align:center;font-size:18px}
-.panel{background:#102b60;border:2px solid #789bd2;border-radius:18px;padding:20px;margin:18px auto;max-width:700px}
-input{width:100%;padding:15px;margin:8px 0;border-radius:10px;border:2px solid #aac8ff;font-size:18px}
-button{padding:15px;border:0;border-radius:11px;background:white;color:#071b49;font-size:18px;font-weight:bold;cursor:pointer;margin:6px 0}
-.full{width:100%}.gold{background:#ffd700}.cyan{background:#00d9ff}
-.password{position:relative}.password input{padding-right:65px}
-.eye{position:absolute;right:5px;top:12px;background:transparent;font-size:22px;margin:0;padding:8px}
-.message{text-align:center;color:#ffe66d;min-height:25px;overflow-wrap:anywhere}
-.hidden{display:none!important}
-.profile{background:#153d7b;border:2px solid white;border-radius:15px;padding:18px;text-align:center;font-size:22px;overflow-wrap:anywhere}
-.ticker{background:white;color:#071b49;padding:15px;border-radius:12px;margin:18px 0;font-size:22px;font-weight:bold}
-.features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.feature{min-height:145px;background:#153d7b;border:2px solid #a8d1ff;border-radius:17px;color:white;text-decoration:none;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:21px;font-weight:bold;padding:12px;box-shadow:0 0 10px #00d9ff}
-.feature span{font-size:39px;margin-bottom:10px}
-.feature:active{transform:scale(.97)}
-.status{text-align:center;color:#bdeaff;font-size:15px}
-footer{text-align:center;padding:25px}
-@media(max-width:480px){body{padding:7px}h1{font-size:29px}.panel{padding:13px}.features{gap:9px}.feature{min-height:130px;font-size:17px;padding:8px}.feature span{font-size:33px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AYNA BOOK</title>
+
+  <meta name="description"
+        content="AYNA BOOK - Modern, secure and privacy-focused digital social platform.">
+
+  <meta name="theme-color" content="#0d6efd">
+
+  <link rel="icon" href="icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ayna-ui-patch.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* HEADER */
+
+    header {
+      background: linear-gradient(135deg, #0d6efd, #673ab7);
+      color: white;
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 3px 15px rgba(0,0,0,.15);
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand img {
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
+    }
+
+    .brand h1 {
+      font-size: 24px;
+    }
+
+    .brand p {
+      font-size: 12px;
+      opacity: .9;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.15);
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      background: white;
+      color: #0d6efd;
+    }
+
+    /* HERO */
+
+    .hero {
+      max-width: 1100px;
+      margin: 25px auto;
+      padding: 45px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #ffffff, #eaf2ff);
+      border-radius: 25px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    .hero img {
+      width: 110px;
+      height: 110px;
+      border-radius: 28px;
+      margin-bottom: 15px;
+    }
+
+    .hero h2 {
+      font-size: 34px;
+      margin-bottom: 10px;
+      color: #0d6efd;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      color: #555;
+    }
+
+    .buttons {
+      margin-top: 25px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      margin: 5px;
+      border-radius: 25px;
+      background: #0d6efd;
+      color: white;
+      font-weight: bold;
+    }
+
+    .btn.secondary {
+      background: #673ab7;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      opacity: .9;
+    }
+
+    /* SECTION */
+
+    .section {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+
+    .section h2 {
+      margin-bottom: 15px;
+      color: #172033;
+    }
+
+    /* CARDS */
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.07);
+      transition: .2s;
+      border: 1px solid #edf0f5;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,.12);
+    }
+
+    .card h3 {
+      color: #0d6efd;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+
+    .card p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* FEATURE */
+
+    .feature {
+      background: linear-gradient(135deg, #0d6efd, #673ab7);
+      color: white;
+      border-radius: 22px;
+      padding: 30px 20px;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .feature h2 {
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    /* FOOTER */
+
+    footer {
+      margin-top: 40px;
+      background: #101828;
+      color: white;
+      text-align: center;
+      padding: 35px 15px;
+    }
+
+    footer img {
+      width: 55px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+    }
+
+    footer a {
+      color: #9ec5ff;
+      margin: 0 7px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+
+      .header-content {
+        flex-direction: column;
+      }
+
+      nav {
+        justify-content: center;
+      }
+
+      .hero {
+        margin: 15px;
+        padding: 35px 15px;
+      }
+
+      .hero h2 {
+        font-size: 28px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 420px) {
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .brand h1 {
+        font-size: 21px;
+      }
+
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
 
-<section id="authScreen">
-<div class="logo">👁</div>
-<h1>AYNA BOOK</h1>
-<p class="tagline">MY WORLD. MY STORY. MY AYNA BOOK.</p>
-<p class="tagline">Connect. Create. Share. Protect.</p>
+<!-- HEADER -->
 
-<div class="panel">
-<h2>নতুন অ্যাকাউন্ট তৈরি</h2>
-<form id="registerForm">
-<input id="regName" placeholder="আপনার পূর্ণ নাম" required maxlength="60">
-<input id="regPhone" type="tel" placeholder="মোবাইল নম্বর" required>
-<input id="regEmail" type="email" placeholder="Gmail / Email" required>
-<div class="password">
-<input id="regPass" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" required minlength="6">
-<button class="eye" type="button" data-eye="regPass">👁</button>
-</div>
-<div class="password">
-<input id="confirmPass" type="password" placeholder="পুনরায় পাসওয়ার্ড লিখুন" required>
-<button class="eye" type="button" data-eye="confirmPass">👁</button>
-</div>
-<button id="registerBtn" class="full gold" type="submit">REGISTER / ACCOUNT CREATE</button>
-</form>
-</div>
+<header>
+  <div class="header-content">
 
-<div class="panel">
-<h2>LOGIN</h2>
-<form id="loginForm">
-<input id="loginEmail" type="email" placeholder="Gmail / Email" required>
-<div class="password">
-<input id="loginPass" type="password" placeholder="Password" required>
-<button class="eye" type="button" data-eye="loginPass">👁</button>
-</div>
-<button id="loginBtn" class="full gold" type="submit">LOGIN</button>
-</form>
-<button id="forgotBtn" class="full cyan" type="button">FORGOT PASSWORD?</button>
-<button id="clearBtn" class="full" type="button">CLEAR</button>
-<p id="message" class="message" aria-live="polite"></p>
-<p id="connectionStatus" class="status">Firebase সংযোগ পরীক্ষা হচ্ছে...</p>
-</div>
+    <div class="brand">
+      <img src="icon-192.png" alt="AYNA BOOK">
+      <div>
+        <h1>AYNA BOOK</h1>
+        <p>Connect • Share • Create</p>
+      </div>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+      <a href="profile.html">Profile</a>
+      <a href="messages.html">Messages</a>
+    </nav>
+
+  </div>
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <img src="icon-512.png" alt="AYNA BOOK Logo">
+
+  <h2>Welcome to AYNA BOOK</h2>
+
+  <p>
+    A modern, secure and privacy-focused digital social platform
+    designed to connect people, share ideas and create meaningful
+    connections around the world.
+  </p>
+
+  <div class="buttons">
+    <a class="btn" href="login.html">Login</a>
+    <a class="btn secondary" href="register.html">Create Account</a>
+  </div>
+
 </section>
 
-<section id="dashboard" class="hidden">
-<div class="logo">👁</div>
-<h1>AYNA BOOK</h1>
-<p class="tagline">MY WORLD. MY STORY. MY AYNA BOOK.</p>
-<p class="tagline">Connect. Create. Share. Protect.</p>
 
-<div class="profile">
-<strong>MY PROFILE</strong>
-<p id="profileName">AYNA User</p>
-<p id="profileEmail"></p>
-<button id="logoutBtn" class="gold">LOGOUT</button>
-</div>
+<!-- QUICK ACCESS -->
 
-<div class="ticker">
-<marquee scrollamount="5">
-🌍 AYNA BOOK GLOBAL HEADLINES • BANGLADESH • WORLD NEWS • TECHNOLOGY • SCIENCE • HUMANITY • GLOBAL SAFETY ALERTS
-</marquee>
-</div>
+<section class="section">
 
-<div class="features">
-<a class="feature" href="profile.html"><span>👤</span>PROFILE</a>
-<a class="feature" href="countries.html"><span>🌍</span>WORLD COUNTRIES</a>
-<a class="feature" href="radio-tv.html"><span>📻</span>WORLD RADIO & TV</a>
-<a class="feature" href="breaking-news.html"><span>📰</span>BREAKING NEWS</a>
-<a class="feature" href="global-alert.html"><span>🚨</span>150 GLOBAL ALERT</a>
-<a class="feature" href="gps.html"><span>📍</span>GPS LOCATION</a>
-<a class="feature" href="radar.html"><span>📡</span>WEATHER RADAR</a>
-<a class="feature" href="compass.html"><span>🧭</span>COMPASS</a>
-<a class="feature" href="hourly-clock.html"><span>🕒</span>HOURLY CLOCK</a>
-<a class="feature" href="chat.html"><span>💬</span>AYNA MESSENGER</a>
-<a class="feature" href="bd-directory.html"><span>🇧🇩</span>BANGLADESH DIRECTORY</a>
-<a class="feature" href="direction.html"><span>🗺️</span>DIRECTION</a>
-</div>
+  <h2>🚀 Quick Access</h2>
 
-<footer>AYNA BOOK<br>Connect. Create. Share. Protect.</footer>
+  <div class="grid">
+
+    <a class="card" href="login.html">
+      <h3>🔐 Login</h3>
+      <p>Sign in to your AYNA BOOK account.</p>
+    </a>
+
+    <a class="card" href="register.html">
+      <h3>📝 Register</h3>
+      <p>Create a new account.</p>
+    </a>
+
+    <a class="card" href="profile.html">
+      <h3>👤 Profile</h3>
+      <p>Manage your profile.</p>
+    </a>
+
+    <a class="card" href="messages.html">
+      <h3>💬 Messages</h3>
+      <p>Communicate with other users.</p>
+    </a>
+
+  </div>
+
 </section>
-</div>
 
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import {
- getAuth,createUserWithEmailAndPassword,
- signInWithEmailAndPassword,sendPasswordResetEmail,
- updateProfile,onAuthStateChanged,signOut
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-import {getFirestore,doc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-const firebaseConfig={
- apiKey:"AIzaSyAIW4FK9Il2yct-tOSKUuSodso8KN2UsTA",
- authDomain:"ayna-book.firebaseapp.com",
- databaseURL:"https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
- projectId:"ayna-book",
- storageBucket:"ayna-book.firebasestorage.app",
- messagingSenderId:"805601138500",
- appId:"1:805601138500:web:81a9adacbedbc5f3626911",
- measurementId:"G-JWBYNXSBMZ"
-};
+<!-- SOCIAL -->
 
-const authScreen=document.getElementById("authScreen");
-const dashboard=document.getElementById("dashboard");
-const message=document.getElementById("message");
-const connection=document.getElementById("connectionStatus");
+<section class="section">
 
-function say(t){message.textContent=t}
-function errorText(e){
- const errors={
- "auth/email-already-in-use":"এই ইমেইলে অ্যাকাউন্ট আছে। লগইন করুন।",
- "auth/invalid-email":"সঠিক ইমেইল লিখুন।",
- "auth/weak-password":"পাসওয়ার্ড আরও শক্তিশালী করুন।",
- "auth/invalid-credential":"ইমেইল অথবা পাসওয়ার্ড ভুল।",
- "auth/network-request-failed":"ইন্টারনেট সংযোগ পরীক্ষা করুন।",
- "auth/too-many-requests":"কিছুক্ষণ পরে চেষ্টা করুন।"
- };
- return errors[e.code]||e.message||"সমস্যা হয়েছে।";
-}
+  <h2>🌐 Social</h2>
 
-document.querySelectorAll("[data-eye]").forEach(b=>{
- b.addEventListener("click",()=>{
-  const f=document.getElementById(b.dataset.eye);
-  f.type=f.type==="password"?"text":"password";
- });
-});
+  <div class="grid">
 
-let auth,db;
-try{
- const app=initializeApp(firebaseConfig);
- auth=getAuth(app);
- db=getFirestore(app);
- connection.textContent="Firebase প্রস্তুত";
-}catch(e){
- connection.textContent="Firebase error: "+e.message;
-}
+    <a class="card" href="chat.html">
+      <h3>💬 Chat</h3>
+      <p>Connect and chat with people.</p>
+    </a>
 
-if(auth){
- document.getElementById("registerForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const name=document.getElementById("regName").value.trim();
-  const phone=document.getElementById("regPhone").value.trim();
-  const email=document.getElementById("regEmail").value.trim();
-  const pass=document.getElementById("regPass").value;
-  const confirm=document.getElementById("confirmPass").value;
-  const btn=document.getElementById("registerBtn");
-  if(pass!==confirm){say("দুই পাসওয়ার্ড এক নয়।");return}
-  btn.disabled=true;
-  try{
-   const result=await createUserWithEmailAndPassword(auth,email,pass);
-   await updateProfile(result.user,{displayName:name});
-   try{
-    await setDoc(doc(db,"users",result.user.uid),{
-     uid:result.user.uid,name,phone,email,createdAt:serverTimestamp()
+    <a class="card" href="public-profile.html">
+      <h3>👥 Public Profiles</h3>
+      <p>Explore public profiles.</p>
+    </a>
+
+    <a class="card" href="audio-video-messaging.html">
+      <h3>🎥 Audio & Video</h3>
+      <p>Audio and video communication.</p>
+    </a>
+
+    <a class="card" href="4account.html">
+      <h3>⚙️ Account</h3>
+      <p>Manage your account.</p>
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- NEWS -->
+
+<section class="section">
+
+  <h2>📰 News & Media</h2>
+
+  <div class="grid">
+
+    <a class="card" href="breaking-news.html">
+      <h3>🚨 Breaking News</h3>
+      <p>Latest breaking news.</p>
+    </a>
+
+    <a class="card" href="radio-tv.html">
+      <h3>📺 Radio & TV</h3>
+      <p>Radio and television.</p>
+    </a>
+
+    <a class="card" href="bangla-radio-tv.html">
+      <h3>🇧🇩 Bangla Radio & TV</h3>
+      <p>Bangla media services.</p>
+    </a>
+
+    <a class="card" href="world-leaders.html">
+      <h3>🌍 World Leaders</h3>
+      <p>Information about world leaders.</p>
+    </a>
+
+    <a class="card" href="countries.html">
+      <h3>🌎 Countries</h3>
+      <p>Explore countries around the world.</p>
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- DIRECTORY -->
+
+<section class="section">
+
+  <h2>📚 Directory</h2>
+
+  <div class="grid">
+
+    <a class="card" href="bd-directory.html">
+      <h3>🇧🇩 Bangladesh Directory</h3>
+      <p>Bangladesh directory.</p>
+    </a>
+
+    <a class="card" href="business-directory.html">
+      <h3>🏢 Business Directory</h3>
+      <p>Business and services.</p>
+    </a>
+
+    <a class="card" href="world-locations.html">
+      <h3>📍 World Locations</h3>
+      <p>Explore worldwide locations.</p>
+    </a>
+
+    <a class="card" href="google-official-sites.html">
+      <h3>🔎 Google Services</h3>
+      <p>Official Google websites.</p>
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- HEALTH -->
+
+<section class="section">
+
+  <h2>🏥 Health & Medical</h2>
+
+  <div class="grid">
+
+    <a class="card" href="medical-research.html">
+      <h3>🔬 Medical Research</h3>
+      <p>Medical research information.</p>
+    </a>
+
+    <a class="card" href="medicine-store.html">
+      <h3>💊 Medicine Store</h3>
+      <p>Medicine information and services.</p>
+    </a>
+
+    <a class="card" href="world-doctors.html">
+      <h3>👨‍⚕️ World Doctors</h3>
+      <p>Doctors and medical information.</p>
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- SMART TOOLS -->
+
+<section class="section">
+
+  <h2>🧭 Smart Tools</h2>
+
+  <div class="grid">
+
+    <a class="card" href="gps.html">
+      <h3>📍 GPS</h3>
+      <p>GPS and location tools.</p>
+    </a>
+
+    <a class="card" href="compass.html">
+      <h3>🧭 Compass</h3>
+      <p>Digital compass.</p>
+    </a>
+
+    <a class="card" href="direction.html">
+      <h3>🧭 Direction</h3>
+      <p>Direction tools.</p>
+    </a>
+
+    <a class="card" href="radar.html">
+      <h3>📡 Radar</h3>
+      <p>Radar interface.</p>
+    </a>
+
+    <a class="card" href="radar-compass.html">
+      <h3>📡 Radar Compass</h3>
+      <p>Radar and compass.</p>
+    </a>
+
+    <a class="card" href="hourly-clock.html">
+      <h3>🕐 Clock</h3>
+      <p>Hourly clock.</p>
+    </a>
+
+    <a class="card" href="currency-exchange.html">
+      <h3>💱 Currency</h3>
+      <p>Currency exchange.</p>
+    </a>
+
+    <a class="card" href="camera.html">
+      <h3>📷 Camera</h3>
+      <p>Camera interface.</p>
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- TECHNOLOGY -->
+
+<section class="section">
+
+  <h2>🚀 Technology</h2>
+
+  <div class="grid">
+
+    <a class="card" href="quantum.html">
+      <h3>⚛️ Quantum</h3>
+      <p>Quantum technology.</p>
+    </a>
+
+    <a class="card" href="supercomputer.html">
+      <h3>💻 Supercomputer</h3>
+      <p>Supercomputer information.</p>
+    </a>
+
+    <a class="card" href="ev-vehicles.html">
+      <h3>🚗 EV Vehicles</h3>
+      <p>Electric vehicle information.</p>
+    </a>
+
+    <a class="card" href="auto-network.html">
+      <h3>🌐 Auto Network</h3>
+      <p>Network services.</p>
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- PRIVACY -->
+
+<section class="section">
+
+  <h2>🔒 Security & Privacy</h2>
+
+  <div class="grid">
+
+    <a class="card" href="privacy.html">
+      <h3>🔐 Privacy Policy</h3>
+      <p>Read our privacy information.</p>
+    </a>
+
+    <a class="card" href="privacy-settings.html">
+      <h3>⚙️ Privacy Settings</h3>
+      <p>Manage privacy settings.</p>
+    </a>
+
+    <a class="card" href="ownership.html">
+      <h3>©️ Ownership</h3>
+      <p>AYNA BOOK project information.</p>
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- FEATURE -->
+
+<section class="section">
+
+  <div class="feature">
+
+    <h2>AYNA BOOK</h2>
+
+    <p>
+      Modern • Secure • Private • Global
+    </p>
+
+    <p style="margin-top:10px;">
+      Connect with people. Share your ideas. Create your digital world.
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+  <img src="icon-192.png" alt="AYNA BOOK">
+
+  <h2>AYNA BOOK</h2>
+
+  <p>
+    Modern Digital Social Platform
+  </p>
+
+  <br>
+
+  <div>
+    <a href="privacy.html">Privacy</a>
+    |
+    <a href="privacy-settings.html">Privacy Settings</a>
+    |
+    <a href="login.html">Login</a>
+    |
+    <a href="register.html">Register</a>
+  </div>
+
+  <br>
+
+  <p>
+    © 2026 AYNA BOOK. All rights reserved.
+  </p>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
+
+<script src="firebase-config.js"></script>
+<script src="firebase-init.js"></script>
+<script src="firebase.js"></script>
+<script src="app.js"></script>
+<script src="offline.js"></script>
+
+<script>
+
+  // AYNA BOOK Service Worker
+  if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function () {
+
+      navigator.serviceWorker.register("sw.js")
+        .then(function () {
+          console.log("AYNA BOOK Service Worker registered.");
+        })
+        .catch(function (error) {
+          console.log(
+            "Service Worker registration failed:",
+            error
+          );
+        });
+
     });
-   }catch(dbError){console.error(dbError)}
-   say("অ্যাকাউন্ট তৈরি হয়েছে!");
-  }catch(err){say(errorText(err))}
-  finally{btn.disabled=false}
- });
 
- document.getElementById("loginForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const email=document.getElementById("loginEmail").value.trim();
-  const pass=document.getElementById("loginPass").value;
-  const btn=document.getElementById("loginBtn");
-  btn.disabled=true;
-  try{
-   await signInWithEmailAndPassword(auth,email,pass);
-   say("লগইন সফল!");
-  }catch(err){say(errorText(err))}
-  finally{btn.disabled=false}
- });
-
- document.getElementById("forgotBtn").addEventListener("click",async()=>{
-  const email=document.getElementById("loginEmail").value.trim();
-  if(!email){say("আগে ইমেইল লিখুন।");return}
-  try{
-   await sendPasswordResetEmail(auth,email);
-   say("পাসওয়ার্ড রিসেট ইমেইল পাঠানো হয়েছে।");
-  }catch(err){say(errorText(err))}
- });
-
- document.getElementById("clearBtn").addEventListener("click",()=>{
-  document.getElementById("registerForm").reset();
-  document.getElementById("loginForm").reset();
-  say("");
- });
-
- document.getElementById("logoutBtn").addEventListener("click",async()=>{
-  try{await signOut(auth)}catch(err){say(errorText(err))}
- });
-
- onAuthStateChanged(auth,user=>{
-  if(user){
-   authScreen.classList.add("hidden");
-   dashboard.classList.remove("hidden");
-   document.getElementById("profileName").textContent=user.displayName||"AYNA User";
-   document.getElementById("profileEmail").textContent=user.email||"";
-  }else{
-   dashboard.classList.add("hidden");
-   authScreen.classList.remove("hidden");
   }
- });
-}
+
 </script>
+
 </body>
 </html>
