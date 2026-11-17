@@ -1,42 +1,40 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AYNA BOOK Profile</title>
-<style>
-body{margin:0;background:#071b49;color:white;font-family:Arial;padding:20px}
-main{max-width:650px;margin:auto;background:#142d5d;border:2px solid #ffd700;border-radius:20px;padding:22px}
-h1,h2{color:#ffd700}input,button{width:100%;padding:15px;margin:8px 0;border:0;border-radius:10px;box-sizing:border-box}
-button{background:#ffd700;color:#071b49;font-weight:bold}
-a{color:#ffd700}.avatar{font-size:65px;text-align:center}
-</style></head>
-<body><main>
-<h1>👁 AYNA BOOK</h1><div class="avatar">👤</div>
-<h2>আমার প্রোফাইল</h2>
-<p id="status">অ্যাকাউন্টের তথ্য লোড হচ্ছে...</p>
-<label>নাম</label><input id="name" placeholder="আপনার নাম">
-<label>ফোন</label><input id="phone" placeholder="মোবাইল নম্বর">
-<button id="save">প্রোফাইল সংরক্ষণ</button>
-<button id="logout">লগআউট</button>
-<p><a href="index.html">হোমে ফিরে যান</a></p>
-</main>
-<script type="module">
-import{initializeApp,getApps}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import{getAuth,onAuthStateChanged,updateProfile,signOut}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-import{getFirestore,doc,setDoc,getDoc}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-const config={apiKey:"AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",authDomain:"ayna-book.firebaseapp.com",projectId:"ayna-book",storageBucket:"ayna-book.firebasestorage.app",messagingSenderId:"805601138500",appId:"1:805601138500:web:81a9adacbedbc5f3626911"};
-const app=getApps().length?getApps()[0]:initializeApp(config),auth=getAuth(app),db=getFirestore(app);
-let current=null;
-onAuthStateChanged(auth,async u=>{
- current=u;if(!u){status.textContent="আগে লগইন করুন।";return}
- status.textContent="লগইন: "+u.email;name.value=u.displayName||"";
- try{let s=await getDoc(doc(db,"users",u.uid));if(s.exists()){name.value=s.data().name||name.value;phone.value=s.data().phone||""}}catch(e){status.textContent="প্রোফাইল পড়তে সমস্যা: "+e.message}
-});
-save.onclick=async()=>{
- if(!current)return alert("আগে লগইন করুন");
- try{await updateProfile(current,{displayName:name.value.trim()});await setDoc(doc(db,"users",current.uid),{name:name.value.trim(),phone:phone.value.trim(),email:current.email},{merge:true});status.textContent="প্রোফাইল সংরক্ষিত হয়েছে।"}
- catch(e){status.textContent="সংরক্ষণ হয়নি: "+e.message}
-};
-logout.onclick=()=>signOut(auth).then(()=>location.href="index.html");
-</script></body></html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমার প্রোফাইল - AYNA ID</title>
+    <style>
+        body { background: #090a0f; color: #fff; font-family: sans-serif; padding: 20px; border: 3px solid #ffd700; min-height: 100vh; margin: 0; font-size: 18px; }
+        .card { background: rgba(255,255,255,0.08); border: 2px solid #ffd700; border-radius: 14px; padding: 20px; text-align: center; margin-top: 20px; }
+        button { padding: 12px 24px; background: #ff4444; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; margin-top: 20px; cursor: pointer; }
+        a.back { color: #ffd700; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back">← হোমে ফিরে যান</a>
+    <div class="card">
+        <h2 style="color: #ffd700;">★ AYNA ID প্রোফাইল ★</h2>
+        <p id="user-email" style="margin: 15px 0; font-size: 1.1rem;">লোড হচ্ছে...</p>
+        <p id="user-uid" style="font-size: 0.9rem; color: #ccc;"></p>
+        <button id="logout-btn">লগআউট করুন</button>
+    </div>
+
+    <script type="module">
+        import { auth } from './firebase.js';
+        import { logoutUser } from './auth.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('user-email').textContent = `ইমেইল: ${user.email}`;
+                document.getElementById('user-uid').textContent = `AYNA ID: ${user.uid}`;
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', logoutUser);
+    </script>
+</body>
+</html>
