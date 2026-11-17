@@ -1,16 +1,72 @@
-
-<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AYNA Radar</title>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK - Global Weather Radar</title>
 <style>
-body{margin:0;background:#071b49;color:white;font-family:Arial;padding:18px}main{max-width:700px;margin:auto}h1{color:#ffd700}.panel{background:#142d5d;border:1px solid #ffd700;border-radius:14px;padding:17px;margin:12px 0}a{color:#ffd700}
-</style></head><body><main>
-<h1>📡 AYNA RADAR</h1>
-<div class="panel"><h2>আবহাওয়া রাডার</h2>
-<p>এখানে এখনো কোনো লাইভ রাডার ডেটা সংযুক্ত নেই।</p>
-<p><a href="https://www.windy.com/" target="_blank" rel="noopener">Windy — Live Weather Map খুলুন</a></p>
-<p><a href="https://zoom.earth/" target="_blank" rel="noopener">Zoom Earth — Satellite & Weather Map</a></p>
+*{box-sizing:border-box}body{margin:0;background:#071b49;color:#fff;font-family:Arial,"Noto Sans Bengali",sans-serif}
+header{padding:16px;text-align:center;background:#102b63;border-bottom:2px solid #ffd700}
+.logo{font-size:25px;font-weight:bold;color:#ffd700}h1{font-size:22px;margin:8px 0}
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px;background:#0b2458}
+a,button{padding:10px 14px;border:1px solid #ffd700;border-radius:9px;background:#17366f;color:#fff;text-decoration:none;font-size:15px;cursor:pointer}
+main{max-width:1200px;margin:auto;padding:12px}
+.note{background:#10285a;border:1px solid #34558e;padding:13px;border-radius:10px;line-height:1.7;margin:10px 0}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+select{padding:11px;border-radius:8px;min-width:190px;font-size:15px}
+.mapwrap{height:72vh;min-height:440px;border:2px solid #ffd700;border-radius:12px;overflow:hidden;background:#132f68}
+iframe{width:100%;height:100%;border:0}
+footer{text-align:center;padding:18px;color:#cbd8f5}
+</style>
+</head>
+<body>
+<header><div class="logo">👁 AYNA BOOK</div><h1>GLOBAL CIVILIAN RADAR</h1><div>আবহাওয়া ও বেসামরিক রাডার পর্যবেক্ষণ</div></header>
+<nav>
+<a href="index.html">⌂ হোম</a>
+<a href="military-radar.html">📡 সামরিক রাডার তথ্য</a>
+<a href="compass.html">🧭 কম্পাস</a>
+<button onclick="fullScreen()">⛶ ফুল স্ক্রিন</button>
+</nav>
+<main>
+<div class="note"><b style="color:#ffd700">বিশ্ব আবহাওয়া রাডার</b><br>মানচিত্রে বৃষ্টি ও আবহাওয়ার স্তর দেখতে নিচের মানচিত্র ব্যবহার করুন। এটি তৃতীয় পক্ষের Windy সেবা; তথ্য ও কভারেজ অঞ্চলভেদে ভিন্ন হতে পারে।</div>
+<div class="controls">
+<select id="place" onchange="changePlace()">
+<option value="21.5|92.0|5">বাংলাদেশ – কক্সবাজার</option>
+<option value="23.8|90.4|6">বাংলাদেশ – ঢাকা</option>
+<option value="22.35|91.8|6">বাংলাদেশ – চট্টগ্রাম</option>
+<option value="19.07|72.87|5">ভারত – মুম্বাই</option>
+<option value="25.2|55.27|5">UAE – দুবাই</option>
+<option value="51.5|-0.12|5">যুক্তরাজ্য – লন্ডন</option>
+<option value="40.7|-74.0|5">যুক্তরাষ্ট্র – নিউইয়র্ক</option>
+<option value="35.68|139.69|5">জাপান – টোকিও</option>
+</select>
+<button onclick="reloadMap()">↻ মানচিত্র রিফ্রেশ</button>
 </div>
-<div class="panel"><h2>রাডার কী দেখায়?</h2>
-<ul><li>বৃষ্টির মেঘের অবস্থান</li><li>ঝড়ের গতিপথ ও তীব্রতা—উৎসের ডেটা থাকলে</li><li>স্যাটেলাইটের মেঘের ছবি</li></ul>
-<p>এটি সরকারি সতর্কবার্তার বিকল্প নয়।</p></div>
-<p><a href="index.html">← হোম</a></p>
-</main></body></html>
+<div class="mapwrap" id="mapwrap">
+<iframe id="weatherMap" title="Windy weather radar map" loading="lazy"
+src="https://embed.windy.com/embed2.html?lat=21.5&lon=92.0&detailLat=21.5&detailLon=92.0&width=650&height=450&zoom=5&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=true&type=map&location=coordinates&detail=true&metricWind=default&metricTemp=default&radarRange=-1"
+allowfullscreen></iframe>
+</div>
+<div class="note">জরুরি ঘূর্ণিঝড় বা দুর্যোগের সিদ্ধান্তের জন্য বাংলাদেশ আবহাওয়া অধিদপ্তর ও সরকারি সতর্কবার্তা অনুসরণ করুন। রাডার মানচিত্রে বিলম্ব বা ডেটা-ঘাটতি থাকতে পারে।</div>
+</main>
+<footer>AYNA BOOK • Connect. Create. Share. Protect.</footer>
+<script>
+function changePlace(){
+ const v=document.getElementById('place').value.split('|');
+ const lat=v[0],lon=v[1],zoom=v[2];
+ document.getElementById('weatherMap').src=
+ 'https://embed.windy.com/embed2.html?lat='+lat+'&lon='+lon+
+ '&detailLat='+lat+'&detailLon='+lon+
+ '&width=650&height=450&zoom='+zoom+
+ '&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=true&type=map&location=coordinates&detail=true&metricWind=default&metricTemp=default&radarRange=-1';
+}
+function reloadMap(){const f=document.getElementById('weatherMap');f.src=f.src;}
+async function fullScreen(){
+ const el=document.getElementById('mapwrap');
+ try{if(!document.fullscreenElement)await el.requestFullscreen();else await document.exitFullscreen();}
+ catch(e){alert('এই ব্রাউজারে ফুল স্ক্রিন চালু করা যায়নি।');}
+}
+</script>
+</body>
+</html>
