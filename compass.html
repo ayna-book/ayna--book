@@ -1,0 +1,32 @@
+
+<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AYNA Compass</title>
+<style>
+body{background:#071b49;color:white;font-family:Arial;text-align:center;padding:18px}h1{color:#ffd700}.dial{width:260px;height:260px;border:7px solid #ffd700;border-radius:50%;margin:35px auto;display:flex;align-items:center;justify-content:center;position:relative;background:#142d5d}.needle{font-size:85px;color:#ffdf00;transition:transform .2s}.north{position:absolute;top:12px;color:#ffd700;font-size:22px}button{padding:15px;background:#ffd700;border:0;border-radius:9px;font-weight:bold}
+</style></head><body>
+<h1>🧭 AYNA COMPASS</h1>
+<div class="dial"><span class="north">N</span><div class="needle" id="needle">↑</div></div>
+<h2 id="degree">দিক নির্ধারণ হয়নি</h2>
+<button id="start">কম্পাস চালু করুন</button>
+<p id="info">ফোনে সেন্সর ও অনুমতি প্রয়োজন হতে পারে।</p>
+<p><a href="index.html" style="color:#ffd700">← হোম</a></p>
+<script>
+function update(e){
+ let heading=typeof e.webkitCompassHeading==="number"?e.webkitCompassHeading:
+ (typeof e.alpha==="number"?(360-e.alpha)%360:null);
+ if(heading===null){info.textContent="এই ডিভাইসে কম্পাস সেন্সর পাওয়া যায়নি।";return}
+ needle.style.transform="rotate("+heading+"deg)";
+ degree.textContent=Math.round(heading)+"° — "+direction(heading);
+}
+function direction(d){return ["উত্তর","উত্তর-পূর্ব","পূর্ব","দক্ষিণ-পূর্ব","দক্ষিণ","দক্ষিণ-পশ্চিম","পশ্চিম","উত্তর-পশ্চিম"][Math.round(d/45)%8]}
+start.onclick=async()=>{
+ try{
+  if(typeof DeviceOrientationEvent==="undefined"){info.textContent="এই ব্রাউজারে কম্পাস সমর্থিত নয়।";return}
+  if(typeof DeviceOrientationEvent.requestPermission==="function"){
+   const p=await DeviceOrientationEvent.requestPermission();
+   if(p!=="granted"){info.textContent="সেন্সরের অনুমতি দেওয়া হয়নি।";return}
+  }
+  window.addEventListener("deviceorientation",update,true);
+  info.textContent="ফোন সমতল রাখুন এবং কম্পাস ক্যালিব্রেট করুন।";
+ }catch(e){info.textContent="কম্পাস চালু হয়নি: "+e.message}
+};
+</script></body></html>
