@@ -1,158 +1,90 @@
-// ======================================================
-// AYNA BOOK — Firebase Initialization
-// Firebase Web SDK 12.5.0
-// ======================================================
 
-import {
-  initializeApp,
-  getApps,
-  getApp
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+/* ======================================================
+   AYNA BOOK — FIREBASE INITIALIZATION
+   Firebase App + Authentication + Firestore
+   ====================================================== */
 
-import {
-  getAuth
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import { initializeApp, getApp, getApps } from
+  "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
-import {
-  getFirestore
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { getAuth } from
+  "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-import {
-  getDatabase
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
-
-import {
-  getStorage
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
-
-import {
-  firebaseConfig
-} from "./firebase-config.js";
+import { getFirestore } from
+  "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
 // ======================================================
-// INITIALIZE FIREBASE APP
+// FIREBASE CONFIGURATION
 // ======================================================
 
-let app;
+// এখানে Firebase Console থেকে পাওয়া সঠিক তথ্য বসান।
 
-try {
-  app = getApps().length
-    ? getApp()
-    : initializeApp(firebaseConfig);
-
-  console.log("✅ AYNA BOOK Firebase App initialized");
-
-} catch (error) {
-  console.error(
-    "❌ Firebase App initialization failed:",
-    error
-  );
-
-  throw error;
-}
-
-
-// ======================================================
-// INITIALIZE FIREBASE SERVICES
-// ======================================================
-
-let auth;
-let db;
-let realtimeDB;
-let storage;
-
-try {
-
-  auth = getAuth(app);
-
-  db = getFirestore(app);
-
-  realtimeDB = getDatabase(app);
-
-  storage = getStorage(app);
-
-  console.log("✅ Firebase Authentication: READY");
-  console.log("✅ Firestore Database: READY");
-  console.log("✅ Realtime Database: READY");
-  console.log("✅ Firebase Storage: READY");
-
-} catch (error) {
-
-  console.error(
-    "❌ Firebase services initialization failed:",
-    error
-  );
-
-  throw error;
-}
-
-
-// ======================================================
-// EXPORT FIREBASE SERVICES
-// ======================================================
-
-export {
-  app,
-  auth,
-  db,
-  realtimeDB,
-  storage
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 
 // ======================================================
-// GLOBAL AYNA FIREBASE OBJECT
+// VALIDATE CONFIGURATION
 // ======================================================
 
-window.AYNA_FIREBASE = {
-  app,
-  auth,
-  db,
-  realtimeDB,
-  storage
-};
+const requiredFields = [
+  "apiKey",
+  "authDomain",
+  "projectId",
+  "appId"
+];
 
-
-// ======================================================
-// FIREBASE STATUS
-// ======================================================
-
-window.AYNA_FIREBASE_STATUS = {
-
-  connected: true,
-
-  projectId: firebaseConfig.projectId,
-
-  appId: firebaseConfig.appId,
-
-  sdkVersion: "12.5.0",
-
-  services: {
-
-    authentication: true,
-
-    firestore: true,
-
-    realtimeDatabase: true,
-
-    storage: true
-
+for (const field of requiredFields) {
+  if (
+    !firebaseConfig[field] ||
+    firebaseConfig[field].startsWith("YOUR_")
+  ) {
+    throw new Error(
+      `AYNA BOOK Firebase configuration missing: ${field}`
+    );
   }
-
-};
+}
 
 
 // ======================================================
-// CONSOLE STATUS
+// INITIALIZE FIREBASE
 // ======================================================
 
-console.log("==========================================");
-console.log("🚀 AYNA BOOK FIREBASE READY");
-console.log("🔥 Firebase Web SDK: 12.5.0");
-console.log("📌 Project: " + firebaseConfig.projectId);
-console.log("🔐 Authentication: READY");
-console.log("🗄️ Firestore: READY");
-console.log("⚡ Realtime Database: READY");
-console.log("📦 Storage: READY");
-console.log("==========================================");
+const app = getApps().length
+  ? getApp()
+  : initializeApp(firebaseConfig);
+
+
+// ======================================================
+// FIREBASE AUTHENTICATION
+// ======================================================
+
+export const auth = getAuth(app);
+
+
+// ======================================================
+// FIRESTORE DATABASE
+// ======================================================
+
+export const db = getFirestore(app);
+
+
+// ======================================================
+// EXPORT FIREBASE APP
+// ======================================================
+
+export { app };
+
+
+// ======================================================
+// INITIALIZATION COMPLETE
+// ======================================================
+
+console.log("AYNA BOOK Firebase initialized successfully.");
