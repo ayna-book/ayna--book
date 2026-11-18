@@ -5,13 +5,13 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase
 import { getDatabase } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
-    apiKey: "YOUR_WEB_API_KEY", // আপনার ফায়ারবেস প্রজেক্ট সেটিংস থেকে প্রাপ্ত ওয়েব এপিআই কি দিন
+    apiKey: "AIzaSyD-YourWebApiKeyFromConsole", // আপনার ফায়ারবেস কনসোলের ওয়েব প্রজেক্ট সেটিংস থেকে প্রাপ্ত API Key এখানে দিন
     authDomain: "ayna-book.firebaseapp.com",
-    databaseURL: "https://ayna-book-default-rtdb.firebaseio.com", // আপনার রিয়েলটাইম ডাটাবেস ইউআরএল
+    databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app", // আপনার কনসোলের রিয়েলটাইম ডাটাবেস ইউআরএল
     projectId: "ayna-book",
     storageBucket: "ayna-book.appspot.com",
-    messagingSenderId: "805601138500", // আপনার প্রজেক্ট আইডি নম্বর অনুযায়ী
-    appId: "1:805601138500:web:YOUR_APP_ID"
+    messagingSenderId: "805601138500", // প্রজেক্ট আইডি নম্বর
+    appId: "1:805601138500:web:6a0213b9832c75d4626911" // ফায়ারবেস কনসোল থেকে প্রাপ্ত ওয়েব App ID
 };
 
 // ফায়ারবেস ইনিশিয়ালাইজ করা হচ্ছে
