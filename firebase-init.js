@@ -1,54 +1,68 @@
-
-/* ======================================================
+/* =========================================================
    AYNA BOOK — FIREBASE INITIALIZATION
-   Firebase SDK Version: 13.4.0
-   ====================================================== */
+   Firebase SDK: 13.4.0
+   ========================================================= */
 
-import {
-  initializeApp,
-  getApp,
-  getApps
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
-import {
-  getAuth
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import { getAuth } from
+  "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-import {
-  getFirestore
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+import { getFirestore } from
+  "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-import {
-  getDatabase
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+import { getDatabase } from
+  "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
-import {
-  getStorage
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
+import { getStorage } from
+  "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
 import { firebaseConfig } from "./firebase-config.js";
 
 
-// Initialize Firebase App only once
-export const app = getApps().length
-  ? getApp()
-  : initializeApp(firebaseConfig);
+/* =========================================================
+   INITIALIZE FIREBASE APP
+   ========================================================= */
+
+const app = initializeApp(firebaseConfig);
 
 
-// Firebase Authentication
-export const auth = getAuth(app);
+/* =========================================================
+   FIREBASE SERVICES
+   ========================================================= */
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+const database = getDatabase(app);
+
+const storage = getStorage(app);
 
 
-// Cloud Firestore
-export const db = getFirestore(app);
+/* =========================================================
+   EXPORT SERVICES
+   ========================================================= */
+
+export {
+  app,
+  auth,
+  db,
+  database,
+  storage
+};
 
 
-// Realtime Database
-export const database = getDatabase(app);
+/* =========================================================
+   CONNECTION LOG
+   ========================================================= */
 
+console.log(
+  "AYNA BOOK — Firebase initialized successfully."
+);
 
-// Firebase Storage
-export const storage = getStorage(app);
-
-
-console.log("AYNA BOOK Firebase initialized.");
+console.log(
+  "Firebase Project:",
+  firebaseConfig.projectId
+);
