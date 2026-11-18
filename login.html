@@ -1,704 +1,98 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0A0F1E">
-
-  <title>AYNA BOOK — Login</title>
-
-  <style>
-    :root {
-      --bg: #0A0F1E;
-      --card: #1A2233;
-      --gold: #FFD700;
-      --subtitle: #A9B0BC;
-      --border: #4A4A2A;
-      --green: #2ECC71;
-      --run: #2D5BFF;
-      --white: #FFFFFF;
-      --danger: #ff6464;
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--white);
-      font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      padding: 20px;
-    }
-
-    .login-page {
-      width: 100%;
-      max-width: 430px;
-    }
-
-    /* =========================
-       BRAND
-    ========================== */
-
-    .brand {
-      text-align: center;
-      margin-bottom: 22px;
-    }
-
-    .brand-title {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(30px, 10vw, 46px);
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: 2px;
-    }
-
-    .brand-subtitle {
-      margin-top: 9px;
-      color: var(--subtitle);
-      font-size: 11px;
-      letter-spacing: 1.5px;
-    }
-
-    .star {
-      display: inline-block;
-      margin-left: 5px;
-      color: #FFFFFF;
-      font-size: 16px;
-
-      animation: minuteGlow 60s infinite;
-    }
-
-    @keyframes minuteGlow {
-      0% {
-        text-shadow: none;
-      }
-
-      1% {
-        text-shadow:
-          0 0 4px #FFFFFF,
-          0 0 9px #FFFFFF,
-          0 0 16px #FFFFFF;
-        transform: scale(1.15);
-      }
-
-      2% {
-        text-shadow:
-          0 0 3px #FFFFFF,
-          0 0 7px #FFFFFF;
-        transform: scale(1);
-      }
-
-      3%,
-      100% {
-        text-shadow: none;
-      }
-    }
-
-    /* =========================
-       LOGIN CARD
-    ========================== */
-
-    .card {
-      padding: 22px;
-
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
-      box-shadow:
-        0 18px 50px rgba(0, 0, 0, 0.28);
-    }
-
-    .card h1 {
-      margin: 0;
-      color: var(--gold);
-      font-size: 22px;
-      text-align: center;
-    }
-
-    .card-description {
-      margin: 8px 0 20px;
-
-      color: var(--subtitle);
-      font-size: 12px;
-      line-height: 1.5;
-      text-align: center;
-    }
-
-    /* =========================
-       FORM
-    ========================== */
-
-    .field {
-      margin-bottom: 14px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-
-      color: var(--subtitle);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .input-wrap {
-      position: relative;
-    }
-
-    input {
-      width: 100%;
-      padding: 13px 14px;
-
-      color: var(--white);
-      background: #111827;
-
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      outline: none;
-
-      font-size: 14px;
-    }
-
-    input::placeholder {
-      color: #737b89;
-    }
-
-    input:focus {
-      border-color: var(--gold);
-      box-shadow:
-        0 0 0 2px rgba(255, 215, 0, 0.08);
-    }
-
-    #password {
-      padding-right: 70px;
-    }
-
-    .show-password {
-      position: absolute;
-      right: 7px;
-      top: 50%;
-      transform: translateY(-50%);
-
-      padding: 6px 8px;
-
-      color: var(--gold);
-      background: transparent;
-      border: 0;
-
-      font-size: 10px;
-      font-weight: 800;
-    }
-
-    /* =========================
-       LOGIN BUTTON
-    ========================== */
-
-    .login-btn {
-      width: 100%;
-      margin-top: 5px;
-      padding: 13px;
-
-      color: #07101c;
-      background: var(--gold);
-
-      border: 0;
-      border-radius: 11px;
-
-      font-size: 14px;
-      font-weight: 900;
-
-      transition:
-        transform 0.15s ease,
-        opacity 0.15s ease;
-    }
-
-    .login-btn:active {
-      transform: scale(0.98);
-    }
-
-    .login-btn:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    /* =========================
-       STATUS
-    ========================== */
-
-    .message {
-      display: none;
-
-      margin-top: 14px;
-      padding: 11px;
-
-      border-radius: 10px;
-
-      font-size: 11px;
-      line-height: 1.45;
-      text-align: center;
-    }
-
-    .message.error {
-      display: block;
-      color: #ffb0b0;
-      background: rgba(255, 70, 70, 0.08);
-      border: 1px solid rgba(255, 70, 70, 0.3);
-    }
-
-    .message.success {
-      display: block;
-      color: #8ff0b7;
-      background: rgba(46, 204, 113, 0.08);
-      border: 1px solid rgba(46, 204, 113, 0.3);
-    }
-
-    /* =========================
-       LINKS
-    ========================== */
-
-    .links {
-      margin-top: 18px;
-
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .links a {
-      color: var(--gold);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .links a:hover {
-      text-decoration: underline;
-    }
-
-    /* =========================
-       SECURITY
-    ========================== */
-
-    .security {
-      margin-top: 18px;
-      padding: 11px;
-
-      color: var(--subtitle);
-      background: rgba(46, 204, 113, 0.04);
-
-      border: 1px solid rgba(46, 204, 113, 0.15);
-      border-radius: 10px;
-
-      font-size: 10px;
-      line-height: 1.5;
-      text-align: center;
-    }
-
-    .security strong {
-      color: var(--green);
-    }
-
-    /* =========================
-       FOOTER
-    ========================== */
-
-    .footer {
-      margin-top: 18px;
-
-      color: #6f7785;
-      font-size: 9px;
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    @media (max-width: 360px) {
-      body {
-        padding: 14px;
-      }
-
-      .card {
-        padding: 18px;
-      }
-
-      .links {
-        flex-direction: column;
-        align-items: center;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYNA BOOK - লগইন</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; }
+        .login-box { background: #fff; padding: 30px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border-top: 6px solid #1a73e8; }
+        h1 { font-size: 2.2rem; color: #1a73e8; margin-bottom: 10px; }
+        p { font-size: 1.1rem; color: #555; margin-bottom: 20px; }
+        input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1.1rem; }
+        button { width: 100%; padding: 14px; background: #1a73e8; color: #fff; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        button.register-btn { background: #28a745; }
+        #statusMsg { margin-top: 15px; font-size: 1rem; color: #d93025; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-  <main class="login-page">
-
-    <!-- BRAND -->
-
-    <section class="brand">
-
-      <h1 class="brand-title">
-        AYNA BOOK
-        <span class="star">★</span>
-      </h1>
-
-      <div class="brand-subtitle">
-        MODERN • SECURE • PRIVATE
-      </div>
-
-    </section>
-
-
-    <!-- LOGIN CARD -->
-
-    <section class="card">
-
-      <h1>Welcome Back</h1>
-
-      <p class="card-description">
-        Log in to your AYNA BOOK account to access your private dashboard
-        and features.
-      </p>
-
-
-      <!-- LOGIN FORM -->
-
-      <form id="loginForm" novalidate>
-
-        <!-- EMAIL -->
-
-        <div class="field">
-
-          <label for="email">
-            Email Address
-          </label>
-
-          <div class="input-wrap">
-
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              autocomplete="email"
-              required
-            >
-
-          </div>
-
-        </div>
-
-
-        <!-- PASSWORD -->
-
-        <div class="field">
-
-          <label for="password">
-            Password
-          </label>
-
-          <div class="input-wrap">
-
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              minlength="6"
-              required
-            >
-
-            <button
-              id="showPassword"
-              class="show-password"
-              type="button"
-            >
-              SHOW
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <!-- LOGIN BUTTON -->
-
-        <button
-          id="loginBtn"
-          class="login-btn"
-          type="submit"
-        >
-          LOG IN
-        </button>
-
-      </form>
-
-
-      <!-- MESSAGE -->
-
-      <div
-        id="message"
-        class="message"
-        role="alert"
-        aria-live="polite"
-      ></div>
-
-
-      <!-- LINKS -->
-
-      <div class="links">
-
-        <a href="./signup.html">
-          Create Account
-        </a>
-
-        <a href="./forgot-password.html">
-          Forgot Password?
-        </a>
-
-      </div>
-
-
-      <!-- SECURITY -->
-
-      <div class="security">
-        🔐 <strong>Secure Access</strong><br>
-        Only authenticated AYNA BOOK users can access the private dashboard.
-      </div>
-
-    </section>
-
-
-    <!-- FOOTER -->
-
-    <footer class="footer">
-      AYNA BOOK © 2026<br>
-      Modern • Secure • Privacy-Focused
-    </footer>
-
-  </main>
-
-
-  <!-- =========================
-       FIREBASE AUTH
-  ========================== -->
-
-  <script type="module">
-
-    import {
-      loginUser,
-      watchAuthState
-    } from "./auth.js";
-
-
-    const loginForm =
-      document.getElementById("loginForm");
-
-    const emailInput =
-      document.getElementById("email");
-
-    const passwordInput =
-      document.getElementById("password");
-
-    const loginBtn =
-      document.getElementById("loginBtn");
-
-    const showPassword =
-      document.getElementById("showPassword");
-
-    const message =
-      document.getElementById("message");
-
-
-    /* =========================
-       MESSAGE
-    ========================== */
-
-    function showMessage(text, type) {
-
-      message.textContent = text;
-
-      message.className =
-        "message " + type;
-    }
-
-
-    function clearMessage() {
-
-      message.textContent = "";
-      message.className = "message";
-    }
-
-
-    /* =========================
-       PASSWORD VISIBILITY
-    ========================== */
-
-    showPassword.addEventListener("click", () => {
-
-      const isPassword =
-        passwordInput.type === "password";
-
-      passwordInput.type =
-        isPassword ? "text" : "password";
-
-      showPassword.textContent =
-        isPassword ? "HIDE" : "SHOW";
-
-    });
-
-
-    /* =========================
-       AUTH STATE
-    ========================== */
-
-    watchAuthState((user) => {
-
-      /*
-        If the user is already logged in,
-        there is no reason to display the
-        login screen again.
-      */
-
-      if (user) {
-        window.location.replace("./index.html");
-      }
-
-    });
-
-
-    /* =========================
-       LOGIN
-    ========================== */
-
-    loginForm.addEventListener("submit", async (event) => {
-
-      event.preventDefault();
-
-      clearMessage();
-
-      const email =
-        emailInput.value.trim();
-
-      const password =
-        passwordInput.value;
-
-
-      /* BASIC VALIDATION */
-
-      if (!email) {
-
-        showMessage(
-          "Please enter your email address.",
-          "error"
-        );
-
-        emailInput.focus();
-        return;
-      }
-
-
-      if (!email.includes("@")) {
-
-        showMessage(
-          "Please enter a valid email address.",
-          "error"
-        );
-
-        emailInput.focus();
-        return;
-      }
-
-
-      if (!password) {
-
-        showMessage(
-          "Please enter your password.",
-          "error"
-        );
-
-        passwordInput.focus();
-        return;
-      }
-
-
-      /* DISABLE BUTTON */
-
-      loginBtn.disabled = true;
-      loginBtn.textContent = "LOGGING IN...";
-
-
-      try {
-
-        const result =
-          await loginUser(email, password);
-
-
-        if (result && result.success) {
-
-          showMessage(
-            "Login successful. Opening AYNA BOOK...",
-            "success"
-          );
-
-          /*
-            Give Firebase Auth state a moment to
-            update before navigating.
-          */
-
-          setTimeout(() => {
-            window.location.replace("./index.html");
-          }, 300);
-
-          return;
-        }
-
-
-        showMessage(
-          result?.message ||
-          "Login failed. Please check your email and password.",
-          "error"
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK login error:",
-          error
-        );
-
-        showMessage(
-          "Unable to log in right now. Please try again.",
-          "error"
-        );
-
-      } finally {
-
-        loginBtn.disabled = false;
-        loginBtn.textContent = "LOG IN";
-
-      }
-
-    });
-
-  </script>
-
+    <div class="login-box">
+        <h1>AYNA BOOK</h1>
+        <p>আপনার অ্যাকাউন্টে প্রবেশ করুন</p>
+        <input type="email" id="emailInput" placeholder="ইমেইল ঠিকানা দিন" required>
+        <input type="password" id="passwordInput" placeholder="পাসওয়ার্ড দিন (কমপক্ষে ৬ অক্ষর)" required>
+        <button id="loginBtn">লগইন করুন</button>
+        <button id="registerBtn" class="register-btn">নতুন অ্যাকাউন্ট তৈরি করুন</button>
+        <div id="statusMsg"></div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './firebase-init.js';
+        import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const statusMsg = document.getElementById('statusMsg');
+
+        // ইউজার আগে থেকেই লগইন করা থাকলে ড্যাশবোর্ডে পাঠাবে
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // লগইন বাটন হ্যান্ডলার
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            if(!email || !password) {
+                statusMsg.textContent = "দয়া করে ইমেইল ও পাসওয়ার্ড দিন।";
+                return;
+            }
+
+            statusMsg.textContent = "যাচাই করা হচ্ছে...";
+            
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    statusMsg.textContent = "ত্রুটি: " + error.message;
+                });
+        });
+
+        // নতুন একাউন্ট রেজিস্ট্রেশন ও ফায়ারস্টোর ডাটা সেভ
+        document.getElementById('registerBtn').addEventListener('click', async () => {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            if(!email || !password) {
+                statusMsg.textContent = "দয়া করে ইমেইল ও পাসওয়ার্ড দিন।";
+                return;
+            }
+
+            statusMsg.textContent = "অ্যাকাউন্ট তৈরি হচ্ছে...";
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // ফায়ারস্টোর users কালেকশনে ডেটা সেভ
+                await setDoc(doc(db, "users", user.uid), {
+                    email: email,
+                    name: email.split('@')[0],
+                    phone: "",
+                    plan: "Standard",
+                    created: serverTimestamp()
+                });
+
+                window.location.href = 'index.html';
+            } catch (error) {
+                statusMsg.textContent = "ত্রুটি: " + error.message;
+            }
+        });
+    </script>
 </body>
 </html>
