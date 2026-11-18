@@ -3,151 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK - মূল ড্যাশবোর্ড</title>
+    <title>AYNA BOOK - লগইন</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: #f4f7f6; color: #333; padding: 15px; }
-        
-        .breaking-news-ticker { 
-            background: #ffcc00; 
-            color: #000; 
-            padding: 12px; 
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            border-radius: 8px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .ayna-header { 
-            text-align: center; 
-            margin-bottom: 30px; 
-            padding: 25px; 
-            background: #ffffff; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-        }
-        .ayna-header h1 { font-size: 3rem; color: #1a73e8; margin-bottom: 10px; letter-spacing: 1px; }
-        .user-greeting { font-size: 1.3rem; color: #28a745; font-weight: bold; margin-bottom: 8px; }
-        .db-status { font-size: 1rem; color: #555; background: #e8f0fe; display: inline-block; padding: 5px 15px; border-radius: 20px; }
-
-        .dashboard-container { max-width: 800px; margin: 0 auto; }
-        .feature-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 30px; }
-        @media(min-width: 600px) { .feature-grid { grid-template-columns: 1fr 1fr; } }
-
-        .feature-box { 
-            background: #ffffff; 
-            padding: 25px; 
-            border-radius: 16px; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.08); 
-            cursor: pointer; 
-            transition: transform 0.2s ease, box-shadow 0.2s ease; 
-            border-left: 6px solid #1a73e8; 
-        }
-        .feature-box:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
-        .feature-box h2 { font-size: 1.6rem; color: #222; margin-bottom: 10px; }
-        .feature-box p { font-size: 1.1rem; color: #666; line-height: 1.5; }
-
-        .action-panel { text-align: center; margin-bottom: 30px; }
-        .btn-primary { 
-            background-color: #d93025; 
-            color: white; 
-            border: none; 
-            padding: 14px 30px; 
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            box-shadow: 0 4px 10px rgba(217, 48, 37, 0.3);
-        }
+        body { background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; }
+        .login-box { background: #fff; padding: 30px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border-top: 6px solid #1a73e8; }
+        h1 { font-size: 2.2rem; color: #1a73e8; margin-bottom: 10px; }
+        p { font-size: 1.1rem; color: #555; margin-bottom: 20px; }
+        input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1.1rem; }
+        button { width: 100%; padding: 14px; background: #1a73e8; color: #fff; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        button.register-btn { background: #28a745; }
+        #statusMsg { margin-top: 15px; font-size: 1rem; color: #d93025; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="breaking-news-ticker">
-        <marquee behavior="scroll" direction="left">✨ AYNA BOOK-এ স্বাগতম! ফায়ারবেসের সাথে সফলভাবে সংযুক্ত রয়েছে।</marquee>
+    <div class="login-box">
+        <h1>AYNA BOOK</h1>
+        <p>আপনার অ্যাকাউন্টে প্রবেশ করুন</p>
+        <input type="email" id="emailInput" placeholder="ইমেইল ঠিকানা দিন" required>
+        <input type="password" id="passwordInput" placeholder="পাসওয়ার্ড দিন (কমপক্ষে ৬ অক্ষর)" required>
+        <button id="loginBtn">লগইন করুন</button>
+        <button id="registerBtn" class="register-btn">নতুন অ্যাকাউন্ট তৈরি করুন</button>
+        <div id="statusMsg"></div>
     </div>
 
-    <header class="ayna-header">
-        <h1>AYNA BOOK</h1>
-        <p class="user-greeting" id="userGreeting">ফায়ারবেস কানেকশন যাচাই করা হচ্ছে...</p>
-        <div class="db-status" id="dbStatus">ডাটাবেস স্ট্যাটাস: অপেক্ষমাণ...</div>
-    </header>
-
-    <main class="dashboard-container">
-        <section class="feature-grid">
-            <div class="feature-box" onclick="location.href='chat.html'">
-                <h2>💬 চ্যাট ও মেসেজিং</h2>
-                <p>বন্ধুদের সাথে রিয়েল-টাইমে চ্যাট ও মেসেজ আদান-প্রদান করুন।</p>
-            </div>
-            
-            <div class="feature-box" onclick="location.href='profile.html'">
-                <h2>👤 প্রোফাইল ও আইডি</h2>
-                <p>আপনার গোল্ডেন ফ্রেমড প্রোফাইল ও ইউনিক বারকোড আইডি দেখুন।</p>
-            </div>
-
-            <div class="feature-box" onclick="location.href='radio-tv.html'">
-                <h2>📻 রেডিও ও টিভি</h2>
-                <p>লাইভ বাংলা রেডিও ও টিভি গার্ডেন স্ট্রিম উপভোগ করুন।</p>
-            </div>
-
-            <div class="feature-box" onclick="location.href='radar-compass.html'">
-                <h2>🧭 র‍্যাডার ও কম্পাস</h2>
-                <p>জিপিএস লোকেশন অ্যালার্ট, কম্পাস এবং নেভিগেশন টুলস।</p>
-            </div>
-        </section>
-
-        <div class="action-panel">
-            <button id="logoutBtn" class="btn-primary">লগ আউট</button>
-        </div>
-    </main>
-
     <script type="module">
-        import { auth, rtdb } from './firebase-init.js';
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { auth, db } from './firebase-init.js';
+        import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const greetingEl = document.getElementById('userGreeting');
-        const dbStatusEl = document.getElementById('dbStatus');
+        const statusMsg = document.getElementById('statusMsg');
 
-        // রিয়েলটাইম ডাটাবেস কানেকশন স্ট্যাটাস চেক
-        const connectedRef = ref(rtdb, ".info/connected");
-        onValue(connectedRef, (snap) => {
-            if (snap.val() === true) {
-                dbStatusEl.textContent = "🟢 ফায়ারবেস ডাটাবেস: সংযুক্ত (Connected)";
-                dbStatusEl.style.color = "#137333";
-                dbStatusEl.style.background = "#e6f4ea";
-            } else {
-                dbStatusEl.textContent = "🔴 ফায়ারবেস ডাটাবেস: বিচ্ছিন্ন";
-                dbStatusEl.style.color = "#c5221f";
-                dbStatusEl.style.background = "#fce8e6";
-            }
-        });
-
-        // অথেন্টিকেশন স্টেট চেক ও ইউজার স্ট্যাটাস রিয়েলটাইমে আপডেট
+        // ইউজার আগে থেকেই লগইন করা থাকলে ড্যাশবোর্ডে পাঠাবে
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const shortId = `AB-${user.uid.substring(0, 6).toUpperCase()}`;
-                greetingEl.textContent = `স্বাগতম, ${user.email} (${shortId})`;
-
-                set(ref(rtdb, 'ayna_book_status/' + user.uid), {
-                    email: user.email,
-                    aynaId: shortId,
-                    online: true,
-                    lastActive: new Date().toISOString()
-                });
-            } else {
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
             }
         });
 
-        // লগআউট বাটন হ্যান্ডলার
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = 'login.html';
-            }).catch((error) => {
-                alert('লগআউট ত্রুটি: ' + error.message);
-            });
+        // লগইন বাটন হ্যান্ডলার
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            if(!email || !password) {
+                statusMsg.textContent = "দয়া করে ইমেইল ও পাসওয়ার্ড দিন।";
+                return;
+            }
+
+            statusMsg.textContent = "যাচাই করা হচ্ছে...";
+            
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    statusMsg.textContent = "ত্রুটি: " + error.message;
+                });
+        });
+
+        // নতুন একাউন্ট রেজিস্ট্রেশন ও ফায়ারস্টোর ডাটা সেভ
+        document.getElementById('registerBtn').addEventListener('click', async () => {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            if(!email || !password) {
+                statusMsg.textContent = "দয়া করে ইমেইল ও পাসওয়ার্ড দিন।";
+                return;
+            }
+
+            statusMsg.textContent = "অ্যাকাউন্ট তৈরি হচ্ছে...";
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // ফায়ারস্টোর users কালেকশনে ডেটা সেভ
+                await setDoc(doc(db, "users", user.uid), {
+                    email: email,
+                    name: email.split('@')[0],
+                    phone: "",
+                    plan: "Standard",
+                    created: serverTimestamp()
+                });
+
+                window.location.href = 'index.html';
+            } catch (error) {
+                statusMsg.textContent = "ত্রুটি: " + error.message;
+            }
         });
     </script>
 </body>
