@@ -1,354 +1,667 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#05070b">
+  <meta name="theme-color" content="#0A0F1E">
+
   <title>AYNA BOOK — Sign Up</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 24px 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #05070b;
-      color: #fff;
+      padding: 20px;
+      background: #0A0F1E;
+      color: #ffffff;
       font-family: Arial, sans-serif;
     }
 
-    .signup-box {
+    .container {
       width: 100%;
       max-width: 440px;
-      padding: 30px 24px;
-      background: #10141d;
-      border: 1px solid #333b49;
-      border-radius: 20px;
-      box-shadow: 0 15px 45px #0008;
     }
 
-    .logo {
+    .card {
+      background: #1A2233;
+      border: 1px solid #4A4A2A;
+      border-radius: 24px;
+      padding: 30px 24px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    .brand {
       text-align: center;
-      color: #e8bd62;
+      margin-bottom: 24px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      color: #FFD700;
       font-size: 32px;
       font-weight: 800;
-      letter-spacing: 3px;
-      margin-bottom: 8px;
+      letter-spacing: 2px;
     }
 
-    h2 {
-      text-align: center;
-      margin: 10px 0;
+    .star {
+      display: inline-block;
+      margin-left: 6px;
+      color: #ffffff;
+      font-size: 16px;
+      text-shadow:
+        0 0 5px #ffffff,
+        0 0 10px #ffffff;
+      animation: glow 60s infinite;
+    }
+
+    @keyframes glow {
+      0%, 97% {
+        opacity: 0.8;
+        transform: scale(1);
+      }
+
+      98% {
+        opacity: 1;
+        transform: scale(1.35);
+        text-shadow:
+          0 0 8px #ffffff,
+          0 0 18px #ffffff,
+          0 0 30px #ffffff;
+      }
+
+      100% {
+        opacity: 0.8;
+        transform: scale(1);
+      }
     }
 
     .subtitle {
-      text-align: center;
-      color: #aab1bd;
+      margin-top: 8px;
+      color: #A9B0BC;
       font-size: 14px;
-      margin-bottom: 25px;
+    }
+
+    h2 {
+      margin: 0 0 20px;
+      text-align: center;
+      color: #FFD700;
+      font-size: 23px;
     }
 
     label {
       display: block;
-      margin: 15px 0 7px;
-      color: #e6c477;
+      margin-bottom: 8px;
+      color: #ffffff;
       font-size: 14px;
+      font-weight: 600;
     }
 
-    input:not([type="checkbox"]) {
+    input {
       width: 100%;
-      padding: 14px;
-      border: 1px solid #394353;
-      border-radius: 10px;
-      background: #080c13;
-      color: white;
-      font-size: 15px;
+      padding: 14px 15px;
+      margin-bottom: 16px;
+      border: 1px solid #4A4A2A;
+      border-radius: 12px;
       outline: none;
+      background: #0A0F1E;
+      color: #ffffff;
+      font-size: 15px;
     }
 
     input:focus {
-      border-color: #e8bd62;
+      border-color: #FFD700;
+      box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.12);
     }
 
-    .password-wrap {
+    input::placeholder {
+      color: #6f7888;
+    }
+
+    .password-box {
       position: relative;
     }
 
-    .password-wrap input {
-      padding-right: 65px;
+    .password-box input {
+      padding-right: 58px;
     }
 
-    .toggle {
+    .show-password {
       position: absolute;
       right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
+      top: 8px;
+      width: 42px;
+      height: 42px;
+      padding: 0;
       border: none;
-      color: #e8bd62;
+      border-radius: 10px;
+      background: transparent;
+      color: #A9B0BC;
       cursor: pointer;
+      font-size: 18px;
+    }
+
+    .show-password:hover {
+      color: #FFD700;
+      background: rgba(255, 215, 0, 0.08);
+    }
+
+    .password-help {
+      margin-top: -8px;
+      margin-bottom: 16px;
+      color: #A9B0BC;
+      font-size: 12px;
     }
 
     .terms {
       display: flex;
       align-items: flex-start;
       gap: 9px;
-      margin: 20px 0;
-      color: #c1c6cf;
-      font-size: 13px;
-      line-height: 1.6;
+      margin: 5px 0 18px;
+      color: #A9B0BC;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
     .terms input {
-      margin-top: 4px;
+      width: 16px;
+      height: 16px;
+      margin: 2px 0 0;
+      accent-color: #FFD700;
+      flex-shrink: 0;
     }
 
-    a {
-      color: #e8bd62;
+    .terms a {
+      color: #FFD700;
       text-decoration: none;
     }
 
-    .signup-btn {
+    .terms a:hover {
+      text-decoration: underline;
+    }
+
+    .signup-button {
       width: 100%;
-      padding: 15px;
+      padding: 14px;
       border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #f1d38b, #bd8b34);
-      color: #111;
-      font-weight: bold;
+      border-radius: 12px;
+      background: #FFD700;
+      color: #0A0F1E;
       font-size: 16px;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    .signup-btn:disabled {
-      opacity: .6;
-      cursor: wait;
+    .signup-button:hover {
+      filter: brightness(1.08);
     }
 
-    .message {
+    .signup-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #auth-message {
       display: none;
-      margin: 15px 0;
+      margin-top: 16px;
       padding: 12px;
-      border-radius: 8px;
+      border-radius: 10px;
+      text-align: center;
       font-size: 14px;
       line-height: 1.5;
     }
 
-    .message.show { display: block; }
-    .message.success {
-      background: #123a29;
-      color: #8df0b5;
+    #auth-message[data-type="success"] {
+      display: block;
+      color: #2ECC71;
+      background: rgba(46, 204, 113, 0.10);
+      border: 1px solid rgba(46, 204, 113, 0.35);
     }
 
-    .message.error {
-      background: #431b20;
-      color: #ffadb5;
+    #auth-message[data-type="error"] {
+      display: block;
+      color: #ff7777;
+      background: rgba(255, 80, 80, 0.10);
+      border: 1px solid rgba(255, 80, 80, 0.35);
     }
 
-    .login {
+    .login-link {
+      display: block;
+      margin-top: 20px;
       text-align: center;
-      color: #aab1bd;
+      color: #FFD700;
+      text-decoration: none;
       font-size: 14px;
-      margin-top: 22px;
     }
 
-    .footer {
-      text-align: center;
+    .login-link:hover {
+      text-decoration: underline;
+    }
+
+    .security {
       margin-top: 22px;
-      color: #707987;
+      padding: 12px;
+      border-radius: 12px;
+      background: #0A0F1E;
+      color: #A9B0BC;
+      text-align: center;
       font-size: 12px;
+      line-height: 1.6;
     }
   </style>
 </head>
 
 <body>
 
-  <main class="signup-box">
+  <main class="container">
 
-    <div class="logo">AYNA BOOK</div>
-    <h2>Create Account</h2>
-    <p class="subtitle">Join the AYNA BOOK community</p>
+    <section class="card">
 
-    <form id="signupForm">
+      <div class="brand">
+        <h1>
+          AYNA BOOK
+          <span class="star">★</span>
+        </h1>
 
-      <label for="name">Full Name</label>
-      <input
-        id="name"
-        type="text"
-        placeholder="Enter your full name"
-        minlength="2"
-        maxlength="60"
-        autocomplete="name"
-        required
-      >
+        <div class="subtitle">
+          Secure Digital Social Platform
+        </div>
+      </div>
 
-      <label for="email">Email Address</label>
-      <input
-        id="email"
-        type="email"
-        placeholder="Enter your email"
-        autocomplete="email"
-        required
-      >
 
-      <label for="password">Password</label>
-      <div class="password-wrap">
+      <h2>নতুন অ্যাকাউন্ট তৈরি করুন</h2>
+
+
+      <form id="signup-form">
+
+        <label for="name">
+          আপনার নাম
+        </label>
+
         <input
-          id="password"
-          type="password"
-          placeholder="Minimum 6 characters"
-          minlength="6"
-          autocomplete="new-password"
+          id="name"
+          type="text"
+          placeholder="আপনার পূর্ণ নাম"
+          autocomplete="name"
+          maxlength="60"
           required
         >
-        <button class="toggle" type="button"
-          data-target="password">Show</button>
-      </div>
 
-      <label for="confirmPassword">Confirm Password</label>
-      <div class="password-wrap">
+
+        <label for="email">
+          ইমেইল ঠিকানা
+        </label>
+
         <input
-          id="confirmPassword"
-          type="password"
-          placeholder="Enter password again"
-          minlength="6"
-          autocomplete="new-password"
+          id="email"
+          type="email"
+          placeholder="আপনার ইমেইল"
+          autocomplete="email"
           required
         >
-        <button class="toggle" type="button"
-          data-target="confirmPassword">Show</button>
+
+
+        <label for="password">
+          পাসওয়ার্ড
+        </label>
+
+        <div class="password-box">
+
+          <input
+            id="password"
+            type="password"
+            placeholder="কমপক্ষে ৬ অক্ষর"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+
+          <button
+            class="show-password"
+            id="show-password"
+            type="button"
+            aria-label="Show password"
+          >
+            👁
+          </button>
+
+        </div>
+
+        <div class="password-help">
+          নিরাপত্তার জন্য শক্তিশালী পাসওয়ার্ড ব্যবহার করুন।
+        </div>
+
+
+        <label for="confirm-password">
+          পাসওয়ার্ড আবার লিখুন
+        </label>
+
+        <div class="password-box">
+
+          <input
+            id="confirm-password"
+            type="password"
+            placeholder="পাসওয়ার্ড আবার লিখুন"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+
+          <button
+            class="show-password"
+            id="show-confirm-password"
+            type="button"
+            aria-label="Show confirm password"
+          >
+            👁
+          </button>
+
+        </div>
+
+
+        <label class="terms">
+
+          <input
+            id="terms"
+            type="checkbox"
+            required
+          >
+
+          <span>
+            আমি AYNA BOOK-এর
+            <a href="#" onclick="return false;">
+              নিরাপত্তা ও ব্যবহারের নিয়ম
+            </a>
+            মেনে চলতে সম্মত।
+          </span>
+
+        </label>
+
+
+        <button
+          class="signup-button"
+          id="signup-button"
+          type="submit"
+        >
+          Create Account
+        </button>
+
+      </form>
+
+
+      <div id="auth-message"></div>
+
+
+      <a
+        class="login-link"
+        href="./login.html"
+      >
+        ইতিমধ্যে অ্যাকাউন্ট আছে? Login করুন
+      </a>
+
+
+      <div class="security">
+        🔒 আপনার অ্যাকাউন্ট Firebase Authentication দ্বারা সুরক্ষিত।
       </div>
 
-      <div class="terms">
-        <input id="terms" type="checkbox" required>
-        <span>
-          I agree to the
-          <a href="./terms.html">Terms & Conditions</a>
-          and
-          <a href="./privacy.html">Privacy Policy</a>.
-        </span>
-      </div>
-
-      <div id="message" class="message" role="status"
-        aria-live="polite"></div>
-
-      <button id="signupButton" class="signup-btn" type="submit">
-        Create Account
-      </button>
-
-    </form>
-
-    <p class="login">
-      Already have an account?
-      <a href="./login.html">Login</a>
-    </p>
-
-    <div class="footer">
-      AYNA BOOK — Modern Digital Social Platform
-    </div>
+    </section>
 
   </main>
 
+
   <script type="module">
-    import { registerUser } from "./auth.js";
 
-    const form = document.getElementById("signupForm");
-    const nameInput = document.getElementById("name");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const confirmInput = document.getElementById("confirmPassword");
-    const termsInput = document.getElementById("terms");
-    const signupButton = document.getElementById("signupButton");
-    const messageBox = document.getElementById("message");
+    import {
+      registerUser,
+      watchAuthState
+    } from "./auth.js";
 
-    function showMessage(message, type) {
-      messageBox.textContent = message;
-      messageBox.className = "message show " + type;
-    }
 
-    document.querySelectorAll(".toggle").forEach(button => {
-      button.addEventListener("click", () => {
-        const input = document.getElementById(button.dataset.target);
-        const visible = input.type === "password";
+    const form =
+      document.getElementById("signup-form");
 
-        input.type = visible ? "text" : "password";
-        button.textContent = visible ? "Hide" : "Show";
-      });
+    const nameInput =
+      document.getElementById("name");
+
+    const emailInput =
+      document.getElementById("email");
+
+    const passwordInput =
+      document.getElementById("password");
+
+    const confirmPasswordInput =
+      document.getElementById("confirm-password");
+
+    const termsInput =
+      document.getElementById("terms");
+
+    const button =
+      document.getElementById("signup-button");
+
+    const message =
+      document.getElementById("auth-message");
+
+
+    /* =====================================================
+       IF ALREADY LOGGED IN
+       ===================================================== */
+
+    watchAuthState((user) => {
+
+      if (user) {
+        window.location.replace("./index.html");
+      }
+
     });
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
 
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
+    /* =====================================================
+       SHOW / HIDE PASSWORD
+       ===================================================== */
 
-      const name = nameInput.value.trim();
-      const email = emailInput.value.trim().toLowerCase();
-      const password = passwordInput.value;
-      const confirmPassword = confirmInput.value;
+    function togglePassword(
+      input,
+      buttonElement
+    ) {
 
-      if (name.length < 2) {
-        showMessage("Please enter your full name.", "error");
-        return;
-      }
+      buttonElement.addEventListener(
+        "click",
+        () => {
 
-      if (password !== confirmPassword) {
-        showMessage("Passwords do not match.", "error");
-        confirmInput.focus();
-        return;
-      }
+          if (input.type === "password") {
 
-      if (!termsInput.checked) {
-        showMessage("Please accept the Terms & Conditions.", "error");
-        return;
-      }
+            input.type = "text";
+            buttonElement.textContent = "🙈";
 
-      signupButton.disabled = true;
-      signupButton.textContent = "Creating Account...";
+          } else {
 
-      try {
-        const result = await registerUser(name, email, password);
+            input.type = "password";
+            buttonElement.textContent = "👁";
 
-        if (!result || result.success !== true) {
-          showMessage(
-            result?.message || "Registration failed. Please try again.",
-            "error"
-          );
+          }
+
+        }
+      );
+
+    }
+
+
+    togglePassword(
+      passwordInput,
+      document.getElementById(
+        "show-password"
+      )
+    );
+
+
+    togglePassword(
+      confirmPasswordInput,
+      document.getElementById(
+        "show-confirm-password"
+      )
+    );
+
+
+    /* =====================================================
+       SIGN UP
+       ===================================================== */
+
+    form.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+
+        const name =
+          nameInput.value.trim();
+
+        const email =
+          emailInput.value.trim().toLowerCase();
+
+        const password =
+          passwordInput.value;
+
+        const confirmPassword =
+          confirmPasswordInput.value;
+
+
+        /* Name */
+
+        if (name.length < 2) {
+
+          message.textContent =
+            "আপনার নাম সঠিকভাবে লিখুন।";
+
+          message.dataset.type =
+            "error";
+
           return;
         }
 
-        showMessage(
-          "Account created successfully! Redirecting...",
-          "success"
-        );
 
-        form.reset();
+        /* Password */
 
-        setTimeout(() => {
-          window.location.replace("./index.html");
-        }, 1200);
+        if (password.length < 6) {
 
-      } catch (error) {
-        console.error("AYNA BOOK registration error:", error);
+          message.textContent =
+            "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।";
 
-        showMessage(
-          error?.message || "Something went wrong. Please try again.",
-          "error"
-        );
-      } finally {
-        if (!messageBox.classList.contains("success")) {
-          signupButton.disabled = false;
-          signupButton.textContent = "Create Account";
+          message.dataset.type =
+            "error";
+
+          return;
         }
+
+
+        /* Confirm password */
+
+        if (password !== confirmPassword) {
+
+          message.textContent =
+            "দুইটি পাসওয়ার্ড একই নয়।";
+
+          message.dataset.type =
+            "error";
+
+          return;
+        }
+
+
+        /* Terms */
+
+        if (!termsInput.checked) {
+
+          message.textContent =
+            "অ্যাকাউন্ট তৈরি করতে নিয়মে সম্মতি দিন।";
+
+          message.dataset.type =
+            "error";
+
+          return;
+        }
+
+
+        /* Disable button */
+
+        button.disabled = true;
+
+        button.textContent =
+          "Account তৈরি হচ্ছে...";
+
+
+        try {
+
+          const result =
+            await registerUser(
+              name,
+              email,
+              password
+            );
+
+
+          if (result.success) {
+
+            message.textContent =
+              result.message;
+
+            message.dataset.type =
+              "success";
+
+
+            setTimeout(() => {
+
+              window.location.replace(
+                "./index.html"
+              );
+
+            }, 1000);
+
+          } else {
+
+            message.textContent =
+              result.message;
+
+            message.dataset.type =
+              "error";
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "AYNA BOOK Signup Error:",
+            error
+          );
+
+          message.textContent =
+            "অ্যাকাউন্ট তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+
+          message.dataset.type =
+            "error";
+
+        } finally {
+
+          if (!message.dataset.type ||
+              message.dataset.type !== "success") {
+
+            button.disabled = false;
+
+            button.textContent =
+              "Create Account";
+          }
+
+        }
+
       }
-    });
+    );
+
   </script>
 
 </body>
