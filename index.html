@@ -1,673 +1,1452 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#05070b">
-<meta name="description" content="AYNA BOOK — আধুনিক নিরাপদ ডিজিটাল সোশ্যাল প্ল্যাটফর্ম">
-<title>AYNA BOOK — Home</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
+  <meta name="theme-color" content="#0A0F1E">
+  <meta name="description"
+        content="AYNA BOOK — A modern, secure and privacy-focused digital social platform.">
 
-body{
-  min-height:100vh;
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  background:radial-gradient(circle at top,#172033,#080b12 45%,#030407);
-  color:#fff;
-  padding-bottom:75px;
-}
+  <title>AYNA BOOK — Home</title>
 
-#authLoader{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:15px;
-  background:#05070b;
-  color:#ffd700;
-  text-align:center;
-  padding:20px;
-}
+  <style>
+    :root {
+      --bg: #0A0F1E;
+      --card: #1A2233;
+      --gold: #FFD700;
+      --subtitle: #A9B0BC;
+      --border: #4A4A2A;
+      --green: #2ECC71;
+      --run: #2D5BFF;
+      --white: #FFFFFF;
+      --danger: #ff5b5b;
+    }
 
-.loader-logo{
-  font-size:28px;
-  font-weight:900;
-  letter-spacing:2px;
-}
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.spinner{
-  width:38px;
-  height:38px;
-  border:4px solid #303746;
-  border-top-color:#ffd700;
-  border-radius:50%;
-  animation:spin .8s linear infinite;
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-@keyframes spin{to{transform:rotate(360deg)}}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--white);
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
 
-#app[hidden]{display:none!important}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-header{
-  position:sticky;
-  top:0;
-  z-index:100;
-  padding:14px 16px;
-  background:rgba(5,7,11,.94);
-  backdrop-filter:blur(15px);
-  border-bottom:1px solid rgba(255,215,0,.25);
-}
+    button,
+    input {
+      font: inherit;
+    }
 
-.header-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
+    button {
+      cursor: pointer;
+    }
 
-.logo{
-  color:#ffd700;
-  font-weight:900;
-  font-size:22px;
-  letter-spacing:1px;
-}
+    /* =========================
+       AUTH LOADER
+    ========================== */
 
-.firebase{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  color:#69f0ae;
-  font-size:11px;
-}
+    #authLoader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+      background: var(--bg);
+    }
 
-.dot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#00e676;
-}
+    .loader-logo {
+      color: var(--gold);
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
 
-.userbar{
-  margin-top:10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:9px 11px;
-  border-radius:12px;
-  background:rgba(255,255,255,.05);
-}
+    .loader-ring {
+      width: 34px;
+      height: 34px;
+      border: 3px solid #30394c;
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
 
-.user-info{overflow:hidden}
+    .loader-text {
+      color: var(--subtitle);
+      font-size: 13px;
+    }
 
-.user-name{
-  color:#ffd700;
-  font-size:13px;
-  font-weight:bold;
-}
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-.user-email{
-  color:#8f99aa;
-  font-size:11px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+    /* =========================
+       APP
+    ========================== */
 
-.logout{
-  border:1px solid rgba(255,215,0,.35);
-  background:transparent;
-  color:#ffd700;
-  border-radius:8px;
-  padding:7px 10px;
-  cursor:pointer;
-}
+    #app {
+      display: none;
+      min-height: 100vh;
+      padding-bottom: 85px;
+    }
 
-.logout:disabled{opacity:.5}
+    /* =========================
+       HEADER
+    ========================== */
 
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:20px 15px;
-}
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      min-height: 70px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
 
-.hero{
-  text-align:center;
-  padding:30px 10px 20px;
-}
+      background: rgba(10, 15, 30, 0.97);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+      backdrop-filter: blur(14px);
+    }
 
-.hero h1{
-  font-size:34px;
-  color:#ffd700;
-}
+    .dashboard-btn {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 46px;
 
-.hero p{
-  margin-top:8px;
-  color:#aeb7c7;
-  font-size:14px;
-}
+      display: grid;
+      place-items: center;
 
-.search{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:1px solid rgba(255,215,0,.2);
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  outline:none;
-  margin:10px 0 20px;
-}
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      color: var(--gold);
+    }
 
-.search:focus{border-color:#ffd700}
+    .dashboard-grid {
+      width: 22px;
+      height: 22px;
 
-.actions{
-  display:flex;
-  gap:9px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-bottom:25px;
-}
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+    }
 
-.actions a{
-  text-decoration:none;
-  color:#05070b;
-  background:#ffd700;
-  padding:10px 14px;
-  border-radius:10px;
-  font-size:13px;
-  font-weight:bold;
-}
+    .dashboard-grid span {
+      display: block;
+      border: 2px solid var(--gold);
+      border-radius: 3px;
+    }
 
-.actions a.dark{
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  border:1px solid rgba(255,215,0,.2);
-}
+    .brand-main {
+      min-width: 0;
+      flex: 1;
+      text-align: center;
+    }
 
-.section-title{
-  color:#ffd700;
-  font-size:19px;
-  margin:25px 0 12px;
-}
+    .brand-title {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(23px, 7vw, 36px);
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: 1.5px;
+      white-space: nowrap;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
-  gap:12px;
-}
+    .brand-subtitle {
+      margin-top: 5px;
+      color: var(--subtitle);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
 
-.card{
-  min-height:125px;
-  padding:16px;
-  border-radius:16px;
-  text-decoration:none;
-  color:#fff;
-  background:rgba(255,255,255,.055);
-  border:1px solid rgba(255,255,255,.08);
-  transition:.2s;
-}
+    .brand-right {
+      width: 74px;
+      flex: 0 0 74px;
 
-.card:hover{
-  transform:translateY(-2px);
-  border-color:rgba(255,215,0,.45);
-  background:rgba(255,215,0,.06);
-}
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 5px;
+    }
 
-.icon{font-size:28px;margin-bottom:9px}
+    .brand-right-text {
+      color: var(--white);
+      font-size: 9px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
 
-.card h3{font-size:14px;color:#ffd700}
+    /*
+      The star remains small and white.
+      It gives a short glow approximately once every 60 seconds.
+    */
 
-.card p{
-  color:#8f99aa;
-  font-size:11px;
-  margin-top:5px;
-  line-height:1.4;
-}
+    .minute-star {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
 
-.empty{
-  display:none;
-  text-align:center;
-  color:#8f99aa;
-  padding:30px;
-}
+      color: #FFFFFF;
+      font-size: 16px;
+      line-height: 16px;
 
-.bottom{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:200;
-  height:64px;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  background:rgba(5,7,11,.96);
-  border-top:1px solid rgba(255,215,0,.25);
-  backdrop-filter:blur(15px);
-}
+      text-shadow: none;
+      animation: minuteStarGlow 60s infinite;
+    }
 
-.bottom a{
-  color:#aeb7c7;
-  text-decoration:none;
-  text-align:center;
-  font-size:10px;
-}
+    @keyframes minuteStarGlow {
+      0% {
+        text-shadow: none;
+        transform: scale(1);
+      }
 
-.bottom span{
-  display:block;
-  font-size:20px;
-  margin-bottom:3px;
-}
+      1% {
+        text-shadow:
+          0 0 4px #FFFFFF,
+          0 0 9px #FFFFFF,
+          0 0 16px #FFFFFF;
+        transform: scale(1.15);
+      }
 
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:80px;
-  transform:translateX(-50%);
-  z-index:500;
-  display:none;
-  max-width:90%;
-  padding:12px 16px;
-  border-radius:10px;
-  background:#121722;
-  border:1px solid rgba(255,215,0,.35);
-  color:#fff;
-  font-size:13px;
-  text-align:center;
-}
+      2% {
+        text-shadow:
+          0 0 3px #FFFFFF,
+          0 0 7px #FFFFFF;
+        transform: scale(1);
+      }
 
-.toast.show{display:block}
+      3%,
+      100% {
+        text-shadow: none;
+        transform: scale(1);
+      }
+    }
 
-@media(max-width:380px){
-  .logo{font-size:18px}
-  .hero h1{font-size:28px}
-}
-</style>
+    /* =========================
+       USER BAR
+    ========================== */
+
+    .user-bar {
+      margin: 12px;
+      padding: 11px 13px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .user-info {
+      min-width: 0;
+    }
+
+    .user-label {
+      color: var(--subtitle);
+      font-size: 10px;
+      margin-bottom: 3px;
+    }
+
+    #userName {
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 800;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .auth-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--green);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 7px rgba(46, 204, 113, 0.7);
+    }
+
+    /* =========================
+       SEARCH
+    ========================== */
+
+    .search-wrap {
+      padding: 4px 12px 12px;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 13px 15px;
+
+      color: var(--white);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      outline: none;
+    }
+
+    .search-box::placeholder {
+      color: var(--subtitle);
+    }
+
+    .search-box:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.08);
+    }
+
+    /* =========================
+       BREAKING NEWS
+    ========================== */
+
+    .section {
+      padding: 0 12px;
+      margin-top: 10px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+
+      margin-bottom: 9px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 17px;
+    }
+
+    .section-title span {
+      color: var(--subtitle);
+      font-size: 10px;
+    }
+
+    .breaking-card {
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .breaking-head {
+      padding: 10px 12px;
+
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      border-bottom: 1px solid rgba(255, 215, 0, 0.12);
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff3d3d;
+      box-shadow: 0 0 8px rgba(255, 61, 61, 0.8);
+      animation: livePulse 1.2s infinite;
+    }
+
+    @keyframes livePulse {
+      50% {
+        opacity: 0.35;
+        transform: scale(0.75);
+      }
+    }
+
+    .breaking-label {
+      color: #ff7070;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+    }
+
+    .ticker {
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 13px 0;
+    }
+
+    .ticker-track {
+      display: inline-block;
+      padding-left: 100%;
+      animation: tickerMove 24s linear infinite;
+    }
+
+    .ticker-track span {
+      margin-right: 80px;
+      color: var(--white);
+      font-size: 13px;
+    }
+
+    @keyframes tickerMove {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    .breaking-note {
+      padding: 0 12px 10px;
+      color: var(--subtitle);
+      font-size: 9px;
+    }
+
+    /* =========================
+       HERO
+    ========================== */
+
+    .hero {
+      margin: 12px;
+      padding: 22px 16px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 215, 0, 0.08),
+          rgba(26, 34, 51, 0.96)
+        );
+
+      border: 1px solid var(--border);
+      border-radius: 17px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-size: clamp(25px, 7vw, 38px);
+      line-height: 1.08;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--subtitle);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* =========================
+       FEATURE GRID
+    ========================== */
+
+    .features {
+      padding: 0 12px;
+      margin-top: 15px;
+
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .feature-card {
+      min-height: 126px;
+      padding: 15px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      transition:
+        transform 0.18s ease,
+        border-color 0.18s ease;
+    }
+
+    .feature-card:active {
+      transform: scale(0.97);
+    }
+
+    .feature-card:hover {
+      border-color: rgba(255, 215, 0, 0.55);
+    }
+
+    .feature-icon {
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .feature-name {
+      margin-top: 13px;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .feature-desc {
+      margin-top: 4px;
+      color: var(--subtitle);
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .run-btn {
+      align-self: flex-start;
+
+      margin-top: 11px;
+      padding: 7px 10px;
+
+      color: #FFFFFF;
+      background: var(--run);
+      border: 0;
+      border-radius: 8px;
+
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    /* =========================
+       FEATURE FILTER
+    ========================== */
+
+    .empty-result {
+      display: none;
+      margin: 15px 12px;
+      padding: 20px;
+
+      text-align: center;
+      color: var(--subtitle);
+
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    /* =========================
+       LOGOUT
+    ========================== */
+
+    .logout-wrap {
+      padding: 20px 12px;
+    }
+
+    .logout-btn {
+      width: 100%;
+      padding: 13px;
+
+      color: #FFFFFF;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      font-weight: 800;
+    }
+
+    .logout-btn:hover {
+      border-color: var(--danger);
+      color: #ff7777;
+    }
+
+    /* =========================
+       BOTTOM NAV
+    ========================== */
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2000;
+
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+
+      padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+
+      background: rgba(10, 15, 30, 0.98);
+      border-top: 1px solid rgba(255, 215, 0, 0.15);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-item {
+      min-height: 52px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 3px;
+
+      color: var(--subtitle);
+      border-radius: 10px;
+
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+    }
+
+    .nav-item.active {
+      color: var(--gold);
+      background: rgba(255, 215, 0, 0.06);
+    }
+
+    /* =========================
+       TOAST
+    ========================== */
+
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 82px;
+      z-index: 5000;
+
+      max-width: calc(100% - 30px);
+      padding: 11px 15px;
+
+      color: #FFFFFF;
+      background: #151d2d;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+
+      font-size: 11px;
+      text-align: center;
+
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (min-width: 700px) {
+      .features {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero,
+      .user-bar,
+      .search-wrap,
+      .section {
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .bottom-nav {
+        left: 50%;
+        right: auto;
+        width: min(650px, 100%);
+        transform: translateX(-50%);
+        border: 1px solid rgba(255, 215, 0, 0.15);
+        border-bottom: 0;
+        border-radius: 18px 18px 0 0;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- Authentication Loading Screen -->
-<div id="authLoader">
-  <div class="loader-logo">★ AYNA BOOK ★</div>
-  <div class="spinner"></div>
-  <p id="loaderText">আপনার Account যাচাই করা হচ্ছে...</p>
-</div>
+  <!-- =========================
+       AUTH LOADER
+  ========================== -->
 
-<!-- Protected Homepage -->
-<div id="app" hidden>
+  <div id="authLoader">
+    <div class="loader-logo">AYNA BOOK</div>
+    <div class="loader-ring"></div>
+    <div class="loader-text">Checking account...</div>
+  </div>
 
-<header>
-  <div class="header-top">
-    <div class="logo">★ AYNA BOOK ★</div>
 
-    <div class="firebase">
-      <span id="firebaseDot" class="dot"></span>
-      <span id="firebaseText">Checking...</span>
+  <!-- =========================
+       APP
+  ========================== -->
+
+  <main id="app">
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+      <a
+        class="dashboard-btn"
+        href="./index.html"
+        aria-label="AYNA BOOK Dashboard"
+        title="Dashboard"
+      >
+        <span class="dashboard-grid" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </a>
+
+      <div class="brand-main">
+        <h1 class="brand-title">AYNA BOOK</h1>
+        <div class="brand-subtitle">
+          Modern • Secure • Private
+        </div>
+      </div>
+
+      <div class="brand-right">
+        <span class="brand-right-text">AYNA BOOK</span>
+        <span class="minute-star" aria-label="AYNA BOOK star">★</span>
+      </div>
+
+    </header>
+
+
+    <!-- USER BAR -->
+
+    <section class="user-bar">
+
+      <div class="user-info">
+        <div class="user-label">SIGNED IN AS</div>
+        <div id="userName">Loading...</div>
+      </div>
+
+      <div class="auth-status">
+        <span class="status-dot"></span>
+        <span>ACCOUNT VERIFIED</span>
+      </div>
+
+    </section>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-wrap">
+      <input
+        id="featureSearch"
+        class="search-box"
+        type="search"
+        placeholder="Search AYNA BOOK features..."
+        autocomplete="off"
+        aria-label="Search features"
+      >
     </div>
-  </div>
 
-  <div id="userbar" class="userbar">
-    <div class="user-info">
-      <div id="userName" class="user-name"></div>
-      <div id="userEmail" class="user-email"></div>
+
+    <!-- BREAKING NEWS -->
+
+    <section class="section">
+
+      <div class="section-title">
+        <h2>📰 Breaking News</h2>
+        <span>LIVE AREA</span>
+      </div>
+
+      <div class="breaking-card">
+
+        <div class="breaking-head">
+          <span class="live-dot"></span>
+          <span class="breaking-label">BREAKING NEWS</span>
+        </div>
+
+        <div class="ticker">
+          <div class="ticker-track">
+            <span>
+              AYNA BOOK Breaking News — Live news API connection will appear here.
+            </span>
+
+            <span>
+              Welcome to AYNA BOOK — your modern digital social platform.
+            </span>
+
+            <span>
+              Real-time news requires an authorized news API or licensed source.
+            </span>
+          </div>
+        </div>
+
+        <div class="breaking-note">
+          Current ticker is a safe placeholder. Real breaking news will require
+          an approved news-data service/API.
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <h1>Welcome to AYNA BOOK</h1>
+
+      <p>
+        A modern, secure and privacy-focused digital social platform
+        designed for people around the world.
+      </p>
+
+    </section>
+
+
+    <!-- FEATURE GRID -->
+
+    <section
+      id="featureGrid"
+      class="features"
+      aria-label="AYNA BOOK Features"
+    >
+
+      <!-- 01 -->
+
+      <a
+        class="feature-card"
+        data-search="breaking news news live"
+        href="./breaking-news.html"
+      >
+        <div>
+          <div class="feature-icon">📰</div>
+          <div class="feature-name">Breaking News</div>
+          <div class="feature-desc">
+            News and real-time updates.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 02 -->
+
+      <a
+        class="feature-card"
+        data-search="tv radio television bangla global"
+        href="./radio-tv.html"
+      >
+        <div>
+          <div class="feature-icon">📺</div>
+          <div class="feature-name">TV & Radio</div>
+          <div class="feature-desc">
+            Authorized TV and radio services.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 03 -->
+
+      <a
+        class="feature-card"
+        data-search="chat messaging conversation"
+        href="./chat.html"
+      >
+        <div>
+          <div class="feature-icon">💬</div>
+          <div class="feature-name">Chat</div>
+          <div class="feature-desc">
+            Private conversations.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 04 -->
+
+      <a
+        class="feature-card"
+        data-search="messages inbox"
+        href="./messages.html"
+      >
+        <div>
+          <div class="feature-icon">✉️</div>
+          <div class="feature-name">Messages</div>
+          <div class="feature-desc">
+            Manage your messages.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 05 -->
+
+      <a
+        class="feature-card"
+        data-search="profile account user"
+        href="./profile.html"
+      >
+        <div>
+          <div class="feature-icon">👤</div>
+          <div class="feature-name">Profile</div>
+          <div class="feature-desc">
+            Manage your personal profile.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 06 -->
+
+      <a
+        class="feature-card"
+        data-search="privacy security protection"
+        href="./privacy.html"
+      >
+        <div>
+          <div class="feature-icon">🔐</div>
+          <div class="feature-name">Privacy</div>
+          <div class="feature-desc">
+            Privacy and security controls.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 07 -->
+
+      <a
+        class="feature-card"
+        data-search="audio video call voice"
+        href="./audio-video.html"
+      >
+        <div>
+          <div class="feature-icon">📞</div>
+          <div class="feature-name">Audio & Video</div>
+          <div class="feature-desc">
+            Communication tools.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 08 -->
+
+      <a
+        class="feature-card"
+        data-search="camera photo video"
+        href="./camera.html"
+      >
+        <div>
+          <div class="feature-icon">📷</div>
+          <div class="feature-name">Camera</div>
+          <div class="feature-desc">
+            Camera and media tools.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 09 -->
+
+      <a
+        class="feature-card"
+        data-search="gps location direction map"
+        href="./gps.html"
+      >
+        <div>
+          <div class="feature-icon">📍</div>
+          <div class="feature-name">GPS & Direction</div>
+          <div class="feature-desc">
+            Location and navigation tools.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 10 -->
+
+      <a
+        class="feature-card"
+        data-search="radar weather"
+        href="./radar.html"
+      >
+        <div>
+          <div class="feature-icon">📡</div>
+          <div class="feature-name">Radar</div>
+          <div class="feature-desc">
+            Radar and related services.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 11 -->
+
+      <a
+        class="feature-card"
+        data-search="supercomputer computing"
+        href="./supercomputer.html"
+      >
+        <div>
+          <div class="feature-icon">🖥️</div>
+          <div class="feature-name">Supercomputer</div>
+          <div class="feature-desc">
+            Computing information and tools.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 12 -->
+
+      <a
+        class="feature-card"
+        data-search="quantum quantum computing"
+        href="./quantum.html"
+      >
+        <div>
+          <div class="feature-icon">⚛️</div>
+          <div class="feature-name">Quantum</div>
+          <div class="feature-desc">
+            Quantum technology section.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 13 -->
+
+      <a
+        class="feature-card"
+        data-search="medicine medical health"
+        href="./medicine.html"
+      >
+        <div>
+          <div class="feature-icon">💊</div>
+          <div class="feature-name">Medicine</div>
+          <div class="feature-desc">
+            Health information services.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 14 -->
+
+      <a
+        class="feature-card"
+        data-search="currency money exchange"
+        href="./currency.html"
+      >
+        <div>
+          <div class="feature-icon">💱</div>
+          <div class="feature-name">Currency</div>
+          <div class="feature-desc">
+            Currency information.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 15 -->
+
+      <a
+        class="feature-card"
+        data-search="directory services"
+        href="./directory.html"
+      >
+        <div>
+          <div class="feature-icon">📚</div>
+          <div class="feature-name">Directory</div>
+          <div class="feature-desc">
+            Useful directories and services.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 16 -->
+
+      <a
+        class="feature-card"
+        data-search="studio creator content"
+        href="./studio.html"
+      >
+        <div>
+          <div class="feature-icon">🎬</div>
+          <div class="feature-name">Studio</div>
+          <div class="feature-desc">
+            Create and manage content.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 17 -->
+
+      <a
+        class="feature-card"
+        data-search="public profile social"
+        href="./public-profile.html"
+      >
+        <div>
+          <div class="feature-icon">🌐</div>
+          <div class="feature-name">Public Profile</div>
+          <div class="feature-desc">
+            Your public social presence.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+
+      <!-- 18 -->
+
+      <a
+        class="feature-card"
+        data-search="settings account"
+        href="./settings.html"
+      >
+        <div>
+          <div class="feature-icon">⚙️</div>
+          <div class="feature-name">Settings</div>
+          <div class="feature-desc">
+            Manage your AYNA BOOK account.
+          </div>
+        </div>
+
+        <span class="run-btn">RUN</span>
+      </a>
+
+    </section>
+
+
+    <!-- SEARCH EMPTY -->
+
+    <div id="emptyResult" class="empty-result">
+      No matching AYNA BOOK feature found.
     </div>
 
-    <button id="logoutButton" class="logout" type="button">
-      Logout
-    </button>
-  </div>
-</header>
 
-<main class="container">
+    <!-- LOGOUT -->
 
-  <section class="hero">
-    <h1>AYNA BOOK</h1>
-    <p>Connect • Share • Create • Communicate</p>
-  </section>
+    <div class="logout-wrap">
+      <button
+        id="logoutBtn"
+        class="logout-btn"
+        type="button"
+      >
+        Log Out
+      </button>
+    </div>
 
-  <input
-    id="search"
-    class="search"
-    type="search"
-    placeholder="🔎 AYNA BOOK-এ খুঁজুন..."
-    aria-label="Search AYNA BOOK features">
+  </main>
 
-  <div class="actions">
-    <a href="./profile.html">👤 Profile</a>
-    <a href="./privacy.html" class="dark">🔒 Privacy</a>
-  </div>
 
-  <h2 class="section-title">👥 Social</h2>
+  <!-- =========================
+       BOTTOM NAVIGATION
+  ========================== -->
 
-  <div class="grid">
+  <nav
+    id="bottomNav"
+    class="bottom-nav"
+    aria-label="Main navigation"
+  >
 
-    <a class="card" href="./chat.html">
-      <div class="icon">💬</div>
-      <h3>Chat</h3>
-      <p>বন্ধুদের সঙ্গে যোগাযোগ</p>
+    <a
+      class="nav-item active"
+      href="./index.html"
+    >
+      <span class="nav-icon">⌂</span>
+      <span>Home</span>
     </a>
 
-    <a class="card" href="./messages.html">
-      <div class="icon">📨</div>
-      <h3>Messages</h3>
-      <p>ব্যক্তিগত বার্তা</p>
+    <a
+      class="nav-item"
+      href="./breaking-news.html"
+    >
+      <span class="nav-icon">📰</span>
+      <span>News</span>
     </a>
 
-    <a class="card" href="./audio-video-messaging.html">
-      <div class="icon">📹</div>
-      <h3>Audio & Video</h3>
-      <p>অডিও ও ভিডিও যোগাযোগ</p>
+    <a
+      class="nav-item"
+      href="./messages.html"
+    >
+      <span class="nav-icon">✉</span>
+      <span>Messages</span>
     </a>
 
-    <a class="card" href="./profile.html">
-      <div class="icon">👤</div>
-      <h3>Profile</h3>
-      <p>নিজের প্রোফাইল</p>
+    <a
+      class="nav-item"
+      href="./profile.html"
+    >
+      <span class="nav-icon">●</span>
+      <span>Profile</span>
     </a>
 
-    <a class="card" href="./public-profile.html">
-      <div class="icon">🌐</div>
-      <h3>Public Profile</h3>
-      <p>সবার জন্য প্রোফাইল</p>
-    </a>
+  </nav>
 
-    <a class="card" href="./studio.html">
-      <div class="icon">🎨</div>
-      <h3>Studio</h3>
-      <p>কনটেন্ট তৈরি করুন</p>
-    </a>
 
-  </div>
+  <!-- TOAST -->
 
-  <h2 class="section-title">📺 Media & News</h2>
+  <div id="toast" role="status" aria-live="polite"></div>
 
-  <div class="grid">
 
-    <a class="card" href="./bangla-radio-tv.html">
-      <div class="icon">📻</div>
-      <h3>Bangla TV & Radio</h3>
-      <p>বাংলা মিডিয়া</p>
-    </a>
+  <!-- =========================
+       FIREBASE AUTH
+  ========================== -->
 
-    <a class="card" href="./radio-tv.html">
-      <div class="icon">📺</div>
-      <h3>Global TV</h3>
-      <p>বিশ্বের মিডিয়া</p>
-    </a>
+  <script type="module">
 
-    <a class="card" href="./breaking-news.html">
-      <div class="icon">📰</div>
-      <h3>Breaking News</h3>
-      <p>সর্বশেষ খবর</p>
-    </a>
+    import {
+      watchAuthState,
+      logoutUser
+    } from "./auth.js";
 
-    <a class="card" href="./camera.html">
-      <div class="icon">📷</div>
-      <h3>Camera</h3>
-      <p>ছবি ও ভিডিও</p>
-    </a>
 
-  </div>
+    const authLoader = document.getElementById("authLoader");
+    const app = document.getElementById("app");
+    const userName = document.getElementById("userName");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const featureSearch = document.getElementById("featureSearch");
+    const emptyResult = document.getElementById("emptyResult");
+    const toast = document.getElementById("toast");
 
-  <h2 class="section-title">🚀 Technology</h2>
 
-  <div class="grid">
+    let toastTimer = null;
 
-    <a class="card" href="./gps.html">
-      <div class="icon">📍</div>
-      <h3>GPS</h3>
-      <p>লোকেশন ও নেভিগেশন</p>
-    </a>
 
-    <a class="card" href="./direction.html">
-      <div class="icon">🧭</div>
-      <h3>Direction</h3>
-      <p>দিক নির্দেশনা</p>
-    </a>
+    /* =========================
+       TOAST
+    ========================== */
 
-    <a class="card" href="./radar.html">
-      <div class="icon">📡</div>
-      <h3>Radar</h3>
-      <p>রাডার সিস্টেম</p>
-    </a>
+    function showToast(message) {
 
-    <a class="card" href="./supercomputer.html">
-      <div class="icon">🖥️</div>
-      <h3>Supercomputer</h3>
-      <p>উন্নত প্রযুক্তি</p>
-    </a>
+      if (!toast) return;
 
-    <a class="card" href="./quantum.html">
-      <div class="icon">⚛️</div>
-      <h3>Quantum</h3>
-      <p>কোয়ান্টাম প্রযুক্তি</p>
-    </a>
+      toast.textContent = message;
+      toast.classList.add("show");
 
-  </div>
+      clearTimeout(toastTimer);
 
-  <h2 class="section-title">🌍 Directory & Services</h2>
-
-  <div class="grid">
-
-    <a class="card" href="./medicine-store.html">
-      <div class="icon">💊</div>
-      <h3>Medicine Store</h3>
-      <p>স্বাস্থ্য ও ওষুধ তথ্য</p>
-    </a>
-
-    <a class="card" href="./currency-exchange.html">
-      <div class="icon">💱</div>
-      <h3>Currency</h3>
-      <p>মুদ্রা বিনিময়</p>
-    </a>
-
-    <a class="card" href="./bd-directory.html">
-      <div class="icon">🇧🇩</div>
-      <h3>BD Directory</h3>
-      <p>বাংলাদেশ ডিরেক্টরি</p>
-    </a>
-
-    <a class="card" href="./business-directory.html">
-      <div class="icon">🏢</div>
-      <h3>Business Directory</h3>
-      <p>ব্যবসা ও প্রতিষ্ঠান</p>
-    </a>
-
-  </div>
-
-  <h2 class="section-title">🔒 Account & Security</h2>
-
-  <div class="grid">
-
-    <a class="card" href="./privacy-settings.html">
-      <div class="icon">🛡️</div>
-      <h3>Privacy Settings</h3>
-      <p>গোপনীয়তা নিয়ন্ত্রণ</p>
-    </a>
-
-    <a class="card" href="./ownership.html">
-      <div class="icon">©️</div>
-      <h3>Ownership</h3>
-      <p>AYNA BOOK</p>
-    </a>
-
-  </div>
-
-  <div id="empty" class="empty">
-    🔎 কোনো ফলাফল পাওয়া যায়নি।
-  </div>
-
-</main>
-
-<nav class="bottom">
-  <a href="./index.html"><span>🏠</span>Home</a>
-  <a href="./chat.html"><span>💬</span>Chat</a>
-  <a href="./studio.html"><span>➕</span>Create</a>
-  <a href="./profile.html"><span>👤</span>Profile</a>
-</nav>
-
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-</div>
-
-<script type="module">
-
-import {
-  watchAuthState,
-  logoutUser
-} from "./auth.js";
-
-const app = document.getElementById("app");
-const loader = document.getElementById("authLoader");
-const loaderText = document.getElementById("loaderText");
-
-const userbar = document.getElementById("userbar");
-const userName = document.getElementById("userName");
-const userEmail = document.getElementById("userEmail");
-const logoutButton = document.getElementById("logoutButton");
-
-const firebaseText = document.getElementById("firebaseText");
-const firebaseDot = document.getElementById("firebaseDot");
-
-const search = document.getElementById("search");
-const empty = document.getElementById("empty");
-const toast = document.getElementById("toast");
-
-let toastTimer;
-
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2500);
-}
-
-function showLoginPage() {
-  window.location.replace("./login.html");
-}
-
-function showHomepage(user) {
-  userName.textContent =
-    user.displayName || "AYNA BOOK User";
-
-  userEmail.textContent = user.email || "";
-
-  userbar.style.display = "flex";
-
-  firebaseText.textContent = "Auth Ready";
-  firebaseDot.style.background = "#00e676";
-
-  app.hidden = false;
-  loader.style.display = "none";
-}
-
-// Firebase Authentication State Check
-try {
-
-  watchAuthState((user) => {
-
-    if (user) {
-      showHomepage(user);
-    } else {
-      loaderText.textContent =
-        "Login প্রয়োজন। Login পেজে নেওয়া হচ্ছে...";
-
-      showLoginPage();
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2800);
     }
 
-  });
 
-} catch (error) {
+    /* =========================
+       SHOW APP
+    ========================== */
 
-  console.error("AYNA BOOK Auth Error:", error);
+    function showApp(user) {
 
-  loaderText.textContent =
-    "Authentication Error. আবার চেষ্টা করুন।";
+      if (!user) {
+        window.location.replace("./login.html");
+        return;
+      }
 
-  firebaseText.textContent = "Auth Error";
-  firebaseDot.style.background = "#ff5252";
+      const displayName =
+        user.displayName ||
+        user.email ||
+        "AYNA BOOK User";
 
-}
+      userName.textContent = displayName;
 
-
-// Logout
-logoutButton.addEventListener("click", async () => {
-
-  logoutButton.disabled = true;
-  logoutButton.textContent = "Logging out...";
-
-  try {
-
-    const result = await logoutUser();
-
-    if (result && result.success === true) {
-
-      showToast("Logout সফল হয়েছে");
-
-      window.location.replace("./login.html");
-
-    } else {
-
-      showToast(
-        result?.message ||
-        result?.error ||
-        "Logout করা যায়নি। আবার চেষ্টা করুন।"
-      );
-
-      logoutButton.disabled = false;
-      logoutButton.textContent = "Logout";
-
+      authLoader.style.display = "none";
+      app.style.display = "block";
     }
 
-  } catch (error) {
 
-    console.error("Logout Error:", error);
+    /* =========================
+       AUTH STATE
+    ========================== */
 
-    showToast("Logout Error: আবার চেষ্টা করুন");
+    watchAuthState((user) => {
 
-    logoutButton.disabled = false;
-    logoutButton.textContent = "Logout";
+      if (!user) {
+        window.location.replace("./login.html");
+        return;
+      }
 
-  }
+      showApp(user);
 
-});
+    });
 
 
-// Homepage Feature Search
-search.addEventListener("input", () => {
+    /* =========================
+       LOGOUT
+    ========================== */
 
-  const query = search.value.trim().toLowerCase();
+    logoutBtn.addEventListener("click", async () => {
 
-  const cards = Array.from(
-    document.querySelectorAll(".card")
-  );
+      logoutBtn.disabled = true;
+      logoutBtn.textContent = "Logging out...";
 
-  let visible = 0;
+      try {
 
-  cards.forEach(card => {
+        const result = await logoutUser();
 
-    const text = card.textContent.toLowerCase();
-    const match = !query || text.includes(query);
+        if (result && result.success) {
+          window.location.replace("./login.html");
+          return;
+        }
 
-    card.style.display = match ? "" : "none";
+        logoutBtn.disabled = false;
+        logoutBtn.textContent = "Log Out";
 
-    if (match) visible++;
+        showToast(
+          result?.message ||
+          "Logout failed. Please try again."
+        );
 
-  });
+      } catch (error) {
 
-  empty.style.display = visible === 0 ? "block" : "none";
+        console.error("Logout error:", error);
 
-});
+        logoutBtn.disabled = false;
+        logoutBtn.textContent = "Log Out";
 
-</script>
+        showToast(
+          "Logout failed. Please try again."
+        );
+      }
+
+    });
+
+
+    /* =========================
+       FEATURE SEARCH
+    ========================== */
+
+    featureSearch.addEventListener("input", () => {
+
+      const query =
+        featureSearch.value
+          .trim()
+          .toLowerCase();
+
+      const cards =
+        Array.from(
+          document.querySelectorAll(".feature-card")
+        );
+
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+
+        const text =
+          (
+            card.textContent +
+            " " +
+            (card.dataset.search || "")
+          ).toLowerCase();
+
+        const match =
+          !query ||
+          text.includes(query);
+
+        card.style.display =
+          match ? "" : "none";
+
+        if (match) {
+          visibleCount++;
+        }
+      });
+
+      emptyResult.style.display =
+        visibleCount === 0
+          ? "block"
+          : "none";
+
+    });
+
+
+    /* =========================
+       PREVENT ACCIDENTAL
+       ACCESS BEFORE AUTH
+    ========================== */
+
+    window.addEventListener("pageshow", () => {
+
+      /*
+        Firebase auth state remains the final authority.
+        This page never intentionally displays private
+        content before watchAuthState confirms a user.
+      */
+
+    });
+
+  </script>
 
 </body>
 </html>
