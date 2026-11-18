@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AYNA BOOK - মূল ড্যাশবোর্ড</title>
-    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background-color: #f4f7f6; color: #333; padding: 15px; }
         
-        /* ব্রেকিং নিউজ টিকার */
         .breaking-news-ticker { 
             background: #ffcc00; 
             color: #000; 
@@ -21,7 +19,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        /* হেডার */
         .ayna-header { 
             text-align: center; 
             margin-bottom: 30px; 
@@ -31,9 +28,9 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
         }
         .ayna-header h1 { font-size: 3rem; color: #1a73e8; margin-bottom: 10px; letter-spacing: 1px; }
-        .user-greeting { font-size: 1.3rem; color: #555; }
+        .user-greeting { font-size: 1.3rem; color: #28a745; font-weight: bold; margin-bottom: 8px; }
+        .db-status { font-size: 1rem; color: #555; background: #e8f0fe; display: inline-block; padding: 5px 15px; border-radius: 20px; }
 
-        /* ফিচার গ্রিড ও আলাদা বাক্স */
         .dashboard-container { max-width: 800px; margin: 0 auto; }
         .feature-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 30px; }
         @media(min-width: 600px) { .feature-grid { grid-template-columns: 1fr 1fr; } }
@@ -51,7 +48,6 @@
         .feature-box h2 { font-size: 1.6rem; color: #222; margin-bottom: 10px; }
         .feature-box p { font-size: 1.1rem; color: #666; line-height: 1.5; }
 
-        /* অ্যাকশন প্যানেল ও লগআউট বাটন */
         .action-panel { text-align: center; margin-bottom: 30px; }
         .btn-primary { 
             background-color: #d93025; 
@@ -63,25 +59,21 @@
             border-radius: 8px; 
             cursor: pointer; 
             box-shadow: 0 4px 10px rgba(217, 48, 37, 0.3);
-            transition: background 0.2s;
         }
-        .btn-primary:hover { background-color: #b52219; }
     </style>
 </head>
 <body>
 
-    <!-- ব্রেকিং নিউজ টিকার -->
     <div class="breaking-news-ticker">
-        <marquee behavior="scroll" direction="left">✨ AYNA BOOK-এ স্বাগতম! প্রজেক্টটি ফায়ারবেস (ayna-book) এর সাথে সফলভাবে সংযুক্ত রয়েছে।</marquee>
+        <marquee behavior="scroll" direction="left">✨ AYNA BOOK-এ স্বাগতম! ফায়ারবেসের সাথে সফলভাবে সংযুক্ত রয়েছে।</marquee>
     </div>
 
-    <!-- মূল হেডার -->
     <header class="ayna-header">
         <h1>AYNA BOOK</h1>
         <p class="user-greeting" id="userGreeting">ফায়ারবেস কানেকশন যাচাই করা হচ্ছে...</p>
+        <div class="db-status" id="dbStatus">ডাটাবেস স্ট্যাটাস: অপেক্ষমাণ...</div>
     </header>
 
-    <!-- মূল ফিচার গ্রিড -->
     <main class="dashboard-container">
         <section class="feature-grid">
             <div class="feature-box" onclick="location.href='chat.html'">
@@ -103,47 +95,58 @@
                 <h2>🧭 র‍্যাডার ও কম্পাস</h2>
                 <p>জিপিএস লোকেশন অ্যালার্ট, কম্পাস এবং নেভিগেশন টুলস।</p>
             </div>
-
-            <div class="feature-box" onclick="location.href='business-directory.html'">
-                <h2>📂 ব্যবসায়িক ডিরেক্টরি</h2>
-                <p>প্রয়োজনীয় ব্যবসায়িক তথ্য ও গ্লোবাল ডিরেক্টরি ব্রাউজ করুন।</p>
-            </div>
-
-            <div class="feature-box" onclick="location.href='breaking-news.html'">
-                <h2>📰 ব্রেকিং নিউজ</h2>
-                <p>সর্বশেষ আপডেট, গ্লোবাল অ্যালার্ট এবং খবরাখবর।</p>
-            </div>
         </section>
 
-        <!-- লগআউট বাটন -->
         <div class="action-panel">
             <button id="logoutBtn" class="btn-primary">লগ আউট</button>
         </div>
     </main>
 
-    <!-- ফায়ারবেস রিয়েল-টাইম ইন্টিগ্রেশন স্ক্রিপ্ট -->
     <script type="module">
-        import { auth } from './firebase-init.js';
+        import { auth, rtdb } from './firebase-init.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // ফায়ারবেস অথেন্টিকেশন স্টেট মনিটর করা
-        onAuthStateChanged(auth, (user) => {
-            const greetingEl = document.getElementById('userGreeting');
-            if (user) {
-                // ইউজার লগইন করা থাকলে তার ইমেইল বা আইডি দেখাবে
-                greetingEl.textContent = `স্বাগতম, ${user.email || 'প্রিয় ব্যবহারকারী'}! (ID: AB-${user.uid.substring(0,6).toUpperCase()})`;
+        const greetingEl = document.getElementById('userGreeting');
+        const dbStatusEl = document.getElementById('dbStatus');
+
+        // রিয়েলটাইম ডাটাবেস কানেকশন স্ট্যাটাস চেক
+        const connectedRef = ref(rtdb, ".info/connected");
+        onValue(connectedRef, (snap) => {
+            if (snap.val() === true) {
+                dbStatusEl.textContent = "🟢 ফায়ারবেস ডাটাবেস: সংযুক্ত (Connected)";
+                dbStatusEl.style.color = "#137333";
+                dbStatusEl.style.background = "#e6f4ea";
             } else {
-                // লগইন করা না থাকলে সরাসরি login.html এ পাঠিয়ে দেবে
+                dbStatusEl.textContent = "🔴 ফায়ারবেস ডাটাবেস: বিচ্ছিন্ন";
+                dbStatusEl.style.color = "#c5221f";
+                dbStatusEl.style.background = "#fce8e6";
+            }
+        });
+
+        // অথেন্টিকেশন স্টেট চেক ও ইউজার স্ট্যাটাস রিয়েলটাইমে আপডেট
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const shortId = `AB-${user.uid.substring(0, 6).toUpperCase()}`;
+                greetingEl.textContent = `স্বাগতম, ${user.email} (${shortId})`;
+
+                set(ref(rtdb, 'ayna_book_status/' + user.uid), {
+                    email: user.email,
+                    aynaId: shortId,
+                    online: true,
+                    lastActive: new Date().toISOString()
+                });
+            } else {
                 window.location.href = 'login.html';
             }
         });
 
-        // লগআউট হ্যান্ডলার
+        // লগআউট বাটন হ্যান্ডলার
         document.getElementById('logoutBtn').addEventListener('click', () => {
             signOut(auth).then(() => {
                 window.location.href = 'login.html';
             }).catch((error) => {
-                console.error('লগআউট করতে সমস্যা হয়েছে:', error);
+                alert('লগআউট ত্রুটি: ' + error.message);
             });
         });
     </script>
