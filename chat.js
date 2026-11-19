@@ -4,7 +4,7 @@
 // Firebase SDK: 13.4.0
 // =========================================================
 
-import { auth, db } from "./firebase-init.js";
+import { auth, db } from "./firebase.js";
 
 import {
   onAuthStateChanged
@@ -45,9 +45,10 @@ onAuthStateChanged(auth, (user) => {
 
   currentUser = user;
 
-  authReady = true;
-
-  resolveAuthReady(user);
+  if (!authReady) {
+    authReady = true;
+    resolveAuthReady(user);
+  }
 
   if (!user) {
 
@@ -94,7 +95,6 @@ export async function sendMessage(
 
     const user = await waitForAuth();
 
-
     if (!user) {
 
       throw new Error(
@@ -117,7 +117,6 @@ export async function sendMessage(
     }
 
 
-    // Firestore Rules-এর সঙ্গে মিল
     if (text.length > 2000) {
 
       throw new Error(
@@ -149,10 +148,8 @@ export async function sendMessage(
       ),
       {
 
-        // Firestore Rules-এর সঙ্গে মিল
         uid: user.uid,
 
-        // UI-তে sender চেনার জন্য
         senderId: user.uid,
 
         senderEmail:
@@ -190,7 +187,7 @@ export async function sendMessage(
       success: false,
 
       message:
-        error.message ||
+        error?.message ||
         "মেসেজ পাঠানো যায়নি।"
 
     };
@@ -209,11 +206,17 @@ export function listenMessages(
   roomId = "global"
 ) {
 
-  let unsubscribe =
-    () => {};
+  let unsubscribe = () => {};
+
+  let cancelled = false;
 
 
   waitForAuth().then((user) => {
+
+    if (cancelled) {
+      return;
+    }
+
 
     if (!user) {
 
@@ -272,11 +275,11 @@ export function listenMessages(
 
           const messages =
             snapshot.docs.map(
-              (doc) => ({
+              (messageDoc) => ({
 
-                id: doc.id,
+                id: messageDoc.id,
 
-                ...doc.data()
+                ...messageDoc.data()
 
               })
             );
@@ -303,7 +306,10 @@ export function listenMessages(
   });
 
 
+  // Listener বন্ধ করার function
   return () => {
+
+    cancelled = true;
 
     unsubscribe();
 
