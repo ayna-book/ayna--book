@@ -1,7 +1,10 @@
-// firebase-init.js - AYNA BOOK
+
+import { firebaseConfig } from "./firebase-config.js";
 
 import {
-  initializeApp
+  initializeApp,
+  getApps,
+  getApp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
 import {
@@ -20,45 +23,15 @@ import {
   getStorage
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-import {
-  firebaseConfig
-} from "./firebase-config.js";
+// Initialize Firebase only once
+export const app = getApps().length
+  ? getApp()
+  : initializeApp(firebaseConfig);
 
+// Firebase services
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const database = getDatabase(app);
+export const storage = getStorage(app);
 
-const app =
-  initializeApp(firebaseConfig);
-
-
-const auth =
-  getAuth(app);
-
-
-const db =
-  getFirestore(app);
-
-
-const database =
-  getDatabase(app);
-
-
-const storage =
-  getStorage(app);
-
-
-export {
-  app,
-  auth,
-  db,
-  database,
-  storage
-};
-
-
-console.log(
-  "AYNA BOOK — Firebase initialized successfully."
-);
-
-console.log(
-  "Firebase Project:",
-  firebaseConfig.projectId
-);
+console.log("AYNA BOOK Firebase initialized successfully");
