@@ -22,7 +22,6 @@ const FILES_TO_CACHE = [
 
 // =========================================================
 // INSTALL
-// প্রয়োজনীয় ফাইল Cache করা
 // =========================================================
 
 self.addEventListener("install", (event) => {
@@ -91,7 +90,7 @@ self.addEventListener("install", (event) => {
         );
 
 
-        // নতুন Service Worker activate করার অনুমতি
+        // নতুন Service Worker দ্রুত activate করবে
         await self.skipWaiting();
 
 
@@ -113,7 +112,6 @@ self.addEventListener("install", (event) => {
 
 // =========================================================
 // ACTIVATE
-// পুরোনো Cache মুছে ফেলা
 // =========================================================
 
 self.addEventListener("activate", (event) => {
@@ -146,7 +144,7 @@ self.addEventListener("activate", (event) => {
         );
 
 
-        // বর্তমান পেজগুলোকে নতুন SW-এর অধীনে আনা
+        // বর্তমান client-গুলোকে নতুন SW-এর অধীনে আনা
         await self.clients.claim();
 
 
@@ -174,7 +172,7 @@ self.addEventListener("activate", (event) => {
 
 // =========================================================
 // MESSAGE
-// update.js থেকে SKIP_WAITING গ্রহণ
+// update.js থেকে SKIP_WAITING
 // =========================================================
 
 self.addEventListener(
@@ -191,7 +189,6 @@ self.addEventListener(
         "AYNA BOOK: SKIP_WAITING received."
       );
 
-
       self.skipWaiting();
 
     }
@@ -202,8 +199,7 @@ self.addEventListener(
 
 // =========================================================
 // FETCH
-// Online হলে Network
-// Offline হলে Cache
+// Network First → Cache Fallback
 // =========================================================
 
 self.addEventListener(
@@ -214,7 +210,7 @@ self.addEventListener(
       event.request;
 
 
-    // শুধু GET request
+    // GET ছাড়া অন্য request Service Worker handle করবে না
     if (
       request.method !==
       "GET"
@@ -231,7 +227,7 @@ self.addEventListener(
       );
 
 
-    // শুধু AYNA BOOK-এর নিজস্ব domain
+    // শুধু AYNA BOOK-এর নিজের domain
     if (
       url.origin !==
       self.location.origin
@@ -242,7 +238,7 @@ self.addEventListener(
     }
 
 
-    // Query-যুক্ত request Cache করা হবে না
+    // Query request cache করা হবে না
     if (
       url.search
     ) {
@@ -252,7 +248,7 @@ self.addEventListener(
     }
 
 
-    // Firebase internal request Cache নয়
+    // Firebase internal request cache নয়
     if (
       url.pathname.includes(
         "/__/"
@@ -277,7 +273,7 @@ self.addEventListener(
             );
 
 
-          // সফল হলে Cache update
+          // সফল response হলে Cache update
           if (
             response.ok &&
             response.type ===
@@ -296,6 +292,7 @@ self.addEventListener(
                 request,
                 response.clone()
               );
+
 
             } catch (cacheError) {
 
@@ -320,7 +317,7 @@ self.addEventListener(
           );
 
 
-          // Network না থাকলে Cache
+          // Cache থেকে response
           const cached =
             await caches.match(
               request
@@ -334,7 +331,7 @@ self.addEventListener(
           }
 
 
-          // Navigation request হলে index.html
+          // Offline navigation fallback
           if (
             request.mode ===
             "navigate"
