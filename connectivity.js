@@ -1,74 +1,159 @@
-/**
- * AYNA BOOK — Global Online Connectivity & Real-time Network Engine
- * Founder: Mohammed Mahabub Alam
- * International Account ID: 01400751906
- */
+
+/* =========================================================
+   AYNA BOOK
+   Network Connectivity Monitor
+   ========================================================= */
 
 class AynaConnectivityEngine {
-    constructor() {
-        this.isOnline = navigator.onLine;
-        this.pingInterval = null;
-        this.statusListeners = [];
-        this.init();
+  constructor() {
+    this.isOnline = navigator.onLine;
+    this.pingInterval = null;
+    this.statusListeners = [];
+
+    this.init();
+  }
+
+  init() {
+    window.addEventListener("online", () => {
+      this.checkConnection();
+    });
+
+    window.addEventListener("offline", () => {
+      this.handleStatusChange(false);
+    });
+
+    this.updateUIBadge(this.isOnline);
+
+    // প্রথমবার সংযোগ পরীক্ষা
+    this.checkConnection();
+
+    // প্রতি ৩০ সেকেন্ডে পরীক্ষা
+    this.pingInterval = setInterval(() => {
+      this.checkConnection();
+    }, 30000);
+
+    console.log(
+      "AYNA BOOK Connectivity Engine Started."
+    );
+  }
+
+  handleStatusChange(status) {
+    if (this.isOnline === status) {
+      this.updateUIBadge(status);
+      return;
     }
 
-    init() {
-        // নেটওয়ার্ক ইভেন্ট লিসেনার
-        window.addEventListener('online', () => this.handleStatusChange(true));
-        window.addEventListener('offline', () => this.handleStatusChange(false));
+    this.isOnline = status;
 
-        // রিয়েল-টাইম পিং সার্ভিস চালু করা (প্রতি ১০ সেকেন্ড পর পর সার্ভার কানেকশন চেক)
-        this.startHealthCheck();
-        
-        console.log(`[AYNA BOOK Engine] Connectivity Engine Initialized. Status: ${this.isOnline ? 'ONLINE' : 'OFFLINE'}`);
+    this.updateUIBadge(status);
+
+    console.log(
+      "AYNA BOOK Network:",
+      status ? "ONLINE" : "OFFLINE"
+    );
+
+    this.statusListeners.forEach((callback) => {
+      try {
+        callback(status);
+      } catch (error) {
+        console.error(
+          "AYNA BOOK Listener Error:",
+          error
+        );
+      }
+    });
+  }
+
+  updateUIBadge(status) {
+    const badge = document.getElementById(
+      "network-status-badge"
+    );
+
+    if (!badge) return;
+
+    badge.textContent = status
+      ? "🟢 ONLINE"
+      : "🔴 OFFLINE";
+
+    badge.style.color = status
+      ? "#2ECC71"
+      : "#ef4444";
+  }
+
+  async checkConnection() {
+    if (!navigator.onLine) {
+      this.handleStatusChange(false);
+      return false;
     }
 
-    handleStatusChange(onlineStatus) {
-        this.isOnline = onlineStatus;
-        const statusText = onlineStatus ? "অনলাইন (Connected)" : "অফলাইন (Disconnected)";
-        const statusColor = onlineStatus ? "#10b981" : "#ef4444";
+    try {
+      const pageURL = new URL(
+        "./index.html",
+        document.baseURI
+      );
 
-        console.log(`[AYNA Connectivity] Network status changed: ${statusText}`);
+      pageURL.searchParams.set(
+        "network-check",
+        Date.now()
+      );
 
-        // UI নোটিফিকেশন আপডেট
-        this.updateUIBadge(onlineStatus);
+      const response = await fetch(pageURL, {
+        method: "HEAD",
+        cache: "no-store"
+      });
 
-        // রেজিস্টার্ড লিসেনারদের আপডেট পাঠানো
-        this.statusListeners.forEach(callback => callback(onlineStatus));
+      const connected = response.ok;
+
+      this.handleStatusChange(connected);
+
+      return connected;
+
+    } catch (error) {
+      console.warn(
+        "AYNA BOOK: Connection check failed.",
+        error
+      );
+
+      this.handleStatusChange(false);
+
+      return false;
+    }
+  }
+
+  onStatusChange(callback) {
+    if (typeof callback !== "function") {
+      return () => {};
     }
 
-    updateUIBadge(onlineStatus) {
-        const badgeElem = document.getElementById('network-status-badge');
-        if (badgeElem) {
-            badgeElem.innerText = onlineStatus ? "🟢 ONLINE" : "🔴 OFFLINE";
-            badgeElem.style.color = onlineStatus ? "#10b981" : "#ef4444";
-        }
+    this.statusListeners.push(callback);
+
+    // Listener বন্ধ করার ব্যবস্থা
+    return () => {
+      this.statusListeners =
+        this.statusListeners.filter(
+          (item) => item !== callback
+        );
+    };
+  }
+
+  destroy() {
+    if (this.pingInterval !== null) {
+      clearInterval(this.pingInterval);
+      this.pingInterval = null;
     }
 
-    startHealthCheck() {
-        // রিয়েল-টাইম ক্লাউড/Vercel কানেক্টিভিটি চেক
-        this.pingInterval = setInterval(async () => {
-            if (navigator.onLine) {
-                try {
-                    // হেড রিকোয়েস্টের মাধ্যমে সার্ভার কানেকশন নিশ্চিতকরণ
-                    const response = await fetch('/index.html', { method: 'HEAD', cache: 'no-store' });
-                    if (!response.ok && this.isOnline) {
-                        this.handleStatusChange(false);
-                    }
-                } catch (error) {
-                    if (this.isOnline) this.handleStatusChange(false);
-                }
-            }
-        }, 10000);
-    }
+    this.statusListeners = [];
 
-    // সাবস্ক্রিপশন সিস্টেম (অন্যান্য ফাইল থেকে ট্র্যাক করার জন্য)
-    onStatusChange(callback) {
-        if (typeof callback === 'function') {
-            this.statusListeners.push(callback);
-        }
-    }
+    console.log(
+      "AYNA BOOK Connectivity Engine Stopped."
+    );
+  }
 }
 
-// গ্লোবাল ইন্সট্যান্স তৈরি
-window.AynaNetwork = new AynaConnectivityEngine();
+// Global instance
+window.AynaNetwork =
+  new AynaConnectivityEngine();
+
+console.log(
+  "AYNA BOOK — Connectivity Loaded Successfully."
+);
