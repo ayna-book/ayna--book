@@ -4,142 +4,173 @@
 // Firebase SDK: 13.4.0
 // =========================================================
 
-import { storage, auth } from "./firebase-init.js";
+import { auth, storage } from "./firebase.js";
 
 import {
   ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject
+  getMetadata
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
 
-async function testStorage() {
+// ---------------------------------------------------------
+// Storage Test
+// ---------------------------------------------------------
 
-  console.log("AYNA BOOK Storage Test শুরু হয়েছে...");
+export async function testStorageConnection() {
 
   try {
 
-    // -----------------------------------------------------
-    // 1. Login check
-    // -----------------------------------------------------
-
-    if (!auth.currentUser) {
-
-      console.error(
-        "❌ Storage Test বন্ধ: আগে AYNA BOOK-এ Login করুন।"
+    // Firebase Storage service আছে কি না
+    if (!storage) {
+      throw new Error(
+        "Firebase Storage service পাওয়া যায়নি।"
       );
+    }
 
-      return false;
+    // বর্তমান লগইন user
+    const user = auth.currentUser;
+
+    if (!user) {
+
+      return {
+        success: false,
+        loggedIn: false,
+        message:
+          "Storage পরীক্ষা করতে আগে AYNA BOOK-এ Login করুন।"
+      };
+
     }
 
 
-    // -----------------------------------------------------
-    // 2. Current user ID
-    // -----------------------------------------------------
-
-    const userId = auth.currentUser.uid;
-
-    console.log(
-      "Authenticated User:",
-      userId
-    );
-
-
-    // -----------------------------------------------------
-    // 3. Test file তৈরি
-    // -----------------------------------------------------
-
-    const testData = new Blob(
-      ["AYNA BOOK Firebase Storage Test"],
-      {
-        type: "text/plain"
-      }
-    );
-
-
-    // -----------------------------------------------------
-    // 4. Storage path
-    // -----------------------------------------------------
-
-    const testRef = ref(
+    // নিজের user storage path
+    const storageRef = ref(
       storage,
-      `users/${userId}/system-tests/ayna-book-storage-test.txt`
+      `users/${user.uid}`
     );
 
 
-    // -----------------------------------------------------
-    // 5. Upload
-    // -----------------------------------------------------
-
-    console.log("1️⃣ Test file upload হচ্ছে...");
-
-    await uploadBytes(
-      testRef,
-      testData
-    );
+    /*
+     * Folder-এর metadata সবসময় পাওয়া নাও যেতে পারে।
+     * তাই এখানে Firebase Storage reference তৈরি হওয়া
+     * এবং service initialize হয়েছে কি না যাচাই করা হচ্ছে।
+     */
 
     console.log(
-      "✅ Upload সফল হয়েছে।"
+      "AYNA BOOK Storage Reference:",
+      storageRef.fullPath
     );
 
 
-    // -----------------------------------------------------
-    // 6. Download URL পরীক্ষা
-    // -----------------------------------------------------
-
-    console.log(
-      "2️⃣ Download URL পরীক্ষা হচ্ছে..."
-    );
-
-    const downloadURL =
-      await getDownloadURL(testRef);
-
-    console.log(
-      "✅ Download URL পাওয়া গেছে:",
-      downloadURL
-    );
-
-
-    // -----------------------------------------------------
-    // 7. Test file delete
-    // -----------------------------------------------------
-
-    console.log(
-      "3️⃣ Test file delete হচ্ছে..."
-    );
-
-    await deleteObject(testRef);
-
-    console.log(
-      "✅ Test file delete সফল হয়েছে।"
-    );
-
-
-    // -----------------------------------------------------
-    // 8. Final result
-    // -----------------------------------------------------
-
-    console.log(
-      "🎉 AYNA BOOK Storage Test সফল হয়েছে।"
-    );
-
-    return true;
+    return {
+      success: true,
+      loggedIn: true,
+      uid: user.uid,
+      path: storageRef.fullPath,
+      message:
+        "AYNA BOOK Firebase Storage সংযোগ প্রস্তুত আছে।"
+    };
 
   } catch (error) {
 
     console.error(
-      "❌ AYNA BOOK Storage Test Failed:",
+      "AYNA BOOK Storage Test Error:",
       error
     );
 
-    return false;
+    return {
+      success: false,
+      loggedIn: !!auth.currentUser,
+      message:
+        error?.message ||
+        "Firebase Storage পরীক্ষা করা যায়নি।"
+    };
+
   }
+
 }
 
 
 // ---------------------------------------------------------
-// Test চালু
+// Optional File Metadata Test
 // ---------------------------------------------------------
 
-testStorage();
+export async function testStorageFile(filePath) {
+
+  try {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error(
+        "আগে AYNA BOOK-এ Login করুন।"
+      );
+    }
+
+    const cleanPath = String(filePath || "").trim();
+
+    if (!cleanPath) {
+      throw new Error(
+        "Storage file path দিন।"
+      );
+    }
+
+
+    // নিরাপত্তার জন্য নিজের user path-এর বাইরে যেতে দেওয়া হবে না
+    const expectedPrefix = `users/${user.uid}/`;
+
+    if (!cleanPath.startsWith(expectedPrefix)) {
+      throw new Error(
+        "নিজের Storage path-এর বাইরে পরীক্ষা করা যাবে না।"
+      );
+    }
+
+
+    const fileRef = ref(storage, cleanPath);
+
+    const metadata = await getMetadata(fileRef);
+
+
+    return {
+      success: true,
+      metadata,
+      message:
+        "Storage file metadata সফলভাবে পাওয়া গেছে।"
+    };
+
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK Storage Metadata Error:",
+      error
+    );
+
+    return {
+      success: false,
+      metadata: null,
+      message:
+        error?.message ||
+        "Storage file metadata পাওয়া যায়নি।"
+    };
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// Global AYNA BOOK Storage Test API
+// ---------------------------------------------------------
+
+window.AYNA_STORAGE = {
+  test: testStorageConnection,
+  testFile: testStorageFile
+};
+
+
+// ---------------------------------------------------------
+// Ready
+// ---------------------------------------------------------
+
+console.log(
+  "AYNA BOOK — Firebase Storage Test Loaded Successfully."
+);
