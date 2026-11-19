@@ -1,154 +1,1028 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK - মূল ড্যাশবোর্ড</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: #f4f7f6; color: #333; padding: 15px; }
-        
-        .breaking-news-ticker { 
-            background: #ffcc00; 
-            color: #000; 
-            padding: 12px; 
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            border-radius: 8px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .ayna-header { 
-            text-align: center; 
-            margin-bottom: 30px; 
-            padding: 25px; 
-            background: #ffffff; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-        }
-        .ayna-header h1 { font-size: 3rem; color: #1a73e8; margin-bottom: 10px; letter-spacing: 1px; }
-        .user-greeting { font-size: 1.3rem; color: #28a745; font-weight: bold; margin-bottom: 8px; }
-        .db-status { font-size: 1rem; color: #555; background: #e8f0fe; display: inline-block; padding: 5px 15px; border-radius: 20px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0F1E">
 
-        .dashboard-container { max-width: 800px; margin: 0 auto; }
-        .feature-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 30px; }
-        @media(min-width: 600px) { .feature-grid { grid-template-columns: 1fr 1fr; } }
+  <title>AYNA BOOK — Home</title>
 
-        .feature-box { 
-            background: #ffffff; 
-            padding: 25px; 
-            border-radius: 16px; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.08); 
-            cursor: pointer; 
-            transition: transform 0.2s ease, box-shadow 0.2s ease; 
-            border-left: 6px solid #1a73e8; 
-        }
-        .feature-box:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
-        .feature-box h2 { font-size: 1.6rem; color: #222; margin-bottom: 10px; }
-        .feature-box p { font-size: 1.1rem; color: #666; line-height: 1.5; }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        .action-panel { text-align: center; margin-bottom: 30px; }
-        .btn-primary { 
-            background-color: #d93025; 
-            color: white; 
-            border: none; 
-            padding: 14px 30px; 
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            box-shadow: 0 4px 10px rgba(217, 48, 37, 0.3);
-        }
-    </style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0A0F1E;
+      color: #FFFFFF;
+      font-family: Arial, sans-serif;
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      min-height: 72px;
+      padding: 12px 16px;
+
+      background: #0A0F1E;
+      border-bottom: 1px solid #4A4A2A;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* চার-বক্স Dashboard Icon */
+
+    .dashboard-button {
+      width: 46px;
+      height: 46px;
+
+      border: 1px solid #4A4A2A;
+      border-radius: 12px;
+
+      background: #1A2233;
+
+      display: grid;
+      grid-template-columns: repeat(2, 9px);
+      grid-template-rows: repeat(2, 9px);
+      gap: 5px;
+      place-content: center;
+
+      cursor: pointer;
+    }
+
+    .dashboard-button span {
+      width: 9px;
+      height: 9px;
+      display: block;
+
+      background: #FFD700;
+      border-radius: 2px;
+    }
+
+    /* =========================
+       মাঝের AYNA BOOK
+       স্বাভাবিক সাদা
+    ========================== */
+
+    .brand {
+      flex: 1;
+
+      text-align: center;
+
+      color: #FFFFFF;
+
+      font-size: clamp(24px, 6vw, 36px);
+      font-weight: 900;
+
+      letter-spacing: 2px;
+    }
+
+    /* =========================
+       ডান কর্ণারের AYNA BOOK
+    ========================== */
+
+    .right-brand {
+      min-width: 105px;
+
+      text-align: right;
+
+      color: #FFFFFF;
+
+      font-size: 16px;
+      font-weight: 800;
+
+      white-space: nowrap;
+    }
+
+    /* 16PX সাদা জ্বলন্ত তারা */
+
+    .glowing-star {
+      display: inline-block;
+
+      margin-left: 4px;
+
+      color: #FFFFFF;
+
+      font-size: 16px;
+      line-height: 1;
+
+      text-shadow:
+        0 0 3px #FFFFFF,
+        0 0 7px #FFFFFF,
+        0 0 14px #FFFFFF;
+
+      animation: starGlow 60s infinite;
+    }
+
+    @keyframes starGlow {
+
+      0%,
+      97% {
+        opacity: 0.85;
+        transform: scale(1);
+      }
+
+      98% {
+        opacity: 1;
+        transform: scale(1.35);
+
+        text-shadow:
+          0 0 5px #FFFFFF,
+          0 0 12px #FFFFFF,
+          0 0 24px #FFFFFF,
+          0 0 40px #FFFFFF;
+      }
+
+      99% {
+        opacity: 1;
+        transform: scale(1.6);
+
+        text-shadow:
+          0 0 8px #FFFFFF,
+          0 0 18px #FFFFFF,
+          0 0 35px #FFFFFF,
+          0 0 55px #FFFFFF;
+      }
+
+      100% {
+        opacity: 0.85;
+        transform: scale(1);
+      }
+    }
+
+    /* =========================
+       MAIN
+    ========================== */
+
+    main {
+      width: 100%;
+      max-width: 1100px;
+
+      margin: 0 auto;
+
+      padding: 18px;
+    }
+
+    /* বড় প্রধান বক্স */
+
+    .main-box {
+      background: #1A2233;
+
+      border: 1px solid #4A4A2A;
+      border-radius: 22px;
+
+      padding: 20px;
+
+      box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    /* =========================
+       WELCOME
+    ========================== */
+
+    .welcome {
+      text-align: center;
+
+      padding: 18px 10px 22px;
+    }
+
+    .welcome h1 {
+      margin: 0;
+
+      color: #FFFFFF;
+
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .welcome p {
+      margin: 8px 0 0;
+
+      color: #A9B0BC;
+
+      font-size: 15px;
+
+      line-height: 1.5;
+    }
+
+    /* =========================
+       BREAKING NEWS
+    ========================== */
+
+    .news-box {
+      overflow: hidden;
+
+      background: #0A0F1E;
+
+      border: 1px solid #4A4A2A;
+      border-radius: 14px;
+
+      margin-bottom: 20px;
+    }
+
+    .news-title {
+      padding: 10px 14px;
+
+      background: #FFD700;
+
+      color: #0A0F1E;
+
+      font-weight: 900;
+
+      font-size: 15px;
+    }
+
+    .news-window {
+      overflow: hidden;
+
+      padding: 12px 0;
+
+      white-space: nowrap;
+    }
+
+    .news-text {
+      display: inline-block;
+
+      padding-left: 100%;
+
+      color: #FFFFFF;
+
+      animation: newsMove 22s linear infinite;
+    }
+
+    @keyframes newsMove {
+
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    /* =========================
+       SEARCH
+    ========================== */
+
+    .search-box {
+      margin-bottom: 22px;
+    }
+
+    .search-box input {
+      width: 100%;
+
+      padding: 15px 17px;
+
+      border-radius: 12px;
+      border: 1px solid #4A4A2A;
+
+      outline: none;
+
+      background: #0A0F1E;
+
+      color: #FFFFFF;
+
+      font-size: 16px;
+    }
+
+    .search-box input::placeholder {
+      color: #A9B0BC;
+    }
+
+    .search-box input:focus {
+      border-color: #FFD700;
+
+      box-shadow:
+        0 0 10px rgba(255, 215, 0, 0.12);
+    }
+
+    /* =========================
+       SECTION TITLE
+    ========================== */
+
+    .section-title {
+      margin: 22px 0 14px;
+
+      color: #FFD700;
+
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    /* =========================
+       FEATURE GRID
+    ========================== */
+
+    .features {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(190px, 1fr));
+
+      gap: 14px;
+    }
+
+    /* বড় Feature Box */
+
+    .feature-card {
+      display: block;
+
+      min-height: 120px;
+
+      padding: 18px;
+
+      text-decoration: none;
+
+      color: #FFFFFF;
+
+      background: #0A0F1E;
+
+      border: 1px solid #4A4A2A;
+      border-radius: 16px;
+
+      transition: 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+
+      border-color: #FFD700;
+
+      box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+      font-size: 28px;
+
+      margin-bottom: 10px;
+    }
+
+    .feature-name {
+      color: #FFFFFF;
+
+      font-size: 17px;
+      font-weight: 800;
+
+      margin-bottom: 6px;
+    }
+
+    .feature-description {
+      color: #A9B0BC;
+
+      font-size: 13px;
+
+      line-height: 1.5;
+    }
+
+    /* =========================
+       LOGOUT
+    ========================== */
+
+    .logout-button {
+      width: 100%;
+
+      margin-top: 24px;
+
+      padding: 15px;
+
+      border: 1px solid #4A4A2A;
+      border-radius: 12px;
+
+      background: #FFD700;
+
+      color: #0A0F1E;
+
+      font-size: 16px;
+      font-weight: 900;
+
+      cursor: pointer;
+    }
+
+    .logout-button:hover {
+      filter: brightness(1.08);
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+      padding: 25px 10px;
+
+      text-align: center;
+
+      color: #A9B0BC;
+
+      font-size: 13px;
+    }
+
+    footer strong {
+      color: #FFFFFF;
+    }
+
+    /* =========================
+       MOBILE
+    ========================== */
+
+    @media (max-width: 600px) {
+
+      .header {
+        padding: 10px;
+      }
+
+      .brand {
+        font-size: 24px;
+      }
+
+      .right-brand {
+        min-width: auto;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 10px;
+      }
+
+      .main-box {
+        padding: 14px;
+
+        border-radius: 18px;
+      }
+
+      .features {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .feature-card {
+        min-height: 115px;
+
+        padding: 14px;
+      }
+    }
+
+    @media (max-width: 390px) {
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .right-brand {
+        display: none;
+      }
+    }
+
+  </style>
 </head>
+
 <body>
 
-    <div class="breaking-news-ticker">
-        <marquee behavior="scroll" direction="left">✨ AYNA BOOK-এ স্বাগতম! ফায়ারবেসের সাথে সফলভাবে সংযুক্ত রয়েছে।</marquee>
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="header">
+
+    <button
+      class="dashboard-button"
+      id="dashboardButton"
+      aria-label="Dashboard"
+      title="Dashboard"
+      type="button"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- মাঝের AYNA BOOK — সাদা -->
+
+    <div class="brand">
+      AYNA BOOK
     </div>
 
-    <header class="ayna-header">
-        <h1>AYNA BOOK</h1>
-        <p class="user-greeting" id="userGreeting">ফায়ারবেস কানেকশন যাচাই করা হচ্ছে...</p>
-        <div class="db-status" id="dbStatus">ডাটাবেস স্ট্যাটাস: অপেক্ষমাণ...</div>
-    </header>
+    <!-- ডান কর্ণারের AYNA BOOK + 16PX সাদা জ্বলন্ত তারা -->
 
-    <main class="dashboard-container">
-        <section class="feature-grid">
-            <div class="feature-box" onclick="location.href='chat.html'">
-                <h2>💬 চ্যাট ও মেসেজিং</h2>
-                <p>বন্ধুদের সাথে রিয়েল-টাইমে চ্যাট ও মেসেজ আদান-প্রদান করুন।</p>
-            </div>
-            
-            <div class="feature-box" onclick="location.href='profile.html'">
-                <h2>👤 প্রোফাইল ও আইডি</h2>
-                <p>আপনার গোল্ডেন ফ্রেমড প্রোফাইল ও ইউনিক বারকোড আইডি দেখুন।</p>
-            </div>
+    <div class="right-brand">
+      AYNA BOOK<span class="glowing-star">★</span>
+    </div>
 
-            <div class="feature-box" onclick="location.href='radio-tv.html'">
-                <h2>📻 রেডিও ও টিভি</h2>
-                <p>লাইভ বাংলা রেডিও ও টিভি গার্ডেন স্ট্রিম উপভোগ করুন।</p>
-            </div>
+  </header>
 
-            <div class="feature-box" onclick="location.href='radar-compass.html'">
-                <h2>🧭 র‍্যাডার ও কম্পাস</h2>
-                <p>জিপিএস লোকেশন অ্যালার্ট, কম্পাস এবং নেভিগেশন টুলস।</p>
-            </div>
-        </section>
 
-        <div class="action-panel">
-            <button id="logoutBtn" class="btn-primary">লগ আউট</button>
+  <!-- =========================
+       MAIN
+  ========================== -->
+
+  <main>
+
+    <section class="main-box">
+
+      <!-- WELCOME -->
+
+      <div class="welcome">
+
+        <h1>
+          AYNA BOOK
+        </h1>
+
+        <p>
+          আধুনিক, নিরাপদ ও ব্যবহারবান্ধব ডিজিটাল সামাজিক প্ল্যাটফর্ম
+        </p>
+
+      </div>
+
+
+      <!-- =========================
+           BREAKING NEWS
+      ========================== -->
+
+      <section class="news-box">
+
+        <div class="news-title">
+          🔴 BREAKING NEWS
         </div>
-    </main>
 
-    <script type="module">
-        import { auth, rtdb } from './firebase-init.js';
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        <div class="news-window">
 
-        const greetingEl = document.getElementById('userGreeting');
-        const dbStatusEl = document.getElementById('dbStatus');
+          <div class="news-text">
+            AYNA BOOK — বিশ্বজুড়ে যোগাযোগ, তথ্য, সৃষ্টি ও সংযোগের জন্য আধুনিক ডিজিটাল প্ল্যাটফর্ম
+          </div>
 
-        // রিয়েলটাইম ডাটাবেস কানেকশন স্ট্যাটাস চেক
-        const connectedRef = ref(rtdb, ".info/connected");
-        onValue(connectedRef, (snap) => {
-            if (snap.val() === true) {
-                dbStatusEl.textContent = "🟢 ফায়ারবেস ডাটাবেস: সংযুক্ত (Connected)";
-                dbStatusEl.style.color = "#137333";
-                dbStatusEl.style.background = "#e6f4ea";
-            } else {
-                dbStatusEl.textContent = "🔴 ফায়ারবেস ডাটাবেস: বিচ্ছিন্ন";
-                dbStatusEl.style.color = "#c5221f";
-                dbStatusEl.style.background = "#fce8e6";
-            }
-        });
+        </div>
 
-        // অথেন্টিকেশন স্টেট চেক ও ইউজার স্ট্যাটাস রিয়েলটাইমে আপডেট
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                const shortId = `AB-${user.uid.substring(0, 6).toUpperCase()}`;
-                greetingEl.textContent = `স্বাগতম, ${user.email} (${shortId})`;
+      </section>
 
-                set(ref(rtdb, 'ayna_book_status/' + user.uid), {
-                    email: user.email,
-                    aynaId: shortId,
-                    online: true,
-                    lastActive: new Date().toISOString()
-                });
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
 
-        // লগআউট বাটন হ্যান্ডলার
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = 'login.html';
-            }).catch((error) => {
-                alert('লগআউট ত্রুটি: ' + error.message);
-            });
-        });
-    </script>
+      <!-- =========================
+           SEARCH
+      ========================== -->
+
+      <div class="search-box">
+
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="AYNA BOOK-এ অনুসন্ধান করুন..."
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <!-- =========================
+           FEATURES
+      ========================== -->
+
+      <h2 class="section-title">
+        AYNA BOOK Features
+      </h2>
+
+
+      <div class="features" id="features">
+
+
+        <a class="feature-card" href="profile.html">
+
+          <div class="feature-icon">👤</div>
+
+          <div class="feature-name">
+            আমার প্রোফাইল
+          </div>
+
+          <div class="feature-description">
+            আপনার AYNA ID ও প্রোফাইল পরিচালনা করুন।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="public-profile.html">
+
+          <div class="feature-icon">🌐</div>
+
+          <div class="feature-name">
+            Public Profile
+          </div>
+
+          <div class="feature-description">
+            পাবলিক প্রোফাইল দেখুন ও পরিচালনা করুন।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="chat.html">
+
+          <div class="feature-icon">💬</div>
+
+          <div class="feature-name">
+            Chat
+          </div>
+
+          <div class="feature-description">
+            ব্যবহারকারীদের সঙ্গে যোগাযোগ করুন।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="messages.html">
+
+          <div class="feature-icon">✉️</div>
+
+          <div class="feature-name">
+            Messages
+          </div>
+
+          <div class="feature-description">
+            আপনার মেসেজ পরিচালনা করুন।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="breaking-news.html">
+
+          <div class="feature-icon">📰</div>
+
+          <div class="feature-name">
+            Breaking News
+          </div>
+
+          <div class="feature-description">
+            গুরুত্বপূর্ণ খবরের আপডেট দেখুন।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="radio-tv.html">
+
+          <div class="feature-icon">📺</div>
+
+          <div class="feature-name">
+            Radio & TV
+          </div>
+
+          <div class="feature-description">
+            Radio ও TV সেবার পেজ।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="camera.html">
+
+          <div class="feature-icon">📷</div>
+
+          <div class="feature-name">
+            Camera
+          </div>
+
+          <div class="feature-description">
+            ক্যামেরা-ভিত্তিক ফিচার ব্যবহার করুন।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="gps.html">
+
+          <div class="feature-icon">📍</div>
+
+          <div class="feature-name">
+            GPS
+          </div>
+
+          <div class="feature-description">
+            অবস্থানভিত্তিক সেবা।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="radar.html">
+
+          <div class="feature-icon">📡</div>
+
+          <div class="feature-name">
+            Radar
+          </div>
+
+          <div class="feature-description">
+            Radar সম্পর্কিত ফিচার।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="quantum.html">
+
+          <div class="feature-icon">⚛️</div>
+
+          <div class="feature-name">
+            Quantum
+          </div>
+
+          <div class="feature-description">
+            Quantum technology বিষয়ক AYNA BOOK section।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="supercomputer.html">
+
+          <div class="feature-icon">🖥️</div>
+
+          <div class="feature-name">
+            Supercomputer
+          </div>
+
+          <div class="feature-description">
+            Supercomputer technology section।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="currency-exchange.html">
+
+          <div class="feature-icon">💱</div>
+
+          <div class="feature-name">
+            Currency
+          </div>
+
+          <div class="feature-description">
+            মুদ্রা ও exchange সম্পর্কিত সেবা।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="business-directory.html">
+
+          <div class="feature-icon">🏢</div>
+
+          <div class="feature-name">
+            Directory
+          </div>
+
+          <div class="feature-description">
+            Business ও directory services।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="studio.html">
+
+          <div class="feature-icon">🎬</div>
+
+          <div class="feature-name">
+            AYNA Studio
+          </div>
+
+          <div class="feature-description">
+            Content creation ও media tools।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="medicine-store.html">
+
+          <div class="feature-icon">💊</div>
+
+          <div class="feature-name">
+            Medicine
+          </div>
+
+          <div class="feature-description">
+            Medicine সম্পর্কিত তথ্য ও সেবা।
+          </div>
+
+        </a>
+
+
+        <a class="feature-card" href="privacy-settings.html">
+
+          <div class="feature-icon">🔐</div>
+
+          <div class="feature-name">
+            Privacy & Security
+          </div>
+
+          <div class="feature-description">
+            Privacy ও security settings পরিচালনা করুন।
+          </div>
+
+        </a>
+
+      </div>
+
+
+      <!-- =========================
+           LOGOUT
+      ========================== -->
+
+      <button
+        id="logoutButton"
+        class="logout-button"
+        type="button"
+      >
+        Logout
+      </button>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+      <strong>
+        AYNA BOOK
+      </strong>
+
+      <br>
+
+      Modern • Secure • Global Digital Platform
+
+    </footer>
+
+  </main>
+
+
+  <!-- =========================
+       FIREBASE + AUTH
+  ========================== -->
+
+  <script type="module">
+
+    import {
+      auth
+    } from "./firebase-init.js";
+
+    import {
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+
+    /* =========================
+       AUTH GUARD
+    ========================== */
+
+    onAuthStateChanged(auth, (user) => {
+
+      if (!user) {
+
+        window.location.replace("login.html");
+
+        return;
+      }
+
+      console.log(
+        "AYNA BOOK — User authenticated:",
+        user.uid
+      );
+
+    });
+
+
+    /* =========================
+       LOGOUT
+    ========================== */
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        logoutButton.disabled = true;
+
+        logoutButton.textContent =
+          "Logout হচ্ছে...";
+
+
+        try {
+
+          await signOut(auth);
+
+          window.location.replace(
+            "login.html"
+          );
+
+        } catch (error) {
+
+          console.error(
+            "AYNA BOOK Logout Error:",
+            error
+          );
+
+          logoutButton.disabled = false;
+
+          logoutButton.textContent =
+            "Logout";
+
+          alert(
+            "Logout করা যায়নি। আবার চেষ্টা করুন।"
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+       DASHBOARD BUTTON
+    ========================== */
+
+    document
+      .getElementById("dashboardButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+
+        }
+      );
+
+
+    /* =========================
+       FEATURE SEARCH
+    ========================== */
+
+    const searchInput =
+      document.getElementById(
+        "searchInput"
+      );
+
+    const featureCards =
+      document.querySelectorAll(
+        ".feature-card"
+      );
+
+
+    searchInput.addEventListener(
+      "input",
+      () => {
+
+        const query =
+          searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+        featureCards.forEach(
+          (card) => {
+
+            const text =
+              card.textContent
+                .toLowerCase();
+
+
+            card.style.display =
+              text.includes(query)
+                ? ""
+                : "none";
+
+          }
+        );
+
+      }
+    );
+
+  </script>
+
 </body>
 </html>
