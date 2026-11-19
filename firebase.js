@@ -1,10 +1,7 @@
-/*
- * AYNA BOOK
- * Firebase Service Connector
- *
- * Firebase initialization is handled by firebase-init.js.
- * This file re-exports the initialized Firebase services.
- */
+// =========================================================
+// AYNA BOOK
+// Firebase Service Connector
+// =========================================================
 
 export {
   app,
@@ -14,5 +11,5 @@ export {
   storage
 } from "./firebase-init.js";
 
-// AYNA BOOK Firebase connector ready
-console.log("AYNA BOOK Firebase connector loaded successfully.");
+// Firebase connector loaded
+console.log("AYNA BOOK — Firebase connector loaded successfully.");
