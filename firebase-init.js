@@ -29,7 +29,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
 // ---------------------------------------------------------
-// Initialize Firebase only once
+// Firebase App
 // ---------------------------------------------------------
 
 export const app = getApps().length
@@ -37,19 +37,35 @@ export const app = getApps().length
   : initializeApp(firebaseConfig);
 
 // ---------------------------------------------------------
-// Firebase Services
+// Firebase Authentication
+// Login / Registration / SMS OTP
 // ---------------------------------------------------------
 
 export const auth = getAuth(app);
 
+// ---------------------------------------------------------
+// Cloud Firestore
+// Users / Posts / Messages / Data
+// ---------------------------------------------------------
+
 export const db = getFirestore(app);
 
+// ---------------------------------------------------------
+// Realtime Database
+// Chat / Online Status / Realtime Data
+// ---------------------------------------------------------
+
 export const database = getDatabase(app);
+
+// ---------------------------------------------------------
+// Firebase Storage
+// Profile Photos / Images / Videos
+// ---------------------------------------------------------
 
 export const storage = getStorage(app);
 
 // ---------------------------------------------------------
-// Status
+// AYNA BOOK Firebase Ready
 // ---------------------------------------------------------
 
 console.log("AYNA BOOK — Firebase initialized successfully.");
