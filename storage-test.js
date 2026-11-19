@@ -1,3 +1,9 @@
+// =========================================================
+// AYNA BOOK
+// Firebase Storage Test
+// Firebase SDK: 13.4.0
+// =========================================================
+
 import { storage, auth } from "./firebase-init.js";
 
 import {
@@ -7,17 +13,17 @@ import {
   deleteObject
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-/* =====================================================
-   AYNA BOOK — FIREBASE STORAGE TEST
-   ===================================================== */
 
 async function testStorage() {
 
+  console.log("AYNA BOOK Storage Test শুরু হয়েছে...");
+
   try {
 
-    console.log("AYNA BOOK Storage Test শুরু হয়েছে...");
+    // -----------------------------------------------------
+    // 1. Login check
+    // -----------------------------------------------------
 
-    // আগে Login করা আছে কি না পরীক্ষা
     if (!auth.currentUser) {
 
       console.error(
@@ -27,10 +33,23 @@ async function testStorage() {
       return false;
     }
 
-    // বর্তমান User ID
+
+    // -----------------------------------------------------
+    // 2. Current user ID
+    // -----------------------------------------------------
+
     const userId = auth.currentUser.uid;
 
-    // ছোট Test File
+    console.log(
+      "Authenticated User:",
+      userId
+    );
+
+
+    // -----------------------------------------------------
+    // 3. Test file তৈরি
+    // -----------------------------------------------------
+
     const testData = new Blob(
       ["AYNA BOOK Firebase Storage Test"],
       {
@@ -38,44 +57,71 @@ async function testStorage() {
       }
     );
 
-    /*
-      Storage Rules অনুযায়ী
-      বর্তমান User-এর নিজের folder ব্যবহার করা হচ্ছে।
-    */
+
+    // -----------------------------------------------------
+    // 4. Storage path
+    // -----------------------------------------------------
 
     const testRef = ref(
       storage,
       `users/${userId}/system-tests/ayna-book-storage-test.txt`
     );
 
-    // Upload Test
+
+    // -----------------------------------------------------
+    // 5. Upload
+    // -----------------------------------------------------
+
+    console.log("1️⃣ Test file upload হচ্ছে...");
+
     await uploadBytes(
       testRef,
       testData
     );
 
     console.log(
-      "✅ Storage Upload সফল হয়েছে।"
+      "✅ Upload সফল হয়েছে।"
     );
 
-    // Download URL Test
+
+    // -----------------------------------------------------
+    // 6. Download URL পরীক্ষা
+    // -----------------------------------------------------
+
+    console.log(
+      "2️⃣ Download URL পরীক্ষা হচ্ছে..."
+    );
+
     const downloadURL =
       await getDownloadURL(testRef);
 
     console.log(
-      "✅ Storage Download URL পাওয়া গেছে:",
+      "✅ Download URL পাওয়া গেছে:",
       downloadURL
     );
 
-    // Test File Delete
+
+    // -----------------------------------------------------
+    // 7. Test file delete
+    // -----------------------------------------------------
+
+    console.log(
+      "3️⃣ Test file delete হচ্ছে..."
+    );
+
     await deleteObject(testRef);
 
     console.log(
-      "✅ Test File Delete সফল হয়েছে।"
+      "✅ Test file delete সফল হয়েছে।"
     );
 
+
+    // -----------------------------------------------------
+    // 8. Final result
+    // -----------------------------------------------------
+
     console.log(
-      "🎉 AYNA BOOK Firebase Storage Test সফল হয়েছে।"
+      "🎉 AYNA BOOK Storage Test সফল হয়েছে।"
     );
 
     return true;
@@ -92,8 +138,8 @@ async function testStorage() {
 }
 
 
-/* =====================================================
-   RUN TEST
-   ===================================================== */
+// ---------------------------------------------------------
+// Test চালু
+// ---------------------------------------------------------
 
 testStorage();
