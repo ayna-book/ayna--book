@@ -28,7 +28,7 @@ export const firebaseConfig = {
 
 
 /* =========================================================
-   AYNA BOOK — CONFIGURATION CHECK
+   CONFIGURATION CHECK
    ========================================================= */
 
 if (!firebaseConfig.projectId) {
