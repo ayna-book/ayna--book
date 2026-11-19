@@ -1,4 +1,3 @@
-
 /*
  * AYNA BOOK
  * Firebase Service Connector
@@ -16,4 +15,4 @@ export {
 } from "./firebase-init.js";
 
 // AYNA BOOK Firebase connector ready
-console.log("AYNA BOOK Firebase connector loaded successfully");
+console.log("AYNA BOOK Firebase connector loaded successfully.");
