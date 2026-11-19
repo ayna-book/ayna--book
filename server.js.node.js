@@ -1,85 +1,77 @@
-/* =========================================================
-   AYNA BOOK
-   Secure Node.js Backend Server
-   Express + Socket.IO + Firebase Admin
-   ========================================================= */
+// =========================================================
+// AYNA BOOK
+// Node.js Backend Server
+// Express + Socket.IO + Firebase Admin
+// =========================================================
 
-import express from "express";
-import http from "http";
-import { Server } from "socket.io";
-import cors from "cors";
-import admin from "firebase-admin";
+"use strict";
+
+const express = require("express");
+const http = require("http");
+const cors = require("cors");
+const { Server } = require("socket.io");
+
+const admin = require("firebase-admin");
 
 
 // =========================================================
-// BASIC CONFIGURATION
+// Firebase Admin Initialization
 // =========================================================
 
-const app = express();
+try {
 
-const server =
-  http.createServer(app);
-
-
-const PORT =
-  process.env.PORT || 3000;
-
-
-// AYNA BOOK GitHub Pages origin
-const ALLOWED_ORIGIN =
-  "https://ayna-book.github.io";
-
-
-// =========================================================
-// FIREBASE ADMIN INITIALIZATION
-// =========================================================
-
-if (!admin.apps.length) {
-
-  try {
+  if (!admin.apps.length) {
 
     admin.initializeApp({
-      credential:
-        admin.credential.applicationDefault()
+      credential: admin.credential.applicationDefault()
     });
 
-    console.log(
-      "AYNA BOOK Firebase Admin initialized."
-    );
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Firebase Admin initialization failed:",
-      error.message
-    );
-
-    process.exit(1);
-
   }
+
+  console.log(
+    "AYNA BOOK — Firebase Admin initialized."
+  );
+
+} catch (error) {
+
+  console.error(
+    "AYNA BOOK Firebase Admin Error:",
+    error
+  );
+
+  process.exit(1);
 
 }
 
 
-const db =
-  admin.firestore();
+const db = admin.firestore();
 
 
 // =========================================================
-// EXPRESS SECURITY / CORS
+// Express Application
 // =========================================================
+
+const app = express();
+
+const server = http.createServer(app);
+
+
+// =========================================================
+// CORS
+// =========================================================
+
+const ALLOWED_ORIGINS = [
+  "https://ayna-book.github.io"
+];
 
 app.use(
   cors({
-
-    origin:
-      ALLOWED_ORIGIN,
-
+    origin: ALLOWED_ORIGINS,
     methods: [
       "GET",
-      "POST"
+      "POST",
+      "OPTIONS"
     ]
-
   })
 );
 
@@ -92,23 +84,32 @@ app.use(
 
 
 // =========================================================
-// HEALTH CHECK
+// Health Check
 // =========================================================
 
 app.get(
   "/",
   (req, res) => {
 
-    res.status(200).json({
-
+    res.json({
       success: true,
+      name: "AYNA BOOK",
+      service: "Backend Server",
+      status: "online",
+      version: "1.0.0"
+    });
 
-      app: "AYNA BOOK",
+  }
+);
 
-      server: "Running",
 
-      version: "2.0.0"
+app.get(
+  "/health",
+  (req, res) => {
 
+    res.status(200).json({
+      success: true,
+      status: "healthy"
     });
 
   }
@@ -116,35 +117,25 @@ app.get(
 
 
 // =========================================================
-// SOCKET.IO
+// Socket.IO
 // =========================================================
 
-const io =
-  new Server(
-    server,
-    {
-
-      cors: {
-
-        origin:
-          ALLOWED_ORIGIN,
-
-        methods: [
-          "GET",
-          "POST"
-        ]
-
-      },
-
-      maxHttpBufferSize:
-        10 * 1024
-
+const io = new Server(
+  server,
+  {
+    cors: {
+      origin: ALLOWED_ORIGINS,
+      methods: [
+        "GET",
+        "POST"
+      ]
     }
-  );
+  }
+);
 
 
 // =========================================================
-// SOCKET.IO FIREBASE AUTHENTICATION
+// Socket Authentication
 // =========================================================
 
 io.use(
@@ -153,16 +144,14 @@ io.use(
     try {
 
       const token =
-        socket.handshake
-          ?.auth
-          ?.token;
+        socket.handshake.auth?.token;
 
 
       if (!token) {
 
         return next(
           new Error(
-            "Authentication required."
+            "Authentication token required."
           )
         );
 
@@ -172,13 +161,10 @@ io.use(
       const decodedToken =
         await admin
           .auth()
-          .verifyIdToken(
-            token
-          );
+          .verifyIdToken(token);
 
 
-      socket.user =
-        decodedToken;
+      socket.user = decodedToken;
 
 
       next();
@@ -187,14 +173,14 @@ io.use(
     } catch (error) {
 
       console.error(
-        "AYNA BOOK Authentication Error:",
-        error.message
+        "AYNA BOOK Socket Authentication Error:",
+        error
       );
 
 
       next(
         new Error(
-          "Invalid authentication."
+          "Authentication failed."
         )
       );
 
@@ -205,230 +191,192 @@ io.use(
 
 
 // =========================================================
-// AUTHENTICATED SOCKET CONNECTION
+// Connected Users
 // =========================================================
 
 io.on(
   "connection",
   (socket) => {
 
-    const user =
-      socket.user;
-
-
     console.log(
-      "AYNA BOOK User Connected:",
-      user.uid
+      "AYNA BOOK Socket Connected:",
+      socket.user.uid
     );
 
 
-    // Global chat room
-    socket.join(
-      "global"
-    );
+    // -----------------------------------------------------
+    // Join Global Chat
+    // -----------------------------------------------------
+
+    socket.join("global");
 
 
-    // Per-user rate limiting
+    // -----------------------------------------------------
+    // Rate Limit
+    // -----------------------------------------------------
+
     let lastMessageTime = 0;
 
 
-    // =====================================================
-    // SEND MESSAGE
-    // =====================================================
+    // -----------------------------------------------------
+    // Receive Message
+    // -----------------------------------------------------
 
     socket.on(
       "send_message",
-      async (
-        data,
-        callback
-      ) => {
-
-        const reply =
-          typeof callback ===
-          "function"
-            ? callback
-            : () => {};
-
+      async (payload) => {
 
         try {
-
-          // -----------------------------------------------
-          // Rate limit
-          // -----------------------------------------------
 
           const now =
             Date.now();
 
 
+          // প্রতি ১ সেকেন্ডে সর্বোচ্চ ১টি message
           if (
-            now -
-              lastMessageTime <
-            1000
+            now - lastMessageTime < 1000
           ) {
 
-            return reply({
+            socket.emit(
+              "server_error",
+              {
+                message:
+                  "খুব দ্রুত message পাঠানো হচ্ছে। একটু অপেক্ষা করুন।"
+              }
+            );
 
-              success: false,
-
-              message:
-                "একটু অপেক্ষা করে আবার পাঠান।"
-
-            });
+            return;
 
           }
 
 
-          lastMessageTime =
-            now;
+          lastMessageTime = now;
 
-
-          // -----------------------------------------------
-          // Validate message
-          // -----------------------------------------------
 
           const text =
             String(
-              data?.text || ""
+              payload?.text || ""
             ).trim();
 
 
           if (!text) {
 
-            return reply({
+            socket.emit(
+              "server_error",
+              {
+                message:
+                  "Message লিখুন।"
+              }
+            );
 
-              success: false,
-
-              message:
-                "মেসেজ লিখুন।"
-
-            });
-
-          }
-
-
-          if (
-            text.length >
-            2000
-          ) {
-
-            return reply({
-
-              success: false,
-
-              message:
-                "মেসেজ সর্বোচ্চ ২০০০ অক্ষরের হতে পারবে।"
-
-            });
+            return;
 
           }
 
 
-          // -----------------------------------------------
-          // Firestore message
-          // -----------------------------------------------
+          if (text.length > 2000) {
 
-          const message = {
+            socket.emit(
+              "server_error",
+              {
+                message:
+                  "Message সর্বোচ্চ ২০০০ অক্ষরের হতে পারবে।"
+              }
+            );
+
+            return;
+
+          }
+
+
+          const roomId =
+            String(
+              payload?.roomId || "global"
+            ).trim();
+
+
+          if (!roomId) {
+
+            socket.emit(
+              "server_error",
+              {
+                message:
+                  "Chat room নির্ধারণ করা যায়নি।"
+              }
+            );
+
+            return;
+
+          }
+
+
+          // ------------------------------------------------
+          // Firestore
+          // ------------------------------------------------
+
+          const messageData = {
 
             uid:
-              user.uid,
+              socket.user.uid,
 
             senderId:
-              user.uid,
+              socket.user.uid,
 
             senderEmail:
-              user.email || "",
+              socket.user.email || "",
 
             text,
 
+            roomId,
+
             createdAt:
-              admin.firestore
-                .FieldValue
-                .serverTimestamp()
+              admin.firestore.FieldValue.serverTimestamp()
 
           };
 
 
           const messageRef =
             await db
-              .collection(
-                "rooms"
-              )
-              .doc(
-                "global"
-              )
-              .collection(
-                "messages"
-              )
-              .add(
-                message
-              );
+              .collection("rooms")
+              .doc(roomId)
+              .collection("messages")
+              .add(messageData);
 
 
-          // -----------------------------------------------
+          // ------------------------------------------------
           // Broadcast
-          // -----------------------------------------------
+          // ------------------------------------------------
 
-          io
-            .to("global")
-            .emit(
-              "new_message",
-              {
+          io.to(roomId).emit(
+            "new_message",
+            {
+              id:
+                messageRef.id,
 
-                id:
-                  messageRef.id,
+              ...messageData,
 
-                uid:
-                  user.uid,
+              createdAt:
+                new Date().toISOString()
 
-                senderId:
-                  user.uid,
-
-                senderEmail:
-                  user.email || "",
-
-                text,
-
-                createdAt:
-                  new Date()
-                    .toISOString()
-
-              }
-            );
-
-
-          // -----------------------------------------------
-          // Success
-          // -----------------------------------------------
-
-          reply({
-
-            success: true,
-
-            message:
-              "মেসেজ পাঠানো হয়েছে।",
-
-            id:
-              messageRef.id
-
-          });
+            }
+          );
 
 
         } catch (error) {
 
           console.error(
-            "AYNA BOOK Message Error:",
+            "AYNA BOOK Send Message Error:",
             error
           );
 
 
-          reply({
-
-            success: false,
-
-            message:
-              "মেসেজ পাঠানো যায়নি।"
-
-          });
+          socket.emit(
+            "server_error",
+            {
+              message:
+                "Message পাঠানো যায়নি।"
+            }
+          );
 
         }
 
@@ -436,17 +384,17 @@ io.on(
     );
 
 
-    // =====================================================
-    // DISCONNECT
-    // =====================================================
+    // -----------------------------------------------------
+    // Disconnect
+    // -----------------------------------------------------
 
     socket.on(
       "disconnect",
       (reason) => {
 
         console.log(
-          "AYNA BOOK User Disconnected:",
-          user.uid,
+          "AYNA BOOK Socket Disconnected:",
+          socket.user.uid,
           reason
         );
 
@@ -458,36 +406,44 @@ io.on(
 
 
 // =========================================================
-// SERVER ERROR HANDLING
+// Server Error
 // =========================================================
 
-server.on(
-  "error",
-  (error) => {
+app.use(
+  (error, req, res, next) => {
 
     console.error(
       "AYNA BOOK Server Error:",
       error
     );
 
+
+    res.status(500).json({
+      success: false,
+      message:
+        "Server-এ একটি সমস্যা হয়েছে।"
+    });
+
   }
 );
 
 
 // =========================================================
-// START SERVER
+// Start Server
 // =========================================================
+
+const PORT =
+  Number(
+    process.env.PORT
+  ) || 3000;
+
 
 server.listen(
   PORT,
   () => {
 
     console.log(
-      `AYNA BOOK Backend running on port ${PORT}`
-    );
-
-    console.log(
-      `Allowed Origin: ${ALLOWED_ORIGIN}`
+      `AYNA BOOK Server running on port ${PORT}`
     );
 
   }
