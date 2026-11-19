@@ -1,332 +1,267 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0A0F1E">
-<title>AYNA BOOK - Register</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;padding:20px 12px;
-  background:#0A0F1E;color:#fff;
-  font-family:Arial,sans-serif
-}
-.card{
-  max-width:560px;margin:25px auto;
-  padding:25px 20px;
-  background:#1A2233;
-  border:1px solid #FFD700;
-  border-radius:22px;
-}
-h1,h2{text-align:center}
-h1{font-size:30px}
-.subtitle{text-align:center;color:#ddd}
-label{display:block;margin:20px 0 8px;font-weight:bold}
-input{
-  width:100%;padding:15px;
-  border:1px solid #FFD700;
-  border-radius:11px;
-  background:#0A0F1E;color:white;
-  font-size:16px
-}
-input[type=file]{font-size:14px}
-button{
-  width:100%;padding:15px;margin-top:14px;
-  border:0;border-radius:11px;
-  background:#FFD700;color:#0A0F1E;
-  font-size:17px;font-weight:bold
-}
-button:disabled{opacity:.5}
-.secondary{background:#26344A;color:white;border:1px solid #FFD700}
-#preview{
-  display:none;width:190px;height:190px;
-  object-fit:cover;border-radius:50%;
-  border:3px solid #FFD700;
-  margin:18px auto
-}
-#message{
-  display:none;margin-top:15px;padding:12px;
-  border-radius:9px;background:#26344A;
-  overflow-wrap:anywhere
-}
-#otpArea{display:none}
-#recaptcha-container{margin-top:15px}
-a{color:#FFD700}
-.center{text-align:center;margin-top:20px}
-</style>
-</head>
+  <meta name="theme-color" content="#0A0F1E">
 
-<body>
-<div class="card">
+  <title>AYNA BOOK — Registration</title>
 
-<h1>AYNA BOOK</h1>
-<p class="subtitle">Connect • Share • Create</p>
-<h2>CREATE ACCOUNT</h2>
-
-<form id="signupForm">
-
-<label>১. সম্পূর্ণ নাম</label>
-<input id="name" required maxlength="80" autocomplete="name">
-
-<label>২. Gmail / Email</label>
-<input id="email" type="email" required autocomplete="email">
-
-<label>৩. মোবাইল নম্বর</label>
-<input id="phone" type="tel" required
-placeholder="01XXXXXXXXX" autocomplete="tel">
-
-<label>৪. প্রোফাইল ছবি (ঐচ্ছিক)</label>
-<input id="photo" type="file" accept="image/*">
-<img id="preview" alt="Profile preview">
-
-<label>৫. পাসওয়ার্ড (কমপক্ষে ১১ অক্ষর)</label>
-<input id="password" type="password" minlength="11" required>
-
-<label>৬. পুনরায় পাসওয়ার্ড</label>
-<input id="confirmPassword" type="password" minlength="11" required>
-
-<label>
-<input id="terms" type="checkbox" required style="width:auto">
-আমি AYNA BOOK-এর নিয়ম ও গোপনীয়তা নীতি মেনে চলতে সম্মত।
-</label>
-
-<div id="recaptcha-container"></div>
-
-<button type="button" id="sendOtpBtn">SEND SMS OTP</button>
-
-<div id="otpArea">
-  <label>৭. SMS OTP (৬ সংখ্যা)</label>
-  <input id="otp" inputmode="numeric" maxlength="6"
-  pattern="[0-9]{6}" placeholder="৬ সংখ্যার OTP">
-
-  <p id="timer" class="center">সময়: ২:০০</p>
-
-  <button type="submit" id="registerBtn">
-    VERIFY OTP & CREATE ACCOUNT
-  </button>
-
-  <button type="button" id="resendBtn" class="secondary" disabled>
-    RESEND OTP
-  </button>
-</div>
-
-<div id="message" role="status" aria-live="polite"></div>
-
-</form>
-
-<p class="center">
-আগে অ্যাকাউন্ট আছে?
-<a href="./login.html">LOGIN</a>
-</p>
-
-<p class="center">
-<a href="./index.html">Back to Home</a>
-</p>
-
-</div>
-
-<script type="module">
-import { auth } from "./firebase.js";
-
-import {
-  RecaptchaVerifier
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
-import {
-  sendPhoneOtp,
-  completeRegistration
-} from "./auth.js";
-
-const form = document.getElementById("signupForm");
-const sendBtn = document.getElementById("sendOtpBtn");
-const registerBtn = document.getElementById("registerBtn");
-const resendBtn = document.getElementById("resendBtn");
-const otpArea = document.getElementById("otpArea");
-const message = document.getElementById("message");
-const timerText = document.getElementById("timer");
-const photoInput = document.getElementById("photo");
-const preview = document.getElementById("preview");
-
-let verifier = null;
-let confirmation = null;
-let expiresAt = 0;
-let timer = null;
-let busy = false;
-
-function showMessage(text, success=false) {
-  message.style.display = "block";
-  message.textContent = text;
-  message.style.border = success
-    ? "1px solid #36C275"
-    : "1px solid #FF6878";
-}
-
-function setBusy(value) {
-  busy = value;
-  sendBtn.disabled = value;
-  registerBtn.disabled = value;
-}
-
-function createVerifier() {
-  verifier = new RecaptchaVerifier(
-    auth,
-    "recaptcha-container",
-    { size: "normal" }
-  );
-}
-
-async function startTimer() {
-  clearInterval(timer);
-  expiresAt = Date.now() + 120000;
-  resendBtn.disabled = true;
-
-  timer = setInterval(() => {
-    const remaining = Math.max(
-      0,
-      Math.ceil((expiresAt - Date.now()) / 1000)
-    );
-
-    const minutes = Math.floor(remaining / 60);
-    const seconds = String(remaining % 60).padStart(2,"0");
-
-    timerText.textContent =
-      `সময়: ${minutes}:${seconds}`;
-
-    if (remaining <= 0) {
-      clearInterval(timer);
-      confirmation = null;
-      resendBtn.disabled = false;
-      showMessage("সময় শেষ। নতুন OTP পাঠান।");
-    }
-  }, 500);
-}
-
-photoInput.addEventListener("change", () => {
-  const file = photoInput.files[0];
-  if (!file) return;
-
-  if (!file.type.startsWith("image/") ||
-      file.size > 5 * 1024 * 1024) {
-    photoInput.value = "";
-    preview.style.display = "none";
-    showMessage("শুধু ৫ MB-এর মধ্যে ছবি নির্বাচন করুন।");
-    return;
-  }
-
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = "block";
-});
-
-async function requestOtp() {
-  if (busy) return;
-
-  try {
-    const phone = document.getElementById("phone").value.trim();
-
-    if (!phone) {
-      showMessage("মোবাইল নম্বর লিখুন।");
-      return;
+  <style>
+    * {
+      box-sizing: border-box;
     }
 
-    setBusy(true);
-    showMessage("reCAPTCHA যাচাই ও SMS পাঠানো হচ্ছে...");
-
-    if (!verifier) createVerifier();
-
-    confirmation = await sendPhoneOtp(phone, verifier);
-
-    otpArea.style.display = "block";
-    showMessage("SMS OTP পাঠানো হয়েছে। কোডটি লিখুন।", true);
-    await startTimer();
-
-  } catch (error) {
-    console.error(error);
-    showMessage(error.message || "OTP পাঠানো যায়নি।");
-
-    if (verifier) {
-      verifier.clear();
-      verifier = null;
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0A0F1E;
+      color: #FFFFFF;
+      font-family:
+        Arial,
+        "Noto Sans Bengali",
+        sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
 
-  } finally {
-    setBusy(false);
-  }
-}
+    .container {
+      width: 100%;
+      max-width: 520px;
+    }
 
-sendBtn.addEventListener("click", requestOtp);
+    .brand {
+      text-align: center;
+      margin-bottom: 18px;
+    }
 
-resendBtn.addEventListener("click", requestOtp);
+    .brand h1 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 2px;
+      color: #FFFFFF;
+    }
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+    .brand p {
+      margin: 8px 0 0;
+      color: #A9B0BC;
+      font-size: 14px;
+    }
 
-  if (busy) return;
+    .card {
+      background: #111827;
+      border: 1px solid #FFD700;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.45);
+    }
 
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const password = document.getElementById("password").value;
-  const confirmPassword =
-    document.getElementById("confirmPassword").value;
-  const otp = document.getElementById("otp").value.trim();
-  const photoFile = photoInput.files[0] || null;
+    .photo-box {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-  if (!document.getElementById("terms").checked) {
-    showMessage("নিয়ম ও গোপনীয়তায় সম্মতি দিন।");
-    return;
-  }
+    .photo-preview {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      border: 2px solid #FFD700;
+      background: #1A2233;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      color: #A9B0BC;
+      font-size: 13px;
+    }
 
-  if (password.length < 11) {
-    showMessage("পাসওয়ার্ড কমপক্ষে ১১ অক্ষরের হতে হবে।");
-    return;
-  }
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    }
 
-  if (password !== confirmPassword) {
-    showMessage("দুটি পাসওয়ার্ড মিলছে না।");
-    return;
-  }
+    .photo-label {
+      display: inline-block;
+      background: #1A2233;
+      border: 1px solid #FFD700;
+      color: #FFFFFF;
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
-  if (!confirmation || Date.now() > expiresAt) {
-    showMessage("OTP-এর সময় শেষ। নতুন OTP নিন।");
-    return;
-  }
+    #photo {
+      display: none;
+    }
 
-  try {
-    setBusy(true);
-    showMessage("OTP যাচাই ও অ্যাকাউন্ট তৈরি হচ্ছে...");
+    .field {
+      margin-bottom: 15px;
+    }
 
-    const result = await completeRegistration({
-      name,
-      email,
-      phone,
-      password,
-      otp,
-      verificationId: confirmation.verificationId,
-      photoFile
-    });
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 600;
+    }
 
-    clearInterval(timer);
-    showMessage(result.message, true);
-    form.reset();
-    preview.style.display = "none";
+    input {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      outline: none;
+      background: #1A2233;
+      color: #FFFFFF;
+      font-size: 15px;
+    }
 
-    setTimeout(() => {
-      window.location.replace("./login.html");
-    }, 1800);
+    input:focus {
+      border-color: #FFD700;
+      box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.12);
+    }
 
-  } catch (error) {
-    console.error("AYNA Registration:", error);
-    showMessage(error.message || "Registration সম্পন্ন হয়নি।");
+    input::placeholder {
+      color: #7F8898;
+    }
 
-  } finally {
-    setBusy(false);
-  }
-});
+    .phone-row {
+      display: flex;
+      gap: 8px;
+    }
 
-console.log("AYNA BOOK SMS Registration Ready.");
-</script>
-</body>
-</html>
+    .phone-row input {
+      flex: 1;
+    }
+
+    button {
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .otp-btn {
+      width: auto;
+      min-width: 130px;
+      padding: 0 15px;
+      background: #FFD700;
+      color: #0A0F1E;
+    }
+
+    .otp-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .register-btn {
+      margin-top: 8px;
+      background: #FFD700;
+      color: #0A0F1E;
+    }
+
+    .register-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .otp-section {
+      display: none;
+      margin-top: 8px;
+      padding: 15px;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      background: #0F172A;
+    }
+
+    .otp-section.active {
+      display: block;
+    }
+
+    .otp-title {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #FFFFFF;
+    }
+
+    .otp-info {
+      margin: 0 0 12px;
+      color: #A9B0BC;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    #otp {
+      text-align: center;
+      letter-spacing: 7px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .timer {
+      text-align: center;
+      margin: 12px 0;
+      color: #FFD700;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .resend-btn {
+      background: transparent;
+      color: #FFFFFF;
+      border: 1px solid #475569;
+      font-size: 13px;
+    }
+
+    .resend-btn:hover {
+      border-color: #FFD700;
+    }
+
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin: 15px 0;
+      color: #A9B0BC;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .terms input {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+
+    .message {
+      min-height: 22px;
+      margin: 12px 0 0;
+      text-align: center;
+      color: #FFD700;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .bottom {
+      margin-top: 18px;
+      text-align: center;
+      color: #A9B0BC;
+      font-size: 14px;
+    }
+
+    .bottom a {
+      color: #FFD700
