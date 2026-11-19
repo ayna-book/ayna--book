@@ -1,11 +1,261 @@
-/* AYNA BOOK UI PATCH: index.html-এর <style> ট্যাগের একেবারে শেষে, </style>-এর আগে বসান */
-.logo{color:#fff!important;text-shadow:0 0 7px #fff,0 0 18px #fff;animation:aynaEyeGlow 2s ease-in-out infinite}
-@keyframes aynaEyeGlow{0%,100%{text-shadow:0 0 3px #fff,0 0 8px #fff;filter:brightness(1)}50%{text-shadow:0 0 12px #fff,0 0 28px #fff,0 0 42px #dcecff;filter:brightness(1.5)}}
-.tagline,header h1,.profile h2,.section-title,.cards a,.card-icon{color:#fff!important}
-.section-title{font-size:34px!important}
-.ticker{font-size:24px!important;padding:19px 0!important}
-.cards{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))!important;gap:20px!important}
-.cards a{min-height:165px!important;font-size:24px!important;padding:24px 14px!important}
-.card-icon{font-size:44px!important}.profile h2{font-size:34px!important}.profile p{font-size:22px!important}
-header h1{font-size:34px!important;text-shadow:0 0 10px #fff}
-@media(max-width:500px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}.cards a{min-height:145px!important;font-size:19px!important}.card-icon{font-size:36px!important}.ticker{font-size:19px!important}.section-title{font-size:27px!important}.profile h2{font-size:27px!important}}
+
+/* =========================================================
+   AYNA BOOK
+   Advanced UI Design Patch
+   Version: 1.0
+   ========================================================= */
+
+:root {
+  --ayna-bg: #0A0F1E;
+  --ayna-card: #1A2233;
+  --ayna-gold: #FFD700;
+  --ayna-white: #FFFFFF;
+  --ayna-muted: #A9B0BC;
+  --ayna-border: #4A4A2A;
+  --ayna-green: #2ECC71;
+  --ayna-blue: #2D5BFF;
+}
+
+/* Main UI */
+
+.ayna-app {
+  min-height: 100vh;
+  background: var(--ayna-bg);
+  color: var(--ayna-white);
+}
+
+/* Premium Header */
+
+.ayna-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--ayna-card);
+  border-bottom: 1px solid var(--ayna-border);
+}
+
+.ayna-brand {
+  color: var(--ayna-white);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.ayna-header-right {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ayna-white);
+  font-weight: bold;
+}
+
+.ayna-star {
+  font-size: 16px;
+  color: var(--ayna-white);
+  text-shadow:
+    0 0 5px #FFFFFF,
+    0 0 10px #FFFFFF,
+    0 0 20px #FFD700;
+}
+
+/* Dashboard */
+
+.ayna-dashboard {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  padding: 20px;
+}
+
+.ayna-dashboard-card {
+  background: var(--ayna-card);
+  border: 1px solid var(--ayna-border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.ayna-dashboard-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--ayna-gold);
+}
+
+/* Large white text on colored panels */
+
+.ayna-color-panel {
+  background: linear-gradient(
+    135deg,
+    #2D5BFF,
+    #172A67
+  );
+  color: var(--ayna-white);
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.ayna-color-panel h1,
+.ayna-color-panel h2,
+.ayna-color-panel p {
+  color: var(--ayna-white);
+}
+
+/* Gold action buttons */
+
+.ayna-primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ayna-gold);
+  color: var(--ayna-bg);
+  border: 1px solid var(--ayna-border);
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.ayna-primary-button:hover {
+  filter: brightness(1.1);
+}
+
+.ayna-secondary-button {
+  background: transparent;
+  color: var(--ayna-gold);
+  border: 1px solid var(--ayna-gold);
+  border-radius: 10px;
+  padding: 11px 20px;
+}
+
+/* Breaking News */
+
+.ayna-breaking-news {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  background: #171E2E;
+  border: 1px solid var(--ayna-border);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.ayna-breaking-label {
+  flex-shrink: 0;
+  background: #D71920;
+  color: #FFFFFF;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.ayna-breaking-text {
+  color: #FFFFFF;
+  white-space: nowrap;
+  animation: ayna-news 25s linear infinite;
+}
+
+@keyframes ayna-news {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* Online and Offline status */
+
+.ayna-online {
+  color: var(--ayna-green);
+  font-weight: bold;
+}
+
+.ayna-offline {
+  color: #FF5C5C;
+  font-weight: bold;
+}
+
+/* Privacy and Security */
+
+.ayna-security-card {
+  background: var(--ayna-card);
+  border: 1px solid var(--ayna-border);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.ayna-security-title {
+  color: var(--ayna-gold);
+  font-weight: bold;
+}
+
+/* Inputs */
+
+.ayna-input {
+  width: 100%;
+  background: var(--ayna-bg);
+  color: var(--ayna-white);
+  border: 1px solid var(--ayna-border);
+  border-radius: 9px;
+  padding: 13px;
+}
+
+.ayna-input:focus {
+  outline: 2px solid var(--ayna-gold);
+  outline-offset: 2px;
+}
+
+/* Loading */
+
+.ayna-loading {
+  width: 38px;
+  height: 38px;
+  border: 4px solid rgba(255, 215, 0, .2);
+  border-top-color: var(--ayna-gold);
+  border-radius: 50%;
+  animation: ayna-loading-spin .8s linear infinite;
+}
+
+@keyframes ayna-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .ayna-header {
+    padding: 12px;
+  }
+
+  .ayna-brand {
+    font-size: 16px;
+  }
+
+  .ayna-dashboard {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .ayna-dashboard-card {
+    padding: 16px;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .ayna-breaking-text,
+  .ayna-loading {
+    animation: none;
+  }
+
+  .ayna-dashboard-card {
+    transition: none;
+  }
+}
