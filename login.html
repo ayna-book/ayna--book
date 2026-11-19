@@ -2,259 +2,52 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0A0F1E">
-
-  <title>AYNA BOOK - Login</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #0A0F1E;
-      color: #FFFFFF;
-      font-family: Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .login-container {
-      width: 100%;
-      max-width: 420px;
-      background: #1A2233;
-      border: 1px solid #FFD700;
-      border-radius: 18px;
-      padding: 28px 22px;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.12);
-    }
-
-    .logo {
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      letter-spacing: 1px;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #FFFFFF;
-      margin-bottom: 28px;
-      font-size: 14px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    label {
-      display: block;
-      margin: 15px 0 8px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #FFD700;
-      border-radius: 9px;
-      background: #0A0F1E;
-      color: #FFFFFF;
-      font-size: 16px;
-      outline: none;
-    }
-
-    input::placeholder {
-      color: #A9B0BC;
-    }
-
-    input:focus {
-      border-color: #FFFFFF;
-      box-shadow: 0 0 7px rgba(255,255,255,0.25);
-    }
-
-    .password-box {
-      position: relative;
-    }
-
-    .password-box input {
-      padding-right: 65px;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 9px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: none;
-      background: transparent;
-      color: #FFFFFF;
-      cursor: pointer;
-      font-size: 13px;
-      padding: 7px;
-    }
-
-    .forgot {
-      display: block;
-      text-align: right;
-      margin-top: 12px;
-      color: #FFFFFF;
-      text-decoration: underline;
-      font-size: 14px;
-    }
-
-    button.main-button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 22px;
-      border: 1px solid #FFD700;
-      border-radius: 9px;
-      background: #0A0F1E;
-      color: #FFFFFF;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button.main-button:hover {
-      background: #26334A;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .register-link {
-      text-align: center;
-      margin-top: 22px;
-      font-size: 14px;
-    }
-
-    .register-link a {
-      color: #FFFFFF;
-      font-weight: bold;
-    }
-
-    #message {
-      display: none;
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 18px;
-      font-size: 14px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-
-    .back-home {
-      display: block;
-      text-align: center;
-      margin-top: 22px;
-      color: #FFFFFF;
-      font-size: 14px;
-      text-decoration: none;
-    }
-
-    @media (max-width: 400px) {
-      .login-container {
-        padding: 23px 16px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0F1E">
+<title>AYNA BOOK - Login</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px 12px;background:#0A0F1E;color:white;font-family:Arial,sans-serif}
+.card{max-width:500px;margin:50px auto;padding:28px 22px;background:#1A2233;border:1px solid #FFD700;border-radius:22px}
+h1,h2{text-align:center}
+label{display:block;margin:22px 0 8px;font-weight:bold}
+input{width:100%;padding:15px;border:1px solid #FFD700;border-radius:10px;background:#0A0F1E;color:white;font-size:16px}
+button{width:100%;padding:15px;margin-top:20px;background:#FFD700;color:#0A0F1E;border:0;border-radius:10px;font-size:17px;font-weight:bold}
+button:disabled{opacity:.5}
+#message{display:none;margin-top:16px;padding:12px;background:#26344A;border-radius:9px;overflow-wrap:anywhere}
+a{color:#FFD700}
+.center{text-align:center;margin-top:22px}
+</style>
 </head>
-
 <body>
+<div class="card">
+<h1>AYNA BOOK</h1>
+<p class="center">Connect • Share • Create</p>
+<h2>LOGIN</h2>
 
-  <main class="login-container">
+<form id="loginForm">
+<label>Gmail / Email</label>
+<input id="email" type="email" required autocomplete="username">
 
-    <div class="logo">AYNA BOOK</div>
+<label>Password</label>
+<input id="password" type="password" minlength="11" required autocomplete="current-password">
 
-    <div class="subtitle">
-      Connect • Share • Create
-    </div>
+<button id="loginBtn" type="submit">LOGIN</button>
+</form>
 
-    <h2>LOGIN</h2>
+<div id="message" role="status" aria-live="polite"></div>
 
-    <form id="loginForm">
+<p class="center">
+<a href="./forgot-password.html">Forgot Password?</a>
+</p>
+<p class="center">
+নতুন অ্যাকাউন্ট?
+<a href="./signup.html">REGISTER</a>
+</p>
+<p class="center"><a href="./index.html">Back to Home</a></p>
+</div>
 
-      <label for="identifier">
-        নাম / ফোন নম্বর / Gmail
-      </label>
-
-      <input
-        type="text"
-        id="identifier"
-        name="identifier"
-        placeholder="আপনার নাম, ফোন অথবা Gmail"
-        autocomplete="username"
-        required
-      >
-
-      <label for="password">
-        Password
-      </label>
-
-      <div class="password-box">
-
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="কমপক্ষে ১১ অক্ষর"
-          minlength="11"
-          autocomplete="current-password"
-          required
-        >
-
-        <button
-          type="button"
-          class="toggle-password"
-          id="togglePassword"
-          aria-label="পাসওয়ার্ড দেখুন"
-          aria-pressed="false"
-        >
-          দেখুন
-        </button>
-
-      </div>
-
-      <a class="forgot" href="./forgot-password.html">
-        Forgot Password?
-      </a>
-
-      <button
-        type="submit"
-        class="main-button"
-        id="loginBtn"
-      >
-        LOGIN
-      </button>
-
-      <div id="message" role="status" aria-live="polite"></div>
-
-    </form>
-
-    <div class="register-link">
-      নতুন সদস্য?
-      <a href="./signup.html">REGISTER NOW</a>
-    </div>
-
-    <a class="back-home" href="./index.html">
-      ← Back to Home
-    </a>
-
-  </main>
-
-  <script type="module" src="./login.js"></script>
-
+<script type="module" src="./login.js"></script>
 </body>
 </html>
