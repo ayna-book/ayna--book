@@ -58,7 +58,10 @@
     }
 
     @keyframes glow {
-      0%, 100% { opacity: .8; transform: scale(1); }
+      0%, 100% {
+        opacity: .8;
+        transform: scale(1);
+      }
       50% {
         opacity: 1;
         transform: scale(1.35);
@@ -201,6 +204,13 @@
       border: 1px solid rgba(255,80,80,.35);
     }
 
+    #auth-message[data-type="warning"] {
+      display: block;
+      color: #FFD700;
+      background: rgba(255,215,0,.10);
+      border: 1px solid rgba(255,215,0,.35);
+    }
+
     .login-link {
       display: block;
       margin-top: 20px;
@@ -224,6 +234,7 @@
 </head>
 
 <body>
+
 <main class="container">
   <section class="card">
 
@@ -237,55 +248,97 @@
     <form id="signup-form">
 
       <label for="name">আপনার নাম</label>
-      <input id="name" type="text"
+      <input
+        id="name"
+        type="text"
         placeholder="আপনার পূর্ণ নাম"
-        autocomplete="name" maxlength="60" required>
+        autocomplete="name"
+        maxlength="60"
+        required
+      >
 
       <label for="email">ইমেইল ঠিকানা</label>
-      <input id="email" type="email"
+      <input
+        id="email"
+        type="email"
         placeholder="আপনার ইমেইল"
-        autocomplete="email" required>
+        autocomplete="email"
+        required
+      >
 
       <label for="password">পাসওয়ার্ড</label>
+
       <div class="password-box">
-        <input id="password" type="password"
+        <input
+          id="password"
+          type="password"
           placeholder="কমপক্ষে ৬ অক্ষর"
           autocomplete="new-password"
-          minlength="6" required>
-        <button class="show-password"
-          id="show-password" type="button">👁</button>
+          minlength="6"
+          required
+        >
+
+        <button
+          class="show-password"
+          id="show-password"
+          type="button"
+          aria-label="পাসওয়ার্ড দেখুন"
+        >👁</button>
       </div>
 
       <div class="password-help">
         নিরাপত্তার জন্য শক্তিশালী পাসওয়ার্ড ব্যবহার করুন।
       </div>
 
-      <label for="confirm-password">পাসওয়ার্ড আবার লিখুন</label>
+      <label for="confirm-password">
+        পাসওয়ার্ড আবার লিখুন
+      </label>
+
       <div class="password-box">
-        <input id="confirm-password" type="password"
+        <input
+          id="confirm-password"
+          type="password"
           placeholder="পাসওয়ার্ড আবার লিখুন"
           autocomplete="new-password"
-          minlength="6" required>
-        <button class="show-password"
-          id="show-confirm-password" type="button">👁</button>
+          minlength="6"
+          required
+        >
+
+        <button
+          class="show-password"
+          id="show-confirm-password"
+          type="button"
+          aria-label="পুনরায় লেখা পাসওয়ার্ড দেখুন"
+        >👁</button>
       </div>
 
       <label class="terms">
         <input id="terms" type="checkbox" required>
+
         <span>
           আমি AYNA BOOK-এর
-          <a href="#" onclick="return false;">নিরাপত্তা ও ব্যবহারের নিয়ম</a>
+          <a href="#" onclick="return false;">
+            নিরাপত্তা ও ব্যবহারের নিয়ম
+          </a>
           মেনে চলতে সম্মত।
         </span>
       </label>
 
-      <button class="signup-button" id="signup-button" type="submit">
+      <button
+        class="signup-button"
+        id="signup-button"
+        type="submit"
+      >
         Create Account
       </button>
 
     </form>
 
-    <div id="auth-message" role="status" aria-live="polite"></div>
+    <div
+      id="auth-message"
+      role="status"
+      aria-live="polite"
+    ></div>
 
     <a class="login-link" href="./login.html">
       ইতিমধ্যে অ্যাকাউন্ট আছে? Login করুন
@@ -299,13 +352,16 @@
 </main>
 
 <script type="module">
+
   import { registerUser } from "./auth.js";
 
   const form = document.getElementById("signup-form");
   const nameInput = document.getElementById("name");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
-  const confirmPasswordInput = document.getElementById("confirm-password");
+  const confirmPasswordInput =
+    document.getElementById("confirm-password");
+
   const termsInput = document.getElementById("terms");
   const button = document.getElementById("signup-button");
   const message = document.getElementById("auth-message");
@@ -317,13 +373,19 @@
 
   function togglePassword(input, buttonElement) {
     buttonElement.addEventListener("click", () => {
-      input.type = input.type === "password" ? "text" : "password";
+      input.type =
+        input.type === "password" ? "text" : "password";
+
       buttonElement.textContent =
         input.type === "password" ? "👁" : "🙈";
     });
   }
 
-  togglePassword(passwordInput, document.getElementById("show-password"));
+  togglePassword(
+    passwordInput,
+    document.getElementById("show-password")
+  );
+
   togglePassword(
     confirmPasswordInput,
     document.getElementById("show-confirm-password")
@@ -339,33 +401,45 @@
 
     if (name.length < 2) {
       showMessage("আপনার নাম সঠিকভাবে লিখুন।", "error");
+      nameInput.focus();
       return;
     }
 
     if (password.length < 6) {
-      showMessage("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।", "error");
+      showMessage(
+        "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।",
+        "error"
+      );
+      passwordInput.focus();
       return;
     }
 
     if (password !== confirmPassword) {
       showMessage("দুইটি পাসওয়ার্ড একই নয়।", "error");
+      confirmPasswordInput.focus();
       return;
     }
 
     if (!termsInput.checked) {
       showMessage("নিয়মে সম্মতি দিন।", "error");
+      termsInput.focus();
       return;
     }
 
     button.disabled = true;
     button.textContent = "অ্যাকাউন্ট তৈরি হচ্ছে...";
+
     message.textContent = "";
     delete message.dataset.type;
 
     let success = false;
 
     try {
-      const result = await registerUser(name, email, password);
+      const result = await registerUser(
+        name,
+        email,
+        password
+      );
 
       if (!result || result.success !== true) {
         showMessage(
@@ -376,10 +450,25 @@
       }
 
       success = true;
+
+      // Account created but Firestore profile not saved
+      if (result.profileSaved === false) {
+        showMessage(
+          result.message ||
+          "অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু প্রোফাইল সংরক্ষণ হয়নি।",
+          "warning"
+        );
+
+        button.textContent = "অ্যাকাউন্ট তৈরি হয়েছে";
+        return;
+      }
+
       showMessage(
         result.message || "অ্যাকাউন্ট তৈরি হয়েছে।",
         "success"
       );
+
+      button.textContent = "সফল হয়েছে";
 
       setTimeout(() => {
         window.location.href = "./index.html";
@@ -387,10 +476,12 @@
 
     } catch (error) {
       console.error("AYNA BOOK Signup Error:", error);
+
       showMessage(
         error.message || "সমস্যা হয়েছে। আবার চেষ্টা করুন।",
         "error"
       );
+
     } finally {
       if (!success) {
         button.disabled = false;
@@ -398,6 +489,7 @@
       }
     }
   });
+
 </script>
 
 </body>
