@@ -20,17 +20,24 @@ import {
 
 onAuthStateChanged(auth, (user) => {
 
-  if (!user) {
+  if (user) {
+
+    console.log(
+      "AYNA BOOK: User authenticated:",
+      user.uid
+    );
+
+    // Global user information
+    window.AYNA_BOOK_USER = user;
+
+  } else {
+
     console.log(
       "AYNA BOOK: User is not logged in."
     );
-    return;
-  }
 
-  console.log(
-    "AYNA BOOK: User authenticated:",
-    user.uid
-  );
+    window.AYNA_BOOK_USER = null;
+  }
 
 });
 
@@ -49,7 +56,7 @@ async function logoutUser() {
       "AYNA BOOK: Logout successful."
     );
 
-    window.location.href = "login.html";
+    window.location.replace("login.html");
 
   } catch (error) {
 
@@ -63,6 +70,7 @@ async function logoutUser() {
     );
 
   }
+
 }
 
 
@@ -83,7 +91,27 @@ document.addEventListener(
 
       button.addEventListener(
         "click",
-        logoutUser
+        async (event) => {
+
+          event.preventDefault();
+
+          if (button.disabled) {
+            return;
+          }
+
+          button.disabled = true;
+
+          try {
+
+            await logoutUser();
+
+          } finally {
+
+            button.disabled = false;
+
+          }
+
+        }
       );
 
     });
@@ -104,10 +132,16 @@ window.AYNA_BOOK = {
 
   firebaseSDK: "13.4.0",
 
-  logout: logoutUser
+  logout: logoutUser,
+
+  getCurrentUser: () => auth.currentUser
 
 };
 
+
+// ---------------------------------------------------------
+// Console
+// ---------------------------------------------------------
 
 console.log(
   "AYNA BOOK — app.js loaded successfully."
