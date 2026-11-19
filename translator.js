@@ -1,16 +1,83 @@
-// translator.js
-export async function translateText(text, targetLang = 'en') {
-    if (!text.trim()) return "";
-    try {
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=bn|${targetLang}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.responseData.translatedText || text;
-    } catch (error) {
-        console.error("Translation error:", error);
-        return text;
-    }
-}
 
-// গ্লোবাল উইন্ডোতে যুক্ত করা যাতে যেকোনো HTML পেজ থেকে সহজে ব্যবহার করা যায়
-window.aynaTranslate = translateText;
+/* =========================================================
+   AYNA BOOK
+   Global Language Translator
+   ========================================================= */
+
+const AynaTranslator = {
+  apiUrl: "https://api.mymemory.translated.net/get",
+
+  async translate(text, sourceLang, targetLang) {
+    try {
+      const input = String(text || "").trim();
+
+      if (!input) {
+        throw new Error("অনুবাদের জন্য লেখা দিন।");
+      }
+
+      if (input.length > 450) {
+        throw new Error("একবারে সর্বোচ্চ ৪৫০ অক্ষর অনুবাদ করুন।");
+      }
+
+      if (!sourceLang || !targetLang) {
+        throw new Error("উৎস ও লক্ষ্য ভাষা নির্বাচন করুন।");
+      }
+
+      if (sourceLang === targetLang) {
+        return {
+          success: true,
+          translatedText: input
+        };
+      }
+
+      const params = new URLSearchParams({
+        q: input,
+        langpair: `${sourceLang}|${targetLang}`
+      });
+
+      const response = await fetch(
+        `${this.apiUrl}?${params.toString()}`
+      );
+
+      if (!response.ok) {
+        throw new Error("অনুবাদ সার্ভারে সমস্যা হয়েছে।");
+      }
+
+      const data = await response.json();
+
+      if (
+        data.responseStatus !== 200 ||
+        !data.responseData?.translatedText
+      ) {
+        throw new Error(
+          data.responseDetails || "অনুবাদ পাওয়া যায়নি।"
+        );
+      }
+
+      return {
+        success: true,
+        translatedText:
+          data.responseData.translatedText
+      };
+
+    } catch (error) {
+      console.error(
+        "AYNA BOOK Translation Error:",
+        error
+      );
+
+      return {
+        success: false,
+        message:
+          error.message || "অনুবাদ করা যায়নি।"
+      };
+    }
+  }
+};
+
+// Global access
+window.AYNA_TRANSLATOR = AynaTranslator;
+
+console.log(
+  "AYNA BOOK Translator Loaded Successfully."
+);
