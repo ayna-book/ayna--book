@@ -1,53 +1,689 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0A0F1E">
-<title>AYNA BOOK - Login</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;padding:20px 12px;background:#0A0F1E;color:white;font-family:Arial,sans-serif}
-.card{max-width:500px;margin:50px auto;padding:28px 22px;background:#1A2233;border:1px solid #FFD700;border-radius:22px}
-h1,h2{text-align:center}
-label{display:block;margin:22px 0 8px;font-weight:bold}
-input{width:100%;padding:15px;border:1px solid #FFD700;border-radius:10px;background:#0A0F1E;color:white;font-size:16px}
-button{width:100%;padding:15px;margin-top:20px;background:#FFD700;color:#0A0F1E;border:0;border-radius:10px;font-size:17px;font-weight:bold}
-button:disabled{opacity:.5}
-#message{display:none;margin-top:16px;padding:12px;background:#26344A;border-radius:9px;overflow-wrap:anywhere}
-a{color:#FFD700}
-.center{text-align:center;margin-top:22px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0F1E">
+
+  <title>AYNA BOOK — Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0A0F1E;
+      color: #FFFFFF;
+      font-family: Arial, "Noto Sans Bengali", sans-serif;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+    }
+
+    /* =====================================================
+       BRAND
+    ===================================================== */
+
+    .brand {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .brand h1 {
+      margin: 0;
+
+      color: #FFFFFF;
+
+      font-size: 32px;
+      font-weight: 800;
+
+      letter-spacing: 2px;
+    }
+
+    .brand p {
+      margin: 8px 0 0;
+
+      color: #A9B0BC;
+
+      font-size: 14px;
+    }
+
+    /* =====================================================
+       CARD
+    ===================================================== */
+
+    .card {
+      background: #111827;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 18px;
+
+      padding: 25px;
+
+      box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.45);
+    }
+
+    .title {
+      margin: 0 0 6px;
+
+      text-align: center;
+
+      font-size: 23px;
+      font-weight: 700;
+
+      color: #FFFFFF;
+    }
+
+    .subtitle {
+      margin: 0 0 24px;
+
+      text-align: center;
+
+      color: #A9B0BC;
+
+      font-size: 13px;
+    }
+
+    /* =====================================================
+       FIELD
+    ===================================================== */
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+
+      margin-bottom: 7px;
+
+      color: #FFFFFF;
+
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      height: 50px;
+
+      padding: 0 14px;
+
+      background: #1A2233;
+
+      border: 1px solid #334155;
+
+      border-radius: 10px;
+
+      outline: none;
+
+      color: #FFFFFF;
+
+      font-size: 15px;
+    }
+
+    input::placeholder {
+      color: #7F8898;
+    }
+
+    input:focus {
+      border-color: #FFD700;
+
+      box-shadow:
+        0 0 0 2px rgba(255, 215, 0, 0.12);
+    }
+
+    /* =====================================================
+       PASSWORD
+    ===================================================== */
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 55px;
+    }
+
+    .toggle-password {
+      position: absolute;
+
+      top: 50%;
+      right: 8px;
+
+      transform: translateY(-50%);
+
+      width: 42px;
+      height: 38px;
+
+      background: transparent;
+
+      border: 0;
+
+      color: #A9B0BC;
+
+      cursor: pointer;
+
+      font-size: 17px;
+    }
+
+    .toggle-password:hover {
+      color: #FFD700;
+    }
+
+    /* =====================================================
+       FORGOT PASSWORD
+    ===================================================== */
+
+    .forgot {
+      display: block;
+
+      margin-top: -5px;
+      margin-bottom: 20px;
+
+      text-align: right;
+
+      color: #FFD700;
+
+      text-decoration: none;
+
+      font-size: 13px;
+    }
+
+    .forgot:hover {
+      text-decoration: underline;
+    }
+
+    /* =====================================================
+       LOGIN BUTTON
+    ===================================================== */
+
+    .login-btn {
+      width: 100%;
+      min-height: 50px;
+
+      border: 0;
+      border-radius: 10px;
+
+      background: #FFD700;
+
+      color: #0A0F1E;
+
+      font-size: 16px;
+      font-weight: 800;
+
+      cursor: pointer;
+    }
+
+    .login-btn:hover {
+      filter: brightness(1.05);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.55;
+
+      cursor: not-allowed;
+    }
+
+    /* =====================================================
+       MESSAGE
+    ===================================================== */
+
+    .message {
+      min-height: 22px;
+
+      margin-top: 14px;
+
+      text-align: center;
+
+      color: #FFD700;
+
+      font-size: 14px;
+
+      line-height: 1.5;
+    }
+
+    /* =====================================================
+       REGISTER
+    ===================================================== */
+
+    .register-area {
+      margin-top: 22px;
+
+      padding-top: 18px;
+
+      border-top: 1px solid #263247;
+
+      text-align: center;
+
+      color: #A9B0BC;
+
+      font-size: 14px;
+    }
+
+    .register-area a {
+      color: #FFD700;
+
+      text-decoration: none;
+
+      font-weight: 700;
+    }
+
+    .register-area a:hover {
+      text-decoration: underline;
+    }
+
+    /* =====================================================
+       SECURITY NOTE
+    ===================================================== */
+
+    .security-note {
+      margin-top: 18px;
+
+      text-align: center;
+
+      color: #7F8898;
+
+      font-size: 11px;
+
+      line-height: 1.5;
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 480px) {
+
+      body {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .brand h1 {
+        font-size: 28px;
+      }
+
+    }
+
+  </style>
 </head>
+
 <body>
-<div class="card">
-<h1>AYNA BOOK</h1>
-<p class="center">Connect • Share • Create</p>
-<h2>LOGIN</h2>
 
-<form id="loginForm">
-<label>Gmail / Email</label>
-<input id="email" type="email" required autocomplete="username">
+  <main class="container">
 
-<label>Password</label>
-<input id="password" type="password" minlength="11" required autocomplete="current-password">
+    <!-- ===================================================
+         BRAND
+    ==================================================== -->
 
-<button id="loginBtn" type="submit">LOGIN</button>
-</form>
+    <div class="brand">
 
-<div id="message" role="status" aria-live="polite"></div>
+      <h1>AYNA BOOK</h1>
 
-<p class="center">
-<a href="./forgot-password.html">Forgot Password?</a>
-</p>
-<p class="center">
-নতুন অ্যাকাউন্ট?
-<a href="./signup.html">REGISTER</a>
-</p>
-<p class="center"><a href="./index.html">Back to Home</a></p>
-</div>
+      <p>
+        নিরাপদ ডিজিটাল সামাজিক প্ল্যাটফর্ম
+      </p>
 
-<script type="module" src="./login.js"></script>
+    </div>
+
+
+    <!-- ===================================================
+         LOGIN CARD
+    ==================================================== -->
+
+    <section class="card">
+
+      <h2 class="title">
+        Login
+      </h2>
+
+      <p class="subtitle">
+        আপনার AYNA BOOK Account-এ প্রবেশ করুন
+      </p>
+
+
+      <!-- =================================================
+           LOGIN FORM
+      ================================================== -->
+
+      <form id="loginForm">
+
+        <!-- Gmail -->
+
+        <div class="field">
+
+          <label for="email">
+            Gmail
+          </label>
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="example@gmail.com"
+            autocomplete="email"
+            maxlength="120"
+            required
+          >
+
+        </div>
+
+
+        <!-- Password -->
+
+        <div class="field">
+
+          <label for="password">
+            Password
+          </label>
+
+          <div class="password-wrap">
+
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="আপনার Password"
+              autocomplete="current-password"
+              required
+            >
+
+            <button
+              type="button"
+              id="togglePassword"
+              class="toggle-password"
+              aria-label="Show Password"
+            >
+              👁
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- Forgot Password -->
+
+        <a
+          href="./forgot-password.html"
+          class="forgot"
+        >
+          Password ভুলে গেছেন?
+        </a>
+
+
+        <!-- Login -->
+
+        <button
+          type="submit"
+          id="loginBtn"
+          class="login-btn"
+        >
+          LOGIN
+        </button>
+
+
+        <!-- Message -->
+
+        <div
+          id="message"
+          class="message"
+          aria-live="polite"
+        ></div>
+
+      </form>
+
+
+      <!-- =================================================
+           REGISTER
+      ================================================== -->
+
+      <div class="register-area">
+
+        Account নেই?
+
+        <a href="./signup.html">
+          REGISTER
+        </a>
+
+      </div>
+
+
+      <div class="security-note">
+        🔒 আপনার Password কারও সঙ্গে শেয়ার করবেন না।
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       LOGIN SCRIPT
+  ====================================================== -->
+
+  <script type="module">
+
+    import {
+      loginUser,
+      watchAuthState
+    } from "./auth.js";
+
+
+    // =====================================================
+    // Elements
+    // =====================================================
+
+    const form =
+      document.getElementById("loginForm");
+
+    const email =
+      document.getElementById("email");
+
+    const password =
+      document.getElementById("password");
+
+    const togglePassword =
+      document.getElementById("togglePassword");
+
+    const loginBtn =
+      document.getElementById("loginBtn");
+
+    const message =
+      document.getElementById("message");
+
+
+    // =====================================================
+    // Show / Hide Password
+    // =====================================================
+
+    togglePassword.addEventListener(
+      "click",
+      () => {
+
+        if (password.type === "password") {
+
+          password.type = "text";
+
+          togglePassword.textContent = "🙈";
+
+          togglePassword.setAttribute(
+            "aria-label",
+            "Hide Password"
+          );
+
+        } else {
+
+          password.type = "password";
+
+          togglePassword.textContent = "👁";
+
+          togglePassword.setAttribute(
+            "aria-label",
+            "Show Password"
+          );
+
+        }
+
+      }
+    );
+
+
+    // =====================================================
+    // Login
+    // =====================================================
+
+    form.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+
+        const emailValue =
+          email.value.trim().toLowerCase();
+
+        const passwordValue =
+          password.value;
+
+
+        if (!emailValue) {
+
+          message.textContent =
+            "Gmail দিন।";
+
+          return;
+        }
+
+
+        if (!passwordValue) {
+
+          message.textContent =
+            "Password দিন।";
+
+          return;
+        }
+
+
+        // -------------------------------------------------
+        // Disable button
+        // -------------------------------------------------
+
+        loginBtn.disabled = true;
+
+        loginBtn.textContent =
+          "LOGIN হচ্ছে...";
+
+        message.textContent = "";
+
+
+        try {
+
+          const result =
+            await loginUser(
+              emailValue,
+              passwordValue
+            );
+
+
+          if (result.success) {
+
+            message.textContent =
+              "Login সফল হয়েছে। Dashboard-এ নেওয়া হচ্ছে...";
+
+
+            // ------------------------------------------------
+            // IMPORTANT:
+            // Successful Login → Dashboard
+            // ------------------------------------------------
+
+            window.location.replace(
+              "./dashboard.html"
+            );
+
+          } else {
+
+            message.textContent =
+              result.message ||
+              "Login ব্যর্থ হয়েছে।";
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+              "LOGIN";
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Login Error:",
+            error
+          );
+
+          message.textContent =
+            "Login করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+
+          loginBtn.disabled = false;
+
+          loginBtn.textContent =
+            "LOGIN";
+
+        }
+
+      }
+    );
+
+
+    // =====================================================
+    // Existing Login Session
+    // =====================================================
+
+    watchAuthState(
+      (user) => {
+
+        if (
+          user &&
+          window.location.pathname.endsWith(
+            "/login.html"
+          )
+        ) {
+
+          window.location.replace(
+            "./dashboard.html"
+          );
+
+        }
+
+      }
+    );
+
+
+    // =====================================================
+    // Ready
+    // =====================================================
+
+    console.log(
+      "AYNA BOOK — Login page loaded."
+    );
+
+  </script>
+
 </body>
 </html>
