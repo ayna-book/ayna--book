@@ -28,7 +28,9 @@ class AynaConnectivityEngine {
     window.addEventListener(
       "online",
       () => {
+
         this.checkConnection();
+
       }
     );
 
@@ -36,7 +38,9 @@ class AynaConnectivityEngine {
     window.addEventListener(
       "offline",
       () => {
+
         this.handleStatusChange(false);
+
       }
     );
 
@@ -53,7 +57,9 @@ class AynaConnectivityEngine {
     // প্রতি ৩০ সেকেন্ডে পরীক্ষা
     this.pingInterval = setInterval(
       () => {
+
         this.checkConnection();
+
       },
       30000
     );
@@ -158,9 +164,7 @@ class AynaConnectivityEngine {
 
     if (!navigator.onLine) {
 
-      this.handleStatusChange(
-        false
-      );
+      this.handleStatusChange(false);
 
       return false;
 
@@ -176,7 +180,7 @@ class AynaConnectivityEngine {
         );
 
 
-      // Browser cache এড়িয়ে নতুন request
+      // Cache এড়ানোর জন্য timestamp
       pageURL.searchParams.set(
         "network-check",
         Date.now().toString()
@@ -187,8 +191,9 @@ class AynaConnectivityEngine {
         await fetch(
           pageURL.toString(),
           {
-            method: "HEAD",
-            cache: "no-store"
+            method: "GET",
+            cache: "no-store",
+            credentials: "same-origin"
           }
         );
 
@@ -256,6 +261,17 @@ class AynaConnectivityEngine {
         );
 
     };
+
+  }
+
+
+  // -------------------------------------------------------
+  // Get Current Status
+  // -------------------------------------------------------
+
+  getStatus() {
+
+    return this.isOnline;
 
   }
 
