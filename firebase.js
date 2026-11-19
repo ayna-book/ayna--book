@@ -1,17 +1,76 @@
-// firebase.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+// =========================================================
+// AYNA BOOK
+// Firebase Main Configuration
+// Firebase SDK: 13.4.0
+// =========================================================
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+
+import {
+  getAuth
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {
+  getFirestore
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+import {
+  getDatabase
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+import {
+  getStorage
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
+
+import {
+  firebaseConfig
+} from "./firebase-config.js";
+
+
+// ---------------------------------------------------------
+// Firebase App
+// ---------------------------------------------------------
 
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+
+
+// ---------------------------------------------------------
+// Firebase Services
+// ---------------------------------------------------------
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+const database = getDatabase(app);
+
+const storage = getStorage(app);
+
+
+// ---------------------------------------------------------
+// Exports
+// ---------------------------------------------------------
+
+export {
+  app,
+  auth,
+  db,
+  database,
+  storage
+};
+
+
+// ---------------------------------------------------------
+// Console information
+// ---------------------------------------------------------
+
+console.log(
+  "AYNA BOOK — Firebase initialized."
+);
+
+console.log(
+  "Firebase Project:",
+  firebaseConfig.projectId
+);
