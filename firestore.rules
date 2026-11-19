@@ -4,105 +4,107 @@ service cloud.firestore {
 
   match /databases/{database}/documents {
 
+
     // =====================================================
-    // AUTHENTICATION HELPER
+    // COMMON FUNCTIONS
     // =====================================================
 
     function signedIn() {
       return request.auth != null;
     }
 
+    function isOwner(userId) {
+      return signedIn()
+        && request.auth.uid == userId;
+    }
+
 
     // =====================================================
-    // USER PROFILES
-    // Path:
-    // users/{userId}
+    // USERS
     // =====================================================
 
     match /users/{userId} {
 
-      // নতুন user profile তৈরি
-      allow create: if
-        signedIn() &&
-        request.auth.uid == userId;
+      // নিজের Account document তৈরি করতে পারবে
+      allow create: if isOwner(userId);
 
-      // নিজের profile পড়া / পরিবর্তন / মুছে ফেলা
-      allow read, update, delete: if
-        signedIn() &&
-        request.auth.uid == userId;
+      // শুধু নিজের Account পড়তে পারবে
+      allow read: if isOwner(userId);
+
+      // শুধু নিজের Account update করতে পারবে
+      allow update: if isOwner(userId);
+
+      // নিজের Account delete করতে পারবে
+      allow delete: if isOwner(userId);
     }
 
 
     // =====================================================
     // POSTS
-    // Path:
-    // posts/{postId}
     // =====================================================
 
     match /posts/{postId} {
 
-      // Public posts সবাই পড়তে পারবে
+      // Public posts পড়া যাবে
       allow read: if true;
 
 
-      // নতুন post তৈরি
-      allow create: if
-        signedIn() &&
-        request.resource.data.uid == request.auth.uid &&
-        request.resource.data.text is string &&
-        request.resource.data.text.size() <= 5000;
+      // Login করা user নিজের নামে Post তৈরি করতে পারবে
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() <= 5000;
 
 
-      // নিজের post update
-      // uid পরিবর্তন করা যাবে না
-      allow update: if
-        signedIn() &&
-        resource.data.uid == request.auth.uid &&
-        request.resource.data.uid == resource.data.uid &&
-        request.resource.data.text is string &&
-        request.resource.data.text.size() <= 5000;
+      // শুধু Post-এর owner update করতে পারবে
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() <= 5000;
 
 
-      // নিজের post delete
-      allow delete: if
-        signedIn() &&
-        resource.data.uid == request.auth.uid;
+      // শুধু Post-এর owner delete করতে পারবে
+      allow delete: if signedIn()
+        && resource.data.uid == request.auth.uid;
     }
 
 
     // =====================================================
-    // CHAT MESSAGES
-    // Path:
-    // rooms/{roomId}/messages/{messageId}
+    // CHAT ROOMS / MESSAGES
     // =====================================================
 
     match /rooms/{roomId}/messages/{messageId} {
 
-      // Login করা user chat পড়তে পারবে
-      allow read: if
-        signedIn();
+      // Login করা user message পড়তে পারবে
+      allow read: if signedIn();
 
 
-      // নতুন message তৈরি
-      allow create: if
-        signedIn() &&
-        request.resource.data.uid == request.auth.uid &&
-        request.resource.data.text is string &&
-        request.resource.data.text.size() > 0 &&
-        request.resource.data.text.size() <= 2000;
+      // Login করা user নিজের UID দিয়ে message তৈরি করতে পারবে
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 2000;
 
 
-      // Message পরিবর্তন / delete বন্ধ
-      allow update, delete: if false;
+      // Message পরিবর্তন করা যাবে না
+      allow update: if false;
+
+
+      // Message delete করা যাবে না
+      allow delete: if false;
     }
 
 
     // =====================================================
-    // EVERYTHING ELSE
+    // DEFAULT DENY
     // =====================================================
 
-    // উপরের নির্দিষ্ট collection ছাড়া
-    // অন্য কোনো Firestore document access করা যাবে না।
+    match /{document=**} {
+
+      allow read, write: if false;
+    }
 
   }
 }
