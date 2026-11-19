@@ -32,7 +32,7 @@
       background: #1A2233;
       border: 1px solid #FFD700;
       border-radius: 18px;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.12);
+      box-shadow: 0 0 20px rgba(255,215,0,0.12);
     }
 
     .logo {
@@ -91,7 +91,7 @@
     }
 
     .password-box input {
-      padding-right: 72px;
+      padding-right: 75px;
     }
 
     .toggle-password {
@@ -276,9 +276,7 @@
           class="toggle-password"
           data-target="password"
           aria-pressed="false"
-        >
-          দেখুন
-        </button>
+        >দেখুন</button>
 
       </div>
 
@@ -303,9 +301,7 @@
           class="toggle-password"
           data-target="confirmPassword"
           aria-pressed="false"
-        >
-          দেখুন
-        </button>
+        >দেখুন</button>
 
       </div>
 
@@ -352,7 +348,10 @@
 
   <script type="module">
 
-    import { registerUser } from "./auth.js";
+    import {
+      registerUser,
+      saveUserProfile
+    } from "./auth.js";
 
     const form = document.getElementById("signupForm");
     const nameInput = document.getElementById("name");
@@ -361,9 +360,12 @@
     const photoInput = document.getElementById("photo");
     const passwordInput = document.getElementById("password");
     const confirmInput = document.getElementById("confirmPassword");
+    const termsInput = document.getElementById("terms");
     const signupBtn = document.getElementById("signupBtn");
     const messageBox = document.getElementById("message");
     const photoPreview = document.getElementById("photoPreview");
+
+    let previewURL = null;
 
     function showMessage(message, success = false) {
       messageBox.textContent = message;
@@ -373,32 +375,48 @@
         ? "#123B2A"
         : "#451C24";
 
+      messageBox.style.color = "#FFFFFF";
+
       messageBox.style.border = success
         ? "1px solid #36C275"
         : "1px solid #FF6878";
+    }
+
+    function clearPreview() {
+      if (previewURL) {
+        URL.revokeObjectURL(previewURL);
+        previewURL = null;
+      }
+
+      photoPreview.removeAttribute("src");
+      photoPreview.style.display = "none";
     }
 
     // Show / Hide Password
     document.querySelectorAll(".toggle-password").forEach(button => {
       button.addEventListener("click", () => {
         const target = document.getElementById(button.dataset.target);
+
         const visible = target.type === "password";
 
         target.type = visible ? "text" : "password";
+
         button.textContent = visible ? "লুকান" : "দেখুন";
-        button.setAttribute("aria-pressed", String(visible));
+
+        button.setAttribute(
+          "aria-pressed",
+          String(visible)
+        );
       });
     });
 
     // Profile Photo Preview
     photoInput.addEventListener("change", () => {
+      clearPreview();
+
       const file = photoInput.files[0];
 
-      if (!file) {
-        photoPreview.removeAttribute("src");
-        photoPreview.style.display = "none";
-        return;
-      }
+      if (!file) return;
 
       if (!file.type.startsWith("image/")) {
         showMessage("অনুগ্রহ করে একটি ছবির ফাইল নির্বাচন করুন।");
@@ -412,7 +430,8 @@
         return;
       }
 
-      photoPreview.src = URL.createObjectURL(file);
+      previewURL = URL.createObjectURL(file);
+      photoPreview.src = previewURL;
       photoPreview.style.display = "block";
     });
 
@@ -441,7 +460,7 @@
         return;
       }
 
-      if (!document.getElementById("terms").checked) {
+      if (!termsInput.checked) {
         showMessage("নিয়ম ও গোপনীয়তা নীতিতে সম্মতি দিন।");
         return;
       }
@@ -450,6 +469,7 @@
       signupBtn.textContent = "অ্যাকাউন্ট তৈরি হচ্ছে...";
 
       try {
+
         const result = await registerUser(
           name,
           email,
@@ -459,37 +479,76 @@
         );
 
         if (!result.success) {
-          showMessage(result.message);
+          showMessage(result.message || "Registration সফল হয়নি।");
           return;
         }
 
+        // Account exists, but Firestore profile may need recovery.
         if (!result.profileSaved) {
-          showMessage(result.message);
-          return;
+
+          showMessage(
+            "অ্যাকাউন্ট তৈরি হয়েছে। প্রোফাইল সংরক্ষণের চেষ্টা করা হচ্ছে..."
+          );
+
+          try {
+
+            await saveUserProfile(result.user, {
+              name,
+              phone
+            });
+
+            showMessage(
+              "অ্যাকাউন্ট ও প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে। Login পেজে যাচ্ছেন...",
+              true
+            );
+
+          } catch (profileError) {
+
+            console.error("Profile Recovery Error:", profileError);
+
+            showMessage(
+              "অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু প্রোফাইল সংরক্ষণ হয়নি। আবার Registration করবেন না। ইন্টারনেট ও Firebase Rules পরীক্ষা করুন।"
+            );
+
+            return;
+          }
+
+        } else {
+
+          showMessage(
+            "অভিনন্দন! AYNA BOOK অ্যাকাউন্ট তৈরি হয়েছে। Login পেজে যাচ্ছেন...",
+            true
+          );
+
         }
 
-        showMessage(
-          "অভিনন্দন! AYNA BOOK অ্যাকাউন্ট তৈরি হয়েছে। Login পেজে যাচ্ছেন...",
-          true
-        );
-
+        // Only clear form after successful profile save.
         form.reset();
-        photoPreview.removeAttribute("src");
-        photoPreview.style.display = "none";
+        clearPreview();
 
         setTimeout(() => {
-          window.location.href = "./login.html";
+          window.location.replace("./login.html");
         }, 1800);
 
       } catch (error) {
+
         console.error("Registration Error:", error);
-        showMessage("Registration সম্পন্ন হয়নি। আবার চেষ্টা করুন।");
+
+        showMessage(
+          "একটি সমস্যা হয়েছে। আপনার অ্যাকাউন্ট তৈরি হয়েছে কি না Firebase Authentication-এ পরীক্ষা করুন।"
+        );
 
       } finally {
+
         signupBtn.disabled = false;
         signupBtn.textContent = "SAVE / REGISTER";
+
       }
     });
+
+    window.addEventListener("beforeunload", clearPreview);
+
+    console.log("AYNA BOOK Registration Page Loaded.");
 
   </script>
 
