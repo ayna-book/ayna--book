@@ -4,84 +4,65 @@ service firebase.storage {
 
   match /b/{bucket}/o {
 
-    /* ================================================
-       USER PROFILE FILES
-       Path:
-       users/{userId}/...
-       ================================================ */
+    /* =====================================================
+       USER FILES
+       Profile photo, user documents, etc.
+       ===================================================== */
 
     match /users/{userId}/{allPaths=**} {
 
-      /*
-       * শুধু লগইন করা user নিজের ফাইল
-       * read / upload / update / delete করতে পারবে।
-       *
-       * সর্বোচ্চ file size: 10 MB
-       * অনুমোদিত:
-       * - image/*
-       * - application/pdf
-       */
+      /* নিজের ফাইল নিজে দেখতে পারবে */
+      allow read: if request.auth != null
+        && request.auth.uid == userId;
 
-      allow read: if
-        request.auth != null &&
-        request.auth.uid == userId;
-
-      allow write: if
-        request.auth != null &&
-        request.auth.uid == userId &&
-        request.resource.size <= 10 * 1024 * 1024 &&
-        (
-          request.resource.contentType.matches('image/.*') ||
+      /* নিজের ফাইল upload/update করতে পারবে */
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size <= 10 * 1024 * 1024
+        && (
+          request.resource.contentType.matches('image/.*')
+          ||
           request.resource.contentType == 'application/pdf'
         );
+
+      /* নিজের ফাইল delete করতে পারবে */
+      allow delete: if request.auth != null
+        && request.auth.uid == userId;
     }
 
 
-    /* ================================================
+    /* =====================================================
        POSTS
-       Path:
-       posts/{userId}/...
-       ================================================ */
+       ===================================================== */
 
     match /posts/{userId}/{allPaths=**} {
 
-      /*
-       * শুধু login করা user নিজের post media
-       * upload/read/update/delete করতে পারবে।
-       *
-       * সর্বোচ্চ file size: 20 MB
-       * অনুমোদিত:
-       * - image/*
-       * - video/*
-       */
+      /* বর্তমানে নিজের post files দেখতে পারবে */
+      allow read: if request.auth != null
+        && request.auth.uid == userId;
 
-      allow read: if
-        request.auth != null &&
-        request.auth.uid == userId;
-
-      allow write: if
-        request.auth != null &&
-        request.auth.uid == userId &&
-        request.resource.size <= 20 * 1024 * 1024 &&
-        (
-          request.resource.contentType.matches('image/.*') ||
+      /* Photo / Video upload */
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size <= 20 * 1024 * 1024
+        && (
+          request.resource.contentType.matches('image/.*')
+          ||
           request.resource.contentType.matches('video/.*')
         );
+
+      /* নিজের post media delete */
+      allow delete: if request.auth != null
+        && request.auth.uid == userId;
     }
 
 
-    /* ================================================
+    /* =====================================================
        EVERYTHING ELSE
-       ================================================ */
-
-    /*
-     * অন্য কোনো Storage path
-     * ডিফল্টভাবে সম্পূর্ণ বন্ধ।
-     */
+       ===================================================== */
 
     match /{allPaths=**} {
       allow read, write: if false;
     }
-
   }
 }
