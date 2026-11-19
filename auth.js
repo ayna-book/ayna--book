@@ -37,35 +37,17 @@ export function getAuthErrorMessage(error) {
   const code = error?.code || "";
 
   const messages = {
-    "auth/email-already-in-use":
-      "এই Gmail দিয়ে ইতিমধ্যে অ্যাকাউন্ট আছে।",
-
-    "auth/invalid-email":
-      "Gmail ঠিকানাটি সঠিক নয়।",
-
-    "auth/weak-password":
-      "পাসওয়ার্ড কমপক্ষে ১১ অক্ষরের হতে হবে।",
-
-    "auth/invalid-credential":
-      "Gmail অথবা পাসওয়ার্ড সঠিক নয়।",
-
-    "auth/user-not-found":
-      "এই Gmail দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।",
-
-    "auth/wrong-password":
-      "পাসওয়ার্ড সঠিক নয়।",
-
-    "auth/too-many-requests":
-      "অনেকবার চেষ্টা করা হয়েছে। পরে আবার চেষ্টা করুন।",
-
-    "auth/network-request-failed":
-      "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
-
-    "auth/user-disabled":
-      "এই অ্যাকাউন্টটি নিষ্ক্রিয়।",
-
-    "permission-denied":
-      "তথ্য সংরক্ষণের অনুমতি নেই। Firebase Rules পরীক্ষা করুন।"
+    "auth/email-already-in-use": "এই Gmail দিয়ে ইতিমধ্যে অ্যাকাউন্ট আছে।",
+    "auth/invalid-email": "Gmail ঠিকানাটি সঠিক নয়।",
+    "auth/weak-password": "পাসওয়ার্ড কমপক্ষে ১১ অক্ষরের হতে হবে।",
+    "auth/invalid-credential": "Gmail অথবা পাসওয়ার্ড সঠিক নয়।",
+    "auth/user-not-found": "এই Gmail দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।",
+    "auth/wrong-password": "পাসওয়ার্ড সঠিক নয়।",
+    "auth/too-many-requests": "অনেকবার চেষ্টা করা হয়েছে। পরে আবার চেষ্টা করুন।",
+    "auth/network-request-failed": "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
+    "auth/user-disabled": "এই অ্যাকাউন্টটি নিষ্ক্রিয়।",
+    "auth/operation-not-allowed": "Firebase Console-এ Email/Password Login চালু করুন।",
+    "permission-denied": "তথ্য সংরক্ষণের অনুমতি নেই। Firestore Rules পরীক্ষা করুন।"
   };
 
   return messages[code] ||
@@ -90,9 +72,7 @@ export async function saveUserProfile(user, extraData = {}) {
     throw new Error("ব্যবহারকারীর UID পাওয়া যায়নি।");
   }
 
-  const userRef = doc(db, "users", user.uid);
-
-  await setDoc(userRef, {
+  await setDoc(doc(db, "users", user.uid), {
     uid: user.uid,
     name: extraData.name || user.displayName || "",
     displayName: extraData.name || user.displayName || "",
@@ -115,67 +95,79 @@ export async function registerUser(
   password,
   photoFile = null
 ) {
-  let accountCreated = false;
+  let user = null;
+  let photoURL = "";
+
+  const cleanName = String(name || "").trim();
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  const cleanPhone = String(phone || "").trim();
 
   try {
-    const cleanName = String(name || "").trim();
-    const cleanEmail = String(email || "").trim().toLowerCase();
-    const cleanPhone = String(phone || "").trim();
-
-    if (!cleanName) {
-      throw new Error("আপনার নাম লিখুন।");
-    }
-
-    if (!cleanEmail) {
-      throw new Error("আপনার Gmail লিখুন।");
-    }
-
-    if (!cleanPhone) {
-      throw new Error("আপনার ফোন নম্বর লিখুন।");
-    }
+    if (!cleanName) throw new Error("আপনার নাম লিখুন।");
+    if (!cleanEmail) throw new Error("আপনার Gmail লিখুন।");
+    if (!cleanPhone) throw new Error("আপনার ফোন নম্বর লিখুন।");
 
     validatePassword(password);
 
+    // Create Firebase Authentication account
     const credential = await createUserWithEmailAndPassword(
       auth,
       cleanEmail,
       password
     );
 
-    const user = credential.user;
-    accountCreated = true;
+    user = credential.user;
 
-    let photoURL = "";
+  } catch (error) {
+    console.error("AYNA BOOK Account Creation Error:", error);
 
-    // Optional profile photo upload
-    if (photoFile) {
-      try {
-        if (!photoFile.type.startsWith("image/")) {
-          throw new Error("শুধু ছবির ফাইল ব্যবহার করুন।");
-        }
+    return {
+      success: false,
+      accountCreated: false,
+      profileSaved: false,
+      user: null,
+      message: getAuthErrorMessage(error)
+    };
+  }
 
-        if (photoFile.size > 5 * 1024 * 1024) {
-          throw new Error("ছবির আকার সর্বোচ্চ ৫ MB হতে পারবে।");
-        }
+  // Account now exists. Do not report registration as failed
+  // merely because a later profile operation fails.
 
-        const photoRef = ref(
-          storage,
-          `users/${user.uid}/profile/profile-photo`
-        );
-
-        await uploadBytes(photoRef, photoFile);
-        photoURL = await getDownloadURL(photoRef);
-
-      } catch (photoError) {
-        console.warn("Profile photo upload failed:", photoError);
+  if (photoFile) {
+    try {
+      if (!photoFile.type.startsWith("image/")) {
+        throw new Error("শুধু ছবির ফাইল ব্যবহার করুন।");
       }
-    }
 
+      if (photoFile.size > 5 * 1024 * 1024) {
+        throw new Error("ছবির আকার সর্বোচ্চ ৫ MB হতে পারবে।");
+      }
+
+      const photoRef = ref(
+        storage,
+        `users/${user.uid}/profile/profile-photo`
+      );
+
+      await uploadBytes(photoRef, photoFile);
+      photoURL = await getDownloadURL(photoRef);
+
+    } catch (photoError) {
+      console.warn("Profile photo upload failed:", photoError);
+    }
+  }
+
+  // Update Firebase Authentication display name
+  try {
     await updateProfile(user, {
       displayName: cleanName,
-      photoURL: photoURL || null
+      ...(photoURL ? { photoURL } : {})
     });
+  } catch (profileError) {
+    console.warn("Authentication profile update failed:", profileError);
+  }
 
+  // Save profile in Firestore
+  try {
     await saveUserProfile(user, {
       name: cleanName,
       phone: cleanPhone,
@@ -188,22 +180,20 @@ export async function registerUser(
       profileSaved: true,
       photoUploaded: Boolean(photoURL),
       user,
-      message: photoURL
-        ? "AYNA BOOK অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।"
-        : "অ্যাকাউন্ট তৈরি হয়েছে। প্রোফাইল ছবি আপলোড করা যায়নি বা দেওয়া হয়নি।"
+      message: "AYNA BOOK অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।"
     };
 
   } catch (error) {
-    console.error("AYNA BOOK Registration Error:", error);
+    console.error("AYNA BOOK Firestore Profile Error:", error);
 
     return {
-      success: false,
-      accountCreated,
+      success: true,
+      accountCreated: true,
       profileSaved: false,
-      user: accountCreated ? auth.currentUser : null,
-      message: accountCreated
-        ? "অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু প্রোফাইল সংরক্ষণে সমস্যা হয়েছে।"
-        : getAuthErrorMessage(error)
+      photoUploaded: Boolean(photoURL),
+      user,
+      message:
+        "আপনার অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু প্রোফাইল সংরক্ষণ হয়নি। আবার চেষ্টা করুন।"
     };
   }
 }
@@ -222,18 +212,16 @@ export async function loginUser(identifier, password) {
 
     validatePassword(cleanPassword);
 
-    // Email login works directly with Firebase.
+    // Name and phone login require a secure backend.
     if (!cleanIdentifier.includes("@")) {
       throw new Error(
-        "নাম অথবা ফোন নম্বর দিয়ে Login চালু করতে নিরাপদ Backend প্রয়োজন। আপাতত Gmail ব্যবহার করুন।"
+        "আপাতত Gmail দিয়ে Login করুন। নাম অথবা ফোন নম্বর দিয়ে Login চালু করতে নিরাপদ Backend প্রয়োজন।"
       );
     }
 
-    const email = cleanIdentifier.toLowerCase();
-
     const credential = await signInWithEmailAndPassword(
       auth,
-      email,
+      cleanIdentifier.toLowerCase(),
       cleanPassword
     );
 
@@ -325,7 +313,6 @@ export function watchAuthState(callback) {
 export function getCurrentUser() {
   return auth.currentUser;
 }
-
 
 export function isUserLoggedIn() {
   return Boolean(auth.currentUser);
