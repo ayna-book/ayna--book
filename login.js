@@ -1,19 +1,67 @@
 // =========================================================
 // AYNA BOOK
-// Login JavaScript
+// Login Application
 // Firebase SDK: 13.4.0
 // =========================================================
 
-import { auth } from "./firebase-init.js";
-
 import {
-  signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+  loginUser,
+  watchAuthState
+} from "./auth.js";
 
 
-const loginForm =
-  document.getElementById("loginForm");
+// ---------------------------------------------------------
+// Elements
+// ---------------------------------------------------------
 
+const loginForm = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const message = document.getElementById("message");
+
+
+// ---------------------------------------------------------
+// Message
+// ---------------------------------------------------------
+
+function showMessage(text, type = "error") {
+
+  if (!message) {
+    console.log(text);
+    return;
+  }
+
+  message.textContent = text;
+  message.className = "message " + type;
+
+}
+
+
+// ---------------------------------------------------------
+// Already Logged In
+// ---------------------------------------------------------
+
+watchAuthState((user) => {
+
+  if (user) {
+
+    console.log(
+      "AYNA BOOK: Already logged in:",
+      user.uid
+    );
+
+    window.location.replace("index.html");
+
+  }
+
+});
+
+
+// ---------------------------------------------------------
+// Login
+// ---------------------------------------------------------
 
 if (loginForm) {
 
@@ -23,64 +71,121 @@ if (loginForm) {
 
       event.preventDefault();
 
-      const emailInput =
-        document.getElementById("loginEmail");
-
-      const passwordInput =
-        document.getElementById("loginPassword");
-
-
-      if (!emailInput || !passwordInput) {
-
-        console.error(
-          "AYNA BOOK: Login input পাওয়া যায়নি।"
-        );
-
-        return;
-      }
-
-
       const email =
-        emailInput.value.trim();
+        emailInput
+          ? emailInput.value.trim()
+          : "";
 
       const password =
-        passwordInput.value;
+        passwordInput
+          ? passwordInput.value
+          : "";
 
 
-      if (!email || !password) {
+      // ---------------------------------------------------
+      // Validation
+      // ---------------------------------------------------
 
-        alert(
-          "ইমেইল এবং পাসওয়ার্ড লিখুন।"
+      if (!email) {
+
+        showMessage(
+          "আপনার ইমেইল লিখুন।",
+          "error"
         );
+
+        if (emailInput) {
+          emailInput.focus();
+        }
 
         return;
       }
 
+
+      if (!password) {
+
+        showMessage(
+          "আপনার পাসওয়ার্ড লিখুন।",
+          "error"
+        );
+
+        if (passwordInput) {
+          passwordInput.focus();
+        }
+
+        return;
+      }
+
+
+      // ---------------------------------------------------
+      // Loading
+      // ---------------------------------------------------
+
+      if (loginBtn) {
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = "লগইন হচ্ছে...";
+
+      }
+
+      showMessage(
+        "অ্যাকাউন্ট যাচাই করা হচ্ছে...",
+        "success"
+      );
+
+
+      // ---------------------------------------------------
+      // Firebase Login
+      // ---------------------------------------------------
 
       try {
 
-        const userCredential =
-          await signInWithEmailAndPassword(
-            auth,
+        const result =
+          await loginUser(
             email,
             password
           );
 
 
-        console.log(
-          "AYNA BOOK Login successful:",
-          userCredential.user.uid
-        );
+        if (result && result.success) {
+
+          showMessage(
+            result.message ||
+            "লগইন সফল হয়েছে।",
+            "success"
+          );
+
+          console.log(
+            "AYNA BOOK: Login successful."
+          );
 
 
-        alert(
-          "সফলভাবে লগইন হয়েছে!"
-        );
+          // Dashboard
+          setTimeout(() => {
+
+            window.location.replace(
+              "index.html"
+            );
+
+          }, 500);
 
 
-        window.location.href =
-          "index.html";
+        } else {
 
+          showMessage(
+            result?.message ||
+            "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।",
+            "error"
+          );
+
+          if (loginBtn) {
+
+            loginBtn.disabled = false;
+            loginBtn.textContent =
+              "লগইন করুন";
+
+          }
+
+        }
 
       } catch (error) {
 
@@ -89,14 +194,50 @@ if (loginForm) {
           error
         );
 
-
-        alert(
-          "লগইন ব্যর্থ হয়েছে: " +
-          error.message
+        showMessage(
+          "লগইন করার সময় একটি সমস্যা হয়েছে।",
+          "error"
         );
+
+        if (loginBtn) {
+
+          loginBtn.disabled = false;
+          loginBtn.textContent =
+            "লগইন করুন";
+
+        }
+
       }
 
     }
   );
 
 }
+
+
+// ---------------------------------------------------------
+// Sign Up Button
+// ---------------------------------------------------------
+
+if (signupBtn) {
+
+  signupBtn.addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "signup.html";
+
+    }
+  );
+
+}
+
+
+// ---------------------------------------------------------
+// AYNA BOOK Login JS Ready
+// ---------------------------------------------------------
+
+console.log(
+  "AYNA BOOK — login.js loaded successfully."
+);
