@@ -1,4 +1,3 @@
-
 // =========================================================
 // AYNA BOOK
 // Chat System
@@ -20,91 +19,303 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-// বর্তমান লগইন ব্যবহারকারী
+
+// ---------------------------------------------------------
+// Current User
+// ---------------------------------------------------------
+
 let currentUser = null;
 
-// Authentication যাচাই
-onAuthStateChanged(auth, (user) => {
-  currentUser = user;
+let authReady = false;
 
-  if (!user) {
-    console.log("AYNA BOOK: Login প্রয়োজন।");
-  } else {
-    console.log("AYNA BOOK Chat User:", user.uid);
-  }
+let authWaitPromise;
+
+let resolveAuthReady;
+
+authWaitPromise = new Promise((resolve) => {
+  resolveAuthReady = resolve;
 });
 
-// মেসেজ পাঠানো
-export async function sendMessage(messageText, roomId = "global") {
+
+// ---------------------------------------------------------
+// Authentication State
+// ---------------------------------------------------------
+
+onAuthStateChanged(auth, (user) => {
+
+  currentUser = user;
+
+  authReady = true;
+
+  resolveAuthReady(user);
+
+  if (!user) {
+
+    console.log(
+      "AYNA BOOK: Login প্রয়োজন।"
+    );
+
+  } else {
+
+    console.log(
+      "AYNA BOOK Chat User:",
+      user.uid
+    );
+
+  }
+
+});
+
+
+// ---------------------------------------------------------
+// Wait for Firebase Authentication
+// ---------------------------------------------------------
+
+async function waitForAuth() {
+
+  if (authReady) {
+    return currentUser;
+  }
+
+  return await authWaitPromise;
+}
+
+
+// ---------------------------------------------------------
+// Send Message
+// ---------------------------------------------------------
+
+export async function sendMessage(
+  messageText,
+  roomId = "global"
+) {
+
   try {
-    if (!currentUser) {
-      throw new Error("আগে লগইন করুন।");
+
+    const user = await waitForAuth();
+
+
+    if (!user) {
+
+      throw new Error(
+        "আগে AYNA BOOK-এ লগইন করুন।"
+      );
+
     }
 
-    const text = String(messageText || "").trim();
+
+    const text =
+      String(messageText || "").trim();
+
 
     if (!text) {
-      throw new Error("মেসেজ লিখুন।");
+
+      throw new Error(
+        "মেসেজ লিখুন।"
+      );
+
     }
 
-    if (text.length > 5000) {
-      throw new Error("মেসেজ সর্বোচ্চ ৫০০০ অক্ষরের হতে পারবে।");
+
+    // Firestore Rules-এর সঙ্গে মিল
+    if (text.length > 2000) {
+
+      throw new Error(
+        "মেসেজ সর্বোচ্চ ২০০০ অক্ষরের হতে পারবে।"
+      );
+
     }
+
+
+    const cleanRoomId =
+      String(roomId || "global").trim();
+
+
+    if (!cleanRoomId) {
+
+      throw new Error(
+        "Chat room নির্ধারণ করা যায়নি।"
+      );
+
+    }
+
 
     await addDoc(
-      collection(db, "rooms", roomId, "messages"),
+      collection(
+        db,
+        "rooms",
+        cleanRoomId,
+        "messages"
+      ),
       {
+
+        // Firestore Rules-এর সঙ্গে মিল
+        uid: user.uid,
+
+        // UI-তে sender চেনার জন্য
+        senderId: user.uid,
+
+        senderEmail:
+          user.email || "",
+
         text,
-        senderId: currentUser.uid,
-        senderEmail: currentUser.email || "",
-        createdAt: serverTimestamp()
+
+        createdAt:
+          serverTimestamp()
+
       }
     );
 
+
     return {
+
       success: true,
-      message: "মেসেজ পাঠানো হয়েছে।"
+
+      message:
+        "মেসেজ পাঠানো হয়েছে।"
+
     };
+
 
   } catch (error) {
-    console.error("AYNA BOOK Send Message Error:", error);
+
+    console.error(
+      "AYNA BOOK Send Message Error:",
+      error
+    );
+
 
     return {
+
       success: false,
-      message: error.message || "মেসেজ পাঠানো যায়নি।"
+
+      message:
+        error.message ||
+        "মেসেজ পাঠানো যায়নি।"
+
     };
+
   }
+
 }
 
-// রিয়েল-টাইম মেসেজ শোনা
-export function listenMessages(callback, roomId = "global") {
-  if (!currentUser) {
-    console.error("AYNA BOOK: আগে লগইন করুন।");
-    return () => {};
-  }
 
-  const messagesQuery = query(
-    collection(db, "rooms", roomId, "messages"),
-    orderBy("createdAt", "asc")
-  );
+// ---------------------------------------------------------
+// Listen to Real-Time Messages
+// ---------------------------------------------------------
 
-  const unsubscribe = onSnapshot(
-    messagesQuery,
-    (snapshot) => {
-      const messages = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+export function listenMessages(
+  callback,
+  roomId = "global"
+) {
 
-      callback(messages);
-    },
-    (error) => {
-      console.error("AYNA BOOK Listen Messages Error:", error);
+  let unsubscribe =
+    () => {};
+
+
+  waitForAuth().then((user) => {
+
+    if (!user) {
+
+      console.error(
+        "AYNA BOOK: Chat ব্যবহারের জন্য Login প্রয়োজন।"
+      );
+
       callback([]);
-    }
-  );
 
-  return unsubscribe;
+      return;
+
+    }
+
+
+    const cleanRoomId =
+      String(roomId || "global").trim();
+
+
+    if (!cleanRoomId) {
+
+      console.error(
+        "AYNA BOOK: Invalid room ID."
+      );
+
+      callback([]);
+
+      return;
+
+    }
+
+
+    const messagesQuery =
+      query(
+
+        collection(
+          db,
+          "rooms",
+          cleanRoomId,
+          "messages"
+        ),
+
+        orderBy(
+          "createdAt",
+          "asc"
+        )
+
+      );
+
+
+    unsubscribe =
+      onSnapshot(
+
+        messagesQuery,
+
+        (snapshot) => {
+
+          const messages =
+            snapshot.docs.map(
+              (doc) => ({
+
+                id: doc.id,
+
+                ...doc.data()
+
+              })
+            );
+
+
+          callback(messages);
+
+        },
+
+
+        (error) => {
+
+          console.error(
+            "AYNA BOOK Listen Messages Error:",
+            error
+          );
+
+          callback([]);
+
+        }
+
+      );
+
+  });
+
+
+  return () => {
+
+    unsubscribe();
+
+  };
+
 }
 
-console.log("AYNA BOOK Chat System Loaded.");
+
+// ---------------------------------------------------------
+// AYNA BOOK Chat Ready
+// ---------------------------------------------------------
+
+console.log(
+  "AYNA BOOK — Chat System Loaded."
+);
