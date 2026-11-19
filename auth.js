@@ -1,9 +1,8 @@
 
 /* =========================================================
-   AYNA BOOK
-   Authentication System
-   Firebase SDK: 13.4.0
-   Password: Minimum 11 characters
+   AYNA BOOK - Secure Authentication
+   Firebase SDK 13.4.0
+   SMS OTP + Email/Password
    ========================================================= */
 
 import { auth, db, storage } from "./firebase.js";
@@ -14,13 +13,14 @@ import {
   sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  PhoneAuthProvider,
+  linkWithCredential
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
   doc,
   setDoc,
-  updateDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
@@ -31,118 +31,202 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
 
-/* ---------- Error Messages ---------- */
+export function normalizePhone(phone) {
+  let value = String(phone || "").replace(/[\s-]/g, "");
+
+  if (/^01[3-9]\d{8}$/.test(value)) {
+    value = "+88" + value;
+  } else if (/^8801[3-9]\d{8}$/.test(value)) {
+    value = "+" + value;
+  }
+
+  if (!/^\+8801[3-9]\d{8}$/.test(value)) {
+    throw new Error("সঠিক বাংলাদেশি মোবাইল নম্বর লিখুন।");
+  }
+
+  return value;
+}
+
 
 export function getAuthErrorMessage(error) {
-  const code = error?.code || "";
-
   const messages = {
-    "auth/email-already-in-use": "এই Gmail দিয়ে ইতিমধ্যে অ্যাকাউন্ট আছে।",
-    "auth/invalid-email": "Gmail ঠিকানাটি সঠিক নয়।",
-    "auth/weak-password": "পাসওয়ার্ড কমপক্ষে ১১ অক্ষরের হতে হবে।",
-    "auth/invalid-credential": "Gmail অথবা পাসওয়ার্ড সঠিক নয়।",
-    "auth/user-not-found": "এই Gmail দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।",
-    "auth/wrong-password": "পাসওয়ার্ড সঠিক নয়।",
-    "auth/too-many-requests": "অনেকবার চেষ্টা করা হয়েছে। পরে আবার চেষ্টা করুন।",
-    "auth/network-request-failed": "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
-    "auth/user-disabled": "এই অ্যাকাউন্টটি নিষ্ক্রিয়।",
-    "auth/operation-not-allowed": "Firebase Console-এ Email/Password Login চালু করুন।",
-    "permission-denied": "তথ্য সংরক্ষণের অনুমতি নেই। Firestore Rules পরীক্ষা করুন।"
+    "auth/email-already-in-use":
+      "এই Gmail দিয়ে অ্যাকাউন্ট আগে থেকেই আছে।",
+
+    "auth/invalid-email":
+      "Gmail ঠিকানা সঠিক নয়।",
+
+    "auth/weak-password":
+      "পাসওয়ার্ড কমপক্ষে ১১ অক্ষরের হতে হবে।",
+
+    "auth/invalid-credential":
+      "Gmail অথবা পাসওয়ার্ড সঠিক নয়।",
+
+    "auth/wrong-password":
+      "পাসওয়ার্ড সঠিক নয়।",
+
+    "auth/user-not-found":
+      "এই Gmail দিয়ে অ্যাকাউন্ট পাওয়া যায়নি।",
+
+    "auth/too-many-requests":
+      "অনেকবার চেষ্টা হয়েছে। পরে আবার চেষ্টা করুন।",
+
+    "auth/network-request-failed":
+      "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
+
+    "auth/operation-not-allowed":
+      "Firebase Console-এ প্রয়োজনীয় Sign-in provider চালু করুন।",
+
+    "auth/invalid-phone-number":
+      "মোবাইল নম্বর সঠিক নয়।",
+
+    "auth/invalid-verification-code":
+      "OTP সঠিক নয়।",
+
+    "auth/code-expired":
+      "OTP-এর মেয়াদ শেষ হয়েছে। নতুন OTP নিন।",
+
+    "auth/provider-already-linked":
+      "এই অ্যাকাউন্টে ফোন নম্বর আগে থেকেই যুক্ত আছে।",
+
+    "auth/credential-already-in-use":
+      "এই ফোন নম্বর অন্য অ্যাকাউন্টে যুক্ত আছে।",
+
+    "permission-denied":
+      "Firestore Rules তথ্য সংরক্ষণে বাধা দিয়েছে।"
   };
 
-  return messages[code] ||
+  return messages[error?.code] ||
     error?.message ||
     "একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।";
 }
 
 
-/* ---------- Password Validation ---------- */
+/* ---------- Send SMS OTP ---------- */
 
-function validatePassword(password) {
-  if (typeof password !== "string" || password.length < 11) {
-    throw new Error("পাসওয়ার্ড কমপক্ষে ১১ অক্ষরের হতে হবে।");
+export async function sendPhoneOtp(phone, appVerifier) {
+  const phoneNumber = normalizePhone(phone);
+
+  try {
+    auth.languageCode = "bn";
+
+    const { signInWithPhoneNumber } =
+      await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
+
+    return await signInWithPhoneNumber(
+      auth,
+      phoneNumber,
+      appVerifier
+    );
+
+  } catch (error) {
+    console.error("AYNA SMS OTP Error:", error);
+    throw new Error(getAuthErrorMessage(error));
   }
 }
 
 
-/* ---------- Save User Profile ---------- */
+/* ---------- Complete Registration ---------- */
 
-export async function saveUserProfile(user, extraData = {}) {
-  if (!user?.uid) {
-    throw new Error("ব্যবহারকারীর UID পাওয়া যায়নি।");
-  }
-
-  await setDoc(doc(db, "users", user.uid), {
-    uid: user.uid,
-    name: extraData.name || user.displayName || "",
-    displayName: extraData.name || user.displayName || "",
-    email: user.email || "",
-    phone: extraData.phone || "",
-    photoURL: extraData.photoURL || user.photoURL || "",
-    updatedAt: serverTimestamp()
-  }, { merge: true });
-
-  return true;
-}
-
-
-/* ---------- Registration ---------- */
-
-export async function registerUser(
+export async function completeRegistration({
   name,
   email,
   phone,
   password,
-  photoFile = null
-) {
-  let user = null;
-  let photoURL = "";
-
+  otp,
+  verificationId,
+  photoFile
+}) {
   const cleanName = String(name || "").trim();
   const cleanEmail = String(email || "").trim().toLowerCase();
-  const cleanPhone = String(phone || "").trim();
+  const cleanPhone = normalizePhone(phone);
+
+  if (!cleanName) throw new Error("আপনার নাম লিখুন।");
+
+  if (!cleanEmail) throw new Error("Gmail লিখুন।");
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+    throw new Error("সঠিক Gmail/Email লিখুন।");
+  }
+
+  if (typeof password !== "string" || password.length < 11) {
+    throw new Error("পাসওয়ার্ড কমপক্ষে ১১ অক্ষরের হতে হবে।");
+  }
+
+  if (!/^\d{6}$/.test(String(otp || ""))) {
+    throw new Error("৬ সংখ্যার OTP লিখুন।");
+  }
+
+  if (!verificationId) {
+    throw new Error("OTP Verification ID পাওয়া যায়নি। নতুন OTP নিন।");
+  }
+
+  // Create email account, or sign in to an existing account.
+  let user;
 
   try {
-    if (!cleanName) throw new Error("আপনার নাম লিখুন।");
-    if (!cleanEmail) throw new Error("আপনার Gmail লিখুন।");
-    if (!cleanPhone) throw new Error("আপনার ফোন নম্বর লিখুন।");
-
-    validatePassword(password);
-
-    // Create Firebase Authentication account
-    const credential = await createUserWithEmailAndPassword(
+    const result = await createUserWithEmailAndPassword(
       auth,
       cleanEmail,
       password
     );
 
-    user = credential.user;
+    user = result.user;
 
   } catch (error) {
-    console.error("AYNA BOOK Account Creation Error:", error);
+    if (error.code !== "auth/email-already-in-use") {
+      throw new Error(getAuthErrorMessage(error));
+    }
 
-    return {
-      success: false,
-      accountCreated: false,
-      profileSaved: false,
-      user: null,
-      message: getAuthErrorMessage(error)
-    };
+    try {
+      const result = await signInWithEmailAndPassword(
+        auth,
+        cleanEmail,
+        password
+      );
+
+      user = result.user;
+
+    } catch (loginError) {
+      throw new Error(
+        "এই Gmail আগে থেকেই আছে। সঠিক পাসওয়ার্ড দিয়ে চেষ্টা করুন।"
+      );
+    }
   }
 
-  // Account now exists. Do not report registration as failed
-  // merely because a later profile operation fails.
+  // Create phone credential from the SMS verification code.
+  const phoneCredential = PhoneAuthProvider.credential(
+    verificationId,
+    String(otp)
+  );
 
+  // Attach verified phone number to this email account.
+  try {
+    const linked = await linkWithCredential(
+      user,
+      phoneCredential
+    );
+
+    user = linked.user;
+
+  } catch (error) {
+    console.error("Phone linking error:", error);
+    throw new Error(getAuthErrorMessage(error));
+  }
+
+  let photoURL = "";
+
+  // Profile photo is optional.
   if (photoFile) {
+    if (!photoFile.type.startsWith("image/")) {
+      throw new Error("শুধু ছবির ফাইল ব্যবহার করুন।");
+    }
+
+    if (photoFile.size > 5 * 1024 * 1024) {
+      throw new Error("ছবির আকার সর্বোচ্চ ৫ MB হতে পারবে।");
+    }
+
     try {
-      if (!photoFile.type.startsWith("image/")) {
-        throw new Error("শুধু ছবির ফাইল ব্যবহার করুন।");
-      }
-
-      if (photoFile.size > 5 * 1024 * 1024) {
-        throw new Error("ছবির আকার সর্বোচ্চ ৫ MB হতে পারবে।");
-      }
-
       const photoRef = ref(
         storage,
         `users/${user.uid}/profile/profile-photo`
@@ -151,102 +235,69 @@ export async function registerUser(
       await uploadBytes(photoRef, photoFile);
       photoURL = await getDownloadURL(photoRef);
 
-    } catch (photoError) {
-      console.warn("Profile photo upload failed:", photoError);
+    } catch (error) {
+      console.warn("Profile photo upload failed:", error);
     }
   }
 
-  // Update Firebase Authentication display name
-  try {
-    await updateProfile(user, {
-      displayName: cleanName,
-      ...(photoURL ? { photoURL } : {})
-    });
-  } catch (profileError) {
-    console.warn("Authentication profile update failed:", profileError);
-  }
+  await updateProfile(user, {
+    displayName: cleanName,
+    ...(photoURL ? { photoURL } : {})
+  });
 
-  // Save profile in Firestore
-  try {
-    await saveUserProfile(user, {
+  await setDoc(
+    doc(db, "users", user.uid),
+    {
+      uid: user.uid,
       name: cleanName,
+      displayName: cleanName,
+      email: cleanEmail,
       phone: cleanPhone,
-      photoURL
-    });
+      phoneVerified: true,
+      photoURL,
+      plan: "personal",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    },
+    { merge: true }
+  );
 
-    return {
-      success: true,
-      accountCreated: true,
-      profileSaved: true,
-      photoUploaded: Boolean(photoURL),
-      user,
-      message: "AYNA BOOK অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।"
-    };
-
-  } catch (error) {
-    console.error("AYNA BOOK Firestore Profile Error:", error);
-
-    return {
-      success: true,
-      accountCreated: true,
-      profileSaved: false,
-      photoUploaded: Boolean(photoURL),
-      user,
-      message:
-        "আপনার অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু প্রোফাইল সংরক্ষণ হয়নি। আবার চেষ্টা করুন।"
-    };
-  }
+  return {
+    success: true,
+    user,
+    message: "AYNA BOOK Registration সফল হয়েছে।"
+  };
 }
 
 
-/* ---------- Login ---------- */
+/* ---------- Login: Gmail + Password ---------- */
 
-export async function loginUser(identifier, password) {
+export async function loginUser(email, password) {
   try {
-    const cleanIdentifier = String(identifier || "").trim();
-    const cleanPassword = String(password || "");
+    const cleanEmail = String(email || "").trim().toLowerCase();
 
-    if (!cleanIdentifier) {
-      throw new Error("নাম, ফোন নম্বর অথবা Gmail লিখুন।");
+    if (!cleanEmail || !password) {
+      throw new Error("Gmail ও পাসওয়ার্ড লিখুন।");
     }
 
-    validatePassword(cleanPassword);
-
-    // Name and phone login require a secure backend.
-    if (!cleanIdentifier.includes("@")) {
-      throw new Error(
-        "আপাতত Gmail দিয়ে Login করুন। নাম অথবা ফোন নম্বর দিয়ে Login চালু করতে নিরাপদ Backend প্রয়োজন।"
-      );
+    if (password.length < 11) {
+      throw new Error("পাসওয়ার্ড কমপক্ষে ১১ অক্ষরের হতে হবে।");
     }
 
-    const credential = await signInWithEmailAndPassword(
+    const result = await signInWithEmailAndPassword(
       auth,
-      cleanIdentifier.toLowerCase(),
-      cleanPassword
+      cleanEmail,
+      password
     );
-
-    const user = credential.user;
-
-    try {
-      await updateDoc(doc(db, "users", user.uid), {
-        lastLoginAt: serverTimestamp()
-      });
-    } catch (profileError) {
-      console.warn("Last login update warning:", profileError);
-    }
 
     return {
       success: true,
-      user,
-      message: "লগইন সফল হয়েছে।"
+      user: result.user
     };
 
   } catch (error) {
-    console.error("AYNA BOOK Login Error:", error);
-
     return {
       success: false,
-      user: null,
       message: getAuthErrorMessage(error)
     };
   }
@@ -257,22 +308,17 @@ export async function loginUser(identifier, password) {
 
 export async function resetPassword(email) {
   try {
-    const cleanEmail = String(email || "").trim().toLowerCase();
-
-    if (!cleanEmail) {
-      throw new Error("আপনার Gmail লিখুন।");
-    }
-
-    await sendPasswordResetEmail(auth, cleanEmail);
+    await sendPasswordResetEmail(
+      auth,
+      String(email || "").trim().toLowerCase()
+    );
 
     return {
       success: true,
-      message: "পাসওয়ার্ড পরিবর্তনের লিংক আপনার Gmail-এ পাঠানো হয়েছে।"
+      message: "Password Reset Email পাঠানো হয়েছে।"
     };
 
   } catch (error) {
-    console.error("Password Reset Error:", error);
-
     return {
       success: false,
       message: getAuthErrorMessage(error)
@@ -281,44 +327,18 @@ export async function resetPassword(email) {
 }
 
 
-/* ---------- Logout ---------- */
+/* ---------- Logout / Auth State ---------- */
 
 export async function logoutUser() {
-  try {
-    await signOut(auth);
-
-    return {
-      success: true,
-      message: "লগআউট সফল হয়েছে।"
-    };
-
-  } catch (error) {
-    return {
-      success: false,
-      message: getAuthErrorMessage(error)
-    };
-  }
+  await signOut(auth);
 }
-
-
-/* ---------- Authentication State ---------- */
 
 export function watchAuthState(callback) {
   return onAuthStateChanged(auth, callback);
 }
 
-
-/* ---------- Current User ---------- */
-
 export function getCurrentUser() {
   return auth.currentUser;
 }
 
-export function isUserLoggedIn() {
-  return Boolean(auth.currentUser);
-}
-
-
-/* ---------- System Ready ---------- */
-
-console.log("AYNA BOOK Authentication System Loaded.");
+console.log("AYNA BOOK Secure Authentication Loaded.");
