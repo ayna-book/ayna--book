@@ -14,11 +14,26 @@ service firebase.storage {
 
       /*
        * শুধু লগইন করা user নিজের ফাইল
-       * upload/read/update/delete করতে পারবে।
+       * read / upload / update / delete করতে পারবে।
+       *
+       * সর্বোচ্চ file size: 10 MB
+       * অনুমোদিত:
+       * - image/*
+       * - application/pdf
        */
-      allow read, write: if
+
+      allow read: if
         request.auth != null &&
         request.auth.uid == userId;
+
+      allow write: if
+        request.auth != null &&
+        request.auth.uid == userId &&
+        request.resource.size <= 10 * 1024 * 1024 &&
+        (
+          request.resource.contentType.matches('image/.*') ||
+          request.resource.contentType == 'application/pdf'
+        );
     }
 
 
@@ -30,9 +45,28 @@ service firebase.storage {
 
     match /posts/{userId}/{allPaths=**} {
 
-      allow read, write: if
+      /*
+       * শুধু login করা user নিজের post media
+       * upload/read/update/delete করতে পারবে।
+       *
+       * সর্বোচ্চ file size: 20 MB
+       * অনুমোদিত:
+       * - image/*
+       * - video/*
+       */
+
+      allow read: if
         request.auth != null &&
         request.auth.uid == userId;
+
+      allow write: if
+        request.auth != null &&
+        request.auth.uid == userId &&
+        request.resource.size <= 20 * 1024 * 1024 &&
+        (
+          request.resource.contentType.matches('image/.*') ||
+          request.resource.contentType.matches('video/.*')
+        );
     }
 
 
@@ -41,9 +75,10 @@ service firebase.storage {
        ================================================ */
 
     /*
-     * অন্য কোনো অজানা Storage path
-     * ডিফল্টভাবে বন্ধ থাকবে।
+     * অন্য কোনো Storage path
+     * ডিফল্টভাবে সম্পূর্ণ বন্ধ।
      */
+
     match /{allPaths=**} {
       allow read, write: if false;
     }
