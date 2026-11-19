@@ -1,170 +1,620 @@
+/* =========================================================
+   AYNA BOOK
+   Service Worker Update Manager
+   ========================================================= */
 
 (() => {
+
   "use strict";
 
-  const VERSION_URL = "./version.json";
-  const STORAGE_KEY = "ayna_book_installed_version";
 
-  let registration = null;
-  let latestVersion = null;
-  let updateBanner = null;
+  // =======================================================
+  // CONFIGURATION
+  // =======================================================
+
+  const VERSION_URL =
+    "./version.json";
+
+  const STORAGE_KEY =
+    "ayna_book_installed_version";
+
+  const CHECK_INTERVAL =
+    5 * 60 * 1000;
+
+
+  // =======================================================
+  // STATE
+  // =======================================================
+
+  let registration =
+    null;
+
+  let latestVersion =
+    null;
+
+  let updateBanner =
+    null;
+
+  let updateInProgress =
+    false;
+
+
+  // =======================================================
+  // CREATE UPDATE BANNER
+  // =======================================================
 
   function createBanner() {
-    if (updateBanner) return;
 
-    updateBanner = document.createElement("div");
+    if (
+      updateBanner ||
+      !document.body
+    ) {
 
-    Object.assign(updateBanner.style, {
-      position: "fixed",
-      bottom: "15px",
-      left: "12px",
-      right: "12px",
-      zIndex: "99999",
-      background: "#071b49",
-      color: "white",
-      padding: "16px",
-      border: "1px solid #00d9ff",
-      borderRadius: "14px",
-      boxShadow: "0 4px 20px #0008",
-      textAlign: "center",
-      fontFamily: "Arial, sans-serif"
-    });
+      return;
 
-    const message = document.createElement("p");
+    }
+
+
+    updateBanner =
+      document.createElement(
+        "div"
+      );
+
+
+    updateBanner.id =
+      "ayna-update-banner";
+
+
+    Object.assign(
+      updateBanner.style,
+      {
+
+        position:
+          "fixed",
+
+        bottom:
+          "15px",
+
+        left:
+          "12px",
+
+        right:
+          "12px",
+
+        zIndex:
+          "99999",
+
+        background:
+          "#071b49",
+
+        color:
+          "#ffffff",
+
+        padding:
+          "16px",
+
+        border:
+          "1px solid #00d9ff",
+
+        borderRadius:
+          "14px",
+
+        boxShadow:
+          "0 4px 20px #0008",
+
+        textAlign:
+          "center",
+
+        fontFamily:
+          "Arial, sans-serif"
+
+      }
+    );
+
+
+    const message =
+      document.createElement(
+        "p"
+      );
+
+
     message.textContent =
       "🚀 AYNA BOOK-এর নতুন সংস্করণ পাওয়া গেছে!";
 
-    const button = document.createElement("button");
-    button.textContent = "Update Now";
 
-    Object.assign(button.style, {
-      background: "#00bde9",
-      color: "#071b49",
-      padding: "12px 25px",
-      border: "0",
-      borderRadius: "8px",
-      fontWeight: "bold"
-    });
+    Object.assign(
+      message.style,
+      {
 
-    button.addEventListener("click", applyUpdate);
+        margin:
+          "0 0 12px",
 
-    updateBanner.append(message, button);
-    document.body.appendChild(updateBanner);
-  }
+        fontSize:
+          "15px",
 
-  function showUpdate(version) {
-    latestVersion = version;
-    createBanner();
-  }
+        lineHeight:
+          "1.5"
 
-  function applyUpdate() {
-    if (!latestVersion) return;
+      }
+    );
 
-    localStorage.setItem(STORAGE_KEY, latestVersion);
 
-    if (registration && registration.waiting) {
-      navigator.serviceWorker.addEventListener(
-        "controllerchange",
-        () => location.reload(),
-        { once: true }
+    const button =
+      document.createElement(
+        "button"
       );
 
-      registration.waiting.postMessage("SKIP_WAITING");
-    } else {
-      location.reload();
-    }
+
+    button.type =
+      "button";
+
+
+    button.textContent =
+      "Update Now";
+
+
+    Object.assign(
+      button.style,
+      {
+
+        background:
+          "#00bde9",
+
+        color:
+          "#071b49",
+
+        padding:
+          "12px 25px",
+
+        border:
+          "0",
+
+        borderRadius:
+          "8px",
+
+        fontWeight:
+          "bold",
+
+        cursor:
+          "pointer",
+
+        fontSize:
+          "15px"
+
+      }
+    );
+
+
+    button.addEventListener(
+      "click",
+      applyUpdate
+    );
+
+
+    updateBanner.append(
+      message,
+      button
+    );
+
+
+    document.body.appendChild(
+      updateBanner
+    );
+
   }
 
-  async function checkVersion() {
-    if (!navigator.onLine) return;
 
-    try {
-      const response = await fetch(
-        VERSION_URL + "?check=" + Date.now(),
-        { cache: "no-store" }
-      );
+  // =======================================================
+  // SHOW UPDATE
+  // =======================================================
 
-      if (!response.ok) {
-        throw new Error("Version check failed");
-      }
+  function showUpdate(
+    version
+  ) {
 
-      const data = await response.json();
-
-      if (!data.version) return;
-
-      const installed =
-        localStorage.getItem(STORAGE_KEY);
-
-      if (!installed) {
-        localStorage.setItem(
-          STORAGE_KEY,
-          data.version
-        );
-        return;
-      }
-
-      if (installed !== data.version) {
-        showUpdate(data.version);
-      }
-
-    } catch (error) {
-      console.warn("AYNA Update:", error.message);
-    }
-  }
-
-  async function startUpdateSystem() {
-    if (!("serviceWorker" in navigator)) {
-      console.warn("Service Worker not supported");
+    if (!version) {
       return;
     }
 
+
+    latestVersion =
+      String(
+        version
+      );
+
+
+    createBanner();
+
+  }
+
+
+  // =======================================================
+  // APPLY UPDATE
+  // =======================================================
+
+  function applyUpdate() {
+
+    if (
+      !latestVersion ||
+      updateInProgress
+    ) {
+
+      return;
+
+    }
+
+
+    updateInProgress =
+      true;
+
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      latestVersion
+    );
+
+
+    // -----------------------------------------------------
+    // Waiting Service Worker থাকলে
+    // -----------------------------------------------------
+
+    if (
+      registration &&
+      registration.waiting
+    ) {
+
+      const waitingWorker =
+        registration.waiting;
+
+
+      navigator.serviceWorker.addEventListener(
+        "controllerchange",
+        () => {
+
+          window.location.reload();
+
+        },
+        {
+          once: true
+        }
+      );
+
+
+      // sw.js-এর message handler-এর সঙ্গে মিল রেখে
+      waitingWorker.postMessage({
+        type:
+          "SKIP_WAITING"
+      });
+
+
+      return;
+
+    }
+
+
+    // -----------------------------------------------------
+    // Waiting worker না থাকলে reload
+    // -----------------------------------------------------
+
+    window.location.reload();
+
+  }
+
+
+  // =======================================================
+  // CHECK VERSION
+  // =======================================================
+
+  async function checkVersion() {
+
+    if (
+      !navigator.onLine
+    ) {
+
+      return;
+
+    }
+
+
     try {
+
+      const response =
+        await fetch(
+          VERSION_URL +
+          "?check=" +
+          Date.now(),
+          {
+            cache:
+              "no-store",
+
+            headers: {
+              "Accept":
+                "application/json"
+            }
+          }
+        );
+
+
+      if (
+        !response.ok
+      ) {
+
+        throw new Error(
+          "Version check failed: HTTP " +
+          response.status
+        );
+
+      }
+
+
+      const data =
+        await response.json();
+
+
+      if (
+        !data ||
+        !data.version
+      ) {
+
+        console.warn(
+          "AYNA Update: version.json-এ version পাওয়া যায়নি।"
+        );
+
+        return;
+
+      }
+
+
+      const serverVersion =
+        String(
+          data.version
+        ).trim();
+
+
+      if (!serverVersion) {
+        return;
+      }
+
+
+      const installedVersion =
+        localStorage.getItem(
+          STORAGE_KEY
+        );
+
+
+      // ---------------------------------------------------
+      // প্রথমবার version save
+      // ---------------------------------------------------
+
+      if (
+        !installedVersion
+      ) {
+
+        localStorage.setItem(
+          STORAGE_KEY,
+          serverVersion
+        );
+
+        return;
+
+      }
+
+
+      // ---------------------------------------------------
+      // নতুন version পাওয়া গেছে
+      // ---------------------------------------------------
+
+      if (
+        installedVersion !==
+        serverVersion
+      ) {
+
+        showUpdate(
+          serverVersion
+        );
+
+      }
+
+
+    } catch (error) {
+
+      console.warn(
+        "AYNA Update:",
+        error?.message ||
+        error
+      );
+
+    }
+
+  }
+
+
+  // =======================================================
+  // START UPDATE SYSTEM
+  // =======================================================
+
+  async function startUpdateSystem() {
+
+    if (
+      !("serviceWorker" in navigator)
+    ) {
+
+      console.warn(
+        "AYNA BOOK: Service Worker not supported."
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      // ---------------------------------------------------
+      // Register Service Worker
+      // ---------------------------------------------------
+
       registration =
-        await navigator.serviceWorker.register("./sw.js");
+        await navigator.serviceWorker.register(
+          "./sw.js",
+          {
+            scope:
+              "./"
+          }
+        );
+
+
+      console.log(
+        "AYNA BOOK: Service Worker registered."
+      );
+
+
+      // ---------------------------------------------------
+      // Initial version check
+      // ---------------------------------------------------
 
       await checkVersion();
 
-      registration.addEventListener("updatefound", () => {
-        const worker = registration.installing;
-        if (!worker) return;
 
-        worker.addEventListener("statechange", () => {
-          if (
-            worker.state === "installed" &&
-            navigator.serviceWorker.controller
-          ) {
-            checkVersion();
+      // ---------------------------------------------------
+      // New Service Worker found
+      // ---------------------------------------------------
+
+      registration.addEventListener(
+        "updatefound",
+        () => {
+
+          const worker =
+            registration.installing;
+
+
+          if (!worker) {
+            return;
           }
-        });
-      });
 
-      if (registration.waiting) {
+
+          worker.addEventListener(
+            "statechange",
+            () => {
+
+              if (
+                worker.state ===
+                  "installed" &&
+                navigator.serviceWorker.controller
+              ) {
+
+                console.log(
+                  "AYNA BOOK: New Service Worker installed."
+                );
+
+
+                checkVersion();
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+
+      // ---------------------------------------------------
+      // Waiting worker
+      // ---------------------------------------------------
+
+      if (
+        registration.waiting
+      ) {
+
         checkVersion();
+
       }
 
-      // প্রতি ৫ মিনিটে নতুন সংস্করণ পরীক্ষা
-      setInterval(() => {
-        checkVersion();
-        registration.update().catch(console.warn);
-      }, 5 * 60 * 1000);
+
+      // ---------------------------------------------------
+      // Periodic update check
+      // প্রতি ৫ মিনিটে
+      // ---------------------------------------------------
+
+      setInterval(
+        async () => {
+
+          if (
+            !navigator.onLine
+          ) {
+
+            return;
+
+          }
+
+
+          await checkVersion();
+
+
+          try {
+
+            await registration.update();
+
+          } catch (error) {
+
+            console.warn(
+              "AYNA BOOK Service Worker update check failed:",
+              error
+            );
+
+          }
+
+        },
+        CHECK_INTERVAL
+      );
+
+
+      // ---------------------------------------------------
+      // Page visible হলে update check
+      // ---------------------------------------------------
 
       document.addEventListener(
         "visibilitychange",
         () => {
-          if (document.visibilityState === "visible") {
+
+          if (
+            document.visibilityState ===
+            "visible"
+          ) {
+
             checkVersion();
+
           }
+
         }
       );
 
+
     } catch (error) {
-      console.error("AYNA Update Error:", error);
+
+      console.error(
+        "AYNA BOOK Update System Error:",
+        error
+      );
+
     }
+
   }
+
+
+  // =======================================================
+  // START AFTER PAGE LOAD
+  // =======================================================
 
   window.addEventListener(
     "load",
     startUpdateSystem,
-    { once: true }
+    {
+      once:
+        true
+    }
   );
+
+
 })();
