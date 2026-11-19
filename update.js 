@@ -1,620 +1,567 @@
-/* =========================================================
-   AYNA BOOK
-   Service Worker Update Manager
-   ========================================================= */
+// =========================================================
+// AYNA BOOK
+// Update Manager
+// Version: 1.0.0
+// =========================================================
 
-(() => {
+"use strict";
 
-  "use strict";
+const VERSION_URL = "./version.json";
+const STORAGE_KEY = "ayna_book_installed_version";
 
-
-  // =======================================================
-  // CONFIGURATION
-  // =======================================================
-
-  const VERSION_URL =
-    "./version.json";
-
-  const STORAGE_KEY =
-    "ayna_book_installed_version";
-
-  const CHECK_INTERVAL =
-    5 * 60 * 1000;
+let updateCheckTimer = null;
+let isUpdating = false;
 
 
-  // =======================================================
-  // STATE
-  // =======================================================
+// ---------------------------------------------------------
+// Read Current Version
+// ---------------------------------------------------------
 
-  let registration =
-    null;
+async function getLatestVersion() {
+  try {
+    const response = await fetch(
+      `${VERSION_URL}?t=${Date.now()}`,
+      {
+        method: "GET",
+        cache: "no-store"
+      }
+    );
 
-  let latestVersion =
-    null;
-
-  let updateBanner =
-    null;
-
-  let updateInProgress =
-    false;
-
-
-  // =======================================================
-  // CREATE UPDATE BANNER
-  // =======================================================
-
-  function createBanner() {
-
-    if (
-      updateBanner ||
-      !document.body
-    ) {
-
-      return;
-
+    if (!response.ok) {
+      throw new Error(
+        `Version file পাওয়া যায়নি। HTTP ${response.status}`
+      );
     }
 
+    const data = await response.json();
 
-    updateBanner =
+    const version = String(
+      data?.version || ""
+    ).trim();
+
+    if (!version) {
+      throw new Error(
+        "version.json-এ version পাওয়া যায়নি।"
+      );
+    }
+
+    return version;
+
+  } catch (error) {
+    console.error(
+      "AYNA BOOK Version Check Error:",
+      error
+    );
+
+    return null;
+  }
+}
+
+
+// ---------------------------------------------------------
+// Installed Version
+// ---------------------------------------------------------
+
+function getInstalledVersion() {
+  return (
+    localStorage.getItem(
+      STORAGE_KEY
+    ) || ""
+  ).trim();
+}
+
+
+function saveInstalledVersion(version) {
+  if (!version) {
+    return;
+  }
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    version
+  );
+}
+
+
+// ---------------------------------------------------------
+// Compare Versions
+// ---------------------------------------------------------
+
+function compareVersions(a, b) {
+  const first =
+    String(a || "")
+      .split(".")
+      .map(Number);
+
+  const second =
+    String(b || "")
+      .split(".")
+      .map(Number);
+
+  const length =
+    Math.max(
+      first.length,
+      second.length
+    );
+
+  for (let i = 0; i < length; i++) {
+    const x =
+      Number.isFinite(first[i])
+        ? first[i]
+        : 0;
+
+    const y =
+      Number.isFinite(second[i])
+        ? second[i]
+        : 0;
+
+    if (x > y) {
+      return 1;
+    }
+
+    if (x < y) {
+      return -1;
+    }
+  }
+
+  return 0;
+}
+
+
+// ---------------------------------------------------------
+// Update Banner
+// ---------------------------------------------------------
+
+function showUpdateBanner(version) {
+
+  let banner =
+    document.getElementById(
+      "ayna-update-banner"
+    );
+
+  if (!banner) {
+
+    banner =
       document.createElement(
         "div"
       );
 
-
-    updateBanner.id =
+    banner.id =
       "ayna-update-banner";
 
-
-    Object.assign(
-      updateBanner.style,
-      {
-
-        position:
-          "fixed",
-
-        bottom:
-          "15px",
-
-        left:
-          "12px",
-
-        right:
-          "12px",
-
-        zIndex:
-          "99999",
-
-        background:
-          "#071b49",
-
-        color:
-          "#ffffff",
-
-        padding:
-          "16px",
-
-        border:
-          "1px solid #00d9ff",
-
-        borderRadius:
-          "14px",
-
-        boxShadow:
-          "0 4px 20px #0008",
-
-        textAlign:
-          "center",
-
-        fontFamily:
-          "Arial, sans-serif"
-
-      }
-    );
-
-
-    const message =
-      document.createElement(
-        "p"
-      );
-
-
-    message.textContent =
-      "🚀 AYNA BOOK-এর নতুন সংস্করণ পাওয়া গেছে!";
-
-
-    Object.assign(
-      message.style,
-      {
-
-        margin:
-          "0 0 12px",
-
-        fontSize:
-          "15px",
-
-        lineHeight:
-          "1.5"
-
-      }
-    );
-
-
-    const button =
-      document.createElement(
-        "button"
-      );
-
-
-    button.type =
-      "button";
-
-
-    button.textContent =
-      "Update Now";
-
-
-    Object.assign(
-      button.style,
-      {
-
-        background:
-          "#00bde9",
-
-        color:
-          "#071b49",
-
-        padding:
-          "12px 25px",
-
-        border:
-          "0",
-
-        borderRadius:
-          "8px",
-
-        fontWeight:
-          "bold",
-
-        cursor:
-          "pointer",
-
-        fontSize:
-          "15px"
-
-      }
-    );
-
-
-    button.addEventListener(
-      "click",
-      applyUpdate
-    );
-
-
-    updateBanner.append(
-      message,
-      button
-    );
-
+    banner.style.cssText = `
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 99999;
+      background: #1A2233;
+      border: 1px solid #FFD700;
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.45);
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    `;
 
     document.body.appendChild(
-      updateBanner
+      banner
     );
-
   }
 
+  banner.innerHTML = `
+    <div>
+      <strong style="color:#FFD700;">
+        AYNA BOOK Update Available
+      </strong>
+      <div style="
+        margin-top:5px;
+        color:#A9B0BC;
+        font-size:14px;
+      ">
+        নতুন version ${version} পাওয়া গেছে।
+      </div>
+    </div>
 
-  // =======================================================
-  // SHOW UPDATE
-  // =======================================================
+    <button
+      id="ayna-update-button"
+      type="button"
+      style="
+        border:1px solid #4A4A2A;
+        background:#FFD700;
+        color:#0A0F1E;
+        border-radius:10px;
+        padding:10px 16px;
+        font-weight:700;
+        cursor:pointer;
+      "
+    >
+      Update Now
+    </button>
+  `;
 
-  function showUpdate(
-    version
+  const updateButton =
+    document.getElementById(
+      "ayna-update-button"
+    );
+
+  if (updateButton) {
+    updateButton.onclick =
+      () => activateUpdate();
+  }
+}
+
+
+// ---------------------------------------------------------
+// Service Worker Registration
+// ---------------------------------------------------------
+
+async function registerServiceWorker() {
+
+  if (
+    !("serviceWorker" in navigator)
   ) {
+    console.warn(
+      "AYNA BOOK: Service Worker supported নয়।"
+    );
 
-    if (!version) {
-      return;
-    }
+    return null;
+  }
 
+  try {
 
-    latestVersion =
-      String(
-        version
+    const registration =
+      await navigator.serviceWorker.register(
+        "./sw.js",
+        {
+          scope: "./"
+        }
       );
 
-
-    createBanner();
-
-  }
-
-
-  // =======================================================
-  // APPLY UPDATE
-  // =======================================================
-
-  function applyUpdate() {
-
-    if (
-      !latestVersion ||
-      updateInProgress
-    ) {
-
-      return;
-
-    }
-
-
-    updateInProgress =
-      true;
-
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      latestVersion
+    console.log(
+      "AYNA BOOK Service Worker Registered:",
+      registration.scope
     );
 
+    return registration;
 
-    // -----------------------------------------------------
-    // Waiting Service Worker থাকলে
-    // -----------------------------------------------------
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK Service Worker Registration Error:",
+      error
+    );
+
+    return null;
+  }
+}
+
+
+// ---------------------------------------------------------
+// Activate Waiting Service Worker
+// ---------------------------------------------------------
+
+function activateWaitingWorker(
+  registration
+) {
+
+  if (
+    !registration ||
+    !registration.waiting
+  ) {
+    return false;
+  }
+
+  isUpdating = true;
+
+  registration.waiting.postMessage({
+    type: "SKIP_WAITING"
+  });
+
+  return true;
+}
+
+
+// ---------------------------------------------------------
+// Activate Update
+// ---------------------------------------------------------
+
+async function activateUpdate() {
+
+  if (isUpdating) {
+    return;
+  }
+
+  try {
+
+    isUpdating = true;
+
+    const registration =
+      await navigator.serviceWorker.getRegistration(
+        "./"
+      );
 
     if (
       registration &&
       registration.waiting
     ) {
 
-      const waitingWorker =
-        registration.waiting;
-
-
-      navigator.serviceWorker.addEventListener(
-        "controllerchange",
-        () => {
-
-          window.location.reload();
-
-        },
-        {
-          once: true
-        }
-      );
-
-
-      // sw.js-এর message handler-এর সঙ্গে মিল রেখে
-      waitingWorker.postMessage({
-        type:
-          "SKIP_WAITING"
+      registration.waiting.postMessage({
+        type: "SKIP_WAITING"
       });
 
-
       return;
-
     }
 
+    if (registration) {
+      await registration.update();
+    }
 
-    // -----------------------------------------------------
-    // Waiting worker না থাকলে reload
-    // -----------------------------------------------------
+    window.location.reload(
+      true
+    );
 
-    window.location.reload();
+  } catch (error) {
 
+    console.error(
+      "AYNA BOOK Update Activation Error:",
+      error
+    );
+
+    isUpdating = false;
+
+    alert(
+      "AYNA BOOK update করা যায়নি। আবার চেষ্টা করুন।"
+    );
+  }
+}
+
+
+// ---------------------------------------------------------
+// Check For Update
+// ---------------------------------------------------------
+
+async function checkForUpdate() {
+
+  const latestVersion =
+    await getLatestVersion();
+
+  if (!latestVersion) {
+    return false;
   }
 
+  const installedVersion =
+    getInstalledVersion();
 
-  // =======================================================
-  // CHECK VERSION
-  // =======================================================
+  // প্রথমবার version সংরক্ষণ
+  if (!installedVersion) {
 
-  async function checkVersion() {
+    saveInstalledVersion(
+      latestVersion
+    );
 
-    if (
-      !navigator.onLine
-    ) {
+    console.log(
+      "AYNA BOOK Initial Version:",
+      latestVersion
+    );
 
-      return;
-
-    }
-
-
-    try {
-
-      const response =
-        await fetch(
-          VERSION_URL +
-          "?check=" +
-          Date.now(),
-          {
-            cache:
-              "no-store",
-
-            headers: {
-              "Accept":
-                "application/json"
-            }
-          }
-        );
-
-
-      if (
-        !response.ok
-      ) {
-
-        throw new Error(
-          "Version check failed: HTTP " +
-          response.status
-        );
-
-      }
-
-
-      const data =
-        await response.json();
-
-
-      if (
-        !data ||
-        !data.version
-      ) {
-
-        console.warn(
-          "AYNA Update: version.json-এ version পাওয়া যায়নি।"
-        );
-
-        return;
-
-      }
-
-
-      const serverVersion =
-        String(
-          data.version
-        ).trim();
-
-
-      if (!serverVersion) {
-        return;
-      }
-
-
-      const installedVersion =
-        localStorage.getItem(
-          STORAGE_KEY
-        );
-
-
-      // ---------------------------------------------------
-      // প্রথমবার version save
-      // ---------------------------------------------------
-
-      if (
-        !installedVersion
-      ) {
-
-        localStorage.setItem(
-          STORAGE_KEY,
-          serverVersion
-        );
-
-        return;
-
-      }
-
-
-      // ---------------------------------------------------
-      // নতুন version পাওয়া গেছে
-      // ---------------------------------------------------
-
-      if (
-        installedVersion !==
-        serverVersion
-      ) {
-
-        showUpdate(
-          serverVersion
-        );
-
-      }
-
-
-    } catch (error) {
-
-      console.warn(
-        "AYNA Update:",
-        error?.message ||
-        error
-      );
-
-    }
-
+    return false;
   }
 
+  const comparison =
+    compareVersions(
+      latestVersion,
+      installedVersion
+    );
 
-  // =======================================================
-  // START UPDATE SYSTEM
-  // =======================================================
+  if (comparison > 0) {
 
-  async function startUpdateSystem() {
+    console.log(
+      "AYNA BOOK New Version Available:",
+      latestVersion
+    );
 
-    if (
-      !("serviceWorker" in navigator)
-    ) {
+    showUpdateBanner(
+      latestVersion
+    );
 
-      console.warn(
-        "AYNA BOOK: Service Worker not supported."
-      );
+    return true;
+  }
 
-      return;
+  console.log(
+    "AYNA BOOK: Already up to date.",
+    latestVersion
+  );
 
-    }
-
-
-    try {
-
-      // ---------------------------------------------------
-      // Register Service Worker
-      // ---------------------------------------------------
-
-      registration =
-        await navigator.serviceWorker.register(
-          "./sw.js",
-          {
-            scope:
-              "./"
-          }
-        );
+  return false;
+}
 
 
-      console.log(
-        "AYNA BOOK: Service Worker registered."
-      );
+// ---------------------------------------------------------
+// Service Worker Update Handling
+// ---------------------------------------------------------
 
+async function setupServiceWorkerUpdates() {
 
-      // ---------------------------------------------------
-      // Initial version check
-      // ---------------------------------------------------
+  const registration =
+    await registerServiceWorker();
 
-      await checkVersion();
+  if (!registration) {
+    return;
+  }
 
+  if (
+    registration.waiting
+  ) {
+    console.log(
+      "AYNA BOOK: Waiting Service Worker found."
+    );
 
-      // ---------------------------------------------------
-      // New Service Worker found
-      // ---------------------------------------------------
+    activateWaitingWorker(
+      registration
+    );
 
-      registration.addEventListener(
-        "updatefound",
+    return;
+  }
+
+  registration.addEventListener(
+    "updatefound",
+    () => {
+
+      const newWorker =
+        registration.installing;
+
+      if (!newWorker) {
+        return;
+      }
+
+      newWorker.addEventListener(
+        "statechange",
         () => {
 
-          const worker =
-            registration.installing;
-
-
-          if (!worker) {
-            return;
-          }
-
-
-          worker.addEventListener(
-            "statechange",
-            () => {
-
-              if (
-                worker.state ===
-                  "installed" &&
-                navigator.serviceWorker.controller
-              ) {
-
-                console.log(
-                  "AYNA BOOK: New Service Worker installed."
-                );
-
-
-                checkVersion();
-
-              }
-
-            }
-          );
-
-        }
-      );
-
-
-      // ---------------------------------------------------
-      // Waiting worker
-      // ---------------------------------------------------
-
-      if (
-        registration.waiting
-      ) {
-
-        checkVersion();
-
-      }
-
-
-      // ---------------------------------------------------
-      // Periodic update check
-      // প্রতি ৫ মিনিটে
-      // ---------------------------------------------------
-
-      setInterval(
-        async () => {
-
           if (
-            !navigator.onLine
+            newWorker.state ===
+            "installed" &&
+            navigator.serviceWorker.controller
           ) {
 
-            return;
-
-          }
-
-
-          await checkVersion();
-
-
-          try {
-
-            await registration.update();
-
-          } catch (error) {
-
-            console.warn(
-              "AYNA BOOK Service Worker update check failed:",
-              error
+            console.log(
+              "AYNA BOOK: New Service Worker installed."
             );
 
+            showUpdateBanner(
+              "নতুন"
+            );
           }
-
-        },
-        CHECK_INTERVAL
-      );
-
-
-      // ---------------------------------------------------
-      // Page visible হলে update check
-      // ---------------------------------------------------
-
-      document.addEventListener(
-        "visibilitychange",
-        () => {
-
-          if (
-            document.visibilityState ===
-            "visible"
-          ) {
-
-            checkVersion();
-
-          }
-
         }
       );
-
-
-    } catch (error) {
-
-      console.error(
-        "AYNA BOOK Update System Error:",
-        error
-      );
-
-    }
-
-  }
-
-
-  // =======================================================
-  // START AFTER PAGE LOAD
-  // =======================================================
-
-  window.addEventListener(
-    "load",
-    startUpdateSystem,
-    {
-      once:
-        true
     }
   );
 
+  navigator.serviceWorker.addEventListener(
+    "controllerchange",
+    () => {
 
-})();
+      if (!isUpdating) {
+        return;
+      }
+
+      window.location.reload();
+    }
+  );
+}
+
+
+// ---------------------------------------------------------
+// Start Update Manager
+// ---------------------------------------------------------
+
+async function startUpdateManager() {
+
+  try {
+
+    await setupServiceWorkerUpdates();
+
+    await checkForUpdate();
+
+    // প্রতি ৫ মিনিটে update check
+    updateCheckTimer =
+      setInterval(
+        () => {
+          checkForUpdate();
+        },
+        5 * 60 * 1000
+      );
+
+    console.log(
+      "AYNA BOOK Update Manager Started."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK Update Manager Error:",
+      error
+    );
+  }
+}
+
+
+// ---------------------------------------------------------
+// Visibility Change
+// ---------------------------------------------------------
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+
+    if (
+      document.visibilityState ===
+      "visible"
+    ) {
+      checkForUpdate();
+    }
+  }
+);
+
+
+// ---------------------------------------------------------
+// Start After DOM Ready
+// ---------------------------------------------------------
+
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    startUpdateManager
+  );
+
+} else {
+
+  startUpdateManager();
+}
+
+
+// ---------------------------------------------------------
+// Public API
+// ---------------------------------------------------------
+
+window.AYNA_UPDATE = {
+  check: checkForUpdate,
+  update: activateUpdate,
+  getInstalledVersion,
+  saveInstalledVersion
+};
+
+
+console.log(
+  "AYNA BOOK — update.js loaded successfully."
+);
