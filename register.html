@@ -1,184 +1,834 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK - World Class Registration</title>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #0b132b;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            width: 100%;
-            max-width: 480px;
-            background: #1c2541;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-            border: 1px solid #3a506b;
-        }
-        .logo-title {
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            color: #ff007f;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #8d99ae;
-        }
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            background: #0b132b;
-            border: 1px solid #48cae4;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .form-control:focus {
-            border-color: #ff007f;
-            box-shadow: 0 0 8px rgba(255, 0, 127, 0.3);
-        }
-        .password-container {
-            position: relative;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #8d99ae;
-        }
-        .btn-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-        }
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            text-align: center;
-        }
-        .btn-save {
-            background: linear-gradient(135deg, #4361ee, #3a0ca3);
-            color: white;
-        }
-        .btn-save:hover {
-            background: linear-gradient(135deg, #3a0ca3, #4361ee);
-        }
-        .btn-login {
-            background: linear-gradient(135deg, #2ec4b6, #25a18e);
-            color: white;
-        }
-        .btn-login:hover {
-            background: linear-gradient(135deg, #25a18e, #2ec4b6);
-        }
-    </style>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#0A0F1E"
+  >
+
+  <meta
+    name="description"
+    content="AYNA BOOK — Create your account"
+  >
+
+  <title>AYNA BOOK — Register</title>
+
+  <link
+    rel="manifest"
+    href="./manifest.webmanifest"
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="./icon-192.png"
+  >
+
+  <link
+    rel="stylesheet"
+    href="./styles.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="./ayna-ui-patch.css"
+  >
+
 </head>
+
+
 <body>
 
-<div class="container">
-    <div class="logo-title">AYNA BOOK</div>
-    <form id="registrationForm" action="dashboard.php" method="POST" enctype="multipart/form-data">
-        
-        <!-- প্রোফাইল ছবি আপলোড -->
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <header class="site-header">
+
+    <div class="header-inner">
+
+      <div class="header-left">
+
+        <a
+          href="./index.html"
+          class="dashboard-icon"
+          aria-label="AYNA BOOK Home"
+          title="Home"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </a>
+
+      </div>
+
+
+      <div class="header-center">
+
+        <a
+          href="./index.html"
+          class="brand"
+          aria-label="AYNA BOOK"
+        >
+          AYNA BOOK
+        </a>
+
+      </div>
+
+
+      <div class="header-right">
+
+        <span
+          class="glowing-star"
+          aria-hidden="true"
+        >
+          ★
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <nav
+      class="main-nav"
+      aria-label="Main Navigation"
+    >
+
+      <a href="./index.html">
+        Home
+      </a>
+
+      <a href="./login.html">
+        Login
+      </a>
+
+      <a
+        href="./register.html"
+        class="active"
+      >
+        Register
+      </a>
+
+      <a href="./profile.html">
+        Profile
+      </a>
+
+      <a href="./chat.html">
+        Messages
+      </a>
+
+    </nav>
+
+  </header>
+
+
+  <!-- =====================================================
+       NETWORK STATUS
+       ===================================================== -->
+
+  <div
+    id="network-status-badge"
+    aria-live="polite"
+  >
+    Checking...
+  </div>
+
+
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
+
+  <main class="app-container">
+
+    <section class="form-container">
+
+      <h1>
+        Create AYNA BOOK Account
+      </h1>
+
+      <p class="text-muted">
+        নতুন AYNA BOOK অ্যাকাউন্ট তৈরি করুন।
+      </p>
+
+
+      <!-- =================================================
+           MESSAGE
+           ================================================= -->
+
+      <div
+        id="message"
+        class="message"
+        aria-live="polite"
+      ></div>
+
+
+      <!-- =================================================
+           REGISTRATION FORM
+           ================================================= -->
+
+      <form
+        id="registrationForm"
+        novalidate
+      >
+
+        <!-- NAME -->
+
         <div class="form-group">
-            <label><i class="fa-solid fa-camera"></i> প্রোফাইল ছবি আপলোড</label>
-            <input type="file" name="profile_pic" class="form-control" accept="image/*">
+
+          <label
+            for="fullname"
+          >
+            👤 পূর্ণ নাম
+          </label>
+
+          <input
+            id="fullname"
+            name="fullname"
+            type="text"
+            class="form-control"
+            placeholder="আপনার পূর্ণ নাম লিখুন"
+            maxlength="100"
+            autocomplete="name"
+            required
+          >
+
         </div>
 
-        <!-- নাম -->
+
+        <!-- EMAIL -->
+
         <div class="form-group">
-            <label><i class="fa-solid fa-user"></i> পূর্ণ নাম</label>
-            <input type="text" name="fullname" class="form-control" placeholder="আপনার নাম লিখুন" required>
+
+          <label
+            for="email"
+          >
+            ✉️ Gmail / Email Address
+          </label>
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            class="form-control"
+            placeholder="example@gmail.com"
+            autocomplete="email"
+            required
+          >
+
         </div>
 
-        <!-- ফোন নম্বর -->
+
+        <!-- PASSWORD -->
+
         <div class="form-group">
-            <label><i class="fa-solid fa-phone"></i> মোবাইল নম্বর</label>
-            <input type="tel" name="phone" class="form-control" placeholder="০১৭xxxxxxxx" pattern="[0-1][0-9]{10}" required>
+
+          <label
+            for="password"
+          >
+            🔐 Password
+          </label>
+
+          <div style="position:relative;">
+
+            <input
+              id="password"
+              name="password"
+              type="password"
+              class="form-control"
+              placeholder="কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড"
+              minlength="6"
+              autocomplete="new-password"
+              required
+              style="padding-right:50px;"
+            >
+
+            <button
+              id="togglePassword"
+              type="button"
+              aria-label="Show password"
+              title="Show password"
+              style="
+                position:absolute;
+                right:10px;
+                top:50%;
+                transform:translateY(-50%);
+                background:transparent;
+                border:0;
+                color:#A9B0BC;
+                cursor:pointer;
+                font-size:18px;
+              "
+            >
+              👁
+            </button>
+
+          </div>
+
         </div>
 
-        <!-- জিমেইল -->
+
+        <!-- CONFIRM PASSWORD -->
+
         <div class="form-group">
-            <label><i class="fa-solid fa-envelope"></i> জিমেইল অ্যাড্রেস</label>
-            <input type="email" name="email" class="form-control" placeholder="example@gmail.com" required>
+
+          <label
+            for="confirm-password"
+          >
+            🔐 Confirm Password
+          </label>
+
+          <div style="position:relative;">
+
+            <input
+              id="confirm-password"
+              name="confirm-password"
+              type="password"
+              class="form-control"
+              placeholder="পাসওয়ার্ড আবার লিখুন"
+              minlength="6"
+              autocomplete="new-password"
+              required
+              style="padding-right:50px;"
+            >
+
+            <button
+              id="toggleConfirmPassword"
+              type="button"
+              aria-label="Show password"
+              title="Show password"
+              style="
+                position:absolute;
+                right:10px;
+                top:50%;
+                transform:translateY(-50%);
+                background:transparent;
+                border:0;
+                color:#A9B0BC;
+                cursor:pointer;
+                font-size:18px;
+              "
+            >
+              👁
+            </button>
+
+          </div>
+
         </div>
 
-        <!-- পাসওয়ার্ড -->
+
+        <!-- TERMS -->
+
         <div class="form-group">
-            <label><i class="fa-solid fa-lock"></i> পাসওয়ার্ড (কমপক্ষে ১১ সংখ্যা)</label>
-            <div class="password-container">
-                <input type="password" name="password" id="password" class="form-control" placeholder="১১ সংখ্যার পাসওয়ার্ড" minlength="11" required>
-                <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
-            </div>
+
+          <label
+            style="
+              display:flex;
+              align-items:flex-start;
+              gap:10px;
+              cursor:pointer;
+            "
+          >
+
+            <input
+              id="terms"
+              type="checkbox"
+              required
+              style="
+                margin-top:4px;
+              "
+            >
+
+            <span>
+              আমি AYNA BOOK-এর
+              নিরাপত্তা ও ব্যবহারবিধি
+              মেনে চলতে সম্মত।
+            </span>
+
+          </label>
+
         </div>
 
-        <!-- রি-পাসওয়ার্ড -->
-        <div class="form-group">
-            <label><i class="fa-solid fa-lock"></i> পাসওয়ার্ড নিশ্চিত করুন (Re-type Password)</label>
-            <div class="password-container">
-                <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="পুনরায় পাসওয়ার্ড দিন" minlength="11" required>
-                <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('confirm_password', this)"></i>
-            </div>
+
+        <!-- REGISTER BUTTON -->
+
+        <button
+          id="registerButton"
+          type="submit"
+          class="btn"
+          style="width:100%;"
+        >
+          📝 Create Account
+        </button>
+
+
+        <!-- LOGIN -->
+
+        <div
+          class="text-center"
+          style="margin-top:20px;"
+        >
+
+          <p class="text-muted">
+            ইতিমধ্যে অ্যাকাউন্ট আছে?
+          </p>
+
+          <a
+            href="./login.html"
+            class="btn btn-secondary"
+            style="
+              display:inline-block;
+              margin-top:10px;
+            "
+          >
+            🔑 Login
+          </a>
+
         </div>
 
-        <!-- বাটনসমূহ -->
-        <div class="btn-container">
-            <button type="submit" class="btn btn-save"><i class="fa-solid fa-check"></i> সেভ করুন</button>
-            <button type="button" class="btn btn-login" onclick="window.location.href='login.php'"><i class="fa-solid fa-key"></i> লগইন</button>
-        </div>
+      </form>
 
-    </form>
-</div>
+    </section>
 
-<script>
-    // পাসওয়ার্ড দেখানো ও লুকানোর জাভাস্ক্রিপ্ট ফাংশন
-    function togglePassword(fieldId, icon) {
-        const field = document.getElementById(fieldId);
-        if (field.type === "password") {
-            field.type = "text";
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-        } else {
-            field.type = "password";
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
-        }
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="site-footer">
+
+    <strong>
+      AYNA BOOK
+    </strong>
+
+    <br>
+
+    Connect • Share • Create
+
+    <br><br>
+
+    © 2026 AYNA BOOK. All rights reserved.
+
+  </footer>
+
+
+  <!-- =====================================================
+       REGISTRATION SCRIPT
+       ===================================================== -->
+
+  <script type="module">
+
+    import {
+      registerUser
+    } from "./auth.js";
+
+
+    const registrationForm =
+      document.getElementById(
+        "registrationForm"
+      );
+
+    const nameInput =
+      document.getElementById(
+        "fullname"
+      );
+
+    const emailInput =
+      document.getElementById(
+        "email"
+      );
+
+    const passwordInput =
+      document.getElementById(
+        "password"
+      );
+
+    const confirmPasswordInput =
+      document.getElementById(
+        "confirm-password"
+      );
+
+    const termsInput =
+      document.getElementById(
+        "terms"
+      );
+
+    const registerButton =
+      document.getElementById(
+        "registerButton"
+      );
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+
+    function showMessage(
+      text,
+      type = "error"
+    ) {
+
+      if (!message) {
+        return;
+      }
+
+      message.textContent =
+        text;
+
+      message.className =
+        "message " + type;
     }
-</script>
+
+
+    function setLoading(
+      loading
+    ) {
+
+      if (!registerButton) {
+        return;
+      }
+
+      registerButton.disabled =
+        loading;
+
+      registerButton.textContent =
+        loading
+          ? "অ্যাকাউন্ট তৈরি হচ্ছে..."
+          : "📝 Create Account";
+    }
+
+
+    function setupPasswordToggle(
+      buttonId,
+      inputId
+    ) {
+
+      const button =
+        document.getElementById(
+          buttonId
+        );
+
+      const input =
+        document.getElementById(
+          inputId
+        );
+
+      if (!button || !input) {
+        return;
+      }
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const isPassword =
+            input.type ===
+            "password";
+
+          input.type =
+            isPassword
+              ? "text"
+              : "password";
+
+          button.textContent =
+            isPassword
+              ? "🙈"
+              : "👁";
+
+          button.setAttribute(
+            "aria-label",
+            isPassword
+              ? "Hide password"
+              : "Show password"
+          );
+
+        }
+      );
+    }
+
+
+    setupPasswordToggle(
+      "togglePassword",
+      "password"
+    );
+
+
+    setupPasswordToggle(
+      "toggleConfirmPassword",
+      "confirm-password"
+    );
+
+
+    if (registrationForm) {
+
+      registrationForm.addEventListener(
+        "submit",
+        async (event) => {
+
+          event.preventDefault();
+
+
+          const name =
+            nameInput?.value
+              .trim() || "";
+
+          const email =
+            emailInput?.value
+              .trim()
+              .toLowerCase() || "";
+
+          const password =
+            passwordInput?.value ||
+            "";
+
+          const confirmPassword =
+            confirmPasswordInput?.value ||
+            "";
+
+
+          if (!name) {
+
+            showMessage(
+              "আপনার পূর্ণ নাম লিখুন।",
+              "error"
+            );
+
+            nameInput?.focus();
+
+            return;
+          }
+
+
+          if (name.length > 100) {
+
+            showMessage(
+              "নাম সর্বোচ্চ ১০০ অক্ষরের হতে পারবে।",
+              "error"
+            );
+
+            return;
+          }
+
+
+          if (!email) {
+
+            showMessage(
+              "আপনার ইমেইল লিখুন।",
+              "error"
+            );
+
+            emailInput?.focus();
+
+            return;
+          }
+
+
+          if (!emailInput.checkValidity()) {
+
+            showMessage(
+              "সঠিক ইমেইল ঠিকানা লিখুন।",
+              "error"
+            );
+
+            emailInput?.focus();
+
+            return;
+          }
+
+
+          if (!password) {
+
+            showMessage(
+              "আপনার পাসওয়ার্ড লিখুন।",
+              "error"
+            );
+
+            passwordInput?.focus();
+
+            return;
+          }
+
+
+          if (password.length < 6) {
+
+            showMessage(
+              "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।",
+              "error"
+            );
+
+            passwordInput?.focus();
+
+            return;
+          }
+
+
+          if (
+            password !==
+            confirmPassword
+          ) {
+
+            showMessage(
+              "দুটি পাসওয়ার্ড একই নয়।",
+              "error"
+            );
+
+            confirmPasswordInput?.focus();
+
+            return;
+          }
+
+
+          if (
+            termsInput &&
+            !termsInput.checked
+          ) {
+
+            showMessage(
+              "অ্যাকাউন্ট তৈরি করতে শর্তে সম্মতি দিন।",
+              "error"
+            );
+
+            termsInput.focus();
+
+            return;
+          }
+
+
+          setLoading(true);
+
+
+          showMessage(
+            "আপনার AYNA BOOK অ্যাকাউন্ট তৈরি করা হচ্ছে...",
+            "success"
+          );
+
+
+          try {
+
+            const result =
+              await registerUser(
+                name,
+                email,
+                password
+              );
+
+
+            if (
+              result &&
+              result.success
+            ) {
+
+              if (
+                result.profileSaved
+              ) {
+
+                showMessage(
+                  "AYNA BOOK অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।",
+                  "success"
+                );
+
+                setTimeout(
+                  () => {
+                    window.location.replace(
+                      "./index.html"
+                    );
+                  },
+                  800
+                );
+
+              } else {
+
+                showMessage(
+                  "অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু Profile তথ্য সংরক্ষণ করা যায়নি। আপনি Login করতে পারবেন।",
+                  "error"
+                );
+
+                setTimeout(
+                  () => {
+                    window.location.replace(
+                      "./login.html"
+                    );
+                  },
+                  2500
+                );
+              }
+
+              return;
+            }
+
+
+            showMessage(
+              result?.message ||
+              "অ্যাকাউন্ট তৈরি করা যায়নি।",
+              "error"
+            );
+
+
+          } catch (error) {
+
+            console.error(
+              "AYNA BOOK Registration Error:",
+              error
+            );
+
+            showMessage(
+              error?.message ||
+              "Registration-এর সময় একটি সমস্যা হয়েছে।",
+              "error"
+            );
+
+          } finally {
+
+            setLoading(false);
+
+          }
+
+        }
+      );
+    }
+
+
+    console.log(
+      "AYNA BOOK — register.html loaded successfully."
+    );
+
+  </script>
+
+
+  <!-- =====================================================
+       NETWORK MONITOR
+       ===================================================== -->
+
+  <script
+    type="module"
+    src="./connectivity.js"
+  ></script>
+
+
+  <!-- =====================================================
+       UPDATE MANAGER
+       ===================================================== -->
+
+  <script
+    type="module"
+    src="./update.js"
+  ></script>
+
 
 </body>
+
 </html>
