@@ -1,15 +1,18 @@
-/* =========================================================
-   AYNA BOOK
-   Global Language Translator
-   MyMemory Translation API
-   ========================================================= */
+// =========================================================
+// AYNA BOOK
+// Translation System
+// MyMemory Translation API
+// =========================================================
 
 "use strict";
 
 
+// ---------------------------------------------------------
+// Translator Engine
+// ---------------------------------------------------------
+
 const AynaTranslator = {
 
-  // MyMemory Translation API
   apiUrl:
     "https://api.mymemory.translated.net/get",
 
@@ -26,10 +29,6 @@ const AynaTranslator = {
 
     try {
 
-      // -----------------------------------------------
-      // Input পরিষ্কার করা
-      // -----------------------------------------------
-
       const input =
         String(
           text ?? ""
@@ -45,10 +44,7 @@ const AynaTranslator = {
       }
 
 
-      // -----------------------------------------------
-      // Maximum text length
-      // -----------------------------------------------
-
+      // নিরাপত্তা ও API request সীমা
       if (
         input.length > 450
       ) {
@@ -59,10 +55,6 @@ const AynaTranslator = {
 
       }
 
-
-      // -----------------------------------------------
-      // Language validation
-      // -----------------------------------------------
 
       const source =
         String(
@@ -88,10 +80,7 @@ const AynaTranslator = {
       }
 
 
-      // -----------------------------------------------
-      // Same language
-      // -----------------------------------------------
-
+      // একই ভাষা হলে API call প্রয়োজন নেই
       if (
         source === target
       ) {
@@ -108,29 +97,21 @@ const AynaTranslator = {
       }
 
 
-      // -----------------------------------------------
-      // API Parameters
-      // -----------------------------------------------
+      // ---------------------------------------------------
+      // API Request
+      // ---------------------------------------------------
 
       const params =
         new URLSearchParams({
-
-          q:
-            input,
-
+          q: input,
           langpair:
             `${source}|${target}`
-
         });
 
 
       const requestUrl =
         `${this.apiUrl}?${params.toString()}`;
 
-
-      // -----------------------------------------------
-      // API Request
-      // -----------------------------------------------
 
       const response =
         await fetch(
@@ -143,15 +124,10 @@ const AynaTranslator = {
                 "application/json"
             },
 
-            cache:
-              "no-store"
+            cache: "no-store"
           }
         );
 
-
-      // -----------------------------------------------
-      // HTTP Error
-      // -----------------------------------------------
 
       if (
         !response.ok
@@ -164,17 +140,9 @@ const AynaTranslator = {
       }
 
 
-      // -----------------------------------------------
-      // JSON Response
-      // -----------------------------------------------
-
       const data =
         await response.json();
 
-
-      // -----------------------------------------------
-      // API Response Validation
-      // -----------------------------------------------
 
       if (
         Number(
@@ -192,8 +160,7 @@ const AynaTranslator = {
 
       const translatedText =
         String(
-          data?.responseData
-            ?.translatedText ||
+          data?.responseData?.translatedText ||
           ""
         ).trim();
 
@@ -206,10 +173,6 @@ const AynaTranslator = {
 
       }
 
-
-      // -----------------------------------------------
-      // Success
-      // -----------------------------------------------
 
       return {
 
@@ -247,17 +210,17 @@ const AynaTranslator = {
 };
 
 
-// =========================================================
-// Global Access
-// =========================================================
+// ---------------------------------------------------------
+// Global AYNA BOOK Translator
+// ---------------------------------------------------------
 
 window.AYNA_TRANSLATOR =
   AynaTranslator;
 
 
-// =========================================================
+// ---------------------------------------------------------
 // Ready
-// =========================================================
+// ---------------------------------------------------------
 
 console.log(
   "AYNA BOOK Translator Loaded Successfully."
