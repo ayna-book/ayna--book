@@ -1,98 +1,276 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYNA BOOK - লগইন</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; }
-        .login-box { background: #fff; padding: 30px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border-top: 6px solid #1a73e8; }
-        h1 { font-size: 2.2rem; color: #1a73e8; margin-bottom: 10px; }
-        p { font-size: 1.1rem; color: #555; margin-bottom: 20px; }
-        input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1.1rem; }
-        button { width: 100%; padding: 14px; background: #1a73e8; color: #fff; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
-        button.register-btn { background: #28a745; }
-        #statusMsg { margin-top: 15px; font-size: 1rem; color: #d93025; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0F1E">
+
+  <title>AYNA BOOK — Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0A0F1E;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 430px;
+      background: #1A2233;
+      border: 1px solid #4A4A2A;
+      border-radius: 20px;
+      padding: 30px 24px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.35);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      text-align: center;
+      color: #FFD700;
+      font-size: 30px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #A9B0BC;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 7px;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #4A4A2A;
+      border-radius: 10px;
+      background: #0A0F1E;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #FFD700;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 18px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #loginBtn {
+      background: #FFD700;
+      color: #0A0F1E;
+    }
+
+    #loginBtn:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .secondary-btn {
+      background: transparent;
+      color: #FFD700;
+      border: 1px solid #FFD700;
+      margin-top: 12px;
+    }
+
+    .forgot {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      color: #FFD700;
+      text-decoration: none;
+    }
+
+    .message {
+      min-height: 24px;
+      margin-top: 15px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .success {
+      color: #2ECC71;
+    }
+
+    .error {
+      color: #ff6b6b;
+    }
+  </style>
 </head>
+
 <body>
 
-    <div class="login-box">
-        <h1>AYNA BOOK</h1>
-        <p>আপনার অ্যাকাউন্টে প্রবেশ করুন</p>
-        <input type="email" id="emailInput" placeholder="ইমেইল ঠিকানা দিন" required>
-        <input type="password" id="passwordInput" placeholder="পাসওয়ার্ড দিন (কমপক্ষে ৬ অক্ষর)" required>
-        <button id="loginBtn">লগইন করুন</button>
-        <button id="registerBtn" class="register-btn">নতুন অ্যাকাউন্ট তৈরি করুন</button>
-        <div id="statusMsg"></div>
+  <main class="login-box">
+
+    <h1>AYNA BOOK</h1>
+
+    <div class="subtitle">
+      আপনার অ্যাকাউন্টে লগইন করুন
     </div>
 
-    <script type="module">
-        import { auth, db } from './firebase-init.js';
-        import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <form id="loginForm">
 
-        const statusMsg = document.getElementById('statusMsg');
+      <label for="email">ইমেইল</label>
+      <input
+        id="email"
+        type="email"
+        placeholder="আপনার ইমেইল লিখুন"
+        autocomplete="email"
+        required
+      >
 
-        // ইউজার আগে থেকেই লগইন করা থাকলে ড্যাশবোর্ডে পাঠাবে
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                window.location.href = 'index.html';
-            }
-        });
+      <label for="password">পাসওয়ার্ড</label>
+      <input
+        id="password"
+        type="password"
+        placeholder="আপনার পাসওয়ার্ড লিখুন"
+        autocomplete="current-password"
+        required
+      >
 
-        // লগইন বাটন হ্যান্ডলার
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('passwordInput').value;
-            
-            if(!email || !password) {
-                statusMsg.textContent = "দয়া করে ইমেইল ও পাসওয়ার্ড দিন।";
-                return;
-            }
+      <button id="loginBtn" type="submit">
+        লগইন করুন
+      </button>
 
-            statusMsg.textContent = "যাচাই করা হচ্ছে...";
-            
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    window.location.href = 'index.html';
-                })
-                .catch((error) => {
-                    statusMsg.textContent = "ত্রুটি: " + error.message;
-                });
-        });
+    </form>
 
-        // নতুন একাউন্ট রেজিস্ট্রেশন ও ফায়ারস্টোর ডাটা সেভ
-        document.getElementById('registerBtn').addEventListener('click', async () => {
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('passwordInput').value;
+    <a class="forgot" href="forgot-password.html">
+      পাসওয়ার্ড ভুলে গেছেন?
+    </a>
 
-            if(!email || !password) {
-                statusMsg.textContent = "দয়া করে ইমেইল ও পাসওয়ার্ড দিন।";
-                return;
-            }
+    <button
+      class="secondary-btn"
+      type="button"
+      id="signupBtn"
+    >
+      নতুন অ্যাকাউন্ট তৈরি করুন
+    </button>
 
-            statusMsg.textContent = "অ্যাকাউন্ট তৈরি হচ্ছে...";
+    <div id="message" class="message"></div>
 
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+  </main>
 
-                // ফায়ারস্টোর users কালেকশনে ডেটা সেভ
-                await setDoc(doc(db, "users", user.uid), {
-                    email: email,
-                    name: email.split('@')[0],
-                    phone: "",
-                    plan: "Standard",
-                    created: serverTimestamp()
-                });
+  <script type="module">
 
-               window.location.href = 'index.html';
-            } catch (error) {
-                statusMsg.textContent = "ত্রুটি: " + error.message;
-            }
-        });
-    </script>
+    import {
+      loginUser,
+      watchAuthState
+    } from "./auth.js";
+
+    const form = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const signupBtn = document.getElementById("signupBtn");
+    const message = document.getElementById("message");
+
+    function showMessage(text, type = "error") {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    // আগে থেকেই Login করা থাকলে Dashboard-এ পাঠাবে
+    watchAuthState((user) => {
+      if (user) {
+        window.location.replace("index.html");
+      }
+    });
+
+    form.addEventListener("submit", async (event) => {
+
+      event.preventDefault();
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showMessage(
+          "ইমেইল ও পাসওয়ার্ড লিখুন।",
+          "error"
+        );
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = "লগইন হচ্ছে...";
+      showMessage("অ্যাকাউন্ট যাচাই করা হচ্ছে...", "success");
+
+      try {
+
+        const result = await loginUser(
+          email,
+          password
+        );
+
+        if (result.success) {
+
+          showMessage(
+            result.message || "লগইন সফল হয়েছে।",
+            "success"
+          );
+
+          setTimeout(() => {
+            window.location.replace("index.html");
+          }, 500);
+
+        } else {
+
+          showMessage(
+            result.message || "লগইন করা যায়নি।",
+            "error"
+          );
+
+          loginBtn.disabled = false;
+          loginBtn.textContent = "লগইন করুন";
+        }
+
+      } catch (error) {
+
+        console.error(
+          "AYNA BOOK Login Page Error:",
+          error
+        );
+
+        showMessage(
+          "লগইন করার সময় একটি সমস্যা হয়েছে।",
+          "error"
+        );
+
+        loginBtn.disabled = false;
+        loginBtn.textContent = "লগইন করুন";
+      }
+
+    });
+
+    signupBtn.addEventListener("click", () => {
+      window.location.href = "signup.html";
+    });
+
+  </script>
+
 </body>
 </html>
