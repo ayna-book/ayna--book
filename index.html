@@ -1,44 +1,544 @@
-
 <!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0A0F1E">
-<title>AYNA BOOK</title>
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;min-height:100vh;
-  display:flex;align-items:center;justify-content:center;
-  background:#0A0F1E;color:white;
-  font-family:Arial,sans-serif;padding:20px
-}
-.main{
-  width:100%;max-width:520px;
-  padding:35px 24px;
-  background:#1A2233;
-  border:1px solid #FFD700;
-  border-radius:24px;text-align:center
-}
-.logo{font-size:34px;font-weight:bold;letter-spacing:2px}
-.tagline{color:#ddd;margin:12px 0 35px}
-a{
-  display:block;text-decoration:none;
-  padding:17px;margin:17px 0;
-  border-radius:12px;font-weight:bold;font-size:20px
-}
-.login{background:white;color:#0A0F1E}
-.register{background:#FFD700;color:#0A0F1E}
-</style>
-</head>
-<body>
-<main class="main">
-  <div class="logo">AYNA BOOK</div>
-  <p class="tagline">Connect • Share • Create</p>
+<html lang="en">
 
-  <a class="login" href="./login.html">LOGIN</a>
-  <a class="register" href="./signup.html">REGISTER</a>
-</main>
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#0A0F1E"
+  >
+
+  <meta
+    name="description"
+    content="AYNA BOOK — A modern, secure and global digital social platform."
+  >
+
+  <meta
+    name="robots"
+    content="index, follow"
+  >
+
+  <meta
+    name="application-name"
+    content="AYNA BOOK"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="AYNA BOOK"
+  >
+
+  <link
+    rel="manifest"
+    href="./manifest.webmanifest"
+  >
+
+  <title>AYNA BOOK — Global Digital Social Platform</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at 50% 20%,
+          rgba(255, 215, 0, 0.08),
+          transparent 35%
+        ),
+        #0A0F1E;
+      color: #FFFFFF;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* =========================================
+       GLOBAL BACKGROUND
+       ========================================= */
+
+    .quantum-background {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .orb {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 1px solid rgba(255, 215, 0, 0.12);
+      border-radius: 50%;
+      animation: rotateOrb 20s linear infinite;
+    }
+
+    .orb:nth-child(1) {
+      top: -80px;
+      left: -80px;
+    }
+
+    .orb:nth-child(2) {
+      bottom: -100px;
+      right: -80px;
+      animation-duration: 28s;
+    }
+
+    @keyframes rotateOrb {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+
+    /* =========================================
+       MAIN
+       ========================================= */
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+
+    .card {
+      width: 100%;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(26, 34, 51, 0.98),
+          rgba(10, 15, 30, 0.98)
+        );
+
+      border: 1px solid #FFD700;
+      border-radius: 28px;
+
+      padding: 42px 28px;
+
+      text-align: center;
+
+      box-shadow:
+        0 0 40px rgba(255, 215, 0, 0.08),
+        inset 0 0 30px rgba(255, 255, 255, 0.015);
+
+      backdrop-filter: blur(18px);
+    }
+
+
+    /* =========================================
+       LOGO
+       ========================================= */
+
+    .logo-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .logo {
+      width: 82px;
+      height: 82px;
+
+      border: 2px solid #FFD700;
+      border-radius: 24px;
+
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+
+      padding: 14px;
+
+      box-shadow:
+        0 0 24px rgba(255, 215, 0, 0.16);
+    }
+
+    .logo span {
+      background: #FFFFFF;
+      border-radius: 5px;
+    }
+
+
+    /* =========================================
+       BRAND
+       ========================================= */
+
+    h1 {
+      font-size: clamp(30px, 8vw, 44px);
+      letter-spacing: 4px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #A9B0BC;
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 380px;
+      margin: 0 auto 30px;
+    }
+
+
+    /* =========================================
+       QUANTUM STAR
+       ========================================= */
+
+    .star {
+      width: 16px;
+      height: 16px;
+      margin: 0 auto 28px;
+
+      background: #FFFFFF;
+
+      clip-path: polygon(
+        50% 0%,
+        61% 39%,
+        100% 50%,
+        61% 61%,
+        50% 100%,
+        39% 61%,
+        0% 50%,
+        39% 39%
+      );
+
+      animation: starPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes starPulse {
+
+      0%,
+      100% {
+        transform: scale(0.85);
+        opacity: 0.55;
+      }
+
+      50% {
+        transform: scale(1.35);
+        opacity: 1;
+        filter:
+          drop-shadow(
+            0 0 8px #FFFFFF
+          );
+      }
+    }
+
+
+    /* =========================================
+       BUTTONS
+       ========================================= */
+
+    .actions {
+      display: grid;
+      gap: 15px;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 58px;
+
+      border-radius: 14px;
+
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 2px;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+
+      text-decoration: none;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-login {
+      background: #FFFFFF;
+      color: #0A0F1E;
+      border: 1px solid #FFFFFF;
+    }
+
+    .btn-register {
+      background: transparent;
+      color: #FFFFFF;
+      border: 1px solid #FFD700;
+    }
+
+    .btn-login:hover {
+      box-shadow:
+        0 0 24px rgba(255, 255, 255, 0.20);
+      transform: translateY(-2px);
+    }
+
+    .btn-register:hover {
+      background: rgba(255, 215, 0, 0.08);
+      box-shadow:
+        0 0 24px rgba(255, 215, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+
+    /* =========================================
+       SECURITY MESSAGE
+       ========================================= */
+
+    .security {
+      margin-top: 28px;
+
+      color: #A9B0BC;
+
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .security strong {
+      color: #FFFFFF;
+    }
+
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+
+    .footer {
+      margin-top: 26px;
+
+      color: #687080;
+
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+
+    /* =========================================
+       MOBILE
+       ========================================= */
+
+    @media (max-width: 420px) {
+
+      .page {
+        padding: 14px;
+      }
+
+      .card {
+        padding: 34px 20px;
+        border-radius: 22px;
+      }
+
+      .logo {
+        width: 72px;
+        height: 72px;
+        padding: 12px;
+      }
+
+      h1 {
+        font-size: 30px;
+        letter-spacing: 3px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+  <!-- =========================================
+       BACKGROUND
+       ========================================= -->
+
+  <div
+    class="quantum-background"
+    aria-hidden="true"
+  >
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+
+  <!-- =========================================
+       MAIN PAGE
+       ========================================= -->
+
+  <main class="page">
+
+    <section
+      class="card"
+      aria-label="AYNA BOOK"
+    >
+
+      <!-- Logo -->
+
+      <div
+        class="logo-area"
+        aria-label="AYNA BOOK logo"
+      >
+
+        <div class="logo">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+      </div>
+
+
+      <!-- Brand -->
+
+      <h1>AYNA BOOK</h1>
+
+      <p class="subtitle">
+        A modern, secure and global digital
+        social platform designed to connect
+        people, ideas and communities.
+      </p>
+
+
+      <!-- Star -->
+
+      <div
+        class="star"
+        aria-hidden="true"
+      ></div>
+
+
+      <!-- Login / Register -->
+
+      <div class="actions">
+
+        <a
+          class="btn btn-login"
+          href="./login.html"
+          aria-label="Login to AYNA BOOK"
+        >
+          LOGIN
+        </a>
+
+        <a
+          class="btn btn-register"
+          href="./signup.html"
+          aria-label="Register for AYNA BOOK"
+        >
+          REGISTER
+        </a>
+
+      </div>
+
+
+      <!-- Security -->
+
+      <p class="security">
+        <strong>Privacy • Security • Global Connectivity</strong><br>
+        Your account access is protected by
+        Firebase Authentication and secure
+        application rules.
+      </p>
+
+
+      <!-- Footer -->
+
+      <div class="footer">
+        © 2026 AYNA BOOK<br>
+        Building a future-ready digital world.
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================================
+       SERVICE WORKER
+       ========================================= -->
+
+  <script>
+
+    if ("serviceWorker" in navigator) {
+
+      window.addEventListener("load", () => {
+
+        navigator.serviceWorker
+          .register("./sw.js")
+          .then((registration) => {
+
+            console.log(
+              "AYNA BOOK Service Worker registered:",
+              registration.scope
+            );
+
+          })
+          .catch((error) => {
+
+            console.error(
+              "AYNA BOOK Service Worker error:",
+              error
+            );
+
+          });
+
+      });
+
+    }
+
+  </script>
+
 </body>
+
 </html>
