@@ -1,11 +1,11 @@
-// =========================================================
-// AYNA BOOK
-// Main Application
-// Firebase SDK: 13.4.0
-// =========================================================
+/* =========================================================
+   AYNA BOOK
+   Global Application Controller
+   ========================================================= */
 
 import {
-  auth
+  auth,
+  db
 } from "./firebase.js";
 
 import {
@@ -14,135 +14,158 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 
-// ---------------------------------------------------------
-// Authentication State
-// ---------------------------------------------------------
+/* =========================================================
+   GLOBAL USER STATE
+   ========================================================= */
+
+let currentUser = null;
+
+
+/* =========================================================
+   AUTH STATE LISTENER
+   ========================================================= */
 
 onAuthStateChanged(auth, (user) => {
 
-  if (user) {
+  currentUser = user || null;
+
+  /* Global access */
+  window.AYNA_BOOK_USER = currentUser;
+
+  /* Event dispatch */
+  window.dispatchEvent(
+    new CustomEvent("ayna-auth-state-changed", {
+      detail: {
+        user: currentUser
+      }
+    })
+  );
+
+  if (currentUser) {
 
     console.log(
-      "AYNA BOOK: User authenticated:",
-      user.uid
+      "AYNA BOOK — User signed in:",
+      currentUser.email || currentUser.uid
     );
-
-    // Global user information
-    window.AYNA_BOOK_USER = user;
 
   } else {
 
     console.log(
-      "AYNA BOOK: User is not logged in."
+      "AYNA BOOK — No authenticated user."
     );
-
-    window.AYNA_BOOK_USER = null;
   }
 
 });
 
 
-// ---------------------------------------------------------
-// Logout
-// ---------------------------------------------------------
+/* =========================================================
+   GET CURRENT USER
+   ========================================================= */
 
-async function logoutUser() {
+export function getCurrentUser() {
+  return currentUser;
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+export async function logout() {
 
   try {
 
     await signOut(auth);
 
-    console.log(
-      "AYNA BOOK: Logout successful."
-    );
+    currentUser = null;
+    window.AYNA_BOOK_USER = null;
 
-    window.location.replace("login.html");
+    window.location.replace("./login.html");
 
   } catch (error) {
 
     console.error(
-      "AYNA BOOK Logout Error:",
+      "AYNA BOOK logout error:",
       error
     );
 
     alert(
-      "Logout করা যায়নি। আবার চেষ্টা করুন।"
+      "Logout করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।"
     );
-
   }
-
 }
 
 
-// ---------------------------------------------------------
-// Logout Buttons
-// ---------------------------------------------------------
+/* =========================================================
+   GLOBAL LOGOUT FUNCTION
+   ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    const logoutButtons =
-      document.querySelectorAll(
-        "[data-action='logout'], #logoutButton, .logout-button"
-      );
-
-    logoutButtons.forEach((button) => {
-
-      button.addEventListener(
-        "click",
-        async (event) => {
-
-          event.preventDefault();
-
-          if (button.disabled) {
-            return;
-          }
-
-          button.disabled = true;
-
-          try {
-
-            await logoutUser();
-
-          } finally {
-
-            button.disabled = false;
-
-          }
-
-        }
-      );
-
-    });
-
-  }
-);
+window.AYNA_BOOK_LOGOUT = logout;
 
 
-// ---------------------------------------------------------
-// Global AYNA BOOK App Information
-// ---------------------------------------------------------
+/* =========================================================
+   GLOBAL AYNA BOOK OBJECT
+   ========================================================= */
 
 window.AYNA_BOOK = {
 
-  name: "AYNA BOOK",
+  getUser: getCurrentUser,
 
-  version: "1.0.0",
+  logout: logout,
 
-  firebaseSDK: "13.4.0",
-
-  logout: logoutUser,
-
-  getCurrentUser: () => auth.currentUser
+  isLoggedIn: () => {
+    return currentUser !== null;
+  }
 
 };
 
 
-// ---------------------------------------------------------
-// Console
-// ---------------------------------------------------------
+/* =========================================================
+   PROTECT DASHBOARD
+   ========================================================= */
+
+if (
+  window.location.pathname.endsWith("/dashboard.html")
+) {
+
+  onAuthStateChanged(auth, (user) => {
+
+    if (!user) {
+
+      window.location.replace("./login.html");
+
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   PROTECT PROFILE
+   ========================================================= */
+
+if (
+  window.location.pathname.endsWith("/profile.html")
+) {
+
+  onAuthStateChanged(auth, (user) => {
+
+    if (!user) {
+
+      window.location.replace("./login.html");
+
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   AYNA BOOK APP READY
+   ========================================================= */
 
 console.log(
-  "AYNA BOOK — app.js loaded successfully."
+  "AYNA BOOK — Application controller loaded successfully."
 );
