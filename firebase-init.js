@@ -1,3 +1,8 @@
+// =========================================================
+// AYNA BOOK
+// Firebase Initialization
+// Firebase SDK: 13.4.0
+// =========================================================
 
 import { firebaseConfig } from "./firebase-config.js";
 
@@ -23,15 +28,28 @@ import {
   getStorage
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
+// ---------------------------------------------------------
 // Initialize Firebase only once
+// ---------------------------------------------------------
+
 export const app = getApps().length
   ? getApp()
   : initializeApp(firebaseConfig);
 
-// Firebase services
+// ---------------------------------------------------------
+// Firebase Services
+// ---------------------------------------------------------
+
 export const auth = getAuth(app);
+
 export const db = getFirestore(app);
+
 export const database = getDatabase(app);
+
 export const storage = getStorage(app);
 
-console.log("AYNA BOOK Firebase initialized successfully");
+// ---------------------------------------------------------
+// Status
+// ---------------------------------------------------------
+
+console.log("AYNA BOOK — Firebase initialized successfully.");
