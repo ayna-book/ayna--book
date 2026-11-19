@@ -1,23 +1,25 @@
-"use strict";
-
 /* =========================================================
    AYNA BOOK
-   Service Worker
+   Main Service Worker
    Version: 5.0
    ========================================================= */
 
+"use strict";
+
 const CACHE_NAME = "ayna-book-cache-v5";
 
-const APP_FILES = [
+const OFFLINE_URL = "./index.html";
+
+const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./login.html",
   "./signup.html",
   "./forgot-password.html",
-  "./profile.html",
-  "./messages.html",
   "./styles.css",
+  "./ayna-ui-patch.css",
   "./app.js",
+  "./login.js",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png"
@@ -28,156 +30,148 @@ const APP_FILES = [
    INSTALL
    ========================================================= */
 
-self.addEventListener("install", (event) => {
+self.addEventListener(
+  "install",
+  (event) => {
 
-  event.waitUntil(
+    event.waitUntil(
+      (async () => {
 
-    (async () => {
+        try {
 
-      try {
+          const cache =
+            await caches.open(
+              CACHE_NAME
+            );
 
-        const cache =
-          await caches.open(CACHE_NAME);
+          await Promise.all(
+            FILES_TO_CACHE.map(
+              async (file) => {
 
+                try {
 
-        await Promise.allSettled(
+                  const response =
+                    await fetch(
+                      file,
+                      {
+                        cache: "reload"
+                      }
+                    );
 
-          APP_FILES.map(
-            async (file) => {
+                  if (response.ok) {
 
-              try {
+                    await cache.put(
+                      file,
+                      response
+                    );
 
-                const response =
-                  await fetch(
-                    file,
-                    {
-                      cache: "reload"
-                    }
-                  );
+                    console.log(
+                      "AYNA BOOK Cached:",
+                      file
+                    );
 
+                  } else {
 
-                if (response.ok) {
+                    console.warn(
+                      "AYNA BOOK Cache HTTP Error:",
+                      file,
+                      response.status
+                    );
+                  }
 
-                  await cache.put(
-                    file,
-                    response
-                  );
-
-                } else {
+                } catch (error) {
 
                   console.warn(
-                    "AYNA BOOK Cache HTTP Error:",
+                    "AYNA BOOK Cache Skip:",
                     file,
-                    response.status
+                    error
                   );
-
                 }
-
-              } catch (error) {
-
-                console.warn(
-                  "AYNA BOOK Cache Skip:",
-                  file,
-                  error
-                );
-
               }
+            )
+          );
 
-            }
-          )
+          /*
+           * Do not activate immediately here.
+           * update.js can control activation through
+           * SKIP_WAITING when an update is confirmed.
+           */
 
-        );
+          console.log(
+            "AYNA BOOK Service Worker Installed:",
+            CACHE_NAME
+          );
 
+        } catch (error) {
 
-        console.log(
-          "AYNA BOOK: Essential files cached."
-        );
+          console.error(
+            "AYNA BOOK Service Worker Install Error:",
+            error
+          );
+        }
 
-
-        // নতুন Service Worker দ্রুত চালু করা
-        await self.skipWaiting();
-
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK Install Error:",
-          error
-        );
-
-      }
-
-    })()
-
-  );
-
-});
+      })()
+    );
+  }
+);
 
 
 /* =========================================================
    ACTIVATE
-   পুরোনো Cache মুছে ফেলা
    ========================================================= */
 
-self.addEventListener("activate", (event) => {
+self.addEventListener(
+  "activate",
+  (event) => {
 
-  event.waitUntil(
+    event.waitUntil(
+      (async () => {
 
-    (async () => {
+        try {
 
-      try {
+          const cacheNames =
+            await caches.keys();
 
-        const cacheNames =
-          await caches.keys();
+          await Promise.all(
+            cacheNames
+              .filter(
+                (cacheName) =>
+                  cacheName.startsWith(
+                    "ayna-book-cache-"
+                  ) &&
+                  cacheName !== CACHE_NAME
+              )
+              .map(
+                (cacheName) =>
+                  caches.delete(
+                    cacheName
+                  )
+              )
+          );
 
+          await self.clients.claim();
 
-        await Promise.all(
+          console.log(
+            "AYNA BOOK Service Worker Activated:",
+            CACHE_NAME
+          );
 
-          cacheNames
-            .filter(
-              (name) =>
-                name.startsWith(
-                  "ayna-book-cache-"
-                ) &&
-                name !== CACHE_NAME
-            )
-            .map(
-              (name) =>
-                caches.delete(name)
-            )
+        } catch (error) {
 
-        );
+          console.error(
+            "AYNA BOOK Service Worker Activate Error:",
+            error
+          );
+        }
 
-
-        // সব open page-কে নতুন Service Worker-এর অধীনে আনা
-        await self.clients.claim();
-
-
-        console.log(
-          "AYNA BOOK Service Worker Activated:",
-          CACHE_NAME
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK Activate Error:",
-          error
-        );
-
-      }
-
-    })()
-
-  );
-
-});
+      })()
+    );
+  }
+);
 
 
 /* =========================================================
    MESSAGE
-   update.js থেকে SKIP_WAITING গ্রহণ
    ========================================================= */
 
 self.addEventListener(
@@ -191,22 +185,17 @@ self.addEventListener(
     ) {
 
       console.log(
-        "AYNA BOOK: Updating Service Worker..."
+        "AYNA BOOK: SKIP_WAITING received."
       );
 
-
       self.skipWaiting();
-
     }
-
   }
 );
 
 
 /* =========================================================
    FETCH
-   Online = Network
-   Offline = Cache
    ========================================================= */
 
 self.addEventListener(
@@ -216,77 +205,73 @@ self.addEventListener(
     const request =
       event.request;
 
-
-    // শুধু GET request
+    /*
+     * Only GET requests are handled.
+     */
     if (
-      request.method !== "GET"
+      request.method !==
+      "GET"
     ) {
-
       return;
-
     }
-
 
     const url =
       new URL(
         request.url
       );
 
-
-    // External domain Cache করা হবে না
+    /*
+     * Ignore external domains.
+     */
     if (
       url.origin !==
       self.location.origin
     ) {
-
       return;
-
     }
 
+    /*
+     * Ignore requests with query strings.
+     * This prevents cached version/network-check
+     * requests from becoming stale.
+     */
+    if (
+      url.search
+    ) {
+      return;
+    }
 
-    // Firebase internal request Cache নয়
+    /*
+     * Ignore special platform paths.
+     */
     if (
       url.pathname.includes(
         "/__/"
       )
     ) {
-
       return;
-
     }
-
-
-    // Query request Cache না করাই নিরাপদ
-    if (
-      url.search
-    ) {
-
-      return;
-
-    }
-
 
     event.respondWith(
-
       (async () => {
 
         try {
 
-          // ---------------------------------------------
-          // প্রথমে Network
-          // ---------------------------------------------
-
-          const response =
+          /*
+           * Network first.
+           */
+          const networkResponse =
             await fetch(
               request
             );
 
-
-          // সফল response Cache-এ রাখা
+          /*
+           * Cache successful same-origin responses.
+           */
           if (
-            response &&
-            response.ok &&
-            response.type === "basic"
+            networkResponse.ok &&
+            networkResponse.type ===
+              "basic"
           ) {
 
             try {
@@ -296,112 +281,136 @@ self.addEventListener(
                   CACHE_NAME
                 );
 
-
               await cache.put(
                 request,
-                response.clone()
+                networkResponse.clone()
               );
-
 
             } catch (cacheError) {
 
               console.warn(
-                "AYNA BOOK Cache Update Failed:",
+                "AYNA BOOK Cache Update Error:",
                 cacheError
               );
-
             }
-
           }
 
-
-          return response;
-
+          return networkResponse;
 
         } catch (networkError) {
 
           console.warn(
-            "AYNA BOOK Network Failed:",
+            "AYNA BOOK Network Request Failed:",
             networkError
           );
 
-
-          // ---------------------------------------------
-          // Network না থাকলে Cache
-          // ---------------------------------------------
-
-          const cached =
+          /*
+           * Network failed:
+           * try cache.
+           */
+          const cachedResponse =
             await caches.match(
               request
             );
 
-
-          if (cached) {
-
-            return cached;
-
+          if (cachedResponse) {
+            return cachedResponse;
           }
 
-
-          // ---------------------------------------------
-          // Navigation হলে index.html দেখানো
-          // ---------------------------------------------
-
+          /*
+           * Navigation fallback.
+           */
           if (
             request.mode ===
             "navigate"
           ) {
 
-            const home =
+            const homePage =
               await caches.match(
-                "./index.html"
+                OFFLINE_URL
               );
 
-
-            if (home) {
-
-              return home;
-
+            if (homePage) {
+              return homePage;
             }
 
+            return new Response(
+              `
+              <!DOCTYPE html>
+              <html lang="bn">
+              <head>
+                <meta charset="UTF-8">
+                <meta
+                  name="viewport"
+                  content="width=device-width,initial-scale=1.0"
+                >
+                <title>AYNA BOOK — Offline</title>
+              </head>
+
+              <body style="
+                margin:0;
+                min-height:100vh;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                background:#0A0F1E;
+                color:#FFFFFF;
+                font-family:Arial,sans-serif;
+                text-align:center;
+                padding:20px;
+              ">
+
+                <div>
+
+                  <h1 style="
+                    color:#FFD700;
+                  ">
+                    AYNA BOOK
+                  </h1>
+
+                  <p style="
+                    color:#A9B0BC;
+                  ">
+                    আপনি বর্তমানে অফলাইনে আছেন।
+                  </p>
+
+                  <p style="
+                    color:#A9B0BC;
+                  ">
+                    ইন্টারনেট সংযোগ ফিরে এলে আবার চেষ্টা করুন।
+                  </p>
+
+                </div>
+
+              </body>
+              </html>
+              `,
+              {
+                status: 503,
+                headers: {
+                  "Content-Type":
+                    "text/html; charset=utf-8"
+                }
+              }
+            );
           }
 
-
-          // ---------------------------------------------
-          // কোনো Cache না থাকলে Offline message
-          // ---------------------------------------------
-
-          return new Response(
-
-            "আপনি বর্তমানে অফলাইনে আছেন। " +
-            "ইন্টারনেট সংযোগ ফিরে এলে আবার চেষ্টা করুন।",
-
-            {
-              status: 503,
-
-              headers: {
-                "Content-Type":
-                  "text/plain; charset=utf-8"
-              }
-
-            }
-
-          );
-
+          /*
+           * No cached response available.
+           */
+          return Response.error();
         }
 
       })()
-
     );
-
   }
 );
 
 
 /* =========================================================
-   READY
+   SERVICE WORKER READY
    ========================================================= */
 
 console.log(
-  "AYNA BOOK Service Worker v5 Loaded."
+  "AYNA BOOK — Main Service Worker v5 Loaded."
 );
