@@ -1,43 +1,108 @@
 rules_version = '2';
 
 service cloud.firestore {
-match /databases/{database}/documents {
 
-function signedIn() {
-  return request.auth != null;
-}
+  match /databases/{database}/documents {
 
-match /users/{userId} {
-  allow create: if signedIn()
-    && request.auth.uid == userId;
+    // =====================================================
+    // AUTHENTICATION HELPER
+    // =====================================================
 
-  allow read, update, delete: if signedIn()
-    && request.auth.uid == userId;
-}
+    function signedIn() {
+      return request.auth != null;
+    }
 
-match /posts/{postId} {
-  allow read: if true;
 
-  allow create: if signedIn()
-    && request.resource.data.uid == request.auth.uid
-    && request.resource.data.text is string
-    && request.resource.data.text.size() <= 5000;
+    // =====================================================
+    // USER PROFILES
+    // Path:
+    // users/{userId}
+    // =====================================================
 
-  allow update, delete: if signedIn()
-    && resource.data.uid == request.auth.uid;
-}
+    match /users/{userId} {
 
-match /rooms/{roomId}/messages/{messageId} {
-  allow read: if signedIn();
+      // নতুন user profile তৈরি
+      allow create: if
+        signedIn() &&
+        request.auth.uid == userId;
 
-  allow create: if signedIn()
-    && request.resource.data.uid == request.auth.uid
-    && request.resource.data.text is string
-    && request.resource.data.text.size() > 0
-    && request.resource.data.text.size() <= 2000;
+      // নিজের profile পড়া / পরিবর্তন / মুছে ফেলা
+      allow read, update, delete: if
+        signedIn() &&
+        request.auth.uid == userId;
+    }
 
-  allow update, delete: if false;
-}
 
-}
+    // =====================================================
+    // POSTS
+    // Path:
+    // posts/{postId}
+    // =====================================================
+
+    match /posts/{postId} {
+
+      // Public posts সবাই পড়তে পারবে
+      allow read: if true;
+
+
+      // নতুন post তৈরি
+      allow create: if
+        signedIn() &&
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() <= 5000;
+
+
+      // নিজের post update
+      // uid পরিবর্তন করা যাবে না
+      allow update: if
+        signedIn() &&
+        resource.data.uid == request.auth.uid &&
+        request.resource.data.uid == resource.data.uid &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() <= 5000;
+
+
+      // নিজের post delete
+      allow delete: if
+        signedIn() &&
+        resource.data.uid == request.auth.uid;
+    }
+
+
+    // =====================================================
+    // CHAT MESSAGES
+    // Path:
+    // rooms/{roomId}/messages/{messageId}
+    // =====================================================
+
+    match /rooms/{roomId}/messages/{messageId} {
+
+      // Login করা user chat পড়তে পারবে
+      allow read: if
+        signedIn();
+
+
+      // নতুন message তৈরি
+      allow create: if
+        signedIn() &&
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() > 0 &&
+        request.resource.data.text.size() <= 2000;
+
+
+      // Message পরিবর্তন / delete বন্ধ
+      allow update, delete: if false;
+    }
+
+
+    // =====================================================
+    // EVERYTHING ELSE
+    // =====================================================
+
+    // উপরের নির্দিষ্ট collection ছাড়া
+    // অন্য কোনো Firestore document access করা যাবে না।
+
+  }
 }
