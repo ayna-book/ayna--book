@@ -3,31 +3,27 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0A0F1E">
-
   <title>AYNA BOOK — Registration</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       padding: 20px 12px;
       background: #0A0F1E;
-      color: #FFFFFF;
+      color: #fff;
       font-family: Arial, sans-serif;
     }
 
     .container {
-      width: 100%;
       max-width: 480px;
       margin: auto;
     }
 
-    .header {
+    header {
       text-align: center;
       margin-bottom: 22px;
     }
@@ -36,17 +32,15 @@
       font-size: 29px;
       font-weight: bold;
       letter-spacing: 2px;
-      color: #FFFFFF;
     }
 
     .star {
       color: #FFD700;
-      font-size: 19px;
       animation: glow 1s infinite alternate;
     }
 
     @keyframes glow {
-      from { opacity: .5; }
+      from { opacity: .45; }
       to { opacity: 1; }
     }
 
@@ -57,17 +51,12 @@
       padding: 22px;
     }
 
-    h2 {
-      text-align: center;
-      margin-top: 0;
-      color: #FFFFFF;
-    }
+    h2, .subtitle { text-align: center; }
 
-    .subtitle {
+    .subtitle, .note {
       color: #A9B0BC;
-      text-align: center;
       font-size: 13px;
-      margin-bottom: 20px;
+      line-height: 1.6;
     }
 
     label {
@@ -82,16 +71,12 @@
       border: 1px solid #526078;
       border-radius: 8px;
       background: #0A0F1E;
-      color: white;
+      color: #fff;
       font-size: 15px;
     }
 
     input:focus, select:focus {
       outline: 1px solid #FFD700;
-    }
-
-    input[type="file"] {
-      padding: 9px;
     }
 
     .password-box {
@@ -107,7 +92,7 @@
     .show-button {
       padding: 0 12px;
       background: #34415A;
-      color: white;
+      color: #fff;
       border: 0;
       border-radius: 8px;
     }
@@ -128,16 +113,20 @@
       align-items: flex-start;
       gap: 9px;
       margin-top: 18px;
-      color: #A9B0BC;
-      font-size: 13px;
     }
 
     .terms input {
       width: auto;
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
-    button.submit {
+    .terms label {
+      margin: 0;
+      color: #A9B0BC;
+      font-size: 13px;
+    }
+
+    .submit {
       width: 100%;
       padding: 14px;
       margin-top: 20px;
@@ -156,13 +145,14 @@
     }
 
     #statusMessage {
+      display: none;
       margin-top: 16px;
       padding: 12px;
       border-radius: 8px;
       font-size: 14px;
       line-height: 1.6;
       white-space: pre-wrap;
-      display: none;
+      overflow-wrap: anywhere;
     }
 
     .login-link {
@@ -175,39 +165,24 @@
       color: #FFD700;
       text-decoration: none;
     }
-
-    .note {
-      color: #A9B0BC;
-      font-size: 12px;
-      line-height: 1.6;
-      margin-top: 12px;
-    }
   </style>
 </head>
 
 <body>
-
 <div class="container">
 
-  <div class="header">
-    <div class="logo">
-      AYNA BOOK <span class="star">✦</span>
-    </div>
+  <header>
+    <div class="logo">AYNA BOOK <span class="star">✦</span></div>
     <p>Connect • Share • Create</p>
-  </div>
+  </header>
 
-  <div class="card">
-
+  <main class="card">
     <h2>Create Your Account</h2>
-
-    <p class="subtitle">
-      Registration with Gmail Verification
-    </p>
+    <p class="subtitle">Registration with Gmail Verification</p>
 
     <form id="registrationForm">
 
       <label for="accountType">Account Category</label>
-
       <select id="accountType" required>
         <option value="personal">Personal — Free</option>
         <option value="business">Business — $10</option>
@@ -243,13 +218,11 @@
       >
 
       <label for="profilePhoto">Profile Photo (Optional)</label>
-
       <img
         id="photoPreview"
         class="photo-preview"
         alt="Profile photo preview"
       >
-
       <input
         id="profilePhoto"
         type="file"
@@ -257,7 +230,6 @@
       >
 
       <label for="password">Password (Minimum 11 Characters)</label>
-
       <div class="password-box">
         <input
           id="password"
@@ -266,7 +238,6 @@
           autocomplete="new-password"
           required
         >
-
         <button
           class="show-button"
           type="button"
@@ -275,7 +246,6 @@
       </div>
 
       <label for="confirmPassword">Confirm Password</label>
-
       <div class="password-box">
         <input
           id="confirmPassword"
@@ -284,7 +254,6 @@
           autocomplete="new-password"
           required
         >
-
         <button
           class="show-button"
           type="button"
@@ -303,29 +272,26 @@
         class="submit"
         id="registerButton"
         type="submit"
-      >
-        REGISTER
-      </button>
+      >REGISTER</button>
 
     </form>
 
     <div id="statusMessage" role="status" aria-live="polite"></div>
 
     <p class="note">
-      Registration-এর পরে আপনার Gmail-এ একটি verification link পাঠানো হবে।
-      Inbox অথবা Spam folder পরীক্ষা করুন।
+      Registration-এর পরে আপনার Gmail-এ Verification Link পাঠানো হবে।
+      Inbox অথবা Spam Folder পরীক্ষা করুন।
+      Gmail Verify না করা পর্যন্ত Dashboard ব্যবহার করা যাবে না।
     </p>
 
     <div class="login-link">
       Already have an account?
       <a href="./login.html">LOGIN</a>
     </div>
-
-  </div>
+  </main>
 
 </div>
 
 <script type="module" src="./signup.js"></script>
-
 </body>
 </html>
