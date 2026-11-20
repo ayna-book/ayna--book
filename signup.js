@@ -1,21 +1,17 @@
-
 // =========================================================
 // AYNA BOOK
-// SIGNUP CONTROLLER
-// Firebase SDK 13.4.0
-// Personal Free + Gmail Verification
+// SIGNUP / REGISTRATION
+// Firebase SDK: 13.4.0
 // =========================================================
 
 import { auth, db } from "./firebase.js";
 
 import {
-  createRegistrationAccount,
-  sendVerificationEmail,
-  normalizePhone,
-  validateGmail,
-  validatePassword,
-  getAuthErrorMessage
-} from "./auth.js";
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+  signOut
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
   doc,
@@ -23,18 +19,14 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-import {
-  signOut
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
 
 // =========================================================
-// SETTINGS
+// CONFIGURATION
 // =========================================================
 
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 
-const ALLOWED_IMAGE_TYPES = [
+const ALLOWED_PHOTO_TYPES = [
   "image/jpeg",
   "image/png",
   "image/webp"
@@ -42,10 +34,11 @@ const ALLOWED_IMAGE_TYPES = [
 
 
 // =========================================================
-// HTML ELEMENTS
+// DOM
 // =========================================================
 
-const form = document.getElementById("registrationForm");
+const registrationForm =
+  document.getElementById("registrationForm");
 
 const registerButton =
   document.getElementById("registerButton");
@@ -53,28 +46,7 @@ const registerButton =
 const statusMessage =
   document.getElementById("statusMessage");
 
-const fullNameInput =
-  document.getElementById("fullName");
-
-const emailInput =
-  document.getElementById("email");
-
-const phoneInput =
-  document.getElementById("phone");
-
-const passwordInput =
-  document.getElementById("password");
-
-const confirmPasswordInput =
-  document.getElementById("confirmPassword");
-
-const accountTypeInput =
-  document.getElementById("accountType");
-
-const termsInput =
-  document.getElementById("terms");
-
-const profilePhotoInput =
+const profilePhoto =
   document.getElementById("profilePhoto");
 
 const photoPreview =
@@ -82,37 +54,16 @@ const photoPreview =
 
 
 // =========================================================
-// CHECK REQUIRED ELEMENTS
-// =========================================================
-
-if (
-  !form ||
-  !registerButton ||
-  !statusMessage ||
-  !fullNameInput ||
-  !emailInput ||
-  !phoneInput ||
-  !passwordInput ||
-  !confirmPasswordInput ||
-  !accountTypeInput ||
-  !termsInput
-) {
-  throw new Error(
-    "AYNA BOOK: signup.html-এর প্রয়োজনীয় HTML ID পাওয়া যায়নি।"
-  );
-}
-
-
-// =========================================================
-// STATUS MESSAGE
+// STATUS
 // =========================================================
 
 function showStatus(message, type = "info") {
 
+  if (!statusMessage) return;
+
   statusMessage.textContent = message;
 
-  statusMessage.className =
-    `status-message ${type}`;
+  statusMessage.className = `status-message ${type}`;
 
   statusMessage.style.display = "block";
 }
@@ -122,13 +73,75 @@ function showStatus(message, type = "info") {
 // LOADING
 // =========================================================
 
-function setLoading(loading) {
+function setLoading(isLoading) {
 
-  registerButton.disabled = loading;
+  if (!registerButton) return;
 
-  registerButton.textContent = loading
-    ? "CREATING ACCOUNT..."
-    : "REGISTER";
+  registerButton.disabled = isLoading;
+
+  registerButton.textContent =
+    isLoading
+      ? "CREATING ACCOUNT..."
+      : "CREATE ACCOUNT";
+}
+
+
+// =========================================================
+// VALUE HELPERS
+// =========================================================
+
+function getValue(id) {
+
+  const element = document.getElementById(id);
+
+  return element
+    ? element.value.trim()
+    : "";
+}
+
+
+// =========================================================
+// GMAIL VALIDATION
+// =========================================================
+
+function validateGmail(email) {
+
+  return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(email);
+}
+
+
+// =========================================================
+// PHONE NORMALIZATION
+// =========================================================
+
+function normalizePhone(phone) {
+
+  let value = phone.replace(/\s+/g, "");
+
+  if (/^01\d{9}$/.test(value)) {
+    return "+880" + value.substring(1);
+  }
+
+  if (/^8801\d{9}$/.test(value)) {
+    return "+" + value;
+  }
+
+  if (/^\+8801\d{9}$/.test(value)) {
+    return value;
+  }
+
+  return null;
+}
+
+
+// =========================================================
+// PASSWORD VALIDATION
+// =========================================================
+
+function validatePassword(password) {
+
+  return typeof password === "string" &&
+         password.length >= 11;
 }
 
 
@@ -138,19 +151,35 @@ function setLoading(loading) {
 
 function validatePhoto(file) {
 
-  if (!file) return;
+  if (!file) {
+    return {
+      valid: true,
+      message: ""
+    };
+  }
 
-  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-    throw new Error(
-      "শুধু JPG, PNG অথবা WEBP ছবি ব্যবহার করুন।"
-    );
+  if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+
+    return {
+      valid: false,
+      message:
+        "Profile photo must be JPG, PNG or WEBP."
+    };
   }
 
   if (file.size > MAX_PHOTO_SIZE) {
-    throw new Error(
-      "Profile Photo সর্বোচ্চ 5MB হতে পারবে।"
-    );
+
+    return {
+      valid: false,
+      message:
+        "Profile photo must be 5 MB or smaller."
+    };
   }
+
+  return {
+    valid: true,
+    message: ""
+  };
 }
 
 
@@ -158,55 +187,72 @@ function validatePhoto(file) {
 // PHOTO PREVIEW
 // =========================================================
 
-let previewURL = null;
+if (profilePhoto) {
 
-if (profilePhotoInput) {
+  profilePhoto.addEventListener("change", () => {
 
-  profilePhotoInput.addEventListener("change", () => {
+    const file = profilePhoto.files?.[0];
 
-    const file = profilePhotoInput.files?.[0];
-
-    if (!file) return;
-
-    try {
-
-      validatePhoto(file);
-
-      if (previewURL) {
-        URL.revokeObjectURL(previewURL);
-      }
-
-      previewURL = URL.createObjectURL(file);
+    if (!file) {
 
       if (photoPreview) {
-        photoPreview.src = previewURL;
+        photoPreview.style.display = "none";
+        photoPreview.removeAttribute("src");
       }
 
-      showStatus(
-        "ছবির Preview প্রস্তুত হয়েছে।",
-        "info"
-      );
-
-    } catch (error) {
-
-      profilePhotoInput.value = "";
-
-      showStatus(error.message, "error");
-
+      return;
     }
 
-  });
+    const validation =
+      validatePhoto(file);
 
+    if (!validation.valid) {
+
+      showStatus(
+        validation.message,
+        "error"
+      );
+
+      profilePhoto.value = "";
+
+      if (photoPreview) {
+        photoPreview.style.display = "none";
+        photoPreview.removeAttribute("src");
+      }
+
+      return;
+    }
+
+    if (photoPreview) {
+
+      const objectURL =
+        URL.createObjectURL(file);
+
+      photoPreview.src = objectURL;
+
+      photoPreview.style.display = "block";
+
+      photoPreview.onload = () => {
+        URL.revokeObjectURL(objectURL);
+      };
+    }
+  });
 }
 
 
 // =========================================================
-// CREATE FIRESTORE PROFILE
+// FIRESTORE USER PROFILE
 // =========================================================
 
 async function createUserProfile(user, data) {
 
-  const userRef = doc(db, "users", user.uid);
+  showStatus(
+    "ধাপ ২/৪: AYNA BOOK Profile তৈরি হচ্ছে...",
+    "info"
+  );
+
+  const userRef =
+    doc(db, "users", user.uid);
 
   await setDoc(userRef, {
 
@@ -214,9 +260,11 @@ async function createUserProfile(user, data) {
 
     fullName: data.fullName,
 
-    email: user.email || "",
+    email: data.email,
 
     phone: data.phone,
+
+    accountType: "personal",
 
     bio: "",
 
@@ -232,367 +280,458 @@ async function createUserProfile(user, data) {
 
   });
 
+  return true;
 }
 
 
 // =========================================================
-// RESEND VERIFICATION BUTTON
+// SEND VERIFICATION EMAIL
 // =========================================================
 
-function showResendButton(user) {
+async function sendVerification(user) {
 
-  const resendButton = document.createElement("button");
+  showStatus(
+    "ধাপ ৩/৪: Gmail Verification Email পাঠানো হচ্ছে...",
+    "info"
+  );
 
-  resendButton.type = "button";
+  await sendEmailVerification(user);
 
-  resendButton.textContent =
-    "RESEND VERIFICATION EMAIL";
+  return true;
+}
 
-  resendButton.className = "resend-verification-button";
 
-  resendButton.addEventListener("click", async () => {
+// =========================================================
+// SUBMIT
+// =========================================================
 
-    resendButton.disabled = true;
+if (registrationForm) {
 
-    resendButton.textContent = "SENDING...";
+  registrationForm.addEventListener(
+    "submit",
+    async (event) => {
 
-    const result = await sendVerificationEmail(user);
+      event.preventDefault();
 
-    if (result.success) {
+      // -----------------------------------------------
+      // PREVENT DOUBLE SUBMIT
+      // -----------------------------------------------
 
-      showStatus(
-        "Verification Email পাঠানো হয়েছে। Gmail Inbox অথবা Spam Folder পরীক্ষা করুন।",
-        "success"
-      );
-
-      try {
-        await signOut(auth);
-      } catch (error) {
-        console.warn("Sign out warning:", error);
+      if (
+        registerButton &&
+        registerButton.disabled
+      ) {
+        return;
       }
 
-    } else {
 
-      showStatus(
-        result.message || "Email পাঠানো যায়নি।",
-        "error"
-      );
+      // -----------------------------------------------
+      // READ FORM
+      // -----------------------------------------------
 
-      resendButton.disabled = false;
+      const accountType =
+        getValue("accountType");
 
-      resendButton.textContent =
-        "RESEND VERIFICATION EMAIL";
+      const fullName =
+        getValue("fullName");
 
+      const email =
+        getValue("email").toLowerCase();
+
+      const phoneInput =
+        getValue("phone");
+
+      const password =
+        getValue("password");
+
+      const confirmPassword =
+        getValue("confirmPassword");
+
+      const terms =
+        document.getElementById("terms");
+
+      const photoFile =
+        profilePhoto?.files?.[0] || null;
+
+
+      // -----------------------------------------------
+      // VALIDATION
+      // -----------------------------------------------
+
+      if (accountType !== "personal") {
+
+        showStatus(
+          "এই Registration ধাপে বর্তমানে Personal — Free Account চালু আছে।",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (!fullName || fullName.length < 2) {
+
+        showStatus(
+          "আপনার Full Name লিখুন।",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (!validateGmail(email)) {
+
+        showStatus(
+          "সঠিক Gmail Address দিন।",
+          "error"
+        );
+
+        return;
+      }
+
+
+      const normalizedPhone =
+        normalizePhone(phoneInput);
+
+      if (!normalizedPhone) {
+
+        showStatus(
+          "সঠিক Bangladesh Mobile Number দিন।",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (!validatePassword(password)) {
+
+        showStatus(
+          "Password কমপক্ষে 11 characters হতে হবে।",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (password !== confirmPassword) {
+
+        showStatus(
+          "Password এবং Confirm Password একই নয়।",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (!terms || !terms.checked) {
+
+        showStatus(
+          "Terms and Privacy Policy গ্রহণ করুন।",
+          "error"
+        );
+
+        return;
+      }
+
+
+      const photoValidation =
+        validatePhoto(photoFile);
+
+      if (!photoValidation.valid) {
+
+        showStatus(
+          photoValidation.message,
+          "error"
+        );
+
+        return;
+      }
+
+
+      // -----------------------------------------------
+      // START
+      // -----------------------------------------------
+
+      setLoading(true);
+
+      let createdUser = null;
+      let profileCreated = false;
+      let verificationSent = false;
+
+
+      try {
+
+        // =================================================
+        // STEP 1
+        // FIREBASE AUTHENTICATION
+        // =================================================
+
+        showStatus(
+          "ধাপ ১/৪: Firebase Account তৈরি হচ্ছে...",
+          "info"
+        );
+
+
+        /*
+         * IMPORTANT:
+         * Do not block registration just because an
+         * anonymous Firebase user exists.
+         *
+         * Only an actual authenticated email/password
+         * account should be considered an existing account.
+         */
+
+        if (
+          auth.currentUser &&
+          !auth.currentUser.isAnonymous
+        ) {
+
+          showStatus(
+            "এই Browser-এ ইতোমধ্যে একটি Account চালু আছে। আগে Logout করুন।",
+            "error"
+          );
+
+          setLoading(false);
+
+          return;
+        }
+
+
+        const credential =
+          await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+
+        createdUser =
+          credential.user;
+
+
+        if (!createdUser) {
+
+          throw new Error(
+            "Firebase Account তৈরি হয়েছে বলে নিশ্চিত হওয়া যায়নি।"
+          );
+        }
+
+
+        // -----------------------------------------------
+        // UPDATE DISPLAY NAME
+        // -----------------------------------------------
+
+        showStatus(
+          "ধাপ ১/৪ সম্পন্ন: Account তৈরি হয়েছে।",
+          "success"
+        );
+
+
+        await updateProfile(
+          createdUser,
+          {
+            displayName: fullName
+          }
+        );
+
+
+        // =================================================
+        // STEP 2
+        // FIRESTORE PROFILE
+        // =================================================
+
+        await createUserProfile(
+          createdUser,
+          {
+            fullName,
+            email,
+            phone: normalizedPhone
+          }
+        );
+
+
+        profileCreated = true;
+
+
+        // =================================================
+        // STEP 3
+        // EMAIL VERIFICATION
+        // =================================================
+
+        await sendVerification(
+          createdUser
+        );
+
+
+        verificationSent = true;
+
+
+        // =================================================
+        // STEP 4
+        // SIGN OUT
+        // =================================================
+
+        showStatus(
+          "ধাপ ৪/৪: Registration সম্পন্ন হচ্ছে...",
+          "info"
+        );
+
+
+        await signOut(auth);
+
+
+        // =================================================
+        // SUCCESS
+        // =================================================
+
+        showStatus(
+          "Account তৈরি সফল হয়েছে। আপনার Gmail-এ Verification Email পাঠানো হয়েছে। Gmail খুলে Verify করুন।",
+          "success"
+        );
+
+
+        registrationForm.reset();
+
+
+        if (photoPreview) {
+
+          photoPreview.style.display = "none";
+
+          photoPreview.removeAttribute("src");
+        }
+
+
+      } catch (error) {
+
+        console.error(
+          "AYNA BOOK Registration Error:",
+          error
+        );
+
+
+        // =================================================
+        // ERROR MESSAGE
+        // =================================================
+
+        let message =
+          "Registration সম্পন্ন হয়নি।";
+
+
+        if (
+          error?.code ===
+          "auth/email-already-in-use"
+        ) {
+
+          message =
+            "এই Gmail দিয়ে Firebase-এ আগে থেকেই Account আছে।";
+        }
+
+        else if (
+          error?.code ===
+          "auth/invalid-email"
+        ) {
+
+          message =
+            "Gmail Address সঠিক নয়।";
+        }
+
+        else if (
+          error?.code ===
+          "auth/weak-password"
+        ) {
+
+          message =
+            "Password আরও শক্তিশালী করুন।";
+        }
+
+        else if (
+          error?.code ===
+          "auth/network-request-failed"
+        ) {
+
+          message =
+            "Network সমস্যা হয়েছে। Internet connection পরীক্ষা করুন।";
+        }
+
+        else if (
+          error?.code ===
+          "auth/too-many-requests"
+        ) {
+
+          message =
+            "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।";
+        }
+
+        else if (
+          error?.code ===
+          "permission-denied"
+        ) {
+
+          message =
+            "Firestore Permission Denied হয়েছে। Security Rules পরীক্ষা করতে হবে।";
+        }
+
+        else if (
+          error?.code ===
+          "failed-precondition"
+        ) {
+
+          message =
+            "Firebase configuration বা database state-এ সমস্যা হয়েছে।";
+        }
+
+        else if (profileCreated && !verificationSent) {
+
+          message =
+            "Account এবং Profile তৈরি হয়েছে, কিন্তু Verification Email পাঠানো যায়নি।";
+        }
+
+        else if (createdUser && !profileCreated) {
+
+          message =
+            "Firebase Account তৈরি হয়েছে, কিন্তু User Profile তৈরি করা যায়নি।";
+        }
+
+        else if (error?.message) {
+
+          message =
+            error.message;
+        }
+
+
+        showStatus(
+          message,
+          "error"
+        );
+
+
+        // =================================================
+        // IMPORTANT RECOVERY INFORMATION
+        // =================================================
+
+        if (createdUser) {
+
+          console.warn(
+            "Firebase User was created:",
+            createdUser.uid
+          );
+
+          console.warn(
+            "Do not repeatedly submit the form."
+          );
+        }
+
+      } finally {
+
+        setLoading(false);
+      }
     }
-
-  });
-
-  statusMessage.appendChild(resendButton);
-
+  );
 }
-
-
-// =========================================================
-// REGISTRATION
-// =========================================================
-
-form.addEventListener("submit", async (event) => {
-
-  event.preventDefault();
-
-  if (registerButton.disabled) return;
-
-  const fullName = fullNameInput.value.trim();
-
-  const email = emailInput.value.trim().toLowerCase();
-
-  const rawPhone = phoneInput.value.trim();
-
-  const password = passwordInput.value;
-
-  const confirmPassword = confirmPasswordInput.value;
-
-  const accountType = accountTypeInput.value;
-
-
-  // -------------------------------------------------------
-  // NAME VALIDATION
-  // -------------------------------------------------------
-
-  if (fullName.length < 2 || fullName.length > 100) {
-
-    showStatus(
-      "নাম ২ থেকে ১০০ অক্ষরের মধ্যে হতে হবে।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  // -------------------------------------------------------
-  // EMAIL VALIDATION
-  // -------------------------------------------------------
-
-  if (!validateGmail(email)) {
-
-    showStatus(
-      "সঠিক Gmail Address দিন।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  // -------------------------------------------------------
-  // PHONE VALIDATION
-  // -------------------------------------------------------
-
-  let phone;
-
-  try {
-
-    phone = normalizePhone(rawPhone);
-
-  } catch (error) {
-
-    showStatus(
-      error.message || "ফোন নম্বর সঠিক নয়।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  // -------------------------------------------------------
-  // PASSWORD VALIDATION
-  // -------------------------------------------------------
-
-  if (!validatePassword(password)) {
-
-    showStatus(
-      "Password কমপক্ষে ১১ অক্ষরের হতে হবে।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if (password !== confirmPassword) {
-
-    showStatus(
-      "Password এবং Confirm Password মিলছে না।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  // -------------------------------------------------------
-  // ACCOUNT TYPE
-  // -------------------------------------------------------
-
-  if (accountType !== "personal") {
-
-    showStatus(
-      "এই ধাপে শুধু Personal Free Registration চালু আছে। Paid Account পরে Payment ও Admin Approval-এর মাধ্যমে চালু হবে।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  // -------------------------------------------------------
-  // TERMS
-  // -------------------------------------------------------
-
-  if (!termsInput.checked) {
-
-    showStatus(
-      "Terms and Privacy Policy গ্রহণ করুন।",
-      "error"
-    );
-
-    return;
-  }
-
-
-  // -------------------------------------------------------
-  // PHOTO VALIDATION
-  // -------------------------------------------------------
-
-  const photoFile =
-    profilePhotoInput?.files?.[0];
-
-  try {
-
-    validatePhoto(photoFile);
-
-  } catch (error) {
-
-    showStatus(error.message, "error");
-
-    return;
-  }
-
-
-  // -------------------------------------------------------
-  // START
-  // -------------------------------------------------------
-
-  setLoading(true);
-
-  let createdUser = null;
-
-  let profileCreated = false;
-
-  try {
-
-    // STEP 1: CREATE FIREBASE AUTH ACCOUNT
-
-    showStatus(
-      "Firebase Account তৈরি হচ্ছে...",
-      "info"
-    );
-
-    const result = await createRegistrationAccount({
-
-      name: fullName,
-
-      email: email,
-
-      password: password
-
-    });
-
-    if (!result.success) {
-
-      throw new Error(
-        result.message || "Account তৈরি করা যায়নি।"
-      );
-
-    }
-
-    createdUser = result.user;
-
-
-    // STEP 2: CREATE USER PROFILE
-
-    showStatus(
-      "আপনার Profile Information সংরক্ষণ হচ্ছে...",
-      "info"
-    );
-
-    await createUserProfile(createdUser, {
-
-      fullName: fullName,
-
-      phone: phone
-
-    });
-
-    profileCreated = true;
-
-
-    // STEP 3: SEND VERIFICATION EMAIL
-
-    showStatus(
-      "Gmail Verification Email পাঠানো হচ্ছে...",
-      "info"
-    );
-
-    const verification =
-      await sendVerificationEmail(createdUser);
-
-
-    if (!verification.success) {
-
-      showStatus(
-        "Account তৈরি হয়েছে, কিন্তু Verification Email পাঠানো যায়নি। নিচের বাটনে আবার চেষ্টা করুন।",
-        "error"
-      );
-
-      showResendButton(createdUser);
-
-      return;
-    }
-
-
-    // STEP 4: SIGN OUT
-
-    await signOut(auth);
-
-
-    // STEP 5: SUCCESS
-
-    showStatus(
-      "AYNA BOOK Registration সফল হয়েছে!\n\n" +
-      "আপনার Gmail Inbox অথবা Spam Folder খুলুন।\n" +
-      "AYNA BOOK-এর Verification Link-এ ক্লিক করুন।\n" +
-      "Gmail Verify করার পরে Login করুন।",
-      "success"
-    );
-
-    form.reset();
-
-    if (photoPreview) {
-      photoPreview.removeAttribute("src");
-    }
-
-    if (previewURL) {
-      URL.revokeObjectURL(previewURL);
-      previewURL = null;
-    }
-
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Registration Error:",
-      error
-    );
-
-    if (createdUser && !profileCreated) {
-
-      showStatus(
-        "Firebase Account তৈরি হয়েছে, কিন্তু Profile সংরক্ষণ সম্পূর্ণ হয়নি। একই Gmail দিয়ে আবার Registration করবেন না। Error: " +
-        (error.message || ""),
-        "error"
-      );
-
-    } else if (createdUser && profileCreated) {
-
-      showStatus(
-        "Account ও Profile তৈরি হয়েছে। Verification Email পাঠাতে সমস্যা হয়েছে। একই Gmail দিয়ে আবার Registration করবেন না। Error: " +
-        (error.message || ""),
-        "error"
-      );
-
-      showResendButton(createdUser);
-
-    } else {
-
-      showStatus(
-        getAuthErrorMessage(error) ||
-        error.message ||
-        "Registration ব্যর্থ হয়েছে।",
-        "error"
-      );
-
-    }
-
-  } finally {
-
-    setLoading(false);
-
-  }
-
-});
 
 
 // =========================================================
@@ -600,5 +739,5 @@ form.addEventListener("submit", async (event) => {
 // =========================================================
 
 console.log(
-  "AYNA BOOK — Signup Controller Loaded."
+  "AYNA BOOK — Signup module loaded successfully."
 );
