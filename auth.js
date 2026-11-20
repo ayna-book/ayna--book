@@ -1,18 +1,19 @@
+
 // =========================================================
 // AYNA BOOK
-// Authentication Controller
+// AUTHENTICATION CONTROLLER
 // Firebase SDK: 13.4.0
-// Free Plan + Gmail Verification
+// Personal Free + Gmail Verification
 // =========================================================
 
-import {
-  auth
-} from "./firebase.js";
+import { auth } from "./firebase.js";
 
 import {
+  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   sendEmailVerification,
+  updateProfile,
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
@@ -55,9 +56,6 @@ export function validatePassword(password) {
 // =========================================================
 // BANGLADESH PHONE NORMALIZATION
 // =========================================================
-// Phone number এখন শুধু Profile তথ্যের জন্য।
-// SMS OTP ব্যবহার করা হচ্ছে না.
-// =========================================================
 
 export function normalizePhone(phone) {
 
@@ -69,17 +67,14 @@ export function normalizePhone(phone) {
     .trim()
     .replace(/[\s\-().]/g, "");
 
-  // 01XXXXXXXXX
   if (/^01\d{9}$/.test(value)) {
     return "+880" + value.substring(1);
   }
 
-  // 8801XXXXXXXXX
   if (/^8801\d{9}$/.test(value)) {
     return "+" + value;
   }
 
-  // +8801XXXXXXXXX
   if (/^\+8801\d{9}$/.test(value)) {
     return value;
   }
@@ -101,7 +96,7 @@ export function getAuthErrorMessage(error) {
   switch (code) {
 
     case "auth/email-already-in-use":
-      return "এই Gmail দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট আছে। Login করুন।";
+      return "এই Gmail দিয়ে ইতিমধ্যে অ্যাকাউন্ট আছে। Login করুন।";
 
     case "auth/invalid-email":
       return "Gmail address সঠিক নয়।";
@@ -135,10 +130,13 @@ export function getAuthErrorMessage(error) {
       return "Verification Link সঠিক নয় অথবা মেয়াদ শেষ হয়েছে।";
 
     case "auth/expired-action-code":
-      return "Verification Link-এর মেয়াদ শেষ হয়েছে। নতুন Verification Email পাঠান।";
+      return "Verification Link-এর মেয়াদ শেষ হয়েছে। নতুন Email পাঠান।";
 
     case "auth/missing-email":
       return "Gmail address দিন।";
+
+    case "auth/quota-exceeded":
+      return "Firebase Email quota অতিক্রম হয়েছে। পরে চেষ্টা করুন।";
 
     default:
 
@@ -158,10 +156,6 @@ export function getAuthErrorMessage(error) {
 // =========================================================
 // CREATE REGISTRATION ACCOUNT
 // =========================================================
-// নতুন Registration-এর মূল Auth অংশ।
-// Gmail + Password ব্যবহার করা হবে।
-// SMS OTP ব্যবহার করা হবে না.
-// =========================================================
 
 export async function createRegistrationAccount({
   name,
@@ -171,21 +165,16 @@ export async function createRegistrationAccount({
 
   try {
 
-    const cleanName =
-      String(name || "").trim();
+    const cleanName = String(name || "").trim();
 
-    const cleanEmail =
-      String(email || "")
-        .trim()
-        .toLowerCase();
+    const cleanEmail = String(email || "")
+      .trim()
+      .toLowerCase();
 
-
-    // -----------------------------------------------------
-    // NAME
-    // -----------------------------------------------------
-
-    if (!cleanName) {
-      throw new Error("আপনার নাম দিন।");
+    if (auth.currentUser) {
+      throw new Error(
+        "নতুন Registration করার আগে বর্তমান Account থেকে Logout করুন।"
+      );
     }
 
     if (cleanName.length < 2) {
@@ -194,10 +183,9 @@ export async function createRegistrationAccount({
       );
     }
 
-
-    // -----------------------------------------------------
-    // GMAIL
-    // -----------------------------------------------------
+    if (cleanName.length > 100) {
+      throw new Error("নাম সর্বোচ্চ ১০০ অক্ষরের হতে পারবে।");
+    }
 
     if (!validateGmail(cleanEmail)) {
       throw new Error(
@@ -205,52 +193,25 @@ export async function createRegistrationAccount({
       );
     }
 
-
-    // -----------------------------------------------------
-    // PASSWORD
-    // -----------------------------------------------------
-
     if (!validatePassword(password)) {
       throw new Error(
         "Password কমপক্ষে ১১ অক্ষরের হতে হবে।"
       );
     }
 
-
-    // -----------------------------------------------------
-    // ALREADY SIGNED IN CHECK
-    // -----------------------------------------------------
-
-    if (auth.currentUser) {
-
-      return {
-        success: true,
-        user: auth.currentUser,
-        alreadySignedIn: true
-      };
-    }
-
-
-    // -----------------------------------------------------
-    // CREATE FIREBASE USER
-    // -----------------------------------------------------
-
     const credential =
-      await import(
-        "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"
-      )
-      .then(module =>
-        module.createUserWithEmailAndPassword(
-          auth,
-          cleanEmail,
-          password
-        )
+      await createUserWithEmailAndPassword(
+        auth,
+        cleanEmail,
+        password
       );
 
+    const user = credential.user;
 
-    const user =
-      credential.user;
-
+    // Firebase Auth Profile Name
+    await updateProfile(user, {
+      displayName: cleanName
+    });
 
     return {
       success: true,
@@ -260,15 +221,13 @@ export async function createRegistrationAccount({
   } catch (error) {
 
     console.error(
-      "AYNA BOOK — Registration Account Error:",
+      "AYNA BOOK — Registration Error:",
       error
     );
 
     return {
       success: false,
-      message:
-        error?.message ||
-        getAuthErrorMessage(error),
+      message: getAuthErrorMessage(error),
       error
     };
   }
@@ -287,22 +246,26 @@ export async function sendVerificationEmail(
 
     if (!user) {
       throw new Error(
-        "Verification Email পাঠানোর জন্য Login session পাওয়া যায়নি।"
+        "Verification Email পাঠানোর জন্য Login Session প্রয়োজন।"
       );
     }
 
+    await user.reload();
 
-    if (user.emailVerified) {
+    const currentUser = auth.currentUser;
 
+    if (!currentUser) {
+      throw new Error("Login Session পাওয়া যায়নি।");
+    }
+
+    if (currentUser.emailVerified) {
       return {
         success: true,
         alreadyVerified: true
       };
     }
 
-
-    await sendEmailVerification(user);
-
+    await sendEmailVerification(currentUser);
 
     return {
       success: true
@@ -332,49 +295,35 @@ export async function checkEmailVerification() {
 
   try {
 
-    const user =
-      auth.currentUser;
+    const user = auth.currentUser;
 
     if (!user) {
-
       return {
         success: false,
         verified: false,
-        message: "Login session পাওয়া যায়নি।"
+        message: "Login Session পাওয়া যায়নি।"
       };
     }
 
-
-    // Firebase থেকে সর্বশেষ user information নেওয়া
     await user.reload();
 
+    const refreshedUser = auth.currentUser;
 
-    const refreshedUser =
-      auth.currentUser;
-
-
-    if (refreshedUser?.emailVerified) {
-
-      return {
-        success: true,
-        verified: true,
-        user: refreshedUser
-      };
-    }
-
+    const verified = !!refreshedUser?.emailVerified;
 
     return {
       success: true,
-      verified: false,
+      verified,
       user: refreshedUser,
-      message:
-        "আপনার Gmail এখনো Verify করা হয়নি।"
+      message: verified
+        ? "Gmail Verified হয়েছে।"
+        : "আপনার Gmail এখনো Verify করা হয়নি।"
     };
 
   } catch (error) {
 
     console.error(
-      "AYNA BOOK — Email Verification Check Error:",
+      "AYNA BOOK — Verification Check Error:",
       error
     );
 
@@ -392,49 +341,27 @@ export async function checkEmailVerification() {
 // LOGIN
 // =========================================================
 
-export async function loginUser(
-  email,
-  password
-) {
+export async function loginUser(email, password) {
 
   try {
 
-    const cleanEmail =
-      String(email || "")
-        .trim()
-        .toLowerCase();
-
-
-    // -----------------------------------------------------
-    // VALIDATE GMAIL
-    // -----------------------------------------------------
+    const cleanEmail = String(email || "")
+      .trim()
+      .toLowerCase();
 
     if (!validateGmail(cleanEmail)) {
-
       return {
         success: false,
         message: "সঠিক Gmail address দিন।"
       };
     }
 
-
-    // -----------------------------------------------------
-    // VALIDATE PASSWORD
-    // -----------------------------------------------------
-
     if (!validatePassword(password)) {
-
       return {
         success: false,
-        message:
-          "Password কমপক্ষে ১১ অক্ষরের হতে হবে।"
+        message: "Password কমপক্ষে ১১ অক্ষরের হতে হবে।"
       };
     }
-
-
-    // -----------------------------------------------------
-    // FIREBASE LOGIN
-    // -----------------------------------------------------
 
     const credential =
       await signInWithEmailAndPassword(
@@ -443,23 +370,13 @@ export async function loginUser(
         password
       );
 
-
-    const user =
-      credential.user;
-
-
-    // -----------------------------------------------------
-    // EMAIL VERIFICATION CHECK
-    // -----------------------------------------------------
+    const user = credential.user;
 
     await user.reload();
 
+    const currentUser = auth.currentUser;
 
-    const currentUser =
-      auth.currentUser;
-
-
-    if (!currentUser.emailVerified) {
+    if (!currentUser?.emailVerified) {
 
       await signOut(auth);
 
@@ -467,14 +384,9 @@ export async function loginUser(
         success: false,
         emailVerified: false,
         message:
-          "আপনার Gmail এখনো Verify করা হয়নি। Gmail Inbox/Spam Folder থেকে Verification Link-এ ক্লিক করুন।"
+          "আপনার Gmail এখনো Verify করা হয়নি। Gmail Inbox অথবা Spam Folder পরীক্ষা করুন।"
       };
     }
-
-
-    // -----------------------------------------------------
-    // LOGIN SUCCESS
-    // -----------------------------------------------------
 
     return {
       success: true,
@@ -502,33 +414,25 @@ export async function loginUser(
 // PASSWORD RESET
 // =========================================================
 
-export async function resetPassword(
-  email
-) {
+export async function resetPassword(email) {
 
   try {
 
-    const cleanEmail =
-      String(email || "")
-        .trim()
-        .toLowerCase();
-
+    const cleanEmail = String(email || "")
+      .trim()
+      .toLowerCase();
 
     if (!validateGmail(cleanEmail)) {
-
       return {
         success: false,
-        message:
-          "সঠিক Gmail address দিন।"
+        message: "সঠিক Gmail address দিন।"
       };
     }
-
 
     await sendPasswordResetEmail(
       auth,
       cleanEmail
     );
-
 
     return {
       success: true,
@@ -586,17 +490,13 @@ export async function logoutUser() {
 // AUTH STATE LISTENER
 // =========================================================
 
-export function watchAuthState(
-  callback
-) {
+export function watchAuthState(callback) {
 
   if (typeof callback !== "function") {
-
     throw new Error(
-      "Auth state callback function প্রয়োজন।"
+      "Auth State Callback Function প্রয়োজন।"
     );
   }
-
 
   return onAuthStateChanged(
     auth,
@@ -610,7 +510,6 @@ export function watchAuthState(
 // =========================================================
 
 export function getCurrentUser() {
-
   return auth.currentUser || null;
 }
 
@@ -620,7 +519,6 @@ export function getCurrentUser() {
 // =========================================================
 
 export function isLoggedIn() {
-
   return !!auth.currentUser;
 }
 
@@ -630,7 +528,6 @@ export function isLoggedIn() {
 // =========================================================
 
 export function isEmailVerified() {
-
   return !!(
     auth.currentUser &&
     auth.currentUser.emailVerified
@@ -643,9 +540,13 @@ export function isEmailVerified() {
 // =========================================================
 
 console.log(
-  "AYNA BOOK — Authentication controller loaded successfully."
+  "AYNA BOOK — Authentication Controller Loaded."
 );
 
 console.log(
-  "AYNA BOOK — Free Plan + Gmail Verification mode active."
+  "AYNA BOOK — Firebase SDK 13.4.0."
+);
+
+console.log(
+  "AYNA BOOK — Gmail Verification Mode Active."
 );
