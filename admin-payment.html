@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#0A0F1E"
+  >
+
+  <meta
+    name="robots"
+    content="noindex,nofollow"
+  >
+
+  <title>
+    AYNA BOOK — Admin Payment Verification
+  </title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    body {
+
+      margin: 0;
+
+      min-height: 100vh;
+
+      background: #0A0F1E;
+
+      color: #FFFFFF;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    }
+
+
+    .page {
+
+      min-height: 100vh;
+
+      padding: 18px 12px 50px;
+
+    }
+
+
+    .container {
+
+      width: 100%;
+
+      max-width: 1100px;
+
+      margin: auto;
+
+    }
+
+
+    /* =====================================
+       HEADER
+    ===================================== */
+
+    .header {
+
+      min-height: 60px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      border-bottom:
+        1px solid
+        rgba(255,215,0,.4);
+
+      margin-bottom: 22px;
+
+    }
+
+
+    .brand {
+
+      font-size: 21px;
+
+      font-weight: 900;
+
+      letter-spacing: 1px;
+
+    }
+
+
+    .admin-label {
+
+      color: #FFD700;
+
+      font-size: 13px;
+
+      font-weight: 800;
+
+    }
+
+
+    /* =====================================
+       CARD
+    ===================================== */
+
+    .card {
+
+      background: #121A2A;
+
+      border:
+        1px solid
+        rgba(255,215,0,.30);
+
+      border-radius: 16px;
+
+      padding: 20px;
+
+      margin-bottom: 18px;
+
+    }
+
+
+    h1 {
+
+      margin: 0 0 8px;
+
+      font-size: 24px;
+
+    }
+
+
+    h2 {
+
+      color: #FFD700;
+
+      font-size: 18px;
+
+      margin-top: 0;
+
+    }
+
+
+    .description {
+
+      color: #A9B0BC;
+
+      line-height: 1.6;
+
+    }
+
+
+    /* =====================================
+       ACCESS
+    ===================================== */
+
+    .access {
+
+      padding: 15px;
+
+      border-radius: 12px;
+
+      background:
+        rgba(255,152,0,.08);
+
+      border:
+        1px solid
+        rgba(255,152,0,.35);
+
+      color: #FFD180;
+
+      line-height: 1.6;
+
+    }
+
+
+    .access.allowed {
+
+      background:
+        rgba(76,175,80,.10);
+
+      border-color:
+        rgba(76,175,80,.35);
+
+      color: #A5D6A7;
+
+    }
+
+
+    .access.denied {
+
+      background:
+        rgba(244,67,54,.10);
+
+      border-color:
+        rgba(244,67,54,.35);
+
+      color: #FFABAB;
+
+    }
+
+
+    /* =====================================
+       TABLE
+    ===================================== */
+
+    .table-wrapper {
+
+      width: 100%;
+
+      overflow-x: auto;
+
+    }
+
+
+    table {
+
+      width: 100%;
+
+      min-width: 850px;
+
+      border-collapse: collapse;
+
+    }
+
+
+    th,
+    td {
+
+      padding: 12px;
+
+      text-align: left;
+
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+      vertical-align: top;
+
+    }
+
+
+    th {
+
+      color: #FFD700;
+
+      font-size: 13px;
+
+      background: #0D1422;
+
+    }
+
+
+    td {
+
+      color: #FFFFFF;
+
+      font-size: 14px;
+
+    }
+
+
+    .muted {
+
+      color: #A9B0BC;
+
+    }
+
+
+    /* =====================================
+       STATUS
+    ===================================== */
+
+    .status {
+
+      display: inline-block;
+
+      padding: 6px 10px;
+
+      border-radius: 20px;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      background:
+        rgba(255,215,0,.10);
+
+      color: #FFD700;
+
+      border:
+        1px solid
+        rgba(255,215,0,.30);
+
+    }
+
+
+    .status.approved {
+
+      color: #A5D6A7;
+
+      background:
+        rgba(76,175,80,.10);
+
+      border-color:
+        rgba(76,175,80,.30);
+
+    }
+
+
+    .status.rejected {
+
+      color: #FFABAB;
+
+      background:
+        rgba(244,67,54,.10);
+
+      border-color:
+        rgba(244,67,54,.30);
+
+    }
+
+
+    /* =====================================
+       BUTTONS
+    ===================================== */
+
+    button {
+
+      border: none;
+
+      border-radius: 8px;
+
+      padding: 9px 12px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      margin: 2px;
+
+    }
+
+
+    .approve {
+
+      background: #FFD700;
+
+      color: #0A0F1E;
+
+    }
+
+
+    .reject {
+
+      background: #B71C1C;
+
+      color: #FFFFFF;
+
+    }
+
+
+    .refresh {
+
+      background: #1A2233;
+
+      color: #FFFFFF;
+
+      border:
+        1px solid
+        rgba(255,215,0,.35);
+
+    }
+
+
+    button:disabled {
+
+      opacity: .45;
+
+      cursor: not-allowed;
+
+    }
+
+
+    /* =====================================
+       MESSAGE
+    ===================================== */
+
+    #message {
+
+      display: none;
+
+      margin-top: 15px;
+
+      padding: 12px;
+
+      border-radius: 10px;
+
+      line-height: 1.5;
+
+    }
+
+
+    #message.show {
+
+      display: block;
+
+    }
+
+
+    #message.info {
+
+      color: #90CAF9;
+
+      background:
+        rgba(33,150,243,.10);
+
+      border:
+        1px solid
+        rgba(33,150,243,.30);
+
+    }
+
+
+    #message.error {
+
+      color: #FFABAB;
+
+      background:
+        rgba(244,67,54,.10);
+
+      border:
+        1px solid
+        rgba(244,67,54,.30);
+
+    }
+
+
+    #message.success {
+
+      color: #A5D6A7;
+
+      background:
+        rgba(76,175,80,.10);
+
+      border:
+        1px solid
+        rgba(76,175,80,.30);
+
+    }
+
+
+    /* =====================================
+       FOOTER
+    ===================================== */
+
+    .footer {
+
+      text-align: center;
+
+      color: #A9B0BC;
+
+      font-size: 13px;
+
+      margin-top: 25px;
+
+    }
+
+
+    @media (max-width: 600px) {
+
+      .page {
+
+        padding:
+          12px 8px 40px;
+
+      }
+
+
+      .card {
+
+        padding: 15px;
+
+      }
+
+
+      h1 {
+
+        font-size: 21px;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+  <div class="container">
+
+
+    <!-- ===================================
+         HEADER
+    ==================================== -->
+
+    <header class="header">
+
+      <div class="brand">
+        AYNA BOOK
+      </div>
+
+      <div class="admin-label">
+        ADMIN PAYMENT PANEL
+      </div>
+
+    </header>
+
+
+    <!-- ===================================
+         TITLE
+    ==================================== -->
+
+    <section class="card">
+
+      <h1>
+        Payment Verification
+      </h1>
+
+      <div class="description">
+
+        এখানে AYNA BOOK-এর Paid Account
+        Payment Requests যাচাই করার জন্য
+        Admin interface থাকবে।
+
+      </div>
+
+
+      <div
+        id="accessStatus"
+        class="access"
+        style="margin-top:16px;"
+      >
+
+        Admin access যাচাই করা হচ্ছে...
+
+      </div>
+
+
+      <div id="message"></div>
+
+    </section>
+
+
+    <!-- ===================================
+         CONTROLS
+    ==================================== -->
+
+    <section
+      class="card"
+      id="adminPanel"
+      style="display:none;"
+    >
+
+      <h2>
+        Payment Requests
+      </h2>
+
+
+      <button
+        type="button"
+        class="refresh"
+        id="refreshBtn"
+      >
+        REFRESH
+      </button>
+
+
+      <div
+        class="table-wrapper"
+        style="margin-top:15px;"
+      >
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Request ID
+              </th>
+
+              <th>
+                Account
+              </th>
+
+              <th>
+                User
+              </th>
+
+              <th>
+                Method
+              </th>
+
+              <th>
+                Amount
+              </th>
+
+              <th>
+                Transaction
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Action
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="paymentList">
+
+            <tr>
+
+              <td
+                colspan="8"
+                class="muted"
+              >
+
+                Payment Request loading...
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================
+         SECURITY
+    ==================================== -->
+
+    <section class="card">
+
+      <h2>
+        🔐 Admin Security
+      </h2>
+
+
+      <div class="description">
+
+        সাধারণ Firebase user এই panel ব্যবহার
+        করতে পারবে না।
+
+        <br><br>
+
+        Admin permission অবশ্যই Firebase
+        Authentication-এর trusted
+        <strong>Custom Claim</strong>
+        অথবা নিরাপদ backend-এর মাধ্যমে
+        দেওয়া উচিত।
+
+        <br><br>
+
+        শুধু JavaScript-এ কোনো email address
+        লিখে Admin বানানো নিরাপদ নয়।
+
+      </div>
+
+    </section>
+
+
+    <div class="footer">
+
+      © AYNA BOOK — Secure Administration
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+<!-- =========================================
+     ADMIN CONTROLLER
+========================================== -->
+
+<script type="module">
+
+  import {
+    auth
+  } from "./firebase.js";
+
+
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+
+  const accessStatus =
+    document.getElementById(
+      "accessStatus"
+    );
+
+
+  const adminPanel =
+    document.getElementById(
+      "adminPanel"
+    );
+
+
+  const message =
+    document.getElementById(
+      "message"
+    );
+
+
+  /*
+   * এই UI এখনো Approve/Reject
+   * Firebase update করছে না।
+   *
+   * কারণ client-side থেকে সরাসরি
+   * Admin permission দেওয়া নিরাপদ নয়।
+   */
+
+
+  function showMessage(
+    text,
+    type = "info"
+  ) {
+
+    message.textContent =
+      text;
+
+    message.className =
+      type +
+      " show";
+
+  }
+
+
+  onAuthStateChanged(
+    auth,
+
+    async user => {
+
+      if (!user) {
+
+        accessStatus.textContent =
+          "LOGIN REQUIRED — Admin login প্রয়োজন।";
+
+        accessStatus.className =
+          "access denied";
+
+        adminPanel.style.display =
+          "none";
+
+        return;
+
+      }
+
+
+      try {
+
+        const tokenResult =
+          await user.getIdTokenResult(
+            true
+          );
+
+
+        const isAdmin =
+          tokenResult.claims.admin === true;
+
+
+        if (!isAdmin) {
+
+          accessStatus.textContent =
+            "ACCESS DENIED — আপনার Admin permission নেই।";
+
+          accessStatus.className =
+            "access denied";
+
+          adminPanel.style.display =
+            "none";
+
+          showMessage(
+            "এই পেজটি শুধুমাত্র অনুমোদিত AYNA BOOK Admin ব্যবহার করতে পারবেন।",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        /*
+         * Custom Claim পাওয়া গেছে।
+         */
+
+        accessStatus.textContent =
+          "ADMIN ACCESS VERIFIED";
+
+        accessStatus.className =
+          "access allowed";
+
+        adminPanel.style.display =
+          "block";
+
+
+        showMessage(
+          "Admin permission যাচাই সফল হয়েছে।",
+          "success"
+        );
+
+
+        /*
+         * Payment list এবং Approve/Reject
+         * backend/API দিয়ে পরের ধাপে
+         * নিরাপদভাবে যুক্ত হবে।
+         */
+
+        console.log(
+          "AYNA BOOK — Admin access verified."
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "AYNA BOOK — Admin verification error:",
+          error
+        );
+
+
+        accessStatus.textContent =
+          "ADMIN VERIFICATION FAILED";
+
+        accessStatus.className =
+          "access denied";
+
+
+        adminPanel.style.display =
+          "none";
+
+
+        showMessage(
+          "Admin permission যাচাই করা যায়নি।",
+          "error"
+        );
+
+      }
+
+    }
+  );
+
+
+  /* =======================================
+     REFRESH
+  ======================================= */
+
+  const refreshBtn =
+    document.getElementById(
+      "refreshBtn"
+    );
+
+
+  refreshBtn.addEventListener(
+    "click",
+    () => {
+
+      window.location.reload();
+
+    }
+  );
+
+
+  console.log(
+    "AYNA BOOK — Admin Payment page loaded."
+  );
+
+</script>
+
+
+</body>
+
+</html>
