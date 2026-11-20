@@ -4,9 +4,8 @@ service cloud.firestore {
 
   match /databases/{database}/documents {
 
-
     // =====================================================
-    // COMMON FUNCTIONS
+    // AYNA BOOK — Security Helper Functions
     // =====================================================
 
     function signedIn() {
@@ -21,20 +20,17 @@ service cloud.firestore {
 
     // =====================================================
     // USERS
+    // একজন ব্যবহারকারী শুধু নিজের প্রোফাইল নিয়ন্ত্রণ করতে পারবে
     // =====================================================
 
     match /users/{userId} {
 
-      // নিজের Account document তৈরি করতে পারবে
       allow create: if isOwner(userId);
 
-      // শুধু নিজের Account পড়তে পারবে
       allow read: if isOwner(userId);
 
-      // শুধু নিজের Account update করতে পারবে
       allow update: if isOwner(userId);
 
-      // নিজের Account delete করতে পারবে
       allow delete: if isOwner(userId);
     }
 
@@ -45,66 +41,64 @@ service cloud.firestore {
 
     match /posts/{postId} {
 
-      // Public posts পড়া যাবে
+      // Public post পড়া যাবে
       allow read: if true;
 
-
-      // Login করা user নিজের নামে Post তৈরি করতে পারবে
-      allow create: if signedIn()
+      // Login করা ব্যবহারকারী নিজের নামে post তৈরি করতে পারবে
+      allow create:
+        if signedIn()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.text is string
         && request.resource.data.text.size() <= 5000;
 
-
-      // শুধু Post-এর owner update করতে পারবে
-      allow update: if signedIn()
+      // শুধু post-এর মালিক update করতে পারবে
+      allow update:
+        if signedIn()
         && resource.data.uid == request.auth.uid
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.text is string
         && request.resource.data.text.size() <= 5000;
 
-
-      // শুধু Post-এর owner delete করতে পারবে
-      allow delete: if signedIn()
+      // শুধু মালিক delete করতে পারবে
+      allow delete:
+        if signedIn()
         && resource.data.uid == request.auth.uid;
     }
 
 
     // =====================================================
-    // CHAT ROOMS / MESSAGES
+    // CHAT / MESSAGES
     // =====================================================
 
     match /rooms/{roomId}/messages/{messageId} {
 
-      // Login করা user message পড়তে পারবে
-      allow read: if signedIn();
+      // Login করা ব্যবহারকারী message পড়তে পারবে
+      allow read:
+        if signedIn();
 
-
-      // Login করা user নিজের UID দিয়ে message তৈরি করতে পারবে
-      allow create: if signedIn()
+      // নিজের UID দিয়ে message তৈরি করতে হবে
+      allow create:
+        if signedIn()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.text is string
         && request.resource.data.text.size() > 0
         && request.resource.data.text.size() <= 2000;
 
-
-      // Message পরিবর্তন করা যাবে না
+      // বর্তমানে message edit বন্ধ
       allow update: if false;
 
-
-      // Message delete করা যাবে না
+      // বর্তমানে message delete বন্ধ
       allow delete: if false;
     }
 
 
     // =====================================================
     // DEFAULT DENY
+    // অজানা কোনো collection-এ access বন্ধ
     // =====================================================
 
     match /{document=**} {
-
       allow read, write: if false;
     }
-
   }
 }
