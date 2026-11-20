@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#0A0F1E"
+  >
+
+  <title>AYNA BOOK — Payment</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0A0F1E;
+      color: #FFFFFF;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 20px 14px 50px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    /* ==============================
+       HEADER
+    ============================== */
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      min-height: 58px;
+
+      border-bottom:
+        1px solid rgba(255, 215, 0, 0.45);
+
+      margin-bottom: 25px;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #FFFFFF;
+    }
+
+    .star {
+      font-size: 18px;
+      color: #FFFFFF;
+
+      animation:
+        starPulse 1s infinite;
+    }
+
+    @keyframes starPulse {
+
+      0% {
+        opacity: 0.45;
+        transform: scale(0.9);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.15);
+      }
+
+      100% {
+        opacity: 0.45;
+        transform: scale(0.9);
+      }
+
+    }
+
+    /* ==============================
+       CARD
+    ============================== */
+
+    .card {
+      background: #121A2A;
+
+      border:
+        1px solid rgba(255, 215, 0, 0.35);
+
+      border-radius: 18px;
+
+      padding: 22px;
+
+      margin-bottom: 18px;
+
+      box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.28);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+
+      font-size: 25px;
+
+      color: #FFFFFF;
+
+      text-align: center;
+    }
+
+    h2 {
+      margin: 0 0 15px;
+
+      font-size: 18px;
+
+      color: #FFD700;
+    }
+
+    p {
+      color: #A9B0BC;
+      line-height: 1.6;
+    }
+
+    /* ==============================
+       ACCOUNT SUMMARY
+    ============================== */
+
+    .account-box {
+      background: #1A2233;
+
+      border:
+        1px solid #FFD700;
+
+      border-radius: 14px;
+
+      padding: 18px;
+
+      margin-top: 20px;
+      margin-bottom: 20px;
+
+      text-align: center;
+    }
+
+    .account-name {
+      font-size: 24px;
+      font-weight: 800;
+
+      color: #FFD700;
+    }
+
+    .price {
+      margin-top: 8px;
+
+      font-size: 25px;
+      font-weight: 800;
+
+      color: #FFFFFF;
+    }
+
+    .status {
+      display: inline-block;
+
+      margin-top: 12px;
+
+      padding: 7px 13px;
+
+      border-radius: 20px;
+
+      background: rgba(255, 215, 0, 0.12);
+
+      border:
+        1px solid rgba(255, 215, 0, 0.5);
+
+      color: #FFD700;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ==============================
+       PAYMENT METHODS
+    ============================== */
+
+    .method {
+      background: #1A2233;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.08);
+
+      border-radius: 13px;
+
+      padding: 15px;
+
+      margin-bottom: 12px;
+    }
+
+    .method-title {
+      font-size: 17px;
+      font-weight: 700;
+
+      margin-bottom: 8px;
+
+      color: #FFFFFF;
+    }
+
+    .payment-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      margin-top: 8px;
+    }
+
+    .payment-value {
+      flex: 1;
+
+      min-width: 0;
+
+      padding: 11px;
+
+      background: #0D1422;
+
+      border:
+        1px solid rgba(255, 215, 0, 0.22);
+
+      border-radius: 9px;
+
+      color: #FFFFFF;
+
+      word-break: break-word;
+    }
+
+    .copy-btn {
+      border: none;
+
+      background: #FFD700;
+
+      color: #0A0F1E;
+
+      padding: 10px 13px;
+
+      border-radius: 9px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      white-space: nowrap;
+    }
+
+    .copy-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* ==============================
+       FORM
+    ============================== */
+
+    label {
+      display: block;
+
+      margin-top: 15px;
+      margin-bottom: 7px;
+
+      color: #FFFFFF;
+
+      font-weight: 700;
+    }
+
+    input,
+    select {
+      width: 100%;
+
+      padding: 13px 14px;
+
+      background: #1A2233;
+
+      color: #FFFFFF;
+
+      border:
+        1px solid rgba(255, 215, 0, 0.35);
+
+      border-radius: 10px;
+
+      outline: none;
+
+      font-size: 15px;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #FFD700;
+
+      box-shadow:
+        0 0 0 2px rgba(255, 215, 0, 0.10);
+    }
+
+    input[type="file"] {
+      padding: 10px;
+    }
+
+    .help {
+      margin-top: 6px;
+
+      font-size: 13px;
+
+      color: #A9B0BC;
+    }
+
+    .submit-btn {
+      width: 100%;
+
+      margin-top: 22px;
+
+      padding: 14px;
+
+      border: none;
+
+      border-radius: 11px;
+
+      background: #FFD700;
+
+      color: #0A0F1E;
+
+      font-size: 16px;
+
+      font-weight: 900;
+
+      cursor: pointer;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.55;
+
+      cursor: not-allowed;
+    }
+
+    /* ==============================
+       MESSAGE
+    ============================== */
+
+    .message {
+      margin-top: 15px;
+
+      padding: 12px;
+
+      border-radius: 10px;
+
+      display: none;
+
+      line-height: 1.5;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.info {
+      background: rgba(33, 150, 243, 0.12);
+
+      border:
+        1px solid rgba(33, 150, 243, 0.35);
+
+      color: #90CAF9;
+    }
+
+    .message.success {
+      background: rgba(76, 175, 80, 0.12);
+
+      border:
+        1px solid rgba(76, 175, 80, 0.35);
+
+      color: #A5D6A7;
+    }
+
+    .message.error {
+      background: rgba(244, 67, 54, 0.12);
+
+      border:
+        1px solid rgba(244, 67, 54, 0.35);
+
+      color: #FFABAB;
+    }
+
+    /* ==============================
+       WARNING
+    ============================== */
+
+    .warning {
+      padding: 15px;
+
+      border-radius: 12px;
+
+      background: rgba(255, 152, 0, 0.10);
+
+      border:
+        1px solid rgba(255, 152, 0, 0.35);
+
+      color: #FFD180;
+
+      line-height: 1.6;
+
+      font-size: 14px;
+    }
+
+    /* ==============================
+       FOOTER
+    ============================== */
+
+    .footer {
+      text-align: center;
+
+      margin-top: 25px;
+
+      color: #A9B0BC;
+
+      font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+
+      .page {
+        padding: 14px 10px 40px;
+      }
+
+      .card {
+        padding: 17px;
+      }
+
+      .brand {
+        font-size: 19px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .payment-row {
+        align-items: stretch;
+      }
+
+      .copy-btn {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+  <div class="container">
+
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+      <div class="brand">
+        AYNA BOOK
+      </div>
+
+      <div class="star">
+        ★
+      </div>
+
+    </header>
+
+
+    <!-- TITLE -->
+
+    <section class="card">
+
+      <h1>
+        Payment & Account Activation
+      </h1>
+
+      <p style="text-align:center;">
+        আপনার নির্বাচিত Paid Account সক্রিয় করার জন্য
+        Payment Information জমা দিন।
+      </p>
+
+
+      <!-- ACCOUNT -->
+
+      <div class="account-box">
+
+        <div
+          id="accountName"
+          class="account-name"
+        >
+          Loading...
+        </div>
+
+        <div
+          id="accountPrice"
+          class="price"
+        >
+          —
+        </div>
+
+        <div class="status">
+          PAYMENT PENDING VERIFICATION
+        </div>
+
+      </div>
+
+
+      <div class="warning">
+
+        <strong>গুরুত্বপূর্ণ:</strong>
+
+        Payment information দেখানোর মাধ্যমে
+        Account automatically Active হবে না।
+
+        Payment করার পরে Transaction/Reference ID
+        এবং প্রয়োজন হলে Payment Proof জমা দিতে হবে।
+
+        AYNA BOOK কর্তৃপক্ষ যাচাই করার পরে
+        Paid Account Active করা হবে।
+
+      </div>
+
+    </section>
+
+
+    <!-- BANGLADESH PAYMENT -->
+
+    <section class="card">
+
+      <h2>
+        🇧🇩 Bangladesh Payment
+      </h2>
+
+
+      <div class="method">
+
+        <div class="method-title">
+          bKash
+        </div>
+
+        <div class="payment-row">
+
+          <div
+            class="payment-value"
+            id="bkashNumber"
+          >
+            01400751906
+          </div>
+
+          <button
+            type="button"
+            class="copy-btn"
+            data-copy="01400751906"
+          >
+            COPY
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="method">
+
+        <div class="method-title">
+          Nagad
+        </div>
+
+        <div class="payment-row">
+
+          <div
+            class="payment-value"
+          >
+            01400751906
+          </div>
+
+          <button
+            type="button"
+            class="copy-btn"
+            data-copy="01400751906"
+          >
+            COPY
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="method">
+
+        <div class="method-title">
+          Rocket
+        </div>
+
+        <div class="payment-row">
+
+          <div
+            class="payment-value"
+          >
+            01400751906
+          </div>
+
+          <button
+            type="button"
+            class="copy-btn"
+            data-copy="01400751906"
+          >
+            COPY
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="method">
+
+        <div class="method-title">
+          Upay
+        </div>
+
+        <div class="payment-row">
+
+          <div
+            class="payment-value"
+          >
+            01400751906
+          </div>
+
+          <button
+            type="button"
+            class="copy-btn"
+            data-copy="01400751906"
+          >
+            COPY
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- INTERNATIONAL -->
+
+    <section class="card">
+
+      <h2>
+        🌍 International Payment
+      </h2>
+
+
+      <div class="method">
+
+        <div class="method-title">
+          PayPal
+        </div>
+
+        <div class="payment-row">
+
+          <div
+            class="payment-value"
+          >
+            aynabookofficeal@gmail.com
+          </div>
+
+          <button
+            type="button"
+            class="copy-btn"
+            data-copy="aynabookofficeal@gmail.com"
+          >
+            COPY
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="method">
+
+        <div class="method-title">
+          Payoneer
+        </div>
+
+        <div class="payment-row">
+
+          <div
+            class="payment-value"
+          >
+            aynabookofficeal@gmail.com
+          </div>
+
+          <button
+            type="button"
+            class="copy-btn"
+            data-copy="aynabookofficeal@gmail.com"
+          >
+            COPY
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <p class="help">
+
+        International payment করার আগে
+        সংশ্লিষ্ট PayPal/Payoneer account
+        receiving capability নিশ্চিত করুন।
+
+      </p>
+
+    </section>
+
+
+    <!-- PAYMENT FORM -->
+
+    <section class="card">
+
+      <h2>
+        🧾 Payment Submission
+      </h2>
+
+
+      <form id="paymentForm">
+
+
+        <label for="paymentMethod">
+          Payment Method
+        </label>
+
+        <select
+          id="paymentMethod"
+          required
+        >
+
+          <option value="">
+            Select Payment Method
+          </option>
+
+          <option value="bkash">
+            bKash
+          </option>
+
+          <option value="nagad">
+            Nagad
+          </option>
+
+          <option value="rocket">
+            Rocket
+          </option>
+
+          <option value="upay">
+            Upay
+          </option>
+
+          <option value="paypal">
+            PayPal
+          </option>
+
+          <option value="payoneer">
+            Payoneer
+          </option>
+
+        </select>
+
+
+        <label for="transactionId">
+          Transaction / Reference ID
+        </label>
+
+        <input
+          type="text"
+          id="transactionId"
+          name="transactionId"
+          placeholder="Transaction / Reference ID"
+          maxlength="100"
+          autocomplete="off"
+          required
+        >
+
+
+        <label for="paymentAmount">
+          Payment Amount
+        </label>
+
+        <input
+          type="text"
+          id="paymentAmount"
+          name="paymentAmount"
+          placeholder="যেমন: 10 USD / BDT amount"
+          maxlength="50"
+          required
+        >
+
+
+        <label for="paymentProof">
+          Payment Screenshot / Proof
+        </label>
+
+        <input
+          type="file"
+          id="paymentProof"
+          name="paymentProof"
+          accept="image/*"
+        >
+
+        <div class="help">
+
+          সর্বোচ্চ 5 MB-এর image upload করুন।
+          Payment proof না থাকলে প্রয়োজনীয় তথ্য দিয়ে
+          Submit করতে পারেন।
+
+        </div>
+
+
+        <button
+          type="submit"
+          id="submitPaymentBtn"
+          class="submit-btn"
+        >
+          SUBMIT PAYMENT FOR VERIFICATION
+        </button>
+
+
+        <div
+          id="message"
+          class="message"
+        ></div>
+
+      </form>
+
+    </section>
+
+
+    <!-- INFORMATION -->
+
+    <section class="card">
+
+      <h2>
+        🔐 নিরাপত্তা ও Verification
+      </h2>
+
+      <p>
+
+        AYNA BOOK payment submission-এর পরে
+        আপনার Account Status হবে
+        <strong>Pending Verification</strong>।
+
+        Payment যাচাই না হওয়া পর্যন্ত
+        Paid features Active করা হবে না।
+
+      </p>
+
+      <p>
+
+        আপনার Password, OTP বা Firebase
+        security information কখনোই Payment
+        form-এ দেবেন না।
+
+      </p>
+
+    </section>
+
+
+    <div class="footer">
+
+      © AYNA BOOK — Secure Digital Social Platform
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+<script type="module">
+
+  import {
+    getAccountType,
+    getSelectedAccount,
+    getPaymentInformation,
+    copyPaymentValue
+  } from "./account-types.js";
+
+
+  /* =========================================
+     ACCOUNT
+  ========================================= */
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const accountFromURL =
+    params.get("account");
+
+  const account =
+    getAccountType(accountFromURL) ||
+    getSelectedAccount();
+
+
+  const accountName =
+    document.getElementById(
+      "accountName"
+    );
+
+  const accountPrice =
+    document.getElementById(
+      "accountPrice"
+    );
+
+
+  if (!account) {
+
+    accountName.textContent =
+      "Account পাওয়া যায়নি";
+
+    accountPrice.textContent =
+      "Registration থেকে আবার শুরু করুন।";
+
+  } else {
+
+    accountName.textContent =
+      account.name +
+      " — " +
+      account.nameBn;
+
+    accountPrice.textContent =
+      "$" +
+      account.priceUSD;
+
+  }
+
+
+  /* =========================================
+     COPY BUTTON
+  ========================================= */
+
+  document
+    .querySelectorAll("[data-copy]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        async () => {
+
+          const value =
+            button.dataset.copy;
+
+          const original =
+            button.textContent;
+
+          const result =
+            await copyPaymentValue(
+              value
+            );
+
+          if (result.success) {
+
+            button.textContent =
+              "COPIED ✓";
+
+            setTimeout(() => {
+
+              button.textContent =
+                original;
+
+            }, 1500);
+
+          } else {
+
+            alert(
+              result.message ||
+              "Copy করা যায়নি।"
+            );
+
+          }
+
+        }
+      );
+
+    });
+
+
+  /* =========================================
+     PAYMENT FORM
+  ========================================= */
+
+  const form =
+    document.getElementById(
+      "paymentForm"
+    );
+
+  const submitButton =
+    document.getElementById(
+      "submitPaymentBtn"
+    );
+
+  const message =
+    document.getElementById(
+      "message"
+    );
+
+
+  function showMessage(
+    text,
+    type = "info"
+  ) {
+
+    message.textContent =
+      text || "";
+
+    message.className =
+      "message show " +
+      type;
+
+  }
+
+
+  form.addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+
+      if (!account) {
+
+        showMessage(
+          "Account Type পাওয়া যায়নি। Registration থেকে আবার শুরু করুন।",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const method =
+        document
+          .getElementById(
+            "paymentMethod"
+          )
+          .value;
+
+
+      const transactionId =
+        document
+          .getElementById(
+            "transactionId"
+          )
+          .value
+          .trim();
+
+
+      const amount =
+        document
+          .getElementById(
+            "paymentAmount"
+          )
+          .value
+          .trim();
+
+
+      const proof =
+        document
+          .getElementById(
+            "paymentProof"
+          )
+          .files[0];
+
+
+      if (!method) {
+
+        showMessage(
+          "Payment Method নির্বাচন করুন।",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (!transactionId) {
+
+        showMessage(
+          "Transaction / Reference ID দিন।",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (!amount) {
+
+        showMessage(
+          "Payment Amount দিন।",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        proof &&
+        proof.size >
+        5 * 1024 * 1024
+      ) {
+
+        showMessage(
+          "Payment screenshot সর্বোচ্চ 5 MB হতে পারবে।",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      /*
+       * File 5-এ আমরা UI + validation তৈরি করছি।
+       *
+       * Firebase payment request storage
+       * পরের নিরাপদ ধাপে আলাদা controller
+       * দিয়ে করা হবে।
+       *
+       * তাই এখানে fake success দেখানো হচ্ছে না।
+       */
+
+
+      submitButton.disabled =
+        true;
+
+      submitButton.textContent =
+        "PREPARING PAYMENT REQUEST...";
+
+
+      showMessage(
+        "Payment তথ্য যাচাই করা হয়েছে। Firebase Payment Request controller পরের ধাপে সংযুক্ত হবে।",
+        "info"
+      );
+
+
+      setTimeout(() => {
+
+        submitButton.disabled =
+          false;
+
+        submitButton.textContent =
+          "SUBMIT PAYMENT FOR VERIFICATION";
+
+      }, 1000);
+
+    }
+  );
+
+
+  console.log(
+    "AYNA BOOK — Payment page loaded."
+  );
+
+</script>
+
+</body>
+
+</html>
