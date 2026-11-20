@@ -28,44 +28,53 @@ import {
   getStorage
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-// ---------------------------------------------------------
-// Firebase App
-// ---------------------------------------------------------
 
-export const app = getApps().length
-  ? getApp()
-  : initializeApp(firebaseConfig);
+// =========================================================
+// FIREBASE APP
+// =========================================================
 
-// ---------------------------------------------------------
-// Firebase Authentication
-// Login / Registration / SMS OTP
-// ---------------------------------------------------------
+export const app =
+  getApps().length > 0
+    ? getApp()
+    : initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
 
-// ---------------------------------------------------------
-// Cloud Firestore
-// Users / Posts / Messages / Data
-// ---------------------------------------------------------
+// =========================================================
+// FIREBASE AUTHENTICATION
+// =========================================================
 
-export const db = getFirestore(app);
+export const auth =
+  getAuth(app);
 
-// ---------------------------------------------------------
-// Realtime Database
-// Chat / Online Status / Realtime Data
-// ---------------------------------------------------------
 
-export const database = getDatabase(app);
+// =========================================================
+// CLOUD FIRESTORE
+// =========================================================
 
-// ---------------------------------------------------------
-// Firebase Storage
-// Profile Photos / Images / Videos
-// ---------------------------------------------------------
+export const db =
+  getFirestore(app);
 
-export const storage = getStorage(app);
 
-// ---------------------------------------------------------
-// AYNA BOOK Firebase Ready
-// ---------------------------------------------------------
+// =========================================================
+// REALTIME DATABASE
+// =========================================================
 
-console.log("AYNA BOOK — Firebase initialized successfully.");
+export const database =
+  getDatabase(app);
+
+
+// =========================================================
+// FIREBASE STORAGE
+// =========================================================
+
+export const storage =
+  getStorage(app);
+
+
+// =========================================================
+// READY
+// =========================================================
+
+console.log(
+  "AYNA BOOK — Firebase initialized successfully."
+);
