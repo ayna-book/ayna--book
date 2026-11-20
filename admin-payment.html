@@ -1,837 +1,243 @@
+
 <!DOCTYPE html>
 <html lang="bn">
-
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="theme-color"
-    content="#0A0F1E"
-  >
-
-  <meta
-    name="description"
-    content="AYNA BOOK — Secure Admin Payment Panel"
-  >
-
-  <title>AYNA BOOK — Admin Payment Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0A0F1E">
+  <title>AYNA BOOK — Admin Payment</title>
 
   <style>
+    * { box-sizing: border-box; }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
     body {
       margin: 0;
-      padding: 0;
-      min-height: 100%;
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
       background: #0A0F1E;
       color: #FFFFFF;
+      font-family: Arial, sans-serif;
     }
 
-    body {
-      min-height: 100vh;
-    }
-
-    /* =====================================================
-       HEADER
-       ===================================================== */
-
-    .header {
-      width: 100%;
-      min-height: 68px;
-
+    header {
+      min-height: 65px;
+      padding: 15px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-
-      padding: 12px 18px;
-
-      background: #0A0F1E;
-
-      border-bottom:
-        1px solid rgba(
-          255,
-          215,
-          0,
-          0.35
-        );
-
+      border-bottom: 1px solid #FFD700;
       position: sticky;
       top: 0;
-      z-index: 100;
+      background: #0A0F1E;
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .dashboard-icon {
-      width: 30px;
-      height: 30px;
-
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-
-      gap: 4px;
-    }
-
-    .dashboard-icon span {
-      display: block;
-
-      background: #FFFFFF;
-
-      border-radius: 4px;
-
-      box-shadow:
-        0 0 8px
-        rgba(
-          255,
-          255,
-          255,
-          0.35
-        );
-    }
-
-    .brand-title {
-      font-size: 19px;
-      font-weight: 800;
+      font-size: 20px;
+      font-weight: bold;
       letter-spacing: 1px;
-      color: #FFFFFF;
-    }
-
-    .admin-label {
-      font-size: 12px;
-      color: #FFD700;
-
-      border:
-        1px solid
-        rgba(
-          255,
-          215,
-          0,
-          0.65
-        );
-
-      padding: 5px 9px;
-
-      border-radius: 20px;
     }
 
     .star {
-      font-size: 18px;
-      color: #FFFFFF;
-
-      text-shadow:
-        0 0 5px #FFFFFF,
-        0 0 12px #FFD700;
-
-      animation:
-        starPulse 1s
-        infinite;
+      color: white;
+      text-shadow: 0 0 8px #FFD700;
+      animation: pulse 1s infinite;
     }
 
-    @keyframes starPulse {
-
-      0%,
-      100% {
-        opacity: 0.55;
-        transform: scale(0.95);
-      }
-
-      50% {
-        opacity: 1;
-        transform: scale(1.12);
-      }
+    @keyframes pulse {
+      50% { opacity: .5; transform: scale(1.15); }
     }
 
-
-    /* =====================================================
-       MAIN
-       ===================================================== */
-
-    .container {
+    main {
       width: 100%;
       max-width: 1400px;
-
-      margin: 0 auto;
-
-      padding:
-        22px 14px 50px;
+      margin: auto;
+      padding: 20px 12px;
     }
 
-
-    /* =====================================================
-       PAGE TITLE
-       ===================================================== */
-
-    .page-title {
-      margin-bottom: 18px;
-    }
-
-    .page-title h1 {
-      margin: 0 0 6px;
-
-      font-size: 25px;
-
-      color: #FFFFFF;
-    }
-
-    .page-title p {
-      margin: 0;
-
-      color: #A9B0BC;
-
-      font-size: 14px;
-
-      line-height: 1.6;
-    }
-
-
-    /* =====================================================
-       ACCESS STATUS
-       ===================================================== */
+    h1 { font-size: 24px; }
 
     #accessStatus {
-      margin: 18px 0;
-
-      padding: 13px 15px;
-
-      border-radius: 10px;
-
-      border:
-        1px solid
-        rgba(
-          255,
-          215,
-          0,
-          0.25
-        );
-
+      padding: 13px;
+      margin: 15px 0;
+      border: 1px solid #FFD700;
+      border-radius: 9px;
       background: #1A2233;
+      overflow-wrap: anywhere;
+    }
 
-      color: #FFFFFF;
-
-      font-size: 14px;
-
-      word-break: break-word;
+    #accessStatus[data-type="error"] {
+      border-color: #ff6262;
+      color: #ffb3b3;
     }
 
     #accessStatus[data-type="success"] {
       border-color: #FFD700;
     }
 
-    #accessStatus[data-type="error"] {
-      border-color: #ff6b6b;
-      color: #ffb3b3;
-    }
-
-
-    /* =====================================================
-       PANEL
-       ===================================================== */
-
-    .panel {
+    #adminPanel {
+      display: none;
       background: #1A2233;
-
-      border:
-        1px solid
-        rgba(
-          255,
-          215,
-          0,
-          0.35
-        );
-
-      border-radius: 14px;
-
+      border: 1px solid #FFD700;
+      border-radius: 12px;
       overflow: hidden;
-
-      box-shadow:
-        0 12px 35px
-        rgba(
-          0,
-          0,
-          0,
-          0.28
-        );
     }
-
-
-    /* =====================================================
-       PANEL HEADER
-       ===================================================== */
 
     .panel-header {
-      padding: 16px;
-
+      padding: 15px;
       display: flex;
-
-      align-items: center;
-
       justify-content: space-between;
-
+      align-items: center;
       gap: 12px;
-
-      border-bottom:
-        1px solid
-        rgba(
-          255,
-          255,
-          255,
-          0.08
-        );
+      flex-wrap: wrap;
     }
 
-    .panel-header h2 {
-      margin: 0;
-
-      font-size: 18px;
-
-      color: #FFFFFF;
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 7px;
+      padding: 9px 12px;
+      font-weight: bold;
     }
-
-    .panel-header p {
-      margin: 5px 0 0;
-
-      font-size: 12px;
-
-      color: #A9B0BC;
-    }
-
-
-    /* =====================================================
-       REFRESH BUTTON
-       ===================================================== */
 
     #refreshButton {
-      border: 1px solid #FFD700;
-
-      background: transparent;
-
       color: #FFD700;
-
-      padding: 9px 13px;
-
-      border-radius: 8px;
-
-      cursor: pointer;
-
-      font-weight: 700;
-
-      transition:
-        0.2s ease;
+      background: transparent;
+      border: 1px solid #FFD700;
     }
-
-    #refreshButton:hover {
-      background: #FFD700;
-      color: #0A0F1E;
-    }
-
-    #refreshButton:active {
-      transform: scale(0.97);
-    }
-
-
-    /* =====================================================
-       TABLE
-       ===================================================== */
 
     .table-wrapper {
-      width: 100%;
-
       overflow-x: auto;
-
-      -webkit-overflow-scrolling: touch;
+      width: 100%;
     }
 
     table {
-      width: 100%;
-
-      min-width: 1050px;
-
       border-collapse: collapse;
+      width: 100%;
+      min-width: 1050px;
     }
 
-    th,
-    td {
-      padding: 13px 11px;
-
+    th, td {
+      padding: 12px;
       text-align: left;
-
-      border-bottom:
-        1px solid
-        rgba(
-          255,
-          255,
-          255,
-          0.07
-        );
-
+      border-bottom: 1px solid #344052;
+      font-size: 12px;
       vertical-align: middle;
     }
 
     th {
-      background: #0F1728;
-
       color: #FFD700;
-
-      font-size: 12px;
-
-      white-space: nowrap;
-    }
-
-    td {
-      color: #FFFFFF;
-
-      font-size: 12px;
-
-      line-height: 1.5;
-    }
-
-    tr:hover td {
-      background:
-        rgba(
-          255,
-          255,
-          255,
-          0.025
-        );
+      background: #10192B;
     }
 
     td small {
-      color: #A9B0BC;
-
       display: block;
-
-      margin-top: 3px;
-
-      word-break: break-all;
-    }
-
-
-    /* =====================================================
-       ACTION BUTTONS
-       ===================================================== */
-
-    .approve-payment-btn,
-    .reject-payment-btn {
-      border: 0;
-
-      padding: 8px 10px;
-
-      border-radius: 7px;
-
-      font-size: 11px;
-
-      font-weight: 800;
-
-      cursor: pointer;
-
-      margin: 2px;
-
-      transition:
-        0.2s ease;
+      color: #A9B0BC;
+      overflow-wrap: anywhere;
     }
 
     .approve-payment-btn {
       background: #FFD700;
-
       color: #0A0F1E;
-    }
-
-    .approve-payment-btn:hover {
-      filter: brightness(1.08);
     }
 
     .reject-payment-btn {
       background: #8b2635;
-
-      color: #FFFFFF;
+      color: white;
     }
 
-    .reject-payment-btn:hover {
-      background: #a83242;
-    }
-
-    .approve-payment-btn:disabled,
-    .reject-payment-btn:disabled {
-      opacity: 0.5;
-
+    button:disabled {
+      opacity: .5;
       cursor: not-allowed;
     }
 
-
-    /* =====================================================
-       SECURITY INFORMATION
-       ===================================================== */
-
-    .security-box {
+    .security {
       margin-top: 20px;
-
-      padding: 16px;
-
+      padding: 15px;
       background: #1A2233;
-
-      border:
-        1px solid
-        rgba(
-          255,
-          215,
-          0,
-          0.25
-        );
-
-      border-radius: 12px;
-    }
-
-    .security-box h3 {
-      margin: 0 0 8px;
-
-      color: #FFD700;
-
-      font-size: 16px;
-    }
-
-    .security-box p {
-      margin: 7px 0;
-
+      border: 1px solid #344052;
+      border-radius: 10px;
       color: #A9B0BC;
-
       font-size: 13px;
-
-      line-height: 1.65;
+      line-height: 1.7;
     }
 
-    .security-box strong {
-      color: #FFFFFF;
-    }
+    .security strong { color: #FFD700; }
 
-
-    /* =====================================================
-       FOOTER
-       ===================================================== */
-
-    .footer {
-      margin-top: 25px;
-
+    footer {
       text-align: center;
-
-      color: #687181;
-
-      font-size: 11px;
+      color: #A9B0BC;
+      font-size: 12px;
+      padding: 25px 10px;
     }
-
-
-    /* =====================================================
-       MOBILE
-       ===================================================== */
-
-    @media (max-width: 650px) {
-
-      .header {
-        padding:
-          11px 12px;
-      }
-
-      .brand-title {
-        font-size: 16px;
-      }
-
-      .admin-label {
-        display: none;
-      }
-
-      .container {
-        padding:
-          18px 10px 35px;
-      }
-
-      .page-title h1 {
-        font-size: 21px;
-      }
-
-      .panel-header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      #refreshButton {
-        width: 100%;
-      }
-
-      .security-box {
-        padding: 13px;
-      }
-    }
-
   </style>
-
 </head>
 
-
 <body>
-
-
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
-
-  <header class="header">
-
-    <div class="brand">
-
-      <div
-        class="dashboard-icon"
-        aria-hidden="true"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-
-      <div class="brand-title">
-        AYNA BOOK
-      </div>
-
-      <div class="admin-label">
-        ADMIN
-      </div>
-
-    </div>
-
-    <div
-      class="star"
-      aria-label="AYNA BOOK"
-    >
-      ★
-    </div>
-
+  <header>
+    <div class="brand">AYNA BOOK · ADMIN</div>
+    <div class="star">★</div>
   </header>
 
+  <main>
+    <h1>Admin Payment Panel</h1>
+    <p style="color:#A9B0BC">
+      Business, VIP ও VVIP payment যাচাই করুন।
+    </p>
 
-  <!-- =====================================================
-       MAIN
-       ===================================================== -->
-
-  <main class="container">
-
-
-    <section class="page-title">
-
-      <h1>
-        Admin Payment Panel
-      </h1>
-
-      <p>
-        Paid account payment requests
-        নিরাপদভাবে যাচাই ও পরিচালনা করুন।
-      </p>
-
-    </section>
-
-
-    <!-- ===================================================
-         ACCESS STATUS
-         =================================================== -->
-
-    <div
-      id="accessStatus"
-      data-type="info"
-      role="status"
-      aria-live="polite"
-    >
+    <div id="accessStatus"
+         data-type="info"
+         role="status"
+         aria-live="polite">
       Admin access যাচাই হচ্ছে...
     </div>
 
-
-    <!-- ===================================================
-         ADMIN PANEL
-         =================================================== -->
-
-    <section
-      id="adminPanel"
-      class="panel"
-      style="display:none;"
-    >
-
+    <section id="adminPanel">
       <div class="panel-header">
-
         <div>
-
-          <h2>
-            Pending Payment Requests
-          </h2>
-
-          <p>
-            Business / VIP / VVIP account
-            payment verification
+          <strong>Pending Payment Requests</strong>
+          <p style="color:#A9B0BC;font-size:12px">
+            Payment verification
           </p>
-
         </div>
 
-        <button
-          id="refreshButton"
-          type="button"
-        >
+        <button id="refreshButton" type="button">
           ↻ Refresh
         </button>
-
       </div>
-
-
-      <!-- ===============================================
-           PAYMENT TABLE
-           =============================================== -->
 
       <div class="table-wrapper">
-
         <table>
-
           <thead>
-
             <tr>
-
-              <th>
-                Request ID
-              </th>
-
-              <th>
-                Account
-              </th>
-
-              <th>
-                User
-              </th>
-
-              <th>
-                Method
-              </th>
-
-              <th>
-                Amount
-              </th>
-
-              <th>
-                Transaction
-              </th>
-
-              <th>
-                Status
-              </th>
-
-              <th>
-                Action
-              </th>
-
+              <th>Request ID</th>
+              <th>Account</th>
+              <th>User</th>
+              <th>Method</th>
+              <th>Amount</th>
+              <th>Transaction</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
-
           </thead>
 
-
           <tbody id="paymentTableBody">
-
             <tr>
-
-              <td
-                colspan="8"
-                style="
-                  text-align:center;
-                  padding:25px;
-                "
-              >
-                Payment requests লোড হচ্ছে...
-              </td>
-
+              <td colspan="8">Loading...</td>
             </tr>
-
           </tbody>
-
         </table>
-
       </div>
-
     </section>
 
-
-    <!-- ===================================================
-         SECURITY
-         =================================================== -->
-
-    <section class="security-box">
-
-      <h3>
-        🔐 Security Information
-      </h3>
-
-      <p>
-        <strong>Admin access:</strong>
-        শুধু Firebase Admin custom claim
-        <code>admin: true</code>
-        থাকা account এই panel ব্যবহার করতে পারবে।
-      </p>
-
-      <p>
-        <strong>APPROVE:</strong>
-        Payment verification সফল হলে account
-        active করার জন্য Cloud Function ব্যবহার হবে।
-      </p>
-
-      <p>
-        <strong>REJECT:</strong>
-        Payment গ্রহণযোগ্য না হলে request rejected
-        হিসেবে সংরক্ষিত হবে।
-      </p>
-
-      <p>
-        <strong>Important:</strong>
-        এই পেজে কোনো password, OTP অথবা
-        Firebase service-account private key রাখবেন না।
-      </p>
-
+    <section class="security">
+      <strong>Security Information</strong>
+      <p>• শুধু অনুমোদিত Admin এই প্যানেল ব্যবহার করতে পারবেন।</p>
+      <p>• APPROVE করলে Cloud Function payment যাচাইয়ের পর account সক্রিয় করবে।</p>
+      <p>• REJECT করলে payment request বাতিল হিসেবে সংরক্ষিত হবে।</p>
+      <p>• কোনো password, OTP বা service-account private key এখানে রাখবেন না।</p>
     </section>
-
-
-    <!-- ===================================================
-         FOOTER
-         =================================================== -->
-
-    <footer class="footer">
-
-      AYNA BOOK © 2026 —
-      Secure Administration Panel
-
-    </footer>
-
-
   </main>
 
+  <footer>AYNA BOOK © 2026 — Secure Admin Panel</footer>
 
-  <!-- =====================================================
-       ADMIN PAYMENT CONTROLLER
-       ===================================================== -->
-
-  <script
-    type="module"
-    src="./admin-payment.js"
-  ></script>
-
-
+  <script type="module" src="./admin-payment.js"></script>
 </body>
-
 </html>
