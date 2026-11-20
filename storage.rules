@@ -4,10 +4,10 @@ service firebase.storage {
 
   match /b/{bucket}/o {
 
-    // =====================================================
-    // AYNA BOOK — USER FILES
-    // =====================================================
-
+    // ==========================================
+    // USER FILES
+    // Profile photo + payment proof
+    // ==========================================
     match /users/{userId}/{allPaths=**} {
 
       // নিজের ফাইল নিজে দেখতে পারবে
@@ -15,35 +15,34 @@ service firebase.storage {
         if request.auth != null
         && request.auth.uid == userId;
 
-
-      // নিজের ফাইল upload/update
+      // শুধু image upload
+      // Maximum size: 5 MB
       allow create, update:
         if request.auth != null
         && request.auth.uid == userId
         && request.resource.size <= 5 * 1024 * 1024
         && request.resource.contentType.matches('image/.*');
 
-
-      // নিজের ফাইল delete
+      // নিজের ফাইল delete করতে পারবে
       allow delete:
         if request.auth != null
         && request.auth.uid == userId;
     }
 
 
-    // =====================================================
-    // AYNA BOOK — POST MEDIA
-    // =====================================================
-
+    // ==========================================
+    // POST MEDIA
+    // Images + Videos
+    // ==========================================
     match /posts/{userId}/{allPaths=**} {
 
-      // নিজের post media দেখতে পারবে
+      // নিজের পোস্টের media দেখতে পারবে
       allow read:
         if request.auth != null
         && request.auth.uid == userId;
 
-
       // Image / Video upload
+      // Maximum size: 20 MB
       allow create, update:
         if request.auth != null
         && request.auth.uid == userId
@@ -54,18 +53,16 @@ service firebase.storage {
           request.resource.contentType.matches('video/.*')
         );
 
-
-      // নিজের post media delete
+      // নিজের media delete
       allow delete:
         if request.auth != null
         && request.auth.uid == userId;
     }
 
 
-    // =====================================================
-    // DEFAULT DENY
-    // =====================================================
-
+    // ==========================================
+    // EVERYTHING ELSE — BLOCK
+    // ==========================================
     match /{allPaths=**} {
       allow read, write: if false;
     }
