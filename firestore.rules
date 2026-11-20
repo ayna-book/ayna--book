@@ -6,17 +6,29 @@ service cloud.firestore {
 
 
     // =====================================================
-    // HELPER FUNCTIONS
+    // BASIC SECURITY FUNCTIONS
     // =====================================================
 
     function signedIn() {
+
       return request.auth != null;
+
     }
 
 
     function isOwner(userId) {
+
       return signedIn()
         && request.auth.uid == userId;
+
+    }
+
+
+    function isAdmin() {
+
+      return signedIn()
+        && request.auth.token.admin == true;
+
     }
 
 
@@ -26,29 +38,62 @@ service cloud.firestore {
 
     match /users/{userId} {
 
-      // নিজের user document তৈরি করতে পারবে
+
+      // ---------------------------------------------------
+      // CREATE
+      // ---------------------------------------------------
+
       allow create:
         if isOwner(userId);
 
 
-      // নিজের user document দেখতে পারবে
+      // ---------------------------------------------------
+      // READ
+      // Owner OR Admin
+      // ---------------------------------------------------
+
       allow read:
-        if isOwner(userId);
-
-
-      // নিজের user document update করতে পারবে
-      //
-      // গুরুত্বপূর্ণ:
-      // User নিজে accountStatus = active
-      // করতে পারবে না।
-      //
-      allow update:
         if isOwner(userId)
-        && request.resource.data.accountStatus
-           == resource.data.accountStatus;
+        || isAdmin();
 
 
-      // নিজের account delete করতে পারবে
+      // ---------------------------------------------------
+      // UPDATE
+      //
+      // Normal user:
+      // accountStatus cannot be changed.
+      //
+      // Admin:
+      // allowed.
+      // ---------------------------------------------------
+
+      allow update:
+        if isAdmin()
+        ||
+        (
+          isOwner(userId)
+
+          && request.resource.data.accountStatus
+             == resource.data.accountStatus
+
+          && request.resource.data.uid
+             == resource.data.uid
+
+          && request.resource.data.email
+             == resource.data.email
+
+          && request.resource.data.accountType
+             == resource.data.accountType
+
+          && request.resource.data.paymentStatus
+             == resource.data.paymentStatus
+        );
+
+
+      // ---------------------------------------------------
+      // DELETE
+      // ---------------------------------------------------
+
       allow delete:
         if isOwner(userId);
 
@@ -59,35 +104,52 @@ service cloud.firestore {
 
       match /paymentRequests/{paymentId} {
 
-        // নিজের Payment Request তৈরি
+
+        // -------------------------------------------------
+        // USER CREATES PAYMENT REQUEST
+        // -------------------------------------------------
+
         allow create:
+
           if isOwner(userId)
+
           && request.resource.data.uid
              == request.auth.uid
+
           && request.resource.data.accountType
              in [
                "business",
                "vip",
                "vvip"
              ]
+
           && request.resource.data.paymentRequired
              == true
+
           && request.resource.data.status
              == "pending"
+
           && request.resource.data.accountStatus
              == "pending_payment"
+
           && request.resource.data.transactionId
              is string
+
           && request.resource.data.transactionId.size()
              >= 3
+
           && request.resource.data.transactionId.size()
              <= 100
+
           && request.resource.data.amount
              is string
+
           && request.resource.data.amount.size()
              >= 1
+
           && request.resource.data.amount.size()
              <= 50
+
           && request.resource.data.paymentMethod
              in [
                "bkash",
@@ -99,29 +161,59 @@ service cloud.firestore {
              ];
 
 
-        // নিজের Payment Request দেখতে পারবে
+        // -------------------------------------------------
+        // USER OR ADMIN READ
+        // -------------------------------------------------
+
         allow read:
-          if isOwner(userId);
+          if isOwner(userId)
+          || isAdmin();
 
 
-        // সাধারণ user Payment Request update করতে পারবে না
+        // -------------------------------------------------
+        // ADMIN UPDATE ONLY
         //
-        // অর্থাৎ user নিজে status:
-        // pending -> approved
-        // pending -> verified
-        // pending -> paid
+        // This will later be used for:
         //
-        // করতে পারবে না।
-        //
+        // approved
+        // rejected
+        // verified
+        // -------------------------------------------------
+
         allow update:
-          if false;
+          if isAdmin();
 
 
-        // Payment Request delete করা যাবে না
+        // -------------------------------------------------
+        // PAYMENT REQUEST DELETE
+        //
+        // Disabled for security.
+        // -------------------------------------------------
+
         allow delete:
           if false;
 
       }
+
+    }
+
+
+    // =====================================================
+    // COLLECTION GROUP PAYMENT REQUESTS
+    //
+    // Required by admin-payment.js because it uses:
+    //
+    // collectionGroup(db, "paymentRequests")
+    //
+    // =====================================================
+
+    match /{parentPath=**}/paymentRequests/{paymentId} {
+
+      allow read:
+        if isAdmin();
+
+      allow update:
+        if isAdmin();
 
     }
 
@@ -132,38 +224,43 @@ service cloud.firestore {
 
     match /posts/{postId} {
 
-      // Public post পড়া যাবে
+
       allow read:
         if true;
 
 
-      // Signed-in user নিজের নামে post তৈরি করবে
       allow create:
         if signedIn()
+
         && request.resource.data.uid
            == request.auth.uid
+
         && request.resource.data.text
            is string
+
         && request.resource.data.text.size()
            <= 5000;
 
 
-      // নিজের post update
       allow update:
         if signedIn()
+
         && resource.data.uid
            == request.auth.uid
+
         && request.resource.data.uid
            == resource.data.uid
+
         && request.resource.data.text
            is string
+
         && request.resource.data.text.size()
            <= 5000;
 
 
-      // নিজের post delete
       allow delete:
         if signedIn()
+
         && resource.data.uid
            == request.auth.uid;
 
@@ -171,35 +268,36 @@ service cloud.firestore {
 
 
     // =====================================================
-    // CHAT ROOMS
+    // CHAT / MESSAGES
     // =====================================================
 
     match /rooms/{roomId}/messages/{messageId} {
 
-      // Signed-in user message পড়তে পারবে
+
       allow read:
         if signedIn();
 
 
-      // নিজের নামে message তৈরি
       allow create:
         if signedIn()
+
         && request.resource.data.uid
            == request.auth.uid
+
         && request.resource.data.text
            is string
+
         && request.resource.data.text.size()
            > 0
+
         && request.resource.data.text.size()
            <= 2000;
 
 
-      // Message edit বন্ধ
       allow update:
         if false;
 
 
-      // Message delete বন্ধ
       allow delete:
         if false;
 
@@ -218,4 +316,5 @@ service cloud.firestore {
     }
 
   }
+
 }
