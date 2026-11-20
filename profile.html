@@ -2,7 +2,6 @@
 <html lang="bn">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -17,783 +16,579 @@
 
   <meta
     name="description"
-    content="AYNA BOOK — User Profile"
+    content="AYNA BOOK — Your digital identity"
   >
 
   <title>AYNA BOOK — Profile</title>
 
-  <link
-    rel="manifest"
-    href="./manifest.webmanifest"
-  >
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  <link
-    rel="icon"
-    type="image/png"
-    sizes="192x192"
-    href="./icon-192.png"
-  >
+    body {
+      min-height: 100vh;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
-  <link
-    rel="stylesheet"
-    href="./styles.css"
-  >
+      background: #0A0F1E;
+      color: #FFFFFF;
 
-  <link
-    rel="stylesheet"
-    href="./ayna-ui-patch.css"
-  >
+      padding: 20px;
+    }
 
+    .container {
+      width: 100%;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 30px;
+      font-weight: 800;
+      color: #FFD700;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: #A9B0BC;
+      font-size: 14px;
+    }
+
+    .profile-card {
+      background: #1A2233;
+      border-radius: 20px;
+      padding: 25px;
+      border: 1px solid #30394D;
+      box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .photo-section {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      border: 3px solid #FFD700;
+
+      background: #0A0F1E;
+
+      display: block;
+      margin: 0 auto 12px;
+    }
+
+    .photo-label {
+      display: inline-block;
+
+      padding: 9px 16px;
+
+      border-radius: 10px;
+
+      background: #FFD700;
+      color: #0A0F1E;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    #profilePhoto {
+      display: none;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      display: block;
+
+      margin-bottom: 7px;
+
+      color: #A9B0BC;
+
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+
+      padding: 13px 14px;
+
+      border-radius: 10px;
+
+      border: 1px solid #3A4358;
+
+      background: #0A0F1E;
+
+      color: #FFFFFF;
+
+      font-size: 15px;
+
+      outline: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #FFD700;
+    }
+
+    .field textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .field input[readonly] {
+      opacity: 0.75;
+    }
+
+    .verification {
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      padding: 12px;
+
+      margin-bottom: 20px;
+
+      border-radius: 10px;
+
+      background: #0A0F1E;
+
+      border: 1px solid #30394D;
+    }
+
+    .verification-icon {
+      font-size: 20px;
+    }
+
+    .verification-text {
+      font-size: 14px;
+    }
+
+    .verified {
+      color: #7CFFB2;
+    }
+
+    .not-verified {
+      color: #FFB4B4;
+    }
+
+    .save-button {
+      width: 100%;
+
+      padding: 14px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #FFD700;
+
+      color: #0A0F1E;
+
+      font-size: 16px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+    }
+
+    .save-button:hover {
+      opacity: 0.9;
+    }
+
+    .save-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .logout-button {
+      width: 100%;
+
+      margin-top: 12px;
+
+      padding: 13px;
+
+      border-radius: 10px;
+
+      border: 1px solid #59647A;
+
+      background: transparent;
+
+      color: #FFFFFF;
+
+      font-size: 15px;
+
+      cursor: pointer;
+    }
+
+    .status-message {
+      display: none;
+
+      margin-top: 18px;
+
+      padding: 12px;
+
+      border-radius: 10px;
+
+      text-align: center;
+
+      font-size: 14px;
+
+      white-space: pre-line;
+    }
+
+    .status-message.info {
+      display: block;
+      background: #172033;
+      color: #FFFFFF;
+    }
+
+    .status-message.success {
+      display: block;
+      background: #123322;
+      color: #7CFFB2;
+    }
+
+    .status-message.error {
+      display: block;
+      background: #351919;
+      color: #FFB4B4;
+    }
+
+    .account-info {
+      margin-top: 22px;
+
+      padding-top: 18px;
+
+      border-top: 1px solid #30394D;
+
+      color: #A9B0BC;
+
+      font-size: 12px;
+
+      line-height: 1.7;
+    }
+
+    .footer {
+      text-align: center;
+
+      margin-top: 20px;
+
+      color: #667085;
+
+      font-size: 12px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+      }
+
+      .profile-card {
+        padding: 18px;
+      }
+
+      .profile-photo {
+        width: 105px;
+        height: 105px;
+      }
+    }
+  </style>
 </head>
-
 
 <body>
 
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
+  <main class="container">
 
-  <header class="site-header">
+    <!-- HEADER -->
+    <header class="header">
 
-    <div class="header-inner">
-
-      <div class="header-left">
-
-        <a
-          href="./index.html"
-          class="dashboard-icon"
-          aria-label="AYNA BOOK Home"
-          title="Home"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </a>
-
+      <div class="logo">
+        AYNA BOOK
       </div>
 
-
-      <div class="header-center">
-
-        <a
-          href="./index.html"
-          class="brand"
-        >
-          AYNA BOOK
-        </a>
-
+      <div class="subtitle">
+        Your Digital Identity
       </div>
 
-
-      <div class="header-right">
-
-        <span
-          class="glowing-star"
-          aria-hidden="true"
-        >
-          ★
-        </span>
-
-      </div>
-
-    </div>
+    </header>
 
 
-    <!-- ===================================================
-         NAVIGATION
-         =================================================== -->
-
-    <nav
-      class="main-nav"
-      aria-label="Main Navigation"
-    >
-
-      <a href="./index.html">
-        Home
-      </a>
-
-      <a href="./login.html">
-        Login
-      </a>
-
-      <a href="./signup.html">
-        Register
-      </a>
-
-      <a
-        href="./profile.html"
-        class="active"
-      >
-        Profile
-      </a>
-
-      <a href="./chat.html">
-        Messages
-      </a>
-
-    </nav>
-
-  </header>
-
-
-  <!-- =====================================================
-       NETWORK STATUS
-       ===================================================== -->
-
-  <div
-    id="network-status-badge"
-    aria-live="polite"
-  >
-    Checking...
-  </div>
-
-
-  <!-- =====================================================
-       MAIN
-       ===================================================== -->
-
-  <main class="app-container">
-
+    <!-- PROFILE CARD -->
     <section class="profile-card">
 
-      <!-- =================================================
-           AVATAR
-           ================================================= -->
+      <!-- PROFILE PHOTO -->
+      <div class="photo-section">
 
-      <div
-        id="profileAvatar"
-        class="profile-avatar"
-        aria-label="Profile Avatar"
-      >
-        A
+        <img
+          id="profileImage"
+          class="profile-photo"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='120' height='120' fill='%230A0F1E'/%3E%3Ctext x='60' y='68' text-anchor='middle' font-size='42' fill='%23FFD700'%3EA%3C/text%3E%3C/svg%3E"
+          alt="AYNA BOOK Profile Photo"
+        >
+
+        <label
+          for="profilePhoto"
+          class="photo-label"
+        >
+          📷 Change Photo
+        </label>
+
+        <input
+          type="file"
+          id="profilePhoto"
+          accept="image/*"
+        >
+
       </div>
 
 
-      <!-- =================================================
-           NAME
-           ================================================= -->
+      <!-- PROFILE FORM -->
+      <form id="profileForm">
 
-      <h1
-        id="profileName"
-        class="profile-name"
-      >
-        Loading...
-      </h1>
+        <!-- FULL NAME -->
+        <div class="field">
 
-
-      <!-- =================================================
-           EMAIL
-           ================================================= -->
-
-      <p
-        id="profileEmail"
-        class="profile-email"
-      >
-        Loading...
-      </p>
-
-
-      <!-- =================================================
-           MESSAGE
-           ================================================= -->
-
-      <div
-        id="profileMessage"
-        class="message"
-        aria-live="polite"
-      ></div>
-
-
-      <!-- =================================================
-           PROFILE INFORMATION
-           ================================================= -->
-
-      <div
-        class="card"
-        style="
-          margin-top:20px;
-          text-align:left;
-        "
-      >
-
-        <h2>
-          👤 Profile Information
-        </h2>
-
-
-        <div
-          class="form-group"
-        >
-
-          <label>
-            Name
+          <label for="fullName">
+            Full Name
           </label>
 
           <input
-            id="profileNameInput"
             type="text"
-            class="form-control"
+            id="fullName"
+            name="fullName"
+            placeholder="আপনার পূর্ণ নাম"
             maxlength="100"
-            placeholder="আপনার নাম"
+            required
           >
 
         </div>
 
 
-        <div
-          class="form-group"
-        >
+        <!-- EMAIL -->
+        <div class="field">
 
-          <label>
-            Email
+          <label for="email">
+            Gmail Address
           </label>
 
           <input
-            id="profileEmailInput"
             type="email"
-            class="form-control"
+            id="email"
+            name="email"
+            placeholder="example@gmail.com"
             readonly
           >
 
         </div>
 
 
+        <!-- PHONE -->
+        <div class="field">
+
+          <label for="phone">
+            Mobile Number
+          </label>
+
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="+8801XXXXXXXXX"
+            maxlength="20"
+          >
+
+        </div>
+
+
+        <!-- BIO -->
+        <div class="field">
+
+          <label for="bio">
+            About Me
+          </label>
+
+          <textarea
+            id="bio"
+            name="bio"
+            placeholder="নিজের সম্পর্কে কিছু লিখুন..."
+            maxlength="500"
+          ></textarea>
+
+        </div>
+
+
+        <!-- COUNTRY -->
+        <div class="field">
+
+          <label for="country">
+            Country
+          </label>
+
+          <select
+            id="country"
+            name="country"
+          >
+
+            <option value="">
+              Select Country
+            </option>
+
+            <option value="BD">
+              Bangladesh
+            </option>
+
+            <option value="US">
+              United States
+            </option>
+
+            <option value="GB">
+              United Kingdom
+            </option>
+
+            <option value="CA">
+              Canada
+            </option>
+
+            <option value="AU">
+              Australia
+            </option>
+
+            <option value="DE">
+              Germany
+            </option>
+
+            <option value="FR">
+              France
+            </option>
+
+            <option value="JP">
+              Japan
+            </option>
+
+            <option value="IN">
+              India
+            </option>
+
+            <option value="OTHER">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- EMAIL VERIFICATION -->
+        <div
+          id="verificationStatus"
+          class="verification"
+        >
+
+          <div class="verification-icon">
+            🔐
+          </div>
+
+          <div
+            id="verificationText"
+            class="verification-text"
+          >
+            Checking email verification...
+          </div>
+
+        </div>
+
+
+        <!-- SAVE -->
         <button
+          type="submit"
           id="saveProfileButton"
-          type="button"
-          class="btn"
+          class="save-button"
         >
-          Save Profile
+          SAVE PROFILE
         </button>
 
-      </div>
+      </form>
 
 
-      <!-- =================================================
-           ACCOUNT ACTIONS
-           ================================================= -->
-
+      <!-- STATUS -->
       <div
-        class="flex-center gap-12"
-        style="
-          margin-top:20px;
-          flex-wrap:wrap;
-        "
+        id="statusMessage"
+        class="status-message"
+      ></div>
+
+
+      <!-- LOGOUT -->
+      <button
+        type="button"
+        id="logoutButton"
+        class="logout-button"
       >
+        LOG OUT
+      </button>
 
-        <a
-          href="./chat.html"
-          class="btn btn-secondary"
-        >
-          💬 Messages
-        </a>
 
-        <button
-          id="logoutButton"
-          type="button"
-          class="btn btn-danger"
-        >
-          Logout
-        </button>
+      <!-- ACCOUNT INFORMATION -->
+      <div class="account-info">
+
+        <div>
+          AYNA User ID:
+          <strong id="userId">
+            Loading...
+          </strong>
+        </div>
+
+        <div>
+          Account Created:
+          <strong id="createdAt">
+            Loading...
+          </strong>
+        </div>
 
       </div>
 
     </section>
 
+
+    <footer class="footer">
+      AYNA BOOK © 2026 — Connect • Share • Create
+    </footer>
+
   </main>
 
 
-  <!-- =====================================================
-       FOOTER
-       ===================================================== -->
-
-  <footer class="site-footer">
-
-    <strong>
-      AYNA BOOK
-    </strong>
-
-    <br>
-
-    Connect • Share • Create
-
-    <br><br>
-
-    © 2026 AYNA BOOK. All rights reserved.
-
-  </footer>
-
-
-  <!-- =====================================================
-       PROFILE JAVASCRIPT
-       ===================================================== -->
-
-  <script type="module">
-
-    import {
-      auth,
-      db
-    } from "./firebase.js";
-
-    import {
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
-    import {
-      doc,
-      getDoc,
-      setDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
-
-
-    /* ===================================================
-       ELEMENTS
-       =================================================== */
-
-    const profileAvatar =
-      document.getElementById(
-        "profileAvatar"
-      );
-
-    const profileName =
-      document.getElementById(
-        "profileName"
-      );
-
-    const profileEmail =
-      document.getElementById(
-        "profileEmail"
-      );
-
-    const profileNameInput =
-      document.getElementById(
-        "profileNameInput"
-      );
-
-    const profileEmailInput =
-      document.getElementById(
-        "profileEmailInput"
-      );
-
-    const saveProfileButton =
-      document.getElementById(
-        "saveProfileButton"
-      );
-
-    const logoutButton =
-      document.getElementById(
-        "logoutButton"
-      );
-
-    const profileMessage =
-      document.getElementById(
-        "profileMessage"
-      );
-
-
-    let currentUser = null;
-
-
-    /* ===================================================
-       MESSAGE
-       =================================================== */
-
-    function showMessage(
-      text,
-      type = "info"
-    ) {
-
-      if (!profileMessage) {
-        return;
-      }
-
-      profileMessage.textContent =
-        text;
-
-      profileMessage.className =
-        "message " + type;
-    }
-
-
-    /* ===================================================
-       AVATAR
-       =================================================== */
-
-    function updateAvatar(name) {
-
-      const cleanName =
-        String(
-          name || "A"
-        ).trim();
-
-      const firstCharacter =
-        cleanName
-          .charAt(0)
-          .toUpperCase() || "A";
-
-      if (profileAvatar) {
-        profileAvatar.textContent =
-          firstCharacter;
-      }
-    }
-
-
-    /* ===================================================
-       DISPLAY PROFILE
-       =================================================== */
-
-    function displayProfile(
-      user,
-      profileData = {}
-    ) {
-
-      const name =
-        String(
-          profileData.displayName ||
-          profileData.name ||
-          user.displayName ||
-          ""
-        ).trim();
-
-      const email =
-        user.email || "";
-
-      if (profileName) {
-        profileName.textContent =
-          name || "AYNA BOOK User";
-      }
-
-      if (profileEmail) {
-        profileEmail.textContent =
-          email;
-      }
-
-      if (profileNameInput) {
-        profileNameInput.value =
-          name;
-      }
-
-      if (profileEmailInput) {
-        profileEmailInput.value =
-          email;
-      }
-
-      updateAvatar(
-        name || email || "A"
-      );
-    }
-
-
-    /* ===================================================
-       LOAD PROFILE
-       =================================================== */
-
-    async function loadProfile(
-      user
-    ) {
-
-      try {
-
-        const userRef =
-          doc(
-            db,
-            "users",
-            user.uid
-          );
-
-        const snapshot =
-          await getDoc(
-            userRef
-          );
-
-        if (
-          snapshot.exists()
-        ) {
-
-          displayProfile(
-            user,
-            snapshot.data()
-          );
-
-        } else {
-
-          displayProfile(
-            user,
-            {
-              displayName:
-                user.displayName ||
-                ""
-            }
-          );
-        }
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK Profile Load Error:",
-          error
-        );
-
-        displayProfile(
-          user,
-          {
-            displayName:
-              user.displayName ||
-              ""
-          }
-        );
-
-        showMessage(
-          "Profile তথ্য সম্পূর্ণভাবে লোড করা যায়নি।",
-          "error"
-        );
-      }
-    }
-
-
-    /* ===================================================
-       AUTH STATE
-       =================================================== */
-
-    onAuthStateChanged(
-      auth,
-      async (user) => {
-
-        if (!user) {
-
-          window.location.replace(
-            "./login.html"
-          );
-
-          return;
-        }
-
-        currentUser =
-          user;
-
-        await loadProfile(
-          user
-        );
-      }
-    );
-
-
-    /* ===================================================
-       SAVE PROFILE
-       =================================================== */
-
-    if (saveProfileButton) {
-
-      saveProfileButton.addEventListener(
-        "click",
-        async () => {
-
-          if (!currentUser) {
-
-            showMessage(
-              "আগে Login করুন।",
-              "error"
-            );
-
-            return;
-          }
-
-          const name =
-            String(
-              profileNameInput?.value ||
-              ""
-            ).trim();
-
-          if (!name) {
-
-            showMessage(
-              "আপনার নাম লিখুন।",
-              "error"
-            );
-
-            profileNameInput?.focus();
-
-            return;
-          }
-
-          if (
-            name.length > 100
-          ) {
-
-            showMessage(
-              "নাম সর্বোচ্চ ১০০ অক্ষরের হতে পারবে।",
-              "error"
-            );
-
-            return;
-          }
-
-
-          saveProfileButton.disabled =
-            true;
-
-          saveProfileButton.textContent =
-            "Saving...";
-
-          try {
-
-            const userRef =
-              doc(
-                db,
-                "users",
-                currentUser.uid
-              );
-
-            await setDoc(
-              userRef,
-              {
-                uid:
-                  currentUser.uid,
-
-                email:
-                  currentUser.email ||
-                  "",
-
-                displayName:
-                  name,
-
-                name:
-                  name,
-
-                updatedAt:
-                  serverTimestamp()
-              },
-              {
-                merge: true
-              }
-            );
-
-
-            displayProfile(
-              currentUser,
-              {
-                displayName:
-                  name,
-                name:
-                  name
-              }
-            );
-
-            showMessage(
-              "Profile সফলভাবে সংরক্ষণ হয়েছে।",
-              "success"
-            );
-
-          } catch (error) {
-
-            console.error(
-              "AYNA BOOK Save Profile Error:",
-              error
-            );
-
-            showMessage(
-              error?.message ||
-              "Profile সংরক্ষণ করা যায়নি।",
-              "error"
-            );
-
-          } finally {
-
-            saveProfileButton.disabled =
-              false;
-
-            saveProfileButton.textContent =
-              "Save Profile";
-          }
-        }
-      );
-    }
-
-
-    /* ===================================================
-       LOGOUT
-       =================================================== */
-
-    if (logoutButton) {
-
-      logoutButton.addEventListener(
-        "click",
-        async () => {
-
-          if (
-            !currentUser
-          ) {
-            return;
-          }
-
-          logoutButton.disabled =
-            true;
-
-          logoutButton.textContent =
-            "Logging out...";
-
-          try {
-
-            await signOut(
-              auth
-            );
-
-            window.location.replace(
-              "./login.html"
-            );
-
-          } catch (error) {
-
-            console.error(
-              "AYNA BOOK Logout Error:",
-              error
-            );
-
-            showMessage(
-              "Logout করা যায়নি। আবার চেষ্টা করুন।",
-              "error"
-            );
-
-            logoutButton.disabled =
-              false;
-
-            logoutButton.textContent =
-              "Logout";
-          }
-        }
-      );
-    }
-
-
-    console.log(
-      "AYNA BOOK — Profile Page Loaded Successfully."
-    );
-
-  </script>
-
-
-  <!-- =====================================================
-       CONNECTIVITY
-       ===================================================== -->
-
+  <!-- PROFILE CONTROLLER -->
   <script
     type="module"
-    src="./connectivity.js"
+    src="./profile.js"
   ></script>
-
-
-  <!-- =====================================================
-       UPDATE MANAGER
-       ===================================================== -->
-
-  <script
-    type="module"
-    src="./update.js"
-  ></script>
-
 
 </body>
 
