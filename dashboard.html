@@ -6,16 +6,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0A0F1E">
+  <meta name="description" content="AYNA BOOK — Secure Digital Social Platform">
 
   <title>AYNA BOOK — Dashboard</title>
 
   <style>
     * {
       box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
     }
 
     body {
@@ -30,6 +27,8 @@
       font: inherit;
     }
 
+    /* HEADER */
+
     .topbar {
       position: sticky;
       top: 0;
@@ -37,7 +36,6 @@
       min-height: 68px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       padding: 10px 16px;
       background: #0A0F1E;
       border-bottom: 1px solid #FFD700;
@@ -45,6 +43,7 @@
     }
 
     .menu-button {
+      flex-shrink: 0;
       width: 44px;
       height: 44px;
       display: grid;
@@ -66,31 +65,44 @@
       border-radius: 2px;
     }
 
+    /* AYNA BOOK BRAND AND STAR */
+
     .brand {
       flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       font-size: 22px;
       font-weight: 700;
       letter-spacing: 1px;
+      white-space: nowrap;
     }
 
     .glowing-star {
-      width: 16px;
-      height: 16px;
-      margin-left: 8px;
+      display: inline-block;
+      margin-left: 7px;
       color: #FFFFFF;
-      text-shadow: 0 0 5px #FFFFFF, 0 0 10px #FFFFFF;
-      animation: pulse 1s ease-in-out infinite;
+      font-size: 19px;
+      text-shadow:
+        0 0 5px #FFFFFF,
+        0 0 10px #FFFFFF,
+        0 0 18px #FFFFFF;
+      animation: starGlow 1.5s ease-in-out infinite;
     }
 
-    @keyframes pulse {
+    @keyframes starGlow {
       0%, 100% {
-        opacity: .65;
+        opacity: .55;
+        transform: scale(.9);
       }
       50% {
         opacity: 1;
+        transform: scale(1.15);
       }
     }
+
+    /* SIDEBAR */
 
     .sidebar {
       position: fixed;
@@ -132,8 +144,8 @@
     }
 
     .side-link:hover {
-      border-color: #FFD700;
       background: #26344A;
+      border-color: #FFD700;
     }
 
     .close-menu {
@@ -161,6 +173,8 @@
     .overlay.show {
       display: block;
     }
+
+    /* MAIN */
 
     main {
       width: 100%;
@@ -199,6 +213,8 @@
       font-size: 21px;
       color: #FFFFFF;
     }
+
+    /* FEATURE CARDS */
 
     .feature-grid {
       display: grid;
@@ -243,6 +259,8 @@
       font-size: 12px;
       color: #A9B0BC;
     }
+
+    /* QUICK ACTIONS */
 
     .actions {
       display: grid;
@@ -308,10 +326,6 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
       .glowing-star,
       .sidebar,
       .feature-card {
@@ -341,9 +355,9 @@
       <span></span>
     </button>
 
-    <div class="brand">AYNA BOOK</div>
-
-    <div class="glowing-star" aria-hidden="true">★</div>
+    <div class="brand">
+      AYNA BOOK<span class="glowing-star" aria-hidden="true">★</span>
+    </div>
 
   </header>
 
@@ -364,11 +378,8 @@
     <div class="sidebar-title">AYNA BOOK</div>
 
     <a class="side-link" href="./profile.html">👤 Profile</a>
-
     <a class="side-link" href="./index.html">🏠 Home</a>
-
     <a class="side-link" href="#features">✨ All Features</a>
-
     <a class="side-link" href="./privacy.html">🔒 Privacy & Security</a>
 
     <button id="sidebarLogout" class="side-link" type="button">
@@ -556,12 +567,17 @@
 
   <script type="module">
 
-    import { auth, watchAuthState, logoutUser } from "./auth.js";
+    // Firebase Auth আলাদা ফাইল থেকে Import
+    import { auth } from "./firebase.js";
+
+    // Authentication functions
+    import {
+      watchAuthState,
+      logoutUser
+    } from "./auth.js";
 
 
-    // -----------------------------------------------------
     // ELEMENTS
-    // -----------------------------------------------------
 
     const userEmail = document.getElementById("userEmail");
 
@@ -582,31 +598,22 @@
       document.getElementById("sidebarLogout");
 
 
-    // -----------------------------------------------------
     // STATE
-    // -----------------------------------------------------
 
     let authCheckStarted = false;
     let redirecting = false;
     let logoutInProgress = false;
 
 
-    // -----------------------------------------------------
     // MESSAGE
-    // -----------------------------------------------------
 
     function showMessage(text) {
-
       dashboardMessage.textContent = text;
-
       dashboardMessage.style.display = "block";
-
     }
 
 
-    // -----------------------------------------------------
     // REDIRECT
-    // -----------------------------------------------------
 
     function redirectToLogin() {
 
@@ -619,9 +626,7 @@
     }
 
 
-    // -----------------------------------------------------
     // MENU
-    // -----------------------------------------------------
 
     function openMenu() {
 
@@ -652,9 +657,7 @@
     overlay.addEventListener("click", closeSidebar);
 
 
-    // -----------------------------------------------------
-    // AUTH STATE
-    // -----------------------------------------------------
+    // AUTHENTICATION CHECK
 
     userEmail.textContent = "Checking Account...";
 
@@ -695,10 +698,13 @@
           const result = await logoutUser();
 
           if (result && result.success === false) {
+
             showMessage(
-              "Gmail Verify করা হয়নি এবং Logout সম্পন্ন হয়নি। আবার চেষ্টা করুন।"
+              "Logout সম্পন্ন হয়নি। আবার চেষ্টা করুন।"
             );
+
             return;
+
           }
 
           redirectToLogin();
@@ -732,9 +738,7 @@
     });
 
 
-    // -----------------------------------------------------
     // LOGOUT
-    // -----------------------------------------------------
 
     async function logout() {
 
@@ -785,9 +789,7 @@
     sidebarLogout.addEventListener("click", logout);
 
 
-    // -----------------------------------------------------
     // FEATURE ACTIONS
-    // -----------------------------------------------------
 
     document
       .querySelectorAll("[data-feature]")
@@ -839,10 +841,6 @@
 
       });
 
-
-    // -----------------------------------------------------
-    // READY
-    // -----------------------------------------------------
 
     console.log(
       "AYNA BOOK — Dashboard Controller Loaded."
