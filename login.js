@@ -1,8 +1,8 @@
-/* =========================================================
-   AYNA BOOK
-   Login Controller
-   Firebase SDK: 13.4.0
-   ========================================================= */
+// =========================================================
+// AYNA BOOK
+// Login Controller
+// Firebase SDK: 13.4.0
+// =========================================================
 
 import {
   loginUser,
@@ -11,9 +11,9 @@ import {
 } from "./auth.js";
 
 
-/* =========================================================
-   ELEMENTS
-   ========================================================= */
+// =========================================================
+// ELEMENTS
+// =========================================================
 
 const form =
   document.getElementById("loginForm");
@@ -34,9 +34,9 @@ const message =
   document.getElementById("message");
 
 
-/* =========================================================
-   SAFETY CHECK
-   ========================================================= */
+// =========================================================
+// ELEMENT CHECK
+// =========================================================
 
 if (
   !form ||
@@ -47,18 +47,30 @@ if (
 ) {
 
   console.error(
-    "AYNA BOOK — Login elements not found."
+    "AYNA BOOK — Login page elements missing."
   );
 
   throw new Error(
-    "Login page elements are missing."
+    "AYNA BOOK Login page elements are missing."
   );
 }
 
 
-/* =========================================================
-   PASSWORD SHOW / HIDE
-   ========================================================= */
+// =========================================================
+// SHOW MESSAGE
+// =========================================================
+
+function showMessage(text) {
+
+  message.textContent =
+    text || "";
+
+}
+
+
+// =========================================================
+// PASSWORD SHOW / HIDE
+// =========================================================
 
 if (togglePassword) {
 
@@ -82,8 +94,7 @@ if (togglePassword) {
 
       } else {
 
-        passwordInput.type =
-          "password";
+        passwordInput.type = "password";
 
         togglePassword.textContent =
           "👁";
@@ -101,21 +112,9 @@ if (togglePassword) {
 }
 
 
-/* =========================================================
-   MESSAGE
-   ========================================================= */
-
-function showMessage(text) {
-
-  message.textContent =
-    text || "";
-
-}
-
-
-/* =========================================================
-   LOGIN
-   ========================================================= */
+// =========================================================
+// LOGIN FORM
+// =========================================================
 
 form.addEventListener(
   "submit",
@@ -124,19 +123,22 @@ form.addEventListener(
     event.preventDefault();
 
 
+    // -----------------------------------------------------
+    // GET VALUES
+    // -----------------------------------------------------
+
     const email =
       emailInput.value
         .trim()
         .toLowerCase();
 
-
     const password =
       passwordInput.value;
 
 
-    /* -----------------------------------------------
-       Validation
-       ----------------------------------------------- */
+    // -----------------------------------------------------
+    // VALIDATE GMAIL
+    // -----------------------------------------------------
 
     if (!email) {
 
@@ -150,7 +152,11 @@ form.addEventListener(
     }
 
 
-    if (!/^[a-z0-9._%+-]+@gmail\.com$/.test(email)) {
+    if (
+      !/^[a-z0-9._%+-]+@gmail\.com$/.test(
+        email
+      )
+    ) {
 
       showMessage(
         "সঠিক Gmail address দিন।"
@@ -161,6 +167,10 @@ form.addEventListener(
       return;
     }
 
+
+    // -----------------------------------------------------
+    // VALIDATE PASSWORD
+    // -----------------------------------------------------
 
     if (!password) {
 
@@ -186,9 +196,9 @@ form.addEventListener(
     }
 
 
-    /* -----------------------------------------------
-       Login শুরু
-       ----------------------------------------------- */
+    // -----------------------------------------------------
+    // DISABLE BUTTON
+    // -----------------------------------------------------
 
     loginBtn.disabled =
       true;
@@ -199,6 +209,10 @@ form.addEventListener(
     showMessage("");
 
 
+    // -----------------------------------------------------
+    // FIREBASE LOGIN
+    // -----------------------------------------------------
+
     try {
 
       const result =
@@ -207,6 +221,10 @@ form.addEventListener(
           password
         );
 
+
+      // ---------------------------------------------------
+      // LOGIN FAILED
+      // ---------------------------------------------------
 
       if (!result.success) {
 
@@ -219,37 +237,38 @@ form.addEventListener(
       }
 
 
+      // ---------------------------------------------------
+      // LOGIN SUCCESS
+      // ---------------------------------------------------
+
       showMessage(
         "Login সফল হয়েছে। Dashboard-এ নেওয়া হচ্ছে..."
       );
 
 
-      /*
-       * Firebase Auth session তৈরি হওয়ার পর
-       * Dashboard-এ redirect।
-       */
+      // ছোট delay যাতে success message দেখা যায়
+      setTimeout(
+        () => {
 
-      setTimeout(() => {
+          window.location.replace(
+            "./dashboard.html"
+          );
 
-        window.location.replace(
-          "./dashboard.html"
-        );
-
-      }, 500);
+        },
+        600
+      );
 
 
     } catch (error) {
 
       console.error(
-        "AYNA BOOK — Login Error:",
+        "AYNA BOOK — Login Controller Error:",
         error
       );
-
 
       showMessage(
         getAuthErrorMessage(error)
       );
-
 
     } finally {
 
@@ -265,17 +284,15 @@ form.addEventListener(
 );
 
 
-/* =========================================================
-   AUTH STATE PROTECTION
-   ========================================================= */
+// =========================================================
+// AUTH STATE
+// =========================================================
 
 watchAuthState(
   (user) => {
 
-    /*
-     * Login page-এ আগে থেকেই valid Firebase
-     * session থাকলে Dashboard-এ পাঠানো হবে।
-     */
+    // Login page-এ already authenticated user
+    // থাকলে Dashboard-এ পাঠানো হবে।
 
     if (
       user &&
@@ -294,9 +311,9 @@ watchAuthState(
 );
 
 
-/* =========================================================
-   PAGE READY
-   ========================================================= */
+// =========================================================
+// MODULE READY
+// =========================================================
 
 console.log(
   "AYNA BOOK — Login controller loaded successfully."
