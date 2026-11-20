@@ -1,17 +1,10 @@
-
-import {
-  auth,
-  db,
-  storage
-} from "./firebase.js";
+import { auth, db, storage } from "./firebase.js";
 
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
-  signOut,
-  setPersistence,
-  browserLocalPersistence
+  signOut
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
@@ -26,354 +19,265 @@ import {
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-
 const form = document.getElementById("registrationForm");
 const registerButton = document.getElementById("registerButton");
 const statusMessage = document.getElementById("statusMessage");
-const photoInput = document.getElementById("profilePhoto");
+
+const fullNameInput = document.getElementById("fullName");
+const emailInput = document.getElementById("email");
+const phoneInput = document.getElementById("phone");
+const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirmPassword");
+const accountTypeInput = document.getElementById("accountType");
+const profilePhotoInput = document.getElementById("profilePhoto");
+const termsInput = document.getElementById("terms");
+
 const photoPreview = document.getElementById("photoPreview");
 
-const ACCOUNT_PRICES = {
-  personal: 0,
-  business: 10,
-  vip: 10,
-  vvip: 20
-};
+function showStatus(message, type = "info") {
+  if (!statusMessage) return;
 
-
-function showMessage(message, success = false) {
-  statusMessage.style.display = "block";
-  statusMessage.style.color = success ? "#8CFFB0" : "#FFB4B4";
-  statusMessage.style.background = success ? "#123526" : "#402020";
   statusMessage.textContent = message;
+  statusMessage.className = `status-message ${type}`;
 }
 
+function setLoading(loading) {
+  if (!registerButton) return;
 
-function validateGmail(email) {
+  registerButton.disabled = loading;
+  registerButton.textContent = loading
+    ? "CREATING ACCOUNT..."
+    : "CREATE ACCOUNT";
+}
+
+function isValidGmail(email) {
   return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(email);
 }
 
-
-function normalizePhone(value) {
-  return value.replace(/[\s()-]/g, "");
+function isValidPhone(phone) {
+  return /^\+?[0-9]{10,15}$/.test(phone.replace(/[\s()-]/g, ""));
 }
 
-
-function validatePhone(phone) {
-  return /^\+?[0-9]{10,15}$/.test(phone);
-}
-
-
-function getErrorMessage(error) {
-  const messages = {
-    "auth/email-already-in-use":
-      "এই Gmail দিয়ে আগে থেকেই অ্যাকাউন্ট রয়েছে। Login করুন অথবা Password Reset করুন।",
-
-    "auth/invalid-email":
-      "সঠিক Gmail Address দিন।",
-
-    "auth/weak-password":
-      "আরও শক্তিশালী Password দিন।",
-
-    "auth/operation-not-allowed":
-      "Firebase Console-এ Email/Password Authentication চালু করুন।",
-
-    "auth/network-request-failed":
-      "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
-
-    "auth/too-many-requests":
-      "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
-
-    "auth/unauthorized-continue-uri":
-      "Verification Link-এর Domain Firebase Authorized Domains-এ নেই।",
-
-    "auth/invalid-continue-uri":
-      "Verification Link-এর ঠিকানা সঠিক নয়।",
-
-    "permission-denied":
-      "Firestore Rules অনুমতি দেয়নি। Firestore Security Rules পরীক্ষা করুন।",
-
-    "storage/unauthorized":
-      "Profile Photo Upload অনুমোদিত হয়নি। Storage Rules পরীক্ষা করুন।"
+function getAccountPrice(accountType) {
+  const prices = {
+    personal: 0,
+    business: 10,
+    vip: 10,
+    vvip: 20
   };
 
-  return messages[error.code] ||
-    "Registration সম্পন্ন হয়নি। Error Code: " +
-    (error.code || "unknown");
+  return prices[accountType] ?? 0;
 }
 
+if (profilePhotoInput && photoPreview) {
+  profilePhotoInput.addEventListener("change", () => {
+    const file = profilePhotoInput.files?.[0];
 
-// Password Show / Hide
-document.querySelectorAll("[data-toggle]").forEach(button => {
-  button.addEventListener("click", () => {
-    const input = document.getElementById(button.dataset.toggle);
-    if (!input) return;
-
-    const visible = input.type === "password";
-    input.type = visible ? "text" : "password";
-    button.textContent = visible ? "Hide" : "Show";
-  });
-});
-
-
-// Profile Photo Preview
-photoInput.addEventListener("change", () => {
-  const file = photoInput.files[0];
-
-  if (!file) {
-    photoPreview.removeAttribute("src");
-    return;
-  }
-
-  const allowedTypes = [
-    "image/jpeg",
-    "image/png",
-    "image/webp"
-  ];
-
-  if (!allowedTypes.includes(file.type)) {
-    showMessage("JPEG, PNG অথবা WebP ছবি ব্যবহার করুন।");
-    photoInput.value = "";
-    photoPreview.removeAttribute("src");
-    return;
-  }
-
-  if (file.size > 5 * 1024 * 1024) {
-    showMessage("ছবির সর্বোচ্চ সাইজ 5 MB।");
-    photoInput.value = "";
-    photoPreview.removeAttribute("src");
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = event => {
-    photoPreview.src = event.target.result;
-  };
-
-  reader.readAsDataURL(file);
-});
-
-
-// Registration
-form.addEventListener("submit", async event => {
-  event.preventDefault();
-
-  if (registerButton.disabled) return;
-
-  const fullName =
-    document.getElementById("fullName").value.trim();
-
-  const email =
-    document.getElementById("email").value.trim().toLowerCase();
-
-  const phone =
-    normalizePhone(document.getElementById("phone").value.trim());
-
-  const password =
-    document.getElementById("password").value;
-
-  const confirmPassword =
-    document.getElementById("confirmPassword").value;
-
-  const accountType =
-    document.getElementById("accountType").value;
-
-  const photo =
-    photoInput.files[0] || null;
-
-  const terms =
-    document.getElementById("terms").checked;
-
-
-  // Form validation
-  if (fullName.length < 2) {
-    showMessage("সঠিক নাম লিখুন।");
-    return;
-  }
-
-  if (!validateGmail(email)) {
-    showMessage("শুধু Gmail Address ব্যবহার করুন।");
-    return;
-  }
-
-  if (!validatePhone(phone)) {
-    showMessage("সঠিক ফোন নম্বর লিখুন। উদাহরণ: +88017XXXXXXXX");
-    return;
-  }
-
-  if (password.length < 11) {
-    showMessage("Password কমপক্ষে 11 অক্ষরের হতে হবে।");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    showMessage("দুটি Password মিলছে না।");
-    return;
-  }
-
-  if (!Object.hasOwn(ACCOUNT_PRICES, accountType)) {
-    showMessage("সঠিক Account Category নির্বাচন করুন।");
-    return;
-  }
-
-  if (!terms) {
-    showMessage("Terms and Privacy Policy গ্রহণ করুন।");
-    return;
-  }
-
-  if (photo) {
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp"
-    ];
-
-    if (!allowedTypes.includes(photo.type) ||
-        photo.size > 5 * 1024 * 1024) {
-      showMessage("সঠিক ছবি নির্বাচন করুন। সর্বোচ্চ সাইজ 5 MB।");
+    if (!file) {
+      photoPreview.style.display = "none";
+      photoPreview.src = "";
       return;
     }
-  }
 
-
-  registerButton.disabled = true;
-  registerButton.textContent = "CREATING ACCOUNT...";
-
-  showMessage("আপনার AYNA BOOK Account তৈরি হচ্ছে...");
-
-  let createdUser = null;
-
-  try {
-    await setPersistence(auth, browserLocalPersistence);
-
-    // 1. Create Firebase Authentication Account
-    const credential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    createdUser = credential.user;
-
-    // 2. Save Display Name
-    await updateProfile(createdUser, {
-      displayName: fullName
-    });
-
-    // 3. Optional Profile Photo
-    let photoURL = "";
-
-    if (photo) {
-      try {
-        const photoRef = ref(
-          storage,
-          `users/${createdUser.uid}/profile-photo`
-        );
-
-        const uploaded = await uploadBytes(
-          photoRef,
-          photo,
-          { contentType: photo.type }
-        );
-
-        photoURL = await getDownloadURL(uploaded.ref);
-
-        await updateProfile(createdUser, {
-          photoURL
-        });
-
-      } catch (photoError) {
-        console.error("Photo upload error:", photoError);
-        showMessage(
-          "ছবি Upload হয়নি। Registration ছবি ছাড়া চালিয়ে যাচ্ছি।",
-          false
-        );
-      }
+    if (!file.type.startsWith("image/")) {
+      showStatus("শুধু ছবি নির্বাচন করুন।", "error");
+      profilePhotoInput.value = "";
+      return;
     }
 
-    // 4. Account Details
-    const priceUSD = ACCOUNT_PRICES[accountType];
-    const paymentRequired = priceUSD > 0;
+    if (file.size > 5 * 1024 * 1024) {
+      showStatus("Profile Photo সর্বোচ্চ 5 MB হতে হবে।", "error");
+      profilePhotoInput.value = "";
+      return;
+    }
 
-    // 5. Save User Document
-    await setDoc(
-      doc(db, "users", createdUser.uid),
-      {
-        uid: createdUser.uid,
-        name: fullName,
+    photoPreview.src = URL.createObjectURL(file);
+    photoPreview.style.display = "block";
+  });
+}
+
+if (form) {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (registerButton?.disabled) return;
+
+    const fullName = fullNameInput?.value.trim() || "";
+    const email = emailInput?.value.trim().toLowerCase() || "";
+    const phone = phoneInput?.value.trim() || "";
+    const password = passwordInput?.value || "";
+    const confirmPassword = confirmPasswordInput?.value || "";
+    const accountType = accountTypeInput?.value || "personal";
+    const photoFile = profilePhotoInput?.files?.[0] || null;
+
+    if (!fullName) {
+      showStatus("Full Name লিখুন।", "error");
+      return;
+    }
+
+    if (!isValidGmail(email)) {
+      showStatus("একটি সঠিক Gmail Address দিন।", "error");
+      return;
+    }
+
+    if (!isValidPhone(phone)) {
+      showStatus("সঠিক Mobile Number দিন। উদাহরণ: +8801XXXXXXXXX", "error");
+      return;
+    }
+
+    if (password.length < 11) {
+      showStatus("Password কমপক্ষে 11 অক্ষরের হতে হবে।", "error");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      showStatus("Password এবং Confirm Password মিলছে না।", "error");
+      return;
+    }
+
+    if (!termsInput?.checked) {
+      showStatus("Terms and Privacy Policy গ্রহণ করুন।", "error");
+      return;
+    }
+
+    setLoading(true);
+
+    let createdUser = null;
+
+    try {
+      showStatus("Firebase Account তৈরি করা হচ্ছে...", "info");
+
+      const credential = await createUserWithEmailAndPassword(
+        auth,
         email,
-        phone,
-        photoURL,
-
-        accountType,
-        priceUSD,
-        paymentRequired,
-
-        emailVerified: false,
-        emailVerificationStatus: "pending",
-
-        paymentStatus: paymentRequired
-          ? "pending"
-          : "not_required",
-
-        accountStatus: "pending_email_verification",
-
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      }
-    );
-
-    // 6. Send Gmail Verification
-    const loginURL = new URL(
-      "./login.html",
-      window.location.href
-    ).href;
-
-    await sendEmailVerification(createdUser, {
-      url: loginURL,
-      handleCodeInApp: false
-    });
-
-    // 7. Sign Out until email is verified
-    await signOut(auth);
-
-    form.reset();
-    photoPreview.removeAttribute("src");
-
-    showMessage(
-      "Registration Request তৈরি হয়েছে!\n\n" +
-      "আপনার Gmail Inbox অথবা Spam Folder খুলুন।\n" +
-      "AYNA BOOK-এর Verification Email-এর Link-এ ক্লিক করুন।\n\n" +
-      "Email Verify হওয়ার পরে Login করুন।\n\n" +
-      "Account Category: " + accountType.toUpperCase() +
-      "\nLogin: " + loginURL,
-      true
-    );
-
-    registerButton.textContent = "REGISTRATION REQUEST SENT";
-
-  } catch (error) {
-    console.error("AYNA BOOK Registration Error:", error);
-
-    if (createdUser) {
-      try {
-        await signOut(auth);
-      } catch (signOutError) {
-        console.error("Sign out error:", signOutError);
-      }
-
-      showMessage(
-        "Firebase Account তৈরি হয়েছে, কিন্তু Registration-এর পরের কোনো ধাপে সমস্যা হয়েছে।\n\n" +
-        getErrorMessage(error) +
-        "\n\nএকই Gmail দিয়ে আবার Registration করার আগে Login/Verification ব্যবস্থা পরীক্ষা করুন।"
+        password
       );
 
-    } else {
-      showMessage(getErrorMessage(error));
-    }
+      createdUser = credential.user;
 
-    registerButton.disabled = false;
-    registerButton.textContent = "REGISTER";
-  }
-});
+      showStatus("Profile তথ্য সংরক্ষণ করা হচ্ছে...", "info");
+
+      await updateProfile(createdUser, {
+        displayName: fullName
+      });
+
+      let photoURL = "";
+
+      if (photoFile) {
+        try {
+          showStatus("Profile Photo আপলোড করা হচ্ছে...", "info");
+
+          const photoRef = ref(
+            storage,
+            `profilePhotos/${createdUser.uid}/${Date.now()}-${photoFile.name}`
+          );
+
+          await uploadBytes(photoRef, photoFile);
+          photoURL = await getDownloadURL(photoRef);
+        } catch (photoError) {
+          console.warn("Photo upload failed:", photoError);
+
+          showStatus(
+            "Photo upload হয়নি। Registration চালিয়ে যাওয়া হচ্ছে...",
+            "info"
+          );
+        }
+      }
+
+      const price = getAccountPrice(accountType);
+
+      showStatus("User information Firestore-এ সংরক্ষণ করা হচ্ছে...", "info");
+
+      await setDoc(
+        doc(db, "users", createdUser.uid),
+        {
+          uid: createdUser.uid,
+          fullName,
+          displayName: fullName,
+          email,
+          phone,
+          accountType,
+          accountPriceUSD: price,
+          photoURL,
+
+          emailVerified: false,
+          emailVerificationStatus: "pending",
+
+          accountStatus: "pending_email_verification",
+
+          paymentStatus:
+            price > 0 ? "pending" : "not_required",
+
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        }
+      );
+
+      showStatus("Gmail Verification Link পাঠানো হচ্ছে...", "info");
+
+      await sendEmailVerification(createdUser);
+
+      await signOut(auth);
+
+      setLoading(false);
+
+      showStatus(
+        "Registration সফল হয়েছে। আপনার Gmail Inbox/Spam Folder থেকে Verification Link-এ ক্লিক করুন। এরপর Login করুন।",
+        "success"
+      );
+
+      form.reset();
+
+      if (photoPreview) {
+        photoPreview.src = "";
+        photoPreview.style.display = "none";
+      }
+
+    } catch (error) {
+      console.error("Registration Error:", error);
+
+      setLoading(false);
+
+      let message = "Registration সম্পন্ন হয়নি।";
+
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          message =
+            "এই Gmail দিয়ে ইতিমধ্যে একটি Firebase Account আছে। নতুন করে Registration করবেন না।";
+          break;
+
+        case "auth/invalid-email":
+          message = "Gmail Address সঠিক নয়।";
+          break;
+
+        case "auth/weak-password":
+          message = "Password আরও শক্তিশালী দিন।";
+          break;
+
+        case "auth/network-request-failed":
+          message =
+            "Internet Connection পরীক্ষা করে আবার চেষ্টা করুন।";
+          break;
+
+        case "permission-denied":
+          message =
+            "Firebase Firestore Permission সমস্যা হয়েছে।";
+          break;
+
+        default:
+          message =
+            `Registration Error: ${error.message || "Unknown error"}`;
+      }
+
+      if (createdUser) {
+        try {
+          await signOut(auth);
+        } catch (signOutError) {
+          console.warn("Sign out failed:", signOutError);
+        }
+      }
+
+      showStatus(message, "error");
+    }
+  });
+}
