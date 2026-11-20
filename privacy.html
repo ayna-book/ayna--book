@@ -1,532 +1,322 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0F1E">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="theme-color"
-    content="#0A0F1E"
-  >
-
-  <title>
-    AYNA BOOK — Privacy & Security
-  </title>
+  <title>AYNA BOOK — Privacy Center</title>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      padding: 0;
-
       background: #0A0F1E;
       color: #FFFFFF;
-
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
     }
 
     .container {
       width: 100%;
       max-width: 720px;
-
-      margin: 0 auto;
-
+      margin: auto;
       padding: 20px;
     }
 
-    .header {
+    header {
       text-align: center;
-
-      padding: 25px 10px 20px;
+      padding: 25px 10px;
     }
 
     .logo {
+      color: #FFD700;
       font-size: 30px;
       font-weight: 800;
-
-      color: #FFD700;
-
-      letter-spacing: 1px;
     }
 
     .subtitle {
-      margin-top: 8px;
-
       color: #A9B0BC;
-
-      font-size: 14px;
+      margin-top: 8px;
     }
 
     .card {
       background: #1A2233;
-
+      border: 1px solid rgba(255,255,255,.08);
       border-radius: 16px;
-
       padding: 22px;
-
       margin-bottom: 18px;
-
-      border:
-        1px solid
-        rgba(255, 255, 255, 0.08);
     }
 
-    .card h2 {
-      margin-top: 0;
-
+    h2 {
       color: #FFD700;
-
-      font-size: 20px;
-    }
-
-    .card p {
-      color: #D7DCE5;
-
-      line-height: 1.7;
-
-      font-size: 14px;
+      font-size: 19px;
+      margin-top: 0;
     }
 
     .setting {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 15px;
-
-      padding: 15px 0;
-
-      border-bottom:
-        1px solid
-        rgba(255, 255, 255, 0.08);
+      margin: 20px 0;
     }
 
-    .setting:last-child {
+    .setting label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 9px;
+    }
+
+    .description {
+      color: #A9B0BC;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    select {
+      width: 100%;
+      padding: 13px;
+      background: #0A0F1E;
+      color: #FFFFFF;
+      border: 1px solid #39445A;
+      border-radius: 9px;
+      font-size: 14px;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .toggle:last-child {
       border-bottom: none;
     }
 
-    .setting-title {
-      font-size: 15px;
-
-      font-weight: 600;
+    .toggle input {
+      width: 21px;
+      height: 21px;
+      accent-color: #FFD700;
     }
 
-    .setting-description {
-      margin-top: 5px;
-
-      color: #A9B0BC;
-
-      font-size: 12px;
-
-      line-height: 1.5;
-    }
-
-    .badge {
-      flex-shrink: 0;
-
-      padding: 7px 12px;
-
-      border-radius: 20px;
-
-      background:
-        rgba(255, 215, 0, 0.12);
-
-      color: #FFD700;
-
-      font-size: 12px;
-
-      font-weight: 700;
-    }
-
-    .security-list {
-      margin: 0;
-
-      padding-left: 20px;
-    }
-
-    .security-list li {
-      color: #D7DCE5;
-
-      line-height: 1.8;
-
-      font-size: 14px;
-
-      margin-bottom: 5px;
-    }
-
-    .back-button {
+    button, .back-button {
       display: block;
-
       width: 100%;
-
       padding: 14px;
-
-      margin-top: 10px;
-
+      margin-top: 12px;
       border: none;
-
-      border-radius: 10px;
-
-      background: #FFD700;
-
-      color: #0A0F1E;
-
-      font-size: 15px;
-
-      font-weight: 700;
-
+      border-radius: 9px;
+      font-weight: bold;
+      font-size: 14px;
       cursor: pointer;
-
       text-align: center;
-
       text-decoration: none;
     }
 
-    .back-button:hover {
-      opacity: 0.9;
+    .save-button {
+      background: #FFD700;
+      color: #0A0F1E;
     }
 
-    .footer {
+    .reset-button {
+      background: #303B50;
+      color: #FFFFFF;
+    }
+
+    .back-button {
+      background: #1A2233;
+      color: #FFD700;
+      border: 1px solid #FFD700;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    #statusMessage {
+      display: none;
+      padding: 13px;
+      margin: 15px 0;
+      border-radius: 9px;
+      line-height: 1.5;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    #statusMessage.success {
+      display: block;
+      background: #123B2B;
+      color: #B7FFD7;
+    }
+
+    #statusMessage.error {
+      display: block;
+      background: #4A2028;
+      color: #FFD0D0;
+    }
+
+    #statusMessage.info {
+      display: block;
+      background: #24344D;
+      color: #D6E7FF;
+    }
+
+    footer {
       text-align: center;
-
-      padding: 20px 10px 30px;
-
       color: #A9B0BC;
-
       font-size: 12px;
+      padding: 20px;
     }
-
   </style>
-
 </head>
-
 
 <body>
 
   <main class="container">
 
-
-    <!-- =================================================
-         HEADER
-    ================================================== -->
-
-    <header class="header">
-
-      <div class="logo">
-        AYNA BOOK
-      </div>
-
-      <div class="subtitle">
-        Privacy & Security Center
-      </div>
-
+    <header>
+      <div class="logo">AYNA BOOK</div>
+      <div class="subtitle">Privacy & Security Center</div>
     </header>
 
-
-    <!-- =================================================
-         PRIVACY INTRODUCTION
-    ================================================== -->
-
     <section class="card">
 
-      <h2>
-        Privacy & Security
-      </h2>
+      <h2>Account Privacy</h2>
 
-      <p>
-        AYNA BOOK একটি privacy-focused
-        digital platform হিসেবে তৈরি হচ্ছে।
-        আপনার account, profile এবং ব্যক্তিগত
-        তথ্য নিরাপদ রাখা আমাদের গুরুত্বপূর্ণ
-        লক্ষ্য।
-      </p>
+      <div class="setting">
+        <label for="profileVisibility">
+          Profile Visibility
+        </label>
 
-      <p>
-        এই Privacy Center থেকে ভবিষ্যতে
-        আপনার account privacy, profile visibility,
-        security এবং অন্যান্য privacy controls
-        পরিচালনা করা যাবে।
-      </p>
+        <p class="description">
+          আপনার Profile কারা দেখতে পারবে তা নির্বাচন করুন।
+        </p>
+
+        <select id="profileVisibility">
+          <option value="private">Private</option>
+          <option value="friends">Friends</option>
+          <option value="public">Public</option>
+        </select>
+      </div>
+
+      <div class="toggle">
+        <div>
+          <label for="emailVisibility">
+            Show Email Address
+          </label>
+          <p class="description">
+            Public profile-এ Email দেখানোর অনুমতি।
+          </p>
+        </div>
+        <input type="checkbox" id="emailVisibility">
+      </div>
+
+      <div class="toggle">
+        <div>
+          <label for="phoneVisibility">
+            Show Phone Number
+          </label>
+          <p class="description">
+            Public profile-এ Phone দেখানোর অনুমতি।
+          </p>
+        </div>
+        <input type="checkbox" id="phoneVisibility">
+      </div>
 
     </section>
 
-
-    <!-- =================================================
-         ACCOUNT PRIVACY
-    ================================================== -->
-
     <section class="card">
 
-      <h2>
-        Account Privacy
-      </h2>
-
+      <h2>Message Privacy</h2>
 
       <div class="setting">
 
-        <div>
+        <label for="messagePermission">
+          Who Can Message Me?
+        </label>
 
-          <div class="setting-title">
-            Profile Visibility
-          </div>
+        <p class="description">
+          কে আপনাকে Message পাঠাতে পারবে তা নির্বাচন করুন।
+        </p>
 
-          <div class="setting-description">
-            আপনার profile কে দেখতে পারবে
-            তা নিয়ন্ত্রণ করুন।
-          </div>
-
-        </div>
-
-        <div class="badge">
-          PRIVATE
-        </div>
-
-      </div>
-
-
-      <div class="setting">
-
-        <div>
-
-          <div class="setting-title">
-            Email Privacy
-          </div>
-
-          <div class="setting-description">
-            আপনার Gmail address public profile-এ
-            প্রকাশ না করার জন্য ব্যবহৃত হবে।
-          </div>
-
-        </div>
-
-        <div class="badge">
-          PROTECTED
-        </div>
-
-      </div>
-
-
-      <div class="setting">
-
-        <div>
-
-          <div class="setting-title">
-            Phone Privacy
-          </div>
-
-          <div class="setting-description">
-            আপনার mobile number ব্যক্তিগত
-            তথ্য হিসেবে সংরক্ষিত থাকবে।
-          </div>
-
-        </div>
-
-        <div class="badge">
-          PROTECTED
-        </div>
+        <select id="messagePermission">
+          <option value="friends">Friends</option>
+          <option value="everyone">Everyone</option>
+          <option value="nobody">Nobody</option>
+        </select>
 
       </div>
 
     </section>
 
-
-    <!-- =================================================
-         SECURITY
-    ================================================== -->
-
     <section class="card">
 
-      <h2>
-        Security
-      </h2>
+      <h2>Search & Activity Privacy</h2>
 
-      <ul class="security-list">
-
-        <li>
-          Gmail-based account verification
-        </li>
-
-        <li>
-          Firebase Authentication
-        </li>
-
-        <li>
-          Secure Firestore database rules
-        </li>
-
-        <li>
-          Firebase Storage access control
-        </li>
-
-        <li>
-          User-based profile data access
-        </li>
-
-        <li>
-          Password Reset security
-        </li>
-
-      </ul>
-
-    </section>
-
-
-    <!-- =================================================
-         FUTURE PRIVACY CONTROLS
-    ================================================== -->
-
-    <section class="card">
-
-      <h2>
-        Future Privacy Controls
-      </h2>
-
-
-      <div class="setting">
-
+      <div class="toggle">
         <div>
-
-          <div class="setting-title">
-            Who Can See My Profile
-          </div>
-
-          <div class="setting-description">
-            Public / Friends / Private
-            visibility control।
-          </div>
-
+          <label for="searchVisibility">
+            Search Visibility
+          </label>
+          <p class="description">
+            Search-এর মাধ্যমে আপনার Profile খুঁজে পাওয়ার অনুমতি।
+          </p>
         </div>
-
-        <div class="badge">
-          SOON
-        </div>
-
+        <input type="checkbox" id="searchVisibility">
       </div>
 
-
-      <div class="setting">
-
+      <div class="toggle">
         <div>
-
-          <div class="setting-title">
-            Message Privacy
-          </div>
-
-          <div class="setting-description">
-            কে আপনাকে message করতে পারবে
-            তা নিয়ন্ত্রণ করা যাবে।
-          </div>
-
+          <label for="activityVisibility">
+            Activity Visibility
+          </label>
+          <p class="description">
+            আপনার Activity অন্যদের দেখানোর অনুমতি।
+          </p>
         </div>
-
-        <div class="badge">
-          SOON
-        </div>
-
-      </div>
-
-
-      <div class="setting">
-
-        <div>
-
-          <div class="setting-title">
-            Block & Report
-          </div>
-
-          <div class="setting-description">
-            নিরাপত্তার জন্য user block এবং
-            report system।
-          </div>
-
-        </div>
-
-        <div class="badge">
-          SOON
-        </div>
-
-      </div>
-
-
-      <div class="setting">
-
-        <div>
-
-          <div class="setting-title">
-            Login Security
-          </div>
-
-          <div class="setting-description">
-            ভবিষ্যতে আরও উন্নত account
-            security এবং device management।
-          </div>
-
-        </div>
-
-        <div class="badge">
-          SOON
-        </div>
-
+        <input type="checkbox" id="activityVisibility">
       </div>
 
     </section>
 
+    <div id="statusMessage" role="status" aria-live="polite"></div>
 
-    <!-- =================================================
-         BACK TO PROFILE
-    ================================================== -->
-
-    <a
-      href="./profile.html"
-      class="back-button"
+    <button
+      type="button"
+      id="savePrivacyButton"
+      class="save-button"
     >
+      SAVE PRIVACY SETTINGS
+    </button>
+
+    <button
+      type="button"
+      id="resetPrivacyButton"
+      class="reset-button"
+    >
+      RESET SETTINGS
+    </button>
+
+    <a href="./profile.html" class="back-button">
       ← BACK TO PROFILE
     </a>
 
-
-    <!-- =================================================
-         FOOTER
-    ================================================== -->
-
-    <footer class="footer">
-
-      AYNA BOOK
-
-      <br>
-
+    <footer>
+      AYNA BOOK<br>
       Privacy • Security • Trust
-
     </footer>
 
   </main>
 
-
-  <!-- =================================================
-       AYNA BOOK — PRIVACY CONTROLLER
-  ================================================== -->
-
-  <script
-    type="module"
-    src="./privacy.js"
-  ></script>
-
+  <script type="module" src="./privacy.js"></script>
+  <script type="module" src="./privacy-settings.js"></script>
 
 </body>
-
 </html>
