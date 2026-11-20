@@ -28,19 +28,10 @@ import {
 
 
 const form = document.getElementById("registrationForm");
-
-const registerButton =
-  document.getElementById("registerButton");
-
-const statusMessage =
-  document.getElementById("statusMessage");
-
-const photoInput =
-  document.getElementById("profilePhoto");
-
-const photoPreview =
-  document.getElementById("photoPreview");
-
+const registerButton = document.getElementById("registerButton");
+const statusMessage = document.getElementById("statusMessage");
+const photoInput = document.getElementById("profilePhoto");
+const photoPreview = document.getElementById("photoPreview");
 
 const ACCOUNT_PRICES = {
   personal: 0,
@@ -53,15 +44,18 @@ const ACCOUNT_PRICES = {
 function showMessage(message, success = false) {
   statusMessage.style.display = "block";
   statusMessage.style.color = success ? "#8CFFB0" : "#FFB4B4";
-  statusMessage.style.background =
-    success ? "#123526" : "#402020";
-
+  statusMessage.style.background = success ? "#123526" : "#402020";
   statusMessage.textContent = message;
 }
 
 
 function validateGmail(email) {
   return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(email);
+}
+
+
+function normalizePhone(value) {
+  return value.replace(/[\s()-]/g, "");
 }
 
 
@@ -91,10 +85,16 @@ function getErrorMessage(error) {
       "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
 
     "auth/unauthorized-continue-uri":
-      "Verification Link-এর Domain Firebase-এ Authorized নয়।",
+      "Verification Link-এর Domain Firebase Authorized Domains-এ নেই।",
 
     "auth/invalid-continue-uri":
-      "Verification Link-এর ঠিকানা সঠিক নয়।"
+      "Verification Link-এর ঠিকানা সঠিক নয়।",
+
+    "permission-denied":
+      "Firestore Rules অনুমতি দেয়নি। Firestore Security Rules পরীক্ষা করুন।",
+
+    "storage/unauthorized":
+      "Profile Photo Upload অনুমোদিত হয়নি। Storage Rules পরীক্ষা করুন।"
   };
 
   return messages[error.code] ||
@@ -105,40 +105,43 @@ function getErrorMessage(error) {
 
 // Password Show / Hide
 document.querySelectorAll("[data-toggle]").forEach(button => {
-
   button.addEventListener("click", () => {
-
-    const inputId = button.dataset.toggle;
-    const input = document.getElementById(inputId);
-
+    const input = document.getElementById(button.dataset.toggle);
     if (!input) return;
 
     const visible = input.type === "password";
-
     input.type = visible ? "text" : "password";
-
     button.textContent = visible ? "Hide" : "Show";
   });
-
 });
 
 
 // Profile Photo Preview
 photoInput.addEventListener("change", () => {
-
   const file = photoInput.files[0];
 
-  if (!file) return;
+  if (!file) {
+    photoPreview.removeAttribute("src");
+    return;
+  }
 
-  if (!file.type.startsWith("image/")) {
-    showMessage("শুধু ছবি নির্বাচন করুন।");
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    showMessage("JPEG, PNG অথবা WebP ছবি ব্যবহার করুন।");
     photoInput.value = "";
+    photoPreview.removeAttribute("src");
     return;
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    showMessage("ছবির সর্বোচ্চ সাইজ 5 MB হতে পারবে।");
+    showMessage("ছবির সর্বোচ্চ সাইজ 5 MB।");
     photoInput.value = "";
+    photoPreview.removeAttribute("src");
     return;
   }
 
@@ -149,13 +152,11 @@ photoInput.addEventListener("change", () => {
   };
 
   reader.readAsDataURL(file);
-
 });
 
 
 // Registration
 form.addEventListener("submit", async event => {
-
   event.preventDefault();
 
   if (registerButton.disabled) return;
@@ -167,7 +168,7 @@ form.addEventListener("submit", async event => {
     document.getElementById("email").value.trim().toLowerCase();
 
   const phone =
-    document.getElementById("phone").value.trim();
+    normalizePhone(document.getElementById("phone").value.trim());
 
   const password =
     document.getElementById("password").value;
@@ -185,8 +186,8 @@ form.addEventListener("submit", async event => {
     document.getElementById("terms").checked;
 
 
-  // Validation
-  if (!fullName || fullName.length < 2) {
+  // Form validation
+  if (fullName.length < 2) {
     showMessage("সঠিক নাম লিখুন।");
     return;
   }
@@ -197,7 +198,7 @@ form.addEventListener("submit", async event => {
   }
 
   if (!validatePhone(phone)) {
-    showMessage("সঠিক ফোন নম্বর লিখুন।");
+    showMessage("সঠিক ফোন নম্বর লিখুন। উদাহরণ: +88017XXXXXXXX");
     return;
   }
 
@@ -222,20 +223,15 @@ form.addEventListener("submit", async event => {
   }
 
   if (photo) {
-
     const allowedTypes = [
       "image/jpeg",
       "image/png",
       "image/webp"
     ];
 
-    if (!allowedTypes.includes(photo.type)) {
-      showMessage("JPEG, PNG অথবা WebP ছবি ব্যবহার করুন।");
-      return;
-    }
-
-    if (photo.size > 5 * 1024 * 1024) {
-      showMessage("ছবির সর্বোচ্চ সাইজ 5 MB।");
+    if (!allowedTypes.includes(photo.type) ||
+        photo.size > 5 * 1024 * 1024) {
+      showMessage("সঠিক ছবি নির্বাচন করুন। সর্বোচ্চ সাইজ 5 MB।");
       return;
     }
   }
@@ -249,35 +245,27 @@ form.addEventListener("submit", async event => {
   let createdUser = null;
 
   try {
-
-    // Firebase Auth Persistence
     await setPersistence(auth, browserLocalPersistence);
 
-
-    // Create Firebase Account
-    const credential =
-      await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+    // 1. Create Firebase Authentication Account
+    const credential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
     createdUser = credential.user;
 
-
-    // Update Display Name
+    // 2. Save Display Name
     await updateProfile(createdUser, {
       displayName: fullName
     });
 
-
-    // Optional Profile Photo Upload
+    // 3. Optional Profile Photo
     let photoURL = "";
 
     if (photo) {
-
       try {
-
         const photoRef = ref(
           storage,
           `users/${createdUser.uid}/profile-photo`
@@ -286,53 +274,43 @@ form.addEventListener("submit", async event => {
         const uploaded = await uploadBytes(
           photoRef,
           photo,
-          {
-            contentType: photo.type
-          }
+          { contentType: photo.type }
         );
 
         photoURL = await getDownloadURL(uploaded.ref);
 
         await updateProfile(createdUser, {
-          photoURL: photoURL
+          photoURL
         });
 
       } catch (photoError) {
-
-        console.error("Profile photo upload failed:", photoError);
-
+        console.error("Photo upload error:", photoError);
+        showMessage(
+          "ছবি Upload হয়নি। Registration ছবি ছাড়া চালিয়ে যাচ্ছি।",
+          false
+        );
       }
     }
 
-
-    // Account Information
+    // 4. Account Details
     const priceUSD = ACCOUNT_PRICES[accountType];
-
     const paymentRequired = priceUSD > 0;
 
-
-    // Save User Information
+    // 5. Save User Document
     await setDoc(
       doc(db, "users", createdUser.uid),
       {
         uid: createdUser.uid,
-
         name: fullName,
+        email,
+        phone,
+        photoURL,
 
-        email: email,
-
-        phone: phone,
-
-        photoURL: photoURL,
-
-        accountType: accountType,
-
-        priceUSD: priceUSD,
-
-        paymentRequired: paymentRequired,
+        accountType,
+        priceUSD,
+        paymentRequired,
 
         emailVerified: false,
-
         emailVerificationStatus: "pending",
 
         paymentStatus: paymentRequired
@@ -342,61 +320,60 @@ form.addEventListener("submit", async event => {
         accountStatus: "pending_email_verification",
 
         createdAt: serverTimestamp(),
-
         updatedAt: serverTimestamp()
       }
     );
 
-
-    // Verification Link
+    // 6. Send Gmail Verification
     const loginURL = new URL(
       "./login.html",
       window.location.href
     ).href;
 
+    await sendEmailVerification(createdUser, {
+      url: loginURL,
+      handleCodeInApp: false
+    });
 
-    // Send Verification Email
-    await sendEmailVerification(
-      createdUser,
-      {
-        url: loginURL,
-        handleCodeInApp: false
-      }
-    );
-
-
-    // Sign Out Until Email Is Verified
+    // 7. Sign Out until email is verified
     await signOut(auth);
 
-
     form.reset();
-
     photoPreview.removeAttribute("src");
 
     showMessage(
-      "অভিনন্দন! আপনার Registration Request তৈরি হয়েছে।\n\n" +
+      "Registration Request তৈরি হয়েছে!\n\n" +
       "আপনার Gmail Inbox অথবা Spam Folder খুলুন।\n" +
       "AYNA BOOK-এর Verification Email-এর Link-এ ক্লিক করুন।\n\n" +
       "Email Verify হওয়ার পরে Login করুন।\n\n" +
-      "আপনার Account Category: " +
-      accountType.toUpperCase() +
-      "\n\nLogin: " + loginURL,
+      "Account Category: " + accountType.toUpperCase() +
+      "\nLogin: " + loginURL,
       true
     );
 
     registerButton.textContent = "REGISTRATION REQUEST SENT";
 
-
   } catch (error) {
-
     console.error("AYNA BOOK Registration Error:", error);
 
-    showMessage(getErrorMessage(error));
+    if (createdUser) {
+      try {
+        await signOut(auth);
+      } catch (signOutError) {
+        console.error("Sign out error:", signOutError);
+      }
+
+      showMessage(
+        "Firebase Account তৈরি হয়েছে, কিন্তু Registration-এর পরের কোনো ধাপে সমস্যা হয়েছে।\n\n" +
+        getErrorMessage(error) +
+        "\n\nএকই Gmail দিয়ে আবার Registration করার আগে Login/Verification ব্যবস্থা পরীক্ষা করুন।"
+      );
+
+    } else {
+      showMessage(getErrorMessage(error));
+    }
 
     registerButton.disabled = false;
-
     registerButton.textContent = "REGISTER";
-
   }
-
 });
