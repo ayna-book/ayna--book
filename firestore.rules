@@ -4,13 +4,15 @@ service cloud.firestore {
 
   match /databases/{database}/documents {
 
+
     // =====================================================
-    // AYNA BOOK — Security Helper Functions
+    // HELPER FUNCTIONS
     // =====================================================
 
     function signedIn() {
       return request.auth != null;
     }
+
 
     function isOwner(userId) {
       return signedIn()
@@ -20,18 +22,107 @@ service cloud.firestore {
 
     // =====================================================
     // USERS
-    // একজন ব্যবহারকারী শুধু নিজের প্রোফাইল নিয়ন্ত্রণ করতে পারবে
     // =====================================================
 
     match /users/{userId} {
 
-      allow create: if isOwner(userId);
+      // নিজের user document তৈরি করতে পারবে
+      allow create:
+        if isOwner(userId);
 
-      allow read: if isOwner(userId);
 
-      allow update: if isOwner(userId);
+      // নিজের user document দেখতে পারবে
+      allow read:
+        if isOwner(userId);
 
-      allow delete: if isOwner(userId);
+
+      // নিজের user document update করতে পারবে
+      //
+      // গুরুত্বপূর্ণ:
+      // User নিজে accountStatus = active
+      // করতে পারবে না।
+      //
+      allow update:
+        if isOwner(userId)
+        && request.resource.data.accountStatus
+           == resource.data.accountStatus;
+
+
+      // নিজের account delete করতে পারবে
+      allow delete:
+        if isOwner(userId);
+
+
+      // ===================================================
+      // PAYMENT REQUESTS
+      // ===================================================
+
+      match /paymentRequests/{paymentId} {
+
+        // নিজের Payment Request তৈরি
+        allow create:
+          if isOwner(userId)
+          && request.resource.data.uid
+             == request.auth.uid
+          && request.resource.data.accountType
+             in [
+               "business",
+               "vip",
+               "vvip"
+             ]
+          && request.resource.data.paymentRequired
+             == true
+          && request.resource.data.status
+             == "pending"
+          && request.resource.data.accountStatus
+             == "pending_payment"
+          && request.resource.data.transactionId
+             is string
+          && request.resource.data.transactionId.size()
+             >= 3
+          && request.resource.data.transactionId.size()
+             <= 100
+          && request.resource.data.amount
+             is string
+          && request.resource.data.amount.size()
+             >= 1
+          && request.resource.data.amount.size()
+             <= 50
+          && request.resource.data.paymentMethod
+             in [
+               "bkash",
+               "nagad",
+               "rocket",
+               "upay",
+               "paypal",
+               "payoneer"
+             ];
+
+
+        // নিজের Payment Request দেখতে পারবে
+        allow read:
+          if isOwner(userId);
+
+
+        // সাধারণ user Payment Request update করতে পারবে না
+        //
+        // অর্থাৎ user নিজে status:
+        // pending -> approved
+        // pending -> verified
+        // pending -> paid
+        //
+        // করতে পারবে না।
+        //
+        allow update:
+          if false;
+
+
+        // Payment Request delete করা যাবে না
+        allow delete:
+          if false;
+
+      }
+
     }
 
 
@@ -42,63 +133,89 @@ service cloud.firestore {
     match /posts/{postId} {
 
       // Public post পড়া যাবে
-      allow read: if true;
+      allow read:
+        if true;
 
-      // Login করা ব্যবহারকারী নিজের নামে post তৈরি করতে পারবে
+
+      // Signed-in user নিজের নামে post তৈরি করবে
       allow create:
         if signedIn()
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.text is string
-        && request.resource.data.text.size() <= 5000;
+        && request.resource.data.uid
+           == request.auth.uid
+        && request.resource.data.text
+           is string
+        && request.resource.data.text.size()
+           <= 5000;
 
-      // শুধু post-এর মালিক update করতে পারবে
+
+      // নিজের post update
       allow update:
         if signedIn()
-        && resource.data.uid == request.auth.uid
-        && request.resource.data.uid == resource.data.uid
-        && request.resource.data.text is string
-        && request.resource.data.text.size() <= 5000;
+        && resource.data.uid
+           == request.auth.uid
+        && request.resource.data.uid
+           == resource.data.uid
+        && request.resource.data.text
+           is string
+        && request.resource.data.text.size()
+           <= 5000;
 
-      // শুধু মালিক delete করতে পারবে
+
+      // নিজের post delete
       allow delete:
         if signedIn()
-        && resource.data.uid == request.auth.uid;
+        && resource.data.uid
+           == request.auth.uid;
+
     }
 
 
     // =====================================================
-    // CHAT / MESSAGES
+    // CHAT ROOMS
     // =====================================================
 
     match /rooms/{roomId}/messages/{messageId} {
 
-      // Login করা ব্যবহারকারী message পড়তে পারবে
+      // Signed-in user message পড়তে পারবে
       allow read:
         if signedIn();
 
-      // নিজের UID দিয়ে message তৈরি করতে হবে
+
+      // নিজের নামে message তৈরি
       allow create:
         if signedIn()
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.text is string
-        && request.resource.data.text.size() > 0
-        && request.resource.data.text.size() <= 2000;
+        && request.resource.data.uid
+           == request.auth.uid
+        && request.resource.data.text
+           is string
+        && request.resource.data.text.size()
+           > 0
+        && request.resource.data.text.size()
+           <= 2000;
 
-      // বর্তমানে message edit বন্ধ
-      allow update: if false;
 
-      // বর্তমানে message delete বন্ধ
-      allow delete: if false;
+      // Message edit বন্ধ
+      allow update:
+        if false;
+
+
+      // Message delete বন্ধ
+      allow delete:
+        if false;
+
     }
 
 
     // =====================================================
     // DEFAULT DENY
-    // অজানা কোনো collection-এ access বন্ধ
     // =====================================================
 
     match /{document=**} {
-      allow read, write: if false;
+
+      allow read, write:
+        if false;
+
     }
+
   }
 }
