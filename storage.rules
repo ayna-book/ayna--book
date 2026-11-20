@@ -4,45 +4,48 @@ service firebase.storage {
 
   match /b/{bucket}/o {
 
-    /* =====================================================
-       USER FILES
-       Profile photo, user documents, etc.
-       ===================================================== */
+    // =====================================================
+    // AYNA BOOK — USER FILES
+    // =====================================================
 
     match /users/{userId}/{allPaths=**} {
 
-      /* নিজের ফাইল নিজে দেখতে পারবে */
-      allow read: if request.auth != null
+      // নিজের ফাইল নিজে দেখতে পারবে
+      allow read:
+        if request.auth != null
         && request.auth.uid == userId;
 
-      /* নিজের ফাইল upload/update করতে পারবে */
-      allow create, update: if request.auth != null
-        && request.auth.uid == userId
-        && request.resource.size <= 10 * 1024 * 1024
-        && (
-          request.resource.contentType.matches('image/.*')
-          ||
-          request.resource.contentType == 'application/pdf'
-        );
 
-      /* নিজের ফাইল delete করতে পারবে */
-      allow delete: if request.auth != null
+      // নিজের ফাইল upload/update
+      allow create, update:
+        if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+
+
+      // নিজের ফাইল delete
+      allow delete:
+        if request.auth != null
         && request.auth.uid == userId;
     }
 
 
-    /* =====================================================
-       POSTS
-       ===================================================== */
+    // =====================================================
+    // AYNA BOOK — POST MEDIA
+    // =====================================================
 
     match /posts/{userId}/{allPaths=**} {
 
-      /* বর্তমানে নিজের post files দেখতে পারবে */
-      allow read: if request.auth != null
+      // নিজের post media দেখতে পারবে
+      allow read:
+        if request.auth != null
         && request.auth.uid == userId;
 
-      /* Photo / Video upload */
-      allow create, update: if request.auth != null
+
+      // Image / Video upload
+      allow create, update:
+        if request.auth != null
         && request.auth.uid == userId
         && request.resource.size <= 20 * 1024 * 1024
         && (
@@ -51,15 +54,17 @@ service firebase.storage {
           request.resource.contentType.matches('video/.*')
         );
 
-      /* নিজের post media delete */
-      allow delete: if request.auth != null
+
+      // নিজের post media delete
+      allow delete:
+        if request.auth != null
         && request.auth.uid == userId;
     }
 
 
-    /* =====================================================
-       EVERYTHING ELSE
-       ===================================================== */
+    // =====================================================
+    // DEFAULT DENY
+    // =====================================================
 
     match /{allPaths=**} {
       allow read, write: if false;
