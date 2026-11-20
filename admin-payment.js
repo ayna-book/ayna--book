@@ -1,13 +1,5 @@
-// ============================================================
-// AYNA BOOK — ADMIN PAYMENT PANEL
-// File: admin-payment.js
-// ============================================================
 
-import {
-  auth,
-  db,
-  app
-} from "./firebase.js";
+import { auth, db, app } from "./firebase.js";
 
 import {
   onAuthStateChanged,
@@ -20,9 +12,7 @@ import {
   where,
   orderBy,
   limit,
-  getDocs,
-  doc,
-  onSnapshot
+  getDocs
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
 import {
@@ -30,11 +20,7 @@ import {
   httpsCallable
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-functions.js";
 
-
-// ============================================================
-// FIREBASE FUNCTIONS
-// ============================================================
-
+// Functions region: default Firebase region
 const functions = getFunctions(app);
 
 const approvePayment = httpsCallable(
@@ -47,771 +33,269 @@ const rejectPayment = httpsCallable(
   "rejectPayment"
 );
 
-
-// ============================================================
-// DOM
-// ============================================================
-
-const accessStatus =
-  document.getElementById("accessStatus");
-
-const adminPanel =
-  document.getElementById("adminPanel");
-
-const paymentTableBody =
-  document.getElementById("paymentTableBody");
-
-const refreshButton =
-  document.getElementById("refreshButton");
-
-
-// ============================================================
-// STATE
-// ============================================================
+const statusBox = document.getElementById("accessStatus");
+const adminPanel = document.getElementById("adminPanel");
+const tableBody = document.getElementById("paymentTableBody");
+const refreshButton = document.getElementById("refreshButton");
 
 let currentUser = null;
 let loading = false;
 
-
-// ============================================================
-// HTML ESCAPE
-// ============================================================
+function showStatus(message, type = "info") {
+  statusBox.textContent = message;
+  statusBox.dataset.type = type;
+}
 
 function escapeHTML(value) {
-
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
 }
 
-
-// ============================================================
-// DATE FORMAT
-// ============================================================
-
-function formatDate(timestamp) {
-
-  if (!timestamp) {
-    return "—";
-  }
+function formatDate(value) {
+  if (!value) return "—";
 
   try {
+    const date = typeof value.toDate === "function"
+      ? value.toDate()
+      : new Date(value);
 
-    const date =
-      typeof timestamp.toDate === "function"
-        ? timestamp.toDate()
-        : new Date(timestamp);
-
-    return date.toLocaleString(
-      "en-BD",
-      {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit"
-      }
-    );
-
-  } catch (error) {
-
-    console.warn(
-      "Date formatting failed:",
-      error
-    );
-
+    return date.toLocaleString("en-BD");
+  } catch {
     return "—";
   }
 }
 
-
-// ============================================================
-// MESSAGE
-// ============================================================
-
-function showMessage(
-  message,
-  type = "info"
-) {
-
-  if (!accessStatus) {
-    return;
-  }
-
-  accessStatus.textContent = message;
-
-  accessStatus.dataset.type = type;
-}
-
-
-// ============================================================
-// ADMIN CHECK
-// ============================================================
-
-async function checkAdmin(user) {
-
+async function verifyAdmin(user) {
   if (!user) {
-    throw new Error(
-      "আপনি লগইন করা নেই।"
-    );
+    throw new Error("প্রথমে Admin account দিয়ে Login করুন।");
   }
 
-  const tokenResult =
-    await getIdTokenResult(
-      user,
-      true
-    );
+  const token = await getIdTokenResult(user, true);
 
-  if (
-    tokenResult.claims &&
-    tokenResult.claims.admin === true
-  ) {
-
-    return true;
+  if (token.claims.admin !== true) {
+    throw new Error("Admin permission পাওয়া যায়নি।");
   }
 
-  throw new Error(
-    "আপনার Admin permission নেই।"
-  );
+  return true;
 }
 
-
-// ============================================================
-// LOAD PAYMENT REQUESTS
-// ============================================================
-
-async function loadPaymentRequests() {
-
-  if (loading) {
-    return;
-  }
+async function loadPayments() {
+  if (loading || !currentUser) return;
 
   loading = true;
+  refreshButton.disabled = true;
+
+  showStatus("Payment requests লোড হচ্ছে...");
 
   try {
-
-    showMessage(
-      "Payment requests লোড হচ্ছে...",
-      "info"
-    );
-
-    if (!paymentTableBody) {
-      throw new Error(
-        "paymentTableBody পাওয়া যায়নি।"
-      );
-    }
-
-    paymentTableBody.innerHTML = `
-      <tr>
-        <td colspan="8"
-            style="text-align:center;padding:25px;">
-          Loading...
-        </td>
-      </tr>
-    `;
-
-
-    // --------------------------------------------------------
-    // Pending payment requests
-    // --------------------------------------------------------
+    await verifyAdmin(currentUser);
 
     const paymentQuery = query(
-
-      collectionGroup(
-        db,
-        "paymentRequests"
-      ),
-
-      where(
-        "status",
-        "==",
-        "pending"
-      ),
-
-      orderBy(
-        "submittedAt",
-        "desc"
-      ),
-
+      collectionGroup(db, "paymentRequests"),
+      where("status", "==", "pending"),
+      orderBy("submittedAt", "desc"),
       limit(100)
     );
 
+    const snapshot = await getDocs(paymentQuery);
 
-    const snapshot =
-      await getDocs(paymentQuery);
-
-
-    // --------------------------------------------------------
-    // No requests
-    // --------------------------------------------------------
+    tableBody.replaceChildren();
 
     if (snapshot.empty) {
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
 
-      paymentTableBody.innerHTML = `
-        <tr>
-          <td colspan="8"
-              style="text-align:center;padding:25px;">
-            কোনো Pending Payment Request নেই।
-          </td>
-        </tr>
-      `;
+      cell.colSpan = 8;
+      cell.textContent = "কোনো Pending Payment Request নেই।";
 
-      showMessage(
-        "Payment panel online.",
-        "success"
-      );
+      row.appendChild(cell);
+      tableBody.appendChild(row);
 
+      showStatus("কোনো pending payment নেই।", "success");
       return;
     }
 
+    snapshot.forEach(paymentDoc => {
+      const data = paymentDoc.data();
 
-    // --------------------------------------------------------
-    // Render
-    // --------------------------------------------------------
+      // Require exact nested document path:
+      // users/{uid}/paymentRequests/{paymentId}
+      const parts = paymentDoc.ref.path.split("/");
 
-    paymentTableBody.innerHTML = "";
-
-
-    snapshot.forEach(
-      paymentDoc => {
-
-        const data =
-          paymentDoc.data();
-
-        const paymentId =
-          paymentDoc.id;
-
-        const uid =
-          data.uid || "";
-
-        const accountName =
-          data.accountName ||
-          data.accountType ||
-          "—";
-
-        const email =
-          data.email ||
-          "—";
-
-        const method =
-          data.paymentMethod ||
-          "—";
-
-        const amount =
-          data.amount ||
-          "—";
-
-        const transactionId =
-          data.transactionId ||
-          "—";
-
-        const status =
-          data.status ||
-          "—";
-
-        const submittedAt =
-          formatDate(
-            data.submittedAt
-          );
-
-
-        const row =
-          document.createElement("tr");
-
-
-        row.innerHTML = `
-
-          <td>
-            ${escapeHTML(paymentId)}
-          </td>
-
-          <td>
-            ${escapeHTML(accountName)}
-          </td>
-
-          <td>
-            <div>
-              ${escapeHTML(email)}
-            </div>
-
-            <small>
-              UID:
-              ${escapeHTML(uid)}
-            </small>
-          </td>
-
-          <td>
-            ${escapeHTML(method)}
-          </td>
-
-          <td>
-            ${escapeHTML(amount)}
-          </td>
-
-          <td>
-            ${escapeHTML(transactionId)}
-          </td>
-
-          <td>
-            ${escapeHTML(status)}
-          </td>
-
-          <td>
-
-            <button
-              type="button"
-              class="approve-payment-btn"
-              data-user-id="${escapeHTML(uid)}"
-              data-payment-id="${escapeHTML(paymentId)}"
-            >
-              APPROVE
-            </button>
-
-            <button
-              type="button"
-              class="reject-payment-btn"
-              data-user-id="${escapeHTML(uid)}"
-              data-payment-id="${escapeHTML(paymentId)}"
-            >
-              REJECT
-            </button>
-
-          </td>
-        `;
-
-
-        paymentTableBody.appendChild(
-          row
-        );
+      if (
+        parts.length !== 4 ||
+        parts[0] !== "users" ||
+        parts[2] !== "paymentRequests"
+      ) {
+        return;
       }
-    );
 
+      const uid = parts[1];
+      const paymentId = paymentDoc.id;
 
-    // --------------------------------------------------------
-    // Buttons
-    // --------------------------------------------------------
+      if (data.uid !== uid) {
+        console.warn("Payment UID mismatch:", paymentId);
+        return;
+      }
 
-    document
-      .querySelectorAll(
-        ".approve-payment-btn"
-      )
-      .forEach(button => {
+      const row = document.createElement("tr");
 
-        button.addEventListener(
-          "click",
-          () => {
+      const values = [
+        paymentId,
+        data.accountName || data.accountType || "—",
+        data.email || uid,
+        data.paymentMethod || "—",
+        data.amount || "—",
+        data.transactionId || "—",
+        data.status || "—",
+        formatDate(data.submittedAt)
+      ];
 
-            handlePaymentAction(
-              "approve",
-              button.dataset.userId,
-              button.dataset.paymentId,
-              button
-            );
-
-          }
-        );
-
+      values.forEach(value => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
       });
 
+      const actionCell = document.createElement("td");
 
-    document
-      .querySelectorAll(
-        ".reject-payment-btn"
-      )
-      .forEach(button => {
+      const approveButton = document.createElement("button");
+      approveButton.type = "button";
+      approveButton.className = "approve-payment-btn";
+      approveButton.textContent = "APPROVE";
 
-        button.addEventListener(
-          "click",
-          () => {
+      const rejectButton = document.createElement("button");
+      rejectButton.type = "button";
+      rejectButton.className = "reject-payment-btn";
+      rejectButton.textContent = "REJECT";
 
-            handlePaymentAction(
-              "reject",
-              button.dataset.userId,
-              button.dataset.paymentId,
-              button
-            );
+      approveButton.addEventListener("click", () =>
+        handleAction("approve", uid, paymentId, approveButton, rejectButton)
+      );
 
-          }
-        );
+      rejectButton.addEventListener("click", () =>
+        handleAction("reject", uid, paymentId, rejectButton, approveButton)
+      );
 
-      });
+      actionCell.append(approveButton, rejectButton);
+      row.appendChild(actionCell);
+      tableBody.appendChild(row);
+    });
 
-
-    showMessage(
-      `${snapshot.size}টি pending payment request পাওয়া গেছে।`,
+    showStatus(
+      `${snapshot.size}টি payment request পাওয়া গেছে।`,
       "success"
     );
 
-
   } catch (error) {
+    console.error("Load payment error:", error);
 
-    console.error(
-      "Payment request loading error:",
-      error
-    );
+    tableBody.replaceChildren();
 
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
 
-    paymentTableBody.innerHTML = `
-      <tr>
-        <td colspan="8"
-            style="text-align:center;padding:25px;">
-          Payment requests লোড করা যায়নি।
-          <br>
-          <small>
-            ${escapeHTML(
-              error.message || "Unknown error"
-            )}
-          </small>
-        </td>
-      </tr>
-    `;
+    cell.colSpan = 8;
+    cell.textContent = error.message || "Payment load করা যায়নি।";
 
+    row.appendChild(cell);
+    tableBody.appendChild(row);
 
-    showMessage(
-      error.message ||
-      "Payment requests লোড করা যায়নি।",
-      "error"
-    );
+    showStatus(error.message || "Payment load failed.", "error");
 
   } finally {
-
     loading = false;
+    refreshButton.disabled = false;
   }
 }
 
+async function handleAction(action, userId, paymentId, button, otherButton) {
+  if (!currentUser) return;
 
-// ============================================================
-// APPROVE / REJECT
-// ============================================================
+  const approved = action === "approve";
 
-async function handlePaymentAction(
-  action,
-  userId,
-  paymentId,
-  button
-) {
+  let reason = "";
 
-  if (!userId || !paymentId) {
+  if (approved) {
+    if (!window.confirm("এই payment APPROVE করবেন?")) return;
+  } else {
+    const answer = window.prompt("REJECT করার কারণ লিখুন:");
 
-    alert(
-      "User ID অথবা Payment ID পাওয়া যায়নি।"
+    if (answer === null) return;
+
+    reason = answer.trim();
+
+    if (!reason) {
+      alert("Reject করার কারণ লিখুন।");
+      return;
+    }
+  }
+
+  button.disabled = true;
+  otherButton.disabled = true;
+
+  const oldText = button.textContent;
+  button.textContent = "Processing...";
+
+  try {
+    await verifyAdmin(currentUser);
+
+    const callable = approved ? approvePayment : rejectPayment;
+
+    const result = await callable(
+      approved
+        ? { userId, paymentId }
+        : { userId, paymentId, reason }
     );
 
+    if (result.data?.success !== true) {
+      throw new Error("Server operation সফল হয়নি।");
+    }
+
+    alert(approved ? "Payment APPROVED হয়েছে।" : "Payment REJECTED হয়েছে।");
+
+    await loadPayments();
+
+  } catch (error) {
+    console.error("Payment action error:", error);
+
+    alert(error.message || "Payment action ব্যর্থ হয়েছে।");
+
+    button.disabled = false;
+    otherButton.disabled = false;
+    button.textContent = oldText;
+  }
+}
+
+refreshButton.addEventListener("click", loadPayments);
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+
+  if (!user) {
+    adminPanel.style.display = "none";
+    showStatus("Admin panel ব্যবহারের জন্য Login করুন।", "error");
     return;
   }
 
-
-  // ----------------------------------------------------------
-  // Confirmation
-  // ----------------------------------------------------------
-
-  if (action === "approve") {
-
-    const confirmed =
-      window.confirm(
-        "এই payment request APPROVE করবেন?"
-      );
-
-    if (!confirmed) {
-      return;
-    }
-
-  } else {
-
-    const confirmed =
-      window.confirm(
-        "এই payment request REJECT করবেন?"
-      );
-
-    if (!confirmed) {
-      return;
-    }
-
-  }
-
-
-  // ----------------------------------------------------------
-  // Disable button
-  // ----------------------------------------------------------
-
-  const originalText =
-    button.textContent;
-
-  button.disabled = true;
-
-  button.textContent =
-    "Processing...";
-
-
   try {
+    await verifyAdmin(user);
 
-    let result;
+    adminPanel.style.display = "block";
 
+    showStatus("Admin access verified.", "success");
 
-    // --------------------------------------------------------
-    // APPROVE
-    // --------------------------------------------------------
-
-    if (action === "approve") {
-
-      result =
-        await approvePayment({
-          userId,
-          paymentId
-        });
-
-    }
-
-
-    // --------------------------------------------------------
-    // REJECT
-    // --------------------------------------------------------
-
-    else {
-
-      const reason =
-        window.prompt(
-          "Reject করার কারণ লিখুন:",
-          "Payment verification failed."
-        );
-
-
-      if (reason === null) {
-
-        button.disabled = false;
-
-        button.textContent =
-          originalText;
-
-        return;
-      }
-
-
-      result =
-        await rejectPayment({
-
-          userId,
-
-          paymentId,
-
-          reason:
-            reason.trim() ||
-            "Payment rejected by admin."
-        });
-
-    }
-
-
-    console.log(
-      "Payment action result:",
-      result
-    );
-
-
-    // --------------------------------------------------------
-    // Success
-    // --------------------------------------------------------
-
-    if (
-      result &&
-      result.data &&
-      result.data.success === true
-    ) {
-
-      alert(
-        action === "approve"
-          ? "Payment APPROVED হয়েছে।"
-          : "Payment REJECTED হয়েছে।"
-      );
-
-
-      await loadPaymentRequests();
-
-
-    } else {
-
-      throw new Error(
-        "Server থেকে সফল response পাওয়া যায়নি।"
-      );
-    }
-
+    await loadPayments();
 
   } catch (error) {
-
-    console.error(
-      "Payment action error:",
-      error
-    );
-
-
-    alert(
-      error.message ||
-      "Payment action সম্পন্ন করা যায়নি।"
-    );
-
-
-    button.disabled = false;
-
-    button.textContent =
-      originalText;
+    adminPanel.style.display = "none";
+    showStatus(error.message, "error");
   }
-}
+});
 
-
-// ============================================================
-// REFRESH
-// ============================================================
-
-if (refreshButton) {
-
-  refreshButton.addEventListener(
-    "click",
-    async () => {
-
-      if (!currentUser) {
-        return;
-      }
-
-      try {
-
-        await checkAdmin(
-          currentUser
-        );
-
-        await loadPaymentRequests();
-
-      } catch (error) {
-
-        console.error(
-          error
-        );
-
-        showMessage(
-          error.message,
-          "error"
-        );
-      }
-
-    }
-  );
-}
-
-
-// ============================================================
-// AUTH STATE
-// ============================================================
-
-onAuthStateChanged(
-  auth,
-  async user => {
-
-    currentUser = user;
-
-
-    // --------------------------------------------------------
-    // Not logged in
-    // --------------------------------------------------------
-
-    if (!user) {
-
-      if (adminPanel) {
-        adminPanel.style.display =
-          "none";
-      }
-
-      showMessage(
-        "Admin panel ব্যবহার করতে Login করুন।",
-        "error"
-      );
-
-      return;
-    }
-
-
-    // --------------------------------------------------------
-    // Check admin
-    // --------------------------------------------------------
-
-    try {
-
-      await checkAdmin(
-        user
-      );
-
-
-      if (adminPanel) {
-        adminPanel.style.display =
-          "block";
-      }
-
-
-      showMessage(
-        `Admin access verified: ${user.email}`,
-        "success"
-      );
-
-
-      await loadPaymentRequests();
-
-
-    } catch (error) {
-
-      console.error(
-        "Admin verification failed:",
-        error
-      );
-
-
-      if (adminPanel) {
-        adminPanel.style.display =
-          "none";
-      }
-
-
-      showMessage(
-        "ACCESS DENIED — Admin permission প্রয়োজন।",
-        "error"
-      );
-
-    }
-
-  }
-);
-
-
-// ============================================================
-// GLOBAL ERROR HANDLER
-// ============================================================
-
-window.addEventListener(
-  "error",
-  event => {
-
-    console.error(
-      "AYNA BOOK Admin Panel Error:",
-      event.error || event.message
-    );
-
-  }
-);
-
-
-window.addEventListener(
-  "unhandledrejection",
-  event => {
-
-    console.error(
-      "AYNA BOOK Admin Panel Promise Error:",
-      event.reason
-    );
-
-  }
-);
-
-
-console.log(
-  "AYNA BOOK — Admin Payment Panel loaded."
-);
+console.log("AYNA BOOK Admin Payment Panel initialized.");
