@@ -2,6 +2,7 @@
 // AYNA BOOK
 // Login Controller
 // Firebase SDK: 13.4.0
+// Free Plan + Gmail Verification
 // =========================================================
 
 import {
@@ -82,7 +83,8 @@ if (togglePassword) {
         passwordInput.type === "password"
       ) {
 
-        passwordInput.type = "text";
+        passwordInput.type =
+          "text";
 
         togglePassword.textContent =
           "🙈";
@@ -94,7 +96,8 @@ if (togglePassword) {
 
       } else {
 
-        passwordInput.type = "password";
+        passwordInput.type =
+          "password";
 
         togglePassword.textContent =
           "👁";
@@ -238,6 +241,22 @@ form.addEventListener(
 
 
       // ---------------------------------------------------
+      // EMAIL VERIFICATION CHECK
+      // ---------------------------------------------------
+
+      if (
+        result.emailVerified !== true
+      ) {
+
+        showMessage(
+          "আপনার Gmail এখনো Verify করা হয়নি। Gmail Inbox/Spam Folder থেকে Verification Link-এ ক্লিক করুন।"
+        );
+
+        return;
+      }
+
+
+      // ---------------------------------------------------
       // LOGIN SUCCESS
       // ---------------------------------------------------
 
@@ -246,7 +265,10 @@ form.addEventListener(
       );
 
 
-      // ছোট delay যাতে success message দেখা যায়
+      // ---------------------------------------------------
+      // DASHBOARD REDIRECT
+      // ---------------------------------------------------
+
       setTimeout(
         () => {
 
@@ -289,13 +311,57 @@ form.addEventListener(
 // =========================================================
 
 watchAuthState(
-  (user) => {
+  async (user) => {
 
-    // Login page-এ already authenticated user
-    // থাকলে Dashboard-এ পাঠানো হবে।
+    // -----------------------------------------------------
+    // NO USER
+    // -----------------------------------------------------
+
+    if (!user) {
+      return;
+    }
+
+
+    // -----------------------------------------------------
+    // RELOAD FIREBASE USER
+    // -----------------------------------------------------
+
+    try {
+
+      await user.reload();
+
+    } catch (error) {
+
+      console.error(
+        "AYNA BOOK — User reload error:",
+        error
+      );
+
+      return;
+    }
+
+
+    const currentUser =
+      user;
+
+
+    // -----------------------------------------------------
+    // EMAIL NOT VERIFIED
+    // -----------------------------------------------------
 
     if (
-      user &&
+      !currentUser.emailVerified
+    ) {
+
+      return;
+    }
+
+
+    // -----------------------------------------------------
+    // VERIFIED USER → DASHBOARD
+    // -----------------------------------------------------
+
+    if (
       window.location.pathname.endsWith(
         "/login.html"
       )
@@ -317,4 +383,8 @@ watchAuthState(
 
 console.log(
   "AYNA BOOK — Login controller loaded successfully."
+);
+
+console.log(
+  "AYNA BOOK — Gmail Verification Login mode active."
 );
