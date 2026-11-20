@@ -1,23 +1,29 @@
 // =========================================================
 // AYNA BOOK
 // Profile Controller
-// Step 13 — Firestore Profile
 // Firebase SDK: 13.4.0
-// =========================================================
-
-
-// =========================================================
-// FIREBASE
+//
+// Features:
+// 1. Firebase Authentication
+// 2. Firestore Profile
+// 3. Profile Photo Preview
+// 4. Firebase Storage Photo Upload
+// 5. Firebase Auth Photo URL Update
+// 6. Email Verification Status
+// 7. Profile Save
+// 8. Logout
 // =========================================================
 
 import {
   auth,
-  db
+  db,
+  storage
 } from "./firebase.js";
 
 import {
   onAuthStateChanged,
-  signOut
+  signOut,
+  updateProfile
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
@@ -27,19 +33,33 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
+
 
 // =========================================================
-// DOM ELEMENTS
+// CONFIGURATION
+// =========================================================
+
+const MAX_PHOTO_SIZE =
+  5 * 1024 * 1024;
+
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp"
+];
+
+
+// =========================================================
+// HTML ELEMENTS
 // =========================================================
 
 const profileForm =
   document.getElementById("profileForm");
-
-const profileImage =
-  document.getElementById("profileImage");
-
-const profilePhoto =
-  document.getElementById("profilePhoto");
 
 const fullNameInput =
   document.getElementById("fullName");
@@ -56,11 +76,11 @@ const bioInput =
 const countryInput =
   document.getElementById("country");
 
-const verificationStatus =
-  document.getElementById("verificationStatus");
+const profilePhotoInput =
+  document.getElementById("profilePhoto");
 
-const verificationText =
-  document.getElementById("verificationText");
+const profileImage =
+  document.getElementById("profileImage");
 
 const saveProfileButton =
   document.getElementById("saveProfileButton");
@@ -70,6 +90,12 @@ const logoutButton =
 
 const statusMessage =
   document.getElementById("statusMessage");
+
+const verificationStatus =
+  document.getElementById("verificationStatus");
+
+const verificationText =
+  document.getElementById("verificationText");
 
 const userIdElement =
   document.getElementById("userId");
@@ -103,268 +129,156 @@ function showStatus(
 
 
 // =========================================================
-// DATE FORMAT
+// LOADING STATE
 // =========================================================
 
-function formatDate(dateValue) {
+function setLoading(
+  loading
+) {
 
-  if (!dateValue) {
-    return "Not available";
+  if (!saveProfileButton) {
+    return;
   }
 
-  try {
+  saveProfileButton.disabled =
+    loading;
 
-    const date =
-      new Date(dateValue);
-
-    if (
-      Number.isNaN(
-        date.getTime()
-      )
-    ) {
-      return "Not available";
-    }
-
-    return date.toLocaleDateString(
-      "en-GB",
-      {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-      }
-    );
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK — Date formatting error:",
-      error
-    );
-
-    return "Not available";
-  }
+  saveProfileButton.textContent =
+    loading
+      ? "SAVING..."
+      : "SAVE PROFILE";
 }
 
 
 // =========================================================
-// FIRESTORE PROFILE LOAD
+// PHOTO PREVIEW
+// =========================================================
+
+function previewPhoto(file) {
+
+  if (!profileImage) {
+    return;
+  }
+
+  if (!file) {
+    return;
+  }
+
+  const reader =
+    new FileReader();
+
+  reader.onload =
+    function (event) {
+
+      profileImage.src =
+        event.target.result;
+    };
+
+  reader.onerror =
+    function () {
+
+      showStatus(
+        "Profile photo preview করা যায়নি।",
+        "error"
+      );
+    };
+
+  reader.readAsDataURL(file);
+}
+
+
+// =========================================================
+// PHOTO VALIDATION
+// =========================================================
+
+function validatePhoto(file) {
+
+  if (!file) {
+
+    return {
+      valid: true
+    };
+  }
+
+  if (
+    !ALLOWED_IMAGE_TYPES.includes(
+      file.type
+    )
+  ) {
+
+    return {
+      valid: false,
+      message:
+        "শুধু JPG, PNG অথবা WEBP ছবি ব্যবহার করুন।"
+    };
+  }
+
+  if (
+    file.size >
+    MAX_PHOTO_SIZE
+  ) {
+
+    return {
+      valid: false,
+      message:
+        "Profile photo সর্বোচ্চ 5 MB হতে পারবে।"
+    };
+  }
+
+  return {
+    valid: true
+  };
+}
+
+
+// =========================================================
+// LOAD PROFILE FROM FIRESTORE
 // =========================================================
 
 async function loadFirestoreProfile(
   user
 ) {
 
+  const userRef =
+    doc(
+      db,
+      "users",
+      user.uid
+    );
+
+  const snapshot =
+    await getDoc(userRef);
+
+  if (!snapshot.exists()) {
+
+    return null;
+  }
+
+  return snapshot.data();
+}
+
+
+// =========================================================
+// LOAD USER PROFILE
+// =========================================================
+
+async function loadProfile(
+  user
+) {
+
   try {
 
-    const userRef =
-      doc(
-        db,
-        "users",
-        user.uid
-      );
-
-    const snapshot =
-      await getDoc(userRef);
-
-
-    if (!snapshot.exists()) {
-
-      console.log(
-        "AYNA BOOK — Firestore profile not found."
-      );
-
-      return;
-    }
-
-
-    const data =
-      snapshot.data();
-
-
-    // Full Name
-
-    if (fullNameInput) {
-
-      fullNameInput.value =
-        data.fullName ||
-        user.displayName ||
-        "";
-
-    }
-
-
-    // Phone
-
-    if (phoneInput) {
-
-      phoneInput.value =
-        data.phone || "";
-
-    }
-
-
-    // Bio
-
-    if (bioInput) {
-
-      bioInput.value =
-        data.bio || "";
-
-    }
-
-
-    // Country
-
-    if (countryInput) {
-
-      countryInput.value =
-        data.country || "";
-
-    }
-
-
-    console.log(
-      "AYNA BOOK — Firestore profile loaded successfully."
-    );
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK — Firestore Profile Load Error:",
-      error
-    );
-
     showStatus(
-      "Profile তথ্য লোড করতে সমস্যা হয়েছে।",
-      "error"
+      "Profile তথ্য লোড হচ্ছে...",
+      "info"
     );
-  }
-}
 
+    await user.reload();
 
-// =========================================================
-// AUTH USER PROFILE LOAD
-// =========================================================
+    const currentUser =
+      auth.currentUser;
 
-function loadAuthProfile(user) {
-
-  if (!user) {
-    return;
-  }
-
-
-  // -------------------------------------------------------
-  // Full Name
-  // -------------------------------------------------------
-
-  if (fullNameInput) {
-
-    fullNameInput.value =
-      user.displayName || "";
-
-  }
-
-
-  // -------------------------------------------------------
-  // Email
-  // -------------------------------------------------------
-
-  if (emailInput) {
-
-    emailInput.value =
-      user.email || "";
-
-  }
-
-
-  // -------------------------------------------------------
-  // User ID
-  // -------------------------------------------------------
-
-  if (userIdElement) {
-
-    userIdElement.textContent =
-      user.uid || "Not available";
-
-  }
-
-
-  // -------------------------------------------------------
-  // Account Created
-  // -------------------------------------------------------
-
-  if (createdAtElement) {
-
-    createdAtElement.textContent =
-      formatDate(
-        user.metadata?.creationTime
-      );
-
-  }
-
-
-  // -------------------------------------------------------
-  // Email Verification
-  // -------------------------------------------------------
-
-  if (verificationStatus) {
-
-    verificationStatus.className =
-      "verification";
-  }
-
-
-  if (verificationText) {
-
-    if (user.emailVerified) {
-
-      verificationText.textContent =
-        "Email Verified ✓";
-
-      verificationText.className =
-        "verification-text verified";
-
-    } else {
-
-      verificationText.textContent =
-        "Email Not Verified";
-
-      verificationText.className =
-        "verification-text not-verified";
-    }
-
-  }
-
-
-  // -------------------------------------------------------
-  // Profile Photo
-  // -------------------------------------------------------
-
-  if (
-    profileImage &&
-    user.photoURL
-  ) {
-
-    profileImage.src =
-      user.photoURL;
-  }
-
-}
-
-
-// =========================================================
-// AUTH STATE
-// =========================================================
-
-onAuthStateChanged(
-  auth,
-  async (user) => {
-
-    if (!user) {
-
-      console.log(
-        "AYNA BOOK — No authenticated user."
-      );
+    if (!currentUser) {
 
       window.location.href =
         "./login.html";
@@ -373,157 +287,313 @@ onAuthStateChanged(
     }
 
 
-    console.log(
-      "AYNA BOOK — Authenticated Profile User:",
-      user.uid
-    );
+    // -----------------------------------------------------
+    // Firestore Profile
+    // -----------------------------------------------------
 
+    let profileData =
+      null;
 
     try {
 
-      // Refresh Firebase user
+      profileData =
+        await loadFirestoreProfile(
+          currentUser
+        );
 
-      await user.reload();
+    } catch (firestoreError) {
 
-
-      const currentUser =
-        auth.currentUser;
-
-
-      if (!currentUser) {
-
-        window.location.href =
-          "./login.html";
-
-        return;
-      }
-
-
-      // Load Firebase Auth data
-
-      loadAuthProfile(
-        currentUser
+      console.warn(
+        "AYNA BOOK — Firestore profile load failed:",
+        firestoreError
       );
 
-
-      // Load Firestore data
-
-      await loadFirestoreProfile(
-        currentUser
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "AYNA BOOK — Profile loading error:",
-        error
-      );
-
-      showStatus(
-        "Profile তথ্য লোড করতে সমস্যা হয়েছে।",
-        "error"
-      );
+      profileData =
+        null;
     }
 
-  }
-);
+
+    // -----------------------------------------------------
+    // Full Name
+    // -----------------------------------------------------
+
+    const savedName =
+      profileData?.fullName ||
+      currentUser.displayName ||
+      "";
+
+    if (fullNameInput) {
+
+      fullNameInput.value =
+        savedName;
+    }
 
 
-// =========================================================
-// PROFILE PHOTO PREVIEW
-// =========================================================
+    // -----------------------------------------------------
+    // Email
+    // -----------------------------------------------------
 
-if (profilePhoto) {
+    if (emailInput) {
 
-  profilePhoto.addEventListener(
-    "change",
-    () => {
+      emailInput.value =
+        currentUser.email ||
+        profileData?.email ||
+        "";
+    }
 
-      const file =
-        profilePhoto.files?.[0];
+
+    // -----------------------------------------------------
+    // Phone
+    // -----------------------------------------------------
+
+    if (phoneInput) {
+
+      phoneInput.value =
+        profileData?.phone ||
+        "";
+    }
 
 
-      if (!file) {
-        return;
+    // -----------------------------------------------------
+    // Bio
+    // -----------------------------------------------------
+
+    if (bioInput) {
+
+      bioInput.value =
+        profileData?.bio ||
+        "";
+    }
+
+
+    // -----------------------------------------------------
+    // Country
+    // -----------------------------------------------------
+
+    if (countryInput) {
+
+      countryInput.value =
+        profileData?.country ||
+        "";
+    }
+
+
+    // -----------------------------------------------------
+    // Profile Photo
+    // -----------------------------------------------------
+
+    const savedPhotoURL =
+      profileData?.photoURL ||
+      currentUser.photoURL ||
+      "";
+
+    if (
+      profileImage &&
+      savedPhotoURL
+    ) {
+
+      profileImage.src =
+        savedPhotoURL;
+    }
+
+
+    // -----------------------------------------------------
+    // Verification Status
+    // -----------------------------------------------------
+
+    if (
+      currentUser.emailVerified
+    ) {
+
+      if (verificationStatus) {
+
+        verificationStatus.textContent =
+          "✓";
       }
 
+      if (verificationText) {
 
-      // Image validation
+        verificationText.textContent =
+          "Gmail Verified";
+      }
+
+    } else {
+
+      if (verificationStatus) {
+
+        verificationStatus.textContent =
+          "!";
+      }
+
+      if (verificationText) {
+
+        verificationText.textContent =
+          "Gmail Not Verified";
+      }
+    }
+
+
+    // -----------------------------------------------------
+    // User ID
+    // -----------------------------------------------------
+
+    if (userIdElement) {
+
+      userIdElement.textContent =
+        currentUser.uid;
+    }
+
+
+    // -----------------------------------------------------
+    // Created At
+    // -----------------------------------------------------
+
+    if (
+      createdAtElement &&
+      profileData?.createdAt
+    ) {
+
+      let createdDate;
 
       if (
-        !file.type.startsWith(
-          "image/"
+        typeof profileData.createdAt.toDate ===
+        "function"
+      ) {
+
+        createdDate =
+          profileData.createdAt.toDate();
+
+      } else {
+
+        createdDate =
+          new Date(
+            profileData.createdAt
+          );
+      }
+
+      if (
+        !Number.isNaN(
+          createdDate.getTime()
         )
       ) {
 
-        showStatus(
-          "শুধু Image file নির্বাচন করুন।",
-          "error"
-        );
-
-        profilePhoto.value =
-          "";
-
-        return;
+        createdAtElement.textContent =
+          createdDate.toLocaleString(
+            "en-BD"
+          );
       }
+    }
 
 
-      // Maximum 5 MB
+    showStatus(
+      "Profile loaded successfully.",
+      "success"
+    );
 
-      const maxSize =
-        5 * 1024 * 1024;
+  } catch (error) {
 
+    console.error(
+      "AYNA BOOK — Profile Load Error:",
+      error
+    );
 
-      if (file.size > maxSize) {
-
-        showStatus(
-          "Profile Photo সর্বোচ্চ 5 MB হতে হবে।",
-          "error"
-        );
-
-        profilePhoto.value =
-          "";
-
-        return;
-      }
-
-
-      // Preview
-
-      const reader =
-        new FileReader();
+    showStatus(
+      "Profile তথ্য লোড করা যায়নি।",
+      "error"
+    );
+  }
+}
 
 
-      reader.onload = () => {
+// =========================================================
+// UPLOAD PROFILE PHOTO
+// =========================================================
 
-        if (profileImage) {
+async function uploadProfilePhoto(
+  user,
+  file
+) {
 
-          profileImage.src =
-            reader.result;
+  if (!file) {
 
-        }
-
-      };
-
-
-      reader.onerror = () => {
-
-        showStatus(
-          "ছবিটি Preview করা যায়নি।",
-          "error"
-        );
-
-      };
+    return user.photoURL ||
+      "";
+  }
 
 
-      reader.readAsDataURL(
-        file
-      );
+  // -----------------------------------------------------
+  // Validate Photo
+  // -----------------------------------------------------
 
+  const validation =
+    validatePhoto(file);
+
+  if (!validation.valid) {
+
+    throw new Error(
+      validation.message
+    );
+  }
+
+
+  showStatus(
+    "Profile photo Firebase Storage-এ upload হচ্ছে...",
+    "info"
+  );
+
+
+  // -----------------------------------------------------
+  // Storage Path
+  // -----------------------------------------------------
+
+  const photoRef =
+    ref(
+      storage,
+      `users/${user.uid}/profile/profile-photo`
+    );
+
+
+  // -----------------------------------------------------
+  // Upload
+  // -----------------------------------------------------
+
+  await uploadBytes(
+    photoRef,
+    file,
+    {
+      contentType:
+        file.type,
+
+      cacheControl:
+        "public,max-age=3600"
     }
   );
 
+
+  // -----------------------------------------------------
+  // Download URL
+  // -----------------------------------------------------
+
+  const downloadURL =
+    await getDownloadURL(
+      photoRef
+    );
+
+
+  // -----------------------------------------------------
+  // Update Firebase Auth Profile
+  // -----------------------------------------------------
+
+  await updateProfile(
+    user,
+    {
+      photoURL:
+        downloadURL
+    }
+  );
+
+
+  return downloadURL;
 }
 
 
@@ -531,225 +601,399 @@ if (profilePhoto) {
 // SAVE PROFILE
 // =========================================================
 
+async function saveProfile() {
+
+  const user =
+    auth.currentUser;
+
+  if (!user) {
+
+    window.location.href =
+      "./login.html";
+
+    return;
+  }
+
+
+  try {
+
+    setLoading(true);
+
+    showStatus(
+      "Profile save হচ্ছে...",
+      "info"
+    );
+
+
+    // -----------------------------------------------------
+    // Reload User
+    // -----------------------------------------------------
+
+    await user.reload();
+
+
+    const currentUser =
+      auth.currentUser;
+
+    if (!currentUser) {
+
+      throw new Error(
+        "Login session পাওয়া যায়নি।"
+      );
+    }
+
+
+    // -----------------------------------------------------
+    // Get Form Values
+    // -----------------------------------------------------
+
+    const fullName =
+      fullNameInput?.value.trim() ||
+      "";
+
+    const phone =
+      phoneInput?.value.trim() ||
+      "";
+
+    const bio =
+      bioInput?.value.trim() ||
+      "";
+
+    const country =
+      countryInput?.value.trim() ||
+      "";
+
+
+    // -----------------------------------------------------
+    // Name Validation
+    // -----------------------------------------------------
+
+    if (
+      fullName.length < 2
+    ) {
+
+      throw new Error(
+        "Full Name কমপক্ষে ২ অক্ষরের হতে হবে।"
+      );
+    }
+
+
+    // -----------------------------------------------------
+    // Selected Photo
+    // -----------------------------------------------------
+
+    const selectedFile =
+      profilePhotoInput?.files?.[0] ||
+      null;
+
+
+    // -----------------------------------------------------
+    // Upload Photo If Selected
+    // -----------------------------------------------------
+
+    let photoURL =
+      currentUser.photoURL ||
+      "";
+
+
+    if (selectedFile) {
+
+      photoURL =
+        await uploadProfilePhoto(
+          currentUser,
+          selectedFile
+        );
+    }
+
+
+    // -----------------------------------------------------
+    // Update Auth Display Name
+    // -----------------------------------------------------
+
+    showStatus(
+      "Account profile update হচ্ছে...",
+      "info"
+    );
+
+    await updateProfile(
+      currentUser,
+      {
+        displayName:
+          fullName,
+
+        photoURL:
+          photoURL || null
+      }
+    );
+
+
+    // -----------------------------------------------------
+    // Firestore User Document
+    // -----------------------------------------------------
+
+    showStatus(
+      "Secure profile data Firestore-এ save হচ্ছে...",
+      "info"
+    );
+
+
+    const userRef =
+      doc(
+        db,
+        "users",
+        currentUser.uid
+      );
+
+
+    // -----------------------------------------------------
+    // Save Profile Data
+    // -----------------------------------------------------
+
+    await setDoc(
+      userRef,
+      {
+        uid:
+          currentUser.uid,
+
+        fullName:
+          fullName,
+
+        email:
+          currentUser.email ||
+          "",
+
+        phone:
+          phone,
+
+        bio:
+          bio,
+
+        country:
+          country,
+
+        emailVerified:
+          currentUser.emailVerified,
+
+        photoURL:
+          photoURL,
+
+        accountType:
+          "personal",
+
+        accountStatus:
+          "active",
+
+        updatedAt:
+          serverTimestamp()
+      },
+      {
+        merge: true
+      }
+    );
+
+
+    // -----------------------------------------------------
+    // Refresh Photo
+    // -----------------------------------------------------
+
+    if (
+      profileImage &&
+      photoURL
+    ) {
+
+      profileImage.src =
+        photoURL;
+    }
+
+
+    // -----------------------------------------------------
+    // Success
+    // -----------------------------------------------------
+
+    setLoading(false);
+
+    showStatus(
+      "Profile সফলভাবে Save হয়েছে।",
+      "success"
+    );
+
+
+    // -----------------------------------------------------
+    // Clear Selected File
+    // -----------------------------------------------------
+
+    if (profilePhotoInput) {
+
+      profilePhotoInput.value =
+        "";
+    }
+
+
+    console.log(
+      "AYNA BOOK — Profile saved successfully:",
+      currentUser.uid
+    );
+
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK — Profile Save Error:",
+      error
+    );
+
+
+    setLoading(false);
+
+
+    let message =
+      "Profile Save করা যায়নি।";
+
+
+    // -----------------------------------------------------
+    // Firebase Storage Errors
+    // -----------------------------------------------------
+
+    switch (error?.code) {
+
+      case "storage/unauthorized":
+
+        message =
+          "Profile photo upload করার অনুমতি নেই। Storage Rules পরীক্ষা করুন.";
+
+        break;
+
+
+      case "storage/quota-exceeded":
+
+        message =
+          "Firebase Storage quota শেষ হয়ে গেছে.";
+
+        break;
+
+
+      case "storage/canceled":
+
+        message =
+          "Photo upload বাতিল হয়েছে.";
+
+        break;
+
+
+      case "storage/unknown":
+
+        message =
+          "Firebase Storage-এ অজানা সমস্যা হয়েছে.";
+
+        break;
+
+
+      case "permission-denied":
+
+        message =
+          "Firestore permission denied. Firestore Rules পরীক্ষা করুন.";
+
+        break;
+
+
+      case "unauthenticated":
+
+        message =
+          "আপনার Login session নেই। আবার Login করুন.";
+
+        break;
+
+
+      default:
+
+        message =
+          error?.message ||
+          "Profile Save করা যায়নি।";
+    }
+
+
+    showStatus(
+      message,
+      "error"
+    );
+  }
+}
+
+
+// =========================================================
+// PHOTO INPUT EVENT
+// =========================================================
+
+if (
+  profilePhotoInput
+) {
+
+  profilePhotoInput.addEventListener(
+    "change",
+    function () {
+
+      const file =
+        this.files?.[0] ||
+        null;
+
+      if (!file) {
+        return;
+      }
+
+
+      const validation =
+        validatePhoto(file);
+
+
+      if (!validation.valid) {
+
+        showStatus(
+          validation.message,
+          "error"
+        );
+
+        this.value =
+          "";
+
+        return;
+      }
+
+
+      previewPhoto(
+        file
+      );
+
+
+      showStatus(
+        "Photo preview প্রস্তুত। SAVE PROFILE চাপুন।",
+        "info"
+      );
+    }
+  );
+}
+
+
+// =========================================================
+// PROFILE FORM SUBMIT
+// =========================================================
+
 if (profileForm) {
 
   profileForm.addEventListener(
     "submit",
-    async (event) => {
+    async function (event) {
 
       event.preventDefault();
 
-
-      const user =
-        auth.currentUser;
-
-
-      if (!user) {
-
-        showStatus(
-          "Login session পাওয়া যায়নি।",
-          "error"
-        );
+      if (
+        saveProfileButton?.disabled
+      ) {
 
         return;
       }
 
-
-      // ---------------------------------------------------
-      // Full Name
-      // ---------------------------------------------------
-
-      const fullName =
-        fullNameInput?.value.trim() ||
-        "";
-
-
-      if (fullName.length < 2) {
-
-        showStatus(
-          "Full Name কমপক্ষে ২ অক্ষরের হতে হবে।",
-          "error"
-        );
-
-        return;
-      }
-
-
-      // ---------------------------------------------------
-      // Other Profile Data
-      // ---------------------------------------------------
-
-      const phone =
-        phoneInput?.value.trim() ||
-        "";
-
-      const bio =
-        bioInput?.value.trim() ||
-        "";
-
-      const country =
-        countryInput?.value ||
-        "";
-
-
-      // ---------------------------------------------------
-      // Loading
-      // ---------------------------------------------------
-
-      if (saveProfileButton) {
-
-        saveProfileButton.disabled =
-          true;
-
-        saveProfileButton.textContent =
-          "SAVING...";
-      }
-
-
-      showStatus(
-        "Profile সংরক্ষণ করা হচ্ছে...",
-        "info"
-      );
-
-
-      try {
-
-        // -------------------------------------------------
-        // Firestore User Document
-        // -------------------------------------------------
-
-        const userRef =
-          doc(
-            db,
-            "users",
-            user.uid
-          );
-
-
-        await setDoc(
-          userRef,
-          {
-
-            // Identity
-            uid:
-              user.uid,
-
-            // Basic Information
-            fullName:
-              fullName,
-
-            email:
-              user.email || "",
-
-            phone:
-              phone,
-
-            bio:
-              bio,
-
-            country:
-              country,
-
-            // Security Status
-            emailVerified:
-              user.emailVerified === true,
-
-            // Profile
-            photoURL:
-              user.photoURL || "",
-
-            // Account Type
-            accountType:
-              "personal",
-
-            // Account Status
-            accountStatus:
-              "active",
-
-            // Updated
-            updatedAt:
-              serverTimestamp()
-
-          },
-          {
-            merge: true
-          }
-        );
-
-
-        // -------------------------------------------------
-        // Success
-        // -------------------------------------------------
-
-        showStatus(
-          "Profile সফলভাবে সংরক্ষণ হয়েছে।",
-          "success"
-        );
-
-
-        console.log(
-          "AYNA BOOK — Firestore profile saved successfully:",
-          user.uid
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK — Firestore Profile Save Error:",
-          error
-        );
-
-
-        let message =
-          "Profile Save করা যায়নি।";
-
-
-        if (
-          error?.code ===
-          "permission-denied"
-        ) {
-
-          message =
-            "Firestore Rules এই Profile Save অনুমতি দিচ্ছে না।";
-
-        } else if (
-          error?.code ===
-          "unavailable"
-        ) {
-
-          message =
-            "Firebase Server পাওয়া যাচ্ছে না। Internet Connection পরীক্ষা করুন।";
-
-        } else if (
-          error?.message
-        ) {
-
-          message =
-            `Profile Save Error:\n${error.message}`;
-        }
-
-
-        showStatus(
-          message,
-          "error"
-        );
-
-      } finally {
-
-        if (saveProfileButton) {
-
-          saveProfileButton.disabled =
-            false;
-
-          saveProfileButton.textContent =
-            "SAVE PROFILE";
-        }
-      }
-
+      await saveProfile();
     }
   );
-
 }
 
 
@@ -761,7 +1005,7 @@ if (logoutButton) {
 
   logoutButton.addEventListener(
     "click",
-    async () => {
+    async function () {
 
       try {
 
@@ -780,7 +1024,6 @@ if (logoutButton) {
         window.location.href =
           "./login.html";
 
-
       } catch (error) {
 
         console.error(
@@ -788,28 +1031,55 @@ if (logoutButton) {
           error
         );
 
-
         logoutButton.disabled =
           false;
 
         logoutButton.textContent =
-          "LOG OUT";
+          "LOGOUT";
 
 
         showStatus(
-          "Logout করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+          "Logout করা যায়নি। আবার চেষ্টা করুন।",
           "error"
         );
       }
-
     }
   );
-
 }
 
 
 // =========================================================
-// INITIAL LOG
+// AUTH STATE
+// =========================================================
+
+onAuthStateChanged(
+  auth,
+  async function (user) {
+
+    if (!user) {
+
+      window.location.href =
+        "./login.html";
+
+      return;
+    }
+
+
+    console.log(
+      "AYNA BOOK — Logged in user:",
+      user.uid
+    );
+
+
+    await loadProfile(
+      user
+    );
+  }
+);
+
+
+// =========================================================
+// INITIAL CONSOLE MESSAGE
 // =========================================================
 
 console.log(
@@ -817,9 +1087,5 @@ console.log(
 );
 
 console.log(
-  "AYNA BOOK — Profile Controller Step 13 active."
-);
-
-console.log(
-  "AYNA BOOK — Firestore Profile Save/Load enabled."
+  "AYNA BOOK — Profile + Firestore + Storage system active."
 );
