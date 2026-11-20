@@ -15,135 +15,152 @@
     content="#0A0F1E"
   >
 
-  <title>AYNA BOOK — Registration</title>
+  <title>AYNA BOOK — Register</title>
 
   <style>
 
-    /* =====================================================
-       RESET
-       ===================================================== */
-
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     html,
     body {
-      width: 100%;
+      margin: 0;
+      padding: 0;
       min-height: 100%;
-    }
-
-    body {
-      min-height: 100vh;
-      background: #0A0F1E;
-      color: #FFFFFF;
       font-family:
         Arial,
         Helvetica,
         sans-serif;
-      padding: 20px;
+      background: #0A0F1E;
+      color: #FFFFFF;
     }
 
-
-    /* =====================================================
-       PAGE
-       ===================================================== */
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px 15px;
+    }
 
     .page {
       width: 100%;
       max-width: 520px;
-      margin: 0 auto;
-      padding: 10px 0 30px;
     }
-
 
     /* =====================================================
        HEADER
        ===================================================== */
 
-    .header {
-      text-align: center;
-      margin-bottom: 22px;
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .dashboard-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      padding: 7px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      background: #1A2233;
+      text-decoration: none;
+    }
+
+    .dashboard-icon span {
+      display: block;
+      background: #FFFFFF;
+      border-radius: 3px;
     }
 
     .brand {
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      color: #FFFFFF;
-    }
-
-    .brand-line {
-      width: 70px;
-      height: 2px;
-      background: #FFD700;
-      margin: 10px auto 0;
-    }
-
-    .heading {
-      margin-top: 18px;
       font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
       color: #FFFFFF;
+      text-align: center;
     }
 
-    .description {
-      margin-top: 8px;
-      color: #A9B0BC;
-      font-size: 13px;
-      line-height: 1.6;
+    .star {
+      width: 32px;
+      text-align: center;
+      font-size: 16px;
+      color: #FFFFFF;
+      animation: starPulse 1s infinite;
     }
 
+    @keyframes starPulse {
+
+      0%,
+      100% {
+        opacity: 0.55;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.35);
+      }
+
+    }
 
     /* =====================================================
        CARD
        ===================================================== */
 
     .card {
-      width: 100%;
       background: #111827;
       border: 1px solid #FFD700;
-      border-radius: 24px;
+      border-radius: 20px;
       padding: 25px 20px;
       box-shadow:
-        0 0 30px rgba(255, 215, 0, 0.07);
+        0 15px 45px rgba(0, 0, 0, 0.45);
     }
 
+    .title {
+      margin: 0;
+      text-align: center;
+      font-size: 27px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .subtitle {
+      margin: 8px 0 22px;
+      text-align: center;
+      color: #A9B0BC;
+      font-size: 14px;
+      line-height: 1.5;
+    }
 
     /* =====================================================
        PROFILE PHOTO
        ===================================================== */
 
-    .photo-area {
-      text-align: center;
-      margin-bottom: 25px;
+    .photo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 22px;
     }
 
     .photo-preview {
-      width: 145px;
-      height: 145px;
-
-      margin: 0 auto 12px;
-
-      border-radius: 50%;
-
+      width: 150px;
+      height: 150px;
+      border-radius: 18px;
       border: 2px solid #FFD700;
-
       background: #1A2233;
-
       display: flex;
-      align-items: center;
       justify-content: center;
-
+      align-items: center;
       overflow: hidden;
-
-      color: #A9B0BC;
-      font-size: 13px;
-
-      box-shadow:
-        0 0 20px
-        rgba(255, 215, 0, 0.08);
+      margin-bottom: 10px;
     }
 
     .photo-preview img {
@@ -153,241 +170,106 @@
       display: none;
     }
 
-    .photo-label {
-      display: inline-block;
-
-      padding: 10px 16px;
-
-      border: 1px solid #FFD700;
-      border-radius: 10px;
-
-      color: #FFFFFF;
-
+    .photo-placeholder {
+      text-align: center;
+      color: #A9B0BC;
       font-size: 13px;
-
-      cursor: pointer;
+      padding: 10px;
     }
 
-    #profilePhoto {
+    .photo-button {
+      display: inline-block;
+      padding: 9px 16px;
+      border: 1px solid #FFD700;
+      border-radius: 9px;
+      background: #1A2233;
+      color: #FFFFFF;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .photo-button:hover {
+      background: #222C40;
+    }
+
+    #photoInput {
       display: none;
     }
-
 
     /* =====================================================
        FORM
        ===================================================== */
 
-    .form-group {
+    .field {
       margin-bottom: 16px;
     }
 
     label {
       display: block;
-
       margin-bottom: 7px;
-
       color: #FFFFFF;
-
-      font-size: 13px;
-
+      font-size: 14px;
       font-weight: 600;
     }
 
-    .required {
-      color: #FFD700;
+    .input-wrap {
+      position: relative;
     }
 
-    input {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="number"] {
       width: 100%;
-
-      height: 52px;
-
-      padding: 0 14px;
-
+      height: 50px;
+      border: 1px solid #384357;
+      border-radius: 10px;
       background: #1A2233;
-
       color: #FFFFFF;
-
-      border:
-        1px solid
-        rgba(255, 215, 0, 0.55);
-
-      border-radius: 11px;
-
+      padding: 0 14px;
       outline: none;
-
       font-size: 15px;
     }
 
     input:focus {
       border-color: #FFD700;
-
       box-shadow:
-        0 0 0 2px
-        rgba(255, 215, 0, 0.08);
+        0 0 0 2px rgba(255, 215, 0, 0.10);
     }
 
     input::placeholder {
-      color: #788191;
+      color: #7F8999;
     }
 
-
-    /* =====================================================
-       PASSWORD
-       ===================================================== */
-
-    .password-wrap {
-      position: relative;
+    .password-input {
+      padding-right: 52px !important;
     }
 
-    .password-wrap input {
-      padding-right: 55px;
-    }
-
-    .password-toggle {
+    .eye-button {
       position: absolute;
-
-      right: 10px;
       top: 50%;
-
+      right: 7px;
       transform: translateY(-50%);
-
-      width: 38px;
+      width: 40px;
       height: 38px;
-
       border: 0;
-
-      background: transparent;
-
-      color: #FFFFFF;
-
-      font-size: 18px;
-
-      cursor: pointer;
-    }
-
-
-    /* =====================================================
-       PHONE
-       ===================================================== */
-
-    .phone-note {
-      margin-top: 6px;
-
-      color: #A9B0BC;
-
-      font-size: 11px;
-
-      line-height: 1.5;
-    }
-
-
-    /* =====================================================
-       OTP
-       ===================================================== */
-
-    .otp-section {
-      display: none;
-
-      margin-top: 22px;
-
-      padding: 17px;
-
-      border:
-        1px solid
-        rgba(255, 215, 0, 0.55);
-
-      border-radius: 14px;
-
-      background: #0D1424;
-    }
-
-    .otp-section.show {
-      display: block;
-    }
-
-    .otp-title {
-      color: #FFFFFF;
-
-      font-size: 15px;
-
-      font-weight: 700;
-
-      margin-bottom: 6px;
-    }
-
-    .otp-description {
-      color: #A9B0BC;
-
-      font-size: 12px;
-
-      line-height: 1.5;
-
-      margin-bottom: 12px;
-    }
-
-    #otp {
-      text-align: center;
-
-      font-size: 23px;
-
-      letter-spacing: 8px;
-
-      font-weight: 700;
-    }
-
-    .timer {
-      text-align: center;
-
-      margin-top: 10px;
-
-      color: #FFD700;
-
-      font-size: 13px;
-    }
-
-    .resend-btn {
-      display: none;
-
-      margin: 12px auto 0;
-
-      padding: 9px 15px;
-
-      border:
-        1px solid
-        #FFD700;
-
       border-radius: 8px;
-
       background: transparent;
-
       color: #FFFFFF;
-
       cursor: pointer;
+      font-size: 19px;
+    }
 
+    .eye-button:hover {
+      background: #273247;
+    }
+
+    .hint {
+      margin-top: 5px;
+      color: #A9B0BC;
       font-size: 12px;
     }
-
-    .resend-btn.show {
-      display: block;
-    }
-
-
-    /* =====================================================
-       RECAPTCHA
-       ===================================================== */
-
-    #recaptcha-container {
-      margin:
-        18px 0;
-
-      display: flex;
-
-      justify-content: center;
-
-      min-height: 78px;
-    }
-
 
     /* =====================================================
        TERMS
@@ -395,144 +277,191 @@
 
     .terms {
       display: flex;
-
       align-items: flex-start;
-
       gap: 9px;
-
       margin: 18px 0;
+      color: #A9B0BC;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
     .terms input {
-      width: 18px;
-      height: 18px;
-
-      min-width: 18px;
-
-      margin-top: 2px;
+      margin-top: 3px;
+      accent-color: #FFD700;
     }
-
-    .terms-text {
-      color: #A9B0BC;
-
-      font-size: 12px;
-
-      line-height: 1.6;
-    }
-
 
     /* =====================================================
-       BUTTON
+       RECAPTCHA
        ===================================================== */
 
-    button {
-      font-family: inherit;
+    .captcha-box {
+      margin: 18px 0;
+      display: flex;
+      justify-content: center;
+      min-height: 78px;
     }
 
-    .main-btn {
-      width: 100%;
+    /* =====================================================
+       OTP SECTION
+       ===================================================== */
 
-      min-height: 54px;
+    .otp-section {
+      display: none;
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid #FFD700;
+      border-radius: 13px;
+      background: #151E2E;
+    }
 
-      border: 0;
+    .otp-title {
+      margin: 0 0 7px;
+      color: #FFFFFF;
+      font-size: 17px;
+      font-weight: 700;
+    }
 
-      border-radius: 12px;
+    .otp-info {
+      margin: 0 0 13px;
+      color: #A9B0BC;
+      font-size: 13px;
+      line-height: 1.5;
+    }
 
-      background: #FFFFFF;
+    #otp {
+      text-align: center;
+      letter-spacing: 7px;
+      font-size: 22px;
+      font-weight: 700;
+    }
 
-      color: #0A0F1E;
+    .otp-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
 
-      font-size: 15px;
+    .timer {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      border-radius: 8px;
+      background: #1A2233;
+      color: #FFFFFF;
+      font-size: 13px;
+    }
 
-      font-weight: 800;
-
-      letter-spacing: 1.5px;
-
+    .resend-button {
+      flex: 1;
+      border: 1px solid #FFD700;
+      border-radius: 8px;
+      background: transparent;
+      color: #FFFFFF;
       cursor: pointer;
+      font-weight: 600;
     }
 
-    .main-btn:disabled {
-      opacity: 0.55;
-
+    .resend-button:disabled {
+      opacity: 0.45;
       cursor: not-allowed;
     }
 
-    .otp-btn {
-      margin-top: 4px;
+    /* =====================================================
+       BUTTONS
+       ===================================================== */
+
+    button.primary {
+      width: 100%;
+      height: 52px;
+      border: 1px solid #FFD700;
+      border-radius: 11px;
+      background: #FFD700;
+      color: #0A0F1E;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
     }
 
+    button.primary:hover {
+      filter: brightness(1.08);
+    }
+
+    button.primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .otp-send-button {
+      margin-top: 4px;
+    }
 
     /* =====================================================
        MESSAGE
        ===================================================== */
 
-    #message {
-      min-height: 22px;
-
-      margin: 15px 0 0;
-
+    .message {
+      min-height: 24px;
+      margin: 15px 0 5px;
       text-align: center;
-
-      color: #A9B0BC;
-
+      color: #FFD700;
       font-size: 13px;
-
       line-height: 1.5;
     }
 
-
     /* =====================================================
-       LOGIN LINK
+       FOOTER
        ===================================================== */
 
     .bottom-link {
-      text-align: center;
-
       margin-top: 20px;
-
+      text-align: center;
       color: #A9B0BC;
-
-      font-size: 13px;
+      font-size: 14px;
     }
 
     .bottom-link a {
       color: #FFFFFF;
-
-      font-weight: 700;
-
       text-decoration: none;
+      font-weight: 700;
     }
 
     .bottom-link a:hover {
       color: #FFD700;
     }
 
+    .security-note {
+      margin-top: 15px;
+      padding-top: 13px;
+      border-top: 1px solid #273247;
+      text-align: center;
+      color: #707B8D;
+      font-size: 11px;
+      line-height: 1.5;
+    }
 
     /* =====================================================
        MOBILE
        ===================================================== */
 
-    @media (max-width: 420px) {
+    @media (max-width: 480px) {
 
       body {
-        padding: 12px;
-      }
-
-      .page {
-        padding-top: 5px;
+        padding: 14px 10px;
+        align-items: flex-start;
       }
 
       .card {
-        padding: 22px 15px;
-        border-radius: 20px;
+        padding: 20px 15px;
+        border-radius: 16px;
       }
 
       .brand {
-        font-size: 27px;
+        font-size: 19px;
       }
 
-      .heading {
-        font-size: 20px;
+      .title {
+        font-size: 24px;
       }
 
       .photo-preview {
@@ -551,71 +480,81 @@
 
   <main class="page">
 
-
-    <!-- =================================================
+    <!-- ===================================================
          HEADER
-         ================================================= -->
+         =================================================== -->
 
-    <header class="header">
+    <header class="top-header">
+
+      <a
+        href="./index.html"
+        class="dashboard-icon"
+        aria-label="AYNA BOOK Home"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </a>
 
       <div class="brand">
         AYNA BOOK
       </div>
 
-      <div class="brand-line"></div>
-
-      <h1 class="heading">
-        Create Your Account
-      </h1>
-
-      <p class="description">
-        নিরাপদভাবে AYNA BOOK-এ আপনার
-        নতুন account তৈরি করুন।
-      </p>
+      <div class="star">
+        ★
+      </div>
 
     </header>
 
 
-    <!-- =================================================
-         CARD
-         ================================================= -->
+    <!-- ===================================================
+         REGISTRATION CARD
+         =================================================== -->
 
     <section class="card">
+
+      <h1 class="title">
+        CREATE ACCOUNT
+      </h1>
+
+      <p class="subtitle">
+        AYNA BOOK-এ নিরাপদভাবে আপনার নতুন অ্যাকাউন্ট তৈরি করুন।
+      </p>
 
 
       <!-- =================================================
            PROFILE PHOTO
            ================================================= -->
 
-      <div class="photo-area">
+      <div class="photo-section">
 
-        <div
-          class="photo-preview"
-          id="photoPreview"
-        >
-
-          <span id="photoText">
-            Profile Photo
-          </span>
+        <div class="photo-preview">
 
           <img
-            id="photoImage"
+            id="photoPreview"
             alt="Profile preview"
           >
 
+          <div
+            id="photoPlaceholder"
+            class="photo-placeholder"
+          >
+            Profile Photo<br>
+            Optional
+          </div>
+
         </div>
 
-
         <label
-          class="photo-label"
-          for="profilePhoto"
+          for="photoInput"
+          class="photo-button"
         >
           SELECT PROFILE PHOTO
         </label>
 
-
         <input
-          id="profilePhoto"
+          id="photoInput"
           type="file"
           accept="image/*"
         >
@@ -632,22 +571,20 @@
         novalidate
       >
 
-
         <!-- NAME -->
 
-        <div class="form-group">
+        <div class="field">
 
           <label for="name">
-            নাম <span class="required">*</span>
+            Full Name
           </label>
 
           <input
             id="name"
             name="name"
             type="text"
-            autocomplete="name"
             placeholder="আপনার পূর্ণ নাম"
-            maxlength="80"
+            autocomplete="name"
             required
           >
 
@@ -656,20 +593,18 @@
 
         <!-- GMAIL -->
 
-        <div class="form-group">
+        <div class="field">
 
           <label for="email">
-            Gmail <span class="required">*</span>
+            Gmail
           </label>
 
           <input
             id="email"
             name="email"
             type="email"
-            inputmode="email"
-            autocomplete="email"
             placeholder="example@gmail.com"
-            maxlength="120"
+            autocomplete="email"
             required
           >
 
@@ -678,27 +613,23 @@
 
         <!-- PHONE -->
 
-        <div class="form-group">
+        <div class="field">
 
           <label for="phone">
-            মোবাইল নম্বর
-            <span class="required">*</span>
+            Mobile Number
           </label>
 
           <input
             id="phone"
             name="phone"
             type="tel"
-            inputmode="tel"
+            placeholder="017XXXXXXXX"
             autocomplete="tel"
-            placeholder="01XXXXXXXXX"
-            maxlength="14"
             required
           >
 
-          <div class="phone-note">
-            বাংলাদেশি নম্বর দিন।
-            OTP SMS এই নম্বরে পাঠানো হবে।
+          <div class="hint">
+            SMS OTP এই নম্বরে পাঠানো হবে।
           </div>
 
         </div>
@@ -706,29 +637,66 @@
 
         <!-- PASSWORD -->
 
-        <div class="form-group">
+        <div class="field">
 
           <label for="password">
             Password
-            <span class="required">*</span>
           </label>
 
-          <div class="password-wrap">
+          <div class="input-wrap">
 
             <input
               id="password"
               name="password"
+              class="password-input"
               type="password"
-              autocomplete="new-password"
               placeholder="কমপক্ষে ১১ অক্ষর"
-              minlength="11"
+              autocomplete="new-password"
               required
             >
 
             <button
-              type="button"
-              class="password-toggle"
               id="togglePassword"
+              class="eye-button"
+              type="button"
+              aria-label="Show password"
+            >
+              👁
+            </button>
+
+          </div>
+
+          <div class="hint">
+            Password কমপক্ষে ১১ অক্ষরের হতে হবে।
+          </div>
+
+        </div>
+
+
+        <!-- CONFIRM PASSWORD -->
+
+        <div class="field">
+
+          <label for="confirmPassword">
+            Confirm Password
+          </label>
+
+          <div class="input-wrap">
+
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              class="password-input"
+              type="password"
+              placeholder="Password আবার লিখুন"
+              autocomplete="new-password"
+              required
+            >
+
+            <button
+              id="toggleConfirmPassword"
+              class="eye-button"
+              type="button"
               aria-label="Show password"
             >
               👁
@@ -739,34 +707,99 @@
         </div>
 
 
-        <!-- CONFIRM PASSWORD -->
+        <!-- TERMS -->
 
-        <div class="form-group">
+        <label class="terms">
 
-          <label for="confirmPassword">
-            Password আবার লিখুন
-            <span class="required">*</span>
-          </label>
+          <input
+            id="terms"
+            type="checkbox"
+            required
+          >
 
-          <div class="password-wrap">
+          <span>
+            আমি AYNA BOOK-এর
+            নিরাপত্তা, Privacy এবং Terms মেনে
+            অ্যাকাউন্ট তৈরি করতে সম্মত।
+          </span>
+
+        </label>
+
+
+        <!-- RECAPTCHA -->
+
+        <div
+          id="recaptcha-container"
+          class="captcha-box"
+        ></div>
+
+
+        <!-- SEND OTP -->
+
+        <button
+          id="sendOtpBtn"
+          class="primary otp-send-button"
+          type="button"
+        >
+          SEND SMS OTP
+        </button>
+
+
+        <!-- =================================================
+             OTP SECTION
+             ================================================= -->
+
+        <div
+          id="otpSection"
+          class="otp-section"
+        >
+
+          <h2 class="otp-title">
+            VERIFY MOBILE NUMBER
+          </h2>
+
+          <p
+            id="otpInfo"
+            class="otp-info"
+          >
+            আপনার মোবাইলে পাঠানো ৬ সংখ্যার OTP দিন।
+          </p>
+
+          <div class="field">
+
+            <label for="otp">
+              SMS OTP
+            </label>
 
             <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              autocomplete="new-password"
-              placeholder="Password আবার লিখুন"
-              minlength="11"
-              required
+              id="otp"
+              name="otp"
+              type="number"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="6"
+              placeholder="••••••"
             >
 
-            <button
-              type="button"
-              class="password-toggle"
-              id="toggleConfirmPassword"
-              aria-label="Show confirm password"
+          </div>
+
+
+          <div class="otp-actions">
+
+            <div
+              id="timer"
+              class="timer"
             >
-              👁
+              02:00
+            </div>
+
+            <button
+              id="resendBtn"
+              class="resend-button"
+              type="button"
+              disabled
+            >
+              RESEND OTP
             </button>
 
           </div>
@@ -774,116 +807,34 @@
         </div>
 
 
-        <!-- RECAPTCHA -->
-
-        <div id="recaptcha-container"></div>
-
-
-        <!-- SEND OTP -->
-
-        <button
-          type="button"
-          class="main-btn otp-btn"
-          id="sendOtpBtn"
-        >
-          SEND SMS OTP
-        </button>
-
-
-        <!-- OTP SECTION -->
+        <!-- MESSAGE -->
 
         <div
-          class="otp-section"
-          id="otpSection"
-        >
-
-          <div class="otp-title">
-            SMS OTP
-          </div>
-
-          <div class="otp-description">
-            আপনার মোবাইলে পাঠানো
-            ৬ সংখ্যার OTP লিখুন।
-          </div>
-
-          <input
-            id="otp"
-            name="otp"
-            type="text"
-            inputmode="numeric"
-            autocomplete="one-time-code"
-            maxlength="6"
-            pattern="[0-9]{6}"
-            placeholder="000000"
-          >
-
-          <div
-            class="timer"
-            id="timer"
-          >
-            OTP সময়: 02:00
-          </div>
-
-          <button
-            type="button"
-            class="resend-btn"
-            id="resendBtn"
-          >
-            RESEND OTP
-          </button>
-
-        </div>
+          id="message"
+          class="message"
+          aria-live="polite"
+        ></div>
 
 
-        <!-- TERMS -->
-
-        <div class="terms">
-
-          <input
-            id="terms"
-            type="checkbox"
-          >
-
-          <div class="terms-text">
-            আমি AYNA BOOK-এর Terms,
-            Privacy এবং নিরাপত্তা নীতিতে
-            সম্মত।
-          </div>
-
-        </div>
-
-
-        <!-- REGISTER -->
+        <!-- CREATE ACCOUNT -->
 
         <button
+          id="createAccountBtn"
+          class="primary"
           type="submit"
-          class="main-btn"
-          id="registerBtn"
           disabled
         >
           CREATE ACCOUNT
         </button>
 
-
-        <!-- MESSAGE -->
-
-        <div
-          id="message"
-          role="status"
-          aria-live="polite"
-        ></div>
-
-
       </form>
 
 
-      <!-- =================================================
-           LOGIN LINK
-           ================================================= -->
+      <!-- LOGIN -->
 
       <div class="bottom-link">
 
-        ইতিমধ্যে account আছে?
+        আগে থেকেই অ্যাকাউন্ট আছে?
 
         <a href="./login.html">
           LOGIN
@@ -892,13 +843,20 @@
       </div>
 
 
+      <div class="security-note">
+
+        AYNA BOOK — Secure Registration<br>
+        আপনার Password বা OTP কারও সঙ্গে শেয়ার করবেন না।
+
+      </div>
+
     </section>
 
   </main>
 
 
   <!-- =====================================================
-       REGISTRATION JAVASCRIPT
+       SIGNUP CONTROLLER
        ===================================================== -->
 
   <script type="module">
@@ -911,6 +869,9 @@
       sendPhoneOtp,
       createRegistrationAccount,
       completeRegistration,
+      normalizePhone,
+      validateGmail,
+      validatePassword,
       getAuthErrorMessage
     } from "./auth.js";
 
@@ -919,9 +880,9 @@
     } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 
-    /* ===================================================
-       ELEMENTS
-       =================================================== */
+    // =====================================================
+    // ELEMENTS
+    // =====================================================
 
     const form =
       document.getElementById("signupForm");
@@ -941,23 +902,26 @@
     const confirmPasswordInput =
       document.getElementById("confirmPassword");
 
-    const photoInput =
-      document.getElementById("profilePhoto");
-
-    const photoImage =
-      document.getElementById("photoImage");
-
-    const photoText =
-      document.getElementById("photoText");
-
-    const terms =
+    const termsInput =
       document.getElementById("terms");
+
+    const photoInput =
+      document.getElementById("photoInput");
+
+    const photoPreview =
+      document.getElementById("photoPreview");
+
+    const photoPlaceholder =
+      document.getElementById("photoPlaceholder");
+
+    const togglePassword =
+      document.getElementById("togglePassword");
+
+    const toggleConfirmPassword =
+      document.getElementById("toggleConfirmPassword");
 
     const sendOtpBtn =
       document.getElementById("sendOtpBtn");
-
-    const registerBtn =
-      document.getElementById("registerBtn");
 
     const otpSection =
       document.getElementById("otpSection");
@@ -971,97 +935,105 @@
     const resendBtn =
       document.getElementById("resendBtn");
 
+    const createAccountBtn =
+      document.getElementById("createAccountBtn");
+
     const message =
       document.getElementById("message");
 
-    const togglePassword =
-      document.getElementById("togglePassword");
-
-    const toggleConfirmPassword =
+    const recaptchaContainer =
       document.getElementById(
-        "toggleConfirmPassword"
+        "recaptcha-container"
       );
 
 
-    /* ===================================================
-       VARIABLES
-       =================================================== */
-
-    let verificationId = null;
+    // =====================================================
+    // STATE
+    // =====================================================
 
     let recaptchaVerifier = null;
 
-    let countdownInterval = null;
+    let verificationId = null;
+
+    let timerInterval = null;
+
+    let secondsRemaining = 120;
 
     let otpSent = false;
 
 
-    /* ===================================================
-       MESSAGE
-       =================================================== */
+    // =====================================================
+    // MESSAGE
+    // =====================================================
 
     function showMessage(text) {
 
-      message.textContent = text;
+      message.textContent =
+        text || "";
 
     }
 
 
-    /* ===================================================
-       PASSWORD TOGGLE
-       =================================================== */
+    // =====================================================
+    // PASSWORD SHOW / HIDE
+    // =====================================================
 
-    togglePassword.addEventListener(
-      "click",
-      () => {
+    function setupPasswordToggle(
+      input,
+      button
+    ) {
 
-        if (
-          passwordInput.type === "password"
-        ) {
+      button.addEventListener(
+        "click",
+        () => {
 
-          passwordInput.type = "text";
+          if (
+            input.type === "password"
+          ) {
 
-          togglePassword.textContent = "🙈";
+            input.type = "text";
 
-        } else {
+            button.textContent =
+              "🙈";
 
-          passwordInput.type = "password";
+            button.setAttribute(
+              "aria-label",
+              "Hide password"
+            );
 
-          togglePassword.textContent = "👁";
+          } else {
+
+            input.type = "password";
+
+            button.textContent =
+              "👁";
+
+            button.setAttribute(
+              "aria-label",
+              "Show password"
+            );
+          }
 
         }
+      );
 
-      }
+    }
+
+
+    setupPasswordToggle(
+      passwordInput,
+      togglePassword
+    );
+
+    setupPasswordToggle(
+      confirmPasswordInput,
+      toggleConfirmPassword
     );
 
 
-    toggleConfirmPassword.addEventListener(
-      "click",
-      () => {
-
-        if (
-          confirmPasswordInput.type === "password"
-        ) {
-
-          confirmPasswordInput.type = "text";
-
-          toggleConfirmPassword.textContent = "🙈";
-
-        } else {
-
-          confirmPasswordInput.type = "password";
-
-          toggleConfirmPassword.textContent = "👁";
-
-        }
-
-      }
-    );
-
-
-    /* ===================================================
-       PROFILE PHOTO PREVIEW
-       =================================================== */
+    // =====================================================
+    // PROFILE PHOTO PREVIEW
+    // =====================================================
 
     photoInput.addEventListener(
       "change",
@@ -1077,7 +1049,7 @@
         if (!file.type.startsWith("image/")) {
 
           showMessage(
-            "শুধু image file নির্বাচন করুন।"
+            "শুধু image profile photo নির্বাচন করুন।"
           );
 
           photoInput.value = "";
@@ -1101,13 +1073,13 @@
 
         reader.onload = () => {
 
-          photoImage.src =
+          photoPreview.src =
             reader.result;
 
-          photoImage.style.display =
+          photoPreview.style.display =
             "block";
 
-          photoText.style.display =
+          photoPlaceholder.style.display =
             "none";
 
         };
@@ -1118,67 +1090,75 @@
     );
 
 
-    /* ===================================================
-       RECAPTCHA
-       =================================================== */
+    // =====================================================
+    // RECAPTCHA
+    // =====================================================
 
-    function createRecaptcha() {
+    function initializeRecaptcha() {
 
-      if (recaptchaVerifier) {
+      try {
 
-        try {
-          recaptchaVerifier.clear();
-        } catch (error) {
-          console.warn(
-            "reCAPTCHA clear warning:",
-            error
-          );
+        if (recaptchaVerifier) {
+          return;
         }
 
-        recaptchaVerifier = null;
-      }
+        recaptchaVerifier =
+          new RecaptchaVerifier(
+            auth,
+            "recaptcha-container",
+            {
+              size: "normal",
 
+              callback: () => {
 
-      recaptchaVerifier =
-        new RecaptchaVerifier(
-          auth,
-          "recaptcha-container",
-          {
-            size: "normal",
+                showMessage(
+                  "reCAPTCHA যাচাই সফল হয়েছে।"
+                );
 
-            callback: () => {
+              },
 
-              showMessage(
-                "reCAPTCHA সম্পন্ন হয়েছে।"
-              );
+              "expired-callback": () => {
 
-            },
+                showMessage(
+                  "reCAPTCHA-এর সময় শেষ হয়েছে। আবার যাচাই করুন।"
+                );
 
-            "expired-callback": () => {
-
-              showMessage(
-                "reCAPTCHA মেয়াদ শেষ হয়েছে। আবার চেষ্টা করুন।"
-              );
-
+              }
             }
-          }
+          );
+
+        recaptchaVerifier.render();
+
+      } catch (error) {
+
+        console.error(
+          "AYNA BOOK — reCAPTCHA Error:",
+          error
         );
 
-      return recaptchaVerifier;
+        showMessage(
+          "reCAPTCHA চালু করা যায়নি। পেজটি Refresh করুন।"
+        );
+
+      }
+
     }
 
 
-    /* ===================================================
-       VALIDATION
-       =================================================== */
+    initializeRecaptcha();
 
-    function validateRegistration() {
+
+    // =====================================================
+    // VALIDATE FORM
+    // =====================================================
+
+    function validateRegistrationForm() {
 
       const name =
         nameInput.value.trim();
 
       const email =
-        emailInput.value.trim();
+        emailInput.value.trim().toLowerCase();
 
       const phone =
         phoneInput.value.trim();
@@ -1192,283 +1172,315 @@
 
       if (!name) {
 
-        showMessage(
-          "আপনার নাম দিন।"
-        );
+        return {
+          valid: false,
+          message: "আপনার নাম দিন।"
+        };
 
-        nameInput.focus();
-
-        return false;
       }
 
 
-      if (!email) {
+      if (name.length < 2) {
 
-        showMessage(
-          "Gmail দিন।"
-        );
+        return {
+          valid: false,
+          message: "নাম কমপক্ষে ২ অক্ষরের হতে হবে।"
+        };
 
-        emailInput.focus();
-
-        return false;
       }
 
 
-      if (
-        !email.includes("@") ||
-        !email.includes(".")
-      ) {
+      if (!validateGmail(email)) {
 
-        showMessage(
-          "সঠিক Gmail address দিন।"
-        );
+        return {
+          valid: false,
+          message: "সঠিক Gmail address দিন।"
+        };
 
-        emailInput.focus();
-
-        return false;
       }
 
 
-      if (!phone) {
+      try {
 
-        showMessage(
-          "মোবাইল নম্বর দিন।"
-        );
+        normalizePhone(phone);
 
-        phoneInput.focus();
+      } catch (error) {
 
-        return false;
+        return {
+          valid: false,
+          message: error.message
+        };
+
       }
 
 
-      const digits =
-        phone.replace(/\D/g, "");
+      if (!validatePassword(password)) {
 
+        return {
+          valid: false,
+          message:
+            "Password কমপক্ষে ১১ অক্ষরের হতে হবে।"
+        };
 
-      if (
-        !/^01\d{9}$/.test(digits) &&
-        !/^8801\d{9}$/.test(digits)
-      ) {
-
-        showMessage(
-          "সঠিক বাংলাদেশি মোবাইল নম্বর দিন।"
-        );
-
-        phoneInput.focus();
-
-        return false;
       }
 
 
-      if (password.length < 11) {
+      if (password !== confirmPassword) {
 
-        showMessage(
-          "Password কমপক্ষে ১১ অক্ষরের হতে হবে।"
-        );
+        return {
+          valid: false,
+          message:
+            "Password এবং Confirm Password একই নয়।"
+        };
 
-        passwordInput.focus();
-
-        return false;
       }
 
 
-      if (
-        password !== confirmPassword
-      ) {
+      if (!termsInput.checked) {
 
-        showMessage(
-          "দুইটি Password একই নয়।"
-        );
+        return {
+          valid: false,
+          message:
+            "Terms এবং Privacy গ্রহণ করতে হবে।"
+        };
 
-        confirmPasswordInput.focus();
-
-        return false;
       }
 
 
-      if (!terms.checked) {
+      return {
+        valid: true
+      };
 
-        showMessage(
-          "Terms ও Privacy-তে সম্মতি দিন।"
-        );
-
-        return false;
-      }
-
-
-      return true;
     }
 
 
-    /* ===================================================
-       START TIMER
-       =================================================== */
+    // =====================================================
+    // START TIMER
+    // =====================================================
 
-    function startTimer() {
+    function startOtpTimer() {
 
-      clearInterval(
-        countdownInterval
-      );
+      clearInterval(timerInterval);
 
-      let remaining = 120;
+      secondsRemaining = 120;
+
+      resendBtn.disabled = true;
+
+      updateTimerDisplay();
+
+      timerInterval =
+        setInterval(
+          () => {
+
+            secondsRemaining--;
+
+            updateTimerDisplay();
+
+            if (secondsRemaining <= 0) {
+
+              clearInterval(
+                timerInterval
+              );
+
+              resendBtn.disabled = false;
+
+              timer.textContent =
+                "সময় শেষ";
+
+            }
+
+          },
+          1000
+        );
+
+    }
+
+
+    // =====================================================
+    // TIMER DISPLAY
+    // =====================================================
+
+    function updateTimerDisplay() {
+
+      const minutes =
+        Math.floor(
+          secondsRemaining / 60
+        );
+
+      const seconds =
+        secondsRemaining % 60;
 
       timer.textContent =
-        "OTP সময়: 02:00";
-
-      resendBtn.classList.remove(
-        "show"
-      );
-
-
-      countdownInterval =
-        setInterval(() => {
-
-          remaining--;
-
-          const minutes =
-            Math.floor(
-              remaining / 60
-            );
-
-          const seconds =
-            remaining % 60;
-
-          timer.textContent =
-            "OTP সময়: " +
-            String(minutes).padStart(2, "0") +
-            ":" +
-            String(seconds).padStart(2, "0");
-
-
-          if (remaining <= 0) {
-
-            clearInterval(
-              countdownInterval
-            );
-
-            timer.textContent =
-              "OTP সময় শেষ।";
-
-            resendBtn.classList.add(
-              "show"
-            );
-
-          }
-
-        }, 1000);
+        String(minutes).padStart(2, "0")
+        + ":"
+        +
+        String(seconds).padStart(2, "0");
 
     }
 
 
-    /* ===================================================
-       SEND OTP
-       =================================================== */
+    // =====================================================
+    // CREATE INITIAL ACCOUNT
+    // =====================================================
+
+    async function ensureRegistrationAccount() {
+
+      if (auth.currentUser) {
+
+        return {
+          success: true,
+          user: auth.currentUser
+        };
+
+      }
+
+
+      const result =
+        await createRegistrationAccount({
+
+          name:
+            nameInput.value.trim(),
+
+          email:
+            emailInput.value.trim().toLowerCase(),
+
+          password:
+            passwordInput.value
+
+        });
+
+
+      return result;
+
+    }
+
+
+    // =====================================================
+    // SEND OTP
+    // =====================================================
 
     async function sendOtp() {
 
-      if (!validateRegistration()) {
+      const validation =
+        validateRegistrationForm();
+
+      if (!validation.valid) {
+
+        showMessage(
+          validation.message
+        );
+
         return;
+
       }
 
 
       sendOtpBtn.disabled = true;
 
       sendOtpBtn.textContent =
-        "ACCOUNT প্রস্তুত হচ্ছে...";
+        "ACCOUNT PREPARING...";
 
       showMessage("");
 
 
       try {
 
-        /*
-         * প্রথমবার Registration account তৈরি।
-         */
+        // -----------------------------------------------
+        // Create Firebase email/password account
+        // -----------------------------------------------
 
-        if (!auth.currentUser) {
+        const accountResult =
+          await ensureRegistrationAccount();
 
-          await createRegistrationAccount({
 
-            name:
-              nameInput.value.trim(),
+        if (!accountResult.success) {
 
-            email:
-              emailInput.value.trim(),
+          showMessage(
+            accountResult.message
+          );
 
-            password:
-              passwordInput.value
-
-          });
+          return;
 
         }
 
 
-        showMessage(
-          "নিরাপত্তা যাচাই প্রস্তুত হচ্ছে..."
-        );
+        // -----------------------------------------------
+        // Send phone OTP
+        // -----------------------------------------------
+
+        sendOtpBtn.textContent =
+          "SMS OTP পাঠানো হচ্ছে...";
 
 
-        const verifier =
-          createRecaptcha();
-
-
-        const result =
+        const otpResult =
           await sendPhoneOtp(
             phoneInput.value.trim(),
-            verifier
+            recaptchaVerifier
           );
 
 
-        if (!result.success) {
+        if (!otpResult.success) {
 
-          throw new Error(
-            result.message ||
-            "OTP পাঠানো যায়নি।"
+          showMessage(
+            otpResult.message
           );
+
+          return;
+
         }
 
 
         verificationId =
-          result.verificationId;
+          otpResult.verificationId;
 
         otpSent = true;
 
 
-        otpSection.classList.add(
-          "show"
-        );
+        // -----------------------------------------------
+        // Show OTP section
+        // -----------------------------------------------
 
+        otpSection.style.display =
+          "block";
 
-        registerBtn.disabled =
+        createAccountBtn.disabled =
           false;
-
-
-        sendOtpBtn.textContent =
-          "OTP SENT";
-
 
         showMessage(
           "SMS OTP পাঠানো হয়েছে। ৬ সংখ্যার OTP দিন।"
         );
 
 
-        startTimer();
+        startOtpTimer();
+
+
+        otpInput.focus();
+
+
+        // -----------------------------------------------
+        // Scroll to OTP
+        // -----------------------------------------------
+
+        otpSection.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
 
       } catch (error) {
 
         console.error(
-          "AYNA BOOK OTP Error:",
+          "AYNA BOOK — OTP Error:",
           error
         );
-
 
         showMessage(
           getAuthErrorMessage(error)
         );
 
+      } finally {
 
-        sendOtpBtn.disabled =
-          false;
+        sendOtpBtn.disabled = false;
 
         sendOtpBtn.textContent =
           "SEND SMS OTP";
@@ -1478,123 +1490,59 @@
     }
 
 
+    // =====================================================
+    // SEND OTP BUTTON
+    // =====================================================
+
     sendOtpBtn.addEventListener(
       "click",
       sendOtp
     );
 
 
-    /* ===================================================
-       RESEND OTP
-       =================================================== */
+    // =====================================================
+    // RESEND OTP
+    // =====================================================
 
     resendBtn.addEventListener(
       "click",
       async () => {
 
-        if (!auth.currentUser) {
-
-          showMessage(
-            "Registration session পাওয়া যায়নি। আবার শুরু করুন।"
-          );
-
+        if (
+          secondsRemaining > 0
+        ) {
           return;
         }
 
-
-        resendBtn.disabled = true;
-
-        resendBtn.textContent =
-          "SENDING...";
-
-
-        try {
-
-          const verifier =
-            createRecaptcha();
-
-
-          const result =
-            await sendPhoneOtp(
-              phoneInput.value.trim(),
-              verifier
-            );
-
-
-          if (!result.success) {
-
-            throw new Error(
-              result.message ||
-              "OTP পাঠানো যায়নি।"
-            );
-          }
-
-
-          verificationId =
-            result.verificationId;
-
-          otpSent = true;
-
-
-          showMessage(
-            "নতুন SMS OTP পাঠানো হয়েছে।"
-          );
-
-
-          startTimer();
-
-
-          resendBtn.classList.remove(
-            "show"
-          );
-
-
-        } catch (error) {
-
-          console.error(
-            "AYNA BOOK Resend OTP Error:",
-            error
-          );
-
-
-          showMessage(
-            getAuthErrorMessage(error)
-          );
-
-        } finally {
-
-          resendBtn.disabled =
-            false;
-
-          resendBtn.textContent =
-            "RESEND OTP";
-
-        }
+        await sendOtp();
 
       }
     );
 
 
-    /* ===================================================
-       OTP INPUT
-       =================================================== */
+    // =====================================================
+    // OTP INPUT — ONLY 6 DIGITS
+    // =====================================================
 
     otpInput.addEventListener(
       "input",
       () => {
 
-        otpInput.value =
+        let value =
           otpInput.value
             .replace(/\D/g, "")
             .slice(0, 6);
+
+        otpInput.value =
+          value;
 
       }
     );
 
 
-    /* ===================================================
-       REGISTER
-       =================================================== */
+    // =====================================================
+    // CREATE ACCOUNT
+    // =====================================================
 
     form.addEventListener(
       "submit",
@@ -1610,16 +1558,18 @@
           );
 
           return;
+
         }
 
 
         if (!verificationId) {
 
           showMessage(
-            "OTP verification session পাওয়া যায়নি।"
+            "OTP verification session পাওয়া যায়নি। আবার OTP পাঠান।"
           );
 
           return;
+
         }
 
 
@@ -1630,30 +1580,21 @@
         if (!/^\d{6}$/.test(otp)) {
 
           showMessage(
-            "৬ সংখ্যার OTP দিন।"
+            "৬ সংখ্যার সঠিক OTP দিন।"
           );
 
           otpInput.focus();
 
           return;
+
         }
 
 
-        if (!terms.checked) {
-
-          showMessage(
-            "Terms ও Privacy-তে সম্মতি দিন।"
-          );
-
-          return;
-        }
-
-
-        registerBtn.disabled =
+        createAccountBtn.disabled =
           true;
 
-        registerBtn.textContent =
-          "ACCOUNT তৈরি হচ্ছে...";
+        createAccountBtn.textContent =
+          "ACCOUNT CREATING...";
 
         showMessage("");
 
@@ -1667,16 +1608,14 @@
                 nameInput.value.trim(),
 
               email:
-                emailInput.value.trim(),
+                emailInput.value.trim().toLowerCase(),
 
               phone:
                 phoneInput.value.trim(),
 
-              otp:
-                otp,
+              otp,
 
-              verificationId:
-                verificationId,
+              verificationId,
 
               photoFile:
                 photoInput.files?.[0] || null
@@ -1686,49 +1625,54 @@
 
           if (!result.success) {
 
-            throw new Error(
-              result.message ||
-              "Registration ব্যর্থ হয়েছে।"
+            showMessage(
+              result.message
             );
+
+            return;
+
           }
 
 
-          clearInterval(
-            countdownInterval
-          );
-
-
           showMessage(
-            "Registration সফল হয়েছে। Login page-এ নেওয়া হচ্ছে..."
+            "Registration সফল হয়েছে। Login পেজে নেওয়া হচ্ছে..."
           );
 
 
-          setTimeout(() => {
+          clearInterval(
+            timerInterval
+          );
 
-            window.location.replace(
-              "./login.html"
-            );
 
-          }, 1200);
+          setTimeout(
+            () => {
+
+              window.location.replace(
+                "./login.html"
+              );
+
+            },
+            1000
+          );
 
 
         } catch (error) {
 
           console.error(
-            "AYNA BOOK Registration Error:",
+            "AYNA BOOK — Registration Error:",
             error
           );
-
 
           showMessage(
             getAuthErrorMessage(error)
           );
 
+        } finally {
 
-          registerBtn.disabled =
+          createAccountBtn.disabled =
             false;
 
-          registerBtn.textContent =
+          createAccountBtn.textContent =
             "CREATE ACCOUNT";
 
         }
@@ -1737,19 +1681,15 @@
     );
 
 
-    /* ===================================================
-       INITIAL STATE
-       =================================================== */
-
-    registerBtn.disabled = true;
-
+    // =====================================================
+    // PAGE READY
+    // =====================================================
 
     console.log(
-      "AYNA BOOK — Registration page loaded."
+      "AYNA BOOK — Signup page loaded successfully."
     );
 
   </script>
-
 
 </body>
 
