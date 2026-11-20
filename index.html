@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
 
@@ -16,7 +15,7 @@
 
   <meta
     name="description"
-    content="AYNA BOOK — A modern, secure and global digital social platform."
+    content="AYNA BOOK — Connect • Share • Create • Communicate"
   >
 
   <meta
@@ -24,23 +23,44 @@
     content="index, follow"
   >
 
-  <meta
-    name="application-name"
-    content="AYNA BOOK"
-  >
+  <title>AYNA BOOK — Connect • Share • Create</title>
 
   <link
     rel="manifest"
     href="./manifest.webmanifest"
   >
 
-  <title>AYNA BOOK</title>
+  <link
+    rel="icon"
+    href="./icon-192.png"
+    type="image/png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="./icon-192.png"
+  >
 
   <style>
-
     /* =====================================================
-       RESET
+       AYNA BOOK
+       MAIN INDEX PAGE
+       Navy + White + Gold
        ===================================================== */
+
+    :root {
+      --navy: #0A0F1E;
+      --navy2: #10182A;
+      --card: #1A2233;
+      --card2: #202A3D;
+      --white: #FFFFFF;
+      --muted: #A9B0BC;
+      --gold: #FFD700;
+      --green: #22C55E;
+      --red: #EF4444;
+      --blue: #38BDF8;
+      --shadow: rgba(0, 0, 0, 0.45);
+    }
 
     * {
       box-sizing: border-box;
@@ -48,500 +68,821 @@
       padding: 0;
     }
 
-
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
+    html {
+      scroll-behavior: smooth;
     }
 
-
     body {
-
       min-height: 100vh;
-
-      background: #0A0F1E;
-
-      color: #FFFFFF;
-
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-      overflow-x: hidden;
-    }
-
-
-    /* =====================================================
-       BACKGROUND
-       ===================================================== */
-
-    .background {
-
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 0;
-
-      pointer-events: none;
-
-      overflow: hidden;
-
       background:
         radial-gradient(
-          circle at 50% 35%,
-          rgba(255, 215, 0, 0.07),
-          transparent 38%
+          circle at top,
+          #17223A 0%,
+          var(--navy) 45%,
+          #060A14 100%
         );
+      color: var(--white);
+      font-family:
+        Arial,
+        "Noto Sans Bengali",
+        sans-serif;
+      line-height: 1.6;
     }
 
-
-    .circle {
-
-      position: absolute;
-
-      width: 280px;
-      height: 280px;
-
-      border: 1px solid
-        rgba(255, 215, 0, 0.08);
-
-      border-radius: 50%;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-
-    .circle.one {
-
-      top: -150px;
-      left: -130px;
-
-      animation:
-        rotateOne 25s linear infinite;
+    button {
+      font: inherit;
     }
-
-
-    .circle.two {
-
-      right: -150px;
-      bottom: -140px;
-
-      animation:
-        rotateTwo 30s linear infinite;
-    }
-
-
-    @keyframes rotateOne {
-
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-
-    @keyframes rotateTwo {
-
-      from {
-        transform: rotate(360deg);
-      }
-
-      to {
-        transform: rotate(0deg);
-      }
-    }
-
 
     /* =====================================================
-       PAGE
+       HEADER
        ===================================================== */
 
-    .page {
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
 
-      position: relative;
-
-      z-index: 1;
-
-      width: 100%;
-
-      min-height: 100vh;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 20px;
-    }
-
-
-    /* =====================================================
-       CARD
-       ===================================================== */
-
-    .card {
-
-      width: 100%;
-
-      max-width: 500px;
-
-      padding: 42px 26px;
-
-      background: #0A0F1E;
-
-      border: 1px solid #FFD700;
-
-      border-radius: 26px;
-
-      text-align: center;
-
-      box-shadow:
-        0 0 35px
-        rgba(255, 215, 0, 0.08);
-    }
-
-
-    /* =====================================================
-       LOGO
-       ===================================================== */
-
-    .logo {
-
-      width: 82px;
-      height: 82px;
-
-      margin: 0 auto 24px;
-
-      padding: 14px;
+      height: 68px;
 
       display: grid;
+      grid-template-columns: 60px 1fr 60px;
+      align-items: center;
 
-      grid-template-columns:
-        repeat(2, 1fr);
+      padding: 0 12px;
 
-      gap: 7px;
+      background: rgba(10, 15, 30, 0.96);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.35);
 
-      border:
-        2px solid #FFD700;
-
-      border-radius: 22px;
-
-      box-shadow:
-        0 0 22px
-        rgba(255, 215, 0, 0.10);
+      backdrop-filter: blur(12px);
     }
 
+    /* Four-square dashboard icon */
 
-    .logo span {
+    .dashboard-icon {
+      width: 42px;
+      height: 42px;
 
-      display: block;
+      display: grid;
+      grid-template-columns: repeat(2, 10px);
+      grid-template-rows: repeat(2, 10px);
+      gap: 5px;
 
-      background: #FFFFFF;
+      align-content: center;
+      justify-content: center;
 
-      border-radius: 5px;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      border-radius: 10px;
+
+      background: var(--card);
+
+      cursor: pointer;
     }
 
+    .dashboard-icon span {
+      width: 10px;
+      height: 10px;
+      background: var(--white);
+      border-radius: 2px;
+    }
 
-    /* =====================================================
-       TITLE
-       ===================================================== */
+    .brand {
+      text-align: center;
 
-    .title {
-
-      color: #FFFFFF;
-
-      font-size:
-        clamp(30px, 8vw, 46px);
-
+      font-size: 20px;
       font-weight: 800;
+      letter-spacing: 2px;
 
-      letter-spacing: 4px;
+      color: var(--white);
 
-      line-height: 1.2;
-
-      margin-bottom: 12px;
+      white-space: nowrap;
     }
 
+    /* RIGHT-SIDE WHITE GLOWING STAR */
 
-    .subtitle {
+    .header-star {
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-      max-width: 390px;
+      font-size: 17px;
+      color: var(--white);
 
-      margin: 0 auto 25px;
+      text-shadow:
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 18px rgba(255,255,255,0.8);
 
-      color: #A9B0BC;
-
-      font-size: 14px;
-
-      line-height: 1.7;
+      animation: starPulse 1s ease-in-out infinite;
     }
 
-
-    /* =====================================================
-       STAR
-       ===================================================== */
-
-    .star {
-
-      width: 16px;
-      height: 16px;
-
-      margin:
-        0 auto 30px;
-
-      background: #FFFFFF;
-
-      clip-path:
-        polygon(
-          50% 0%,
-          61% 39%,
-          100% 50%,
-          61% 61%,
-          50% 100%,
-          39% 61%,
-          0% 50%,
-          39% 39%
-        );
-
-      animation:
-        pulseStar 1s ease-in-out infinite;
-    }
-
-
-    @keyframes pulseStar {
-
-      0%,
-      100% {
-
-        transform: scale(0.85);
-
-        opacity: 0.55;
+    @keyframes starPulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.75;
       }
 
       50% {
-
-        transform: scale(1.3);
-
+        transform: scale(1.18);
         opacity: 1;
+      }
 
-        filter:
-          drop-shadow(
-            0 0 8px #FFFFFF
-          );
+      100% {
+        transform: scale(1);
+        opacity: 0.75;
       }
     }
 
-
     /* =====================================================
-       BUTTONS
+       TOP NAVIGATION
        ===================================================== */
 
-    .buttons {
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
 
-      width: 100%;
+      padding: 12px;
 
-      display: grid;
-
-      gap: 14px;
+      background: rgba(10, 15, 30, 0.75);
     }
 
+    .nav a {
+      padding: 8px 13px;
 
-    .button {
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      border-radius: 20px;
 
+      color: var(--white);
+      font-size: 14px;
+
+      background: rgba(26, 34, 51, 0.8);
+
+      transition: 0.2s;
+    }
+
+    .nav a:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    /* =====================================================
+       NEWS BAR
+       ===================================================== */
+
+    .news-bar {
       width: 100%;
 
-      min-height: 58px;
+      padding: 9px 14px;
 
+      background: #121A2B;
+
+      border-top: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,215,0,0.2);
+
+      overflow: hidden;
+    }
+
+    .news-inner {
       display: flex;
-
       align-items: center;
+      gap: 10px;
+    }
 
-      justify-content: center;
+    .news-label {
+      flex-shrink: 0;
 
-      text-decoration: none;
+      padding: 3px 8px;
 
-      border-radius: 14px;
+      border-radius: 5px;
 
-      font-size: 16px;
+      color: #000;
+      background: var(--gold);
 
+      font-size: 12px;
       font-weight: 800;
+    }
+
+    .news-text {
+      color: var(--muted);
+      font-size: 13px;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    /* =====================================================
+       MAIN
+       ===================================================== */
+
+    main {
+      width: min(1100px, 94%);
+      margin: 0 auto;
+      padding: 25px 0 50px;
+    }
+
+    /* =====================================================
+       HERO
+       ===================================================== */
+
+    .hero {
+      text-align: center;
+
+      padding: 45px 18px 35px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+
+      padding: 6px 13px;
+      margin-bottom: 15px;
+
+      border: 1px solid rgba(255,215,0,0.4);
+      border-radius: 20px;
+
+      color: var(--gold);
+      background: rgba(255,215,0,0.06);
+
+      font-size: 13px;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 7vw, 58px);
+      line-height: 1.1;
 
       letter-spacing: 2px;
 
+      margin-bottom: 15px;
+    }
+
+    .hero h1 span {
+      color: var(--gold);
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin: auto;
+
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    /* =====================================================
+       LOGIN / REGISTER
+       ===================================================== */
+
+    .auth-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      margin-top: 28px;
+    }
+
+    .btn {
+      min-width: 150px;
+
+      padding: 13px 20px;
+
+      border-radius: 9px;
+
+      font-weight: 800;
+
+      text-align: center;
+
+      cursor: pointer;
+
       transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+        transform 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
     }
 
-
-    .button:active {
-
-      transform: scale(0.97);
-    }
-
-
-    /* LOGIN */
-
-    .login {
-
-      background: #FFFFFF;
-
-      color: #0A0F1E;
-
-      border: 1px solid #FFFFFF;
-    }
-
-
-    .login:hover {
-
+    .btn:hover {
       transform: translateY(-2px);
-
-      box-shadow:
-        0 0 25px
-        rgba(255, 255, 255, 0.18);
     }
 
+    .btn-login {
+      color: var(--white);
+      background: var(--card);
 
-    /* REGISTER */
-
-    .register {
-
-      background: transparent;
-
-      color: #FFFFFF;
-
-      border: 1px solid #FFD700;
+      border: 1px solid var(--gold);
     }
 
+    .btn-register {
+      color: #000;
+      background: var(--gold);
 
-    .register:hover {
+      border: 1px solid var(--gold);
 
-      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(255,215,0,0.15);
+    }
+
+    /* =====================================================
+       CLOCK
+       ===================================================== */
+
+    .clock-card {
+      margin: 10px auto 25px;
+
+      max-width: 430px;
+
+      padding: 15px;
+
+      text-align: center;
+
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 14px;
+
+      background: rgba(26,34,51,0.8);
+    }
+
+    .clock-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    #liveClock {
+      margin-top: 3px;
+
+      color: var(--gold);
+
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    #liveDate {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =====================================================
+       ACCOUNT CATEGORY
+       ===================================================== */
+
+    .section-title {
+      margin: 38px 0 18px;
+
+      text-align: center;
+
+      font-size: 25px;
+    }
+
+    .section-title span {
+      color: var(--gold);
+    }
+
+    .account-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+
+      gap: 16px;
+    }
+
+    .account-card {
+      position: relative;
+
+      padding: 22px;
 
       background:
-        rgba(255, 215, 0, 0.08);
+        linear-gradient(
+          145deg,
+          rgba(32,42,61,0.98),
+          rgba(20,28,44,0.98)
+        );
 
-      box-shadow:
-        0 0 25px
-        rgba(255, 215, 0, 0.14);
+      border: 1px solid rgba(255,215,0,0.28);
+      border-radius: 16px;
+
+      box-shadow: 0 10px 30px var(--shadow);
+
+      transition: 0.2s;
     }
 
+    .account-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+    }
+
+    .account-card.featured {
+      border-color: var(--gold);
+    }
+
+    .account-badge {
+      position: absolute;
+
+      top: 12px;
+      right: 12px;
+
+      padding: 3px 7px;
+
+      border-radius: 10px;
+
+      color: #000;
+      background: var(--gold);
+
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .account-icon {
+      font-size: 31px;
+      margin-bottom: 8px;
+    }
+
+    .account-card h3 {
+      font-size: 21px;
+      margin-bottom: 5px;
+    }
+
+    .account-price {
+      color: var(--gold);
+
+      font-size: 21px;
+      font-weight: 800;
+
+      margin-bottom: 10px;
+    }
+
+    .account-card p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .account-card ul {
+      margin: 15px 0 0 18px;
+
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .account-card li {
+      margin-bottom: 5px;
+    }
+
+    .select-account {
+      width: 100%;
+
+      margin-top: 17px;
+      padding: 10px;
+
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+
+      color: var(--white);
+      background: transparent;
+
+      cursor: pointer;
+    }
+
+    .select-account:hover {
+      color: #000;
+      background: var(--gold);
+    }
+
+    /* =====================================================
+       PAYMENT INFO
+       ===================================================== */
+
+    .payment-section {
+      margin-top: 40px;
+
+      padding: 22px;
+
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 16px;
+
+      background: rgba(26,34,51,0.9);
+    }
+
+    .payment-section h3 {
+      margin-bottom: 8px;
+      color: var(--gold);
+      text-align: center;
+    }
+
+    .payment-note {
+      margin-bottom: 20px;
+
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .payment-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+
+      gap: 12px;
+    }
+
+    .payment-item {
+      padding: 14px;
+
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+
+      background: var(--card2);
+    }
+
+    .payment-item strong {
+      display: block;
+
+      margin-bottom: 5px;
+
+      color: var(--white);
+    }
+
+    .payment-value {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .payment-value span {
+      flex: 1;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      color: var(--gold);
+
+      font-size: 13px;
+    }
+
+    .copy-btn {
+      flex-shrink: 0;
+
+      padding: 6px 9px;
+
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+
+      color: var(--white);
+      background: transparent;
+
+      font-size: 11px;
+
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      color: #000;
+      background: var(--gold);
+    }
+
+    .payment-warning {
+      margin-top: 18px;
+
+      padding: 12px;
+
+      border-left: 3px solid var(--gold);
+
+      color: var(--muted);
+      background: rgba(255,215,0,0.05);
+
+      font-size: 12px;
+    }
+
+    /* =====================================================
+       FEATURES
+       ===================================================== */
+
+    .features {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(150px, 1fr));
+
+      gap: 12px;
+    }
+
+    .feature {
+      min-height: 105px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      padding: 15px;
+
+      text-align: center;
+
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+
+      background: var(--card);
+
+      transition: 0.2s;
+    }
+
+    .feature:hover {
+      border-color: rgba(255,215,0,0.5);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      font-size: 25px;
+      margin-bottom: 5px;
+    }
+
+    .feature span {
+      color: var(--muted);
+      font-size: 12px;
+    }
 
     /* =====================================================
        SECURITY
        ===================================================== */
 
     .security {
+      margin-top: 40px;
 
-      margin-top: 27px;
+      padding: 25px;
 
-      color: #A9B0BC;
+      text-align: center;
 
-      font-size: 12px;
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 15px;
 
-      line-height: 1.7;
+      background: rgba(34,197,94,0.04);
     }
 
-
-    .security strong {
-
-      color: #FFFFFF;
+    .security h3 {
+      margin-bottom: 8px;
+      color: var(--green);
     }
 
+    .security p {
+      color: var(--muted);
+      font-size: 13px;
+    }
 
     /* =====================================================
        FOOTER
        ===================================================== */
 
-    .footer {
+    footer {
+      padding: 30px 15px;
 
-      margin-top: 24px;
+      text-align: center;
 
-      color: #687080;
+      border-top: 1px solid rgba(255,215,0,0.2);
 
-      font-size: 11px;
+      color: var(--muted);
 
-      line-height: 1.6;
+      font-size: 12px;
     }
 
+    footer strong {
+      color: var(--white);
+    }
 
     /* =====================================================
        MOBILE
        ===================================================== */
 
-    @media (max-width: 420px) {
+    @media (max-width: 600px) {
 
-      .page {
-
-        padding: 14px;
+      header {
+        grid-template-columns: 50px 1fr 50px;
+        height: 62px;
       }
 
-
-      .card {
-
-        padding:
-          34px 20px;
-
-        border-radius: 22px;
+      .brand {
+        font-size: 17px;
+        letter-spacing: 1px;
       }
 
-
-      .logo {
-
-        width: 72px;
-        height: 72px;
-
-        padding: 12px;
+      .dashboard-icon {
+        width: 38px;
+        height: 38px;
       }
 
-
-      .title {
-
-        font-size: 30px;
-
-        letter-spacing: 3px;
+      .hero {
+        padding-top: 32px;
       }
 
-
-      .subtitle {
-
-        font-size: 13px;
+      .hero h1 {
+        font-size: 35px;
       }
 
-
-      .button {
-
-        min-height: 56px;
+      .nav {
+        padding: 9px 5px;
       }
 
+      .nav a {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
+      .payment-section {
+        padding: 15px;
+      }
+
+      .account-card {
+        padding: 18px;
+      }
     }
-
   </style>
-
 </head>
-
 
 <body>
 
-
   <!-- ===================================================
-       BACKGROUND
+       HEADER
        =================================================== -->
 
-  <div
-    class="background"
-    aria-hidden="true"
-  >
+  <header>
 
-    <div class="circle one"></div>
+    <a
+      href="./dashboard.html"
+      class="dashboard-icon"
+      aria-label="Dashboard"
+      title="Dashboard"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
 
-    <div class="circle two"></div>
+    <div class="brand">
+      AYNA BOOK
+    </div>
+
+    <div
+      class="header-star"
+      aria-label="AYNA BOOK"
+      title="AYNA BOOK"
+    >
+      ★
+    </div>
+
+  </header>
+
+
+  <!-- ===================================================
+       NAVIGATION
+       =================================================== -->
+
+  <nav class="nav">
+
+    <a href="./index.html">
+      Home
+    </a>
+
+    <a href="./login.html">
+      Login
+    </a>
+
+    <a href="./signup.html">
+      Register
+    </a>
+
+    <a href="./profile.html">
+      Profile
+    </a>
+
+    <a href="./dashboard.html">
+      Dashboard
+    </a>
+
+  </nav>
+
+
+  <!-- ===================================================
+       NEWS
+       =================================================== -->
+
+  <div class="news-bar">
+
+    <div class="news-inner">
+
+      <div class="news-label">
+        AYNA NEWS
+      </div>
+
+      <div class="news-text">
+        AYNA BOOK — Connect • Share • Create • Communicate
+        • নিরাপদ ডিজিটাল সামাজিক প্ল্যাটফর্ম
+      </div>
+
+    </div>
 
   </div>
 
@@ -550,125 +891,771 @@
        MAIN
        =================================================== -->
 
-  <main class="page">
-
-    <section
-      class="card"
-      aria-label="AYNA BOOK"
-    >
+  <main>
 
 
-      <!-- LOGO -->
+    <!-- HERO -->
 
-      <div
-        class="logo"
-        aria-label="AYNA BOOK logo"
-      >
+    <section class="hero">
 
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-
+      <div class="hero-badge">
+        NEXT-GENERATION DIGITAL SOCIAL PLATFORM
       </div>
 
-
-      <!-- TITLE -->
-
-      <h1 class="title">
-        AYNA BOOK
+      <h1>
+        Welcome to
+        <span>AYNA BOOK</span>
       </h1>
 
-
-      <!-- DESCRIPTION -->
-
-      <p class="subtitle">
-
-        A modern, secure and global
-        digital social platform designed
-        to connect people, ideas and
-        communities.
-
+      <p>
+        Connect with people, share your moments,
+        communicate and build your digital community
+        through AYNA BOOK.
       </p>
 
 
-      <!-- STAR -->
-
-      <div
-        class="star"
-        aria-hidden="true"
-      ></div>
-
-
-      <!-- LOGIN / REGISTER -->
-
-      <div class="buttons">
-
+      <div class="auth-buttons">
 
         <a
           href="./login.html"
-          class="button login"
-          aria-label="Login to AYNA BOOK"
+          class="btn btn-login"
         >
           LOGIN
         </a>
 
-
         <a
           href="./signup.html"
-          class="button register"
-          aria-label="Register for AYNA BOOK"
+          class="btn btn-register"
         >
           REGISTER
         </a>
 
-
       </div>
 
+    </section>
 
-      <!-- SECURITY -->
 
-      <p class="security">
+    <!-- =================================================
+         LIVE CLOCK
+         ================================================= -->
 
-        <strong>
-          Privacy • Security • Global Connectivity
-        </strong>
+    <section class="clock-card">
 
-        <br>
+      <div class="clock-label">
+        AYNA BOOK LIVE CLOCK
+      </div>
 
-        Secure account access powered by
-        Firebase Authentication.
+      <div id="liveClock">
+        --:--:--
+      </div>
 
+      <div id="liveDate">
+        Loading...
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ACCOUNT TYPES
+         ================================================= -->
+
+    <h2 class="section-title">
+      Choose Your <span>Account</span>
+    </h2>
+
+
+    <section class="account-grid">
+
+
+      <!-- PERSONAL -->
+
+      <article class="account-card">
+
+        <div class="account-icon">
+          👤
+        </div>
+
+        <h3>
+          Personal
+        </h3>
+
+        <div class="account-price">
+          FREE
+        </div>
+
+        <p>
+          ব্যক্তিগত ব্যবহারকারীদের জন্য।
+        </p>
+
+        <ul>
+          <li>Free Registration</li>
+          <li>Profile</li>
+          <li>Posts</li>
+          <li>Messages</li>
+          <li>Community Features</li>
+        </ul>
+
+        <button
+          class="select-account"
+          type="button"
+          data-account="personal"
+        >
+          SELECT PERSONAL
+        </button>
+
+      </article>
+
+
+      <!-- BUSINESS -->
+
+      <article class="account-card featured">
+
+        <div class="account-badge">
+          BUSINESS
+        </div>
+
+        <div class="account-icon">
+          💼
+        </div>
+
+        <h3>
+          Business
+        </h3>
+
+        <div class="account-price">
+          $10 + BDT
+        </div>
+
+        <p>
+          ব্যবসা ও প্রতিষ্ঠান পরিচালনার জন্য।
+        </p>
+
+        <ul>
+          <li>Business Profile</li>
+          <li>Business Directory</li>
+          <li>Business Communication</li>
+          <li>Advanced Features</li>
+        </ul>
+
+        <button
+          class="select-account"
+          type="button"
+          data-account="business"
+        >
+          SELECT BUSINESS
+        </button>
+
+      </article>
+
+
+      <!-- VIP -->
+
+      <article class="account-card">
+
+        <div class="account-icon">
+          ⭐
+        </div>
+
+        <h3>
+          VIP
+        </h3>
+
+        <div class="account-price">
+          $10 + BDT
+        </div>
+
+        <p>
+          বিশেষ সুবিধা ও উন্নত ব্যবহারকারীদের জন্য।
+        </p>
+
+        <ul>
+          <li>VIP Profile</li>
+          <li>Priority Features</li>
+          <li>Advanced Communication</li>
+          <li>VIP Benefits</li>
+        </ul>
+
+        <button
+          class="select-account"
+          type="button"
+          data-account="vip"
+        >
+          SELECT VIP
+        </button>
+
+      </article>
+
+
+      <!-- VVIP -->
+
+      <article class="account-card featured">
+
+        <div class="account-badge">
+          PREMIUM
+        </div>
+
+        <div class="account-icon">
+          👑
+        </div>
+
+        <h3>
+          VVIP
+        </h3>
+
+        <div class="account-price">
+          $20 + BDT
+        </div>
+
+        <p>
+          সর্বোচ্চ স্তরের বিশেষ সুবিধার জন্য।
+        </p>
+
+        <ul>
+          <li>VVIP Profile</li>
+          <li>Premium Features</li>
+          <li>Priority Support</li>
+          <li>Advanced Services</li>
+        </ul>
+
+        <button
+          class="select-account"
+          type="button"
+          data-account="vvip"
+        >
+          SELECT VVIP
+        </button>
+
+      </article>
+
+    </section>
+
+
+    <!-- =================================================
+         PAYMENT INFORMATION
+         ================================================= -->
+
+    <section class="payment-section">
+
+      <h3>
+        💳 Payment Information
+      </h3>
+
+      <p class="payment-note">
+        Paid account-এর জন্য পেমেন্ট করার পর
+        AYNA BOOK কর্তৃপক্ষ Payment Verification করবে।
       </p>
 
 
-      <!-- FOOTER -->
+      <div class="payment-grid">
 
-      <div class="footer">
 
-        © 2026 AYNA BOOK
+        <!-- BKASH -->
 
-        <br>
+        <div class="payment-item">
 
-        Building a future-ready digital world.
+          <strong>
+            bKash — Bangladesh
+          </strong>
+
+          <div class="payment-value">
+
+            <span id="bkashNumber">
+              01400751906
+            </span>
+
+            <button
+              type="button"
+              class="copy-btn"
+              data-copy="01400751906"
+            >
+              COPY
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- NAGAD -->
+
+        <div class="payment-item">
+
+          <strong>
+            Nagad — Bangladesh
+          </strong>
+
+          <div class="payment-value">
+
+            <span>
+              01400751906
+            </span>
+
+            <button
+              type="button"
+              class="copy-btn"
+              data-copy="01400751906"
+            >
+              COPY
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ROCKET -->
+
+        <div class="payment-item">
+
+          <strong>
+            Rocket — Bangladesh
+          </strong>
+
+          <div class="payment-value">
+
+            <span>
+              01400751906
+            </span>
+
+            <button
+              type="button"
+              class="copy-btn"
+              data-copy="01400751906"
+            >
+              COPY
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- UPAY -->
+
+        <div class="payment-item">
+
+          <strong>
+            Upay — Bangladesh
+          </strong>
+
+          <div class="payment-value">
+
+            <span>
+              01400751906
+            </span>
+
+            <button
+              type="button"
+              class="copy-btn"
+              data-copy="01400751906"
+            >
+              COPY
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- PAYPAL -->
+
+        <div class="payment-item">
+
+          <strong>
+            PayPal — International
+          </strong>
+
+          <div class="payment-value">
+
+            <span>
+              aynabookofficeal@gmail.com
+            </span>
+
+            <button
+              type="button"
+              class="copy-btn"
+              data-copy="aynabookofficeal@gmail.com"
+            >
+              COPY
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- PAYONEER -->
+
+        <div class="payment-item">
+
+          <strong>
+            Payoneer — International
+          </strong>
+
+          <div class="payment-value">
+
+            <span>
+              aynabookofficeal@gmail.com
+            </span>
+
+            <button
+              type="button"
+              class="copy-btn"
+              data-copy="aynabookofficeal@gmail.com"
+            >
+              COPY
+            </button>
+
+          </div>
+
+        </div>
 
       </div>
 
+
+      <div class="payment-warning">
+
+        ⚠️
+        <strong>নিরাপত্তা:</strong>
+        Personal account-এর জন্য কোনো payment প্রয়োজন নেই।
+        Business, VIP এবং VVIP account-এর ক্ষেত্রে
+        Payment Verification সম্পন্ন হওয়ার আগে
+        Paid account Active হবে না।
+        OTP বা Password কখনো কারও সঙ্গে শেয়ার করবেন না।
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         FEATURES
+         ================================================= -->
+
+    <h2 class="section-title">
+      AYNA BOOK <span>Features</span>
+    </h2>
+
+
+    <section class="features">
+
+      <a class="feature" href="./profile.html">
+        <div class="feature-icon">👤</div>
+        <span>Profile</span>
+      </a>
+
+      <a class="feature" href="./dashboard.html">
+        <div class="feature-icon">🏠</div>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="feature" href="./chat.html">
+        <div class="feature-icon">💬</div>
+        <span>Messages</span>
+      </a>
+
+      <div class="feature">
+        <div class="feature-icon">📝</div>
+        <span>Posts</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">📷</div>
+        <span>Photos & Videos</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">👥</div>
+        <span>Groups</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🔔</div>
+        <span>Notifications</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">📞</div>
+        <span>Audio Call</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🎥</div>
+        <span>Video Call</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🌍</div>
+        <span>World Community</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🏢</div>
+        <span>Business Directory</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">📰</div>
+        <span>Global News</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">📻</div>
+        <span>Live Radio</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">📺</div>
+        <span>Live TV</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🌐</div>
+        <span>Worldwide Languages</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🎂</div>
+        <span>Birthday Greetings</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🔳</div>
+        <span>Profile QR Code</span>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🚨</div>
+        <span>150 Alert Categories</span>
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         SECURITY
+         ================================================= -->
+
+    <section class="security">
+
+      <h3>
+        🔐 Security & Privacy
+      </h3>
+
+      <p>
+        AYNA BOOK-এ Account Registration,
+        Login, Password, SMS OTP,
+        Payment Verification এবং
+        Privacy Controls আলাদাভাবে নিরাপদভাবে
+        পরিচালনার জন্য ব্যবস্থা তৈরি করা হবে।
+      </p>
 
     </section>
 
   </main>
 
 
-  <!--
-    Service Worker ইচ্ছাকৃতভাবে এখানে
-    register করা হয়নি।
+  <!-- ===================================================
+       FOOTER
+       =================================================== -->
 
-    প্রথমে index.html ঠিকভাবে দেখা যাচ্ছে
-    কি না পরীক্ষা করা হবে।
-  -->
+  <footer>
+
+    <strong>
+      AYNA BOOK
+    </strong>
+
+    <br>
+
+    Connect • Share • Create • Communicate
+
+    <br><br>
+
+    © 2026 AYNA BOOK. All rights reserved.
+
+  </footer>
+
+
+  <!-- ===================================================
+       JAVASCRIPT
+       =================================================== -->
+
+  <script>
+
+    /* =====================================================
+       LIVE CLOCK
+       ===================================================== */
+
+    function updateClock() {
+
+      const clock =
+        document.getElementById("liveClock");
+
+      const date =
+        document.getElementById("liveDate");
+
+      if (!clock || !date) {
+        return;
+      }
+
+      const now = new Date();
+
+      clock.textContent =
+        now.toLocaleTimeString(
+          "en-BD",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          }
+        );
+
+      date.textContent =
+        now.toLocaleDateString(
+          "bn-BD",
+          {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          }
+        );
+    }
+
+    updateClock();
+
+    setInterval(
+      updateClock,
+      1000
+    );
+
+
+    /* =====================================================
+       COPY PAYMENT ACCOUNT
+       ===================================================== */
+
+    document
+      .querySelectorAll("[data-copy]")
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          async () => {
+
+            const value =
+              button.getAttribute("data-copy");
+
+            if (!value) {
+              return;
+            }
+
+            try {
+
+              await navigator.clipboard.writeText(value);
+
+              const oldText =
+                button.textContent;
+
+              button.textContent =
+                "COPIED ✓";
+
+              setTimeout(() => {
+                button.textContent = oldText;
+              }, 1500);
+
+            } catch (error) {
+
+              /* Clipboard fallback */
+
+              const textarea =
+                document.createElement("textarea");
+
+              textarea.value = value;
+
+              textarea.style.position = "fixed";
+              textarea.style.opacity = "0";
+
+              document.body.appendChild(textarea);
+
+              textarea.select();
+
+              try {
+                document.execCommand("copy");
+
+                button.textContent =
+                  "COPIED ✓";
+
+                setTimeout(() => {
+                  button.textContent = "COPY";
+                }, 1500);
+
+              } catch (copyError) {
+
+                alert(
+                  "Copy করা যায়নি। নম্বরটি হাতে Copy করুন:\n\n"
+                  + value
+                );
+
+              }
+
+              textarea.remove();
+            }
+
+          }
+        );
+
+      });
+
+
+    /* =====================================================
+       ACCOUNT SELECTION
+       ===================================================== */
+
+    document
+      .querySelectorAll(".select-account")
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const account =
+              button.dataset.account;
+
+            try {
+
+              sessionStorage.setItem(
+                "AYNA_BOOK_SELECTED_ACCOUNT",
+                account
+              );
+
+            } catch (error) {
+
+              console.warn(
+                "Session storage unavailable.",
+                error
+              );
+
+            }
+
+            /*
+              পরের ধাপে account-types.js
+              এই selection ব্যবহার করবে।
+            */
+
+            window.location.href =
+              "./signup.html?account="
+              + encodeURIComponent(account);
+
+          }
+        );
+
+      });
+
+  </script>
 
 
 </body>
-
 </html>
