@@ -1,3 +1,4 @@
+
 rules_version = '2';
 
 service firebase.storage {
@@ -17,78 +18,59 @@ service firebase.storage {
         && request.auth.uid == uid;
     }
 
+    function validImage(maxSize) {
+      return request.resource != null
+        && request.resource.size <= maxSize
+        && request.resource.contentType.matches(
+          'image/(jpeg|png|webp)'
+        );
+    }
 
     // =====================================================
     // USER PROFILE PHOTOS
-    // Path:
-    // /users/{uid}/profile/{fileName}
+    // Path: users/{uid}/profile/{fileName}
     // =====================================================
 
     match /users/{uid}/profile/{fileName} {
 
-      // Owner can upload / replace profile photo
-      allow write:
-        if isOwner(uid)
-        && request.resource != null
-        && request.resource.size <= 5 * 1024 * 1024
-        && request.resource.contentType.matches(
-             'image/.*'
-           );
+      allow write: if isOwner(uid)
+        && validImage(5 * 1024 * 1024);
 
-      // Profile photos can be viewed by signed-in users
-      allow read:
-        if signedIn();
+      allow read: if signedIn();
     }
-
 
     // =====================================================
     // USER POST IMAGES
-    // Path:
-    // /users/{uid}/posts/{fileName}
+    // Path: users/{uid}/posts/{fileName}
     // =====================================================
 
     match /users/{uid}/posts/{fileName} {
 
-      allow write:
-        if isOwner(uid)
-        && request.resource != null
-        && request.resource.size <= 10 * 1024 * 1024
-        && request.resource.contentType.matches(
-             'image/.*'
-           );
+      allow write: if isOwner(uid)
+        && validImage(10 * 1024 * 1024);
 
-      allow read:
-        if signedIn();
+      allow read: if signedIn();
     }
-
 
     // =====================================================
     // USER FILES
-    // Path:
-    // /users/{uid}/files/{fileName}
     // =====================================================
 
     match /users/{uid}/files/{fileName} {
 
-      allow write:
-        if isOwner(uid)
+      allow write: if isOwner(uid)
         && request.resource != null
         && request.resource.size <= 10 * 1024 * 1024;
 
-      allow read:
-        if isOwner(uid);
+      allow read: if isOwner(uid);
     }
-
 
     // =====================================================
     // DEFAULT DENY
     // =====================================================
 
     match /{allPaths=**} {
-
-      allow read, write:
-        if false;
-
+      allow read, write: if false;
     }
 
   }
