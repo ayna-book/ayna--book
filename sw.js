@@ -1,205 +1,196 @@
-/* =========================================================
-   AYNA BOOK
-   Service Worker
-   Version: 6.0
-   ========================================================= */
+'use strict';
 
-const CACHE_NAME = "ayna-book-cache-v6";
+// =========================================================
+// AYNA BOOK
+// SERVICE WORKER
+// Version: 1.0.0
+// =========================================================
 
-const APP_FILES = [
+const CACHE_NAME = "ayna-book-v1.0.0";
+
+const APP_SHELL = [
   "./",
   "./index.html",
   "./login.html",
   "./signup.html",
   "./forgot-password.html",
-  "./dashboard.html",
   "./profile.html",
-
-  "./styles.css",
-  "./ayna-ui-patch.css",
-
-  "./app.js",
-  "./auth.js",
-  "./firebase.js",
-  "./firebase-init.js",
-  "./firebase-config.js",
-  "./login.js",
-
-  "./manifest.webmanifest",
-  "./version.json"
+  "./manifest.json"
 ];
 
-/* =========================================================
-   INSTALL
-   ========================================================= */
+
+// =========================================================
+// INSTALL
+// =========================================================
 
 self.addEventListener("install", (event) => {
+
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(APP_FILES))
-      .then(() => self.skipWaiting())
-  );
-});
-
-
-/* =========================================================
-   ACTIVATE
-   পুরোনো Cache মুছে ফেলা
-   ========================================================= */
-
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames
-            .filter((name) => name !== CACHE_NAME)
-            .map((name) => caches.delete(name))
+      .then((cache) => {
+        return cache.addAll(APP_SHELL);
+      })
+      .then(() => {
+        return self.skipWaiting();
+      })
+      .catch((error) => {
+        console.error(
+          "AYNA BOOK Service Worker install error:",
+          error
         );
       })
-      .then(() => self.clients.claim())
   );
+
 });
 
 
-/* =========================================================
-   FETCH
-   ========================================================= */
+// =========================================================
+// ACTIVATE
+// =========================================================
+
+self.addEventListener("activate", (event) => {
+
+  event.waitUntil(
+
+    caches.keys()
+      .then((cacheNames) => {
+
+        return Promise.all(
+
+          cacheNames.map((cacheName) => {
+
+            if (
+              cacheName !== CACHE_NAME
+            ) {
+              return caches.delete(
+                cacheName
+              );
+            }
+
+            return Promise.resolve();
+          })
+
+        );
+
+      })
+      .then(() => {
+        return self.clients.claim();
+      })
+
+  );
+
+});
+
+
+// =========================================================
+// FETCH
+// =========================================================
 
 self.addEventListener("fetch", (event) => {
 
   const request = event.request;
 
-  /* শুধু GET request handle করা হবে */
+  // শুধুমাত্র GET request
   if (request.method !== "GET") {
     return;
   }
 
+  // Firebase / Google CDN request Service Worker
+  // cache করবে না
   const url = new URL(request.url);
 
-  /*
-   * Firebase / Google / external services
-   * Cache করা হবে না।
-   *
-   * এর মধ্যে Firebase Authentication,
-   * Firestore, Storage এবং OTP সম্পর্কিত
-   * network request থাকবে।
-   */
-  const isExternal =
-    url.origin !== self.location.origin;
-
-  if (isExternal) {
+  if (
+    url.hostname.includes("googleapis.com") ||
+    url.hostname.includes("gstatic.com") ||
+    url.hostname.includes("firebaseio.com") ||
+    url.hostname.includes("firebasedatabase.app") ||
+    url.hostname.includes("firebaseapp.com")
+  ) {
     return;
   }
 
-
-  /* =======================================================
-     HTML Navigation
-     Network First
-     ======================================================= */
-
-  if (request.mode === "navigate") {
-
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-
-          if (response && response.ok) {
-            const copy = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(request, copy);
-              });
-          }
-
-          return response;
-        })
-        .catch(() => {
-
-          return caches.match(request)
-            .then((cachedResponse) => {
-
-              if (cachedResponse) {
-                return cachedResponse;
-              }
-
-              return caches.match("./index.html");
-            });
-        })
-    );
-
-    return;
-  }
-
-
-  /* =======================================================
-     Local CSS / JS / Images / Manifest
-     Cache First
-     ======================================================= */
 
   event.respondWith(
 
-    caches.match(request)
-      .then((cachedResponse) => {
+    fetch(request)
 
-        if (cachedResponse) {
-          return cachedResponse;
+      .then((response) => {
+
+        // Valid response হলে cache update
+        if (
+          response &&
+          response.status === 200 &&
+          response.type === "basic"
+        ) {
+
+          const responseClone =
+            response.clone();
+
+          caches.open(CACHE_NAME)
+            .then((cache) => {
+              cache.put(
+                request,
+                responseClone
+              );
+            });
+
         }
 
-        return fetch(request)
-          .then((response) => {
+        return response;
 
-            if (
-              response &&
-              response.ok &&
-              response.type === "basic"
-            ) {
+      })
 
-              const copy = response.clone();
+      .catch(() => {
 
-              caches.open(CACHE_NAME)
-                .then((cache) => {
-                  cache.put(request, copy);
-                });
+        // Internet না থাকলে cache থেকে
+        // আগের ফাইল দেওয়ার চেষ্টা
+        return caches.match(request)
+          .then((cachedResponse) => {
+
+            if (cachedResponse) {
+              return cachedResponse;
             }
 
-            return response;
+            // Navigation request হলে index.html
+            if (
+              request.mode === "navigate"
+            ) {
+              return caches.match(
+                "./index.html"
+              );
+            }
+
+            return new Response(
+              "AYNA BOOK is currently offline.",
+              {
+                status: 503,
+                statusText: "Service Unavailable",
+                headers: {
+                  "Content-Type":
+                    "text/plain; charset=utf-8"
+                }
+              }
+            );
+
           });
 
       })
-      .catch(() => {
 
-        /*
-         * কোনো local resource পাওয়া না গেলে
-         * network error return হবে।
-         */
-        return new Response(
-          "AYNA BOOK — এই ফাইলটি বর্তমানে পাওয়া যাচ্ছে না।",
-          {
-            status: 503,
-            headers: {
-              "Content-Type": "text/plain; charset=utf-8"
-            }
-          }
-        );
-      })
   );
 
 });
 
 
-/* =========================================================
-   MESSAGE
-   ========================================================= */
+// =========================================================
+// MESSAGE
+// =========================================================
 
 self.addEventListener("message", (event) => {
 
-  if (!event.data) {
-    return;
-  }
-
-  if (event.data.type === "SKIP_WAITING") {
+  if (
+    event.data &&
+    event.data.type === "SKIP_WAITING"
+  ) {
     self.skipWaiting();
   }
 
