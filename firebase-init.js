@@ -1,3 +1,4 @@
+
 // =========================================================
 // AYNA BOOK
 // Firebase Initialization
@@ -28,53 +29,52 @@ import {
   getStorage
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-
 // =========================================================
-// FIREBASE APP
-// =========================================================
-
-export const app =
-  getApps().length > 0
-    ? getApp()
-    : initializeApp(firebaseConfig);
-
-
-// =========================================================
-// FIREBASE AUTHENTICATION
+// FIREBASE APP INITIALIZATION
 // =========================================================
 
-export const auth =
-  getAuth(app);
+export const app = getApps().length
+  ? getApp()
+  : initializeApp(firebaseConfig);
 
+// =========================================================
+// AUTHENTICATION
+// =========================================================
+
+export const auth = getAuth(app);
 
 // =========================================================
 // CLOUD FIRESTORE
 // =========================================================
 
-export const db =
-  getFirestore(app);
-
+export const db = getFirestore(app);
 
 // =========================================================
 // REALTIME DATABASE
 // =========================================================
 
-export const database =
-  getDatabase(app);
-
+export const database = getDatabase(app);
 
 // =========================================================
 // FIREBASE STORAGE
 // =========================================================
 
-export const storage =
-  getStorage(app);
-
+export const storage = getStorage(app);
 
 // =========================================================
-// READY
+// INITIALIZATION STATUS
 // =========================================================
+
+console.log("AYNA BOOK Firebase initialized.");
+
+console.log("Project ID:", app.options.projectId);
 
 console.log(
-  "AYNA BOOK — Firebase initialized successfully."
+  "Database URL:",
+  app.options.databaseURL || "DATABASE URL NOT CONFIGURED"
 );
+
+console.log("Authentication:", !!auth);
+console.log("Firestore:", !!db);
+console.log("Realtime Database:", !!database);
+console.log("Storage:", !!storage);
