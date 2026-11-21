@@ -141,7 +141,6 @@
       text-decoration: underline;
     }
 
-    /* মোবাইলে সম্পূর্ণ edge-to-edge ফুল স্ক্রিন লুক চাইলে */
     @media (max-width: 520px) {
       .page-wrapper {
         padding: 0;
@@ -206,13 +205,13 @@
     import { getDatabase, ref, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
+      apiKey: "YOUR_WEB_API_KEY",
       authDomain: "ayna-book.firebaseapp.com",
       databaseURL: "https://ayna-book-default-rtdb.firebaseio.com",
       projectId: "ayna-book",
       storageBucket: "ayna-book.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      messagingSenderId: "805601138500",
+      appId: "YOUR_WEB_APP_ID"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -225,6 +224,7 @@
 
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const fullName = document.getElementById("fullName").value.trim();
       const email = document.getElementById("email").value.trim();
       const country = document.getElementById("country").value.trim();
@@ -261,6 +261,7 @@
 
         statusMsg.style.color = "#4ade80";
         statusMsg.textContent = `Success! Your AYNA ID: ${aynaId}. Redirecting to Dashboard...`;
+
         setTimeout(() => {
           window.location.href = "dashboard.html";
         }, 1800);
