@@ -1,3 +1,4 @@
+
 // =========================================================
 // AYNA BOOK
 // FORGOT PASSWORD CONTROLLER
@@ -59,10 +60,13 @@ function setLoading(isLoading) {
 
   if (isLoading) {
 
-    resetButton.disabled = true;
+    if (!resetButton.disabled) {
 
-    resetButton.dataset.originalText =
-      resetButton.textContent;
+      resetButton.dataset.originalText =
+        resetButton.textContent;
+    }
+
+    resetButton.disabled = true;
 
     resetButton.textContent =
       "Sending...";
@@ -104,9 +108,16 @@ function validateEmail(email) {
     };
   }
 
+  if (email.length > 254) {
+
+    return {
+      valid: false,
+      message: "Gmail Address অনেক বড়।"
+    };
+  }
 
   if (
-    !/^[^\s@]+@gmail\.com$/i.test(email)
+    !/^[a-z0-9._%+-]+@gmail\.com$/i.test(email)
   ) {
 
     return {
@@ -116,10 +127,67 @@ function validateEmail(email) {
     };
   }
 
-
   return {
     valid: true
   };
+}
+
+
+// =========================================================
+// FIREBASE ERROR MESSAGE
+// =========================================================
+
+function getResetErrorMessage(error) {
+
+  switch (error?.code) {
+
+    case "auth/invalid-email":
+
+      return {
+        message: "Gmail Address সঠিক নয়।",
+        type: "error"
+      };
+
+    case "auth/too-many-requests":
+
+      return {
+        message:
+          "অনেকবার Reset Link চাওয়া হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।",
+        type: "warning"
+      };
+
+    case "auth/network-request-failed":
+
+      return {
+        message:
+          "Internet Connection পরীক্ষা করে আবার চেষ্টা করুন।",
+        type: "error"
+      };
+
+    case "auth/user-disabled":
+
+      return {
+        message:
+          "এই Account বর্তমানে ব্যবহার করা যাচ্ছে না।",
+        type: "error"
+      };
+
+    case "auth/operation-not-allowed":
+
+      return {
+        message:
+          "Firebase-এ Password Reset সুবিধা চালু নেই।",
+        type: "error"
+      };
+
+    default:
+
+      return {
+        message:
+          getAuthErrorMessage(error),
+        type: "error"
+      };
+  }
 }
 
 
@@ -129,15 +197,19 @@ function validateEmail(email) {
 
 async function handlePasswordReset() {
 
-  const email =
-    normalizeEmail(
-      emailInput?.value
-    );
+  if (!form || !emailInput || !resetButton) {
+    return;
+  }
 
+  if (resetButton.disabled) {
+    return;
+  }
+
+  const email =
+    normalizeEmail(emailInput.value);
 
   const validation =
     validateEmail(email);
-
 
   if (!validation.valid) {
 
@@ -146,18 +218,17 @@ async function handlePasswordReset() {
       "error"
     );
 
+    emailInput.focus();
+
     return;
   }
 
-
   setLoading(true);
 
-
   showStatus(
-    "Password Reset Link পাঠানো হচ্ছে...",
+    "Password Reset Link পাঠানোর অনুরোধ করা হচ্ছে...",
     "info"
   );
-
 
   try {
 
@@ -167,22 +238,16 @@ async function handlePasswordReset() {
 
     await resetPassword(email);
 
-
     // =====================================================
     // SUCCESS
     // =====================================================
 
     showStatus(
-      "✅ Password Reset Link আপনার Gmail-এ পাঠানো হয়েছে। Gmail Inbox এবং Spam/Junk folder পরীক্ষা করুন।",
+      "যদি এই Gmail দিয়ে AYNA BOOK Account থাকে, তাহলে Password Reset Link পাঠানো হবে। Gmail Inbox এবং Spam/Junk folder পরীক্ষা করুন।",
       "success"
     );
 
-
-    // Email field পরিষ্কার
-    if (emailInput) {
-      emailInput.value = "";
-    }
-
+    emailInput.value = "";
 
   } catch (error) {
 
@@ -191,90 +256,12 @@ async function handlePasswordReset() {
       error
     );
 
-
-    // =====================================================
-    // USER NOT FOUND
-    // =====================================================
-
-    if (
-      error?.code ===
-      "auth/user-not-found"
-    ) {
-
-      showStatus(
-        "এই Gmail দিয়ে কোনো AYNA BOOK Account পাওয়া যায়নি।",
-        "error"
-      );
-
-      return;
-    }
-
-
-    // =====================================================
-    // INVALID EMAIL
-    // =====================================================
-
-    if (
-      error?.code ===
-      "auth/invalid-email"
-    ) {
-
-      showStatus(
-        "Gmail Address সঠিক নয়।",
-        "error"
-      );
-
-      return;
-    }
-
-
-    // =====================================================
-    // TOO MANY REQUESTS
-    // =====================================================
-
-    if (
-      error?.code ===
-      "auth/too-many-requests"
-    ) {
-
-      showStatus(
-        "⚠️ অনেকবার Reset Link চাওয়া হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।",
-        "warning"
-      );
-
-      return;
-    }
-
-
-    // =====================================================
-    // NETWORK ERROR
-    // =====================================================
-
-    if (
-      error?.code ===
-      "auth/network-request-failed"
-    ) {
-
-      showStatus(
-        "❌ Internet Connection পরীক্ষা করুন।",
-        "error"
-      );
-
-      return;
-    }
-
-
-    // =====================================================
-    // DEFAULT ERROR
-    // =====================================================
-
-    const friendlyMessage =
-      getAuthErrorMessage(error);
-
+    const result =
+      getResetErrorMessage(error);
 
     showStatus(
-      `❌ ${friendlyMessage}`,
-      "error"
+      result.message,
+      result.type
     );
 
   } finally {
@@ -302,6 +289,11 @@ if (form) {
     }
   );
 
+} else {
+
+  console.error(
+    "AYNA BOOK: forgotPasswordForm not found."
+  );
 }
 
 
@@ -310,7 +302,7 @@ if (form) {
 // =========================================================
 
 showStatus(
-  "আপনার Verified Gmail Address দিন।",
+  "আপনার AYNA BOOK Account-এর Gmail Address দিন।",
   "info"
 );
 
