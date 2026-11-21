@@ -1,7 +1,14 @@
+
 // =========================================================
 // AYNA BOOK
-// SIGNUP / REGISTRATION
+// SIGNUP / REGISTRATION — DIAGNOSTIC VERSION
 // Firebase SDK: 13.4.0
+//
+// Purpose:
+// 1. Detect exact registration step
+// 2. Prevent infinite CREATING ACCOUNT... state
+// 3. Detect Firestore / Verification timeout
+// 4. Preserve existing registration architecture
 // =========================================================
 
 import { auth, db } from "./firebase.js";
@@ -32,6 +39,9 @@ const ALLOWED_PHOTO_TYPES = [
   "image/webp"
 ];
 
+// Maximum time allowed for a Firebase operation
+const OPERATION_TIMEOUT = 20000;
+
 
 // =========================================================
 // DOM
@@ -59,13 +69,21 @@ const photoPreview =
 
 function showStatus(message, type = "info") {
 
-  if (!statusMessage) return;
+  if (!statusMessage) {
+    console.warn("statusMessage element not found.");
+    return;
+  }
 
   statusMessage.textContent = message;
 
-  statusMessage.className = `status-message ${type}`;
+  statusMessage.className =
+    `status-message ${type}`;
 
   statusMessage.style.display = "block";
+
+  console.log(
+    `[AYNA BOOK STATUS] ${message}`
+  );
 }
 
 
@@ -75,7 +93,12 @@ function showStatus(message, type = "info") {
 
 function setLoading(isLoading) {
 
-  if (!registerButton) return;
+  if (!registerButton) {
+    console.warn(
+      "registerButton element not found."
+    );
+    return;
+  }
 
   registerButton.disabled = isLoading;
 
@@ -87,12 +110,52 @@ function setLoading(isLoading) {
 
 
 // =========================================================
+// TIMEOUT HELPER
+// =========================================================
+
+function withTimeout(
+  promise,
+  timeoutMs,
+  operationName
+) {
+
+  return Promise.race([
+
+    promise,
+
+    new Promise((_, reject) => {
+
+      setTimeout(() => {
+
+        const error =
+          new Error(
+            `${operationName} timed out after ${timeoutMs / 1000} seconds.`
+          );
+
+        error.code =
+          "ayna/operation-timeout";
+
+        error.operation =
+          operationName;
+
+        reject(error);
+
+      }, timeoutMs);
+
+    })
+
+  ]);
+}
+
+
+// =========================================================
 // VALUE HELPERS
 // =========================================================
 
 function getValue(id) {
 
-  const element = document.getElementById(id);
+  const element =
+    document.getElementById(id);
 
   return element
     ? element.value.trim()
@@ -106,7 +169,8 @@ function getValue(id) {
 
 function validateGmail(email) {
 
-  return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(email);
+  return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i
+    .test(email);
 }
 
 
@@ -116,17 +180,22 @@ function validateGmail(email) {
 
 function normalizePhone(phone) {
 
-  let value = phone.replace(/\s+/g, "");
+  let value =
+    phone.replace(/\s+/g, "");
 
   if (/^01\d{9}$/.test(value)) {
-    return "+880" + value.substring(1);
+
+    return "+880" +
+      value.substring(1);
   }
 
   if (/^8801\d{9}$/.test(value)) {
+
     return "+" + value;
   }
 
   if (/^\+8801\d{9}$/.test(value)) {
+
     return value;
   }
 
@@ -140,8 +209,10 @@ function normalizePhone(phone) {
 
 function validatePassword(password) {
 
-  return typeof password === "string" &&
-         password.length >= 11;
+  return (
+    typeof password === "string" &&
+    password.length >= 11
+  );
 }
 
 
@@ -152,13 +223,17 @@ function validatePassword(password) {
 function validatePhoto(file) {
 
   if (!file) {
+
     return {
       valid: true,
       message: ""
     };
   }
 
-  if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+  if (
+    !ALLOWED_PHOTO_TYPES
+      .includes(file.type)
+  ) {
 
     return {
       valid: false,
@@ -189,54 +264,77 @@ function validatePhoto(file) {
 
 if (profilePhoto) {
 
-  profilePhoto.addEventListener("change", () => {
+  profilePhoto.addEventListener(
+    "change",
+    () => {
 
-    const file = profilePhoto.files?.[0];
+      const file =
+        profilePhoto.files?.[0];
 
-    if (!file) {
+      if (!file) {
 
-      if (photoPreview) {
-        photoPreview.style.display = "none";
-        photoPreview.removeAttribute("src");
+        if (photoPreview) {
+
+          photoPreview.style.display =
+            "none";
+
+          photoPreview.removeAttribute(
+            "src"
+          );
+        }
+
+        return;
       }
 
-      return;
-    }
 
-    const validation =
-      validatePhoto(file);
+      const validation =
+        validatePhoto(file);
 
-    if (!validation.valid) {
 
-      showStatus(
-        validation.message,
-        "error"
-      );
+      if (!validation.valid) {
 
-      profilePhoto.value = "";
+        showStatus(
+          validation.message,
+          "error"
+        );
 
-      if (photoPreview) {
-        photoPreview.style.display = "none";
-        photoPreview.removeAttribute("src");
+        profilePhoto.value = "";
+
+        if (photoPreview) {
+
+          photoPreview.style.display =
+            "none";
+
+          photoPreview.removeAttribute(
+            "src"
+          );
+        }
+
+        return;
       }
 
-      return;
+
+      if (photoPreview) {
+
+        const objectURL =
+          URL.createObjectURL(file);
+
+        photoPreview.src =
+          objectURL;
+
+        photoPreview.style.display =
+          "block";
+
+        photoPreview.onload = () => {
+
+          URL.revokeObjectURL(
+            objectURL
+          );
+        };
+      }
+
     }
-
-    if (photoPreview) {
-
-      const objectURL =
-        URL.createObjectURL(file);
-
-      photoPreview.src = objectURL;
-
-      photoPreview.style.display = "block";
-
-      photoPreview.onload = () => {
-        URL.revokeObjectURL(objectURL);
-      };
-    }
-  });
+  );
 }
 
 
@@ -244,41 +342,82 @@ if (profilePhoto) {
 // FIRESTORE USER PROFILE
 // =========================================================
 
-async function createUserProfile(user, data) {
+async function createUserProfile(
+  user,
+  data
+) {
 
   showStatus(
     "ধাপ ২/৪: AYNA BOOK Profile তৈরি হচ্ছে...",
     "info"
   );
 
+  console.log(
+    "[AYNA BOOK] STEP 2 START — Firestore"
+  );
+
+
   const userRef =
-    doc(db, "users", user.uid);
+    doc(
+      db,
+      "users",
+      user.uid
+    );
 
-  await setDoc(userRef, {
 
-    uid: user.uid,
+  await withTimeout(
 
-    fullName: data.fullName,
+    setDoc(
+      userRef,
+      {
 
-    email: data.email,
+        uid:
+          user.uid,
 
-    phone: data.phone,
+        fullName:
+          data.fullName,
 
-    accountType: "personal",
+        email:
+          data.email,
 
-    bio: "",
+        phone:
+          data.phone,
 
-    country: "",
+        accountType:
+          "personal",
 
-    photoURL: "",
+        bio:
+          "",
 
-    emailVerified: false,
+        country:
+          "",
 
-    createdAt: serverTimestamp(),
+        photoURL:
+          "",
 
-    updatedAt: serverTimestamp()
+        emailVerified:
+          false,
 
-  });
+        createdAt:
+          serverTimestamp(),
+
+        updatedAt:
+          serverTimestamp()
+
+      }
+    ),
+
+    OPERATION_TIMEOUT,
+
+    "Firestore user profile creation"
+
+  );
+
+
+  console.log(
+    "[AYNA BOOK] STEP 2 SUCCESS — Firestore"
+  );
+
 
   return true;
 }
@@ -295,7 +434,26 @@ async function sendVerification(user) {
     "info"
   );
 
-  await sendEmailVerification(user);
+  console.log(
+    "[AYNA BOOK] STEP 3 START — Email Verification"
+  );
+
+
+  await withTimeout(
+
+    sendEmailVerification(user),
+
+    OPERATION_TIMEOUT,
+
+    "Email verification"
+
+  );
+
+
+  console.log(
+    "[AYNA BOOK] STEP 3 SUCCESS — Email Verification"
+  );
+
 
   return true;
 }
@@ -313,6 +471,20 @@ if (registrationForm) {
 
       event.preventDefault();
 
+
+      console.log(
+        "================================================="
+      );
+
+      console.log(
+        "AYNA BOOK REGISTRATION STARTED"
+      );
+
+      console.log(
+        "================================================="
+      );
+
+
       // -----------------------------------------------
       // PREVENT DOUBLE SUBMIT
       // -----------------------------------------------
@@ -321,6 +493,11 @@ if (registrationForm) {
         registerButton &&
         registerButton.disabled
       ) {
+
+        console.warn(
+          "[AYNA BOOK] Double submit prevented."
+        );
+
         return;
       }
 
@@ -336,7 +513,8 @@ if (registrationForm) {
         getValue("fullName");
 
       const email =
-        getValue("email").toLowerCase();
+        getValue("email")
+          .toLowerCase();
 
       const phoneInput =
         getValue("phone");
@@ -351,14 +529,17 @@ if (registrationForm) {
         document.getElementById("terms");
 
       const photoFile =
-        profilePhoto?.files?.[0] || null;
+        profilePhoto?.files?.[0] ||
+        null;
 
 
       // -----------------------------------------------
       // VALIDATION
       // -----------------------------------------------
 
-      if (accountType !== "personal") {
+      if (
+        accountType !== "personal"
+      ) {
 
         showStatus(
           "এই Registration ধাপে বর্তমানে Personal — Free Account চালু আছে।",
@@ -369,7 +550,10 @@ if (registrationForm) {
       }
 
 
-      if (!fullName || fullName.length < 2) {
+      if (
+        !fullName ||
+        fullName.length < 2
+      ) {
 
         showStatus(
           "আপনার Full Name লিখুন।",
@@ -392,7 +576,10 @@ if (registrationForm) {
 
 
       const normalizedPhone =
-        normalizePhone(phoneInput);
+        normalizePhone(
+          phoneInput
+        );
+
 
       if (!normalizedPhone) {
 
@@ -405,7 +592,9 @@ if (registrationForm) {
       }
 
 
-      if (!validatePassword(password)) {
+      if (
+        !validatePassword(password)
+      ) {
 
         showStatus(
           "Password কমপক্ষে 11 characters হতে হবে।",
@@ -416,7 +605,10 @@ if (registrationForm) {
       }
 
 
-      if (password !== confirmPassword) {
+      if (
+        password !==
+        confirmPassword
+      ) {
 
         showStatus(
           "Password এবং Confirm Password একই নয়।",
@@ -427,7 +619,10 @@ if (registrationForm) {
       }
 
 
-      if (!terms || !terms.checked) {
+      if (
+        !terms ||
+        !terms.checked
+      ) {
 
         showStatus(
           "Terms and Privacy Policy গ্রহণ করুন।",
@@ -439,9 +634,14 @@ if (registrationForm) {
 
 
       const photoValidation =
-        validatePhoto(photoFile);
+        validatePhoto(
+          photoFile
+        );
 
-      if (!photoValidation.valid) {
+
+      if (
+        !photoValidation.valid
+      ) {
 
         showStatus(
           photoValidation.message,
@@ -458,9 +658,15 @@ if (registrationForm) {
 
       setLoading(true);
 
-      let createdUser = null;
-      let profileCreated = false;
-      let verificationSent = false;
+
+      let createdUser =
+        null;
+
+      let profileCreated =
+        false;
+
+      let verificationSent =
+        false;
 
 
       try {
@@ -476,24 +682,31 @@ if (registrationForm) {
         );
 
 
-        /*
-         * IMPORTANT:
-         * Do not block registration just because an
-         * anonymous Firebase user exists.
-         *
-         * Only an actual authenticated email/password
-         * account should be considered an existing account.
-         */
+        console.log(
+          "[AYNA BOOK] STEP 1 START — Firebase Auth"
+        );
+
+
+        // -----------------------------------------------
+        // CHECK CURRENT USER
+        // -----------------------------------------------
 
         if (
           auth.currentUser &&
           !auth.currentUser.isAnonymous
         ) {
 
+          console.warn(
+            "[AYNA BOOK] Existing authenticated user found:",
+            auth.currentUser.uid
+          );
+
+
           showStatus(
             "এই Browser-এ ইতোমধ্যে একটি Account চালু আছে। আগে Logout করুন।",
             "error"
           );
+
 
           setLoading(false);
 
@@ -501,11 +714,23 @@ if (registrationForm) {
         }
 
 
+        // -----------------------------------------------
+        // CREATE ACCOUNT
+        // -----------------------------------------------
+
         const credential =
-          await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
+          await withTimeout(
+
+            createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            ),
+
+            OPERATION_TIMEOUT,
+
+            "Firebase account creation"
+
           );
 
 
@@ -521,21 +746,50 @@ if (registrationForm) {
         }
 
 
-        // -----------------------------------------------
-        // UPDATE DISPLAY NAME
-        // -----------------------------------------------
+        console.log(
+          "[AYNA BOOK] STEP 1 SUCCESS — Firebase Auth"
+        );
+
+        console.log(
+          "[AYNA BOOK] UID:",
+          createdUser.uid
+        );
+
 
         showStatus(
-          "ধাপ ১/৪ সম্পন্ন: Account তৈরি হয়েছে।",
+          "ধাপ ১/৪ সম্পন্ন: Firebase Account তৈরি হয়েছে।",
           "success"
         );
 
 
-        await updateProfile(
-          createdUser,
-          {
-            displayName: fullName
-          }
+        // -----------------------------------------------
+        // UPDATE DISPLAY NAME
+        // -----------------------------------------------
+
+        console.log(
+          "[AYNA BOOK] Updating displayName..."
+        );
+
+
+        await withTimeout(
+
+          updateProfile(
+            createdUser,
+            {
+              displayName:
+                fullName
+            }
+          ),
+
+          OPERATION_TIMEOUT,
+
+          "Firebase display name update"
+
+        );
+
+
+        console.log(
+          "[AYNA BOOK] displayName updated."
         );
 
 
@@ -549,12 +803,14 @@ if (registrationForm) {
           {
             fullName,
             email,
-            phone: normalizedPhone
+            phone:
+              normalizedPhone
           }
         );
 
 
-        profileCreated = true;
+        profileCreated =
+          true;
 
 
         // =================================================
@@ -567,7 +823,8 @@ if (registrationForm) {
         );
 
 
-        verificationSent = true;
+        verificationSent =
+          true;
 
 
         // =================================================
@@ -581,7 +838,25 @@ if (registrationForm) {
         );
 
 
-        await signOut(auth);
+        console.log(
+          "[AYNA BOOK] STEP 4 START — Sign Out"
+        );
+
+
+        await withTimeout(
+
+          signOut(auth),
+
+          OPERATION_TIMEOUT,
+
+          "Firebase sign out"
+
+        );
+
+
+        console.log(
+          "[AYNA BOOK] STEP 4 SUCCESS — Sign Out"
+        );
 
 
         // =================================================
@@ -599,17 +874,44 @@ if (registrationForm) {
 
         if (photoPreview) {
 
-          photoPreview.style.display = "none";
+          photoPreview.style.display =
+            "none";
 
-          photoPreview.removeAttribute("src");
+          photoPreview.removeAttribute(
+            "src"
+          );
         }
+
+
+        console.log(
+          "================================================="
+        );
+
+        console.log(
+          "AYNA BOOK REGISTRATION SUCCESS"
+        );
+
+        console.log(
+          "================================================="
+        );
 
 
       } catch (error) {
 
         console.error(
-          "AYNA BOOK Registration Error:",
+          "================================================="
+        );
+
+        console.error(
+          "AYNA BOOK REGISTRATION ERROR"
+        );
+
+        console.error(
           error
+        );
+
+        console.error(
+          "================================================="
         );
 
 
@@ -621,7 +923,30 @@ if (registrationForm) {
           "Registration সম্পন্ন হয়নি।";
 
 
+        // -----------------------------------------------
+        // TIMEOUT
+        // -----------------------------------------------
+
         if (
+          error?.code ===
+          "ayna/operation-timeout"
+        ) {
+
+          message =
+            `Registration-এর "${error.operation}" ধাপে 20 সেকেন্ড ধরে কোনো response পাওয়া যায়নি।`;
+
+          console.error(
+            "[AYNA BOOK] TIMEOUT:",
+            error.operation
+          );
+        }
+
+
+        // -----------------------------------------------
+        // AUTH ERRORS
+        // -----------------------------------------------
+
+        else if (
           error?.code ===
           "auth/email-already-in-use"
         ) {
@@ -629,6 +954,7 @@ if (registrationForm) {
           message =
             "এই Gmail দিয়ে Firebase-এ আগে থেকেই Account আছে।";
         }
+
 
         else if (
           error?.code ===
@@ -639,6 +965,7 @@ if (registrationForm) {
             "Gmail Address সঠিক নয়।";
         }
 
+
         else if (
           error?.code ===
           "auth/weak-password"
@@ -647,6 +974,7 @@ if (registrationForm) {
           message =
             "Password আরও শক্তিশালী করুন।";
         }
+
 
         else if (
           error?.code ===
@@ -657,6 +985,7 @@ if (registrationForm) {
             "Network সমস্যা হয়েছে। Internet connection পরীক্ষা করুন।";
         }
 
+
         else if (
           error?.code ===
           "auth/too-many-requests"
@@ -665,6 +994,11 @@ if (registrationForm) {
           message =
             "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।";
         }
+
+
+        // -----------------------------------------------
+        // FIRESTORE
+        // -----------------------------------------------
 
         else if (
           error?.code ===
@@ -675,6 +1009,7 @@ if (registrationForm) {
             "Firestore Permission Denied হয়েছে। Security Rules পরীক্ষা করতে হবে।";
         }
 
+
         else if (
           error?.code ===
           "failed-precondition"
@@ -684,24 +1019,51 @@ if (registrationForm) {
             "Firebase configuration বা database state-এ সমস্যা হয়েছে।";
         }
 
-        else if (profileCreated && !verificationSent) {
+
+        // -----------------------------------------------
+        // PROFILE CREATED BUT VERIFICATION FAILED
+        // -----------------------------------------------
+
+        else if (
+          profileCreated &&
+          !verificationSent
+        ) {
 
           message =
-            "Account এবং Profile তৈরি হয়েছে, কিন্তু Verification Email পাঠানো যায়নি।";
+            "Firebase Account এবং Profile তৈরি হয়েছে, কিন্তু Verification Email পাঠানো যায়নি।";
         }
 
-        else if (createdUser && !profileCreated) {
+
+        // -----------------------------------------------
+        // AUTH CREATED BUT PROFILE FAILED
+        // -----------------------------------------------
+
+        else if (
+          createdUser &&
+          !profileCreated
+        ) {
 
           message =
-            "Firebase Account তৈরি হয়েছে, কিন্তু User Profile তৈরি করা যায়নি।";
+            "Firebase Account তৈরি হয়েছে, কিন্তু AYNA BOOK User Profile তৈরি করা যায়নি।";
         }
 
-        else if (error?.message) {
+
+        // -----------------------------------------------
+        // GENERIC ERROR
+        // -----------------------------------------------
+
+        else if (
+          error?.message
+        ) {
 
           message =
             error.message;
         }
 
+
+        // -----------------------------------------------
+        // SHOW ERROR
+        // -----------------------------------------------
 
         showStatus(
           message,
@@ -710,27 +1072,55 @@ if (registrationForm) {
 
 
         // =================================================
-        // IMPORTANT RECOVERY INFORMATION
+        // RECOVERY INFORMATION
         // =================================================
 
         if (createdUser) {
 
           console.warn(
-            "Firebase User was created:",
+            "-------------------------------------------------"
+          );
+
+          console.warn(
+            "IMPORTANT:"
+          );
+
+          console.warn(
+            "Firebase User was already created."
+          );
+
+          console.warn(
+            "UID:",
             createdUser.uid
           );
 
           console.warn(
-            "Do not repeatedly submit the form."
+            "Do NOT repeatedly submit registration."
+          );
+
+          console.warn(
+            "-------------------------------------------------"
           );
         }
 
+
       } finally {
 
+        // =================================================
+        // ALWAYS RESET BUTTON
+        // =================================================
+
         setLoading(false);
+
+
+        console.log(
+          "[AYNA BOOK] Registration handler finished."
+        );
       }
+
     }
   );
+
 }
 
 
@@ -739,5 +1129,23 @@ if (registrationForm) {
 // =========================================================
 
 console.log(
-  "AYNA BOOK — Signup module loaded successfully."
+  "================================================="
+);
+
+console.log(
+  "AYNA BOOK — Signup Diagnostic Module Loaded"
+);
+
+console.log(
+  "Firebase SDK: 13.4.0"
+);
+
+console.log(
+  "Operation Timeout:",
+  OPERATION_TIMEOUT / 1000,
+  "seconds"
+);
+
+console.log(
+  "================================================="
 );
