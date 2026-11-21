@@ -1,10 +1,10 @@
 // =========================================================
 // AYNA BOOK
-// Firebase Service Connector
+// FIREBASE SERVICE CONNECTOR
 // Firebase SDK: 13.4.0
 // =========================================================
 
-// Firebase initialization থেকে সব service নেওয়া হচ্ছে
+// Firebase services initialized in firebase-init.js
 export {
   app,
   auth,
@@ -15,9 +15,19 @@ export {
 
 
 // =========================================================
-// AYNA BOOK — Firebase Connector Ready
+// STATUS
 // =========================================================
 
-console.log(
-  "AYNA BOOK — Firebase service connector loaded successfully."
-);
+console.log("========================================");
+console.log("AYNA BOOK - Firebase Service Connector");
+console.log("========================================");
+
+console.log("Firebase App:", !!app);
+console.log("Firebase Auth:", !!auth);
+console.log("Cloud Firestore:", !!db);
+console.log("Realtime Database:", !!database);
+console.log("Firebase Storage:", !!storage);
+
+console.log("========================================");
+console.log("Firebase connector loaded successfully.");
+console.log("========================================");
