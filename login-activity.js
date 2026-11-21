@@ -1,3 +1,4 @@
+
 // =========================================================
 // AYNA BOOK
 // LOGIN ACTIVITY
@@ -26,18 +27,12 @@ function getDeviceType() {
   const userAgent =
     navigator.userAgent.toLowerCase();
 
-  if (
-    /mobile|android|iphone|ipod|windows phone/i
-      .test(userAgent)
-  ) {
-    return "mobile";
+  if (/ipad|tablet/i.test(userAgent)) {
+    return "tablet";
   }
 
-  if (
-    /ipad|tablet/i
-      .test(userAgent)
-  ) {
-    return "tablet";
+  if (/mobile|android|iphone|ipod|windows phone/i.test(userAgent)) {
+    return "mobile";
   }
 
   return "desktop";
@@ -50,34 +45,99 @@ function getDeviceType() {
 
 function getBrowserInformation() {
 
-  const userAgent =
-    navigator.userAgent;
-
-  let browser = "Unknown";
-
+  const userAgent = navigator.userAgent;
 
   if (/edg/i.test(userAgent)) {
-    browser = "Microsoft Edge";
+    return "Microsoft Edge";
   }
 
-  else if (/opr|opera/i.test(userAgent)) {
-    browser = "Opera";
+  if (/opr|opera/i.test(userAgent)) {
+    return "Opera";
   }
 
-  else if (/chrome/i.test(userAgent)) {
-    browser = "Google Chrome";
+  if (/firefox/i.test(userAgent)) {
+    return "Mozilla Firefox";
   }
 
-  else if (/firefox/i.test(userAgent)) {
-    browser = "Mozilla Firefox";
+  if (/chrome/i.test(userAgent)) {
+    return "Google Chrome";
   }
 
-  else if (/safari/i.test(userAgent)) {
-    browser = "Safari";
+  if (/safari/i.test(userAgent)) {
+    return "Safari";
   }
 
+  return "Unknown";
+}
 
-  return browser;
+
+// =========================================================
+// GET CURRENT USER
+// =========================================================
+
+function getValidUser(user = null) {
+
+  const currentUser =
+    user || auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error(
+      "LOGIN_ACTIVITY_USER_MISSING"
+    );
+  }
+
+  if (!currentUser.uid) {
+    throw new Error(
+      "LOGIN_ACTIVITY_UID_MISSING"
+    );
+  }
+
+  return currentUser;
+}
+
+
+// =========================================================
+// ACTIVITY COLLECTION
+// =========================================================
+
+function getActivityCollection(user) {
+
+  return collection(
+    db,
+    "users",
+    user.uid,
+    "loginActivity"
+  );
+}
+
+
+// =========================================================
+// CREATE ACTIVITY DATA
+// =========================================================
+
+function createActivityData(user, eventName) {
+
+  return {
+
+    uid: user.uid,
+
+    email: user.email || "",
+
+    emailVerified:
+      user.emailVerified === true,
+
+    event: eventName,
+
+    deviceType:
+      getDeviceType(),
+
+    browserInformation:
+      getBrowserInformation(),
+
+    createdAt:
+      serverTimestamp()
+
+  };
 }
 
 
@@ -88,62 +148,16 @@ function getBrowserInformation() {
 export async function recordLoginActivity(user = null) {
 
   const currentUser =
-    user || auth.currentUser;
-
-
-  if (!currentUser) {
-
-    throw new Error(
-      "LOGIN_ACTIVITY_USER_MISSING"
-    );
-  }
-
-
-  if (!currentUser.uid) {
-
-    throw new Error(
-      "LOGIN_ACTIVITY_UID_MISSING"
-    );
-  }
-
+    getValidUser(user);
 
   const activityRef =
-    collection(
-      db,
-      "users",
-      currentUser.uid,
-      "loginActivity"
+    getActivityCollection(currentUser);
+
+  const activityData =
+    createActivityData(
+      currentUser,
+      "login"
     );
-
-
-  const activityData = {
-
-    // Firebase user information
-    uid: currentUser.uid,
-
-    email:
-      currentUser.email || "",
-
-    emailVerified:
-      currentUser.emailVerified === true,
-
-
-    // Login information
-    event: "login",
-
-    deviceType:
-      getDeviceType(),
-
-    browserInformation:
-      getBrowserInformation(),
-
-
-    // Server timestamp
-    createdAt:
-      serverTimestamp()
-
-  };
-
 
   const documentReference =
     await addDoc(
@@ -151,19 +165,17 @@ export async function recordLoginActivity(user = null) {
       activityData
     );
 
-
   console.log(
     "AYNA BOOK Login Activity recorded:",
     documentReference.id
   );
-
 
   return documentReference;
 }
 
 
 // =========================================================
-// OPTIONAL — RECORD CUSTOM AUTH EVENT
+// RECORD CUSTOM AUTH ACTIVITY
 // =========================================================
 
 export async function recordAuthActivity(
@@ -172,55 +184,32 @@ export async function recordAuthActivity(
 ) {
 
   const currentUser =
-    user || auth.currentUser;
+    getValidUser(user);
 
-
-  if (!currentUser?.uid) {
-
-    throw new Error(
-      "AUTH_ACTIVITY_USER_MISSING"
-    );
-  }
-
+  const normalizedEvent =
+    String(eventName || "unknown")
+      .trim()
+      .slice(0, 50);
 
   const activityRef =
-    collection(
-      db,
-      "users",
-      currentUser.uid,
-      "loginActivity"
-    );
+    getActivityCollection(currentUser);
 
+  const activityData =
+    createActivityData(
+      currentUser,
+      normalizedEvent
+    );
 
   const documentReference =
     await addDoc(
       activityRef,
-      {
-
-        uid:
-          currentUser.uid,
-
-        email:
-          currentUser.email || "",
-
-        emailVerified:
-          currentUser.emailVerified === true,
-
-        event:
-          String(eventName || "unknown"),
-
-        deviceType:
-          getDeviceType(),
-
-        browserInformation:
-          getBrowserInformation(),
-
-        createdAt:
-          serverTimestamp()
-
-      }
+      activityData
     );
 
+  console.log(
+    "AYNA BOOK Auth Activity recorded:",
+    documentReference.id
+  );
 
   return documentReference;
 }
