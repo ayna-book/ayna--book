@@ -2,513 +2,246 @@
 <html lang="bn">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0"
   >
 
   <meta
     name="theme-color"
-    content="#0A0F1E"
+    content="#090a0f"
   >
 
-  <title>AYNA BOOK — Login</title>
+  <title>AYNA BOOK - Login</title>
+
 
   <style>
 
-    /* =====================================================
-       RESET
-       ===================================================== */
-
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
-    html {
-      width: 100%;
-      min-height: 100%;
-      background: #0A0F1E;
-    }
 
     body {
-      width: 100%;
-      min-height: 100vh;
-      min-height: 100dvh;
 
-      background: #0A0F1E;
-      color: #FFFFFF;
+      margin: 0;
+
+      min-height: 100vh;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 20px;
+
+      background:
+        radial-gradient(
+          circle at top,
+          #171923 0%,
+          #090a0f 55%,
+          #050609 100%
+        );
+
+      color: #ffffff;
 
       font-family:
         Arial,
         Helvetica,
         sans-serif;
-
-      overflow-x: hidden;
-
-      /* FULL SCREEN + STATIC */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      padding:
-        max(18px, env(safe-area-inset-top))
-        max(14px, env(safe-area-inset-right))
-        max(18px, env(safe-area-inset-bottom))
-        max(14px, env(safe-area-inset-left));
     }
 
 
-    /* =====================================================
-       PAGE
-       ===================================================== */
+    .container {
 
-    .page {
       width: 100%;
-      max-width: 520px;
-      margin: 0 auto;
+
+      max-width: 430px;
+
+      padding: 30px 24px;
+
+      background:
+        rgba(18, 20, 29, 0.96);
+
+      border:
+        1px solid
+        rgba(212, 175, 55, 0.30);
+
+      border-radius: 18px;
+
+      box-shadow:
+        0 20px 60px
+        rgba(0, 0, 0, 0.55);
     }
 
 
-    /* =====================================================
-       HEADER
-       ===================================================== */
+    .brand {
 
-    .top-header {
-      width: 100%;
+      text-align: center;
 
-      display: grid;
-      grid-template-columns: 52px 1fr 52px;
-      align-items: center;
+      margin-bottom: 8px;
 
-      min-height: 58px;
+      font-size: 28px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+
+      color: #ffffff;
+    }
+
+
+    .brand span {
+
+      color: #d4af37;
+    }
+
+
+    .subtitle {
+
+      text-align: center;
+
+      margin-bottom: 28px;
+
+      color: #bfc2ca;
+
+      font-size: 14px;
+
+      line-height: 1.6;
+    }
+
+
+    h1 {
+
+      margin: 0 0 10px;
+
+      text-align: center;
+
+      font-size: 23px;
+
+      color: #ffffff;
+    }
+
+
+    .description {
+
+      margin: 0 0 24px;
+
+      text-align: center;
+
+      color: #aeb2bc;
+
+      font-size: 14px;
+
+      line-height: 1.6;
+    }
+
+
+    .form-group {
 
       margin-bottom: 18px;
     }
 
 
-    /* =====================================================
-       HOME BUTTON
-       ===================================================== */
-
-    .home-icon {
-      width: 46px;
-      height: 46px;
-
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-
-      padding: 7px;
-
-      border: 1px solid #FFD700;
-      border-radius: 10px;
-
-      background: #1A2233;
-
-      text-decoration: none;
-
-      /* ABSOLUTELY STATIC */
-      transform: none;
-      transition: none;
-    }
-
-    .home-icon span {
-      display: block;
-
-      background: #FFFFFF;
-
-      border-radius: 3px;
-    }
-
-
-    /* =====================================================
-       BRAND
-       ===================================================== */
-
-    .brand {
-      text-align: center;
-
-      color: #FFFFFF;
-
-      font-size: 30px;
-      font-weight: 900;
-
-      letter-spacing: 1px;
-      line-height: 1;
-
-      white-space: nowrap;
-    }
-
-
-    /* =====================================================
-       STAR
-       K-এর ডান কর্ণারের উজ্জ্বল সাদা তারকা
-       ===================================================== */
-
-    .star {
-      width: 52px;
-      height: 52px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      color: #FFFFFF;
-
-      font-size: 25px;
-      font-weight: 900;
-
-      text-shadow:
-        0 0 4px #FFFFFF,
-        0 0 9px #FFFFFF,
-        0 0 18px rgba(255,255,255,0.95);
-
-      /* শুধু আলো জ্বলবে,
-         অবস্থান পরিবর্তন হবে না */
-      animation: starGlow 1s ease-in-out infinite;
-
-      transform: none;
-    }
-
-    @keyframes starGlow {
-
-      0%,
-      100% {
-        opacity: 0.78;
-
-        text-shadow:
-          0 0 4px #FFFFFF,
-          0 0 8px #FFFFFF,
-          0 0 14px rgba(255,255,255,0.75);
-      }
-
-      50% {
-        opacity: 1;
-
-        text-shadow:
-          0 0 5px #FFFFFF,
-          0 0 12px #FFFFFF,
-          0 0 24px #FFFFFF,
-          0 0 36px rgba(255,255,255,0.85);
-      }
-    }
-
-
-    /* =====================================================
-       LOGIN CARD
-       ===================================================== */
-
-    .card {
-      width: 100%;
-
-      background: #111827;
-
-      border: 1px solid #FFD700;
-      border-radius: 20px;
-
-      padding: 32px 28px;
-
-      box-shadow:
-        0 18px 50px rgba(0, 0, 0, 0.55);
-
-      /* STATIC */
-      transform: none;
-      transition: none;
-    }
-
-
-    /* =====================================================
-       TITLE
-       ===================================================== */
-
-    .title {
-      margin: 0;
-
-      text-align: center;
-
-      color: #FFFFFF;
-
-      font-size: 36px;
-      font-weight: 900;
-
-      line-height: 1.2;
-
-      letter-spacing: 1px;
-    }
-
-
-    /* =====================================================
-       SUBTITLE
-       ===================================================== */
-
-    .subtitle {
-      margin: 11px 0 28px;
-
-      text-align: center;
-
-      color: #A9B0BC;
-
-      font-size: 18px;
-
-      line-height: 1.6;
-    }
-
-
-    /* =====================================================
-       FORM FIELD
-       ===================================================== */
-
-    .field {
-      width: 100%;
-      margin-bottom: 22px;
-    }
-
     label {
+
       display: block;
 
-      margin-bottom: 9px;
+      margin-bottom: 8px;
 
-      color: #FFFFFF;
+      color: #eeeeee;
 
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 14px;
 
-      line-height: 1.4;
+      font-weight: 600;
     }
 
-
-    /* =====================================================
-       INPUT WRAPPER
-       ===================================================== */
-
-    .input-wrap {
-      position: relative;
-      width: 100%;
-    }
-
-
-    /* =====================================================
-       INPUT
-       ===================================================== */
 
     input {
-      display: block;
 
       width: 100%;
-      height: 60px;
 
-      border: 1px solid #384357;
-      border-radius: 11px;
+      padding: 14px 15px;
 
-      background: #1A2233;
+      border-radius: 10px;
 
-      color: #FFFFFF;
-
-      padding: 0 17px;
+      border:
+        1px solid #363946;
 
       outline: none;
 
-      font-family: inherit;
-      font-size: 18px;
+      background: #0d0f15;
 
-      /* NO MOVEMENT */
-      transform: none;
-      transition: none;
+      color: #ffffff;
+
+      font-size: 15px;
+
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
     }
 
-    input:focus {
-      border-color: #FFD700;
-
-      box-shadow:
-        0 0 0 2px rgba(255, 215, 0, 0.12);
-
-      transform: none;
-    }
 
     input::placeholder {
-      color: #7F8999;
-      font-size: 17px;
+
+      color: #707480;
     }
 
 
-    /* =====================================================
-       PASSWORD INPUT
-       ===================================================== */
+    input:focus {
 
-    .password-input {
-      padding-right: 88px;
+      border-color: #d4af37;
+
+      box-shadow:
+        0 0 0 3px
+        rgba(212, 175, 55, 0.12);
     }
 
 
-    /* =====================================================
-       SHOW / HIDE BUTTON
-       ===================================================== */
+    button {
 
-    .eye-button {
-      position: absolute;
+      width: 100%;
 
-      top: 50%;
-      right: 7px;
+      padding: 14px 16px;
 
-      width: 70px;
-      height: 46px;
+      border: none;
 
-      /* IMPORTANT:
-         কোনো translate ব্যবহার নেই */
-      margin-top: -23px;
+      border-radius: 10px;
 
-      border: 1px solid #4A566C;
-      border-radius: 9px;
+      background: #d4af37;
 
-      background: #273247;
+      color: #090a0f;
 
-      color: #FFFFFF;
+      font-size: 15px;
 
-      cursor: pointer;
-
-      font-family: inherit;
-      font-size: 16px;
       font-weight: 800;
 
-      text-align: center;
-
-      outline: none;
-
-      /* NO MOVEMENT */
-      transform: none;
-      transition: none;
-    }
-
-    .eye-button:hover {
-      background: #33405A;
-      color: #FFFFFF;
-
-      transform: none;
-    }
-
-    .eye-button:focus {
-      border-color: #FFD700;
-
-      box-shadow:
-        0 0 0 2px rgba(255,215,0,0.12);
-
-      transform: none;
-    }
-
-    .eye-button:active {
-      transform: none;
-      margin-top: -23px;
-    }
-
-
-    /* =====================================================
-       FORGOT PASSWORD
-       ===================================================== */
-
-    .forgot {
-      display: block;
-
-      margin-top: -4px;
-      margin-bottom: 24px;
-
-      text-align: right;
-
-      color: #FFFFFF;
-
-      text-decoration: none;
-
-      font-size: 17px;
-      font-weight: 700;
-
-      line-height: 1.5;
-    }
-
-    .forgot:hover {
-      color: #FFD700;
-    }
-
-
-    /* =====================================================
-       MESSAGE
-       ===================================================== */
-
-    .message {
-      width: 100%;
-
-      min-height: 28px;
-
-      margin: 14px 0 9px;
-
-      text-align: center;
-
-      color: #FFD700;
-
-      font-size: 16px;
-      font-weight: 600;
-
-      line-height: 1.6;
-
-      overflow-wrap: anywhere;
-    }
-
-
-    /* =====================================================
-       LOGIN BUTTON
-       ===================================================== */
-
-    .login-button {
-      display: block;
-
-      width: 100%;
-      height: 60px;
-
-      border: 1px solid #FFD700;
-      border-radius: 11px;
-
-      background: #FFD700;
-      color: #0A0F1E;
-
-      font-family: inherit;
-
-      font-size: 21px;
-      font-weight: 900;
-
       cursor: pointer;
 
-      outline: none;
-
-      /* IMPORTANT:
-         কোনো movement নেই */
-      transform: none;
-      transition: none;
+      transition:
+        transform 0.15s,
+        opacity 0.15s;
     }
 
-    .login-button:hover {
-      background: #FFD700;
 
-      filter: brightness(1.08);
+    button:hover {
 
-      transform: none;
+      opacity: 0.92;
     }
 
-    .login-button:focus {
-      box-shadow:
-        0 0 0 3px rgba(255,215,0,0.18);
 
-      transform: none;
+    button:active {
+
+      transform: scale(0.98);
     }
 
-    .login-button:active {
-      background: #FFD700;
 
-      transform: none;
-    }
+    button:disabled {
 
-    .login-button:disabled {
       opacity: 0.55;
 
       cursor: not-allowed;
@@ -517,234 +250,143 @@
     }
 
 
-    /* =====================================================
-       REGISTER AREA
-       ===================================================== */
+    .status-message {
 
-    .register-area {
-      width: 100%;
+      display: none;
 
-      margin-top: 25px;
-      padding-top: 20px;
+      margin-top: 18px;
 
-      border-top: 1px solid #273247;
+      padding: 12px 14px;
 
-      text-align: center;
-
-      color: #A9B0BC;
-
-      font-size: 17px;
-
-      line-height: 1.8;
-    }
-
-    .register-area a {
-      color: #FFD700;
-
-      font-size: 19px;
-      font-weight: 900;
-
-      text-decoration: none;
-
-      white-space: nowrap;
-    }
-
-    .register-area a:hover {
-      color: #FFFFFF;
-    }
-
-
-    /* =====================================================
-       SECURITY NOTE
-       ===================================================== */
-
-    .security-note {
-      width: 100%;
-
-      margin-top: 20px;
-      padding-top: 15px;
-
-      border-top: 1px solid #273247;
-
-      text-align: center;
-
-      color: #7F8999;
+      border-radius: 10px;
 
       font-size: 14px;
 
-      line-height: 1.7;
+      line-height: 1.5;
+
+      text-align: center;
     }
 
 
-    /* =====================================================
-       MOBILE
-       ===================================================== */
+    .status-message.info {
 
-    @media (max-width: 600px) {
+      display: block;
 
-      body {
-        min-height: 100vh;
-        min-height: 100dvh;
+      background:
+        rgba(70, 120, 180, 0.12);
 
-        padding:
-          max(12px, env(safe-area-inset-top))
-          max(10px, env(safe-area-inset-right))
-          max(12px, env(safe-area-inset-bottom))
-          max(10px, env(safe-area-inset-left));
+      border:
+        1px solid
+        rgba(70, 120, 180, 0.30);
 
-        /* FULL SCREEN CENTER */
-        align-items: center;
-      }
-
-      .page {
-        width: 100%;
-        max-width: 100%;
-      }
-
-      .top-header {
-        grid-template-columns: 48px 1fr 48px;
-
-        min-height: 52px;
-
-        margin-bottom: 14px;
-      }
-
-      .home-icon {
-        width: 44px;
-        height: 44px;
-      }
-
-      .brand {
-        font-size: 24px;
-        letter-spacing: 0.7px;
-      }
-
-      .star {
-        width: 48px;
-        height: 48px;
-
-        font-size: 23px;
-      }
-
-      .card {
-        width: 100%;
-
-        padding: 27px 17px;
-
-        border-radius: 17px;
-      }
-
-      .title {
-        font-size: 32px;
-      }
-
-      .subtitle {
-        font-size: 16px;
-
-        margin-bottom: 24px;
-      }
-
-      label {
-        font-size: 17px;
-      }
-
-      input {
-        height: 58px;
-
-        font-size: 18px;
-      }
-
-      input::placeholder {
-        font-size: 16px;
-      }
-
-      .password-input {
-        padding-right: 84px;
-      }
-
-      .eye-button {
-        width: 68px;
-        height: 44px;
-
-        margin-top: -22px;
-
-        font-size: 15px;
-      }
-
-      .eye-button:active {
-        margin-top: -22px;
-      }
-
-      .forgot {
-        font-size: 16px;
-      }
-
-      .login-button {
-        height: 60px;
-
-        font-size: 20px;
-      }
-
-      .message {
-        font-size: 15px;
-      }
-
-      .register-area {
-        font-size: 15.5px;
-      }
-
-      .register-area a {
-        font-size: 18px;
-      }
-
-      .security-note {
-        font-size: 13px;
-      }
+      color: #c9ddff;
     }
 
 
-    /* =====================================================
-       VERY SMALL PHONES
-       ===================================================== */
+    .status-message.success {
 
-    @media (max-height: 700px) and (max-width: 600px) {
+      display: block;
 
-      body {
-        align-items: flex-start;
-        padding-top: 8px;
-        padding-bottom: 8px;
-      }
+      background:
+        rgba(60, 170, 100, 0.12);
 
-      .top-header {
-        margin-bottom: 8px;
-      }
+      border:
+        1px solid
+        rgba(60, 170, 100, 0.30);
 
-      .card {
-        padding-top: 20px;
-        padding-bottom: 20px;
-      }
+      color: #9ff0b7;
+    }
 
-      .subtitle {
-        margin-bottom: 18px;
-      }
 
-      .field {
-        margin-bottom: 16px;
-      }
+    .status-message.error {
 
-      .forgot {
-        margin-bottom: 16px;
-      }
+      display: block;
 
-      .register-area {
-        margin-top: 18px;
-        padding-top: 14px;
-      }
+      background:
+        rgba(210, 70, 70, 0.12);
 
-      .security-note {
-        margin-top: 14px;
-        padding-top: 10px;
-      }
+      border:
+        1px solid
+        rgba(210, 70, 70, 0.30);
+
+      color: #ffaaaa;
+    }
+
+
+    .status-message.warning {
+
+      display: block;
+
+      background:
+        rgba(212, 175, 55, 0.12);
+
+      border:
+        1px solid
+        rgba(212, 175, 55, 0.30);
+
+      color: #f5d76e;
+    }
+
+
+    .forgot {
+
+      display: block;
+
+      margin-top: 16px;
+
+      text-align: right;
+
+      color: #d4af37;
+
+      text-decoration: none;
+
+      font-size: 13px;
+    }
+
+
+    .forgot:hover {
+
+      text-decoration: underline;
+    }
+
+
+    .links {
+
+      margin-top: 24px;
+
+      text-align: center;
+
+      color: #aeb2bc;
+
+      font-size: 14px;
+    }
+
+
+    .links a {
+
+      color: #d4af37;
+
+      text-decoration: none;
+
+      font-weight: 600;
+    }
+
+
+    .links a:hover {
+
+      text-decoration: underline;
+    }
+
+
+    .footer {
+
+      margin-top: 24px;
+
+      text-align: center;
+
+      color: #666b76;
+
+      font-size: 12px;
     }
 
   </style>
@@ -754,197 +396,147 @@
 
 <body>
 
-  <main class="page">
 
-    <!-- ===================================================
-         HEADER
-         =================================================== -->
-
-    <header class="top-header">
-
-      <a
-        href="./index.html"
-        class="home-icon"
-        aria-label="AYNA BOOK Home"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </a>
+  <main class="container">
 
 
-      <div class="brand">
-        AYNA BOOK
+    <div class="brand">
+
+      AYNA <span>BOOK</span>
+
+    </div>
+
+
+    <div class="subtitle">
+
+      Connect • Share • Create
+
+    </div>
+
+
+    <h1>
+
+      Welcome Back
+
+    </h1>
+
+
+    <p class="description">
+
+      আপনার Verified Gmail ও Password
+      দিয়ে AYNA BOOK-এ Login করুন।
+
+    </p>
+
+
+    <form
+      id="loginForm"
+      novalidate
+    >
+
+
+      <div class="form-group">
+
+        <label for="email">
+
+          Gmail Address
+
+        </label>
+
+
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="yourname@gmail.com"
+          autocomplete="email"
+          inputmode="email"
+          required
+        >
+
       </div>
 
 
-      <!-- K-এর ডানদিকে উজ্জ্বল সাদা তারকা -->
+      <div class="form-group">
 
-      <div
-        class="star"
-        aria-hidden="true"
-      >
-        ★
-      </div>
+        <label for="password">
 
-    </header>
+          Password
+
+        </label>
 
 
-    <!-- ===================================================
-         LOGIN CARD
-         =================================================== -->
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+        >
 
-    <section class="card">
-
-      <h1 class="title">
-        LOGIN
-      </h1>
-
-
-      <p class="subtitle">
-        আপনার AYNA BOOK অ্যাকাউন্টে নিরাপদে প্রবেশ করুন।
-      </p>
-
-
-      <!-- =================================================
-           LOGIN FORM
-           ================================================= -->
-
-      <form
-        id="loginForm"
-        novalidate
-      >
-
-        <!-- GMAIL -->
-
-        <div class="field">
-
-          <label for="email">
-            Gmail Address
-          </label>
-
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="example@gmail.com"
-            autocomplete="email"
-            required
-          >
-
-        </div>
-
-
-        <!-- PASSWORD -->
-
-        <div class="field">
-
-          <label for="password">
-            Password
-          </label>
-
-
-          <div class="input-wrap">
-
-            <input
-              id="password"
-              name="password"
-              class="password-input"
-              type="password"
-              placeholder="আপনার Password"
-              autocomplete="current-password"
-              required
-            >
-
-
-            <button
-              id="togglePassword"
-              class="eye-button"
-              type="button"
-              aria-label="Show password"
-              aria-pressed="false"
-            >
-              Show
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <!-- FORGOT PASSWORD -->
 
         <a
           href="./forgot-password.html"
           class="forgot"
         >
+
           Forgot Password?
-        </a>
 
-
-        <!-- MESSAGE -->
-
-        <div
-          id="message"
-          class="message"
-          aria-live="polite"
-        ></div>
-
-
-        <!-- LOGIN -->
-
-        <button
-          id="loginBtn"
-          class="login-button"
-          type="submit"
-        >
-          LOGIN
-        </button>
-
-      </form>
-
-
-      <!-- =================================================
-           REGISTER
-           ================================================= -->
-
-      <div class="register-area">
-
-        নতুন AYNA BOOK অ্যাকাউন্ট তৈরি করতে
-
-        <a href="./signup.html">
-          REGISTER
         </a>
 
       </div>
 
 
-      <!-- =================================================
-           SECURITY
-           ================================================= -->
+      <button
+        type="submit"
+        id="loginButton"
+      >
 
-      <div class="security-note">
+        Log In
 
-        AYNA BOOK — Secure Login<br>
+      </button>
 
-        আপনার Password কারও সঙ্গে শেয়ার করবেন না।
 
-      </div>
+    </form>
 
-    </section>
+
+    <div
+      id="statusMessage"
+      class="status-message"
+      role="status"
+      aria-live="polite"
+    ></div>
+
+
+    <div class="links">
+
+      Don't have an account?
+
+      <a href="./signup.html">
+
+        Create Account
+
+      </a>
+
+    </div>
+
+
+    <div class="footer">
+
+      © AYNA BOOK
+
+    </div>
+
 
   </main>
 
-
-  <!-- =====================================================
-       LOGIN CONTROLLER
-       ===================================================== -->
 
   <script
     type="module"
     src="./login.js"
   ></script>
+
 
 </body>
 
