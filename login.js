@@ -1,8 +1,8 @@
 // =========================================================
 // AYNA BOOK
 // LOGIN CONTROLLER
+// File: login.js
 // Firebase SDK: 13.4.0
-// Gmail Verification + Login Activity
 // =========================================================
 
 import {
@@ -20,470 +20,498 @@ import {
 // HTML ELEMENTS
 // =========================================================
 
-const form = document.getElementById("loginForm");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const togglePassword = document.getElementById("togglePassword");
-const loginBtn = document.getElementById("loginBtn");
-const message = document.getElementById("message");
+const form =
+  document.getElementById("loginForm");
+
+const emailInput =
+  document.getElementById("email");
+
+const passwordInput =
+  document.getElementById("password");
+
+const loginButton =
+  document.getElementById("loginButton");
+
+const statusMessage =
+  document.getElementById("statusMessage");
 
 
 // =========================================================
-// REQUIRED ELEMENT CHECK
+// STATUS
 // =========================================================
 
-if (
-  !form ||
-  !emailInput ||
-  !passwordInput ||
-  !togglePassword ||
-  !loginBtn ||
-  !message
-) {
-  throw new Error(
-    "AYNA BOOK: Login HTML elements missing."
-  );
-}
+function showStatus(message, type = "info") {
 
-
-// =========================================================
-// STATE
-// =========================================================
-
-let loginInProgress = false;
-let redirectStarted = false;
-
-
-// =========================================================
-// MESSAGE
-// =========================================================
-
-function showMessage(text) {
-  message.textContent = text || "";
-}
-
-
-// =========================================================
-// LOGIN BUTTON LOADING
-// =========================================================
-
-function setLoading(loading) {
-
-  loginBtn.disabled = loading;
-
-  loginBtn.textContent =
-    loading
-      ? "LOGIN হচ্ছে..."
-      : "LOGIN";
-}
-
-
-// =========================================================
-// DASHBOARD REDIRECT
-// =========================================================
-
-function goToDashboard() {
-
-  if (redirectStarted) {
+  if (!statusMessage) {
     return;
   }
 
-  redirectStarted = true;
+  statusMessage.textContent = message;
 
-  showMessage(
-    "Login সফল হয়েছে। Dashboard খুলছে..."
-  );
+  statusMessage.className = "status-message";
 
-  window.location.replace(
-    "./dashboard.html"
-  );
+  if (type === "success") {
+    statusMessage.classList.add("success");
+  }
+
+  if (type === "error") {
+    statusMessage.classList.add("error");
+  }
+
+  if (type === "warning") {
+    statusMessage.classList.add("warning");
+  }
+
+  if (type === "info") {
+    statusMessage.classList.add("info");
+  }
 }
 
 
 // =========================================================
-// SHOW / HIDE PASSWORD
+// BUTTON STATE
 // =========================================================
 
-togglePassword.addEventListener(
-  "click",
-  () => {
+function setLoading(isLoading) {
 
-    const isHidden =
-      passwordInput.type === "password";
-
-
-    if (isHidden) {
-
-      passwordInput.type = "text";
-
-      togglePassword.textContent = "Hide";
-
-      togglePassword.setAttribute(
-        "aria-label",
-        "Hide password"
-      );
-
-      togglePassword.setAttribute(
-        "aria-pressed",
-        "true"
-      );
-
-    } else {
-
-      passwordInput.type = "password";
-
-      togglePassword.textContent = "Show";
-
-      togglePassword.setAttribute(
-        "aria-label",
-        "Show password"
-      );
-
-      togglePassword.setAttribute(
-        "aria-pressed",
-        "false"
-      );
-    }
+  if (!loginButton) {
+    return;
   }
-);
+
+  if (isLoading) {
+
+    loginButton.disabled = true;
+
+    loginButton.dataset.originalText =
+      loginButton.textContent;
+
+    loginButton.textContent =
+      "Logging in...";
+
+  } else {
+
+    loginButton.disabled = false;
+
+    loginButton.textContent =
+      loginButton.dataset.originalText ||
+      "Log In";
+  }
+}
 
 
 // =========================================================
-// LOGIN FORM
+// INPUT NORMALIZATION
 // =========================================================
 
-form.addEventListener(
-  "submit",
-  async (event) => {
+function normalizeEmail(value) {
 
-    event.preventDefault();
-
-
-    // -----------------------------------------------------
-    // PREVENT DOUBLE LOGIN
-    // -----------------------------------------------------
-
-    if (
-      loginInProgress ||
-      redirectStarted
-    ) {
-      return;
-    }
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
 
 
-    // -----------------------------------------------------
-    // GET VALUES
-    // -----------------------------------------------------
+// =========================================================
+// VALIDATION
+// =========================================================
 
-    const email =
-      emailInput.value
-        .trim()
-        .toLowerCase();
+function validateLoginForm() {
 
-    const password =
-      passwordInput.value;
+  const email =
+    normalizeEmail(
+      emailInput?.value
+    );
+
+  const password =
+    String(
+      passwordInput?.value || ""
+    );
 
 
-    // -----------------------------------------------------
-    // EMAIL REQUIRED
-    // -----------------------------------------------------
+  if (!email) {
 
-    if (!email) {
+    return {
+      valid: false,
+      message: "Gmail Address লিখুন।"
+    };
+  }
 
-      showMessage(
-        "Gmail Address দিন।"
+
+  if (
+    !/^[^\s@]+@gmail\.com$/i.test(email)
+  ) {
+
+    return {
+      valid: false,
+      message:
+        "শুধুমাত্র বৈধ Gmail Address ব্যবহার করুন।"
+    };
+  }
+
+
+  if (!password) {
+
+    return {
+      valid: false,
+      message: "Password লিখুন।"
+    };
+  }
+
+
+  return {
+    valid: true,
+    email,
+    password
+  };
+}
+
+
+// =========================================================
+// LOGIN
+// =========================================================
+
+async function handleLogin() {
+
+  const validation =
+    validateLoginForm();
+
+
+  if (!validation.valid) {
+
+    showStatus(
+      validation.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  setLoading(true);
+
+
+  try {
+
+    // =====================================================
+    // STEP 1 — FIREBASE LOGIN
+    // =====================================================
+
+    showStatus(
+      "Firebase Account যাচাই করা হচ্ছে...",
+      "info"
+    );
+
+
+    const user =
+      await loginUser(
+        validation.email,
+        validation.password
       );
 
-      emailInput.focus();
 
-      return;
-    }
+    if (!user?.uid) {
 
-
-    // -----------------------------------------------------
-    // GMAIL VALIDATION
-    // -----------------------------------------------------
-
-    if (
-      !/^[a-z0-9._%+-]+@gmail\.com$/.test(email)
-    ) {
-
-      showMessage(
-        "সঠিক Gmail Address দিন।"
+      throw new Error(
+        "LOGIN_USER_MISSING"
       );
-
-      emailInput.focus();
-
-      return;
     }
 
 
-    // -----------------------------------------------------
-    // PASSWORD REQUIRED
-    // -----------------------------------------------------
+    // =====================================================
+    // STEP 2 — LOGIN ACTIVITY
+    // =====================================================
 
-    if (!password) {
-
-      showMessage(
-        "Password দিন।"
-      );
-
-      passwordInput.focus();
-
-      return;
-    }
-
-
-    // -----------------------------------------------------
-    // PASSWORD LENGTH
-    // -----------------------------------------------------
-
-    if (password.length < 11) {
-
-      showMessage(
-        "Password কমপক্ষে ১১ অক্ষরের হতে হবে।"
-      );
-
-      passwordInput.focus();
-
-      return;
-    }
-
-
-    // -----------------------------------------------------
-    // START LOGIN
-    // -----------------------------------------------------
-
-    loginInProgress = true;
-
-    setLoading(true);
-
-    showMessage(
-      "Firebase Login যাচাই হচ্ছে..."
+    showStatus(
+      "Login Activity সংরক্ষণ করা হচ্ছে...",
+      "info"
     );
 
 
     try {
 
-      // ---------------------------------------------------
-      // FIREBASE LOGIN
-      // ---------------------------------------------------
-
-      const result =
-        await loginUser(
-          email,
-          password
-        );
-
-
-      // ---------------------------------------------------
-      // LOGIN FAILED
-      // ---------------------------------------------------
-
-      if (
-        !result ||
-        !result.success
-      ) {
-
-        showMessage(
-          result?.message ||
-          "Login ব্যর্থ হয়েছে।"
-        );
-
-        return;
-      }
-
-
-      // ---------------------------------------------------
-      // EMAIL VERIFICATION
-      // ---------------------------------------------------
-
-      if (
-        result.emailVerified !== true
-      ) {
-
-        showMessage(
-          "আপনার Gmail Verify করা হয়নি। Gmail Inbox অথবা Spam Folder থেকে Verification Link-এ ক্লিক করুন।"
-        );
-
-        return;
-      }
-
-
-      // ---------------------------------------------------
-      // USER CHECK
-      // ---------------------------------------------------
-
-      if (
-        !result.user ||
-        !result.user.uid
-      ) {
-
-        showMessage(
-          "Firebase User পাওয়া যায়নি। আবার Login চেষ্টা করুন।"
-        );
-
-        return;
-      }
-
-
-      // ---------------------------------------------------
-      // SUCCESS
-      // ---------------------------------------------------
-
-      showMessage(
-        "Login সফল হয়েছে। Dashboard খুলছে..."
+      await recordLoginActivity(
+        user
       );
 
+    } catch (activityError) {
 
-      // ---------------------------------------------------
-      // LOGIN ACTIVITY
-      // ---------------------------------------------------
+      // Login Activity ব্যর্থ হলেও
+      // মূল Login বন্ধ হবে না।
 
-      const userForActivity =
-        result.user;
-
-
-      recordLoginActivity(
-        userForActivity
-      )
-        .then(
-          (activityResult) => {
-
-            if (
-              !activityResult?.success
-            ) {
-
-              console.warn(
-                "AYNA BOOK: Login Activity not recorded.",
-                activityResult?.message
-              );
-            }
-          }
-        )
-        .catch(
-          (activityError) => {
-
-            console.warn(
-              "AYNA BOOK: Login Activity Error:",
-              activityError
-            );
-          }
-        );
-
-
-      // ---------------------------------------------------
-      // GO TO DASHBOARD
-      // ---------------------------------------------------
-
-      goToDashboard();
-
-    }
-
-
-    // -----------------------------------------------------
-    // ERROR
-    // -----------------------------------------------------
-
-    catch (error) {
-
-      console.error(
-        "AYNA BOOK Login Error:",
-        error
-      );
-
-      showMessage(
-        getAuthErrorMessage(error) ||
-        "Login ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
+      console.warn(
+        "Login activity could not be recorded:",
+        activityError
       );
 
     }
 
 
-    // -----------------------------------------------------
-    // FINALLY
-    // -----------------------------------------------------
+    // =====================================================
+    // STEP 3 — SUCCESS
+    // =====================================================
 
-    finally {
+    showStatus(
+      "✅ Login সফল হয়েছে। AYNA BOOK খুলছে...",
+      "success"
+    );
 
-      loginInProgress = false;
 
-      if (!redirectStarted) {
-        setLoading(false);
-      }
+    // Password field পরিষ্কার
+    if (passwordInput) {
+      passwordInput.value = "";
     }
+
+
+    // =====================================================
+    // REDIRECT
+    // =====================================================
+
+    setTimeout(() => {
+
+      window.location.href =
+        "./index.html";
+
+    }, 800);
+
+
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK Login Error:",
+      error
+    );
+
+
+    // =====================================================
+    // EMAIL NOT VERIFIED
+    // =====================================================
+
+    if (
+      error?.code ===
+      "auth/email-not-verified"
+    ) {
+
+      showStatus(
+        "⚠️ আপনার Gmail এখনো Verified হয়নি। Gmail খুলে Verification Link-এ ক্লিক করুন, তারপর আবার Login করুন।",
+        "warning"
+      );
+
+      return;
+    }
+
+
+    // =====================================================
+    // INVALID CREDENTIALS
+    // =====================================================
+
+    if (
+      error?.code ===
+      "auth/invalid-credential"
+    ) {
+
+      showStatus(
+        "❌ Gmail অথবা Password সঠিক নয়।",
+        "error"
+      );
+
+      return;
+    }
+
+
+    // পুরোনো Firebase error compatibility
+    if (
+      error?.code ===
+      "auth/wrong-password"
+    ) {
+
+      showStatus(
+        "❌ Password সঠিক নয়।",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (
+      error?.code ===
+      "auth/user-not-found"
+    ) {
+
+      showStatus(
+        "❌ এই Gmail দিয়ে কোনো AYNA BOOK Account পাওয়া যায়নি।",
+        "error"
+      );
+
+      return;
+    }
+
+
+    // =====================================================
+    // INVALID EMAIL
+    // =====================================================
+
+    if (
+      error?.code ===
+      "auth/invalid-email"
+    ) {
+
+      showStatus(
+        "❌ Gmail Address সঠিক নয়।",
+        "error"
+      );
+
+      return;
+    }
+
+
+    // =====================================================
+    // TOO MANY REQUESTS
+    // =====================================================
+
+    if (
+      error?.code ===
+      "auth/too-many-requests"
+    ) {
+
+      showStatus(
+        "⚠️ অনেকবার Login চেষ্টা হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।",
+        "warning"
+      );
+
+      return;
+    }
+
+
+    // =====================================================
+    // NETWORK ERROR
+    // =====================================================
+
+    if (
+      error?.code ===
+      "auth/network-request-failed"
+    ) {
+
+      showStatus(
+        "❌ Internet Connection পরীক্ষা করুন।",
+        "error"
+      );
+
+      return;
+    }
+
+
+    // =====================================================
+    // USER DISABLED
+    // =====================================================
+
+    if (
+      error?.code ===
+      "auth/user-disabled"
+    ) {
+
+      showStatus(
+        "❌ এই Account বর্তমানে নিষ্ক্রিয় করা হয়েছে।",
+        "error"
+      );
+
+      return;
+    }
+
+
+    // =====================================================
+    // DEFAULT FIREBASE ERROR
+    // =====================================================
+
+    const friendlyMessage =
+      getAuthErrorMessage(error);
+
+
+    showStatus(
+      `❌ ${friendlyMessage}`,
+      "error"
+    );
+
+  } finally {
+
+    setLoading(false);
+
   }
-);
+}
 
 
 // =========================================================
-// AUTH STATE
+// FORM SUBMIT
+// =========================================================
+
+if (form) {
+
+  form.addEventListener(
+    "submit",
+    async (event) => {
+
+      event.preventDefault();
+
+      await handleLogin();
+
+    }
+  );
+
+}
+
+
+// =========================================================
+// AUTH STATE MONITOR
 // =========================================================
 
 watchAuthState(
-  async (user) => {
+  (user) => {
 
     if (!user) {
       return;
     }
 
 
-    if (
-      loginInProgress ||
-      redirectStarted
-    ) {
-      return;
-    }
-
-
-    try {
-
-      // ---------------------------------------------------
-      // REFRESH USER
-      // ---------------------------------------------------
-
-      await user.reload();
-
-
-      // ---------------------------------------------------
-      // EMAIL NOT VERIFIED
-      // ---------------------------------------------------
-
-      if (!user.emailVerified) {
-        return;
+    console.log(
+      "AYNA BOOK Auth State:",
+      {
+        uid: user.uid,
+        email: user.email,
+        emailVerified:
+          user.emailVerified
       }
+    );
 
-
-      // ---------------------------------------------------
-      // ALREADY LOGGED IN
-      // ---------------------------------------------------
-
-      if (
-        window.location.pathname
-          .endsWith("/login.html")
-      ) {
-
-        goToDashboard();
-      }
-
-    }
-
-
-    catch (error) {
-
-      console.error(
-        "AYNA BOOK Auth State Error:",
-        error
-      );
-    }
   }
 );
 
 
 // =========================================================
-// READY
+// INITIAL STATUS
+// =========================================================
+
+showStatus(
+  "আপনার Verified Gmail ও Password দিয়ে Login করুন।",
+  "info"
+);
+
+
+// =========================================================
+// DEBUG
 // =========================================================
 
 console.log(
-  "AYNA BOOK — Login Controller Ready."
+  "========================================"
+);
+
+console.log(
+  "AYNA BOOK - Login Controller"
+);
+
+console.log(
+  "login.js loaded successfully."
+);
+
+console.log(
+  "========================================"
 );
