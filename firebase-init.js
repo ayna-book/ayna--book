@@ -1,4 +1,3 @@
-
 // =========================================================
 // AYNA BOOK
 // FIREBASE INITIALIZATION
@@ -36,6 +35,7 @@ import {
 
 if (
   !firebaseConfig ||
+  typeof firebaseConfig !== "object" ||
   !firebaseConfig.apiKey ||
   !firebaseConfig.authDomain ||
   !firebaseConfig.projectId
@@ -47,7 +47,7 @@ if (
 
 
 // =========================================================
-// FIREBASE APP INITIALIZATION
+// FIREBASE APP
 // =========================================================
 
 export const app = getApps().length > 0
@@ -96,7 +96,6 @@ console.log("Authentication:", !!auth);
 console.log("Cloud Firestore:", !!db);
 console.log("Realtime Database:", !!database);
 console.log("Firebase Storage:", !!storage);
-
 console.log("Project ID:", firebaseConfig.projectId);
 
 console.log("========================================");
