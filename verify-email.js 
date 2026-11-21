@@ -10,7 +10,8 @@ import {
   auth,
   sendVerificationEmail,
   logoutUser,
-  getAuthErrorMessage
+  getAuthErrorMessage,
+  watchAuthState
 } from "./auth.js";
 
 import {
@@ -43,8 +44,9 @@ const statusMessage =
 // =========================================================
 
 let isProcessing = false;
-
 let resendCooldown = false;
+let isRedirecting = false;
+let isInitialized = false;
 
 
 // =========================================================
@@ -53,13 +55,12 @@ let resendCooldown = false;
 
 function showStatus(message, type = "info") {
 
-  if (!statusMessage) {
-    return;
-  }
+  if (!statusMessage) return;
 
   statusMessage.textContent = message;
 
-  statusMessage.className = type;
+  statusMessage.className =
+    "status-message " + type;
 }
 
 
@@ -69,17 +70,16 @@ function showStatus(message, type = "info") {
 
 function setButtonLoading(button, loading, text) {
 
-  if (!button) {
-    return;
-  }
-
-  button.disabled = loading;
+  if (!button) return;
 
   if (loading) {
 
-    button.dataset.originalText =
-      button.textContent;
+    if (!button.dataset.originalText) {
+      button.dataset.originalText =
+        button.textContent;
+    }
 
+    button.disabled = true;
     button.textContent = text;
 
   } else {
@@ -87,7 +87,29 @@ function setButtonLoading(button, loading, text) {
     button.textContent =
       button.dataset.originalText ||
       button.textContent;
+
+    button.disabled = false;
   }
+}
+
+
+// =========================================================
+// REDIRECT TO LOGIN
+// =========================================================
+
+function redirectToLogin(message, type = "warning") {
+
+  if (isRedirecting) return;
+
+  isRedirecting = true;
+
+  showStatus(message, type);
+
+  setTimeout(() => {
+
+    window.location.replace("./login.html");
+
+  }, 2000);
 }
 
 
@@ -101,12 +123,10 @@ function getCurrentAccount() {
 
   if (!user) {
 
-    showStatus(
-      "আপনি Login করা নেই। Login পেজে ফিরে যান।",
+    redirectToLogin(
+      "আপনার Login Session পাওয়া যায়নি। Login পেজে নেওয়া হচ্ছে...",
       "warning"
     );
-
-    window.location.replace("./login.html");
 
     return null;
   }
@@ -121,9 +141,7 @@ function getCurrentAccount() {
 
 function displayUserEmail(user) {
 
-  if (!userEmailElement) {
-    return;
-  }
+  if (!userEmailElement) return;
 
   userEmailElement.textContent =
     user.email || "Gmail পাওয়া যায়নি।";
@@ -136,15 +154,11 @@ function displayUserEmail(user) {
 
 async function checkEmailVerification() {
 
-  if (isProcessing) {
-    return;
-  }
+  if (isProcessing || isRedirecting) return;
 
   const user = getCurrentAccount();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
 
   isProcessing = true;
 
@@ -158,30 +172,21 @@ async function checkEmailVerification() {
 
     await reload(user);
 
-    const updatedUser =
-      auth.currentUser;
+    const updatedUser = auth.currentUser;
 
     if (!updatedUser) {
 
-      throw new Error(
-        "AUTH_USER_NOT_FOUND"
-      );
+      throw new Error("AUTH_USER_NOT_FOUND");
     }
 
     displayUserEmail(updatedUser);
 
     if (updatedUser.emailVerified === true) {
 
-      showStatus(
+      redirectToLogin(
         "আপনার Gmail সফলভাবে Verify হয়েছে। Login পেজে নেওয়া হচ্ছে...",
         "success"
       );
-
-      setTimeout(() => {
-
-        window.location.replace("./login.html");
-
-      }, 2000);
 
     } else {
 
@@ -219,17 +224,15 @@ async function checkEmailVerification() {
 // RESEND VERIFICATION EMAIL
 // =========================================================
 
-async function resendVerificationEmail() {
+async function resendVerificationEmailHandler() {
 
-  if (isProcessing || resendCooldown) {
+  if (isProcessing || resendCooldown || isRedirecting) {
     return;
   }
 
   const user = getCurrentAccount();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
 
   isProcessing = true;
 
@@ -243,24 +246,19 @@ async function resendVerificationEmail() {
 
     await reload(user);
 
-    const updatedUser =
-      auth.currentUser;
+    const updatedUser = auth.currentUser;
 
     if (!updatedUser) {
 
-      throw new Error(
-        "AUTH_USER_NOT_FOUND"
-      );
+      throw new Error("AUTH_USER_NOT_FOUND");
     }
 
     if (updatedUser.emailVerified === true) {
 
-      showStatus(
-        "আপনার Gmail ইতিমধ্যে Verify করা হয়েছে।",
+      redirectToLogin(
+        "আপনার Gmail ইতিমধ্যে Verify করা হয়েছে। Login পেজে নেওয়া হচ্ছে...",
         "success"
       );
-
-      window.location.replace("./login.html");
 
       return;
     }
@@ -272,10 +270,7 @@ async function resendVerificationEmail() {
       "success"
     );
 
-    // =====================================================
-    // RESEND COOLDOWN
-    // =====================================================
-
+    // 60-second cooldown
     resendCooldown = true;
 
     if (resendButton) {
@@ -286,7 +281,12 @@ async function resendVerificationEmail() {
 
       resendCooldown = false;
 
-      if (resendButton && !isProcessing) {
+      if (
+        resendButton &&
+        !isProcessing &&
+        auth.currentUser &&
+        !isRedirecting
+      ) {
         resendButton.disabled = false;
       }
 
@@ -299,15 +299,12 @@ async function resendVerificationEmail() {
       error
     );
 
-    let message =
-      getAuthErrorMessage(error);
+    let message = getAuthErrorMessage(error);
 
-    if (
-      error?.code === "auth/too-many-requests"
-    ) {
+    if (error?.code === "auth/too-many-requests") {
 
       message =
-        "অনেকবার Verification Email চাওয়া হয়েছে। কিছুক্ষণ অপেক্ষা করুন।";
+        "অনেকবার Verification Email চাওয়া হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।";
 
     } else if (
       error?.code === "auth/network-request-failed"
@@ -317,10 +314,7 @@ async function resendVerificationEmail() {
         "Internet Connection পরীক্ষা করে আবার চেষ্টা করুন।";
     }
 
-    showStatus(
-      message,
-      "error"
-    );
+    showStatus(message, "error");
 
   } finally {
 
@@ -344,9 +338,7 @@ async function resendVerificationEmail() {
 
 async function handleLogout() {
 
-  if (isProcessing) {
-    return;
-  }
+  if (isProcessing || isRedirecting) return;
 
   isProcessing = true;
 
@@ -400,7 +392,7 @@ if (resendButton) {
 
   resendButton.addEventListener(
     "click",
-    resendVerificationEmail
+    resendVerificationEmailHandler
   );
 }
 
@@ -414,50 +406,59 @@ if (logoutButton) {
 
 
 // =========================================================
-// INITIALIZATION
+// INITIALIZE VERIFICATION PAGE
 // =========================================================
 
-function initializeVerificationPage() {
+function initializeVerificationPage(user) {
 
-  const user = auth.currentUser;
+  if (isInitialized || isRedirecting) return;
 
-  if (!user) {
-
-    showStatus(
-      "আপনি Login করা নেই। Login পেজে নেওয়া হচ্ছে...",
-      "warning"
-    );
-
-    window.location.replace("./login.html");
-
-    return;
-  }
+  isInitialized = true;
 
   displayUserEmail(user);
 
-  showStatus(
-    user.emailVerified
-      ? "আপনার Gmail ইতিমধ্যে Verify করা হয়েছে।"
-      : "আপনার Gmail Verify করার জন্য Inbox পরীক্ষা করুন।",
-    user.emailVerified ? "success" : "info"
-  );
+  if (user.emailVerified === true) {
 
-  if (user.emailVerified) {
+    redirectToLogin(
+      "আপনার Gmail ইতিমধ্যে Verify করা হয়েছে। Login পেজে নেওয়া হচ্ছে...",
+      "success"
+    );
 
-    setTimeout(() => {
+  } else {
 
-      window.location.replace("./login.html");
-
-    }, 2000);
+    showStatus(
+      "আপনার Gmail Verify করার জন্য Inbox পরীক্ষা করুন।",
+      "info"
+    );
   }
 }
 
 
 // =========================================================
-// START
+// WAIT FOR FIREBASE AUTH SESSION
 // =========================================================
 
-initializeVerificationPage();
+watchAuthState((user) => {
+
+  if (isRedirecting) return;
+
+  if (!user) {
+
+    redirectToLogin(
+      "আপনার Login Session পাওয়া যায়নি। Login পেজে নেওয়া হচ্ছে...",
+      "warning"
+    );
+
+    return;
+  }
+
+  initializeVerificationPage(user);
+});
+
+
+// =========================================================
+// START
+// =========================================================
 
 console.log(
   "AYNA BOOK - verify-email.js loaded successfully."
