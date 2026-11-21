@@ -1,913 +1,188 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0A0F1E">
-
-  <title>AYNA BOOK — Registration</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AYNA BOOK - Sign Up</title>
   <style>
-    /* =====================================================
-       AYNA BOOK
-       REGISTRATION PAGE
-       FULL SCREEN • LARGE TEXT • STATIC UI
-       Firebase / signup.js compatible
-       ===================================================== */
-
-    * {
-      box-sizing: border-box;
+    :root {
+      --gold: #d4af37;
+      --gold-light: #f3e5ab;
+      --bg-dark: #090b10;
+      --card-bg: #121622;
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
     }
-
-    html {
-      width: 100%;
-      min-height: 100%;
-      margin: 0;
-      padding: 0;
-
-      /* কোনো smooth scrolling নয় */
-      scroll-behavior: auto;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body {
-      width: 100%;
+      background: radial-gradient(circle at top, #1a2035 0%, var(--bg-dark) 100%);
+      color: var(--text-main);
       min-height: 100vh;
-
-      margin: 0;
-      padding: 24px;
-
-      background: #0A0F1E;
-      color: #FFFFFF;
-
-      font-family:
-        Arial,
-        "Noto Sans Bengali",
-        sans-serif;
-
-      font-size: 18px;
-
-      /* horizontal movement সম্পূর্ণ বন্ধ */
-      overflow-x: hidden;
-
-      /* কোনো animation / transition নয় */
-      animation: none !important;
-      transition: none !important;
-    }
-
-    /* =====================================================
-       MAIN FULL SCREEN AREA
-       ===================================================== */
-
-    .page {
-      width: 100%;
-      min-height: calc(100vh - 48px);
-
       display: flex;
+      align-items: center;
       justify-content: center;
-      align-items: flex-start;
-
-      padding: 10px 0 40px;
+      padding: 20px;
     }
-
-    .container {
-      width: 100%;
-      max-width: 720px;
-
-      margin: 0 auto;
-    }
-
-    /* =====================================================
-       HEADER
-       ===================================================== */
-
-    header {
-      width: 100%;
-
-      text-align: center;
-
-      margin: 0 0 28px;
-      padding: 8px 0;
-    }
-
-    .logo {
-      margin: 0;
-
-      color: #FFFFFF;
-
-      font-size: clamp(32px, 6vw, 48px);
-      font-weight: 800;
-
-      letter-spacing: 2px;
-      line-height: 1.2;
-    }
-
-    /* স্থির star — কোনো glow animation নেই */
-    .star {
-      color: #FFFFFF;
-
-      font-size: 0.75em;
-
-      animation: none !important;
-      transition: none !important;
-    }
-
-    header p {
-      margin: 10px 0 0;
-
-      color: #FFFFFF;
-
-      font-size: clamp(18px, 3vw, 23px);
-      font-weight: 500;
-
-      line-height: 1.5;
-    }
-
-    /* =====================================================
-       CARD
-       ===================================================== */
-
-    .card {
-      width: 100%;
-
-      background: #1A2233;
-
-      border: 2px solid #FFD700;
+    .auth-container {
+      background: var(--card-bg);
+      border: 2px solid var(--gold);
       border-radius: 16px;
-
-      padding: clamp(24px, 5vw, 42px);
-
-      box-shadow: none;
-
-      animation: none !important;
-      transition: none !important;
-    }
-
-    /* =====================================================
-       HEADINGS
-       ===================================================== */
-
-    h2 {
-      margin: 0;
-
-      text-align: center;
-
-      color: #FFFFFF;
-
-      font-size: clamp(28px, 5vw, 38px);
-      font-weight: 800;
-
-      line-height: 1.3;
-    }
-
-    .subtitle {
-      margin: 12px 0 30px;
-
-      text-align: center;
-
-      color: #D4D9E2;
-
-      font-size: clamp(17px, 3vw, 21px);
-      line-height: 1.6;
-    }
-
-    /* =====================================================
-       FORM
-       ===================================================== */
-
-    form {
+      padding: 32px 28px;
       width: 100%;
+      max-width: 420px;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
     }
-
-    label {
-      display: block;
-
-      margin: 22px 0 9px;
-
-      color: #FFFFFF;
-
-      font-size: clamp(18px, 3vw, 21px);
-      font-weight: 700;
-
-      line-height: 1.5;
+    .brand-header { text-align: center; margin-bottom: 24px; }
+    .brand-header h1 {
+      color: var(--gold);
+      font-size: 28px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
-
-    /* =====================================================
-       INPUT + SELECT
-       ===================================================== */
-
-    input,
-    select {
+    .brand-header p { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; color: var(--gold-light); margin-bottom: 6px; }
+    .form-group input {
       width: 100%;
-
-      min-height: 56px;
-
-      padding: 14px 16px;
-
-      border: 2px solid #526078;
-      border-radius: 10px;
-
-      background: #0A0F1E;
-      color: #FFFFFF;
-
-      font-family: inherit;
-      font-size: clamp(17px, 3vw, 20px);
-
+      padding: 12px 14px;
+      background: #0b0e17;
+      border: 1px solid #2d3548;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 15px;
       outline: none;
-
-      animation: none !important;
-      transition: none !important;
+      transition: 0.3s;
     }
-
-    input::placeholder {
-      color: #8F99AA;
-      opacity: 1;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: #FFD700;
-      outline: 2px solid #FFD700;
-      outline-offset: 1px;
-
-      animation: none !important;
-      transition: none !important;
-    }
-
-    select {
-      cursor: pointer;
-    }
-
-    select option {
-      background: #0A0F1E;
-      color: #FFFFFF;
-    }
-
-    /* =====================================================
-       PASSWORD
-       ===================================================== */
-
-    .password-box {
+    .form-group input:focus { border-color: var(--gold); box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
+    .btn-gold {
       width: 100%;
-
-      display: flex;
-      align-items: stretch;
-
-      gap: 10px;
-    }
-
-    .password-box input {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .show-button {
-      flex: 0 0 auto;
-
-      min-width: 90px;
-      min-height: 56px;
-
-      padding: 12px 16px;
-
-      border: 2px solid #526078;
-      border-radius: 10px;
-
-      background: #34415A;
-      color: #FFFFFF;
-
-      font-family: inherit;
-      font-size: 17px;
+      padding: 13px;
+      background: linear-gradient(135deg, #d4af37, #aa8018);
+      color: #000;
       font-weight: 700;
-
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
-
-      animation: none !important;
-      transition: none !important;
+      transition: 0.3s;
+      margin-top: 8px;
     }
-
-    .show-button:hover,
-    .show-button:active,
-    .show-button:focus {
-      background: #34415A;
-      color: #FFFFFF;
-
-      transform: none !important;
-
-      animation: none !important;
-      transition: none !important;
-    }
-
-    /* =====================================================
-       PROFILE PHOTO
-       ===================================================== */
-
-    .photo-preview {
-      display: block;
-
-      width: 140px;
-      height: 140px;
-
-      margin: 14px auto 20px;
-
-      border: 2px solid #FFD700;
-      border-radius: 50%;
-
-      object-fit: contain;
-
-      background: #0A0F1E;
-
-      animation: none !important;
-      transition: none !important;
-    }
-
-    #profilePhoto {
-      padding: 12px;
-      min-height: 58px;
-
-      cursor: pointer;
-    }
-
-    /* =====================================================
-       TERMS
-       ===================================================== */
-
-    .terms {
-      width: 100%;
-
-      display: flex;
-      align-items: flex-start;
-
-      gap: 12px;
-
-      margin-top: 25px;
-      padding: 4px 0;
-    }
-
-    .terms input {
-      flex: 0 0 auto;
-
-      width: 24px;
-      height: 24px;
-
-      min-height: 24px;
-
-      margin: 3px 0 0;
-
-      padding: 0;
-
-      accent-color: #FFD700;
-
-      cursor: pointer;
-    }
-
-    .terms label {
-      flex: 1;
-
-      margin: 0;
-
-      color: #D4D9E2;
-
-      font-size: clamp(16px, 3vw, 19px);
-      font-weight: 500;
-
-      line-height: 1.6;
-
-      cursor: pointer;
-    }
-
-    /* =====================================================
-       REGISTER BUTTON
-       ===================================================== */
-
-    .submit {
-      width: 100%;
-
-      min-height: 60px;
-
-      margin-top: 28px;
-      padding: 15px 20px;
-
-      border: 2px solid #FFD700;
-      border-radius: 10px;
-
-      background: #FFD700;
-      color: #0A0F1E;
-
-      font-family: inherit;
-      font-size: clamp(19px, 3vw, 23px);
-      font-weight: 800;
-
-      letter-spacing: 0.5px;
-
-      cursor: pointer;
-
-      animation: none !important;
-      transition: none !important;
-      transform: none !important;
-    }
-
-    .submit:hover,
-    .submit:active,
-    .submit:focus {
-      background: #FFD700;
-      color: #0A0F1E;
-
-      transform: none !important;
-
-      animation: none !important;
-      transition: none !important;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-
-      cursor: not-allowed;
-
-      transform: none !important;
-      animation: none !important;
-      transition: none !important;
-    }
-
-    /* =====================================================
-       STATUS MESSAGE
-       ===================================================== */
-
-    #statusMessage {
-      display: none;
-
-      width: 100%;
-
-      margin-top: 20px;
-      padding: 16px;
-
-      border: 1px solid #526078;
-      border-radius: 10px;
-
-      background: #0A0F1E;
-      color: #FFFFFF;
-
-      font-size: clamp(16px, 3vw, 19px);
-
-      line-height: 1.7;
-
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-
-      animation: none !important;
-      transition: none !important;
-    }
-
-    /* =====================================================
-       NOTE
-       ===================================================== */
-
-    .note {
-      margin: 24px 0 0;
-
-      color: #C4CBD6;
-
-      font-size: clamp(16px, 3vw, 19px);
-
-      line-height: 1.8;
-
-      text-align: left;
-    }
-
-    /* =====================================================
-       LOGIN LINK
-       ===================================================== */
-
-    .login-link {
-      margin-top: 28px;
-
-      padding-top: 22px;
-
-      border-top: 1px solid #3E4A60;
-
-      text-align: center;
-
-      color: #C4CBD6;
-
-      font-size: clamp(17px, 3vw, 20px);
-
-      line-height: 1.7;
-    }
-
-    a {
-      color: #FFD700;
-
-      font-weight: 800;
-
-      text-decoration: none;
-
-      animation: none !important;
-      transition: none !important;
-    }
-
-    a:hover,
-    a:focus,
-    a:active {
-      color: #FFD700;
-
-      text-decoration: underline;
-
-      animation: none !important;
-      transition: none !important;
-    }
-
-    /* =====================================================
-       GLOBAL STATIC OVERRIDE
-       ===================================================== */
-
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0s !important;
-      animation-delay: 0s !important;
-      animation-iteration-count: 1 !important;
-
-      transition: none !important;
-
-      scroll-behavior: auto !important;
-    }
-
-    /* =====================================================
-       MOBILE
-       ===================================================== */
-
-    @media (max-width: 600px) {
-
-      body {
-        padding: 14px;
-      }
-
-      .page {
-        min-height: calc(100vh - 28px);
-
-        padding: 4px 0 28px;
-      }
-
-      .container {
-        width: 100%;
-      }
-
-      header {
-        margin-bottom: 20px;
-      }
-
-      .card {
-        padding: 22px 18px 26px;
-
-        border-radius: 14px;
-      }
-
-      .password-box {
-        gap: 7px;
-      }
-
-      .show-button {
-        min-width: 78px;
-
-        padding-left: 10px;
-        padding-right: 10px;
-
-        font-size: 16px;
-      }
-
-      .photo-preview {
-        width: 125px;
-        height: 125px;
-      }
-    }
-
-    /* =====================================================
-       VERY SMALL MOBILE
-       ===================================================== */
-
-    @media (max-width: 380px) {
-
-      body {
-        padding: 10px;
-      }
-
-      .page {
-        min-height: calc(100vh - 20px);
-      }
-
-      .card {
-        padding: 18px 14px 22px;
-      }
-
-      .password-box {
-        flex-direction: column;
-      }
-
-      .password-box input {
-        width: 100%;
-      }
-
-      .show-button {
-        width: 100%;
-        min-height: 52px;
-      }
-
-      .terms {
-        gap: 9px;
-      }
-    }
-
-    /* =====================================================
-       REDUCED MOTION
-       ===================================================== */
-
-    @media (prefers-reduced-motion: reduce) {
-
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-      }
-    }
+    .btn-gold:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    .status-msg { margin-top: 14px; font-size: 13px; text-align: center; min-height: 20px; }
+    .links { margin-top: 18px; text-align: center; font-size: 14px; color: var(--text-muted); }
+    .links a { color: var(--gold); text-decoration: none; font-weight: 600; }
+    .links a:hover { text-decoration: underline; }
   </style>
 </head>
-
 <body>
 
-  <div class="page">
-
-    <div class="container">
-
-      <!-- =================================================
-           HEADER
-           ================================================= -->
-
-      <header>
-
-        <div class="logo">
-          AYNA BOOK <span class="star">✦</span>
-        </div>
-
-        <p>
-          Connect • Share • Create
-        </p>
-
-      </header>
-
-
-      <!-- =================================================
-           REGISTRATION CARD
-           ================================================= -->
-
-      <main class="card">
-
-        <h2>
-          Create Your Account
-        </h2>
-
-        <p class="subtitle">
-          Registration with Gmail Verification
-        </p>
-
-
-        <!-- =================================================
-             REGISTRATION FORM
-
-             IMPORTANT:
-             Existing signup.js IDs are unchanged.
-             ================================================= -->
-
-        <form id="registrationForm">
-
-
-          <!-- ACCOUNT CATEGORY -->
-
-          <label for="accountType">
-            Account Category
-          </label>
-
-          <select
-            id="accountType"
-            required
-          >
-
-            <option value="personal">
-              Personal — Free
-            </option>
-
-            <option value="business">
-              Business — $10
-            </option>
-
-            <option value="vip">
-              VIP — $10
-            </option>
-
-            <option value="vvip">
-              VVIP — $20
-            </option>
-
-          </select>
-
-
-          <!-- FULL NAME -->
-
-          <label for="fullName">
-            Full Name
-          </label>
-
-          <input
-            id="fullName"
-            type="text"
-            maxlength="100"
-            autocomplete="name"
-            required
-          >
-
-
-          <!-- GMAIL -->
-
-          <label for="email">
-            Gmail Address
-          </label>
-
-          <input
-            id="email"
-            type="email"
-            placeholder="example@gmail.com"
-            autocomplete="email"
-            required
-          >
-
-
-          <!-- PHONE -->
-
-          <label for="phone">
-            Mobile Number
-          </label>
-
-          <input
-            id="phone"
-            type="tel"
-            placeholder="+8801XXXXXXXXX"
-            autocomplete="tel"
-            required
-          >
-
-
-          <!-- PROFILE PHOTO -->
-
-          <label for="profilePhoto">
-            Profile Photo (Optional)
-          </label>
-
-          <img
-            id="photoPreview"
-            class="photo-preview"
-            alt="Profile photo preview"
-          >
-
-          <input
-            id="profilePhoto"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-          >
-
-
-          <!-- PASSWORD -->
-
-          <label for="password">
-            Password (Minimum 11 Characters)
-          </label>
-
-          <div class="password-box">
-
-            <input
-              id="password"
-              type="password"
-              minlength="11"
-              autocomplete="new-password"
-              required
-            >
-
-            <button
-              class="show-button"
-              type="button"
-              data-toggle="password"
-              aria-label="Show password"
-            >
-              Show
-            </button>
-
-          </div>
-
-
-          <!-- CONFIRM PASSWORD -->
-
-          <label for="confirmPassword">
-            Confirm Password
-          </label>
-
-          <div class="password-box">
-
-            <input
-              id="confirmPassword"
-              type="password"
-              minlength="11"
-              autocomplete="new-password"
-              required
-            >
-
-            <button
-              class="show-button"
-              type="button"
-              data-toggle="confirmPassword"
-              aria-label="Show confirm password"
-            >
-              Show
-            </button>
-
-          </div>
-
-
-          <!-- TERMS -->
-
-          <div class="terms">
-
-            <input
-              id="terms"
-              type="checkbox"
-              required
-            >
-
-            <label for="terms">
-              I agree to AYNA BOOK's
-              Terms and Privacy Policy.
-            </label>
-
-          </div>
-
-
-          <!-- REGISTER -->
-
-          <button
-            class="submit"
-            id="registerButton"
-            type="submit"
-          >
-            REGISTER
-          </button>
-
-        </form>
-
-
-        <!-- STATUS -->
-
-        <div
-          id="statusMessage"
-          role="status"
-          aria-live="polite"
-        ></div>
-
-
-        <!-- INFORMATION -->
-
-        <p class="note">
-          Registration-এর পরে আপনার Gmail-এ
-          Verification Link পাঠানো হবে।
-          Inbox অথবা Spam Folder পরীক্ষা করুন।
-          Gmail Verify না করা পর্যন্ত Dashboard
-          ব্যবহার করা যাবে না।
-        </p>
-
-
-        <!-- LOGIN -->
-
-        <div class="login-link">
-
-          Already have an account?
-
-          <a href="./login.html">
-            LOGIN
-          </a>
-
-        </div>
-
-      </main>
-
+  <div class="auth-container">
+    <div class="brand-header">
+      <h1>AYNA BOOK</h1>
+      <p>Create your Global Digital Identity</p>
     </div>
 
+    <form id="signupForm">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="Enter your full name" required />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="example@email.com" required />
+      </div>
+      <div class="form-group">
+        <label>Phone / Country</label>
+        <input type="text" id="country" placeholder="e.g. Bangladesh" required />
+      </div>
+      <div class="form-group">
+        <label>Password (Min 6 characters)</label>
+        <input type="password" id="password" placeholder="••••••••" minlength="6" required />
+      </div>
+
+      <button type="submit" class="btn-gold" id="submitBtn">Create AYNA Account</button>
+      <div class="status-msg" id="statusMsg"></div>
+    </form>
+
+    <div class="links">
+      Already have an account? <a href="index.html">Log In</a>
+    </div>
   </div>
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  <!-- =====================================================
-       FIREBASE REGISTRATION CONTROLLER
-       ===================================================== -->
+    // আপনার ayna-book প্রজেক্টের Firebase Config এখানে বসান
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "ayna-book.firebaseapp.com",
+      databaseURL: "https://ayna-book-default-rtdb.firebaseio.com",
+      projectId: "ayna-book",
+      storageBucket: "ayna-book.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-  <script
-    type="module"
-    src="./signup.js"
-  ></script>
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
 
+    const signupForm = document.getElementById("signupForm");
+    const statusMsg = document.getElementById("statusMsg");
+    const submitBtn = document.getElementById("submitBtn");
+
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const country = document.getElementById("country").value.trim();
+      const password = document.getElementById("password").value;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating Account...";
+      statusMsg.style.color = "#f3e5ab";
+      statusMsg.textContent = "Generating your AYNA ID...";
+
+      try {
+        // ১. ইউজার তৈরি
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await updateProfile(user, { displayName: fullName });
+        await sendEmailVerification(user);
+
+        // ২. অটোমেটিক সিকোয়েন্সিয়াল AYNA ID (যেমন: 2026-----10000001)
+        const counterRef = ref(db, "system/lastUserSerial");
+        const transactionResult = await runTransaction(counterRef, (currentValue) => {
+          return (currentValue || 10000000) + 1;
+        });
+        const aynaId = `2026-----${transactionResult.snapshot.val()}`;
+
+        // ৩. Realtime Database-এ প্রোফাইল সেভ
+        await set(ref(db, `users/${user.uid}`), {
+          uid: user.uid,
+          aynaId: aynaId,
+          fullName: fullName,
+          email: email,
+          country: country,
+          photoURL: "https://via.placeholder.com/300/121622/d4af37?text=AYNA+USER",
+          privacy: "public",
+          createdAt: new Date().toISOString()
+        });
+
+        statusMsg.style.color = "#4ade80";
+        statusMsg.textContent = `Success! Your AYNA ID: ${aynaId}. Redirecting to Dashboard...`;
+        setTimeout(() => { window.location.href = "dashboard.html"; }, 2000);
+
+      } catch (error) {
+        statusMsg.style.color = "#f87171";
+        statusMsg.textContent = error.message;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create AYNA Account";
+      }
+    });
+  </script>
 </body>
 </html>
