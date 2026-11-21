@@ -4,67 +4,93 @@ service firebase.storage {
 
   match /b/{bucket}/o {
 
-    // ==========================================
-    // USER FILES
-    // Profile photo + payment proof
-    // ==========================================
-    match /users/{userId}/{allPaths=**} {
+    // =====================================================
+    // HELPER FUNCTIONS
+    // =====================================================
 
-      // নিজের ফাইল নিজে দেখতে পারবে
-      allow read:
-        if request.auth != null
-        && request.auth.uid == userId;
+    function signedIn() {
+      return request.auth != null;
+    }
 
-      // শুধু image upload
-      // Maximum size: 5 MB
-      allow create, update:
-        if request.auth != null
-        && request.auth.uid == userId
+    function isOwner(uid) {
+      return signedIn()
+        && request.auth.uid == uid;
+    }
+
+
+    // =====================================================
+    // USER PROFILE PHOTOS
+    // Path:
+    // /users/{uid}/profile/{fileName}
+    // =====================================================
+
+    match /users/{uid}/profile/{fileName} {
+
+      // Owner can upload / replace profile photo
+      allow write:
+        if isOwner(uid)
+        && request.resource != null
         && request.resource.size <= 5 * 1024 * 1024
-        && request.resource.contentType.matches('image/.*');
+        && request.resource.contentType.matches(
+             'image/.*'
+           );
 
-      // নিজের ফাইল delete করতে পারবে
-      allow delete:
-        if request.auth != null
-        && request.auth.uid == userId;
-    }
-
-
-    // ==========================================
-    // POST MEDIA
-    // Images + Videos
-    // ==========================================
-    match /posts/{userId}/{allPaths=**} {
-
-      // নিজের পোস্টের media দেখতে পারবে
+      // Profile photos can be viewed by signed-in users
       allow read:
-        if request.auth != null
-        && request.auth.uid == userId;
-
-      // Image / Video upload
-      // Maximum size: 20 MB
-      allow create, update:
-        if request.auth != null
-        && request.auth.uid == userId
-        && request.resource.size <= 20 * 1024 * 1024
-        && (
-          request.resource.contentType.matches('image/.*')
-          ||
-          request.resource.contentType.matches('video/.*')
-        );
-
-      // নিজের media delete
-      allow delete:
-        if request.auth != null
-        && request.auth.uid == userId;
+        if signedIn();
     }
 
 
-    // ==========================================
-    // EVERYTHING ELSE — BLOCK
-    // ==========================================
+    // =====================================================
+    // USER POST IMAGES
+    // Path:
+    // /users/{uid}/posts/{fileName}
+    // =====================================================
+
+    match /users/{uid}/posts/{fileName} {
+
+      allow write:
+        if isOwner(uid)
+        && request.resource != null
+        && request.resource.size <= 10 * 1024 * 1024
+        && request.resource.contentType.matches(
+             'image/.*'
+           );
+
+      allow read:
+        if signedIn();
+    }
+
+
+    // =====================================================
+    // USER FILES
+    // Path:
+    // /users/{uid}/files/{fileName}
+    // =====================================================
+
+    match /users/{uid}/files/{fileName} {
+
+      allow write:
+        if isOwner(uid)
+        && request.resource != null
+        && request.resource.size <= 10 * 1024 * 1024;
+
+      allow read:
+        if isOwner(uid);
+    }
+
+
+    // =====================================================
+    // DEFAULT DENY
+    // =====================================================
+
     match /{allPaths=**} {
-      allow read, write: if false;
+
+      allow read, write:
+        if false;
+
     }
+
   }
+
 }
