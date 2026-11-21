@@ -5,7 +5,7 @@
 // =========================================================
 
 export const firebaseConfig = {
-  apiKey: "PASTE_YOUR_REAL_FIREBASE_WEB_API_KEY_HERE",
+  apiKey: "BBASymMgCyL1s0I2kRxZOm5E5brEcL_b2459AreJaWJgT38BA2oUZ-r1Flqa2qkzK8lzFcLkmrw2um7UL2hRXpo",
   authDomain: "ayna-book.firebaseapp.com",
   databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "ayna-book",
