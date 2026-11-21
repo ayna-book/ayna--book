@@ -2,6 +2,7 @@
 // =========================================================
 // AYNA BOOK
 // AUTHENTICATION CONTROLLER
+// File: auth.js
 // Firebase SDK: 13.4.0
 // =========================================================
 
@@ -30,6 +31,7 @@ export const MIN_PASSWORD_LENGTH = 11;
 // =========================================================
 
 export function validateGmail(email) {
+
   const value = String(email || "")
     .trim()
     .toLowerCase();
@@ -40,10 +42,10 @@ export function validateGmail(email) {
 
 // =========================================================
 // PASSWORD VALIDATION
-// Signup-এর সময় ব্যবহার হবে
 // =========================================================
 
 export function validatePassword(password) {
+
   const value = String(password || "");
 
   return value.length >= MIN_PASSWORD_LENGTH;
@@ -55,6 +57,7 @@ export function validatePassword(password) {
 // =========================================================
 
 export function passwordsMatch(password, confirmPassword) {
+
   return (
     String(password || "") ===
     String(confirmPassword || "")
@@ -63,7 +66,7 @@ export function passwordsMatch(password, confirmPassword) {
 
 
 // =========================================================
-// CREATE ACCOUNT
+// CREATE REGISTRATION ACCOUNT
 // =========================================================
 
 export async function createRegistrationAccount({
@@ -107,11 +110,9 @@ export async function createRegistrationAccount({
     throw new Error("Account তৈরি করা যায়নি।");
   }
 
-  if (name) {
-    await updateProfile(user, {
-      displayName: name
-    });
-  }
+  await updateProfile(user, {
+    displayName: name
+  });
 
   return user;
 }
@@ -121,7 +122,9 @@ export async function createRegistrationAccount({
 // SEND VERIFICATION EMAIL
 // =========================================================
 
-export async function sendVerificationEmail(user = auth.currentUser) {
+export async function sendVerificationEmail(
+  user = auth.currentUser
+) {
 
   if (!user) {
     throw new Error(
@@ -129,15 +132,22 @@ export async function sendVerificationEmail(user = auth.currentUser) {
     );
   }
 
+  // Refresh user information
   await user.reload();
 
   const currentUser = auth.currentUser;
 
-  if (!currentUser) {
-    throw new Error("User session পাওয়া যায়নি।");
+  // Confirm the same user is still signed in
+  if (
+    !currentUser ||
+    currentUser.uid !== user.uid
+  ) {
+    throw new Error(
+      "User session পাওয়া যায়নি। আবার Login করুন।"
+    );
   }
 
-  if (currentUser.emailVerified) {
+  if (currentUser.emailVerified === true) {
     return {
       alreadyVerified: true
     };
@@ -153,9 +163,6 @@ export async function sendVerificationEmail(user = auth.currentUser) {
 
 // =========================================================
 // LOGIN
-// গুরুত্বপূর্ণ:
-// এখানে 11 অক্ষরের password বাধ্যতামূলক করা হয়নি।
-// Firebase নিজেই password যাচাই করবে।
 // =========================================================
 
 export async function loginUser(email, password) {
@@ -191,17 +198,20 @@ export async function loginUser(email, password) {
 
   const currentUser = auth.currentUser;
 
-  if (!currentUser) {
+  if (
+    !currentUser ||
+    currentUser.uid !== user.uid
+  ) {
     throw new Error("User session পাওয়া যায়নি।");
   }
 
-  // Gmail verification বাধ্যতামূলক
+  // Gmail verification is mandatory
   if (!currentUser.emailVerified) {
 
     await signOut(auth);
 
     throw new Error(
-      "আপনার Gmail এখনো Verify করা হয়নি। Gmail থেকে Verification link-এ ক্লিক করুন।"
+      "আপনার Gmail এখনো Verify করা হয়নি। Gmail থেকে Verification Link-এ ক্লিক করুন।"
     );
   }
 
@@ -237,7 +247,10 @@ export async function resetPassword(email) {
 // =========================================================
 
 export async function logoutUser() {
+
   await signOut(auth);
+
+  return true;
 }
 
 
@@ -248,6 +261,7 @@ export async function logoutUser() {
 export function watchAuthState(callback) {
 
   if (typeof callback !== "function") {
+
     throw new Error(
       "watchAuthState-এর জন্য callback function প্রয়োজন।"
     );
@@ -255,22 +269,30 @@ export function watchAuthState(callback) {
 
   return onAuthStateChanged(
     auth,
-    callback
+    callback,
+    (error) => {
+
+      console.error(
+        "AYNA BOOK Auth State Error:",
+        error
+      );
+    }
   );
 }
 
 
 // =========================================================
-// CURRENT USER
+// GET CURRENT USER
 // =========================================================
 
 export function getCurrentUser() {
+
   return auth.currentUser;
 }
 
 
 // =========================================================
-// EMAIL VERIFIED?
+// CHECK EMAIL VERIFICATION
 // =========================================================
 
 export function isEmailVerified() {
@@ -290,8 +312,7 @@ export function isEmailVerified() {
 
 export function getAuthErrorMessage(error) {
 
-  const code =
-    error?.code || "";
+  const code = error?.code || "";
 
   switch (code) {
 
@@ -305,6 +326,7 @@ export function getAuthErrorMessage(error) {
       return "Password আরও শক্তিশালী দিন।";
 
     case "auth/invalid-credential":
+    case "auth/invalid-login-credentials":
       return "Gmail অথবা Password সঠিক নয়।";
 
     case "auth/user-not-found":
@@ -312,6 +334,9 @@ export function getAuthErrorMessage(error) {
 
     case "auth/wrong-password":
       return "Password সঠিক নয়।";
+
+    case "auth/missing-password":
+      return "Password লিখুন।";
 
     case "auth/user-disabled":
       return "এই account বর্তমানে বন্ধ করা হয়েছে।";
@@ -325,10 +350,32 @@ export function getAuthErrorMessage(error) {
     case "auth/requires-recent-login":
       return "এই কাজের জন্য আবার Login করতে হবে।";
 
+    case "auth/operation-not-allowed":
+      return "Firebase Console-এ Email/Password Sign-in চালু করুন।";
+
+    case "auth/unauthorized-domain":
+      return "এই Website-এর Domain Firebase Authorized Domains-এ যোগ করুন।";
+
+    case "auth/invalid-api-key":
+      return "Firebase API Key সঠিক নয়। Firebase Configuration পরীক্ষা করুন।";
+
+    case "auth/quota-exceeded":
+      return "Firebase-এর নির্ধারিত সীমা অতিক্রম হয়েছে। পরে আবার চেষ্টা করুন।";
+
     default:
+
       return (
         error?.message ||
         "Authentication-এর সময় একটি সমস্যা হয়েছে।"
       );
   }
 }
+
+
+// =========================================================
+// INITIALIZATION LOG
+// =========================================================
+
+console.log(
+  "AYNA BOOK - auth.js loaded successfully."
+);
