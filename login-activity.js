@@ -1,23 +1,14 @@
-
-/* ========================================================
-   AYNA BOOK
-   Login Activity Controller
-   Step 31
-   Firebase SDK: 13.4.0
-
-   NOTE:
-   This is a client-side activity logger.
-   It is not a trusted security audit log.
-======================================================== */
+// =========================================================
+// AYNA BOOK
+// LOGIN ACTIVITY
+// File: login-activity.js
+// Firebase SDK: 13.4.0
+// =========================================================
 
 import {
   auth,
   db
 } from "./firebase.js";
-
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
   collection,
@@ -26,137 +17,241 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
 
-// ========================================================
-// DEVICE INFORMATION
-// ========================================================
+// =========================================================
+// DEVICE TYPE
+// =========================================================
 
-function getDeviceInformation() {
+function getDeviceType() {
 
   const userAgent =
-    navigator.userAgent || "Unknown";
+    navigator.userAgent.toLowerCase();
 
-  let deviceType = "Unknown";
-
-  if (/Android/i.test(userAgent)) {
-
-    deviceType = "Android";
-
-  } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
-
-    deviceType = "iOS";
-
-  } else if (/Windows/i.test(userAgent)) {
-
-    deviceType = "Windows";
-
-  } else if (/Macintosh|Mac OS/i.test(userAgent)) {
-
-    deviceType = "macOS";
-
-  } else if (/Linux/i.test(userAgent)) {
-
-    deviceType = "Linux";
-
+  if (
+    /mobile|android|iphone|ipod|windows phone/i
+      .test(userAgent)
+  ) {
+    return "mobile";
   }
 
-  return {
-    deviceType,
-    browserInformation: userAgent.substring(0, 250)
-  };
+  if (
+    /ipad|tablet/i
+      .test(userAgent)
+  ) {
+    return "tablet";
+  }
 
+  return "desktop";
 }
 
 
-// ========================================================
-// RECORD LOGIN ACTIVITY
-// ========================================================
+// =========================================================
+// BROWSER INFORMATION
+// =========================================================
 
-export async function recordLoginActivity(user) {
+function getBrowserInformation() {
 
-  if (!user || !user.uid) {
+  const userAgent =
+    navigator.userAgent;
 
-    return {
-      success: false,
-      message: "Authenticated user required."
-    };
+  let browser = "Unknown";
 
+
+  if (/edg/i.test(userAgent)) {
+    browser = "Microsoft Edge";
   }
 
-  try {
+  else if (/opr|opera/i.test(userAgent)) {
+    browser = "Opera";
+  }
 
-    const device = getDeviceInformation();
+  else if (/chrome/i.test(userAgent)) {
+    browser = "Google Chrome";
+  }
 
-    const activityCollection = collection(
+  else if (/firefox/i.test(userAgent)) {
+    browser = "Mozilla Firefox";
+  }
+
+  else if (/safari/i.test(userAgent)) {
+    browser = "Safari";
+  }
+
+
+  return browser;
+}
+
+
+// =========================================================
+// RECORD LOGIN ACTIVITY
+// =========================================================
+
+export async function recordLoginActivity(user = null) {
+
+  const currentUser =
+    user || auth.currentUser;
+
+
+  if (!currentUser) {
+
+    throw new Error(
+      "LOGIN_ACTIVITY_USER_MISSING"
+    );
+  }
+
+
+  if (!currentUser.uid) {
+
+    throw new Error(
+      "LOGIN_ACTIVITY_UID_MISSING"
+    );
+  }
+
+
+  const activityRef =
+    collection(
       db,
       "users",
-      user.uid,
+      currentUser.uid,
       "loginActivity"
     );
 
+
+  const activityData = {
+
+    // Firebase user information
+    uid: currentUser.uid,
+
+    email:
+      currentUser.email || "",
+
+    emailVerified:
+      currentUser.emailVerified === true,
+
+
+    // Login information
+    event: "login",
+
+    deviceType:
+      getDeviceType(),
+
+    browserInformation:
+      getBrowserInformation(),
+
+
+    // Server timestamp
+    createdAt:
+      serverTimestamp()
+
+  };
+
+
+  const documentReference =
     await addDoc(
-      activityCollection,
-      {
-        event: "login",
-        deviceType: device.deviceType,
-        browserInformation: device.browserInformation,
-        emailVerified: user.emailVerified,
-        createdAt: serverTimestamp()
-      }
+      activityRef,
+      activityData
     );
 
-    console.info(
-      "AYNA BOOK — Login Activity Recorded."
-    );
 
-    return {
-      success: true
-    };
+  console.log(
+    "AYNA BOOK Login Activity recorded:",
+    documentReference.id
+  );
 
-  } catch (error) {
 
-    console.error(
-      "AYNA BOOK Login Activity Error:",
-      error
-    );
-
-    return {
-      success: false,
-      message: "Activity could not be recorded."
-    };
-
-  }
-
+  return documentReference;
 }
 
 
-// ========================================================
-// AUTHENTICATION MONITOR
-// ========================================================
+// =========================================================
+// OPTIONAL — RECORD CUSTOM AUTH EVENT
+// =========================================================
 
-// IMPORTANT:
-// This observer also fires when an existing session is
-// restored. Therefore it does not prove a fresh login.
+export async function recordAuthActivity(
+  eventName,
+  user = null
+) {
 
-onAuthStateChanged(
-  auth,
-  function (user) {
+  const currentUser =
+    user || auth.currentUser;
 
-    if (!user) {
 
-      console.info(
-        "AYNA BOOK — No active user session."
-      );
+  if (!currentUser?.uid) {
 
-    }
-
+    throw new Error(
+      "AUTH_ACTIVITY_USER_MISSING"
+    );
   }
-);
 
 
-// ========================================================
-// SYSTEM READY
-// ========================================================
+  const activityRef =
+    collection(
+      db,
+      "users",
+      currentUser.uid,
+      "loginActivity"
+    );
+
+
+  const documentReference =
+    await addDoc(
+      activityRef,
+      {
+
+        uid:
+          currentUser.uid,
+
+        email:
+          currentUser.email || "",
+
+        emailVerified:
+          currentUser.emailVerified === true,
+
+        event:
+          String(eventName || "unknown"),
+
+        deviceType:
+          getDeviceType(),
+
+        browserInformation:
+          getBrowserInformation(),
+
+        createdAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+  return documentReference;
+}
+
+
+// =========================================================
+// EXPORT DEVICE HELPERS
+// =========================================================
+
+export {
+  getDeviceType,
+  getBrowserInformation
+};
+
+
+// =========================================================
+// DEBUG
+// =========================================================
 
 console.log(
-  "AYNA BOOK — Login Activity Controller Loaded."
+  "========================================"
+);
+
+console.log(
+  "AYNA BOOK - Login Activity"
+);
+
+console.log(
+  "login-activity.js loaded successfully."
+);
+
+console.log(
+  "========================================"
 );
