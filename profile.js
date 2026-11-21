@@ -1,503 +1,559 @@
 // =========================================================
 // AYNA BOOK
-// PROFILE CONTROLLER
+// PROFILE EDIT CONTROLLER
 // Firebase SDK: 13.4.0
 // =========================================================
 
 import {
   auth,
-  db
+  db,
+  storage
 } from "./firebase.js";
 
 import {
   watchAuthState,
-  logoutUser,
   getAuthErrorMessage
 } from "./auth.js";
 
 import {
   doc,
-  getDoc
+  getDoc,
+  updateDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-
-// =========================================================
-// HTML ELEMENTS
-// =========================================================
-
-const logoutButton = document.getElementById("logoutButton");
-const statusMessage = document.getElementById("statusMessage");
-const loadingMessage = document.getElementById("loadingMessage");
-const profileCard = document.getElementById("profileCard");
-
-const avatar = document.getElementById("avatar");
-const profileName = document.getElementById("profileName");
-const profileEmail = document.getElementById("profileEmail");
-const verificationStatus = document.getElementById("verificationStatus");
-
-const uidValue = document.getElementById("uidValue");
-const accountTypeValue = document.getElementById("accountTypeValue");
-const phoneValue = document.getElementById("phoneValue");
-const countryValue = document.getElementById("countryValue");
-const planValue = document.getElementById("planValue");
-const accountStatusValue = document.getElementById("accountStatusValue");
-const bioValue = document.getElementById("bioValue");
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
 
 // =========================================================
-// BASIC HELPERS
+// ELEMENTS
 // =========================================================
 
-function showStatus(message, type = "info") {
+const fullNameInput =
+  document.getElementById("fullName");
+
+const phoneInput =
+  document.getElementById("phone");
+
+const countryInput =
+  document.getElementById("country");
+
+const bioInput =
+  document.getElementById("bio");
+
+const profilePhotoInput =
+  document.getElementById("profilePhoto");
+
+const saveButton =
+  document.getElementById("saveProfileButton");
+
+const statusMessage =
+  document.getElementById("statusMessage");
+
+
+// =========================================================
+// CURRENT USER
+// =========================================================
+
+let currentUser = null;
+
+
+// =========================================================
+// STATUS
+// =========================================================
+
+function showStatus(
+  message,
+  type = "info"
+) {
+
   if (!statusMessage) return;
 
   statusMessage.textContent = message;
 
-  statusMessage.className = "status-message";
-
-  if (type === "success") {
-    statusMessage.classList.add("success");
-  } else if (type === "error") {
-    statusMessage.classList.add("error");
-  } else {
-    statusMessage.classList.add("info");
-  }
-
   statusMessage.style.display = "block";
-}
 
+  statusMessage.className =
+    `status-message ${type}`;
 
-function hideStatus() {
-  if (!statusMessage) return;
-
-  statusMessage.textContent = "";
-  statusMessage.style.display = "none";
-}
-
-
-function showLoading(show = true) {
-  if (!loadingMessage) return;
-
-  loadingMessage.style.display = show ? "block" : "none";
-}
-
-
-function showProfile(show = true) {
-  if (!profileCard) return;
-
-  profileCard.style.display = show ? "block" : "none";
 }
 
 
 // =========================================================
-// SAFE TEXT HELPER
+// VALIDATION
 // =========================================================
 
-function safeText(value, fallback = "—") {
-  if (
-    value === null ||
-    value === undefined ||
-    String(value).trim() === ""
-  ) {
-    return fallback;
+function validateProfile() {
+
+  const fullName =
+    fullNameInput?.value.trim() || "";
+
+  const phone =
+    phoneInput?.value.trim() || "";
+
+  const country =
+    countryInput?.value.trim() || "";
+
+  const bio =
+    bioInput?.value.trim() || "";
+
+
+  if (fullName.length < 2) {
+
+    showStatus(
+      "Full Name কমপক্ষে ২ অক্ষরের হতে হবে।",
+      "error"
+    );
+
+    return false;
   }
 
-  return String(value);
-}
 
+  if (fullName.length > 100) {
 
-// =========================================================
-// ACCOUNT TYPE LABEL
-// =========================================================
+    showStatus(
+      "Full Name সর্বোচ্চ ১০০ অক্ষর হতে পারবে।",
+      "error"
+    );
 
-function getAccountTypeLabel(accountType) {
-  const type = String(accountType || "").toLowerCase();
-
-  switch (type) {
-    case "personal":
-      return "Personal — Free";
-
-    case "business":
-      return "Business";
-
-    case "vip":
-      return "VIP";
-
-    case "vvip":
-      return "VVIP";
-
-    default:
-      return safeText(accountType, "Personal — Free");
-  }
-}
-
-
-// =========================================================
-// PLAN LABEL
-// =========================================================
-
-function getPlanLabel(plan) {
-  const value = String(plan || "").toLowerCase();
-
-  switch (value) {
-    case "free":
-      return "Free";
-
-    case "business":
-      return "Business";
-
-    case "vip":
-      return "VIP";
-
-    case "vvip":
-      return "VVIP";
-
-    default:
-      return safeText(plan, "Free");
-  }
-}
-
-
-// =========================================================
-// ACCOUNT STATUS LABEL
-// =========================================================
-
-function getAccountStatusLabel(status) {
-  const value = String(status || "").toLowerCase();
-
-  switch (value) {
-    case "active":
-      return "Active";
-
-    case "pending":
-      return "Pending";
-
-    case "pending_payment":
-      return "Pending Payment";
-
-    case "suspended":
-      return "Suspended";
-
-    case "disabled":
-      return "Disabled";
-
-    default:
-      return safeText(status, "Active");
-  }
-}
-
-
-// =========================================================
-// AVATAR
-// =========================================================
-
-function setAvatar(userData, user) {
-  if (!avatar) return;
-
-  const photoURL =
-    userData?.photoURL ||
-    user?.photoURL ||
-    "";
-
-  if (photoURL) {
-    avatar.innerHTML = "";
-    avatar.style.backgroundImage = `url("${photoURL}")`;
-    avatar.style.backgroundSize = "cover";
-    avatar.style.backgroundPosition = "center";
-    avatar.style.backgroundRepeat = "no-repeat";
-    return;
+    return false;
   }
 
-  avatar.style.backgroundImage = "none";
 
-  const name =
-    userData?.fullName ||
-    userData?.name ||
-    user?.displayName ||
-    user?.email ||
-    "A";
+  if (phone.length > 30) {
 
-  const firstLetter =
-    String(name).trim().charAt(0).toUpperCase() || "A";
+    showStatus(
+      "Phone Number সঠিকভাবে দিন।",
+      "error"
+    );
 
-  avatar.textContent = firstLetter;
-}
-
-
-// =========================================================
-// EMAIL VERIFICATION
-// =========================================================
-
-function setVerificationStatus(user) {
-  if (!verificationStatus) return;
-
-  if (user?.emailVerified) {
-    verificationStatus.textContent = "✓ Email Verified";
-    verificationStatus.className =
-      "verification-status verified";
-  } else {
-    verificationStatus.textContent =
-      "⚠ Email Not Verified";
-
-    verificationStatus.className =
-      "verification-status not-verified";
+    return false;
   }
+
+
+  if (country.length > 100) {
+
+    showStatus(
+      "Country সর্বোচ্চ ১০০ অক্ষর হতে পারবে।",
+      "error"
+    );
+
+    return false;
+  }
+
+
+  if (bio.length > 500) {
+
+    showStatus(
+      "Bio সর্বোচ্চ ৫০০ অক্ষর হতে পারবে।",
+      "error"
+    );
+
+    return false;
+  }
+
+
+  return true;
 }
 
 
 // =========================================================
-// LOAD PROFILE
+// PROFILE PHOTO UPLOAD
+// =========================================================
+
+async function uploadProfilePhoto(user) {
+
+  if (!profilePhotoInput) {
+    return "";
+  }
+
+
+  const file =
+    profilePhotoInput.files?.[0];
+
+
+  if (!file) {
+    return "";
+  }
+
+
+  // -------------------------------------------------------
+  // File type
+  // -------------------------------------------------------
+
+  if (!file.type.startsWith("image/")) {
+
+    throw new Error(
+      "শুধু image file upload করা যাবে।"
+    );
+
+  }
+
+
+  // -------------------------------------------------------
+  // 5 MB limit
+  // -------------------------------------------------------
+
+  const maxSize =
+    5 * 1024 * 1024;
+
+
+  if (file.size > maxSize) {
+
+    throw new Error(
+      "Profile photo সর্বোচ্চ 5 MB হতে পারবে।"
+    );
+
+  }
+
+
+  // -------------------------------------------------------
+  // Storage path
+  // -------------------------------------------------------
+
+  const extension =
+    file.name.includes(".")
+      ? file.name
+          .split(".")
+          .pop()
+          .toLowerCase()
+      : "jpg";
+
+
+  const fileName =
+    `profile-${Date.now()}.${extension}`;
+
+
+  const storagePath =
+    `users/${user.uid}/profile/${fileName}`;
+
+
+  const storageRef =
+    ref(storage, storagePath);
+
+
+  // -------------------------------------------------------
+  // Upload
+  // -------------------------------------------------------
+
+  await uploadBytes(
+    storageRef,
+    file,
+    {
+      contentType: file.type
+    }
+  );
+
+
+  // -------------------------------------------------------
+  // Download URL
+  // -------------------------------------------------------
+
+  const downloadURL =
+    await getDownloadURL(storageRef);
+
+
+  return downloadURL;
+}
+
+
+// =========================================================
+// LOAD EXISTING PROFILE
 // =========================================================
 
 async function loadProfile(user) {
-  if (!user) {
-    window.location.replace("./login.html");
-    return;
-  }
-
-  showLoading(true);
-  showProfile(false);
-  hideStatus();
 
   try {
-    const userRef = doc(db, "users", user.uid);
-    const snapshot = await getDoc(userRef);
 
-    let profileData = {};
+    const userRef =
+      doc(db, "users", user.uid);
 
-    if (snapshot.exists()) {
-      profileData = snapshot.data() || {};
-    } else {
-      // Firestore document না থাকলেও Auth user-এর তথ্য দেখানো হবে
-      profileData = {
-        uid: user.uid,
-        fullName: user.displayName || "",
-        email: user.email || "",
-        phone: "",
-        country: "",
-        accountType: "personal",
-        plan: "free",
-        accountStatus: "active",
-        bio: "",
-        photoURL: user.photoURL || ""
-      };
+    const snapshot =
+      await getDoc(userRef);
+
+
+    if (!snapshot.exists()) {
+
+      if (fullNameInput) {
+        fullNameInput.value =
+          user.displayName || "";
+      }
+
+      return;
     }
 
 
-    // =====================================================
-    // NAME
-    // =====================================================
+    const data =
+      snapshot.data();
 
-    const fullName =
-      profileData.fullName ||
-      profileData.name ||
-      user.displayName ||
-      "AYNA BOOK User";
 
-    if (profileName) {
-      profileName.textContent = safeText(
-        fullName,
-        "AYNA BOOK User"
-      );
+    if (fullNameInput) {
+
+      fullNameInput.value =
+        data.fullName ||
+        data.name ||
+        user.displayName ||
+        "";
+
     }
 
 
-    // =====================================================
-    // EMAIL
-    // =====================================================
+    if (phoneInput) {
 
-    if (profileEmail) {
-      profileEmail.textContent =
-        safeText(
-          profileData.email || user.email,
-          "No email"
-        );
+      phoneInput.value =
+        data.phone || "";
+
     }
 
 
-    // =====================================================
-    // VERIFICATION
-    // =====================================================
+    if (countryInput) {
 
-    setVerificationStatus(user);
+      countryInput.value =
+        data.country || "";
 
-
-    // =====================================================
-    // UID
-    // =====================================================
-
-    if (uidValue) {
-      uidValue.textContent =
-        safeText(
-          profileData.uid || user.uid,
-          user.uid
-        );
     }
 
 
-    // =====================================================
-    // ACCOUNT TYPE
-    // =====================================================
+    if (bioInput) {
 
-    if (accountTypeValue) {
-      accountTypeValue.textContent =
-        getAccountTypeLabel(
-          profileData.accountType
-        );
+      bioInput.value =
+        data.bio || "";
+
     }
 
-
-    // =====================================================
-    // PHONE
-    // =====================================================
-
-    if (phoneValue) {
-      phoneValue.textContent =
-        safeText(profileData.phone);
-    }
-
-
-    // =====================================================
-    // COUNTRY
-    // =====================================================
-
-    if (countryValue) {
-      countryValue.textContent =
-        safeText(profileData.country);
-    }
-
-
-    // =====================================================
-    // PLAN
-    // =====================================================
-
-    if (planValue) {
-      planValue.textContent =
-        getPlanLabel(profileData.plan);
-    }
-
-
-    // =====================================================
-    // ACCOUNT STATUS
-    // =====================================================
-
-    if (accountStatusValue) {
-      accountStatusValue.textContent =
-        getAccountStatusLabel(
-          profileData.accountStatus
-        );
-    }
-
-
-    // =====================================================
-    // BIO
-    // =====================================================
-
-    if (bioValue) {
-      bioValue.textContent =
-        safeText(profileData.bio, "No bio added yet.");
-    }
-
-
-    // =====================================================
-    // AVATAR
-    // =====================================================
-
-    setAvatar(profileData, user);
-
-
-    // =====================================================
-    // SHOW PROFILE
-    // =====================================================
-
-    showLoading(false);
-    showProfile(true);
 
   } catch (error) {
 
     console.error(
-      "AYNA BOOK profile loading error:",
+      "AYNA BOOK profile load error:",
       error
     );
 
-    showLoading(false);
+
+    showStatus(
+      getAuthErrorMessage(error) ||
+      "Profile তথ্য load করা যায়নি।",
+      "error"
+    );
+
+  }
+
+}
+
+
+// =========================================================
+// SAVE PROFILE
+// =========================================================
+
+async function saveProfile() {
+
+  if (!currentUser) {
+
+    showStatus(
+      "আগে Login করুন।",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (!validateProfile()) {
+    return;
+  }
+
+
+  if (saveButton) {
+    saveButton.disabled = true;
+    saveButton.textContent =
+      "Saving...";
+  }
+
+
+  try {
+
+    const userRef =
+      doc(
+        db,
+        "users",
+        currentUser.uid
+      );
+
+
+    // -----------------------------------------------------
+    // Existing document
+    // -----------------------------------------------------
+
+    const snapshot =
+      await getDoc(userRef);
+
+
+    if (!snapshot.exists()) {
+
+      throw new Error(
+        "আপনার AYNA BOOK profile document পাওয়া যায়নি।"
+      );
+
+    }
+
+
+    // -----------------------------------------------------
+    // Upload photo if selected
+    // -----------------------------------------------------
+
+    let photoURL = "";
+
+
+    if (profilePhotoInput?.files?.length) {
+
+      showStatus(
+        "Profile photo upload হচ্ছে...",
+        "info"
+      );
+
+
+      photoURL =
+        await uploadProfilePhoto(
+          currentUser
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // Profile data
+    // -----------------------------------------------------
+
+    const profileData = {
+
+      fullName:
+        fullNameInput?.value.trim() || "",
+
+      name:
+        fullNameInput?.value.trim() || "",
+
+      phone:
+        phoneInput?.value.trim() || "",
+
+      country:
+        countryInput?.value.trim() || "",
+
+      bio:
+        bioInput?.value.trim() || "",
+
+      updatedAt:
+        serverTimestamp()
+
+    };
+
+
+    // -----------------------------------------------------
+    // Photo URL
+    // -----------------------------------------------------
+
+    if (photoURL) {
+
+      profileData.photoURL =
+        photoURL;
+
+    }
+
+
+    // -----------------------------------------------------
+    // Update Firestore
+    // -----------------------------------------------------
+
+    await updateDoc(
+      userRef,
+      profileData
+    );
+
+
+    showStatus(
+      "Profile সফলভাবে আপডেট হয়েছে।",
+      "success"
+    );
+
+
+    if (saveButton) {
+
+      saveButton.textContent =
+        "Saved ✓";
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK profile save error:",
+      error
+    );
+
 
     let message =
-      getAuthErrorMessage(error);
+      error?.message ||
+      getAuthErrorMessage(error) ||
+      "Profile update করা যায়নি।";
+
 
     if (
       error?.code ===
       "permission-denied"
     ) {
+
       message =
-        "Profile access denied. Firestore permission check করুন।";
+        "Profile update permission denied। Firestore Rules পরীক্ষা করুন।";
+
     }
+
 
     if (
       error?.code ===
-      "unavailable"
+      "storage/unauthorized"
     ) {
+
       message =
-        "Network সমস্যা। ইন্টারনেট সংযোগ পরীক্ষা করুন।";
+        "Profile photo upload permission denied। Storage Rules পরীক্ষা করুন।";
+
     }
 
+
     showStatus(
-      message ||
-      "Profile load করা যায়নি।",
+      message,
       "error"
     );
+
+
+    if (saveButton) {
+
+      saveButton.disabled = false;
+
+      saveButton.textContent =
+        "Save Profile";
+
+    }
+
   }
+
 }
 
 
 // =========================================================
-// LOGOUT
+// SAVE BUTTON
 // =========================================================
 
-async function handleLogout() {
-  if (!logoutButton) return;
+if (saveButton) {
 
-  logoutButton.disabled = true;
-
-  showStatus(
-    "Logging out...",
-    "info"
-  );
-
-  try {
-    await logoutUser();
-
-    window.location.replace(
-      "./login.html"
-    );
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK logout error:",
-      error
-    );
-
-    logoutButton.disabled = false;
-
-    showStatus(
-      getAuthErrorMessage(error) ||
-      "Logout failed. আবার চেষ্টা করুন।",
-      "error"
-    );
-  }
-}
-
-
-// =========================================================
-// LOGOUT BUTTON EVENT
-// =========================================================
-
-if (logoutButton) {
-  logoutButton.addEventListener(
+  saveButton.addEventListener(
     "click",
-    handleLogout
+    saveProfile
   );
+
 }
 
 
@@ -505,24 +561,36 @@ if (logoutButton) {
 // AUTH STATE
 // =========================================================
 
-watchAuthState(async (user) => {
+watchAuthState(
+  async (user) => {
 
-  if (!user) {
-    window.location.replace(
-      "./login.html"
-    );
-    return;
+    if (!user) {
+
+      window.location.replace(
+        "./login.html"
+      );
+
+      return;
+    }
+
+
+    currentUser = user;
+
+    await loadProfile(user);
+
   }
-
-  await loadProfile(user);
-
-});
+);
 
 
 // =========================================================
-// INITIAL AUTH SAFETY CHECK
+// GLOBAL ACCESS
 // =========================================================
 
-if (auth.currentUser) {
-  loadProfile(auth.currentUser);
+if (
+  typeof window !== "undefined"
+) {
+
+  window.saveAYNAProfile =
+    saveProfile;
+
 }
