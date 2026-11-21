@@ -1,10 +1,11 @@
+
 // =========================================================
 // AYNA BOOK
 // FIREBASE CONFIGURATION
 // =========================================================
 
 export const firebaseConfig = {
-  apiKey: "YOUR_EXISTING_API_KEY",
+  apiKey: "এখানে_আপনার_আসল_FIREBASE_API_KEY",
   authDomain: "ayna-book.firebaseapp.com",
   databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "ayna-book",
