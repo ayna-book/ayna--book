@@ -8,14 +8,15 @@
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
         ".write": "auth != null && auth.uid === $uid",
+
         ".validate": "newData.hasChildren(['uid', 'aynaId', 'fullName', 'email', 'country', 'createdAt'])",
 
         "uid": {
-          ".validate": "newData.isString() && newData.val() === auth.uid"
+          ".validate": "newData.isString() && newData.val() === $uid"
         },
 
         "aynaId": {
-          ".validate": "newData.isString() && newData.val() === 'AYNA-' + auth.uid"
+          ".validate": "newData.isString() && newData.val().length > 0"
         },
 
         "fullName": {
@@ -27,23 +28,15 @@
         },
 
         "country": {
-          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
-        },
-
-        "photoURL": {
-          ".validate": "!newData.exists() || newData.isString()"
-        },
-
-        "privacy": {
-          ".validate": "!newData.exists() || newData.val() === 'public' || newData.val() === 'private'"
+          ".validate": "newData.isString() && newData.val().length > 0"
         },
 
         "createdAt": {
-          ".validate": "newData.isNumber()"
+          ".validate": "newData.exists()"
         },
 
         "$other": {
-          ".validate": false
+          ".validate": true
         }
       }
     }
