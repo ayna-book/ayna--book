@@ -1,4 +1,3 @@
-
 // =========================================================
 // AYNA BOOK
 // SIGNUP CONTROLLER
@@ -15,7 +14,9 @@ import {
   createRegistrationAccount,
   sendVerificationEmail,
   getAuthErrorMessage,
-  getCurrentUser
+  getCurrentUser,
+  MIN_PASSWORD_LENGTH,
+  MAX_PASSWORD_LENGTH
 } from "./auth.js";
 
 import {
@@ -73,7 +74,6 @@ const statusMessage =
 // CONSTANTS
 // =========================================================
 
-const MIN_PASSWORD_LENGTH = 11;
 const MAX_NAME_LENGTH = 100;
 const MAX_PHONE_LENGTH = 30;
 const MAX_COUNTRY_LENGTH = 100;
@@ -90,13 +90,22 @@ let currentPreviewUrl = null;
 function clearPhotoPreview() {
 
   if (currentPreviewUrl) {
-    URL.revokeObjectURL(currentPreviewUrl);
+
+    URL.revokeObjectURL(
+      currentPreviewUrl
+    );
+
     currentPreviewUrl = null;
   }
 
   if (photoPreview) {
-    photoPreview.removeAttribute("src");
-    photoPreview.style.display = "none";
+
+    photoPreview.removeAttribute(
+      "src"
+    );
+
+    photoPreview.style.display =
+      "none";
   }
 }
 
@@ -104,6 +113,7 @@ function clearPhotoPreview() {
 function validatePhoto(file) {
 
   if (!file) {
+
     return {
       valid: true
     };
@@ -116,6 +126,7 @@ function validatePhoto(file) {
   ];
 
   if (!allowedTypes.includes(file.type)) {
+
     return {
       valid: false,
       message:
@@ -124,6 +135,7 @@ function validatePhoto(file) {
   }
 
   if (file.size > MAX_PHOTO_SIZE) {
+
     return {
       valid: false,
       message:
@@ -158,7 +170,9 @@ function handlePhotoPreview() {
       "error"
     );
 
-    profilePhotoInput.value = "";
+    profilePhotoInput.value =
+      "";
+
     return;
   }
 
@@ -166,8 +180,12 @@ function handlePhotoPreview() {
     URL.createObjectURL(file);
 
   if (photoPreview) {
-    photoPreview.src = currentPreviewUrl;
-    photoPreview.style.display = "block";
+
+    photoPreview.src =
+      currentPreviewUrl;
+
+    photoPreview.style.display =
+      "block";
   }
 }
 
@@ -178,19 +196,25 @@ function handlePhotoPreview() {
 
 function normalizeText(value) {
 
-  return String(value || "").trim();
+  return String(
+    value || ""
+  ).trim();
 }
 
 
 function normalizeEmail(value) {
 
-  return normalizeText(value).toLowerCase();
+  return normalizeText(
+    value
+  ).toLowerCase();
 }
 
 
 function normalizePhone(value) {
 
-  return normalizeText(value)
+  return normalizeText(
+    value
+  )
     .replace(/\s+/g, "")
     .replace(/[()-]/g, "");
 }
@@ -200,18 +224,24 @@ function normalizePhone(value) {
 // STATUS MESSAGE
 // =========================================================
 
-function showStatus(message, type = "info") {
+function showStatus(
+  message,
+  type = "info"
+) {
 
   if (!statusMessage) {
     return;
   }
 
-  statusMessage.textContent = message;
+  statusMessage.textContent =
+    message;
 
   statusMessage.className =
     "status show";
 
-  statusMessage.classList.add(type);
+  statusMessage.classList.add(
+    type
+  );
 }
 
 
@@ -219,17 +249,23 @@ function showStatus(message, type = "info") {
 // BUTTON STATE
 // =========================================================
 
-function setLoading(isLoading) {
+function setLoading(
+  isLoading
+) {
 
   if (!registerButton) {
     return;
   }
 
-  registerButton.disabled = isLoading;
+  registerButton.disabled =
+    isLoading;
 
   if (isLoading) {
 
-    if (!registerButton.dataset.originalText) {
+    if (
+      !registerButton.dataset.originalText
+    ) {
+
       registerButton.dataset.originalText =
         registerButton.textContent;
     }
@@ -247,37 +283,241 @@ function setLoading(isLoading) {
 
 
 // =========================================================
+// PASSWORD STRENGTH
+// =========================================================
+
+function getPasswordStrength(
+  password
+) {
+
+  const value =
+    String(password || "");
+
+  if (!value) {
+    return "none";
+  }
+
+  let score = 0;
+
+  if (value.length >= 8) {
+    score++;
+  }
+
+  if (value.length >= 12) {
+    score++;
+  }
+
+  if (/[a-z]/.test(value)) {
+    score++;
+  }
+
+  if (/[A-Z]/.test(value)) {
+    score++;
+  }
+
+  if (/[0-9]/.test(value)) {
+    score++;
+  }
+
+  if (/[^A-Za-z0-9]/.test(value)) {
+    score++;
+  }
+
+  if (score <= 2) {
+    return "weak";
+  }
+
+  if (score <= 4) {
+    return "medium";
+  }
+
+  return "strong";
+}
+
+
+function updatePasswordStrength() {
+
+  const strengthElement =
+    document.getElementById(
+      "passwordStrength"
+    );
+
+  const strengthText =
+    document.getElementById(
+      "passwordStrengthText"
+    );
+
+  if (
+    !strengthElement &&
+    !strengthText
+  ) {
+    return;
+  }
+
+  const strength =
+    getPasswordStrength(
+      passwordInput?.value
+    );
+
+  if (strengthElement) {
+
+    strengthElement.className =
+      "password-strength";
+
+    if (strength !== "none") {
+
+      strengthElement.classList.add(
+        strength
+      );
+    }
+  }
+
+  if (strengthText) {
+
+    const messages = {
+
+      none: "",
+
+      weak:
+        "Password Strength: Weak",
+
+      medium:
+        "Password Strength: Medium",
+
+      strong:
+        "Password Strength: Strong"
+    };
+
+    strengthText.textContent =
+      messages[strength];
+  }
+}
+
+
+// =========================================================
+// PASSWORD MATCH
+// =========================================================
+
+function checkPasswordMatch() {
+
+  if (
+    !passwordInput ||
+    !confirmPasswordInput
+  ) {
+    return;
+  }
+
+  const password =
+    passwordInput.value;
+
+  const confirmPassword =
+    confirmPasswordInput.value;
+
+  const matchMessage =
+    document.getElementById(
+      "passwordMatchMessage"
+    );
+
+  if (!confirmPassword) {
+
+    if (matchMessage) {
+      matchMessage.textContent =
+        "";
+    }
+
+    confirmPasswordInput.setCustomValidity(
+      ""
+    );
+
+    return;
+  }
+
+  if (
+    password !==
+    confirmPassword
+  ) {
+
+    confirmPasswordInput.setCustomValidity(
+      "Password এবং Confirm Password একই হতে হবে।"
+    );
+
+    if (matchMessage) {
+
+      matchMessage.textContent =
+        "Password মিলছে না।";
+    }
+
+  } else {
+
+    confirmPasswordInput.setCustomValidity(
+      ""
+    );
+
+    if (matchMessage) {
+
+      matchMessage.textContent =
+        "✓ Password মিলেছে।";
+    }
+  }
+}
+
+
+// =========================================================
 // VALIDATION
 // =========================================================
 
 function validateForm() {
 
   const accountType =
-    normalizeText(accountTypeInput?.value);
+    normalizeText(
+      accountTypeInput?.value
+    );
 
   const fullName =
-    normalizeText(fullNameInput?.value);
+    normalizeText(
+      fullNameInput?.value
+    );
 
   const email =
-    normalizeEmail(emailInput?.value);
+    normalizeEmail(
+      emailInput?.value
+    );
 
   const phone =
-    normalizePhone(phoneInput?.value);
+    normalizePhone(
+      phoneInput?.value
+    );
 
   const country =
-    normalizeText(countryInput?.value);
+    normalizeText(
+      countryInput?.value
+    );
 
   const password =
-    String(passwordInput?.value || "");
+    String(
+      passwordInput?.value || ""
+    );
 
   const confirmPassword =
-    String(confirmPasswordInput?.value || "");
+    String(
+      confirmPasswordInput?.value || ""
+    );
 
   const termsAccepted =
-    Boolean(termsInput?.checked);
+    Boolean(
+      termsInput?.checked
+    );
 
 
-  if (accountType !== "personal") {
+  // -------------------------------------------------------
+  // ACCOUNT TYPE
+  // -------------------------------------------------------
+
+  if (
+    accountType !==
+    "personal"
+  ) {
+
     return {
       valid: false,
       message:
@@ -285,10 +525,17 @@ function validateForm() {
     };
   }
 
+
+  // -------------------------------------------------------
+  // NAME
+  // -------------------------------------------------------
+
   if (
     fullName.length < 2 ||
-    fullName.length > MAX_NAME_LENGTH
+    fullName.length >
+    MAX_NAME_LENGTH
   ) {
+
     return {
       valid: false,
       message:
@@ -296,9 +543,17 @@ function validateForm() {
     };
   }
 
+
+  // -------------------------------------------------------
+  // GMAIL
+  // -------------------------------------------------------
+
   if (
-    !/^[a-z0-9._%+-]+@gmail\.com$/i.test(email)
+    !/^[a-z0-9._%+-]+@gmail\.com$/i.test(
+      email
+    )
   ) {
+
     return {
       valid: false,
       message:
@@ -306,10 +561,17 @@ function validateForm() {
     };
   }
 
+
+  // -------------------------------------------------------
+  // PHONE
+  // -------------------------------------------------------
+
   if (
     !phone ||
-    phone.length > MAX_PHONE_LENGTH
+    phone.length >
+    MAX_PHONE_LENGTH
   ) {
+
     return {
       valid: false,
       message:
@@ -317,10 +579,17 @@ function validateForm() {
     };
   }
 
+
+  // -------------------------------------------------------
+  // COUNTRY
+  // -------------------------------------------------------
+
   if (
     !country ||
-    country.length > MAX_COUNTRY_LENGTH
+    country.length >
+    MAX_COUNTRY_LENGTH
   ) {
+
     return {
       valid: false,
       message:
@@ -328,17 +597,46 @@ function validateForm() {
     };
   }
 
+
+  // -------------------------------------------------------
+  // PASSWORD
+  // -------------------------------------------------------
+
   if (
-    password.length < MIN_PASSWORD_LENGTH
+    password.length <
+    MIN_PASSWORD_LENGTH
   ) {
+
     return {
       valid: false,
       message:
-        `Password কমপক্ষে ${MIN_PASSWORD_LENGTH} characters হতে হবে।`
+        `Password কমপক্ষে ${MIN_PASSWORD_LENGTH} অক্ষরের হতে হবে।`
     };
   }
 
-  if (password !== confirmPassword) {
+
+  if (
+    password.length >
+    MAX_PASSWORD_LENGTH
+  ) {
+
+    return {
+      valid: false,
+      message:
+        `Password সর্বোচ্চ ${MAX_PASSWORD_LENGTH} অক্ষরের হতে পারবে।`
+    };
+  }
+
+
+  // -------------------------------------------------------
+  // CONFIRM PASSWORD
+  // -------------------------------------------------------
+
+  if (
+    password !==
+    confirmPassword
+  ) {
+
     return {
       valid: false,
       message:
@@ -346,13 +644,24 @@ function validateForm() {
     };
   }
 
+
+  // -------------------------------------------------------
+  // TERMS
+  // -------------------------------------------------------
+
   if (!termsAccepted) {
+
     return {
       valid: false,
       message:
-        "Terms & Conditions গ্রহণ করতে হবে।"
+        "Terms & Conditions এবং Privacy Policy গ্রহণ করতে হবে।"
     };
   }
+
+
+  // -------------------------------------------------------
+  // PHOTO
+  // -------------------------------------------------------
 
   const photo =
     profilePhotoInput?.files?.[0];
@@ -361,10 +670,17 @@ function validateForm() {
     validatePhoto(photo);
 
   if (!photoResult.valid) {
+
     return photoResult;
   }
 
+
+  // -------------------------------------------------------
+  // VALID
+  // -------------------------------------------------------
+
   return {
+
     valid: true,
 
     data: {
@@ -383,47 +699,71 @@ function validateForm() {
 // CREATE FIRESTORE USER PROFILE
 // =========================================================
 
-async function createUserProfile(user, data) {
+async function createUserProfile(
+  user,
+  data
+) {
 
   if (!user?.uid) {
-    throw new Error("AUTH_USER_MISSING");
+
+    throw new Error(
+      "AUTH_USER_MISSING"
+    );
   }
 
   const userRef =
-    doc(db, "users", user.uid);
+    doc(
+      db,
+      "users",
+      user.uid
+    );
 
   const profileData = {
 
-    uid: user.uid,
+    uid:
+      user.uid,
 
-    fullName: data.fullName,
+    fullName:
+      data.fullName,
 
-    name: data.fullName,
+    name:
+      data.fullName,
 
-    email: data.email,
+    email:
+      data.email,
 
-    phone: data.phone,
+    phone:
+      data.phone,
 
-    country: data.country,
+    country:
+      data.country,
 
-    accountType: data.accountType,
+    accountType:
+      data.accountType,
 
-    plan: "free",
+    plan:
+      "free",
 
-    bio: "",
+    bio:
+      "",
 
-    photoURL: "",
+    photoURL:
+      "",
 
-    emailVerified: false,
+    emailVerified:
+      false,
 
-    accountStatus: "pending_verification",
+    accountStatus:
+      "pending_verification",
 
-    paymentStatus: "none",
+    paymentStatus:
+      "none",
 
-    createdAt: serverTimestamp(),
+    createdAt:
+      serverTimestamp(),
 
-    updatedAt: serverTimestamp()
-
+    updatedAt:
+      serverTimestamp()
   };
 
   await setDoc(
@@ -442,18 +782,28 @@ async function createUserProfile(user, data) {
 function clearSensitiveFields() {
 
   if (passwordInput) {
-    passwordInput.value = "";
+
+    passwordInput.value =
+      "";
   }
 
   if (confirmPasswordInput) {
-    confirmPasswordInput.value = "";
+
+    confirmPasswordInput.value =
+      "";
   }
 
   if (profilePhotoInput) {
-    profilePhotoInput.value = "";
+
+    profilePhotoInput.value =
+      "";
   }
 
   clearPhotoPreview();
+
+  updatePasswordStrength();
+
+  checkPasswordMatch();
 }
 
 
@@ -461,7 +811,9 @@ function clearSensitiveFields() {
 // FIREBASE ERROR MESSAGE
 // =========================================================
 
-function getSignupErrorMessage(error) {
+function getSignupErrorMessage(
+  error
+) {
 
   switch (error?.code) {
 
@@ -469,30 +821,44 @@ function getSignupErrorMessage(error) {
 
       return "এই Gmail দিয়ে ইতিমধ্যে Account আছে। Login করুন।";
 
+
     case "auth/invalid-email":
 
       return "Gmail Address সঠিক নয়।";
 
+
     case "auth/weak-password":
 
-      return "Password Firebase-এর নিয়ম অনুযায়ী যথেষ্ট শক্তিশালী নয়।";
+      return "Password ৮–৫০ অক্ষরের মধ্যে দিন।";
+
 
     case "auth/too-many-requests":
 
       return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ অপেক্ষা করুন।";
 
+
     case "auth/network-request-failed":
 
       return "Internet Connection পরীক্ষা করুন।";
+
+
+    case "auth/invalid-api-key":
+    case "auth/api-key-not-valid":
+
+      return "Firebase API Key সঠিক নয়। Firebase Configuration পরীক্ষা করুন।";
+
 
     case "permission-denied":
     case "firestore/permission-denied":
 
       return "Firebase Account তৈরি হয়েছে, কিন্তু Firestore Profile সংরক্ষণ হয়নি। Firestore Rules পরীক্ষা করুন।";
 
+
     default:
 
-      return getAuthErrorMessage(error);
+      return getAuthErrorMessage(
+        error
+      );
   }
 }
 
@@ -536,13 +902,19 @@ async function handleSignup() {
     return;
   }
 
-  isSubmitting = true;
+  isSubmitting =
+    true;
 
-  setLoading(true);
+  setLoading(
+    true
+  );
 
-  let createdUser = null;
+  let createdUser =
+    null;
 
-  let profileSaved = false;
+  let profileSaved =
+    false;
+
 
   try {
 
@@ -557,12 +929,20 @@ async function handleSignup() {
 
     createdUser =
       await createRegistrationAccount({
-        fullName: data.fullName,
-        email: data.email,
-        password: data.password
+
+        fullName:
+          data.fullName,
+
+        email:
+          data.email,
+
+        password:
+          data.password
       });
 
+
     if (!createdUser?.uid) {
+
       throw new Error(
         "AUTH_USER_CREATION_FAILED"
       );
@@ -583,7 +963,8 @@ async function handleSignup() {
       data
     );
 
-    profileSaved = true;
+    profileSaved =
+      true;
 
 
     // =====================================================
@@ -602,7 +983,6 @@ async function handleSignup() {
 
     // =====================================================
     // SUCCESS
-    // Keep Firebase session active for verification page.
     // =====================================================
 
     clearSensitiveFields();
@@ -612,13 +992,17 @@ async function handleSignup() {
       "success"
     );
 
-    setTimeout(() => {
 
-      window.location.replace(
-        "./verify-email.html"
-      );
+    setTimeout(
+      () => {
 
-    }, 2000);
+        window.location.replace(
+          "./verify-email.html"
+        );
+
+      },
+      2000
+    );
 
 
   } catch (error) {
@@ -628,41 +1012,60 @@ async function handleSignup() {
       error
     );
 
-    if (createdUser && !profileSaved) {
+
+    if (
+      createdUser &&
+      !profileSaved
+    ) {
 
       showStatus(
-        "Firebase Authentication Account তৈরি হয়েছে, কিন্তু Firestore Profile সংরক্ষণ হয়নি। একই Gmail দিয়ে আবার Signup করবেন না। Firestore Rules ও Account Status পরীক্ষা করুন।",
+        "Firebase Authentication Account তৈরি হয়েছে, কিন্তু Firestore Profile সংরক্ষণ হয়নি। একই Gmail দিয়ে আবার Signup করবেন না। Firestore Rules পরীক্ষা করুন।",
         "error"
       );
 
-    } else if (createdUser && profileSaved) {
+
+    } else if (
+      createdUser &&
+      profileSaved
+    ) {
 
       showStatus(
-        "Account এবং Profile তৈরি হয়েছে, কিন্তু Verification Email পাঠানো যায়নি। আবার চেষ্টা করার জন্য Verification পেজে যান।",
+        "Account এবং Profile তৈরি হয়েছে, কিন্তু Verification Email পাঠানো যায়নি। Verification পেজে চেষ্টা করুন।",
         "warning"
       );
 
-      setTimeout(() => {
 
-        window.location.replace(
-          "./verify-email.html"
-        );
+      setTimeout(
+        () => {
 
-      }, 3000);
+          window.location.replace(
+            "./verify-email.html"
+          );
+
+        },
+        3000
+      );
+
 
     } else {
 
       showStatus(
-        getSignupErrorMessage(error),
+        getSignupErrorMessage(
+          error
+        ),
         "error"
       );
     }
 
+
   } finally {
 
-    isSubmitting = false;
+    isSubmitting =
+      false;
 
-    setLoading(false);
+    setLoading(
+      false
+    );
   }
 }
 
@@ -680,7 +1083,6 @@ if (form) {
       event.preventDefault();
 
       await handleSignup();
-
     }
   );
 
@@ -706,36 +1108,24 @@ if (profilePhotoInput) {
 
 
 // =========================================================
-// LIVE PASSWORD CHECK
+// PASSWORD EVENTS
 // =========================================================
 
-if (
-  passwordInput &&
-  confirmPasswordInput
-) {
-
-  function checkPasswordMatch() {
-
-    if (
-      confirmPasswordInput.value &&
-      passwordInput.value !==
-      confirmPasswordInput.value
-    ) {
-
-      confirmPasswordInput.setCustomValidity(
-        "Password এবং Confirm Password একই হতে হবে।"
-      );
-
-    } else {
-
-      confirmPasswordInput.setCustomValidity("");
-    }
-  }
+if (passwordInput) {
 
   passwordInput.addEventListener(
     "input",
-    checkPasswordMatch
+    () => {
+
+      updatePasswordStrength();
+
+      checkPasswordMatch();
+    }
   );
+}
+
+
+if (confirmPasswordInput) {
 
   confirmPasswordInput.addEventListener(
     "input",
@@ -749,7 +1139,7 @@ if (
 // =========================================================
 
 showStatus(
-  "আপনার তথ্য পূরণ করে AYNA BOOK Account তৈরি করুন।",
+  `Password ${MIN_PASSWORD_LENGTH}–${MAX_PASSWORD_LENGTH} অক্ষর হতে পারে। আপনার তথ্য পূরণ করে AYNA BOOK Account তৈরি করুন।`,
   "info"
 );
 
@@ -768,6 +1158,11 @@ console.log(
 
 console.log(
   "signup.js loaded successfully."
+);
+
+console.log(
+  "Password Length:",
+  `${MIN_PASSWORD_LENGTH}-${MAX_PASSWORD_LENGTH}`
 );
 
 console.log(
