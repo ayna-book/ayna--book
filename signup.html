@@ -2,110 +2,201 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>AYNA BOOK - Sign Up</title>
   <style>
     :root {
       --gold: #d4af37;
-      --gold-light: #f3e5ab;
-      --bg-dark: #090b10;
-      --card-bg: #121622;
+      --gold-light: #f5d76e;
+      --bg-dark: #07090f;
+      --card-bg: #111521;
+      --input-bg: #0b0e17;
+      --border-dim: #262e42;
       --text-main: #ffffff;
       --text-muted: #9ca3af;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body {
-      background: radial-gradient(circle at top, #1a2035 0%, var(--bg-dark) 100%);
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100dvh;
+      background: radial-gradient(circle at top, #171d30 0%, var(--bg-dark) 100%);
       color: var(--text-main);
-      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
     }
+
     .auth-container {
-      background: var(--card-bg);
-      border: 2px solid var(--gold);
-      border-radius: 16px;
-      padding: 32px 28px;
       width: 100%;
-      max-width: 420px;
-      box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      padding: 28px 22px;
+      box-shadow: 0 0 28px rgba(212, 175, 55, 0.22);
     }
-    .brand-header { text-align: center; margin-bottom: 24px; }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
     .brand-header h1 {
       color: var(--gold);
       font-size: 28px;
+      font-weight: 800;
       letter-spacing: 2px;
       text-transform: uppercase;
     }
-    .brand-header p { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 13px; color: var(--gold-light); margin-bottom: 6px; }
+
+    .brand-header p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+    }
+
     .form-group input {
       width: 100%;
-      padding: 12px 14px;
-      background: #0b0e17;
-      border: 1px solid #2d3548;
+      padding: 13px 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--border-dim);
       border-radius: 8px;
-      color: #fff;
+      color: #ffffff;
       font-size: 15px;
       outline: none;
-      transition: 0.3s;
+      transition: 0.25s;
     }
-    .form-group input:focus { border-color: var(--gold); box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
+
+    .form-group input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+    }
+
     .btn-gold {
       width: 100%;
-      padding: 13px;
-      background: linear-gradient(135deg, #d4af37, #aa8018);
-      color: #000;
-      font-weight: 700;
+      padding: 14px;
+      background: linear-gradient(135deg, #e0b838, #b88918);
+      color: #090b10;
+      font-weight: 800;
       font-size: 16px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s;
       margin-top: 8px;
+      transition: 0.25s;
     }
-    .btn-gold:hover { filter: brightness(1.15); transform: translateY(-1px); }
-    .status-msg { margin-top: 14px; font-size: 13px; text-align: center; min-height: 20px; }
-    .links { margin-top: 18px; text-align: center; font-size: 14px; color: var(--text-muted); }
-    .links a { color: var(--gold); text-decoration: none; font-weight: 600; }
-    .links a:hover { text-decoration: underline; }
+
+    .btn-gold:hover {
+      filter: brightness(1.08);
+    }
+
+    .status-msg {
+      margin-top: 14px;
+      font-size: 13px;
+      text-align: center;
+      min-height: 20px;
+      line-height: 1.4;
+    }
+
+    .links {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .links a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    /* মোবাইলে সম্পূর্ণ edge-to-edge ফুল স্ক্রিন লুক চাইলে */
+    @media (max-width: 520px) {
+      .page-wrapper {
+        padding: 0;
+        align-items: stretch;
+      }
+      .auth-container {
+        max-width: 100%;
+        min-height: 100dvh;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 28px 20px;
+      }
+    }
   </style>
 </head>
 <body>
-
-  <div class="auth-container">
-    <div class="brand-header">
-      <h1>AYNA BOOK</h1>
-      <p>Create your Global Digital Identity</p>
-    </div>
-
-    <form id="signupForm">
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="fullName" placeholder="Enter your full name" required />
-      </div>
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="email" placeholder="example@email.com" required />
-      </div>
-      <div class="form-group">
-        <label>Phone / Country</label>
-        <input type="text" id="country" placeholder="e.g. Bangladesh" required />
-      </div>
-      <div class="form-group">
-        <label>Password (Min 6 characters)</label>
-        <input type="password" id="password" placeholder="••••••••" minlength="6" required />
+  <div class="page-wrapper">
+    <div class="auth-container">
+      <div class="brand-header">
+        <h1>AYNA BOOK</h1>
+        <p>Create your Global Digital Identity</p>
       </div>
 
-      <button type="submit" class="btn-gold" id="submitBtn">Create AYNA Account</button>
-      <div class="status-msg" id="statusMsg"></div>
-    </form>
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="Enter your full name" required />
+        </div>
 
-    <div class="links">
-      Already have an account? <a href="index.html">Log In</a>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="example@email.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="country">Phone / Country</label>
+          <input type="text" id="country" placeholder="e.g. Bangladesh" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password (Min 6 characters)</label>
+          <input type="password" id="password" placeholder="••••••••" minlength="6" required />
+        </div>
+
+        <button type="submit" class="btn-gold" id="submitBtn">Create AYNA Account</button>
+        <div class="status-msg" id="statusMsg"></div>
+      </form>
+
+      <div class="links">
+        Already have an account? <a href="index.html">Log In</a>
+      </div>
     </div>
   </div>
 
@@ -114,7 +205,6 @@
     import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getDatabase, ref, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // আপনার ayna-book প্রজেক্টের Firebase Config এখানে বসান
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "ayna-book.firebaseapp.com",
@@ -142,25 +232,22 @@
 
       submitBtn.disabled = true;
       submitBtn.textContent = "Creating Account...";
-      statusMsg.style.color = "#f3e5ab";
+      statusMsg.style.color = "#f5d76e";
       statusMsg.textContent = "Generating your AYNA ID...";
 
       try {
-        // ১. ইউজার তৈরি
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
         await updateProfile(user, { displayName: fullName });
         await sendEmailVerification(user);
 
-        // ২. অটোমেটিক সিকোয়েন্সিয়াল AYNA ID (যেমন: 2026-----10000001)
         const counterRef = ref(db, "system/lastUserSerial");
         const transactionResult = await runTransaction(counterRef, (currentValue) => {
           return (currentValue || 10000000) + 1;
         });
         const aynaId = `2026-----${transactionResult.snapshot.val()}`;
 
-        // ৩. Realtime Database-এ প্রোফাইল সেভ
         await set(ref(db, `users/${user.uid}`), {
           uid: user.uid,
           aynaId: aynaId,
@@ -174,8 +261,9 @@
 
         statusMsg.style.color = "#4ade80";
         statusMsg.textContent = `Success! Your AYNA ID: ${aynaId}. Redirecting to Dashboard...`;
-        setTimeout(() => { window.location.href = "dashboard.html"; }, 2000);
-
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1800);
       } catch (error) {
         statusMsg.style.color = "#f87171";
         statusMsg.textContent = error.message;
