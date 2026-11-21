@@ -1,3 +1,4 @@
+
 // =========================================================
 // AYNA BOOK
 // FIREBASE INITIALIZATION
@@ -30,40 +31,72 @@ import {
 
 
 // =========================================================
-// FIREBASE APP
+// VALIDATE FIREBASE CONFIGURATION
 // =========================================================
 
-export const app =
-  getApps().length > 0
-    ? getApp()
-    : initializeApp(firebaseConfig);
+if (
+  !firebaseConfig ||
+  !firebaseConfig.apiKey ||
+  !firebaseConfig.authDomain ||
+  !firebaseConfig.projectId
+) {
+  throw new Error(
+    "AYNA BOOK: Firebase configuration is incomplete."
+  );
+}
 
 
 // =========================================================
-// FIREBASE SERVICES
+// FIREBASE APP INITIALIZATION
+// =========================================================
+
+export const app = getApps().length > 0
+  ? getApp()
+  : initializeApp(firebaseConfig);
+
+
+// =========================================================
+// FIREBASE AUTHENTICATION
 // =========================================================
 
 export const auth = getAuth(app);
 
+
+// =========================================================
+// CLOUD FIRESTORE
+// =========================================================
+
 export const db = getFirestore(app);
 
+
+// =========================================================
+// REALTIME DATABASE
+// =========================================================
+
 export const database = getDatabase(app);
+
+
+// =========================================================
+// FIREBASE STORAGE
+// =========================================================
 
 export const storage = getStorage(app);
 
 
 // =========================================================
-// STATUS
+// INITIALIZATION STATUS
 // =========================================================
 
 console.log("========================================");
 console.log("AYNA BOOK - Firebase Initialized");
 console.log("========================================");
 
-console.log("App:", !!app);
-console.log("Auth:", !!auth);
-console.log("Firestore:", !!db);
+console.log("Firebase App:", !!app);
+console.log("Authentication:", !!auth);
+console.log("Cloud Firestore:", !!db);
 console.log("Realtime Database:", !!database);
-console.log("Storage:", !!storage);
+console.log("Firebase Storage:", !!storage);
+
+console.log("Project ID:", firebaseConfig.projectId);
 
 console.log("========================================");
