@@ -1,176 +1,220 @@
+'use strict';
+
 // =========================================================
 // AYNA BOOK
-// Firebase Storage Test
+// FIREBASE STORAGE TEST
 // Firebase SDK: 13.4.0
 // =========================================================
 
-import { auth, storage } from "./firebase.js";
+import {
+  auth,
+  storage
+} from "./firebase.js";
 
 import {
   ref,
-  getMetadata
+  uploadBytes,
+  getDownloadURL,
+  deleteObject
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
 
-// ---------------------------------------------------------
-// Storage Test
-// ---------------------------------------------------------
+// =========================================================
+// STORAGE TEST
+// =========================================================
 
 export async function testStorageConnection() {
 
+  const user = auth.currentUser;
+
+  if (!user) {
+    throw new Error(
+      "Storage test করতে আগে Login করতে হবে।"
+    );
+  }
+
+
+  // =====================================================
+  // TEST DATA
+  // =====================================================
+
+  const testText =
+    "AYNA BOOK Firebase Storage Test";
+
+  const testBlob = new Blob(
+    [testText],
+    {
+      type: "text/plain"
+    }
+  );
+
+
+  // =====================================================
+  // TEST PATH
+  // =====================================================
+
+  const testPath =
+    `users/${user.uid}/files/ayna-storage-test.txt`;
+
+  const testRef =
+    ref(storage, testPath);
+
+
   try {
 
-    // Firebase Storage service আছে কি না
-    if (!storage) {
-      throw new Error(
-        "Firebase Storage service পাওয়া যায়নি।"
+    // ===================================================
+    // UPLOAD
+    // ===================================================
+
+    const uploadResult =
+      await uploadBytes(
+        testRef,
+        testBlob,
+        {
+          contentType: "text/plain"
+        }
       );
-    }
 
-    // বর্তমান লগইন user
-    const user = auth.currentUser;
-
-    if (!user) {
-
-      return {
-        success: false,
-        loggedIn: false,
-        message:
-          "Storage পরীক্ষা করতে আগে AYNA BOOK-এ Login করুন।"
-      };
-
-    }
-
-
-    // নিজের user storage path
-    const storageRef = ref(
-      storage,
-      `users/${user.uid}`
-    );
-
-
-    /*
-     * Folder-এর metadata সবসময় পাওয়া নাও যেতে পারে।
-     * তাই এখানে Firebase Storage reference তৈরি হওয়া
-     * এবং service initialize হয়েছে কি না যাচাই করা হচ্ছে।
-     */
 
     console.log(
-      "AYNA BOOK Storage Reference:",
-      storageRef.fullPath
+      "AYNA BOOK Storage upload successful:",
+      uploadResult.metadata.fullPath
+    );
+
+
+    // ===================================================
+    // DOWNLOAD URL
+    // ===================================================
+
+    const downloadURL =
+      await getDownloadURL(testRef);
+
+
+    console.log(
+      "AYNA BOOK Storage download URL:",
+      downloadURL
+    );
+
+
+    // ===================================================
+    // DELETE TEST FILE
+    // ===================================================
+
+    await deleteObject(testRef);
+
+
+    console.log(
+      "AYNA BOOK Storage test file deleted."
     );
 
 
     return {
       success: true,
-      loggedIn: true,
-      uid: user.uid,
-      path: storageRef.fullPath,
+      path: testPath,
       message:
-        "AYNA BOOK Firebase Storage সংযোগ প্রস্তুত আছে।"
+        "Firebase Storage connection এবং Rules সফলভাবে কাজ করছে।"
     };
 
   } catch (error) {
 
     console.error(
-      "AYNA BOOK Storage Test Error:",
+      "AYNA BOOK Storage test failed:",
       error
     );
 
-    return {
-      success: false,
-      loggedIn: !!auth.currentUser,
-      message:
-        error?.message ||
-        "Firebase Storage পরীক্ষা করা যায়নি।"
-    };
+
+    // ===================================================
+    // ERROR MESSAGE
+    // ===================================================
+
+    let message =
+      "Firebase Storage test ব্যর্থ হয়েছে।";
+
+
+    switch (error?.code) {
+
+      case "storage/unauthorized":
+
+        message =
+          "Storage permission denied। storage.rules পরীক্ষা করুন।";
+
+        break;
+
+
+      case "storage/object-not-found":
+
+        message =
+          "Storage test file পাওয়া যায়নি।";
+
+        break;
+
+
+      case "storage/bucket-not-found":
+
+        message =
+          "Firebase Storage bucket পাওয়া যায়নি।";
+
+        break;
+
+
+      case "storage/quota-exceeded":
+
+        message =
+          "Firebase Storage quota exceeded।";
+
+        break;
+
+
+      case "storage/retry-limit-exceeded":
+
+        message =
+          "Storage request-এর retry limit শেষ হয়েছে।";
+
+        break;
+
+
+      case "storage/network-request-failed":
+
+        message =
+          "Network সমস্যা। Internet connection পরীক্ষা করুন।";
+
+        break;
+
+
+      case "storage/invalid-argument":
+
+        message =
+          "Storage upload-এর argument ভুল হয়েছে।";
+
+        break;
+
+
+      default:
+
+        if (error?.message) {
+          message =
+            `${message} ${error.message}`;
+        }
+
+    }
+
+
+    throw new Error(message);
 
   }
 
 }
 
 
-// ---------------------------------------------------------
-// Optional File Metadata Test
-// ---------------------------------------------------------
+// =========================================================
+// OPTIONAL BROWSER TEST
+// =========================================================
 
-export async function testStorageFile(filePath) {
+if (
+  typeof window !== "undefined"
+) {
 
-  try {
-
-    const user = auth.currentUser;
-
-    if (!user) {
-      throw new Error(
-        "আগে AYNA BOOK-এ Login করুন।"
-      );
-    }
-
-    const cleanPath = String(filePath || "").trim();
-
-    if (!cleanPath) {
-      throw new Error(
-        "Storage file path দিন।"
-      );
-    }
-
-
-    // নিরাপত্তার জন্য নিজের user path-এর বাইরে যেতে দেওয়া হবে না
-    const expectedPrefix = `users/${user.uid}/`;
-
-    if (!cleanPath.startsWith(expectedPrefix)) {
-      throw new Error(
-        "নিজের Storage path-এর বাইরে পরীক্ষা করা যাবে না।"
-      );
-    }
-
-
-    const fileRef = ref(storage, cleanPath);
-
-    const metadata = await getMetadata(fileRef);
-
-
-    return {
-      success: true,
-      metadata,
-      message:
-        "Storage file metadata সফলভাবে পাওয়া গেছে।"
-    };
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Storage Metadata Error:",
-      error
-    );
-
-    return {
-      success: false,
-      metadata: null,
-      message:
-        error?.message ||
-        "Storage file metadata পাওয়া যায়নি।"
-    };
-
-  }
+  window.testAYNAStorage =
+    testStorageConnection;
 
 }
-
-
-// ---------------------------------------------------------
-// Global AYNA BOOK Storage Test API
-// ---------------------------------------------------------
-
-window.AYNA_STORAGE = {
-  test: testStorageConnection,
-  testFile: testStorageFile
-};
-
-
-// ---------------------------------------------------------
-// Ready
-// ---------------------------------------------------------
-
-console.log(
-  "AYNA BOOK — Firebase Storage Test Loaded Successfully."
-);
