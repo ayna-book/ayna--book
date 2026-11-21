@@ -3,394 +3,446 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="theme-color" content="#07090f">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#090a0f"
+  >
+
   <title>AYNA BOOK - Sign Up</title>
 
   <style>
-    :root {
-      --gold: #d4af37;
-      --gold-light: #f5d76e;
-      --bg-dark: #07090f;
-      --card-bg: #111521;
-      --input-bg: #0b0e17;
-      --border-dim: #262e42;
-    }
-
     * {
       box-sizing: border-box;
+    }
+
+    html,
+    body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
+      min-height: 100%;
     }
 
     body {
-      min-height: 100vh;
-      background: radial-gradient(circle at top, #171d30, #07090f);
-      color: white;
+      background: #090a0f;
+      color: #ffffff;
+      font-family:
+        Arial,
+        "Noto Sans Bengali",
+        sans-serif;
     }
 
-    .page-wrapper {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
+    .container {
+      width: min(100%, 520px);
+      margin: 0 auto;
+      padding: 24px 18px 40px;
     }
 
-    .auth-container {
-      width: 100%;
-      max-width: 480px;
-      background: var(--card-bg);
-      border: 1.5px solid var(--gold);
-      border-radius: 16px;
-      padding: 28px 22px;
-      box-shadow: 0 0 28px rgba(212,175,55,.22);
-    }
-
-    .brand-header {
+    .logo {
       text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .brand-header h1 {
-      color: var(--gold);
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
+      margin: 10px 0 6px;
     }
 
-    .brand-header p {
-      color: #9ca3af;
+    .subtitle {
+      text-align: center;
+      color: #b9bec9;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: #11131a;
+      border: 1px solid #272b36;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    h1 {
+      font-size: 22px;
+      text-align: center;
+      margin: 0 0 8px;
+    }
+
+    .description {
+      color: #aeb4c0;
+      text-align: center;
       font-size: 13px;
-      margin-top: 6px;
+      line-height: 1.6;
+      margin-bottom: 22px;
     }
 
-    .form-group {
-      margin-bottom: 15px;
+    .field {
+      margin-bottom: 16px;
     }
 
     label {
       display: block;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
-      color: var(--gold-light);
-      margin-bottom: 6px;
+      margin-bottom: 7px;
     }
 
-    input {
+    input,
+    select {
       width: 100%;
-      padding: 13px 14px;
-      background: var(--input-bg);
-      border: 1px solid var(--border-dim);
-      border-radius: 8px;
-      color: white;
-      font-size: 15px;
+      min-height: 48px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #343947;
+      background: #090a0f;
+      color: #ffffff;
       outline: none;
+      font-size: 15px;
     }
 
-    input:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 8px rgba(212,175,55,.3);
+    input:focus,
+    select:focus {
+      border-color: #d4af37;
     }
 
-    .btn-gold {
+    input::placeholder {
+      color: #777d89;
+    }
+
+    .password-note {
+      color: #8e95a3;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .photo-preview {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: none;
+      margin: 10px auto;
+      border: 2px solid #d4af37;
+    }
+
+    .terms {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      margin: 18px 0;
+      font-size: 13px;
+      color: #b9bec9;
+      line-height: 1.5;
+    }
+
+    .terms input {
+      width: 18px;
+      min-height: 18px;
+      margin-top: 2px;
+      flex: 0 0 auto;
+    }
+
+    button {
       width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg,#e0b838,#b88918);
-      color: #090b10;
+      min-height: 50px;
+      border: 0;
+      border-radius: 11px;
+      background: #d4af37;
+      color: #090a0f;
       font-size: 16px;
       font-weight: 800;
-      border: none;
-      border-radius: 8px;
       cursor: pointer;
-      margin-top: 8px;
     }
 
-    .btn-gold:disabled {
-      opacity: .65;
+    button:disabled {
+      opacity: 0.55;
       cursor: not-allowed;
     }
 
-    .status-msg {
-      margin-top: 14px;
-      text-align: center;
+    .status {
+      display: none;
+      margin: 16px 0 0;
+      padding: 12px 14px;
+      border-radius: 10px;
       font-size: 13px;
-      min-height: 20px;
       line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-
-    .links {
-      margin-top: 18px;
       text-align: center;
-      font-size: 14px;
-      color: #9ca3af;
     }
 
-    .links a {
-      color: var(--gold);
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      background: #12351f;
+      color: #8ff0ae;
+      border: 1px solid #246c3a;
+    }
+
+    .status.error {
+      background: #35171b;
+      color: #ff9ba5;
+      border: 1px solid #7a2933;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #aeb4c0;
+    }
+
+    .login-link a {
+      color: #f5d76e;
       text-decoration: none;
       font-weight: 700;
-    }
-
-    @media(max-width:520px) {
-      .page-wrapper {
-        padding: 0;
-      }
-
-      .auth-container {
-        max-width: 100%;
-        min-height: 100vh;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="page-wrapper">
-  <div class="auth-container">
+  <main class="container">
 
-    <div class="brand-header">
-      <h1>AYNA BOOK</h1>
-      <p>Create your Global Digital Identity</p>
+    <div class="logo">
+      AYNA BOOK
     </div>
 
-    <form id="signupForm">
-
-      <div class="form-group">
-        <label for="fullName">Full Name</label>
-        <input
-          type="text"
-          id="fullName"
-          placeholder="Enter your full name"
-          autocomplete="name"
-          maxlength="100"
-          required>
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-          type="email"
-          id="email"
-          placeholder="example@gmail.com"
-          autocomplete="email"
-          required>
-      </div>
-
-      <div class="form-group">
-        <label for="country">Phone / Country</label>
-        <input
-          type="text"
-          id="country"
-          placeholder="01XXXXXXXXX / Bangladesh"
-          required>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password (Min 6 characters)</label>
-        <input
-          type="password"
-          id="password"
-          placeholder="Minimum 6 characters"
-          minlength="6"
-          autocomplete="new-password"
-          required>
-      </div>
-
-      <button
-        type="submit"
-        class="btn-gold"
-        id="submitBtn">
-        Create AYNA Account
-      </button>
-
-      <div
-        class="status-msg"
-        id="statusMsg"
-        aria-live="polite">
-      </div>
-
-    </form>
-
-    <div class="links">
-      Already have an account?
-      <a href="index.html">Log In</a>
+    <div class="subtitle">
+      Connect • Share • Create
     </div>
 
-  </div>
-</div>
+    <section class="card">
 
-<script type="module">
+      <h1>Create Your Account</h1>
 
-import { auth, database } from "./firebase-init.js";
+      <div class="description">
+        Registration with Gmail Verification
+      </div>
 
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  sendEmailVerification
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-import {
-  ref,
-  set
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+      <form id="registrationForm" novalidate>
 
-const form = document.getElementById("signupForm");
-const statusMsg = document.getElementById("statusMsg");
-const submitBtn = document.getElementById("submitBtn");
+        <!-- Account Category -->
+        <div class="field">
 
-function showStatus(message, color = "#f87171") {
-  statusMsg.textContent = message;
-  statusMsg.style.color = color;
-}
+          <label for="accountType">
+            Account Category
+          </label>
 
-function friendlyError(error) {
-  const messages = {
-    "auth/email-already-in-use":
-      "এই Gmail দিয়ে ইতিমধ্যে Account আছে। Login করুন।",
+          <select id="accountType" name="accountType">
+            <option value="personal">
+              Personal — Free
+            </option>
+          </select>
 
-    "auth/invalid-email":
-      "সঠিক Email Address দিন।",
+        </div>
 
-    "auth/weak-password":
-      "Password কমপক্ষে ৬ অক্ষরের হতে হবে।",
 
-    "auth/network-request-failed":
-      "Internet connection পরীক্ষা করুন।",
+        <!-- Full Name -->
+        <div class="field">
 
-    "auth/operation-not-allowed":
-      "Firebase Email/Password Authentication চালু করুন।",
+          <label for="fullName">
+            Full Name
+          </label>
 
-    "auth/api-key-not-valid":
-      "Firebase API Key পরীক্ষা করুন।",
+          <input
+            id="fullName"
+            name="fullName"
+            type="text"
+            autocomplete="name"
+            maxlength="100"
+            placeholder="আপনার পূর্ণ নাম"
+            required
+          >
 
-    "PERMISSION_DENIED":
-      "Database Permission Denied। RTDB Rules পরীক্ষা করুন।"
-  };
+        </div>
 
-  return messages[error.code] ||
-    error.message ||
-    "Account তৈরি করা যায়নি।";
-}
 
-form.addEventListener("submit", async (event) => {
+        <!-- Gmail -->
+        <div class="field">
 
-  event.preventDefault();
+          <label for="email">
+            Gmail Address
+          </label>
 
-  const fullName =
-    document.getElementById("fullName").value.trim();
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="example@gmail.com"
+            required
+          >
 
-  const email =
-    document.getElementById("email").value.trim().toLowerCase();
+        </div>
 
-  const country =
-    document.getElementById("country").value.trim();
 
-  const password =
-    document.getElementById("password").value;
+        <!-- Phone -->
+        <div class="field">
 
-  if (fullName.length < 2) {
-    showStatus("সঠিক Full Name লিখুন।");
-    return;
-  }
+          <label for="phone">
+            Mobile Number
+          </label>
 
-  if (password.length < 6) {
-    showStatus("Password কমপক্ষে ৬ অক্ষরের হতে হবে।");
-    return;
-  }
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            maxlength="20"
+            placeholder="01XXXXXXXXX"
+          >
 
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Creating Account...";
+        </div>
 
-  showStatus("Creating your AYNA Account...", "#f5d76e");
 
-  let user = null;
+        <!-- Country -->
+        <div class="field">
 
-  try {
+          <label for="country">
+            Country
+          </label>
 
-    // 1. Firebase Authentication
+          <input
+            id="country"
+            name="country"
+            type="text"
+            maxlength="100"
+            value="Bangladesh"
+            autocomplete="country-name"
+            placeholder="Country"
+          >
 
-    const credential =
-      await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+        </div>
 
-    user = credential.user;
 
-    // 2. Profile name
+        <!-- Profile Photo -->
+        <div class="field">
 
-    await updateProfile(user, {
-      displayName: fullName
-    });
+          <label for="profilePhoto">
+            Profile Photo (Optional)
+          </label>
 
-    // 3. AYNA ID based on Firebase UID
+          <input
+            id="profilePhoto"
+            name="profilePhoto"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+          >
 
-    const aynaId = "AYNA-" + user.uid;
+          <img
+            id="photoPreview"
+            class="photo-preview"
+            alt="Profile photo preview"
+          >
 
-    // 4. Save profile in Realtime Database
+        </div>
 
-    await set(
-      ref(database, "users/" + user.uid),
-      {
-        uid: user.uid,
-        aynaId: aynaId,
-        fullName: fullName,
-        email: email,
-        country: country,
-        photoURL: "",
-        privacy: "public",
-        createdAt: Date.now()
-      }
-    );
 
-    // 5. Send email verification
+        <!-- Password -->
+        <div class="field">
 
-    await sendEmailVerification(user);
+          <label for="password">
+            Password
+          </label>
 
-    showStatus(
-      "Account created! Verification link sent to your email. AYNA ID: " + aynaId,
-      "#4ade80"
-    );
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            minlength="11"
+            placeholder="Minimum 11 characters"
+            required
+          >
 
-    submitBtn.textContent = "Account Created";
+          <div class="password-note">
+            Password অবশ্যই কমপক্ষে ১১ অক্ষরের হতে হবে।
+          </div>
 
-    // Keep the user signed in so the verification link
-    // and login flow can continue normally.
+        </div>
 
-  } catch (error) {
 
-    console.error("AYNA SIGNUP ERROR:", error);
+        <!-- Confirm Password -->
+        <div class="field">
 
-    if (user && error.code === "PERMISSION_DENIED") {
-      showStatus(
-        "Authentication হয়েছে, কিন্তু profile save হয়নি। RTDB Rules বা database URL পরীক্ষা করুন।"
-      );
-    } else {
-      showStatus(friendlyError(error));
-    }
+          <label for="confirmPassword">
+            Confirm Password
+          </label>
 
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Create AYNA Account";
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            autocomplete="new-password"
+            minlength="11"
+            placeholder="Password আবার লিখুন"
+            required
+          >
 
-  }
+        </div>
 
-});
 
-console.log("AYNA BOOK Signup Loaded.");
+        <!-- Terms -->
+        <label class="terms">
 
-</script>
+          <input
+            id="terms"
+            name="terms"
+            type="checkbox"
+            required
+          >
+
+          <span>
+            আমি AYNA BOOK-এর Terms & Conditions এবং
+            Privacy Policy মেনে নিচ্ছি।
+          </span>
+
+        </label>
+
+
+        <!-- Submit -->
+        <button
+          id="registerButton"
+          type="submit"
+        >
+          Create AYNA Account
+        </button>
+
+
+        <!-- Status -->
+        <div
+          id="statusMessage"
+          class="status"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+      </form>
+
+
+      <div class="login-link">
+        Already have an account?
+        <a href="./login.html">
+          Log In
+        </a>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- Signup Controller -->
+  <script
+    type="module"
+    src="./signup.js"
+  ></script>
 
 </body>
 </html>
