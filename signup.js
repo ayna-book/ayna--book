@@ -69,17 +69,34 @@ const registerButton =
 const statusMessage =
   document.getElementById("statusMessage");
 
+const passwordStrength =
+  document.getElementById("passwordStrength");
+
+const passwordStrengthBar =
+  document.getElementById("passwordStrengthBar");
+
+const passwordStrengthText =
+  document.getElementById("passwordStrengthText");
+
+const passwordMatchMessage =
+  document.getElementById("passwordMatchMessage");
+
 
 // =========================================================
 // CONSTANTS
 // =========================================================
 
 const MAX_NAME_LENGTH = 100;
+
 const MAX_PHONE_LENGTH = 30;
+
 const MAX_COUNTRY_LENGTH = 100;
-const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
+
+const MAX_PHOTO_SIZE =
+  5 * 1024 * 1024;
 
 let isSubmitting = false;
+
 let currentPreviewUrl = null;
 
 
@@ -125,7 +142,11 @@ function validatePhoto(file) {
     "image/webp"
   ];
 
-  if (!allowedTypes.includes(file.type)) {
+  if (
+    !allowedTypes.includes(
+      file.type
+    )
+  ) {
 
     return {
       valid: false,
@@ -134,7 +155,10 @@ function validatePhoto(file) {
     };
   }
 
-  if (file.size > MAX_PHOTO_SIZE) {
+  if (
+    file.size >
+    MAX_PHOTO_SIZE
+  ) {
 
     return {
       valid: false,
@@ -337,59 +361,119 @@ function getPasswordStrength(
 
 function updatePasswordStrength() {
 
-  const strengthElement =
-    document.getElementById(
-      "passwordStrength"
-    );
-
-  const strengthText =
-    document.getElementById(
-      "passwordStrengthText"
-    );
-
   if (
-    !strengthElement &&
-    !strengthText
+    !passwordStrength &&
+    !passwordStrengthBar &&
+    !passwordStrengthText
   ) {
     return;
   }
 
+  const password =
+    passwordInput?.value || "";
+
   const strength =
     getPasswordStrength(
-      passwordInput?.value
+      password
     );
 
-  if (strengthElement) {
 
-    strengthElement.className =
-      "password-strength";
+  // -------------------------------------------------------
+  // RESET
+  // -------------------------------------------------------
 
-    if (strength !== "none") {
+  if (passwordStrengthBar) {
 
-      strengthElement.classList.add(
-        strength
-      );
-    }
+    passwordStrengthBar.style.width =
+      "0%";
+
+    passwordStrengthBar.style.background =
+      "#555b68";
   }
 
-  if (strengthText) {
 
-    const messages = {
+  if (passwordStrengthText) {
 
-      none: "",
+    passwordStrengthText.textContent =
+      "";
+  }
 
-      weak:
-        "Password Strength: Weak",
 
-      medium:
-        "Password Strength: Medium",
+  if (!password) {
+    return;
+  }
 
-      strong:
-        "Password Strength: Strong"
-    };
 
-    strengthText.textContent =
-      messages[strength];
+  // -------------------------------------------------------
+  // WEAK
+  // -------------------------------------------------------
+
+  if (strength === "weak") {
+
+    if (passwordStrengthBar) {
+
+      passwordStrengthBar.style.width =
+        "33%";
+
+      passwordStrengthBar.style.background =
+        "#d9534f";
+    }
+
+    if (passwordStrengthText) {
+
+      passwordStrengthText.textContent =
+        "Password Strength: Weak";
+    }
+
+    return;
+  }
+
+
+  // -------------------------------------------------------
+  // MEDIUM
+  // -------------------------------------------------------
+
+  if (strength === "medium") {
+
+    if (passwordStrengthBar) {
+
+      passwordStrengthBar.style.width =
+        "66%";
+
+      passwordStrengthBar.style.background =
+        "#d4af37";
+    }
+
+    if (passwordStrengthText) {
+
+      passwordStrengthText.textContent =
+        "Password Strength: Medium";
+    }
+
+    return;
+  }
+
+
+  // -------------------------------------------------------
+  // STRONG
+  // -------------------------------------------------------
+
+  if (strength === "strong") {
+
+    if (passwordStrengthBar) {
+
+      passwordStrengthBar.style.width =
+        "100%";
+
+      passwordStrengthBar.style.background =
+        "#35c759";
+    }
+
+    if (passwordStrengthText) {
+
+      passwordStrengthText.textContent =
+        "Password Strength: Strong";
+    }
   }
 }
 
@@ -413,24 +497,22 @@ function checkPasswordMatch() {
   const confirmPassword =
     confirmPasswordInput.value;
 
-  const matchMessage =
-    document.getElementById(
-      "passwordMatchMessage"
-    );
 
   if (!confirmPassword) {
-
-    if (matchMessage) {
-      matchMessage.textContent =
-        "";
-    }
 
     confirmPasswordInput.setCustomValidity(
       ""
     );
 
+    if (passwordMatchMessage) {
+
+      passwordMatchMessage.textContent =
+        "";
+    }
+
     return;
   }
+
 
   if (
     password !==
@@ -441,10 +523,13 @@ function checkPasswordMatch() {
       "Password এবং Confirm Password একই হতে হবে।"
     );
 
-    if (matchMessage) {
+    if (passwordMatchMessage) {
 
-      matchMessage.textContent =
+      passwordMatchMessage.textContent =
         "Password মিলছে না।";
+
+      passwordMatchMessage.style.color =
+        "#ff9ba5";
     }
 
   } else {
@@ -453,10 +538,13 @@ function checkPasswordMatch() {
       ""
     );
 
-    if (matchMessage) {
+    if (passwordMatchMessage) {
 
-      matchMessage.textContent =
+      passwordMatchMessage.textContent =
         "✓ Password মিলেছে।";
+
+      passwordMatchMessage.style.color =
+        "#8ff0ae";
     }
   }
 }
@@ -776,27 +864,21 @@ async function createUserProfile(
 
 
 // =========================================================
-// CLEANUP AFTER SUCCESS
+// CLEANUP
 // =========================================================
 
 function clearSensitiveFields() {
 
   if (passwordInput) {
-
-    passwordInput.value =
-      "";
+    passwordInput.value = "";
   }
 
   if (confirmPasswordInput) {
-
-    confirmPasswordInput.value =
-      "";
+    confirmPasswordInput.value = "";
   }
 
   if (profilePhotoInput) {
-
-    profilePhotoInput.value =
-      "";
+    profilePhotoInput.value = "";
   }
 
   clearPhotoPreview();
@@ -819,7 +901,7 @@ function getSignupErrorMessage(
 
     case "auth/email-already-in-use":
 
-      return "এই Gmail দিয়ে ইতিমধ্যে Account আছে। Login করুন।";
+      return "এই Gmail দিয়ে ইতিমধ্যে Account আছে। Login করুন。";
 
 
     case "auth/invalid-email":
@@ -873,8 +955,10 @@ async function handleSignup() {
     return;
   }
 
+
   const validation =
     validateForm();
+
 
   if (!validation.valid) {
 
@@ -886,11 +970,14 @@ async function handleSignup() {
     return;
   }
 
+
   const data =
     validation.data;
 
+
   const existingUser =
     getCurrentUser();
+
 
   if (existingUser) {
 
@@ -902,12 +989,14 @@ async function handleSignup() {
     return;
   }
 
+
   isSubmitting =
     true;
 
   setLoading(
     true
   );
+
 
   let createdUser =
     null;
@@ -926,6 +1015,7 @@ async function handleSignup() {
       "১/৩ — Firebase Account তৈরি হচ্ছে...",
       "info"
     );
+
 
     createdUser =
       await createRegistrationAccount({
@@ -950,7 +1040,7 @@ async function handleSignup() {
 
 
     // =====================================================
-    // STEP 2 — SAVE FIRESTORE PROFILE
+    // STEP 2 — FIRESTORE PROFILE
     // =====================================================
 
     showStatus(
@@ -958,23 +1048,26 @@ async function handleSignup() {
       "info"
     );
 
+
     await createUserProfile(
       createdUser,
       data
     );
+
 
     profileSaved =
       true;
 
 
     // =====================================================
-    // STEP 3 — SEND VERIFICATION EMAIL
+    // STEP 3 — VERIFICATION EMAIL
     // =====================================================
 
     showStatus(
       "৩/৩ — Gmail Verification Email পাঠানো হচ্ছে...",
       "info"
     );
+
 
     await sendVerificationEmail(
       createdUser
@@ -986,6 +1079,7 @@ async function handleSignup() {
     // =====================================================
 
     clearSensitiveFields();
+
 
     showStatus(
       "আপনার AYNA BOOK Account তৈরি হয়েছে। Gmail Inbox থেকে Verification Link খুলুন। এখন Verification পেজে নেওয়া হচ্ছে...",
@@ -1013,6 +1107,10 @@ async function handleSignup() {
     );
 
 
+    // -----------------------------------------------------
+    // AUTH CREATED BUT FIRESTORE FAILED
+    // -----------------------------------------------------
+
     if (
       createdUser &&
       !profileSaved
@@ -1023,6 +1121,10 @@ async function handleSignup() {
         "error"
       );
 
+
+    // -----------------------------------------------------
+    // AUTH + FIRESTORE CREATED BUT EMAIL FAILED
+    // -----------------------------------------------------
 
     } else if (
       createdUser &&
@@ -1046,6 +1148,10 @@ async function handleSignup() {
         3000
       );
 
+
+    // -----------------------------------------------------
+    // NORMAL ERROR
+    // -----------------------------------------------------
 
     } else {
 
@@ -1135,8 +1241,13 @@ if (confirmPasswordInput) {
 
 
 // =========================================================
-// INITIAL MESSAGE
+// INITIAL UI
 // =========================================================
+
+updatePasswordStrength();
+
+checkPasswordMatch();
+
 
 showStatus(
   `Password ${MIN_PASSWORD_LENGTH}–${MAX_PASSWORD_LENGTH} অক্ষর হতে পারে। আপনার তথ্য পূরণ করে AYNA BOOK Account তৈরি করুন।`,
