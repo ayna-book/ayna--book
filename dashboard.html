@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 
@@ -15,107 +14,179 @@
       box-sizing: border-box;
     }
 
+    html {
+      min-height: 100%;
+      background: #0A0F1E;
+      scroll-behavior: auto;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
-      background: #0A0F1E;
+      background:
+        radial-gradient(circle at top, #172033 0%, #0A0F1E 42%, #060A12 100%);
       color: #FFFFFF;
       font-family: Arial, "Noto Sans Bengali", sans-serif;
+      overflow-x: hidden;
     }
 
     button {
       font: inherit;
     }
 
-    /* HEADER */
+    /* =====================================================
+       STATIC MODE
+       ===================================================== */
+
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
+    }
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 1000;
-      min-height: 68px;
+
+      min-height: 78px;
+
       display: flex;
       align-items: center;
+
       padding: 10px 16px;
-      background: #0A0F1E;
+
+      background: rgba(10, 15, 30, .98);
+
       border-bottom: 1px solid #FFD700;
-      box-shadow: 0 4px 20px rgba(0,0,0,.35);
+
+      box-shadow:
+        0 4px 25px rgba(0, 0, 0, .65);
     }
 
     .menu-button {
       flex-shrink: 0;
-      width: 44px;
-      height: 44px;
+
+      width: 50px;
+      height: 50px;
+
       display: grid;
-      grid-template-columns: repeat(2, 9px);
-      grid-template-rows: repeat(2, 9px);
+      grid-template-columns: repeat(2, 10px);
+      grid-template-rows: repeat(2, 10px);
+
       gap: 5px;
+
       align-items: center;
       justify-content: center;
+
       background: #1A2233;
+      color: #FFFFFF;
+
       border: 1px solid #FFD700;
-      border-radius: 10px;
+      border-radius: 8px;
+
       cursor: pointer;
     }
 
     .menu-button span {
-      width: 9px;
-      height: 9px;
+      width: 10px;
+      height: 10px;
+
       background: #FFFFFF;
+
       border-radius: 2px;
     }
 
-    /* AYNA BOOK BRAND AND STAR */
+    /* =====================================================
+       AYNA BOOK BRAND
+       ===================================================== */
 
     .brand {
       flex: 1;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       text-align: center;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 1px;
+
+      font-size: clamp(25px, 6vw, 42px);
+      font-weight: 800;
+
+      letter-spacing: 2px;
+
+      color: #FFFFFF;
+
       white-space: nowrap;
     }
 
     .glowing-star {
       display: inline-block;
-      margin-left: 7px;
+
+      margin-left: 9px;
+
       color: #FFFFFF;
-      font-size: 19px;
+
+      font-size: clamp(22px, 5vw, 34px);
+
       text-shadow:
         0 0 5px #FFFFFF,
-        0 0 10px #FFFFFF,
-        0 0 18px #FFFFFF;
-      animation: starGlow 1.5s ease-in-out infinite;
+        0 0 12px #FFFFFF,
+        0 0 22px #FFFFFF,
+        0 0 35px rgba(255,255,255,.8);
+
+      animation: starGlow 1s ease-in-out infinite;
     }
 
     @keyframes starGlow {
-      0%, 100% {
-        opacity: .55;
-        transform: scale(.9);
+
+      0%,
+      100% {
+        opacity: .45;
+        text-shadow:
+          0 0 4px #FFFFFF,
+          0 0 8px #FFFFFF;
       }
+
       50% {
         opacity: 1;
-        transform: scale(1.15);
+        text-shadow:
+          0 0 6px #FFFFFF,
+          0 0 14px #FFFFFF,
+          0 0 28px #FFFFFF,
+          0 0 42px #FFFFFF;
       }
     }
 
-    /* SIDEBAR */
+    /* =====================================================
+       SIDEBAR
+       ===================================================== */
 
     .sidebar {
       position: fixed;
+
       top: 0;
-      left: -290px;
-      width: 280px;
+      left: -300px;
+
+      width: 290px;
       height: 100vh;
+
       z-index: 2000;
-      padding: 85px 16px 20px;
-      background: #111827;
+
+      padding: 95px 16px 25px;
+
+      background: #0F1727;
+
       border-right: 1px solid #FFD700;
-      transition: left .25s ease;
+
       overflow-y: auto;
+
+      box-shadow:
+        10px 0 35px rgba(0, 0, 0, .6);
     }
 
     .sidebar.open {
@@ -123,214 +194,872 @@
     }
 
     .sidebar-title {
-      color: #FFD700;
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 18px;
+      color: #FFFFFF;
+
+      font-size: 24px;
+      font-weight: 800;
+
+      margin-bottom: 20px;
+
+      padding-bottom: 12px;
+
+      border-bottom: 1px solid #FFD700;
     }
 
     .side-link {
       width: 100%;
-      display: block;
-      padding: 14px 12px;
-      margin: 8px 0;
-      color: #FFFFFF;
-      text-decoration: none;
-      background: #1A2233;
-      border: 1px solid rgba(255,215,0,.55);
-      border-radius: 10px;
-      text-align: left;
-      cursor: pointer;
-    }
 
-    .side-link:hover {
-      background: #26344A;
-      border-color: #FFD700;
+      display: block;
+
+      padding: 16px 14px;
+
+      margin: 10px 0;
+
+      color: #FFFFFF;
+
+      text-decoration: none;
+
+      background: #1A2233;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 9px;
+
+      text-align: left;
+
+      font-size: 17px;
+      font-weight: 700;
+
+      cursor: pointer;
     }
 
     .close-menu {
       position: absolute;
+
       top: 20px;
       right: 16px;
-      width: 40px;
-      height: 40px;
+
+      width: 46px;
+      height: 46px;
+
       background: #1A2233;
       color: #FFFFFF;
+
       border: 1px solid #FFD700;
-      border-radius: 9px;
+      border-radius: 8px;
+
       cursor: pointer;
-      font-size: 20px;
+
+      font-size: 25px;
     }
 
     .overlay {
       position: fixed;
+
       inset: 0;
+
       z-index: 1500;
+
       display: none;
-      background: rgba(0,0,0,.65);
+
+      background: rgba(0, 0, 0, .75);
     }
 
     .overlay.show {
       display: block;
     }
 
-    /* MAIN */
+    /* =====================================================
+       MAIN
+       ===================================================== */
 
     main {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1250px;
+
       margin: 0 auto;
-      padding: 20px 14px 50px;
+
+      padding: 18px 14px 50px;
     }
 
+    /* =====================================================
+       WELCOME
+       ===================================================== */
+
     .welcome {
-      padding: 22px 18px;
+      padding: 24px 18px;
+
       background: #1A2233;
+
       border: 1px solid #FFD700;
-      border-radius: 18px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,.25);
+      border-radius: 12px;
+
+      margin-bottom: 18px;
+
+      box-shadow:
+        0 8px 30px rgba(0, 0, 0, .4);
     }
 
     .welcome h1 {
-      margin: 0 0 8px;
-      font-size: 27px;
+      margin: 0 0 10px;
+
+      font-size: clamp(27px, 6vw, 40px);
+
+      color: #FFFFFF;
     }
 
     .welcome p {
-      margin: 7px 0;
-      color: #D9DEE8;
-      line-height: 1.6;
+      margin: 8px 0;
+
+      color: #FFFFFF;
+
+      line-height: 1.7;
+
+      font-size: 17px;
     }
 
     #userEmail {
       color: #FFD700;
+
       word-break: break-word;
     }
 
-    .section-title {
-      margin: 25px 0 14px;
-      font-size: 21px;
+    /* =====================================================
+       TV NEWS SCREEN
+       ===================================================== */
+
+    .tv-section {
+      margin-top: 20px;
+    }
+
+    .tv-screen {
+
+      position: relative;
+
+      min-height: 300px;
+
+      padding: 20px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #05070C,
+          #101827 50%,
+          #05070C
+        );
+
+      border: 2px solid #FFD700;
+
+      border-radius: 12px;
+
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.05),
+        0 12px 35px rgba(0,0,0,.65),
+        inset 0 0 35px rgba(0,0,0,.7);
+
+      overflow: hidden;
+    }
+
+    .tv-screen::before {
+
+      content: "";
+
+      position: absolute;
+
+      inset: 8px;
+
+      border: 1px solid rgba(255,255,255,.12);
+
+      pointer-events: none;
+    }
+
+    .tv-header {
+
+      position: relative;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 10px;
+
+      margin-bottom: 20px;
+
+      padding-bottom: 12px;
+
+      border-bottom: 1px solid rgba(255,215,0,.5);
+    }
+
+    .tv-title {
+
+      font-size: clamp(20px, 4vw, 30px);
+
+      font-weight: 800;
+
       color: #FFFFFF;
     }
 
-    /* FEATURE CARDS */
+    .live-badge {
 
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      padding: 7px 11px;
+
+      color: #FFFFFF;
+
+      background: #141C2B;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 6px;
+
+      font-size: 13px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+
+      animation: liveGlow 1s ease-in-out infinite;
     }
 
-    .feature-card {
-      min-height: 125px;
+    @keyframes liveGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 4px rgba(255,255,255,.25);
+      }
+
+      50% {
+        box-shadow:
+          0 0 8px rgba(255,255,255,.65),
+          0 0 16px rgba(255,215,0,.25);
+      }
+    }
+
+    .tv-content {
+
+      position: relative;
+
+      display: grid;
+
+      grid-template-columns: 1fr;
+
+      gap: 15px;
+    }
+
+    .headline-box {
+
+      min-height: 155px;
+
       display: flex;
+
       flex-direction: column;
-      align-items: center;
+
       justify-content: center;
-      padding: 16px 10px;
-      text-align: center;
+
+      padding: 20px;
+
+      background: #0B111D;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 8px;
+    }
+
+    .headline-label {
+
+      display: inline-block;
+
+      width: fit-content;
+
+      padding: 6px 10px;
+
+      margin-bottom: 12px;
+
+      color: #FFFFFF;
+
       background: #1A2233;
-      border: 1px solid rgba(255,215,0,.65);
-      border-radius: 15px;
-      transition: transform .2s ease, background .2s ease;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 5px;
+
+      font-size: 13px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+    }
+
+    .headline {
+
+      margin: 0;
+
+      color: #FFFFFF;
+
+      font-size: clamp(22px, 5vw, 34px);
+
+      line-height: 1.35;
+
+      font-weight: 800;
+    }
+
+    .tv-note {
+
+      margin-top: 12px;
+
+      color: #FFFFFF;
+
+      font-size: 15px;
+
+      line-height: 1.6;
+    }
+
+    /* =====================================================
+       CHANNEL BAR
+       ===================================================== */
+
+    .channel-title {
+
+      margin: 20px 0 10px;
+
+      color: #FFFFFF;
+
+      font-size: 20px;
+
+      font-weight: 800;
+    }
+
+    .channels {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 9px;
+    }
+
+    .channel {
+
+      min-height: 58px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 10px;
+
+      color: #FFFFFF;
+
+      background: #1A2233;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 7px;
+
+      font-size: 15px;
+
+      font-weight: 800;
+
+      text-align: center;
+
+      letter-spacing: .5px;
+
+      box-shadow:
+        inset 0 0 12px rgba(255,255,255,.025);
+    }
+
+    .channel.active {
+
+      background: #111827;
+
+      box-shadow:
+        0 0 8px rgba(255,255,255,.35),
+        inset 0 0 14px rgba(255,215,0,.08);
+
+      animation: channelGlow 1s ease-in-out infinite;
+    }
+
+    @keyframes channelGlow {
+
+      0%,
+      100% {
+        box-shadow:
+          0 0 5px rgba(255,255,255,.2);
+      }
+
+      50% {
+        box-shadow:
+          0 0 12px rgba(255,255,255,.6),
+          0 0 20px rgba(255,215,0,.18);
+      }
+    }
+
+    /* =====================================================
+       NEWS CATEGORY BOXES
+       ===================================================== */
+
+    .section-title {
+
+      margin: 28px 0 13px;
+
+      font-size: clamp(22px, 5vw, 30px);
+
+      color: #FFFFFF;
+
+      font-weight: 800;
+    }
+
+    .news-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 11px;
+    }
+
+    .news-card {
+
+      min-height: 125px;
+
+      padding: 17px 12px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      text-align: center;
+
+      background: #1A2233;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 9px;
+
+      box-shadow:
+        0 6px 18px rgba(0,0,0,.35);
+
       cursor: pointer;
     }
 
-    .feature-card:hover {
-      transform: translateY(-3px);
-      background: #26344A;
-      border-color: #FFD700;
+    .news-card:hover {
+      background: #1A2233;
     }
 
-    .feature-icon {
-      font-size: 31px;
+    .news-icon {
+
+      font-size: 34px;
+
       margin-bottom: 9px;
     }
 
-    .feature-name {
-      font-size: 16px;
-      font-weight: 700;
+    .news-name {
+
       color: #FFFFFF;
+
+      font-size: 17px;
+
+      font-weight: 800;
     }
 
-    .feature-status {
+    .news-sub {
+
       margin-top: 5px;
+
+      color: #FFFFFF;
+
       font-size: 12px;
-      color: #A9B0BC;
     }
 
-    /* QUICK ACTIONS */
+    /* =====================================================
+       BREAKING NEWS
+       ===================================================== */
+
+    .breaking {
+
+      margin-top: 22px;
+
+      padding: 16px;
+
+      background: #111827;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 9px;
+
+      box-shadow:
+        0 8px 25px rgba(0,0,0,.45);
+    }
+
+    .breaking-head {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      margin-bottom: 10px;
+    }
+
+    .breaking-label {
+
+      padding: 7px 10px;
+
+      background: #1A2233;
+
+      border: 1px solid #FFD700;
+
+      color: #FFFFFF;
+
+      font-size: 13px;
+
+      font-weight: 900;
+
+      letter-spacing: 1px;
+
+      border-radius: 5px;
+
+      animation: breakingGlow 1s ease-in-out infinite;
+    }
+
+    @keyframes breakingGlow {
+
+      0%,
+      100% {
+        text-shadow:
+          0 0 3px #FFFFFF;
+      }
+
+      50% {
+        text-shadow:
+          0 0 8px #FFFFFF,
+          0 0 15px #FFD700;
+      }
+    }
+
+    .breaking-text {
+
+      color: #FFFFFF;
+
+      font-size: 17px;
+
+      line-height: 1.7;
+
+      font-weight: 700;
+    }
+
+    /* =====================================================
+       QUICK ACTIONS
+       ===================================================== */
 
     .actions {
+
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 11px;
+
+      margin-top: 12px;
     }
 
     .action-button {
-      padding: 15px 10px;
-      color: #0A0F1E;
-      background: #FFD700;
-      border: 0;
-      border-radius: 11px;
-      font-weight: bold;
-      font-size: 15px;
+
+      min-height: 58px;
+
+      padding: 12px 10px;
+
+      color: #FFFFFF;
+
+      background: #1A2233;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 8px;
+
+      font-weight: 800;
+
+      font-size: 16px;
+
       cursor: pointer;
     }
 
     .action-button.secondary {
+
       color: #FFFFFF;
-      background: #1A2233;
+
+      background: #111827;
+
       border: 1px solid #FFD700;
     }
 
-    #dashboardMessage {
-      display: none;
-      margin-top: 18px;
-      padding: 13px;
-      color: #FFFFFF;
+    /* =====================================================
+       FEATURE CARDS
+       ===================================================== */
+
+    .feature-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 11px;
+    }
+
+    .feature-card {
+
+      min-height: 145px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 17px 10px;
+
+      text-align: center;
+
       background: #1A2233;
+
       border: 1px solid #FFD700;
-      border-radius: 10px;
-      line-height: 1.5;
+
+      border-radius: 9px;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 6px 18px rgba(0,0,0,.35);
+
+      animation: boxGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes boxGlow {
+
+      0%,
+      100% {
+        box-shadow:
+          0 5px 16px rgba(0,0,0,.35);
+      }
+
+      50% {
+        box-shadow:
+          0 5px 20px rgba(0,0,0,.45),
+          0 0 9px rgba(255,255,255,.15);
+      }
+    }
+
+    .feature-icon {
+
+      font-size: 35px;
+
+      margin-bottom: 9px;
+    }
+
+    .feature-name {
+
+      font-size: 17px;
+
+      font-weight: 800;
+
+      color: #FFFFFF;
+    }
+
+    .feature-status {
+
+      margin-top: 6px;
+
+      font-size: 13px;
+
+      color: #FFFFFF;
+    }
+
+    /* =====================================================
+       DASHBOARD MESSAGE
+       ===================================================== */
+
+    #dashboardMessage {
+
+      display: none;
+
+      margin-top: 20px;
+
+      padding: 16px;
+
+      color: #FFFFFF;
+
+      background: #1A2233;
+
+      border: 1px solid #FFD700;
+
+      border-radius: 8px;
+
+      line-height: 1.7;
+
+      font-size: 16px;
+
       white-space: pre-line;
     }
 
+    /* =====================================================
+       FOOTER
+       ===================================================== */
+
     footer {
-      max-width: 1100px;
+
+      max-width: 1250px;
+
       margin: 0 auto;
-      padding: 20px 14px 35px;
+
+      padding: 22px 14px 35px;
+
       text-align: center;
-      color: #A9B0BC;
-      font-size: 13px;
+
+      color: #FFFFFF;
+
+      font-size: 14px;
+
+      border-top: 1px solid rgba(255,215,0,.35);
     }
 
+    /* =====================================================
+       TABLET / DESKTOP
+       ===================================================== */
+
     @media (min-width: 700px) {
+
       main {
-        padding: 28px 22px 60px;
+        padding:
+          28px
+          24px
+          65px;
+      }
+
+      .channels {
+        grid-template-columns:
+          repeat(5, minmax(0, 1fr));
+      }
+
+      .news-grid {
+        grid-template-columns:
+          repeat(5, minmax(0, 1fr));
       }
 
       .feature-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns:
+          repeat(4, minmax(0, 1fr));
       }
 
       .actions {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns:
+          repeat(4, minmax(0, 1fr));
       }
 
-      .welcome h1 {
-        font-size: 32px;
+      .tv-content {
+        grid-template-columns:
+          minmax(0, 1fr)
+          280px;
+      }
+
+      .tv-screen {
+        min-height: 350px;
+        padding: 26px;
       }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .glowing-star,
-      .sidebar,
+    @media (min-width: 1100px) {
+
+      .news-grid {
+        grid-template-columns:
+          repeat(5, minmax(0, 1fr));
+      }
+
+      .feature-grid {
+        grid-template-columns:
+          repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    /* =====================================================
+       SMALL MOBILE
+       ===================================================== */
+
+    @media (max-width: 420px) {
+
+      .topbar {
+        min-height: 70px;
+        padding: 8px 10px;
+      }
+
+      .menu-button {
+        width: 46px;
+        height: 46px;
+      }
+
+      .brand {
+        font-size: 24px;
+        letter-spacing: 1px;
+      }
+
+      .glowing-star {
+        font-size: 22px;
+        margin-left: 6px;
+      }
+
+      main {
+        padding:
+          12px
+          10px
+          45px;
+      }
+
+      .welcome {
+        padding: 19px 14px;
+      }
+
+      .welcome p {
+        font-size: 16px;
+      }
+
+      .tv-screen {
+        padding: 15px;
+      }
+
+      .headline-box {
+        padding: 16px;
+      }
+
+      .headline {
+        font-size: 21px;
+      }
+
+      .channels,
+      .news-grid,
+      .feature-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
       .feature-card {
-        animation: none;
-        transition: none;
+        min-height: 130px;
+      }
+
+      .news-card {
+        min-height: 115px;
       }
     }
   </style>
@@ -338,7 +1067,9 @@
 
 <body>
 
-  <!-- HEADER -->
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
 
   <header class="topbar">
 
@@ -356,13 +1087,19 @@
     </button>
 
     <div class="brand">
-      AYNA BOOK<span class="glowing-star" aria-hidden="true">★</span>
+      AYNA BOOK
+      <span
+        class="glowing-star"
+        aria-hidden="true"
+      >★</span>
     </div>
 
   </header>
 
 
-  <!-- SIDEBAR -->
+  <!-- =====================================================
+       SIDEBAR
+       ===================================================== -->
 
   <aside id="sidebar" class="sidebar">
 
@@ -375,172 +1112,515 @@
       ×
     </button>
 
-    <div class="sidebar-title">AYNA BOOK</div>
+    <div class="sidebar-title">
+      AYNA BOOK
+    </div>
 
-    <a class="side-link" href="./profile.html">👤 Profile</a>
-    <a class="side-link" href="./index.html">🏠 Home</a>
-    <a class="side-link" href="#features">✨ All Features</a>
-    <a class="side-link" href="./privacy.html">🔒 Privacy & Security</a>
+    <a
+      class="side-link"
+      href="./profile.html"
+    >
+      👤 Profile
+    </a>
 
-    <button id="sidebarLogout" class="side-link" type="button">
+    <a
+      class="side-link"
+      href="./index.html"
+    >
+      🏠 Home
+    </a>
+
+    <a
+      class="side-link"
+      href="#features"
+    >
+      ✨ All Features
+    </a>
+
+    <a
+      class="side-link"
+      href="./privacy.html"
+    >
+      🔒 Privacy & Security
+    </a>
+
+    <button
+      id="sidebarLogout"
+      class="side-link"
+      type="button"
+    >
       🚪 Logout
     </button>
 
   </aside>
 
 
-  <div id="overlay" class="overlay"></div>
+  <div
+    id="overlay"
+    class="overlay"
+  ></div>
 
 
-  <!-- MAIN DASHBOARD -->
+  <!-- =====================================================
+       MAIN DASHBOARD
+       ===================================================== -->
 
   <main>
 
+    <!-- WELCOME -->
+
     <section class="welcome">
 
-      <h1>Welcome to AYNA BOOK</h1>
+      <h1>
+        Welcome to AYNA BOOK
+      </h1>
 
-      <p>আপনার Dashboard-এ স্বাগতম।</p>
+      <p>
+        আপনার Dashboard-এ স্বাগতম।
+      </p>
 
       <p>
         Login Account:
-        <strong id="userEmail">Checking Account...</strong>
+        <strong id="userEmail">
+          Checking Account...
+        </strong>
       </p>
 
       <p>
-        এখান থেকে AYNA BOOK-এর বিভিন্ন ফিচারে প্রবেশ করতে পারবেন।
+        AYNA BOOK-এর বিশ্ব, স্থানীয়, ভাইরাল,
+        খেলাধুলা, বিনোদন ও সামাজিক ফিচার
+        এখান থেকে ব্যবহার করতে পারবেন।
       </p>
 
     </section>
 
 
-    <h2 class="section-title">Quick Access</h2>
+    <!-- =================================================
+         TV NEWS SCREEN
+         ================================================= -->
+
+    <section class="tv-section">
+
+      <div class="tv-screen">
+
+        <div class="tv-header">
+
+          <div class="tv-title">
+            AYNA BOOK NEWS TV
+          </div>
+
+          <div class="live-badge">
+            ● LIVE
+          </div>
+
+        </div>
+
+
+        <div class="tv-content">
+
+          <div class="headline-box">
+
+            <div class="headline-label">
+              TOP NEWS
+            </div>
+
+            <h2 class="headline">
+              বিশ্ব, স্থানীয় ও গুরুত্বপূর্ণ
+              খবর এক জায়গায়
+            </h2>
+
+            <div class="tv-note">
+              AYNA BOOK News Center
+            </div>
+
+          </div>
+
+
+          <div class="headline-box">
+
+            <div class="headline-label">
+              TRENDING
+            </div>
+
+            <h2 class="headline">
+              আজকের আলোচিত বিষয়
+            </h2>
+
+            <div class="tv-note">
+              Trending content এখানে প্রদর্শিত হবে।
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CHANNELS -->
+
+      <div class="channel-title">
+        NEWS CHANNELS
+      </div>
+
+      <div class="channels">
+
+        <div class="channel active">
+          🌍 WORLD
+        </div>
+
+        <div class="channel">
+          📍 LOCAL
+        </div>
+
+        <div class="channel">
+          🔥 VIRAL
+        </div>
+
+        <div class="channel">
+          ⚽ SPORTS
+        </div>
+
+        <div class="channel">
+          🎬 ENTERTAINMENT
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         MAIN NEWS CATEGORIES
+         ================================================= -->
+
+    <h2 class="section-title">
+      প্রধান খবর
+    </h2>
+
+    <section class="news-grid">
+
+      <article
+        class="news-card"
+        data-feature="World News"
+      >
+        <div class="news-icon">🌍</div>
+        <div class="news-name">
+          WORLD
+        </div>
+        <div class="news-sub">
+          বিশ্ব সংবাদ
+        </div>
+      </article>
+
+
+      <article
+        class="news-card"
+        data-feature="Local News"
+      >
+        <div class="news-icon">📍</div>
+        <div class="news-name">
+          LOCAL
+        </div>
+        <div class="news-sub">
+          স্থানীয় সংবাদ
+        </div>
+      </article>
+
+
+      <article
+        class="news-card"
+        data-feature="Viral News"
+      >
+        <div class="news-icon">🔥</div>
+        <div class="news-name">
+          VIRAL
+        </div>
+        <div class="news-sub">
+          ভাইরাল সংবাদ
+        </div>
+      </article>
+
+
+      <article
+        class="news-card"
+        data-feature="Sports News"
+      >
+        <div class="news-icon">⚽</div>
+        <div class="news-name">
+          SPORTS
+        </div>
+        <div class="news-sub">
+          খেলাধুলা
+        </div>
+      </article>
+
+
+      <article
+        class="news-card"
+        data-feature="Entertainment News"
+      >
+        <div class="news-icon">🎬</div>
+        <div class="news-name">
+          ENTERTAINMENT
+        </div>
+        <div class="news-sub">
+          বিনোদন
+        </div>
+      </article>
+
+    </section>
+
+
+    <!-- =================================================
+         BREAKING NEWS
+         ================================================= -->
+
+    <section class="breaking">
+
+      <div class="breaking-head">
+
+        <div class="breaking-label">
+          BREAKING
+        </div>
+
+        <div class="breaking-text">
+          AYNA BOOK NEWS
+        </div>
+
+      </div>
+
+      <div class="breaking-text">
+        গুরুত্বপূর্ণ ও দ্রুত পরিবর্তনশীল খবর
+        এখানে প্রদর্শিত হবে।
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         QUICK ACTIONS
+         ================================================= -->
+
+    <h2 class="section-title">
+      QUICK ACCESS
+    </h2>
 
     <section class="actions">
 
-      <button class="action-button" data-feature="Profile" type="button">
+      <button
+        class="action-button"
+        data-feature="Profile"
+        type="button"
+      >
         👤 PROFILE
       </button>
 
-      <button class="action-button" data-feature="Create Post" type="button">
+      <button
+        class="action-button"
+        data-feature="Create Post"
+        type="button"
+      >
         ✏️ CREATE POST
       </button>
 
-      <button class="action-button" data-feature="Messages" type="button">
+      <button
+        class="action-button"
+        data-feature="Messages"
+        type="button"
+      >
         💬 MESSAGES
       </button>
 
-      <button class="action-button secondary" id="logoutButton" type="button">
-        LOGOUT
+      <button
+        class="action-button secondary"
+        id="logoutButton"
+        type="button"
+      >
+        🚪 LOGOUT
       </button>
 
     </section>
 
 
-    <h2 id="features" class="section-title">
-      AYNA BOOK Features
+    <!-- =================================================
+         FEATURES
+         ================================================= -->
+
+    <h2
+      id="features"
+      class="section-title"
+    >
+      AYNA BOOK FEATURES
     </h2>
 
 
     <section class="feature-grid">
 
-      <article class="feature-card" data-feature="Profile">
+      <article
+        class="feature-card"
+        data-feature="Profile"
+      >
         <div class="feature-icon">👤</div>
         <div class="feature-name">Profile</div>
         <div class="feature-status">Available</div>
       </article>
 
-      <article class="feature-card" data-feature="Posts">
+
+      <article
+        class="feature-card"
+        data-feature="Posts"
+      >
         <div class="feature-icon">📝</div>
         <div class="feature-name">Posts</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Photos & Videos">
+
+      <article
+        class="feature-card"
+        data-feature="Photos & Videos"
+      >
         <div class="feature-icon">📷</div>
         <div class="feature-name">Photos & Videos</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Messages">
+
+      <article
+        class="feature-card"
+        data-feature="Messages"
+      >
         <div class="feature-icon">💬</div>
         <div class="feature-name">Messages</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Groups">
+
+      <article
+        class="feature-card"
+        data-feature="Groups"
+      >
         <div class="feature-icon">👥</div>
         <div class="feature-name">Groups</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Notifications">
+
+      <article
+        class="feature-card"
+        data-feature="Notifications"
+      >
         <div class="feature-icon">🔔</div>
         <div class="feature-name">Notifications</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Audio Call">
+
+      <article
+        class="feature-card"
+        data-feature="Audio Call"
+      >
         <div class="feature-icon">📞</div>
         <div class="feature-name">Audio Call</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Video Call">
+
+      <article
+        class="feature-card"
+        data-feature="Video Call"
+      >
         <div class="feature-icon">📹</div>
         <div class="feature-name">Video Call</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="World Community">
+
+      <article
+        class="feature-card"
+        data-feature="World Community"
+      >
         <div class="feature-icon">🌍</div>
         <div class="feature-name">World Community</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Business Directory">
+
+      <article
+        class="feature-card"
+        data-feature="Business Directory"
+      >
         <div class="feature-icon">🏢</div>
         <div class="feature-name">Business Directory</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="World Leaders">
+
+      <article
+        class="feature-card"
+        data-feature="World Leaders"
+      >
         <div class="feature-icon">🌐</div>
         <div class="feature-name">World Leaders</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="GPS">
+
+      <article
+        class="feature-card"
+        data-feature="GPS"
+      >
         <div class="feature-icon">📍</div>
         <div class="feature-name">GPS</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Compass">
+
+      <article
+        class="feature-card"
+        data-feature="Compass"
+      >
         <div class="feature-icon">🧭</div>
         <div class="feature-name">Compass</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Currency">
+
+      <article
+        class="feature-card"
+        data-feature="Currency"
+      >
         <div class="feature-icon">💱</div>
         <div class="feature-name">Currency</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Medical Research">
+
+      <article
+        class="feature-card"
+        data-feature="Medical Research"
+      >
         <div class="feature-icon">🧬</div>
         <div class="feature-name">Medical Research</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="World Doctors">
+
+      <article
+        class="feature-card"
+        data-feature="World Doctors"
+      >
         <div class="feature-icon">🩺</div>
         <div class="feature-name">World Doctors</div>
         <div class="feature-status">Coming Soon</div>
       </article>
 
-      <article class="feature-card" data-feature="Privacy & Security">
+
+      <article
+        class="feature-card"
+        data-feature="Privacy & Security"
+      >
         <div class="feature-icon">🔐</div>
         <div class="feature-name">Privacy & Security</div>
         <div class="feature-status">Available</div>
@@ -548,6 +1628,8 @@
 
     </section>
 
+
+    <!-- MESSAGE -->
 
     <div
       id="dashboardMessage"
@@ -558,62 +1640,82 @@
   </main>
 
 
+  <!-- FOOTER -->
+
   <footer>
     © 2026 AYNA BOOK — Secure Digital Social Platform
   </footer>
 
 
-  <!-- JAVASCRIPT -->
+  <!-- =====================================================
+       JAVASCRIPT
+       Firebase Authentication Logic Preserved
+       ===================================================== -->
 
   <script type="module">
 
-    // Firebase Auth আলাদা ফাইল থেকে Import
     import { auth } from "./firebase.js";
 
-    // Authentication functions
     import {
       watchAuthState,
       logoutUser
     } from "./auth.js";
 
 
-    // ELEMENTS
+    /* =====================================================
+       ELEMENTS
+       ===================================================== */
 
-    const userEmail = document.getElementById("userEmail");
+    const userEmail =
+      document.getElementById("userEmail");
 
     const dashboardMessage =
       document.getElementById("dashboardMessage");
 
-    const sidebar = document.getElementById("sidebar");
+    const sidebar =
+      document.getElementById("sidebar");
 
-    const overlay = document.getElementById("overlay");
+    const overlay =
+      document.getElementById("overlay");
 
-    const menuButton = document.getElementById("menuButton");
+    const menuButton =
+      document.getElementById("menuButton");
 
-    const closeMenu = document.getElementById("closeMenu");
+    const closeMenu =
+      document.getElementById("closeMenu");
 
-    const logoutButton = document.getElementById("logoutButton");
+    const logoutButton =
+      document.getElementById("logoutButton");
 
     const sidebarLogout =
       document.getElementById("sidebarLogout");
 
 
-    // STATE
+    /* =====================================================
+       STATE
+       ===================================================== */
 
     let authCheckStarted = false;
     let redirecting = false;
     let logoutInProgress = false;
 
 
-    // MESSAGE
+    /* =====================================================
+       MESSAGE
+       ===================================================== */
 
     function showMessage(text) {
+
       dashboardMessage.textContent = text;
+
       dashboardMessage.style.display = "block";
+
     }
 
 
-    // REDIRECT
+    /* =====================================================
+       REDIRECT
+       ===================================================== */
 
     function redirectToLogin() {
 
@@ -626,7 +1728,9 @@
     }
 
 
-    // MENU
+    /* =====================================================
+       MENU
+       ===================================================== */
 
     function openMenu() {
 
@@ -634,7 +1738,10 @@
 
       overlay.classList.add("show");
 
-      menuButton.setAttribute("aria-expanded", "true");
+      menuButton.setAttribute(
+        "aria-expanded",
+        "true"
+      );
 
     }
 
@@ -645,27 +1752,49 @@
 
       overlay.classList.remove("show");
 
-      menuButton.setAttribute("aria-expanded", "false");
+      menuButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
 
     }
 
 
-    menuButton.addEventListener("click", openMenu);
+    menuButton.addEventListener(
+      "click",
+      openMenu
+    );
 
-    closeMenu.addEventListener("click", closeSidebar);
+    closeMenu.addEventListener(
+      "click",
+      closeSidebar
+    );
 
-    overlay.addEventListener("click", closeSidebar);
+    overlay.addEventListener(
+      "click",
+      closeSidebar
+    );
 
 
-    // AUTHENTICATION CHECK
+    /* =====================================================
+       AUTHENTICATION CHECK
+       ===================================================== */
 
-    userEmail.textContent = "Checking Account...";
+    userEmail.textContent =
+      "Checking Account...";
+
 
     watchAuthState(async (user) => {
 
-      if (authCheckStarted || redirecting) return;
+      if (
+        authCheckStarted ||
+        redirecting
+      ) {
+        return;
+      }
 
       authCheckStarted = true;
+
 
       if (!user) {
 
@@ -675,11 +1804,15 @@
 
       }
 
+
       try {
 
         await user.reload();
 
-        const currentUser = auth.currentUser;
+
+        const currentUser =
+          auth.currentUser;
+
 
         if (!currentUser) {
 
@@ -689,15 +1822,22 @@
 
         }
 
+
         if (!currentUser.emailVerified) {
 
           showMessage(
             "আপনার Gmail এখনো Verify করা হয়নি। Gmail Verification সম্পন্ন করে আবার Login করুন।"
           );
 
-          const result = await logoutUser();
 
-          if (result && result.success === false) {
+          const result =
+            await logoutUser();
+
+
+          if (
+            result &&
+            result.success === false
+          ) {
 
             showMessage(
               "Logout সম্পন্ন হয়নি। আবার চেষ্টা করুন।"
@@ -707,20 +1847,27 @@
 
           }
 
+
           redirectToLogin();
 
           return;
 
         }
 
-        userEmail.textContent =
-          currentUser.email || "AYNA BOOK User";
 
-        dashboardMessage.style.display = "none";
+        userEmail.textContent =
+          currentUser.email ||
+          "AYNA BOOK User";
+
+
+        dashboardMessage.style.display =
+          "none";
+
 
         console.log(
           "AYNA BOOK — Verified Dashboard Access Granted."
         );
+
 
       } catch (error) {
 
@@ -728,6 +1875,7 @@
           "AYNA BOOK Dashboard Authentication Error:",
           error
         );
+
 
         showMessage(
           "Account যাচাই করা যায়নি। আবার Login করুন।"
@@ -738,7 +1886,9 @@
     });
 
 
-    // LOGOUT
+    /* =====================================================
+       LOGOUT
+       ===================================================== */
 
     async function logout() {
 
@@ -746,17 +1896,28 @@
 
       logoutInProgress = true;
 
+
       try {
 
-        showMessage("Logout হচ্ছে...");
+        showMessage(
+          "Logout হচ্ছে..."
+        );
 
-        const result = await logoutUser();
 
-        if (result && result.success === false) {
+        const result =
+          await logoutUser();
+
+
+        if (
+          result &&
+          result.success === false
+        ) {
 
           showMessage(
-            result.message || "Logout করা যায়নি।"
+            result.message ||
+            "Logout করা যায়নি।"
           );
+
 
           logoutInProgress = false;
 
@@ -764,7 +1925,9 @@
 
         }
 
+
         redirectToLogin();
+
 
       } catch (error) {
 
@@ -773,9 +1936,11 @@
           error
         );
 
+
         showMessage(
           "Logout করা যায়নি। আবার চেষ্টা করুন।"
         );
+
 
         logoutInProgress = false;
 
@@ -784,66 +1949,93 @@
     }
 
 
-    logoutButton.addEventListener("click", logout);
+    logoutButton.addEventListener(
+      "click",
+      logout
+    );
 
-    sidebarLogout.addEventListener("click", logout);
+    sidebarLogout.addEventListener(
+      "click",
+      logout
+    );
 
 
-    // FEATURE ACTIONS
+    /* =====================================================
+       FEATURE ACTIONS
+       ===================================================== */
 
     document
       .querySelectorAll("[data-feature]")
       .forEach((card) => {
 
-        card.addEventListener("click", () => {
+        card.addEventListener(
+          "click",
+          () => {
 
-          const feature = card.dataset.feature;
+            const feature =
+              card.dataset.feature;
 
-          if (feature === "Profile") {
 
-            window.location.href = "./profile.html";
+            if (feature === "Profile") {
 
-            return;
+              window.location.href =
+                "./profile.html";
 
-          }
+              return;
 
-          if (feature === "Messages") {
+            }
 
-            window.location.href = "./chat.html";
 
-            return;
+            if (feature === "Messages") {
 
-          }
+              window.location.href =
+                "./chat.html";
 
-          if (feature === "Privacy & Security") {
+              return;
 
-            window.location.href = "./privacy.html";
+            }
 
-            return;
 
-          }
+            if (
+              feature ===
+              "Privacy & Security"
+            ) {
 
-          if (feature === "Posts") {
+              window.location.href =
+                "./privacy.html";
+
+              return;
+
+            }
+
+
+            if (
+              feature ===
+              "Posts"
+            ) {
+
+              showMessage(
+                "Posts ফিচার পরবর্তী ধাপে যুক্ত করা হবে।"
+              );
+
+              return;
+
+            }
+
 
             showMessage(
-              "Posts ফিচার পরবর্তী ধাপে যুক্ত করা হবে।"
+              feature +
+              " — এই ফিচারটি বর্তমানে Coming Soon।"
             );
 
-            return;
-
           }
-
-          showMessage(
-            feature + " — এই ফিচারটি বর্তমানে Coming Soon।"
-          );
-
-        });
+        );
 
       });
 
 
     console.log(
-      "AYNA BOOK — Dashboard Controller Loaded."
+      "AYNA BOOK — Premium Dashboard Controller Loaded."
     );
 
   </script>
