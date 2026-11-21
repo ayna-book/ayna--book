@@ -1,332 +1,697 @@
+
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>AYNA BOOK - Login</title>
-  <style>
-    :root {
-      --gold: #facc15;
-      --gold-border: #d4af37;
-      --bg-dark: #06080d;
-      --card-bg: #10141f;
-      --input-bg: #181e2e;
-      --border-dim: #29324a;
-      --text-main: #ffffff;
-      --text-muted: #9ca3af;
-    }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+  <meta charset="UTF-8">
 
-    html, body {
-      width: 100%;
-      min-height: 100dvh;
-      background: var(--bg-dark);
-      color: var(--text-main);
-      overflow-x: hidden;
-    }
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-    .login-page {
-      width: 100%;
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
+  <meta
+    name="theme-color"
+    content="#0A0F1E"
+  >
 
-    .top-bar {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      padding: 0 4px;
-    }
+  <meta
+    name="description"
+    content="AYNA BOOK — Connect • Share • Create"
+  >
 
-    .top-icon-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      border: 1px solid var(--border-dim);
-      background: #0d111a;
-      color: #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      text-decoration: none;
-    }
+  <meta
+    name="mobile-web-app-capable"
+    content="yes"
+  >
 
-    .top-brand {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: #ffffff;
-    }
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
 
-    .login-card {
-      width: 100%;
-      max-width: 480px;
-      background: var(--card-bg);
-      border: 1px solid rgba(212, 175, 55, 0.55);
-      border-radius: 16px;
-      padding: 26px 20px;
-      box-shadow: 0 0 25px rgba(250, 204, 21, 0.1);
-    }
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
 
-    .login-header {
-      text-align: center;
-      margin-bottom: 22px;
-    }
+  <meta
+    name="apple-mobile-web-app-title"
+    content="AYNA BOOK"
+  >
 
-    .login-header h1 {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #ffffff;
-    }
+  <title>AYNA BOOK — Connect • Share • Create</title>
 
-    .login-header p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 6px;
-    }
+  <link
+    rel="manifest"
+    href="./manifest.webmanifest"
+  >
 
-    .form-group {
-      margin-bottom: 16px;
-    }
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="./icon-192.png"
+  >
 
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: #e5e7eb;
-      margin-bottom: 7px;
-    }
+  <link
+    rel="apple-touch-icon"
+    href="./icon-192.png"
+  >
 
-    .input-box {
-      width: 100%;
-      padding: 13px 14px;
-      background: var(--input-bg);
-      border: 1px solid var(--border-dim);
-      border-radius: 8px;
-      color: #ffffff;
-      font-size: 15px;
-      outline: none;
-    }
+  <link
+    rel="stylesheet"
+    href="./styles.css"
+  >
 
-    .input-box:focus {
-      border-color: var(--gold);
-    }
+  <link
+    rel="stylesheet"
+    href="./ayna-ui-patch.css"
+  >
 
-    .password-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .password-row .input-box {
-      flex: 1;
-    }
-
-    .btn-show {
-      padding: 13px 14px;
-      background: #1f273b;
-      border: 1px solid var(--border-dim);
-      border-radius: 8px;
-      color: #e5e7eb;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .forgot-wrap {
-      text-align: right;
-      margin-top: 8px;
-    }
-
-    .forgot-wrap a {
-      color: var(--gold);
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .forgot-wrap a:hover {
-      text-decoration: underline;
-    }
-
-    .btn-login {
-      width: 100%;
-      padding: 14px;
-      background: var(--gold);
-      color: #090b10;
-      font-size: 15px;
-      font-weight: 800;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 18px;
-      letter-spacing: 0.8px;
-    }
-
-    .register-line {
-      margin-top: 18px;
-      text-align: center;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .register-line a {
-      color: var(--gold);
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .footer-note {
-      margin-top: 20px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      text-align: center;
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .status-msg {
-      margin-top: 12px;
-      text-align: center;
-      font-size: 13px;
-      min-height: 18px;
-    }
-
-    @media (max-width: 520px) {
-      .login-page {
-        padding: 12px 0 0 0;
-        justify-content: flex-start;
-      }
-      .top-bar {
-        padding: 0 14px;
-      }
-      .login-card {
-        max-width: 100%;
-        flex: 1;
-        border-radius: 16px 16px 0 0;
-        border-left: none;
-        border-right: none;
-        border-bottom: none;
-        padding: 26px 18px;
-      }
-    }
-  </style>
 </head>
+
+
 <body>
-  <div class="login-page">
-    <div class="top-bar">
-      <a href="dashboard.html" class="top-icon-btn" title="Modules">▦</a>
-      <div class="top-brand">AYNA BOOK</div>
-      <span class="top-icon-btn" style="color: var(--gold);">★</span>
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <header class="site-header">
+
+    <div class="header-inner">
+
+      <div class="header-left">
+
+        <a
+          href="./index.html"
+          class="dashboard-icon"
+          aria-label="AYNA BOOK Home"
+          title="AYNA BOOK Home"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </a>
+
+      </div>
+
+
+      <div class="header-center">
+
+        <a
+          href="./index.html"
+          class="brand"
+          aria-label="AYNA BOOK"
+        >
+          AYNA BOOK
+        </a>
+
+      </div>
+
+
+      <div class="header-right">
+
+        <span
+          class="glowing-star"
+          aria-hidden="true"
+          title="AYNA BOOK"
+        >
+          ★
+        </span>
+
+      </div>
+
     </div>
 
-    <div class="login-card">
-      <div class="login-header">
-        <h1>LOGIN</h1>
-        <p>আপনার AYNA BOOK অ্যাকাউন্টে নিরাপদে প্রবেশ করুন।</p>
+
+    <!-- ===================================================
+         NAVIGATION
+         =================================================== -->
+
+    <nav
+      class="main-nav"
+      aria-label="Main Navigation"
+    >
+
+      <a
+        href="./index.html"
+        class="active"
+      >
+        Home
+      </a>
+
+      <a href="./login.html">
+        Login
+      </a>
+
+      <a href="./signup.html">
+        Register
+      </a>
+
+      <a href="./profile.html">
+        Profile
+      </a>
+
+      <a href="./chat.html">
+        Messages
+      </a>
+
+    </nav>
+
+  </header>
+
+
+  <!-- =====================================================
+       BREAKING NEWS
+       ===================================================== -->
+
+  <section
+    class="news-ticker"
+    aria-label="Breaking News"
+  >
+
+    <div class="news-ticker-inner">
+
+      <div class="news-label">
+        BREAKING NEWS
       </div>
 
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="loginEmail">Gmail Address</label>
-          <input type="email" id="loginEmail" class="input-box" placeholder="example@gmail.com" required />
+      <div class="news-content">
+
+        <div class="news-track">
+          AYNA BOOK — Connect • Share • Create
+          &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;
+          Welcome to AYNA BOOK
+          &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;
+          A modern digital social platform
+          &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;
+          Stay connected with AYNA BOOK
         </div>
 
-        <div class="form-group">
-          <label for="loginPassword">Password</label>
-          <div class="password-row">
-            <input type="password" id="loginPassword" class="input-box" placeholder="আপনার Password" required />
-            <button type="button" class="btn-show" id="togglePassBtn">Show</button>
-          </div>
-          <div class="forgot-wrap">
-            <a href="forgot-password.html">Forgot Password?</a>
-          </div>
-        </div>
-
-        <button type="submit" class="btn-login" id="loginBtn">LOGIN</button>
-        <div class="status-msg" id="statusMsg"></div>
-      </form>
-
-      <div class="register-line">
-        নতুন AYNA BOOK অ্যাকাউন্ট তৈরি করতে <a href="signup.html">REGISTER</a>
       </div>
 
-      <div class="footer-note">
-        <div>AYNA BOOK - Secure Login</div>
-        <div>আপনার Password কারো সাথে শেয়ার করবেন না।</div>
-      </div>
     </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       NETWORK STATUS
+       ===================================================== -->
+
+  <div
+    id="network-status-badge"
+    aria-live="polite"
+  >
+    Checking...
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "ayna-book.firebaseapp.com",
-      databaseURL: "https://ayna-book-default-rtdb.firebaseio.com",
-      projectId: "ayna-book",
-      storageBucket: "ayna-book.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  <main class="app-container">
 
-    const passInput = document.getElementById("loginPassword");
-    const togglePassBtn = document.getElementById("togglePassBtn");
-    const loginForm = document.getElementById("loginForm");
-    const statusMsg = document.getElementById("statusMsg");
-    const loginBtn = document.getElementById("loginBtn");
 
-    togglePassBtn.addEventListener("click", () => {
-      const isHidden = passInput.type === "password";
-      passInput.type = isHidden ? "text" : "password";
-      togglePassBtn.textContent = isHidden ? "Hide" : "Show";
-    });
+    <!-- ===================================================
+         HERO
+         =================================================== -->
 
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = passInput.value;
+    <section class="hero">
 
-      loginBtn.disabled = true;
-      loginBtn.textContent = "LOGGING IN...";
-      statusMsg.style.color = "#facc15";
-      statusMsg.textContent = "Verifying your credentials...";
+      <h1>
+        Welcome to AYNA BOOK
+      </h1>
 
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        statusMsg.style.color = "#4ade80";
-        statusMsg.textContent = "Login successful! Redirecting...";
-        setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 1000);
-      } catch (error) {
-        statusMsg.style.color = "#f87171";
-        statusMsg.textContent = error.message;
-        loginBtn.disabled = false;
-        loginBtn.textContent = "LOGIN";
-      }
-    });
-  </script>
+      <p>
+        A modern, secure and privacy-focused
+        digital social platform designed to
+        connect people, share ideas and create
+        meaningful connections around the world.
+      </p>
+
+      <div
+        class="flex-center gap-12"
+        style="
+          margin-top:24px;
+          flex-wrap:wrap;
+        "
+      >
+
+        <a
+          href="./login.html"
+          class="btn"
+        >
+          🔑 Login
+        </a>
+
+        <a
+          href="./signup.html"
+          class="btn btn-secondary"
+        >
+          📝 Create Account
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         QUICK ACCESS
+         =================================================== -->
+
+    <section class="section">
+
+      <h2 class="section-title">
+        🚀 Quick Access
+      </h2>
+
+      <div class="dashboard-grid">
+
+
+        <a
+          href="./login.html"
+          class="dashboard-card"
+        >
+
+          <div class="icon">
+            🔑
+          </div>
+
+          <div class="title">
+            Login
+          </div>
+
+          <div class="description">
+            Sign in to your AYNA BOOK account.
+          </div>
+
+        </a>
+
+
+        <a
+          href="./signup.html"
+          class="dashboard-card"
+        >
+
+          <div class="icon">
+            📝
+          </div>
+
+          <div class="title">
+            Register
+          </div>
+
+          <div class="description">
+            Create a new AYNA BOOK account.
+          </div>
+
+        </a>
+
+
+        <a
+          href="./profile.html"
+          class="dashboard-card"
+        >
+
+          <div class="icon">
+            👤
+          </div>
+
+          <div class="title">
+            Profile
+          </div>
+
+          <div class="description">
+            Manage your profile.
+          </div>
+
+        </a>
+
+
+        <a
+          href="./chat.html"
+          class="dashboard-card"
+        >
+
+          <div class="icon">
+            💬
+          </div>
+
+          <div class="title">
+            Messages
+          </div>
+
+          <div class="description">
+            Communicate with other users.
+          </div>
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         SOCIAL FEATURES
+         =================================================== -->
+
+    <section class="section">
+
+      <h2 class="section-title">
+        🌐 AYNA BOOK Features
+      </h2>
+
+      <p class="section-subtitle">
+        Explore the growing AYNA BOOK digital platform.
+      </p>
+
+
+      <div class="feature-grid">
+
+
+        <a
+          href="./public-profile.html"
+          class="card"
+        >
+
+          <h3>
+            👤 Public Profiles
+          </h3>
+
+          <p>
+            Discover public user profiles
+            and social connections.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./chat.html"
+          class="card"
+        >
+
+          <h3>
+            💬 Chat & Messaging
+          </h3>
+
+          <p>
+            Communicate through the AYNA BOOK
+            messaging system.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./audio-video-messaging.html"
+          class="card"
+        >
+
+          <h3>
+            📞 Audio & Video
+          </h3>
+
+          <p>
+            Explore audio and video communication
+            features as they become available.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./countries.html"
+          class="card"
+        >
+
+          <h3>
+            🌍 Countries
+          </h3>
+
+          <p>
+            Explore countries and worldwide
+            information.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./business-directory.html"
+          class="card"
+        >
+
+          <h3>
+            🏢 Business Directory
+          </h3>
+
+          <p>
+            Explore business and organization
+            information.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./world-leaders.html"
+          class="card"
+        >
+
+          <h3>
+            🌐 World Leaders
+          </h3>
+
+          <p>
+            Explore information about
+            world leaders.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./gps.html"
+          class="card"
+        >
+
+          <h3>
+            📍 GPS
+          </h3>
+
+          <p>
+            Access location-related tools
+            when supported by your device.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./compass.html"
+          class="card"
+        >
+
+          <h3>
+            🧭 Compass
+          </h3>
+
+          <p>
+            Explore compass and direction
+            utilities.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./currency-exchange.html"
+          class="card"
+        >
+
+          <h3>
+            💱 Currency
+          </h3>
+
+          <p>
+            Explore currency exchange
+            information.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./camera.html"
+          class="card"
+        >
+
+          <h3>
+            📷 Camera
+          </h3>
+
+          <p>
+            Access camera features
+            when supported by your browser.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./medical-research.html"
+          class="card"
+        >
+
+          <h3>
+            🔬 Medical Research
+          </h3>
+
+          <p>
+            Explore medical research
+            information and resources.
+          </p>
+
+        </a>
+
+
+        <a
+          href="./world-doctors.html"
+          class="card"
+        >
+
+          <h3>
+            👨‍⚕️ World Doctors
+          </h3>
+
+          <p>
+            Explore doctor-related
+            information and resources.
+          </p>
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         SECURITY
+         =================================================== -->
+
+    <section class="section">
+
+      <div class="card">
+
+        <h2>
+          🔐 Security & Privacy
+        </h2>
+
+        <p>
+          AYNA BOOK is designed with authentication,
+          privacy controls and secure Firebase-based
+          services as core parts of the platform.
+        </p>
+
+        <p>
+          Always protect your password and never
+          share your account credentials with anyone.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         PLATFORM MESSAGE
+         =================================================== -->
+
+    <section class="section">
+
+      <div class="card text-center">
+
+        <h2>
+          AYNA BOOK
+        </h2>
+
+        <p>
+          Connect • Share • Create
+        </p>
+
+        <p class="text-muted">
+          A long-term digital platform project
+          focused on communication, creativity,
+          privacy and global connectivity.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="site-footer">
+
+    <strong>
+      AYNA BOOK
+    </strong>
+
+    <br>
+
+    Connect • Share • Create
+
+    <br><br>
+
+    © 2026 AYNA BOOK. All rights reserved.
+
+  </footer>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+
+  <script
+    type="module"
+    src="./app.js"
+  ></script>
+
+  <script
+    type="module"
+    src="./connectivity.js"
+  ></script>
+
+  <script
+    src="./translator.js"
+  ></script>
+
+
+  <!-- =====================================================
+       SERVICE WORKER / UPDATE MANAGER
+       ===================================================== -->
+
+  <script
+    type="module"
+    src="./update.js"
+  ></script>
+
+
 </body>
+
 </html>
