@@ -1,9 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
   <title>AYNA BOOK - Sign Up</title>
+
   <style>
     :root {
       --gold: #d4af37;
@@ -23,10 +26,16 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    html, body {
+    html,
+    body {
       width: 100%;
       min-height: 100dvh;
-      background: radial-gradient(circle at top, #171d30 0%, var(--bg-dark) 100%);
+      background:
+        radial-gradient(
+          circle at top,
+          #171d30 0%,
+          var(--bg-dark) 100%
+        );
       color: var(--text-main);
       overflow-x: hidden;
     }
@@ -47,7 +56,8 @@
       border: 1.5px solid var(--gold);
       border-radius: 16px;
       padding: 28px 22px;
-      box-shadow: 0 0 28px rgba(212, 175, 55, 0.22);
+      box-shadow:
+        0 0 28px rgba(212, 175, 55, 0.22);
     }
 
     .brand-header {
@@ -95,13 +105,15 @@
 
     .form-group input:focus {
       border-color: var(--gold);
-      box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+      box-shadow:
+        0 0 8px rgba(212, 175, 55, 0.3);
     }
 
     .btn-gold {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #e0b838, #b88918);
+      background:
+        linear-gradient(135deg, #e0b838, #b88918);
       color: #090b10;
       font-weight: 800;
       font-size: 16px;
@@ -116,12 +128,18 @@
       filter: brightness(1.08);
     }
 
+    .btn-gold:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
     .status-msg {
       margin-top: 14px;
       font-size: 13px;
       text-align: center;
       min-height: 20px;
       line-height: 1.4;
+      word-break: break-word;
     }
 
     .links {
@@ -146,6 +164,7 @@
         padding: 0;
         align-items: stretch;
       }
+
       .auth-container {
         max-width: 100%;
         min-height: 100dvh;
@@ -160,118 +179,457 @@
     }
   </style>
 </head>
+
 <body>
+
   <div class="page-wrapper">
+
     <div class="auth-container">
+
       <div class="brand-header">
         <h1>AYNA BOOK</h1>
         <p>Create your Global Digital Identity</p>
       </div>
 
       <form id="signupForm">
+
         <div class="form-group">
           <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" placeholder="Enter your full name" required />
+
+          <input
+            type="text"
+            id="fullName"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+          />
         </div>
+
 
         <div class="form-group">
           <label for="email">Email Address</label>
-          <input type="email" id="email" placeholder="example@email.com" required />
+
+          <input
+            type="email"
+            id="email"
+            placeholder="example@email.com"
+            autocomplete="email"
+            required
+          />
         </div>
+
 
         <div class="form-group">
           <label for="country">Phone / Country</label>
-          <input type="text" id="country" placeholder="e.g. Bangladesh" required />
+
+          <input
+            type="text"
+            id="country"
+            placeholder="e.g. Bangladesh"
+            autocomplete="tel"
+            required
+          />
         </div>
+
 
         <div class="form-group">
-          <label for="password">Password (Min 6 characters)</label>
-          <input type="password" id="password" placeholder="••••••••" minlength="6" required />
+          <label for="password">
+            Password (Min 6 characters)
+          </label>
+
+          <input
+            type="password"
+            id="password"
+            placeholder="••••••••"
+            minlength="6"
+            autocomplete="new-password"
+            required
+          />
         </div>
 
-        <button type="submit" class="btn-gold" id="submitBtn">Create AYNA Account</button>
-        <div class="status-msg" id="statusMsg"></div>
+
+        <button
+          type="submit"
+          class="btn-gold"
+          id="submitBtn"
+        >
+          Create AYNA Account
+        </button>
+
+
+        <div
+          class="status-msg"
+          id="statusMsg"
+          aria-live="polite"
+        ></div>
+
       </form>
 
+
       <div class="links">
-        Already have an account? <a href="index.html">Log In</a>
+        Already have an account?
+        <a href="index.html">Log In</a>
       </div>
+
     </div>
+
   </div>
 
+
+  <!-- =====================================================
+       AYNA BOOK
+       Firebase
+       Uses firebase-config.js + firebase-init.js
+       ===================================================== -->
+
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "YOUR_WEB_API_KEY",
-      authDomain: "ayna-book.firebaseapp.com",
-      databaseURL: "https://ayna-book-default-rtdb.firebaseio.com",
-      projectId: "ayna-book",
-      storageBucket: "ayna-book.appspot.com",
-      messagingSenderId: "805601138500",
-      appId: "YOUR_WEB_APP_ID"
-    };
+    import {
+      auth,
+      database
+    } from "./firebase-init.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+    import {
+      createUserWithEmailAndPassword,
+      updateProfile,
+      sendEmailVerification
+    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-    const signupForm = document.getElementById("signupForm");
-    const statusMsg = document.getElementById("statusMsg");
-    const submitBtn = document.getElementById("submitBtn");
+    import {
+      ref,
+      set,
+      runTransaction
+    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
-    signupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
 
-      const fullName = document.getElementById("fullName").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const country = document.getElementById("country").value.trim();
-      const password = document.getElementById("password").value;
+    // =====================================================
+    // ELEMENTS
+    // =====================================================
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Creating Account...";
-      statusMsg.style.color = "#f5d76e";
-      statusMsg.textContent = "Generating your AYNA ID...";
+    const signupForm =
+      document.getElementById("signupForm");
 
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+    const statusMsg =
+      document.getElementById("statusMsg");
 
-        await updateProfile(user, { displayName: fullName });
-        await sendEmailVerification(user);
+    const submitBtn =
+      document.getElementById("submitBtn");
 
-        const counterRef = ref(db, "system/lastUserSerial");
-        const transactionResult = await runTransaction(counterRef, (currentValue) => {
-          return (currentValue || 10000000) + 1;
-        });
-        const aynaId = `2026-----${transactionResult.snapshot.val()}`;
 
-        await set(ref(db, `users/${user.uid}`), {
-          uid: user.uid,
-          aynaId: aynaId,
-          fullName: fullName,
-          email: email,
-          country: country,
-          photoURL: "https://via.placeholder.com/300/121622/d4af37?text=AYNA+USER",
-          privacy: "public",
-          createdAt: new Date().toISOString()
-        });
+    // =====================================================
+    // STATUS
+    // =====================================================
 
-        statusMsg.style.color = "#4ade80";
-        statusMsg.textContent = `Success! Your AYNA ID: ${aynaId}. Redirecting to Dashboard...`;
+    function showStatus(message, color) {
 
-        setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 1800);
-      } catch (error) {
-        statusMsg.style.color = "#f87171";
-        statusMsg.textContent = error.message;
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Create AYNA Account";
+      statusMsg.style.color = color;
+      statusMsg.textContent = message;
+
+    }
+
+
+    // =====================================================
+    // SIGN UP
+    // =====================================================
+
+    signupForm.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+
+        const fullName =
+          document
+            .getElementById("fullName")
+            .value
+            .trim();
+
+
+        const email =
+          document
+            .getElementById("email")
+            .value
+            .trim();
+
+
+        const country =
+          document
+            .getElementById("country")
+            .value
+            .trim();
+
+
+        const password =
+          document
+            .getElementById("password")
+            .value;
+
+
+        // =================================================
+        // BASIC VALIDATION
+        // =================================================
+
+        if (!fullName) {
+
+          showStatus(
+            "Please enter your full name.",
+            "#f87171"
+          );
+
+          return;
+        }
+
+
+        if (!email) {
+
+          showStatus(
+            "Please enter your email address.",
+            "#f87171"
+          );
+
+          return;
+        }
+
+
+        if (password.length < 6) {
+
+          showStatus(
+            "Password must contain at least 6 characters.",
+            "#f87171"
+          );
+
+          return;
+        }
+
+
+        // =================================================
+        // BUTTON
+        // =================================================
+
+        submitBtn.disabled = true;
+
+        submitBtn.textContent =
+          "Creating Account...";
+
+
+        showStatus(
+          "Generating your AYNA ID...",
+          "#f5d76e"
+        );
+
+
+        try {
+
+          // ===============================================
+          // FIREBASE AUTH
+          // ===============================================
+
+          const userCredential =
+            await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+
+          const user =
+            userCredential.user;
+
+
+          // ===============================================
+          // PROFILE
+          // ===============================================
+
+          await updateProfile(
+            user,
+            {
+              displayName: fullName
+            }
+          );
+
+
+          // ===============================================
+          // EMAIL VERIFICATION
+          // ===============================================
+
+          await sendEmailVerification(user);
+
+
+          // ===============================================
+          // AYNA USER SERIAL
+          // ===============================================
+
+          const counterRef =
+            ref(
+              database,
+              "system/lastUserSerial"
+            );
+
+
+          const transactionResult =
+            await runTransaction(
+              counterRef,
+              (currentValue) => {
+
+                return (
+                  (currentValue || 10000000) + 1
+                );
+
+              }
+            );
+
+
+          const serial =
+            transactionResult.snapshot.val();
+
+
+          const aynaId =
+            `2026-----${serial}`;
+
+
+          // ===============================================
+          // USER DATABASE RECORD
+          // ===============================================
+
+          await set(
+            ref(
+              database,
+              `users/${user.uid}`
+            ),
+            {
+
+              uid: user.uid,
+
+              aynaId: aynaId,
+
+              fullName: fullName,
+
+              email: email,
+
+              country: country,
+
+              photoURL:
+                "https://via.placeholder.com/300/121622/d4af37?text=AYNA+USER",
+
+              privacy: "public",
+
+              createdAt:
+                new Date().toISOString()
+
+            }
+          );
+
+
+          // ===============================================
+          // SUCCESS
+          // ===============================================
+
+          showStatus(
+            `Success! Your AYNA ID: ${aynaId}. Redirecting to Dashboard...`,
+            "#4ade80"
+          );
+
+
+          setTimeout(
+            () => {
+
+              window.location.href =
+                "dashboard.html";
+
+            },
+            1800
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            "AYNA BOOK Signup Error:",
+            error
+          );
+
+
+          let message =
+            error?.message ||
+            "Account creation failed.";
+
+
+          // ===============================================
+          // FRIENDLY FIREBASE ERRORS
+          // ===============================================
+
+          if (
+            error.code ===
+            "auth/email-already-in-use"
+          ) {
+
+            message =
+              "This email is already registered. Please log in.";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/invalid-email"
+          ) {
+
+            message =
+              "Please enter a valid email address.";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/weak-password"
+          ) {
+
+            message =
+              "Password is too weak. Use at least 6 characters.";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/api-key-not-valid"
+          ) {
+
+            message =
+              "Firebase API key is invalid. Please check Firebase configuration.";
+
+          }
+
+
+          showStatus(
+            message,
+            "#f87171"
+          );
+
+
+          submitBtn.disabled = false;
+
+          submitBtn.textContent =
+            "Create AYNA Account";
+
+        }
+
       }
-    });
+    );
+
+
+    // =====================================================
+    // DEBUG
+    // =====================================================
+
+    console.log(
+      "AYNA BOOK — Signup module loaded."
+    );
+
+    console.log(
+      "AYNA BOOK — Firebase Auth ready."
+    );
+
   </script>
+
 </body>
 </html>
