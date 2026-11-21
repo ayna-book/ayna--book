@@ -1,4 +1,3 @@
-
 // =========================================================
 // AYNA BOOK
 // LOGIN CONTROLLER
@@ -21,27 +20,16 @@ import {
 // HTML ELEMENTS
 // =========================================================
 
-const form =
-  document.getElementById("loginForm");
-
-const emailInput =
-  document.getElementById("email");
-
-const passwordInput =
-  document.getElementById("password");
-
-const togglePassword =
-  document.getElementById("togglePassword");
-
-const loginBtn =
-  document.getElementById("loginBtn");
-
-const message =
-  document.getElementById("message");
+const form = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const togglePassword = document.getElementById("togglePassword");
+const loginBtn = document.getElementById("loginBtn");
+const message = document.getElementById("message");
 
 
 // =========================================================
-// ELEMENT VALIDATION
+// REQUIRED ELEMENT CHECK
 // =========================================================
 
 if (
@@ -52,11 +40,9 @@ if (
   !loginBtn ||
   !message
 ) {
-
   throw new Error(
     "AYNA BOOK: Login HTML elements missing."
   );
-
 }
 
 
@@ -65,7 +51,6 @@ if (
 // =========================================================
 
 let loginInProgress = false;
-
 let redirectStarted = false;
 
 
@@ -74,32 +59,27 @@ let redirectStarted = false;
 // =========================================================
 
 function showMessage(text) {
-
-  message.textContent =
-    text || "";
-
+  message.textContent = text || "";
 }
 
 
 // =========================================================
-// LOADING
+// LOGIN BUTTON LOADING
 // =========================================================
 
 function setLoading(loading) {
 
-  loginBtn.disabled =
-    loading;
+  loginBtn.disabled = loading;
 
   loginBtn.textContent =
     loading
       ? "LOGIN হচ্ছে..."
       : "LOGIN";
-
 }
 
 
 // =========================================================
-// REDIRECT
+// DASHBOARD REDIRECT
 // =========================================================
 
 function goToDashboard() {
@@ -117,12 +97,11 @@ function goToDashboard() {
   window.location.replace(
     "./dashboard.html"
   );
-
 }
 
 
 // =========================================================
-// PASSWORD SHOW / HIDE
+// SHOW / HIDE PASSWORD
 // =========================================================
 
 togglePassword.addEventListener(
@@ -135,11 +114,9 @@ togglePassword.addEventListener(
 
     if (isHidden) {
 
-      passwordInput.type =
-        "text";
+      passwordInput.type = "text";
 
-      togglePassword.textContent =
-        "Hide";
+      togglePassword.textContent = "Hide";
 
       togglePassword.setAttribute(
         "aria-label",
@@ -153,11 +130,9 @@ togglePassword.addEventListener(
 
     } else {
 
-      passwordInput.type =
-        "password";
+      passwordInput.type = "password";
 
-      togglePassword.textContent =
-        "Show";
+      togglePassword.textContent = "Show";
 
       togglePassword.setAttribute(
         "aria-label",
@@ -168,15 +143,13 @@ togglePassword.addEventListener(
         "aria-pressed",
         "false"
       );
-
     }
-
   }
 );
 
 
 // =========================================================
-// LOGIN SUBMIT
+// LOGIN FORM
 // =========================================================
 
 form.addEventListener(
@@ -186,19 +159,21 @@ form.addEventListener(
     event.preventDefault();
 
 
-    // -------------------------------------------------------
+    // -----------------------------------------------------
     // PREVENT DOUBLE LOGIN
-    // -------------------------------------------------------
+    // -----------------------------------------------------
 
     if (
       loginInProgress ||
       redirectStarted
     ) {
-
       return;
-
     }
 
+
+    // -----------------------------------------------------
+    // GET VALUES
+    // -----------------------------------------------------
 
     const email =
       emailInput.value
@@ -209,9 +184,9 @@ form.addEventListener(
       passwordInput.value;
 
 
-    // -------------------------------------------------------
-    // GMAIL VALIDATION
-    // -------------------------------------------------------
+    // -----------------------------------------------------
+    // EMAIL REQUIRED
+    // -----------------------------------------------------
 
     if (!email) {
 
@@ -225,10 +200,12 @@ form.addEventListener(
     }
 
 
+    // -----------------------------------------------------
+    // GMAIL VALIDATION
+    // -----------------------------------------------------
+
     if (
-      !/^[a-z0-9._%+-]+@gmail\.com$/.test(
-        email
-      )
+      !/^[a-z0-9._%+-]+@gmail\.com$/.test(email)
     ) {
 
       showMessage(
@@ -241,9 +218,9 @@ form.addEventListener(
     }
 
 
-    // -------------------------------------------------------
-    // PASSWORD VALIDATION
-    // -------------------------------------------------------
+    // -----------------------------------------------------
+    // PASSWORD REQUIRED
+    // -----------------------------------------------------
 
     if (!password) {
 
@@ -257,6 +234,10 @@ form.addEventListener(
     }
 
 
+    // -----------------------------------------------------
+    // PASSWORD LENGTH
+    // -----------------------------------------------------
+
     if (password.length < 11) {
 
       showMessage(
@@ -269,12 +250,11 @@ form.addEventListener(
     }
 
 
-    // -------------------------------------------------------
+    // -----------------------------------------------------
     // START LOGIN
-    // -------------------------------------------------------
+    // -----------------------------------------------------
 
-    loginInProgress =
-      true;
+    loginInProgress = true;
 
     setLoading(true);
 
@@ -285,10 +265,9 @@ form.addEventListener(
 
     try {
 
-      // =====================================================
-      // STEP 1
+      // ---------------------------------------------------
       // FIREBASE LOGIN
-      // =====================================================
+      // ---------------------------------------------------
 
       const result =
         await loginUser(
@@ -296,6 +275,10 @@ form.addEventListener(
           password
         );
 
+
+      // ---------------------------------------------------
+      // LOGIN FAILED
+      // ---------------------------------------------------
 
       if (
         !result ||
@@ -311,10 +294,9 @@ form.addEventListener(
       }
 
 
-      // =====================================================
-      // STEP 2
+      // ---------------------------------------------------
       // EMAIL VERIFICATION
-      // =====================================================
+      // ---------------------------------------------------
 
       if (
         result.emailVerified !== true
@@ -328,10 +310,9 @@ form.addEventListener(
       }
 
 
-      // =====================================================
-      // STEP 3
-      // CHECK USER
-      // =====================================================
+      // ---------------------------------------------------
+      // USER CHECK
+      // ---------------------------------------------------
 
       if (
         !result.user ||
@@ -346,24 +327,22 @@ form.addEventListener(
       }
 
 
-      // =====================================================
-      // STEP 4
-      // LOGIN ACTIVITY
-      // =====================================================
+      // ---------------------------------------------------
+      // SUCCESS
+      // ---------------------------------------------------
 
       showMessage(
         "Login সফল হয়েছে। Dashboard খুলছে..."
       );
 
 
+      // ---------------------------------------------------
+      // LOGIN ACTIVITY
+      // ---------------------------------------------------
+
       const userForActivity =
         result.user;
 
-
-      /*
-       * Login Activity ব্যর্থ হলেও
-       * Login বন্ধ হবে না।
-       */
 
       recordLoginActivity(
         userForActivity
@@ -379,9 +358,7 @@ form.addEventListener(
                 "AYNA BOOK: Login Activity not recorded.",
                 activityResult?.message
               );
-
             }
-
           }
         )
         .catch(
@@ -391,58 +368,56 @@ form.addEventListener(
               "AYNA BOOK: Login Activity Error:",
               activityError
             );
-
           }
         );
 
 
-      // =====================================================
-      // STEP 5
-      // DASHBOARD REDIRECT
-      // =====================================================
+      // ---------------------------------------------------
+      // GO TO DASHBOARD
+      // ---------------------------------------------------
 
       goToDashboard();
 
+    }
 
-    } catch (error) {
+
+    // -----------------------------------------------------
+    // ERROR
+    // -----------------------------------------------------
+
+    catch (error) {
 
       console.error(
         "AYNA BOOK Login Error:",
         error
       );
 
-
       showMessage(
         getAuthErrorMessage(error) ||
         "Login ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
       );
 
-
-    } finally {
-
-      loginInProgress =
-        false;
-
-
-      /*
-       * Redirect শুরু হলে
-       * Button আর পরিবর্তন করা হবে না।
-       */
-
-      if (!redirectStarted) {
-
-        setLoading(false);
-
-      }
-
     }
 
+
+    // -----------------------------------------------------
+    // FINALLY
+    // -----------------------------------------------------
+
+    finally {
+
+      loginInProgress = false;
+
+      if (!redirectStarted) {
+        setLoading(false);
+      }
+    }
   }
 );
 
 
 // =========================================================
-// AUTH STATE LISTENER
+// AUTH STATE
 // =========================================================
 
 watchAuthState(
@@ -457,25 +432,31 @@ watchAuthState(
       loginInProgress ||
       redirectStarted
     ) {
-
       return;
-
     }
 
 
     try {
 
+      // ---------------------------------------------------
+      // REFRESH USER
+      // ---------------------------------------------------
+
       await user.reload();
 
 
-      if (
-        !user.emailVerified
-      ) {
+      // ---------------------------------------------------
+      // EMAIL NOT VERIFIED
+      // ---------------------------------------------------
 
+      if (!user.emailVerified) {
         return;
-
       }
 
+
+      // ---------------------------------------------------
+      // ALREADY LOGGED IN
+      // ---------------------------------------------------
 
       if (
         window.location.pathname
@@ -483,19 +464,18 @@ watchAuthState(
       ) {
 
         goToDashboard();
-
       }
 
+    }
 
-    } catch (error) {
+
+    catch (error) {
 
       console.error(
         "AYNA BOOK Auth State Error:",
         error
       );
-
     }
-
   }
 );
 
