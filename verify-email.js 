@@ -46,12 +46,17 @@ let resendCooldown = false;
 let isRedirecting = false;
 let isInitialized = false;
 
+let statusAnimationTimer = null;
+let statusAnimationRunning = false;
+
 
 // =========================================================
 // STATUS MESSAGE
 // =========================================================
 
 function showStatus(message, type = "info") {
+
+  stopStatusAnimation();
 
   if (!statusMessage) return;
 
@@ -63,35 +68,137 @@ function showStatus(message, type = "info") {
 
 
 // =========================================================
+// ANIMATED VERIFICATION STATUS
+// =========================================================
+
+function startVerificationAnimation() {
+
+  if (
+    !statusMessage ||
+    statusAnimationRunning
+  ) {
+    return;
+  }
+
+  statusAnimationRunning = true;
+
+  let dots = 1;
+
+  const baseMessage =
+    "Verification Status পরীক্ষা হচ্ছে";
+
+  function updateMessage() {
+
+    if (
+      !statusAnimationRunning ||
+      !statusMessage
+    ) {
+      return;
+    }
+
+    statusMessage.textContent =
+      baseMessage +
+      ".".repeat(dots);
+
+    dots++;
+
+    if (dots > 3) {
+      dots = 1;
+    }
+  }
+
+  updateMessage();
+
+  statusAnimationTimer =
+    setInterval(
+      updateMessage,
+      500
+    );
+}
+
+
+// =========================================================
+// STOP VERIFICATION ANIMATION
+// =========================================================
+
+function stopStatusAnimation() {
+
+  statusAnimationRunning = false;
+
+  if (statusAnimationTimer !== null) {
+
+    clearInterval(
+      statusAnimationTimer
+    );
+
+    statusAnimationTimer = null;
+  }
+}
+
+
+// =========================================================
 // AUTH ERROR MESSAGE
 // =========================================================
 
 function getErrorMessage(error) {
 
-  const code = error?.code || "";
+  const code =
+    error?.code || "";
 
   switch (code) {
 
     case "auth/network-request-failed":
-      return "Internet Connection পরীক্ষা করে আবার চেষ্টা করুন।";
+
+      return (
+        "Internet Connection পরীক্ষা করে আবার চেষ্টা করুন।"
+      );
+
 
     case "auth/too-many-requests":
-      return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।";
+
+      return (
+        "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।"
+      );
+
 
     case "auth/user-token-expired":
-      return "আপনার Login Session শেষ হয়েছে। আবার Login করুন।";
+
+      return (
+        "আপনার Login Session শেষ হয়েছে। আবার Login করুন।"
+      );
+
 
     case "auth/user-disabled":
-      return "এই Account নিষ্ক্রিয় করা হয়েছে।";
+
+      return (
+        "এই Account নিষ্ক্রিয় করা হয়েছে।"
+      );
+
 
     case "auth/invalid-api-key":
     case "auth/api-key-not-valid":
-      return "Firebase API Key সঠিক নয়। Firebase Configuration পরীক্ষা করুন।";
+
+      return (
+        "Firebase API Key সঠিক নয়। Firebase Configuration পরীক্ষা করুন।"
+      );
+
 
     case "auth/unauthorized-domain":
-      return "এই Website Domain Firebase Authentication-এ অনুমোদিত নয়।";
+
+      return (
+        "এই Website Domain Firebase Authentication-এ অনুমোদিত নয়।"
+      );
+
+
+    case "auth/requires-recent-login":
+
+      return (
+        "Security কারণে আবার Login করা প্রয়োজন।"
+      );
+
 
     default:
+
       return (
         error?.message ||
         "একটি অজানা সমস্যা হয়েছে। আবার চেষ্টা করুন।"
@@ -104,7 +211,11 @@ function getErrorMessage(error) {
 // BUTTON LOADING
 // =========================================================
 
-function setButtonLoading(button, loading, text) {
+function setButtonLoading(
+  button,
+  loading,
+  text
+) {
 
   if (!button) return;
 
@@ -117,7 +228,11 @@ function setButtonLoading(button, loading, text) {
     }
 
     button.disabled = true;
-    button.textContent = text;
+
+    if (text) {
+
+      button.textContent = text;
+    }
 
   } else {
 
@@ -139,15 +254,24 @@ function redirectToLogin(
   type = "success"
 ) {
 
-  if (isRedirecting) return;
+  if (isRedirecting) {
+    return;
+  }
 
   isRedirecting = true;
 
-  showStatus(message, type);
+  stopStatusAnimation();
+
+  showStatus(
+    message,
+    type
+  );
 
   setTimeout(() => {
 
-    window.location.replace("./login.html");
+    window.location.replace(
+      "./login.html"
+    );
 
   }, 2000);
 }
@@ -159,11 +283,42 @@ function redirectToLogin(
 
 function displayUserEmail(user) {
 
-  if (!userEmailElement) return;
+  if (!userEmailElement) {
+    return;
+  }
 
   userEmailElement.textContent =
     user?.email ||
     "Gmail পাওয়া যায়নি।";
+}
+
+
+// =========================================================
+// NO USER REDIRECT
+// =========================================================
+
+function redirectWithoutUser() {
+
+  if (isRedirecting) {
+    return;
+  }
+
+  isRedirecting = true;
+
+  stopStatusAnimation();
+
+  showStatus(
+    "আপনার Login Session পাওয়া যায়নি। Login পেজে নেওয়া হচ্ছে...",
+    "warning"
+  );
+
+  setTimeout(() => {
+
+    window.location.replace(
+      "./login.html"
+    );
+
+  }, 2000);
 }
 
 
@@ -173,24 +328,19 @@ function displayUserEmail(user) {
 
 async function checkEmailVerification() {
 
-  if (isProcessing || isRedirecting) {
+  if (
+    isProcessing ||
+    isRedirecting
+  ) {
     return;
   }
 
-  const user = auth.currentUser;
+  const user =
+    auth.currentUser;
 
   if (!user) {
 
-    showStatus(
-      "আপনার Login Session পাওয়া যায়নি। Login পেজে নেওয়া হচ্ছে...",
-      "warning"
-    );
-
-    setTimeout(() => {
-
-      window.location.replace("./login.html");
-
-    }, 2000);
+    redirectWithoutUser();
 
     return;
   }
@@ -203,10 +353,7 @@ async function checkEmailVerification() {
     "Checking..."
   );
 
-  showStatus(
-    "Verification Status পরীক্ষা হচ্ছে...",
-    "info"
-  );
+  startVerificationAnimation();
 
   try {
 
@@ -222,9 +369,13 @@ async function checkEmailVerification() {
       );
     }
 
-    displayUserEmail(updatedUser);
+    displayUserEmail(
+      updatedUser
+    );
 
-    if (updatedUser.emailVerified === true) {
+    if (
+      updatedUser.emailVerified === true
+    ) {
 
       redirectToLogin(
         "আপনার Gmail সফলভাবে Verify হয়েছে। Login পেজে নেওয়া হচ্ছে...",
@@ -277,20 +428,12 @@ async function resendVerificationEmailHandler() {
     return;
   }
 
-  const user = auth.currentUser;
+  const user =
+    auth.currentUser;
 
   if (!user) {
 
-    showStatus(
-      "আপনার Login Session পাওয়া যায়নি। Login পেজে নেওয়া হচ্ছে...",
-      "warning"
-    );
-
-    setTimeout(() => {
-
-      window.location.replace("./login.html");
-
-    }, 2000);
+    redirectWithoutUser();
 
     return;
   }
@@ -301,6 +444,11 @@ async function resendVerificationEmailHandler() {
     resendButton,
     true,
     "Sending..."
+  );
+
+  showStatus(
+    "Verification Email পাঠানো হচ্ছে...",
+    "info"
   );
 
   try {
@@ -317,7 +465,13 @@ async function resendVerificationEmailHandler() {
       );
     }
 
-    if (updatedUser.emailVerified === true) {
+    displayUserEmail(
+      updatedUser
+    );
+
+    if (
+      updatedUser.emailVerified === true
+    ) {
 
       redirectToLogin(
         "আপনার Gmail ইতিমধ্যে Verify করা হয়েছে। Login পেজে নেওয়া হচ্ছে...",
@@ -339,6 +493,7 @@ async function resendVerificationEmailHandler() {
     resendCooldown = true;
 
     if (resendButton) {
+
       resendButton.disabled = true;
     }
 
@@ -411,9 +566,16 @@ async function handleLogout() {
     "Logging out..."
   );
 
+  showStatus(
+    "Logout করা হচ্ছে...",
+    "info"
+  );
+
   try {
 
     await signOut(auth);
+
+    stopStatusAnimation();
 
     window.location.replace(
       "./login.html"
@@ -491,21 +653,7 @@ onAuthStateChanged(
 
     if (!user) {
 
-      showStatus(
-        "আপনার Login Session পাওয়া যায়নি। Login পেজে নেওয়া হচ্ছে...",
-        "warning"
-      );
-
-      setTimeout(() => {
-
-        if (!isRedirecting) {
-
-          window.location.replace(
-            "./login.html"
-          );
-        }
-
-      }, 2000);
+      redirectWithoutUser();
 
       return;
     }
@@ -518,6 +666,8 @@ onAuthStateChanged(
 
     displayUserEmail(user);
 
+    startVerificationAnimation();
+
     try {
 
       await reload(user);
@@ -526,6 +676,7 @@ onAuthStateChanged(
         auth.currentUser;
 
       if (!updatedUser) {
+
         throw new Error(
           "AUTH_USER_NOT_FOUND"
         );
@@ -564,6 +715,20 @@ onAuthStateChanged(
         "error"
       );
     }
+  }
+);
+
+
+// =========================================================
+// PAGE CLEANUP
+// =========================================================
+
+window.addEventListener(
+  "beforeunload",
+  () => {
+
+    stopStatusAnimation();
+
   }
 );
 
