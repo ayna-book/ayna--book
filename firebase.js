@@ -1,44 +1,128 @@
-// =========================================================
-// AYNA BOOK
-// FIREBASE SERVICE CONNECTOR
-// Firebase SDK: 13.4.0
-// =========================================================
+rules_version = '2';
 
-import {
-  app,
-  auth,
-  db,
-  database,
-  storage
-} from "./firebase-init.js";
+service cloud.firestore {
 
+  match /databases/{database}/documents {
 
-// =========================================================
-// EXPORT FIREBASE SERVICES
-// =========================================================
+    function signedIn() {
+      return request.auth != null;
+    }
 
-export {
-  app,
-  auth,
-  db,
-  database,
-  storage
-};
+    function isOwner(uid) {
+      return signedIn()
+        && request.auth.uid == uid;
+    }
+
+    function verifiedEmail() {
+      return signedIn()
+        && request.auth.token.email_verified == true;
+    }
 
 
-// =========================================================
-// CONNECTION STATUS
-// =========================================================
+    // =======================================================
+    // USERS
+    // =======================================================
 
-console.log("========================================");
-console.log("AYNA BOOK - Firebase Service Connector");
-console.log("========================================");
+    match /users/{uid} {
 
-console.log("Firebase App:", !!app);
-console.log("Firebase Auth:", !!auth);
-console.log("Cloud Firestore:", !!db);
-console.log("Realtime Database:", !!database);
-console.log("Firebase Storage:", !!storage);
-console.log("========================================");
-console.log("Firebase connector loaded successfully.");
-console.log("========================================");
+      // User can read only own profile.
+      allow read: if isOwner(uid);
+
+
+      // =====================================================
+      // REGISTRATION
+      // =====================================================
+
+      allow create: if isOwner(uid)
+
+        && request.resource.data.uid == uid
+
+        && request.resource.data.email
+             == request.auth.token.email
+
+        && request.resource.data.accountType
+             == "personal"
+
+        && request.resource.data.plan
+             == "free"
+
+        && request.resource.data.accountStatus
+             == "pending_email_verification"
+
+        && request.resource.data.emailVerified
+             == false
+
+        && request.resource.data.fullName is string
+
+        && request.resource.data.fullName.size() >= 2
+
+        && request.resource.data.fullName.size() <= 80
+
+        && request.resource.data.phone is string
+
+        && request.resource.data.photoURL is string
+
+        && request.resource.data.createdAt is timestamp
+
+        && request.resource.data.updatedAt is timestamp
+
+        && request.resource.data.keys().hasOnly([
+          "uid",
+          "fullName",
+          "email",
+          "phone",
+          "photoURL",
+          "accountType",
+          "plan",
+          "accountStatus",
+          "emailVerified",
+          "createdAt",
+          "updatedAt"
+        ]);
+
+
+      // =====================================================
+      // EMAIL VERIFICATION
+      // =====================================================
+
+      allow update: if isOwner(uid)
+
+        && verifiedEmail()
+
+        // Must currently be pending.
+        && resource.data.accountStatus
+             == "pending_email_verification"
+
+        // Only verification fields may change.
+        && request.resource.data.diff(resource.data)
+             .affectedKeys()
+             .hasOnly([
+               "emailVerified",
+               "accountStatus",
+               "updatedAt"
+             ])
+
+        // New state must be active.
+        && request.resource.data.emailVerified == true
+
+        && request.resource.data.accountStatus
+             == "active"
+
+        && request.resource.data.updatedAt
+             is timestamp;
+
+
+      // No client-side account deletion.
+      allow delete: if false;
+    }
+
+
+    // =======================================================
+    // DEFAULT DENY
+    // =======================================================
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
