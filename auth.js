@@ -1,3 +1,4 @@
+```js
 // =========================================================
 // AYNA BOOK
 // AUTHENTICATION CONTROLLER
@@ -12,31 +13,38 @@ import {
   sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  reload
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-import { auth } from "./firebase.js";
+import {
+  auth
+} from "./firebase.js";
 
 
 // =========================================================
-// SETTINGS
+// CONSTANTS
 // =========================================================
 
-export const MIN_PASSWORD_LENGTH = 8;
-export const MAX_PASSWORD_LENGTH = 50;
+const MIN_PASSWORD_LENGTH = 8;
+const MAX_PASSWORD_LENGTH = 50;
 
 
 // =========================================================
-// EMAIL VALIDATION
+// GMAIL VALIDATION
 // =========================================================
 
 export function validateGmail(email) {
 
-  const value = String(email || "")
-    .trim()
-    .toLowerCase();
+  const value =
+    String(email || "")
+      .trim()
+      .toLowerCase();
 
-  return /^[a-z0-9._%+-]+@gmail\.com$/.test(value);
+  return /^[a-z0-9._%+-]+@gmail\.com$/i.test(
+    value
+  );
+
 }
 
 
@@ -46,28 +54,14 @@ export function validateGmail(email) {
 
 export function validatePassword(password) {
 
-  const value = String(password || "");
+  const value =
+    String(password || "");
 
   return (
     value.length >= MIN_PASSWORD_LENGTH &&
     value.length <= MAX_PASSWORD_LENGTH
   );
-}
 
-
-// =========================================================
-// PASSWORD CONFIRMATION
-// =========================================================
-
-export function passwordsMatch(
-  password,
-  confirmPassword
-) {
-
-  return (
-    String(password || "") ===
-    String(confirmPassword || "")
-  );
 }
 
 
@@ -94,43 +88,67 @@ export async function createRegistrationAccount({
 
 
   // -------------------------------------------------------
-  // NAME
+  // Validate name
   // -------------------------------------------------------
 
-  if (name.length < 2) {
+  if (
+    name.length < 2 ||
+    name.length > 100
+  ) {
 
-    throw new Error(
-      "আপনার পূর্ণ নাম লিখুন।"
-    );
+    const error =
+      new Error(
+        "আপনার পূর্ণ নাম সঠিকভাবে লিখুন।"
+      );
+
+    error.code =
+      "ayna/invalid-name";
+
+    throw error;
+
   }
 
 
   // -------------------------------------------------------
-  // GMAIL
+  // Validate Gmail
   // -------------------------------------------------------
 
   if (!validateGmail(gmail)) {
 
-    throw new Error(
-      "শুধুমাত্র বৈধ Gmail address ব্যবহার করুন।"
-    );
+    const error =
+      new Error(
+        "শুধুমাত্র বৈধ Gmail Address ব্যবহার করুন।"
+      );
+
+    error.code =
+      "auth/invalid-email";
+
+    throw error;
+
   }
 
 
   // -------------------------------------------------------
-  // PASSWORD
+  // Validate password
   // -------------------------------------------------------
 
   if (!validatePassword(pass)) {
 
-    throw new Error(
-      `Password ${MIN_PASSWORD_LENGTH} থেকে ${MAX_PASSWORD_LENGTH} অক্ষরের মধ্যে হতে হবে।`
-    );
+    const error =
+      new Error(
+        `Password অবশ্যই ${MIN_PASSWORD_LENGTH} থেকে ${MAX_PASSWORD_LENGTH} অক্ষরের মধ্যে হতে হবে।`
+      );
+
+    error.code =
+      "auth/weak-password";
+
+    throw error;
+
   }
 
 
   // -------------------------------------------------------
-  // FIREBASE AUTH ACCOUNT
+  // Create Firebase Authentication account
   // -------------------------------------------------------
 
   const credential =
@@ -140,121 +158,36 @@ export async function createRegistrationAccount({
       pass
     );
 
+
   const user =
     credential.user;
 
 
-  if (!user) {
-
-    throw new Error(
-      "Account তৈরি করা যায়নি।"
-    );
-  }
-
-
   // -------------------------------------------------------
-  // SAVE DISPLAY NAME
+  // Set Firebase Auth display name
   // -------------------------------------------------------
 
-  try {
-
-    await updateProfile(
-      user,
-      {
-        displayName: name
-      }
-    );
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK: Display name update failed:",
-      error
-    );
-
-    // Authentication account already exists.
-    // Do not hide the actual Firebase account creation.
-    throw error;
-  }
-
-
-  return user;
-}
-
-
-// =========================================================
-// SEND VERIFICATION EMAIL
-// =========================================================
-
-export async function sendVerificationEmail(
-  user = auth.currentUser
-) {
-
-  if (!user) {
-
-    throw new Error(
-      "Verification email পাঠানোর জন্য কোনো user পাওয়া যায়নি।"
-    );
-  }
-
-
-  // -------------------------------------------------------
-  // REFRESH USER INFORMATION
-  // -------------------------------------------------------
-
-  await user.reload();
-
-
-  const currentUser =
-    auth.currentUser;
-
-
-  // -------------------------------------------------------
-  // CONFIRM SAME USER SESSION
-  // -------------------------------------------------------
-
-  if (
-    !currentUser ||
-    currentUser.uid !== user.uid
-  ) {
-
-    throw new Error(
-      "User session পাওয়া যায়নি। আবার Login করুন।"
-    );
-  }
-
-
-  // -------------------------------------------------------
-  // ALREADY VERIFIED
-  // -------------------------------------------------------
-
-  if (
-    currentUser.emailVerified === true
-  ) {
-
-    return {
-      alreadyVerified: true
-    };
-  }
-
-
-  // -------------------------------------------------------
-  // SEND EMAIL
-  // -------------------------------------------------------
-
-  await sendEmailVerification(
-    currentUser
+  await updateProfile(
+    user,
+    {
+      displayName: name
+    }
   );
 
 
-  return {
-    alreadyVerified: false
-  };
+  console.log(
+    "AYNA BOOK: Authentication account created:",
+    user.uid
+  );
+
+
+  return user;
+
 }
 
 
 // =========================================================
-// LOGIN
+// LOGIN USER
 // =========================================================
 
 export async function loginUser(
@@ -272,31 +205,45 @@ export async function loginUser(
 
 
   // -------------------------------------------------------
-  // GMAIL
+  // Validate Gmail
   // -------------------------------------------------------
 
   if (!validateGmail(gmail)) {
 
-    throw new Error(
-      "সঠিক Gmail address লিখুন।"
-    );
+    const error =
+      new Error(
+        "শুধুমাত্র বৈধ Gmail Address ব্যবহার করুন।"
+      );
+
+    error.code =
+      "auth/invalid-email";
+
+    throw error;
+
   }
 
 
   // -------------------------------------------------------
-  // PASSWORD
+  // Validate password
   // -------------------------------------------------------
 
   if (!pass) {
 
-    throw new Error(
-      "Password লিখুন।"
-    );
+    const error =
+      new Error(
+        "Password লিখুন।"
+      );
+
+    error.code =
+      "auth/missing-password";
+
+    throw error;
+
   }
 
 
   // -------------------------------------------------------
-  // FIREBASE LOGIN
+  // Firebase Login
   // -------------------------------------------------------
 
   const credential =
@@ -307,66 +254,101 @@ export async function loginUser(
     );
 
 
-  const user =
+  let user =
     credential.user;
 
 
-  if (!user) {
+  // -------------------------------------------------------
+  // Reload latest Auth information
+  // -------------------------------------------------------
 
-    throw new Error(
-      "Login করা যায়নি।"
+  try {
+
+    await reload(user);
+
+    user = auth.currentUser || user;
+
+  } catch (reloadError) {
+
+    console.warn(
+      "AYNA BOOK: User reload failed:",
+      reloadError
     );
+
   }
 
 
   // -------------------------------------------------------
-  // REFRESH USER
+  // Email verification
   // -------------------------------------------------------
 
-  await user.reload();
-
-
-  const currentUser =
-    auth.currentUser;
-
-
-  // -------------------------------------------------------
-  // CONFIRM SESSION
-  // -------------------------------------------------------
-
-  if (
-    !currentUser ||
-    currentUser.uid !== user.uid
-  ) {
-
-    throw new Error(
-      "User session পাওয়া যায়নি।"
-    );
-  }
-
-
-  // -------------------------------------------------------
-  // EMAIL VERIFICATION REQUIRED
-  // -------------------------------------------------------
-
-  if (
-    !currentUser.emailVerified
-  ) {
+  if (!user.emailVerified) {
 
     await signOut(auth);
 
-    throw new Error(
-      "আপনার Gmail এখনো Verify করা হয়নি। Gmail থেকে Verification Link-এ ক্লিক করুন।"
-    );
+
+    const error =
+      new Error(
+        "আপনার Gmail এখনো Verified হয়নি।"
+      );
+
+    error.code =
+      "auth/email-not-verified";
+
+    throw error;
+
   }
 
 
-  return currentUser;
+  console.log(
+    "AYNA BOOK: Login successful:",
+    user.uid
+  );
+
+
+  return user;
+
 }
 
 
 // =========================================================
-// PASSWORD RESET
+// SEND VERIFICATION EMAIL
+// =========================================================
+
+export async function sendVerificationEmail(
+  user = auth.currentUser
+) {
+
+  if (!user) {
+
+    const error =
+      new Error(
+        "Verification email পাঠানোর জন্য Login করা user পাওয়া যায়নি।"
+      );
+
+    error.code =
+      "auth/no-current-user";
+
+    throw error;
+
+  }
+
+
+  await sendEmailVerification(
+    user
+  );
+
+
+  console.log(
+    "AYNA BOOK: Verification email sent:",
+    user.email
+  );
+
+}
+
+
+// =========================================================
+// RESET PASSWORD
 // =========================================================
 
 export async function resetPassword(
@@ -381,9 +363,16 @@ export async function resetPassword(
 
   if (!validateGmail(gmail)) {
 
-    throw new Error(
-      "সঠিক Gmail address লিখুন।"
-    );
+    const error =
+      new Error(
+        "শুধুমাত্র বৈধ Gmail Address ব্যবহার করুন।"
+      );
+
+    error.code =
+      "auth/invalid-email";
+
+    throw error;
+
   }
 
 
@@ -393,24 +382,34 @@ export async function resetPassword(
   );
 
 
-  return true;
+  console.log(
+    "AYNA BOOK: Password reset email sent:",
+    gmail
+  );
+
 }
 
 
 // =========================================================
-// LOGOUT
+// LOGOUT USER
 // =========================================================
 
 export async function logoutUser() {
 
-  await signOut(auth);
+  await signOut(
+    auth
+  );
 
-  return true;
+
+  console.log(
+    "AYNA BOOK: User logged out."
+  );
+
 }
 
 
 // =========================================================
-// AUTH STATE WATCHER
+// WATCH AUTH STATE
 // =========================================================
 
 export function watchAuthState(
@@ -418,26 +417,22 @@ export function watchAuthState(
 ) {
 
   if (
-    typeof callback !== "function"
+    typeof callback !==
+    "function"
   ) {
 
     throw new Error(
-      "watchAuthState-এর জন্য callback function প্রয়োজন।"
+      "watchAuthState callback must be a function."
     );
+
   }
 
 
   return onAuthStateChanged(
     auth,
-    callback,
-    (error) => {
-
-      console.error(
-        "AYNA BOOK Auth State Error:",
-        error
-      );
-    }
+    callback
   );
+
 }
 
 
@@ -448,148 +443,171 @@ export function watchAuthState(
 export function getCurrentUser() {
 
   return auth.currentUser;
+
 }
 
 
 // =========================================================
-// CHECK EMAIL VERIFICATION
+// IS EMAIL VERIFIED
 // =========================================================
 
-export function isEmailVerified() {
+export function isEmailVerified(
+  user = auth.currentUser
+) {
 
-  const user =
-    auth.currentUser;
-
-
-  return !!(
+  return Boolean(
     user &&
-    user.emailVerified === true
+    user.emailVerified
   );
+
 }
 
 
 // =========================================================
-// FIREBASE AUTH ERROR MESSAGE
+// GET AUTH ERROR MESSAGE
 // =========================================================
 
 export function getAuthErrorMessage(
   error
 ) {
 
-  const code =
-    error?.code || "";
+  if (!error) {
+
+    return "একটি অজানা সমস্যা হয়েছে।";
+
+  }
 
 
-  switch (code) {
+  switch (error.code) {
 
     case "auth/email-already-in-use":
 
-      return "এই Gmail দিয়ে ইতিমধ্যে একটি account আছে। Login করুন।";
+      return (
+        "এই Gmail দিয়ে ইতিমধ্যে একটি AYNA BOOK account আছে।"
+      );
 
 
     case "auth/invalid-email":
 
-      return "Gmail address সঠিক নয়।";
-
-
-    case "auth/weak-password":
-
-      return "Password ৮–৫০ অক্ষরের মধ্যে দিন।";
+      return (
+        "Gmail Address সঠিক নয়।"
+      );
 
 
     case "auth/invalid-credential":
-    case "auth/invalid-login-credentials":
 
-      return "Gmail অথবা Password সঠিক নয়।";
-
-
-    case "auth/user-not-found":
-
-      return "এই Gmail দিয়ে কোনো account পাওয়া যায়নি।";
+      return (
+        "Gmail অথবা Password সঠিক নয়।"
+      );
 
 
     case "auth/wrong-password":
 
-      return "Password সঠিক নয়।";
+      return (
+        "Password সঠিক নয়।"
+      );
 
 
-    case "auth/missing-password":
+    case "auth/user-not-found":
 
-      return "Password লিখুন।";
+      return (
+        "এই Gmail দিয়ে কোনো account পাওয়া যায়নি।"
+      );
 
 
     case "auth/user-disabled":
 
-      return "এই account বর্তমানে বন্ধ করা হয়েছে।";
+      return (
+        "এই account বর্তমানে নিষ্ক্রিয়।"
+      );
+
+
+    case "auth/weak-password":
+
+      return (
+        `Password অবশ্যই ${MIN_PASSWORD_LENGTH} থেকে ${MAX_PASSWORD_LENGTH} অক্ষরের মধ্যে হতে হবে।`
+      );
+
+
+    case "auth/missing-password":
+
+      return (
+        "Password লিখুন।"
+      );
+
+
+    case "auth/email-not-verified":
+
+      return (
+        "আপনার Gmail এখনো Verified হয়নি।"
+      );
 
 
     case "auth/too-many-requests":
 
-      return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+      return (
+        "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।"
+      );
 
 
     case "auth/network-request-failed":
 
-      return "Internet connection পরীক্ষা করুন।";
+      return (
+        "Internet connection পরীক্ষা করুন।"
+      );
 
 
     case "auth/requires-recent-login":
 
-      return "এই কাজের জন্য আবার Login করতে হবে।";
+      return (
+        "এই কাজটি করতে আবার Login করতে হবে।"
+      );
+
+
+    case "auth/no-current-user":
+
+      return (
+        "বর্তমানে কোনো Login করা user নেই।"
+      );
 
 
     case "auth/operation-not-allowed":
 
-      return "Firebase Console-এ Email/Password Sign-in চালু করুন।";
+      return (
+        "Firebase Authentication-এ Email/Password Login চালু নেই।"
+      );
 
 
-    case "auth/unauthorized-domain":
+    case "permission-denied":
 
-      return "এই Website-এর Domain Firebase Authorized Domains-এ যোগ করুন।";
-
-
-    case "auth/invalid-api-key":
-    case "auth/api-key-not-valid":
-
-      return "Firebase API Key সঠিক নয়। Firebase Configuration পরীক্ষা করুন।";
+      return (
+        "Firebase permission denied করেছে।"
+      );
 
 
-    case "auth/quota-exceeded":
+    case "ayna/invalid-name":
 
-      return "Firebase-এর নির্ধারিত সীমা অতিক্রম হয়েছে। পরে আবার চেষ্টা করুন।";
+      return (
+        "আপনার পূর্ণ নাম সঠিকভাবে লিখুন।"
+      );
 
 
     default:
 
       return (
-        error?.message ||
+        error.message ||
         "Authentication-এর সময় একটি সমস্যা হয়েছে।"
       );
+
   }
+
 }
 
 
 // =========================================================
-// INITIALIZATION LOG
+// AUTH MODULE READY
 // =========================================================
 
 console.log(
-  "========================================"
-);
-
-console.log(
-  "AYNA BOOK - auth.js"
-);
-
-console.log(
-  "Authentication Controller Loaded"
-);
-
-console.log(
-  "Password Length:",
-  `${MIN_PASSWORD_LENGTH}-${MAX_PASSWORD_LENGTH}`
-);
-
-console.log(
-  "========================================"
+  "AYNA BOOK: auth.js loaded successfully."
 );
