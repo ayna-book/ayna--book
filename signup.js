@@ -1,88 +1,123 @@
 // =========================================================
-// AYNA BOOK
-// PROFILE PHOTO VALIDATION
-// File: signup.js
+// AYNA BOOK — PROFILE PHOTO CONTROLLER
+// File: signup-photo.js
 // =========================================================
-
-const photoInput = document.getElementById("photo");
-const photoPreview = document.getElementById("photoPreview");
-const photoPreviewBox = document.getElementById("photoPreviewBox");
-const photoStatus = document.getElementById("photoStatus");
 
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 
-const ALLOWED_PHOTO_TYPES = [
+const ALLOWED_TYPES = new Set([
   "image/jpeg",
   "image/png",
   "image/webp"
-];
+]);
+
+const photoInput = document.getElementById("photo");
+const previewBox = document.getElementById("photoPreviewBox");
+const preview = document.getElementById("photoPreview");
+const status = document.getElementById("photoStatus");
 
 let selectedPhoto = null;
+let previewUrl = null;
 
-function showPhotoStatus(message, success = false) {
-  if (!photoStatus) return;
+function setStatus(message, success = false) {
+  if (!status) return;
 
-  photoStatus.textContent = message;
+  status.textContent = message;
 
-  photoStatus.style.marginTop = "8px";
-  photoStatus.style.fontSize = "13px";
-  photoStatus.style.color = success
+  status.style.marginTop = "8px";
+  status.style.fontSize = "13px";
+  status.style.color = success
     ? "#d4af37"
     : "#ff6b6b";
 }
 
+function clearPreview() {
+  if (previewUrl) {
+    URL.revokeObjectURL(previewUrl);
+    previewUrl = null;
+  }
+
+  if (preview) {
+    preview.removeAttribute("src");
+  }
+
+  if (previewBox) {
+    previewBox.style.display = "none";
+  }
+}
+
+function validatePhoto(file) {
+  if (!file) {
+    return "Profile Photo নির্বাচন করুন।";
+  }
+
+  if (!ALLOWED_TYPES.has(file.type)) {
+    return "শুধু JPG, PNG অথবা WebP ছবি ব্যবহার করুন।";
+  }
+
+  if (file.size > MAX_PHOTO_SIZE) {
+    return "ছবির আকার সর্বোচ্চ 5 MB হতে হবে।";
+  }
+
+  return "";
+}
+
 photoInput?.addEventListener("change", () => {
+  selectedPhoto = null;
+  clearPreview();
+
   const file = photoInput.files?.[0];
 
-  selectedPhoto = null;
+  const error = validatePhoto(file);
 
-  if (!file) {
-    photoPreviewBox.style.display = "none";
-    showPhotoStatus("");
-    return;
-  }
-
-  // File type check
-  if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+  if (error) {
     photoInput.value = "";
-    photoPreviewBox.style.display = "none";
-
-    showPhotoStatus(
-      "শুধু JPG, PNG অথবা WebP ছবি ব্যবহার করুন।"
-    );
-
-    return;
-  }
-
-  // File size check
-  if (file.size > MAX_PHOTO_SIZE) {
-    photoInput.value = "";
-    photoPreviewBox.style.display = "none";
-
-    showPhotoStatus(
-      "ছবির আকার সর্বোচ্চ 5 MB হতে হবে।"
-    );
-
+    setStatus(error);
     return;
   }
 
   selectedPhoto = file;
 
-  const objectURL = URL.createObjectURL(file);
+  previewUrl = URL.createObjectURL(file);
 
-  photoPreview.src = objectURL;
-  photoPreviewBox.style.display = "block";
+  if (preview) {
+    preview.src = previewUrl;
+  }
 
-  photoPreview.onload = () => {
-    URL.revokeObjectURL(objectURL);
-  };
+  if (previewBox) {
+    previewBox.style.display = "block";
+  }
 
-  showPhotoStatus(
-    "Profile photo প্রস্তুত।",
-    true
-  );
+  setStatus("Profile photo প্রস্তুত।", true);
 });
+
 
 export function getSelectedProfilePhoto() {
   return selectedPhoto;
 }
+
+
+export function validateSelectedProfilePhoto() {
+  const file = selectedPhoto;
+
+  const error = validatePhoto(file);
+
+  if (error) {
+    setStatus(error);
+    return false;
+  }
+
+  return true;
+}
+
+
+export function resetProfilePhoto() {
+  selectedPhoto = null;
+
+  if (photoInput) {
+    photoInput.value = "";
+  }
+
+  clearPreview();
+  setStatus("");
+};
