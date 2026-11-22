@@ -1,13 +1,3 @@
-// =========================================================
-// AYNA BOOK
-// EMAIL VERIFICATION CONTROLLER
-// File: verify-email.js
-// Firebase SDK: 13.4.0
-// =========================================================
-
-import {
-  auth
-} from "./firebase-init.js";
 
 import {
   onAuthStateChanged,
@@ -16,727 +6,152 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
+import {
+  doc,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-// =========================================================
-// HTML ELEMENTS
-// =========================================================
+import { auth, db } from "./firebase-init.js";
 
-const userEmailElement =
-  document.getElementById("userEmail");
+const emailElement = document.getElementById("emailAddress");
+const statusMessage = document.getElementById("statusMessage");
+const checkButton = document.getElementById("checkButton");
+const resendButton = document.getElementById("resendButton");
+const loginButton = document.getElementById("loginButton");
 
-const checkButton =
-  document.getElementById("checkButton");
+let currentUser = null;
+let checking = false;
+let resendBusy = false;
 
-const resendButton =
-  document.getElementById("resendButton");
-
-const logoutButton =
-  document.getElementById("logoutButton");
-
-const statusMessage =
-  document.getElementById("statusMessage");
-
-
-// =========================================================
-// STATE
-// =========================================================
-
-let isProcessing = false;
-let resendCooldown = false;
-let isRedirecting = false;
-let isInitialized = false;
-
-let statusAnimationTimer = null;
-let statusAnimationRunning = false;
-
-
-// =========================================================
-// STATUS MESSAGE
-// =========================================================
-
-function showStatus(message, type = "info") {
-
-  stopStatusAnimation();
-
-  if (!statusMessage) return;
-
+function showMessage(message) {
   statusMessage.textContent = message;
-
-  statusMessage.className =
-    "status-message " + type;
 }
 
+async function activateVerifiedAccount(user) {
+  // Refresh Firebase Authentication data.
+  await reload(user);
 
-// =========================================================
-// ANIMATED VERIFICATION STATUS
-// =========================================================
-
-function startVerificationAnimation() {
-
-  if (
-    !statusMessage ||
-    statusAnimationRunning
-  ) {
-    return;
-  }
-
-  statusAnimationRunning = true;
-
-  let dots = 1;
-
-  const baseMessage =
-    "Verification Status পরীক্ষা হচ্ছে";
-
-  function updateMessage() {
-
-    if (
-      !statusAnimationRunning ||
-      !statusMessage
-    ) {
-      return;
-    }
-
-    statusMessage.textContent =
-      baseMessage +
-      ".".repeat(dots);
-
-    dots++;
-
-    if (dots > 3) {
-      dots = 1;
-    }
-  }
-
-  updateMessage();
-
-  statusAnimationTimer =
-    setInterval(
-      updateMessage,
-      500
+  if (!user.emailVerified) {
+    showMessage(
+      "Your Gmail is not verified yet. Please check your inbox."
     );
-}
-
-
-// =========================================================
-// STOP VERIFICATION ANIMATION
-// =========================================================
-
-function stopStatusAnimation() {
-
-  statusAnimationRunning = false;
-
-  if (statusAnimationTimer !== null) {
-
-    clearInterval(
-      statusAnimationTimer
-    );
-
-    statusAnimationTimer = null;
-  }
-}
-
-
-// =========================================================
-// AUTH ERROR MESSAGE
-// =========================================================
-
-function getErrorMessage(error) {
-
-  const code =
-    error?.code || "";
-
-  switch (code) {
-
-    case "auth/network-request-failed":
-
-      return (
-        "Internet Connection পরীক্ষা করে আবার চেষ্টা করুন।"
-      );
-
-
-    case "auth/too-many-requests":
-
-      return (
-        "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।"
-      );
-
-
-    case "auth/user-token-expired":
-
-      return (
-        "আপনার Login Session শেষ হয়েছে। আবার Login করুন।"
-      );
-
-
-    case "auth/user-disabled":
-
-      return (
-        "এই Account নিষ্ক্রিয় করা হয়েছে।"
-      );
-
-
-    case "auth/invalid-api-key":
-    case "auth/api-key-not-valid":
-
-      return (
-        "Firebase API Key সঠিক নয়। Firebase Configuration পরীক্ষা করুন।"
-      );
-
-
-    case "auth/unauthorized-domain":
-
-      return (
-        "এই Website Domain Firebase Authentication-এ অনুমোদিত নয়।"
-      );
-
-
-    case "auth/requires-recent-login":
-
-      return (
-        "Security কারণে আবার Login করা প্রয়োজন।"
-      );
-
-
-    default:
-
-      return (
-        error?.message ||
-        "একটি অজানা সমস্যা হয়েছে। আবার চেষ্টা করুন।"
-      );
-  }
-}
-
-
-// =========================================================
-// BUTTON LOADING
-// =========================================================
-
-function setButtonLoading(
-  button,
-  loading,
-  text
-) {
-
-  if (!button) return;
-
-  if (loading) {
-
-    if (!button.dataset.originalText) {
-
-      button.dataset.originalText =
-        button.textContent;
-    }
-
-    button.disabled = true;
-
-    if (text) {
-
-      button.textContent = text;
-    }
-
-  } else {
-
-    button.textContent =
-      button.dataset.originalText ||
-      button.textContent;
-
-    button.disabled = false;
-  }
-}
-
-
-// =========================================================
-// REDIRECT TO LOGIN
-// =========================================================
-
-function redirectToLogin(
-  message,
-  type = "success"
-) {
-
-  if (isRedirecting) {
-    return;
+    return false;
   }
 
-  isRedirecting = true;
+  // Refresh ID token so Firestore Rules receive email_verified=true.
+  await user.getIdToken(true);
 
-  stopStatusAnimation();
+  // Only update verification-related fields.
+  await updateDoc(doc(db, "users", user.uid), {
+    emailVerified: true,
+    accountStatus: "active",
+    updatedAt: serverTimestamp()
+  });
 
-  showStatus(
-    message,
-    type
-  );
+  showMessage("Gmail verified successfully. Opening your profile...");
 
-  setTimeout(() => {
-
-    window.location.replace(
-      "./login.html"
-    );
-
-  }, 2000);
+  location.href = "./profile.html";
+  return true;
 }
 
-
-// =========================================================
-// DISPLAY USER EMAIL
-// =========================================================
-
-function displayUserEmail(user) {
-
-  if (!userEmailElement) {
-    return;
-  }
-
-  userEmailElement.textContent =
-    user?.email ||
-    "Gmail পাওয়া যায়নি।";
-}
-
-
-// =========================================================
-// NO USER REDIRECT
-// =========================================================
-
-function redirectWithoutUser() {
-
-  if (isRedirecting) {
-    return;
-  }
-
-  isRedirecting = true;
-
-  stopStatusAnimation();
-
-  showStatus(
-    "আপনার Login Session পাওয়া যায়নি। Login পেজে নেওয়া হচ্ছে...",
-    "warning"
-  );
-
-  setTimeout(() => {
-
-    window.location.replace(
-      "./login.html"
-    );
-
-  }, 2000);
-}
-
-
-// =========================================================
-// CHECK EMAIL VERIFICATION
-// =========================================================
-
-async function checkEmailVerification() {
-
-  if (
-    isProcessing ||
-    isRedirecting
-  ) {
-    return;
-  }
-
-  const user =
-    auth.currentUser;
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
 
   if (!user) {
-
-    redirectWithoutUser();
-
+    emailElement.textContent = "No active account";
+    showMessage("Please log in to continue email verification.");
+    checkButton.disabled = true;
+    resendButton.disabled = true;
     return;
   }
 
-  isProcessing = true;
+  emailElement.textContent = user.email || "Email unavailable";
 
-  setButtonLoading(
-    checkButton,
-    true,
-    "Checking..."
-  );
+  checkButton.disabled = false;
+  resendButton.disabled = false;
 
-  startVerificationAnimation();
-
-  try {
-
-    await reload(user);
-
-    const updatedUser =
-      auth.currentUser;
-
-    if (!updatedUser) {
-
-      throw new Error(
-        "AUTH_USER_NOT_FOUND"
-      );
-    }
-
-    displayUserEmail(
-      updatedUser
-    );
-
-    if (
-      updatedUser.emailVerified === true
-    ) {
-
-      redirectToLogin(
-        "আপনার Gmail সফলভাবে Verify হয়েছে। Login পেজে নেওয়া হচ্ছে...",
-        "success"
-      );
-
-    } else {
-
-      showStatus(
-        "আপনার Gmail এখনো Verify হয়নি। Gmail Inbox থেকে Verification Link খুলুন।",
-        "warning"
-      );
-    }
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Verification Check Error:",
-      error
-    );
-
-    showStatus(
-      getErrorMessage(error),
-      "error"
-    );
-
-  } finally {
-
-    isProcessing = false;
-
-    setButtonLoading(
-      checkButton,
-      false
-    );
-  }
-}
-
-
-// =========================================================
-// RESEND VERIFICATION EMAIL
-// =========================================================
-
-async function resendVerificationEmailHandler() {
-
-  if (
-    isProcessing ||
-    resendCooldown ||
-    isRedirecting
-  ) {
-    return;
-  }
-
-  const user =
-    auth.currentUser;
-
-  if (!user) {
-
-    redirectWithoutUser();
-
-    return;
-  }
-
-  isProcessing = true;
-
-  setButtonLoading(
-    resendButton,
-    true,
-    "Sending..."
-  );
-
-  showStatus(
-    "Verification Email পাঠানো হচ্ছে...",
-    "info"
-  );
-
-  try {
-
-    await reload(user);
-
-    const updatedUser =
-      auth.currentUser;
-
-    if (!updatedUser) {
-
-      throw new Error(
-        "AUTH_USER_NOT_FOUND"
-      );
-    }
-
-    displayUserEmail(
-      updatedUser
-    );
-
-    if (
-      updatedUser.emailVerified === true
-    ) {
-
-      redirectToLogin(
-        "আপনার Gmail ইতিমধ্যে Verify করা হয়েছে। Login পেজে নেওয়া হচ্ছে...",
-        "success"
-      );
-
-      return;
-    }
-
-    await sendEmailVerification(
-      updatedUser
-    );
-
-    showStatus(
-      "নতুন Verification Email পাঠানো হয়েছে। Gmail Inbox এবং Spam/Junk folder পরীক্ষা করুন।",
-      "success"
-    );
-
-    resendCooldown = true;
-
-    if (resendButton) {
-
-      resendButton.disabled = true;
-    }
-
-    setTimeout(() => {
-
-      resendCooldown = false;
-
-      if (
-        resendButton &&
-        !isProcessing &&
-        !isRedirecting &&
-        auth.currentUser
-      ) {
-
-        resendButton.disabled = false;
-      }
-
-    }, 60000);
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Resend Verification Error:",
-      error
-    );
-
-    showStatus(
-      getErrorMessage(error),
-      "error"
-    );
-
-  } finally {
-
-    isProcessing = false;
-
-    setButtonLoading(
-      resendButton,
-      false
-    );
-
-    if (
-      resendCooldown &&
-      resendButton
-    ) {
-
-      resendButton.disabled = true;
-    }
-  }
-}
-
-
-// =========================================================
-// LOGOUT
-// =========================================================
-
-async function handleLogout() {
-
-  if (
-    isProcessing ||
-    isRedirecting
-  ) {
-    return;
-  }
-
-  isProcessing = true;
-
-  setButtonLoading(
-    logoutButton,
-    true,
-    "Logging out..."
-  );
-
-  showStatus(
-    "Logout করা হচ্ছে...",
-    "info"
-  );
-
-  try {
-
-    await signOut(auth);
-
-    stopStatusAnimation();
-
-    window.location.replace(
-      "./login.html"
-    );
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Logout Error:",
-      error
-    );
-
-    showStatus(
-      getErrorMessage(error),
-      "error"
-    );
-
-    isProcessing = false;
-
-    setButtonLoading(
-      logoutButton,
-      false
-    );
-  }
-}
-
-
-// =========================================================
-// BUTTON EVENTS
-// =========================================================
-
-if (checkButton) {
-
-  checkButton.addEventListener(
-    "click",
-    checkEmailVerification
-  );
-}
-
-
-if (resendButton) {
-
-  resendButton.addEventListener(
-    "click",
-    resendVerificationEmailHandler
-  );
-}
-
-
-if (logoutButton) {
-
-  logoutButton.addEventListener(
-    "click",
-    handleLogout
-  );
-}
-
-
-// =========================================================
-// FIREBASE AUTH STATE
-// =========================================================
-
-onAuthStateChanged(
-  auth,
-  async (user) => {
-
-    console.log(
-      "AYNA BOOK Auth State:",
-      user
-    );
-
-    if (isRedirecting) {
-      return;
-    }
-
-    if (!user) {
-
-      redirectWithoutUser();
-
-      return;
-    }
-
-    if (isInitialized) {
-      return;
-    }
-
-    isInitialized = true;
-
-    displayUserEmail(user);
-
-    startVerificationAnimation();
-
+  if (user.emailVerified) {
     try {
-
-      await reload(user);
-
-      const updatedUser =
-        auth.currentUser;
-
-      if (!updatedUser) {
-
-        throw new Error(
-          "AUTH_USER_NOT_FOUND"
-        );
-      }
-
-      displayUserEmail(
-        updatedUser
-      );
-
-      if (
-        updatedUser.emailVerified === true
-      ) {
-
-        redirectToLogin(
-          "আপনার Gmail ইতিমধ্যে Verify করা হয়েছে। Login পেজে নেওয়া হচ্ছে...",
-          "success"
-        );
-
-      } else {
-
-        showStatus(
-          "আপনার Gmail Verify করার জন্য Inbox পরীক্ষা করুন।",
-          "info"
-        );
-      }
-
+      await activateVerifiedAccount(user);
     } catch (error) {
-
-      console.error(
-        "AYNA BOOK Initial Verification Error:",
-        error
+      showMessage(
+        "Your Gmail is verified, but account activation failed. Please try again."
       );
-
-      showStatus(
-        getErrorMessage(error),
-        "error"
-      );
+      console.error("Account activation error:", error);
     }
+  } else {
+    showMessage(
+      "Verification is pending. Please check your Gmail."
+    );
   }
-);
+});
 
+checkButton.addEventListener("click", async () => {
+  if (!currentUser || checking) return;
 
-// =========================================================
-// PAGE CLEANUP
-// =========================================================
+  checking = true;
+  checkButton.disabled = true;
+  showMessage("Checking verification status...");
 
-window.addEventListener(
-  "beforeunload",
-  () => {
-
-    stopStatusAnimation();
-
+  try {
+    await activateVerifiedAccount(currentUser);
+  } catch (error) {
+    console.error("Verification check error:", error);
+    showMessage(
+      "Unable to complete verification. Please try again."
+    );
+  } finally {
+    checking = false;
+    checkButton.disabled = !currentUser;
   }
-);
+});
 
+resendButton.addEventListener("click", async () => {
+  if (!currentUser || resendBusy) return;
 
-// =========================================================
-// START
-// =========================================================
+  resendBusy = true;
+  resendButton.disabled = true;
 
-console.log(
-  "AYNA BOOK - verify-email.js loaded successfully."
-);
+  try {
+    await reload(currentUser);
+
+    if (currentUser.emailVerified) {
+      await activateVerifiedAccount(currentUser);
+      return;
+    }
+
+    await sendEmailVerification(currentUser);
+
+    showMessage(
+      "A new verification email has been sent. Please check your inbox and spam folder."
+    );
+  } catch (error) {
+    console.error("Resend verification error:", error);
+
+    const messages = {
+      "auth/too-many-requests":
+        "Too many requests. Please wait before trying again.",
+      "auth/network-request-failed":
+        "Network error. Check your internet connection."
+    };
+
+    showMessage(
+      messages[error.code] ||
+      "Unable to send verification email. Please try again later."
+    );
+  } finally {
+    resendBusy = false;
+    resendButton.disabled = !currentUser;
+  }
+});
+
+loginButton.addEventListener("click", async () => {
+  try {
+    if (auth.currentUser) {
+      await signOut(auth);
+    }
+  } finally {
+    location.href = "./login.html";
+  }
+});
