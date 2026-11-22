@@ -1,9 +1,20 @@
+// =========================================================
+// AYNA BOOK
+// EMAIL VERIFICATION CONTROLLER
+// File: verify-email.js
+// Firebase SDK: 13.4.0
+// =========================================================
 
 import {
-  onAuthStateChanged,
+  auth,
+  db
+} from "./firebase-init.js";
+
+import {
   reload,
   sendEmailVerification,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
@@ -12,146 +23,270 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-import { auth, db } from "./firebase-init.js";
 
-const emailElement = document.getElementById("emailAddress");
-const statusMessage = document.getElementById("statusMessage");
-const checkButton = document.getElementById("checkButton");
-const resendButton = document.getElementById("resendButton");
-const loginButton = document.getElementById("loginButton");
+// =========================================================
+// ELEMENTS
+// =========================================================
 
-let currentUser = null;
-let checking = false;
-let resendBusy = false;
+const emailAddress =
+  document.getElementById("emailAddress");
+
+const checkButton =
+  document.getElementById("checkButton");
+
+const resendButton =
+  document.getElementById("resendButton");
+
+const loginButton =
+  document.getElementById("loginButton");
+
+const statusMessage =
+  document.getElementById("statusMessage");
+
+
+// =========================================================
+// MESSAGE
+// =========================================================
 
 function showMessage(message) {
   statusMessage.textContent = message;
 }
 
-async function activateVerifiedAccount(user) {
-  // Refresh Firebase Authentication data.
-  await reload(user);
 
-  if (!user.emailVerified) {
-    showMessage(
-      "Your Gmail is not verified yet. Please check your inbox."
-    );
-    return false;
-  }
-
-  // Refresh ID token so Firestore Rules receive email_verified=true.
-  await user.getIdToken(true);
-
-  // Only update verification-related fields.
-  await updateDoc(doc(db, "users", user.uid), {
-    emailVerified: true,
-    accountStatus: "active",
-    updatedAt: serverTimestamp()
-  });
-
-  showMessage("Gmail verified successfully. Opening your profile...");
-
-  location.href = "./profile.html";
-  return true;
-}
+// =========================================================
+// AUTH STATE
+// =========================================================
 
 onAuthStateChanged(auth, async (user) => {
-  currentUser = user;
 
   if (!user) {
-    emailElement.textContent = "No active account";
-    showMessage("Please log in to continue email verification.");
+    emailAddress.textContent = "No account is currently signed in.";
+
+    showMessage(
+      "Please create an account first, or return to Login."
+    );
+
     checkButton.disabled = true;
     resendButton.disabled = true;
+
     return;
   }
 
-  emailElement.textContent = user.email || "Email unavailable";
+  emailAddress.textContent =
+    user.email || "Gmail account";
 
-  checkButton.disabled = false;
-  resendButton.disabled = false;
+  try {
+    await reload(user);
 
-  if (user.emailVerified) {
-    try {
-      await activateVerifiedAccount(user);
-    } catch (error) {
+    if (user.emailVerified) {
       showMessage(
-        "Your Gmail is verified, but account activation failed. Please try again."
+        "Your Gmail is already verified. Activating your account..."
       );
-      console.error("Account activation error:", error);
-    }
-  } else {
-    showMessage(
-      "Verification is pending. Please check your Gmail."
-    );
-  }
-});
 
-checkButton.addEventListener("click", async () => {
-  if (!currentUser || checking) return;
+      await activateAccount();
 
-  checking = true;
-  checkButton.disabled = true;
-  showMessage("Checking verification status...");
-
-  try {
-    await activateVerifiedAccount(currentUser);
-  } catch (error) {
-    console.error("Verification check error:", error);
-    showMessage(
-      "Unable to complete verification. Please try again."
-    );
-  } finally {
-    checking = false;
-    checkButton.disabled = !currentUser;
-  }
-});
-
-resendButton.addEventListener("click", async () => {
-  if (!currentUser || resendBusy) return;
-
-  resendBusy = true;
-  resendButton.disabled = true;
-
-  try {
-    await reload(currentUser);
-
-    if (currentUser.emailVerified) {
-      await activateVerifiedAccount(currentUser);
       return;
     }
 
-    await sendEmailVerification(currentUser);
-
     showMessage(
-      "A new verification email has been sent. Please check your inbox and spam folder."
+      "Open Gmail, verify your email, then press the button above."
     );
+
   } catch (error) {
-    console.error("Resend verification error:", error);
 
-    const messages = {
-      "auth/too-many-requests":
-        "Too many requests. Please wait before trying again.",
-      "auth/network-request-failed":
-        "Network error. Check your internet connection."
-    };
+    console.error(
+      "Verification page error:",
+      error
+    );
 
     showMessage(
-      messages[error.code] ||
-      "Unable to send verification email. Please try again later."
+      error?.message ||
+      "Unable to load verification status."
     );
-  } finally {
-    resendBusy = false;
-    resendButton.disabled = !currentUser;
   }
+
 });
 
-loginButton.addEventListener("click", async () => {
-  try {
-    if (auth.currentUser) {
-      await signOut(auth);
-    }
-  } finally {
-    location.href = "./login.html";
+
+// =========================================================
+// ACTIVATE VERIFIED ACCOUNT
+// =========================================================
+
+async function activateAccount() {
+
+  const user = auth.currentUser;
+
+  if (!user) {
+    throw new Error(
+      "No authenticated account found."
+    );
   }
-});
+
+  await reload(user);
+
+  if (!user.emailVerified) {
+    throw new Error(
+      "Gmail verification is not complete yet."
+    );
+  }
+
+  // Refresh Firebase token so email_verified
+  // claim becomes available to Firestore Rules.
+  await user.getIdToken(true);
+
+  await updateDoc(
+    doc(db, "users", user.uid),
+    {
+      emailVerified: true,
+      accountStatus: "active",
+      updatedAt: serverTimestamp()
+    }
+  );
+
+  showMessage(
+    "Gmail verified successfully. Your account is now active."
+  );
+
+  checkButton.disabled = true;
+  resendButton.disabled = true;
+
+  setTimeout(() => {
+    window.location.href = "./profile.html";
+  }, 1200);
+}
+
+
+// =========================================================
+// CHECK VERIFICATION
+// =========================================================
+
+checkButton.addEventListener(
+  "click",
+  async () => {
+
+    checkButton.disabled = true;
+    showMessage(
+      "Checking your Gmail verification..."
+    );
+
+    try {
+
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error(
+          "No authenticated account found."
+        );
+      }
+
+      await reload(user);
+
+      if (!user.emailVerified) {
+
+        showMessage(
+          "Gmail is not verified yet. Open the verification email and click its link."
+        );
+
+        checkButton.disabled = false;
+        return;
+      }
+
+      await activateAccount();
+
+    } catch (error) {
+
+      console.error(
+        "Verification check failed:",
+        error
+      );
+
+      showMessage(
+        error?.message ||
+        "Verification could not be completed."
+      );
+
+      checkButton.disabled = false;
+    }
+
+  }
+);
+
+
+// =========================================================
+// RESEND VERIFICATION
+// =========================================================
+
+resendButton.addEventListener(
+  "click",
+  async () => {
+
+    resendButton.disabled = true;
+
+    showMessage(
+      "Sending verification email..."
+    );
+
+    try {
+
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error(
+          "No authenticated account found."
+        );
+      }
+
+      await reload(user);
+
+      if (user.emailVerified) {
+        await activateAccount();
+        return;
+      }
+
+      await sendEmailVerification(user);
+
+      showMessage(
+        "Verification email sent. Please check your Gmail inbox and Spam folder."
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Resend verification failed:",
+        error
+      );
+
+      showMessage(
+        error?.message ||
+        "Could not resend the verification email."
+      );
+
+    } finally {
+
+      resendButton.disabled = false;
+    }
+
+  }
+);
+
+
+// =========================================================
+// GO TO LOGIN
+// =========================================================
+
+loginButton.addEventListener(
+  "click",
+  async () => {
+
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error(
+        "Logout before login failed:",
+        error
+      );
+    }
+
+    window.location.href = "./login.html";
+  }
+);
