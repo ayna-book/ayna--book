@@ -1,40 +1,41 @@
 <!DOCTYPE html>
-<html lang="bn">
-
+<html lang="en" data-lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#050507" />
+  <meta name="description" content="AYNA BOOK — Global Multimedia Social Network, Secure Identity, Private Communication, Business Platform, AI & Real-Time Translation." />
+  <title>AYNA BOOK — Global Multimedia Social Network</title>
 
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="theme-color"
-    content="#090a0f"
-  >
-
-  <meta
-    name="description"
-    content="AYNA BOOK - Connect, Share, Create"
-  >
-
-  <link
-    rel="manifest"
-    href="./manifest.json"
-  >
-
-  <link
-    rel="icon"
-    href="./icons/icon-192.png"
-    type="image/png"
-  >
-
-  <title>AYNA BOOK</title>
-
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./icon-512.png" />
 
   <style>
+    :root {
+      --bg-void: #050507;
+      --bg-panel: #0b0b0f;
+      --bg-card: #101016;
+      --bg-elevated: #16161f;
+      --text-white: #ffffff;
+      --text-muted: #b8b8c6;
+      --text-dim: #7c7c8e;
+      --gold: #d4af37;
+      --gold-bright: #f3d26b;
+      --gold-soft: rgba(212, 175, 55, 0.16);
+      --gold-border: rgba(212, 175, 55, 0.42);
+      --gold-border-strong: rgba(212, 175, 55, 0.85);
+      --danger: #ff4d5a;
+      --ok: #29d391;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --max-app: 1380px;
+      --header-h: 64px;
+      --ticker-h: 36px;
+      --nav-h: 62px;
+      --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
     * {
       box-sizing: border-box;
@@ -42,803 +43,1269 @@
       padding: 0;
     }
 
-    html {
-      min-height: 100%;
-      background: #090a0f;
-    }
-
-    body {
+    html, body {
+      background: var(--bg-void);
+      color: var(--text-white);
+      font-family: var(--font-sans);
+      line-height: 1.5;
       min-height: 100vh;
-      background:
-        radial-gradient(
-          circle at top,
-          #171925 0%,
-          #090a0f 45%,
-          #050609 100%
-        );
-      color: #ffffff;
-      font-family:
-        Arial,
-        "Noto Sans Bengali",
-        sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-
-    /* =====================================================
-       HEADER
-       ===================================================== */
-
-    header {
-      width: 100%;
-      min-height: 64px;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: 12px 18px;
-
-      background: rgba(9, 10, 15, 0.96);
-
-      border-bottom:
-        1px solid rgba(212, 175, 55, 0.25);
-
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-
-      backdrop-filter: blur(12px);
-    }
-
-
-    .brand {
-      color: #ffffff;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+    a {
+      color: inherit;
       text-decoration: none;
     }
 
-
-    .brand span {
-      color: #d4af37;
+    button, input, select, textarea {
+      font-family: inherit;
+      color: var(--text-white);
     }
 
+    button {
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      transition: 0.2s ease;
+    }
 
-    .header-actions {
+    button:hover {
+      border-color: var(--gold-bright);
+      background: var(--gold-soft);
+    }
+
+    .gold-text {
+      background: linear-gradient(135deg, #fff3c4 0%, var(--gold) 50%, #b38728 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gold-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid var(--gold-border-strong);
+      border-radius: 999px;
+      color: var(--gold-bright);
+      background: var(--gold-soft);
+    }
+
+    /* Top Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--header-h);
+      background: rgba(5, 5, 7, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--gold-border);
+    }
+
+    .topbar-inner {
+      max-width: var(--max-app);
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 16px;
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--gold-border-strong);
+      background: radial-gradient(circle at 30% 25%, rgba(243, 210, 107, 0.25), #0b0b0f 75%);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--gold-bright);
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .search-box {
+      flex: 1;
+      max-width: 440px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 38px;
+      padding: 0 38px 0 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: 999px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      border-color: var(--gold-bright);
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.16);
+    }
+
+    .search-box .search-icon {
+      position: absolute;
+      right: 12px;
+      color: var(--gold);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      position: relative;
+    }
+
+    .pill-btn {
+      height: 36px;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-btn.primary {
+      background: linear-gradient(135deg, var(--gold), #b48625);
+      color: #050507;
+      border-color: var(--gold-bright);
+      font-weight: 700;
+    }
+
+    .pill-btn.primary:hover {
+      filter: brightness(1.08);
+    }
+
+    /* Slow-Scrolling Breaking News Ticker */
+    .ticker-bar {
+      height: var(--ticker-h);
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .ticker-label {
+      flex-shrink: 0;
+      height: 100%;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.24), rgba(212, 175, 55, 0.08));
+      border-right: 1px solid var(--gold-border);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .ticker-track {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ticker-marquee {
+      display: inline-flex;
+      align-items: center;
+      gap: 36px;
+      white-space: nowrap;
+      padding-left: 100%;
+      animation: aynaTickerSlow 46s linear infinite;
+      font-size: 12px;
+      color: var(--text-white);
+    }
+
+    .ticker-track:hover .ticker-marquee {
+      animation-play-state: paused;
+    }
+
+    .ticker-item {
+      display: inline-flex;
       align-items: center;
       gap: 8px;
     }
 
-
-    .header-button {
-      border: 1px solid
-        rgba(212, 175, 55, 0.45);
-
-      background: rgba(212, 175, 55, 0.08);
-
-      color: #ffffff;
-
-      border-radius: 10px;
-
-      padding: 9px 12px;
-
-      font-size: 13px;
-
-      cursor: pointer;
-
-      text-decoration: none;
+    .ticker-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold-bright);
     }
 
-
-    .header-button:hover {
-      background:
-        rgba(212, 175, 55, 0.18);
+    @keyframes aynaTickerSlow {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
     }
 
-
-    /* =====================================================
-       MAIN
-       ===================================================== */
-
-    main {
-      width: 100%;
-      max-width: 900px;
-
+    /* Main 3-Column Layout */
+    .app-shell {
+      max-width: var(--max-app);
       margin: 0 auto;
-
-      padding: 24px 16px 100px;
+      padding: 16px;
+      padding-bottom: calc(var(--nav-h) + 24px);
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr) 310px;
+      gap: 18px;
     }
 
-
-    .welcome-card {
-      border:
-        1px solid rgba(212, 175, 55, 0.25);
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,0.055),
-          rgba(255,255,255,0.018)
-        );
-
-      border-radius: 18px;
-
-      padding: 24px;
-
-      margin-bottom: 18px;
-
-      box-shadow:
-        0 10px 40px
-        rgba(0,0,0,0.28);
+    @media (max-width: 1120px) {
+      .app-shell {
+        grid-template-columns: 230px minmax(0, 1fr);
+      }
+      .right-rail {
+        display: none;
+      }
     }
 
+    @media (max-width: 820px) {
+      .app-shell {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 12px;
+        padding-bottom: calc(var(--nav-h) + 20px);
+      }
+      .left-rail {
+        display: none;
+      }
+      .search-box {
+        display: none;
+      }
+    }
 
-    .welcome-title {
-      font-size: 25px;
-      line-height: 1.35;
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+    }
+
+    .panel + .panel {
+      margin-top: 14px;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Left Rail Navigation */
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      font-size: 13px;
+      color: var(--text-white);
+      transition: 0.18s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--gold-border);
+      background: var(--gold-soft);
+      color: var(--gold-bright);
+    }
+
+    .nav-link span.left {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    /* Square Golden Photo Frame + Centered Bottom Barcode + AYNA ID */
+    .ayna-id-card {
+      text-align: center;
+    }
+
+    .square-gold-frame {
+      width: 152px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto 10px;
+      border: 2px solid var(--gold-bright);
+      border-radius: 12px;
+      padding: 4px;
+      background: #07070a;
+      box-shadow: 0 0 18px rgba(212, 175, 55, 0.22);
+      overflow: hidden;
+    }
+
+    .square-gold-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .ayna-id-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--gold-bright);
       margin-bottom: 8px;
     }
 
-
-    .welcome-title span {
-      color: #d4af37;
+    .barcode-box {
+      width: 168px;
+      margin: 0 auto;
+      padding: 6px 8px 4px;
+      background: #ffffff;
+      border: 1px solid var(--gold-bright);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-
-    .welcome-subtitle {
-      color: #bfc2ca;
-      font-size: 14px;
-      line-height: 1.7;
+    .barcode-bars {
+      width: 100%;
+      height: 28px;
+      background: repeating-linear-gradient(
+        90deg,
+        #050507 0px,
+        #050507 2px,
+        #ffffff 2px,
+        #ffffff 4px,
+        #050507 4px,
+        #050507 5px,
+        #ffffff 5px,
+        #ffffff 8px,
+        #050507 8px,
+        #050507 11px,
+        #ffffff 11px,
+        #ffffff 13px
+      );
     }
 
-
-    /* =====================================================
-       USER INFO
-       ===================================================== */
-
-    .user-info {
-      display: none;
-
-      margin-top: 18px;
-
-      padding-top: 16px;
-
-      border-top:
-        1px solid
-        rgba(255,255,255,0.08);
-    }
-
-
-    .user-name {
-      color: #ffffff;
-      font-size: 17px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-
-    .user-email {
-      color: #969aa5;
-      font-size: 13px;
-      word-break: break-word;
-    }
-
-
-    /* =====================================================
-       QUICK ACTIONS
-       ===================================================== */
-
-    .section-title {
-      font-size: 18px;
-      margin: 22px 0 12px;
-      color: #ffffff;
-    }
-
-
-    .actions-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 12px;
-    }
-
-
-    .action-card {
-      display: block;
-
-      text-decoration: none;
-
-      color: #ffffff;
-
-      background:
-        rgba(255,255,255,0.035);
-
-      border:
-        1px solid
-        rgba(255,255,255,0.08);
-
-      border-radius: 15px;
-
-      padding: 18px;
-
-      transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-
-    .action-card:hover {
-      transform: translateY(-2px);
-
-      background:
-        rgba(212,175,55,0.08);
-
-      border-color:
-        rgba(212,175,55,0.30);
-    }
-
-
-    .action-icon {
-      font-size: 25px;
-      margin-bottom: 9px;
-    }
-
-
-    .action-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-
-
-    .action-description {
-      color: #989ca7;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-
-    /* =====================================================
-       LOGIN MESSAGE
-       ===================================================== */
-
-    .login-card {
-      display: none;
-
-      margin-top: 18px;
-
-      padding: 18px;
-
-      border-radius: 14px;
-
-      background:
-        rgba(212,175,55,0.06);
-
-      border:
-        1px solid
-        rgba(212,175,55,0.25);
-
-      text-align: center;
-    }
-
-
-    .login-card p {
-      color: #c8cad0;
-      font-size: 13px;
-      line-height: 1.6;
-      margin-bottom: 13px;
-    }
-
-
-    .gold-button {
-      display: inline-block;
-
-      background: #d4af37;
-
-      color: #090a0f;
-
-      text-decoration: none;
-
+    .barcode-caption {
+      font-family: ui-monospace, monospace;
+      font-size: 9px;
+      color: #050507;
+      letter-spacing: 0.14em;
+      margin-top: 2px;
       font-weight: 700;
+    }
 
-      border: none;
+    /* Feed Tabs & Stories */
+    .feed-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+    }
 
-      border-radius: 10px;
+    .tab-btn {
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      border-radius: 999px;
+    }
 
-      padding: 11px 18px;
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--gold), #b48625);
+      color: #050507;
+      border-color: var(--gold-bright);
+    }
 
+    .stories-row {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 92px;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .story-tile {
+      border: 1px solid var(--gold-border);
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+      background: var(--bg-elevated);
       cursor: pointer;
     }
 
-
-    .gold-button:hover {
-      background: #f0cf55;
-    }
-
-
-    /* =====================================================
-       STATUS
-       ===================================================== */
-
-    #statusMessage {
-      display: none;
-
-      margin-top: 15px;
-
-      padding: 11px 13px;
-
+    .story-avatar {
+      width: 54px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto 6px;
       border-radius: 10px;
-
-      font-size: 13px;
-
-      line-height: 1.5;
+      border: 1.5px solid var(--gold-bright);
+      overflow: hidden;
     }
 
+    .story-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-    /* =====================================================
-       FOOTER
-       ===================================================== */
+    .story-name {
+      font-size: 11px;
+      color: var(--text-white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-    footer {
-      text-align: center;
+    /* Composer */
+    .composer textarea {
+      width: 100%;
+      min-height: 76px;
+      padding: 10px 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      resize: vertical;
+      outline: none;
+    }
 
-      padding: 25px 15px 35px;
+    .composer textarea:focus {
+      border-color: var(--gold-bright);
+    }
 
-      color: #737782;
+    .composer-tools {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
 
+    .tool-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip-btn {
+      padding: 5px 10px;
+      font-size: 11px;
+      border-radius: 999px;
+      color: var(--text-muted);
+    }
+
+    .chip-btn.selected {
+      color: var(--gold-bright);
+      border-color: var(--gold-bright);
+      background: var(--gold-soft);
+    }
+
+    /* Feed Post Card */
+    .post-card {
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-top: 14px;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .post-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .post-avatar-square {
+      width: 44px;
+      aspect-ratio: 1 / 1;
+      border: 1.5px solid var(--gold-bright);
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .post-avatar-square img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .post-meta-name {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .post-meta-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: ui-monospace, monospace;
+    }
+
+    .post-body {
+      font-size: 14px;
+      color: var(--text-white);
+      margin-bottom: 10px;
+      white-space: pre-line;
+    }
+
+    .post-media-frame {
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 10px;
+      background: #07070a;
+    }
+
+    .post-media-frame img {
+      width: 100%;
+      max-height: 380px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      flex-wrap: wrap;
+    }
+
+    .act-btn {
+      padding: 6px 10px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-muted);
+    }
+
+    .act-btn.liked {
+      color: var(--gold-bright);
+      border-color: var(--gold-bright);
+      background: var(--gold-soft);
+    }
+
+    /* Right Rail Widgets */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .stat-box {
+      padding: 10px;
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+    }
+
+    .stat-val {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--gold-bright);
+    }
+
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .tier-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 7px;
       font-size: 12px;
     }
 
-
-    footer strong {
-      color: #d4af37;
-      font-weight: 600;
+    .tier-price {
+      color: var(--gold-bright);
+      font-weight: 700;
     }
 
-
-    /* =====================================================
-       MOBILE
-       ===================================================== */
-
-    @media (max-width: 600px) {
-
-      header {
-        padding: 11px 13px;
-      }
-
-      .brand {
-        font-size: 20px;
-      }
-
-      .header-button {
-        padding: 8px 10px;
-        font-size: 12px;
-      }
-
-      main {
-        padding:
-          18px 12px 80px;
-      }
-
-      .welcome-card {
-        padding: 20px;
-      }
-
-      .welcome-title {
-        font-size: 22px;
-      }
-
-      .actions-grid {
-        grid-template-columns: 1fr;
-      }
-
+    /* Bottom Mobile Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-h);
+      background: rgba(5, 5, 7, 0.95);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--gold-border);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      z-index: 50;
     }
 
+    .bnav-btn {
+      border: none;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .bnav-btn.active {
+      color: var(--gold-bright);
+      background: var(--gold-soft);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: calc(var(--nav-h) + 14px);
+      right: 16px;
+      max-width: 340px;
+      padding: 10px 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--gold-bright);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--text-white);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+      z-index: 90;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: 0.22s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
-
 </head>
-
-
 <body>
 
-
-  <!-- ===================================================
-       HEADER
-       =================================================== -->
-
-  <header>
-
-    <a
-      href="./index.html"
-      class="brand"
-    >
-      AYNA <span>BOOK</span>
-    </a>
-
-
-    <div class="header-actions">
-
-      <a
-        href="./login.html"
-        id="loginLink"
-        class="header-button"
-      >
-        Log In
+  <!-- TOP HEADER -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="./index.html" class="brand">
+        <div class="brand-mark">A</div>
+        <div>
+          <div class="brand-title gold-text">AYNA BOOK</div>
+          <div class="brand-sub" data-i18n="tagline">GLOBAL MULTIMEDIA SOCIAL</div>
+        </div>
       </a>
 
-      <a
-        href="./profile.html"
-        id="profileLink"
-        class="header-button"
-        style="display:none;"
-      >
-        Profile
-      </a>
-
-    </div>
-
-  </header>
-
-
-
-  <!-- ===================================================
-       MAIN
-       =================================================== -->
-
-  <main>
-
-
-    <section class="welcome-card">
-
-      <h1 class="welcome-title">
-        Welcome to <span>AYNA BOOK</span>
-      </h1>
-
-      <p class="welcome-subtitle">
-        Connect • Share • Create
-      </p>
-
-
-      <div
-        id="userInfo"
-        class="user-info"
-      >
-
-        <div
-          id="userName"
-          class="user-name"
-        >
-          AYNA BOOK User
-        </div>
-
-        <div
-          id="userEmail"
-          class="user-email"
-        >
-          —
-        </div>
-
+      <div class="search-box">
+        <input id="globalSearchInput" type="search" placeholder="Search people, AYNA ID, posts, AI, business, #tags..." aria-label="Global Search" />
+        <span class="search-icon">⌕</span>
       </div>
 
-    </section>
+      <div class="top-actions">
+        <button id="langToggleBtn" class="pill-btn" title="Switch Language">বাংলা / EN</button>
+        <a id="authActionLink" href="./login.html" class="pill-btn primary">Sign In</a>
+      </div>
+    </div>
+  </header>
 
+  <!-- SLOW-SCROLLING BREAKING NEWS TICKER -->
+  <div class="ticker-bar" role="region" aria-label="Breaking News Ticker">
+    <div class="ticker-label">⚡ BREAKING</div>
+    <div class="ticker-track">
+      <div class="ticker-marquee" id="breakingTickerText">
+        <span class="ticker-item"><span class="ticker-dot"></span>AYNA BOOK Global Network Live — Zero-Trust Security, Passkeys & Real-Time AI Translation Active</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>VVIP ($25/yr), VIP ($15/yr) & Business ($15/yr) Verification Workflows Open • Personal Account Free</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>Live Radio, Bangla TV, Quantum & Supercomputer Modules Connected in AYNA BOOK Hub</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>End-to-End Encrypted Messenger, WebRTC Voice/Video Calls & Smart Feed Ranking Ready</span>
+      </div>
+    </div>
+  </div>
 
+  <!-- MAIN 3-COLUMN WORKSPACE -->
+  <div class="app-shell">
 
-    <!-- =================================================
-         QUICK ACTIONS
-         ================================================= -->
-
-    <h2 class="section-title">
-      Quick Access
-    </h2>
-
-
-    <section class="actions-grid">
-
-
-      <a
-        href="./profile.html"
-        class="action-card"
-      >
-
-        <div class="action-icon">
-          👤
+    <!-- LEFT RAIL -->
+    <aside class="left-rail">
+      <div class="panel ayna-id-card">
+        <div class="panel-title">
+          <span>AYNA IDENTITY</span>
+          <span class="gold-badge" id="accountTierBadge">PERSONAL</span>
         </div>
-
-        <div class="action-title">
-          My Profile
+        <div class="square-gold-frame">
+          <img id="userFramePhoto" src="./icon-512.png" alt="AYNA BOOK Square Gold Frame Profile" />
         </div>
-
-        <div class="action-description">
-          আপনার AYNA BOOK প্রোফাইল দেখুন।
+        <div class="ayna-id-code" id="aynaIdDisplay">2026-----10000001</div>
+        <div class="barcode-box" aria-label="AYNA ID Barcode">
+          <div class="barcode-bars"></div>
+          <div class="barcode-caption" id="barcodeCaption">2026-----10000001</div>
         </div>
-
-      </a>
-
-
-
-      <a
-        href="./signup.html"
-        id="signupAction"
-        class="action-card"
-      >
-
-        <div class="action-icon">
-          ✨
+        <div style="margin-top:10px; font-size:12px; color:var(--text-muted);" id="userStatusText">
+          Guest Mode • <a href="./signup.html" style="color:var(--gold-bright); text-decoration:underline;">Create Free Account</a>
         </div>
+      </div>
 
-        <div class="action-title">
-          Create Account
+      <div class="panel">
+        <div class="panel-title">CORE MODULES</div>
+        <nav class="nav-list">
+          <a class="nav-link active" href="./index.html"><span class="left">🏠 Feed & Reels</span><span>●</span></a>
+          <a class="nav-link" href="./messages.html"><span class="left">💬 Messenger</span><span>E2EE</span></a>
+          <a class="nav-link" href="./audio-video-messaging.html"><span class="left">🎥 Voice & Video</span><span>WebRTC</span></a>
+          <a class="nav-link" href="./profile.html"><span class="left">🪪 Profile & ID</span><span>›</span></a>
+          <a class="nav-link" href="./radio-tv.html"><span class="left">📺 Global Radio & TV</span><span>LIVE</span></a>
+          <a class="nav-link" href="./bangla-radio-tv.html"><span class="left">📻 Bangla Radio & TV</span><span>BD</span></a>
+          <a class="nav-link" href="./quantum.html"><span class="left">⚛️ Quantum Lab</span><span>AI</span></a>
+          <a class="nav-link" href="./supercomputer.html"><span class="left">🖥️ Supercomputer</span><span>HPC</span></a>
+          <a class="nav-link" href="./radar-compass.html"><span class="left">🧭 Radar & Compass</span><span>GPS</span></a>
+          <a class="nav-link" href="./currency-exchange.html"><span class="left">💱 Currency & FX</span><span>FX</span></a>
+          <a class="nav-link" href="./privacy-settings.html"><span class="left">🛡️ Privacy & Security</span><span>2FA</span></a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- CENTER FEED -->
+    <main class="center-feed">
+      <!-- Feed Filter Tabs -->
+      <div class="feed-tabs" id="feedTabs">
+        <button class="tab-btn active" data-feed="smart">Smart Feed</button>
+        <button class="tab-btn" data-feed="following">Following</button>
+        <button class="tab-btn" data-feed="friends">Friends</button>
+        <button class="tab-btn" data-feed="business">Business</button>
+        <button class="tab-btn" data-feed="trending">Trending</button>
+        <button class="tab-btn" data-feed="reels">Reels & Live</button>
+      </div>
+
+      <!-- 24h Stories Row -->
+      <section class="panel" aria-label="24-Hour Stories">
+        <div class="panel-title">
+          <span>24H STORIES & REELS</span>
+          <span style="font-size:11px; color:var(--text-muted);">Close Friends • Public</span>
         </div>
-
-        <div class="action-description">
-          নতুন AYNA BOOK account তৈরি করুন।
+        <div class="stories-row" id="storiesRow">
+          <div class="story-tile" onclick="notify('Story Composer: Add Photo, Video, Audio or Poll')">
+            <div class="story-avatar"><img src="./icon-192.png" alt="Add Story" /></div>
+            <div class="story-name">+ Add Story</div>
+          </div>
+          <div class="story-tile" onclick="notify('Viewing VVIP Story • 2026-----10000001')">
+            <div class="story-avatar"><img src="./icon-512.png" alt="VVIP Story" /></div>
+            <div class="story-name">VVIP Desk</div>
+          </div>
+          <div class="story-tile" onclick="notify('Live Studio Stream Active')">
+            <div class="story-avatar"><img src="./icon-192.png" alt="Live Studio" /></div>
+            <div class="story-name">Live Studio</div>
+          </div>
+          <div class="story-tile" onclick="notify('AI Translation & Voice Reel')">
+            <div class="story-avatar"><img src="./icon-512.png" alt="AI Reel" /></div>
+            <div class="story-name">AI Reels</div>
+          </div>
         </div>
+      </section>
 
-      </a>
-
-
-
-      <a
-        href="./login.html"
-        id="loginAction"
-        class="action-card"
-      >
-
-        <div class="action-icon">
-          🔐
+      <!-- Post Composer -->
+      <section class="panel composer" aria-label="Create Post">
+        <div class="panel-title">
+          <span>CREATE MULTIMEDIA POST</span>
+          <span style="font-size:11px; color:var(--gold);">AI Assistant & Auto-Translate Ready</span>
         </div>
-
-        <div class="action-title">
-          Log In
+        <textarea id="postInput" placeholder="Share a post, photo, video, audio, poll, or ask AYNA AI..."></textarea>
+        <div class="composer-tools">
+          <div class="tool-chips" id="postFormatChips">
+            <button type="button" class="chip-btn selected" data-type="Text">Text</button>
+            <button type="button" class="chip-btn" data-type="Photo">Photo</button>
+            <button type="button" class="chip-btn" data-type="Video">Video</button>
+            <button type="button" class="chip-btn" data-type="Audio">Audio</button>
+            <button type="button" class="chip-btn" data-type="Poll">Poll</button>
+            <button type="button" class="chip-btn" data-type="Live">Live</button>
+          </div>
+          <button id="publishPostBtn" type="button" class="pill-btn primary">Publish</button>
         </div>
+      </section>
 
-        <div class="action-description">
-          আপনার account-এ প্রবেশ করুন।
+      <!-- Feed Stream -->
+      <section id="feedStream" aria-live="polite"></section>
+    </main>
+
+    <!-- RIGHT RAIL -->
+    <aside class="right-rail">
+      <div class="panel">
+        <div class="panel-title">SYSTEM & AI TELEMETRY</div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-val" id="authStateLabel">READY</div>
+            <div class="stat-lbl">Firebase Auth</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="dbStateLabel">FIRESTORE</div>
+            <div class="stat-lbl">Cloud DB</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val">E2EE + 2FA</div>
+            <div class="stat-lbl">Security Shield</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val">EN / বাংলা</div>
+            <div class="stat-lbl">AI Translate</div>
+          </div>
         </div>
+      </div>
 
-      </a>
-
-
-
-      <a
-        href="./forgot-password.html"
-        class="action-card"
-      >
-
-        <div class="action-icon">
-          🔑
+      <div class="panel">
+        <div class="panel-title">
+          <span>ACCOUNTS & TIERS</span>
+          <a href="./payment.html" style="font-size:11px; color:var(--gold-bright);">Upgrade ›</a>
         </div>
-
-        <div class="action-title">
-          Reset Password
+        <div class="tier-row">
+          <span>Personal Account</span>
+          <span class="tier-price">Free</span>
         </div>
-
-        <div class="action-description">
-          Password ভুলে গেলে নতুন password সেট করুন।
+        <div class="tier-row">
+          <span>Business Account</span>
+          <span class="tier-price">$15/year</span>
         </div>
+        <div class="tier-row">
+          <span>VIP Account</span>
+          <span class="tier-price">$15/year</span>
+        </div>
+        <div class="tier-row" style="margin-bottom:0;">
+          <span>VVIP Account</span>
+          <span class="tier-price">$25/year</span>
+        </div>
+      </div>
 
-      </a>
+      <div class="panel">
+        <div class="panel-title">QUICK DIRECTORIES & TOOLS</div>
+        <div class="nav-list">
+          <a class="nav-link" href="./bd-directory.html"><span class="left">🇧🇩 BD Directory</span><span>›</span></a>
+          <a class="nav-link" href="./business-directory.html"><span class="left">🏢 Business Directory</span><span>›</span></a>
+          <a class="nav-link" href="./world-doctors.html"><span class="left">🩺 World Doctors</span><span>›</span></a>
+          <a class="nav-link" href="./world-leaders.html"><span class="left">🌐 World Leaders</span><span>›</span></a>
+          <a class="nav-link" href="./gps.html"><span class="left">📍 Live GPS & Alerts</span><span>›</span></a>
+          <a class="nav-link" href="./security.html"><span class="left">🔐 Security & Sessions</span><span>›</span></a>
+        </div>
+      </div>
+    </aside>
+  </div>
 
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav" aria-label="Primary Navigation">
+    <button type="button" class="bnav-btn active" onclick="scrollToTop()">
+      <span>🏠</span>
+      <span>Feed</span>
+    </button>
+    <a class="bnav-btn" href="./messages.html">
+      <span>💬</span>
+      <span>Chat</span>
+    </a>
+    <button type="button" class="bnav-btn" onclick="focusComposer()">
+      <span>✦</span>
+      <span>Create</span>
+    </button>
+    <a class="bnav-btn" href="./radio-tv.html">
+      <span>📺</span>
+      <span>Media</span>
+    </a>
+    <a class="bnav-btn" href="./profile.html">
+      <span>🪪</span>
+      <span>ID</span>
+    </a>
+  </nav>
 
-    </section>
+  <!-- TOAST NOTIFICATION -->
+  <div id="aynaToast" class="toast" role="status" aria-live="polite"></div>
 
-
-
-    <!-- =================================================
-         LOGIN CARD
-         ================================================= -->
-
-    <section
-      id="loginCard"
-      class="login-card"
-    >
-
-      <p>
-        আপনার AYNA BOOK account ব্যবহার করতে
-        Login করুন অথবা নতুন account তৈরি করুন।
-      </p>
-
-      <a
-        href="./login.html"
-        class="gold-button"
-      >
-        Log In
-      </a>
-
-    </section>
-
-
-
-    <!-- =================================================
-         STATUS
-         ================================================= -->
-
-    <div id="statusMessage"></div>
-
-
-  </main>
-
-
-
-  <!-- ===================================================
-       FOOTER
-       =================================================== -->
-
-  <footer>
-
-    <strong>AYNA BOOK</strong>
-
-    <br>
-
-    Connect • Share • Create
-
-  </footer>
-
-
-
-  <!-- ===================================================
-       HOME CONTROLLER
-       =================================================== -->
-
+  <!-- FIREBASE INIT & LIVE SOCIAL FEED ENGINE -->
   <script type="module">
-
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import {
-      watchAuthState
-    } from "./auth.js";
+      getFirestore,
+      collection,
+      addDoc,
+      query,
+      orderBy,
+      limit,
+      onSnapshot,
+      doc,
+      updateDoc,
+      increment,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+    // firebase-init.js configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIW... - তোমারটা",
+      authDomain: "ayna-book.firebaseapp.com",
+      databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "ayna-book",
+      storageBucket: "ayna-book.firebasestorage.app",
+      messagingSenderId: "805601138500",
+      appId: "1:805601138500:web:47acdc90cb0cb521626911",
+      measurementId: "G-RKHHSKNB4B"
+    };
 
-    const loginLink =
-      document.getElementById("loginLink");
+    const app = initializeApp(firebaseConfig);
+    export const auth = getAuth(app);
+    export const db = getFirestore(app);
 
-    const profileLink =
-      document.getElementById("profileLink");
-
-    const loginAction =
-      document.getElementById("loginAction");
-
-    const signupAction =
-      document.getElementById("signupAction");
-
-    const loginCard =
-      document.getElementById("loginCard");
-
-    const userInfo =
-      document.getElementById("userInfo");
-
-    const userName =
-      document.getElementById("userName");
-
-    const userEmail =
-      document.getElementById("userEmail");
-
-
-    watchAuthState((user) => {
-
-      if (user) {
-
-        /* ===============================================
-           LOGGED IN
-           =============================================== */
-
-        if (loginLink) {
-          loginLink.style.display = "none";
-        }
-
-        if (profileLink) {
-          profileLink.style.display = "inline-block";
-        }
-
-        if (loginAction) {
-          loginAction.style.display = "none";
-        }
-
-        if (signupAction) {
-          signupAction.style.display = "none";
-        }
-
-        if (loginCard) {
-          loginCard.style.display = "none";
-        }
-
-        if (userInfo) {
-          userInfo.style.display = "block";
-        }
-
-        if (userName) {
-          userName.textContent =
-            user.displayName ||
-            "AYNA BOOK User";
-        }
-
-        if (userEmail) {
-          userEmail.textContent =
-            user.email ||
-            "";
-        }
-
-      } else {
-
-        /* ===============================================
-           LOGGED OUT
-           =============================================== */
-
-        if (loginLink) {
-          loginLink.style.display = "inline-block";
-        }
-
-        if (profileLink) {
-          profileLink.style.display = "none";
-        }
-
-        if (loginAction) {
-          loginAction.style.display = "block";
-        }
-
-        if (signupAction) {
-          signupAction.style.display = "block";
-        }
-
-        if (loginCard) {
-          loginCard.style.display = "block";
-        }
-
-        if (userInfo) {
-          userInfo.style.display = "none";
-        }
-
+    const DEMO_POSTS = [
+      {
+        id: "demo-1",
+        authorName: "AYNA BOOK Official",
+        handle: "@aynabook",
+        aynaId: "2026-----10000001",
+        tier: "VVIP",
+        category: "smart",
+        type: "Photo",
+        content: "Welcome to AYNA BOOK — Global Multimedia Social Network. Square golden frames, AYNA ID barcodes, real-time AI translation, E2EE chat & WebRTC calls are unified in one black-and-gold platform.",
+        image: "./icon-512.png",
+        likes: 128,
+        comments: 24,
+        shares: 19,
+        timeLabel: "Just now"
+      },
+      {
+        id: "demo-2",
+        authorName: "AYNA AI & Quantum Desk",
+        handle: "@ayna-ai",
+        aynaId: "2026-----10000002",
+        tier: "BUSINESS",
+        category: "business",
+        type: "Video",
+        content: "Smart Feed Ranking, RAG Semantic Search, Multi-Currency FX & Global Directories are synced with Cloud Firestore and Firebase Auth.",
+        image: "./icon-192.png",
+        likes: 86,
+        comments: 11,
+        shares: 9,
+        timeLabel: "14m ago"
       }
+    ];
 
-    });
+    let currentUser = null;
+    let selectedPostType = "Text";
+    let activeFeedFilter = "smart";
+    let postsCache = [...DEMO_POSTS];
 
-  </script>
+    const feedStreamEl = document.getElementById("feedStream");
+    const postInputEl = document.getElementById("postInput");
+    const publishPostBtn = document.getElementById("publishPostBtn");
+    const authActionLink = document.getElementById("authActionLink");
+    const authStateLabel = document.getElementById("authStateLabel");
+    const aynaIdDisplay = document.getElementById("aynaIdDisplay");
+    const barcodeCaption = document.getElementById("barcodeCaption");
+    const userStatusText = document.getElementById("userStatusText");
 
+    window.notify = function(msg) {
+      const toast = document.getElementById("aynaToast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(window.__aynaToastTimer);
+      window.__aynaToastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+    };
 
+    window.scrollToTop = function() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
-  <!-- ===================================================
-       SERVICE WORKER
-       =================================================== -->
+    window.focusComposer = function() {
+      postInputEl.focus();
+      postInputEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
 
-  <script>
-
-    if ("serviceWorker" in navigator) {
-
-      window.addEventListener(
-        "load",
-        () => {
-
-          navigator.serviceWorker
-            .register("./sw.js")
-            .then((registration) => {
-
-              console.log(
-                "AYNA BOOK Service Worker:",
-                registration.scope
-              );
-
-            })
-            .catch((error) => {
-
-              console.error(
-                "Service Worker registration failed:",
-                error
-              );
-
-            });
-
-        }
-      );
-
+    function formatAynaId(uid) {
+      if (!uid) return "2026-----10000001";
+      let hash = 10000001;
+      for (let i = 0; i < uid.length; i++) {
+        hash = (hash * 31 + uid.charCodeAt(i)) % 89999999 + 10000000;
+      }
+      return `2026-----${hash}`;
     }
 
+    function escapeHtml(str = "") {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderPosts() {
+      const q = (document.getElementById("globalSearchInput").value || "").trim().toLowerCase();
+
+      const filtered = postsCache.filter((p) => {
+        const matchesTab =
+          activeFeedFilter === "smart" ||
+          activeFeedFilter === "trending" ||
+          (activeFeedFilter === "reels" && (p.type === "Video" || p.type === "Live")) ||
+          p.category === activeFeedFilter;
+
+        const matchesQuery =
+          !q ||
+          (p.content || "").toLowerCase().includes(q) ||
+          (p.authorName || "").toLowerCase().includes(q) ||
+          (p.aynaId || "").toLowerCase().includes(q);
+
+        return matchesTab && matchesQuery;
+      });
+
+      if (!filtered.length) {
+        feedStreamEl.innerHTML = `
+          <div class="panel" style="text-align:center; margin-top:14px;">
+            <p style="color:var(--text-muted); font-size:13px;">No posts match your current filter or search query.</p>
+          </div>`;
+        return;
+      }
+
+      feedStreamEl.innerHTML = filtered
+        .map(
+          (post) => `
+          <article class="post-card" data-id="${escapeHtml(post.id)}">
+            <div class="post-header">
+              <div class="post-author">
+                <div class="post-avatar-square">
+                  <img src="${escapeHtml(post.image || "./icon-192.png")}" alt="${escapeHtml(post.authorName)}" />
+                </div>
+                <div>
+                  <div class="post-meta-name">
+                    <span>${escapeHtml(post.authorName)}</span>
+                    <span class="gold-badge">${escapeHtml(post.tier || "PERSONAL")}</span>
+                    <span class="gold-badge">${escapeHtml(post.type || "Text")}</span>
+                  </div>
+                  <div class="post-meta-sub">${escapeHtml(post.handle || "@user")} • ID: ${escapeHtml(post.aynaId || "2026-----10000001")} • ${escapeHtml(post.timeLabel || "Live")}</div>
+                </div>
+              </div>
+              <button type="button" class="chip-btn" onclick="notify('Translated via AYNA AI (EN ↔ বাংলা)')">🌐 Translate</button>
+            </div>
+
+            <div class="post-body">${escapeHtml(post.content)}</div>
+
+            ${
+              post.image
+                ? `<div class="post-media-frame"><img src="${escapeHtml(post.image)}" alt="Post Media" /></div>`
+                : ""
+            }
+
+            <div class="post-actions">
+              <button type="button" class="act-btn" onclick="handleLike('${escapeHtml(post.id)}', this)">
+                ★ Like (<span class="like-count">${Number(post.likes || 0)}</span>)
+              </button>
+              <button type="button" class="act-btn" onclick="notify('Comments & Replies drawer opened')">
+                💬 Comment (${Number(post.comments || 0)})
+              </button>
+              <button type="button" class="act-btn" onclick="notify('Reposted & Bookmarked to AYNA Vault')">
+                ↻ Repost (${Number(post.shares || 0)})
+              </button>
+              <button type="button" class="act-btn" onclick="notify('Post saved to bookmarks')">
+                🔖 Save
+              </button>
+            </div>
+          </article>`
+        )
+        .join("");
+    }
+
+    window.handleLike = async function(postId, btnEl) {
+      const countSpan = btnEl.querySelector(".like-count");
+      const currentCount = parseInt(countSpan.textContent, 10) || 0;
+      countSpan.textContent = currentCount + 1;
+      btnEl.classList.add("liked");
+
+      if (!String(postId).startsWith("demo-")) {
+        try {
+          await updateDoc(doc(db, "posts", postId), { likes: increment(1) });
+        } catch (err) {
+          console.warn("Firestore like update fallback:", err.message);
+        }
+      }
+    };
+
+    // Format chip selection
+    document.querySelectorAll("#postFormatChips .chip-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#postFormatChips .chip-btn").forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        selectedPostType = btn.dataset.type;
+      });
+    });
+
+    // Feed tab filter
+    document.querySelectorAll("#feedTabs .tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#feedTabs .tab-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeFeedFilter = btn.dataset.feed;
+        renderPosts();
+      });
+    });
+
+    document.getElementById("globalSearchInput").addEventListener("input", renderPosts);
+
+    // Language toggle
+    document.getElementById("langToggleBtn").addEventListener("click", () => {
+      const htmlEl = document.documentElement;
+      const nextLang = htmlEl.dataset.lang === "en" ? "bn" : "en";
+      htmlEl.dataset.lang = nextLang;
+      notify(nextLang === "bn" ? "ভাষা বাংলা মোডে সুইচ করা হয়েছে" : "Language switched to English");
+    });
+
+    // Publish post
+    publishPostBtn.addEventListener("click", async () => {
+      const text = postInputEl.value.trim();
+      if (!text) {
+        notify("Please enter content before publishing.");
+        return;
+      }
+
+      const authorName = currentUser?.displayName || (currentUser?.email ? currentUser.email.split("@")[0] : "AYNA Member");
+      const aynaId = formatAynaId(currentUser?.uid);
+
+      const newPost = {
+        authorName,
+        handle: currentUser?.email ? `@${currentUser.email.split("@")[0]}` : "@aynamember",
+        aynaId,
+        tier: "PERSONAL",
+        category: selectedPostType === "Live" || selectedPostType === "Video" ? "reels" : "smart",
+        type: selectedPostType,
+        content: text,
+        image: selectedPostType === "Photo" || selectedPostType === "Video" ? "./icon-512.png" : "",
+        likes: 1,
+        comments: 0,
+        shares: 0,
+        timeLabel: "Just now",
+        uid: currentUser?.uid || "guest",
+        createdAt: serverTimestamp()
+      };
+
+      postInputEl.value = "";
+
+      try {
+        await addDoc(collection(db, "posts"), newPost);
+        notify("Published to AYNA BOOK Cloud Feed!");
+      } catch (err) {
+        postsCache = [{ ...newPost, id: `local-${Date.now()}` }, ...postsCache];
+        renderPosts();
+        notify("Published locally (check Firestore rules/auth for cloud sync).");
+      }
+    });
+
+    // Real-time Firestore feed listener
+    try {
+      const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(25));
+      onSnapshot(
+        q,
+        (snapshot) => {
+          const livePosts = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+          postsCache = [...livePosts, ...DEMO_POSTS];
+          renderPosts();
+        },
+        () => {
+          renderPosts();
+        }
+      );
+    } catch {
+      renderPosts();
+    }
+
+    // Auth state observer
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        const idStr = formatAynaId(user.uid);
+        aynaIdDisplay.textContent = idStr;
+        barcodeCaption.textContent = idStr;
+        authStateLabel.textContent = "ACTIVE";
+        userStatusText.innerHTML = `Signed in as <strong>${escapeHtml(user.email || user.uid)}</strong>`;
+        authActionLink.textContent = "Sign Out";
+        authActionLink.href = "#logout";
+        authActionLink.onclick = async (e) => {
+          e.preventDefault();
+          await signOut(auth);
+          notify("Signed out securely.");
+        };
+      } else {
+        aynaIdDisplay.textContent = "2026-----10000001";
+        barcodeCaption.textContent = "2026-----10000001";
+        authStateLabel.textContent = "GUEST";
+        userStatusText.innerHTML = `Guest Mode • <a href="./signup.html" style="color:var(--gold-bright); text-decoration:underline;">Create Free Account</a>`;
+        authActionLink.textContent = "Sign In";
+        authActionLink.href = "./login.html";
+        authActionLink.onclick = null;
+      }
+    });
+
+    renderPosts();
   </script>
-
-
 </body>
-
 </html>
