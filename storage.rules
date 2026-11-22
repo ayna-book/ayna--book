@@ -1,7 +1,7 @@
-
 rules_version = '2';
 
 service firebase.storage {
+
   match /b/{bucket}/o {
 
     function signedIn() {
@@ -9,27 +9,46 @@ service firebase.storage {
     }
 
     function isOwner(uid) {
-      return signedIn() && request.auth.uid == uid;
+      return signedIn()
+        && request.auth.uid == uid;
     }
+
+
+    // =======================================================
+    // PROFILE PHOTOS
+    // =======================================================
 
     match /profilePhotos/{uid}/{fileName} {
 
-      // Private profile photo access.
+      // Only owner can read.
       allow read: if isOwner(uid);
 
-      // Upload only approved image formats, up to 5 MB.
+
+      // Only owner can upload/update approved profile image.
       allow create, update: if isOwner(uid)
-        && fileName.matches('^profile\\.(jpg|png|webp)$')
+
+        && fileName.matches(
+          '^profile\\.(jpg|png|webp)$'
+        )
+
         && request.resource.size > 0
+
         && request.resource.size <= 5 * 1024 * 1024
+
         && request.resource.contentType.matches(
           'image/(jpeg|png|webp)'
         );
 
+
+      // Only owner can delete own profile image.
       allow delete: if isOwner(uid);
     }
 
-    // Deny every other Storage path.
+
+    // =======================================================
+    // DEFAULT DENY
+    // =======================================================
+
     match /{allPaths=**} {
       allow read, write: if false;
     }
