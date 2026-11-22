@@ -1,320 +1,72 @@
+
 rules_version = '2';
 
 service cloud.firestore {
-
   match /databases/{database}/documents {
 
-
-    // =====================================================
-    // BASIC SECURITY FUNCTIONS
-    // =====================================================
-
     function signedIn() {
-
       return request.auth != null;
-
     }
 
-
-    function isOwner(userId) {
-
-      return signedIn()
-        && request.auth.uid == userId;
-
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
     }
 
+    match /users/{uid} {
 
-    function isAdmin() {
+      // Users can read only their own account.
+      allow read: if isOwner(uid);
 
-      return signedIn()
-        && request.auth.token.admin == true;
+      // Registration: Personal + Free only.
+      allow create: if isOwner(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.accountType == "personal"
+        && request.resource.data.plan == "free"
+        && request.resource.data.accountStatus == "pending_email_verification"
+        && request.resource.data.emailVerified == false
+        && request.resource.data.fullName is string
+        && request.resource.data.fullName.size() >= 2
+        && request.resource.data.fullName.size() <= 80
+        && request.resource.data.phone is string
+        && request.resource.data.photoURL is string
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp
+        && request.resource.data.keys().hasOnly([
+          "uid",
+          "fullName",
+          "email",
+          "phone",
+          "photoURL",
+          "accountType",
+          "plan",
+          "accountStatus",
+          "emailVerified",
+          "createdAt",
+          "updatedAt"
+        ]);
 
+      // Email verification: Firebase token must confirm verification.
+      allow update: if isOwner(uid)
+        && request.auth.token.email_verified == true
+        && request.resource.data.diff(resource.data)
+             .affectedKeys()
+             .hasOnly([
+               "emailVerified",
+               "accountStatus",
+               "updatedAt"
+             ])
+        && request.resource.data.emailVerified == true
+        && request.resource.data.accountStatus == "active"
+        && request.resource.data.updatedAt is timestamp;
+
+      // Account deletion must use a trusted server-side process.
+      allow delete: if false;
     }
 
-
-    // =====================================================
-    // USERS
-    // =====================================================
-
-    match /users/{userId} {
-
-
-      // ---------------------------------------------------
-      // CREATE
-      // ---------------------------------------------------
-
-      allow create:
-        if isOwner(userId);
-
-
-      // ---------------------------------------------------
-      // READ
-      // Owner OR Admin
-      // ---------------------------------------------------
-
-      allow read:
-        if isOwner(userId)
-        || isAdmin();
-
-
-      // ---------------------------------------------------
-      // UPDATE
-      //
-      // Normal user:
-      // accountStatus cannot be changed.
-      //
-      // Admin:
-      // allowed.
-      // ---------------------------------------------------
-
-      allow update:
-        if isAdmin()
-        ||
-        (
-          isOwner(userId)
-
-          && request.resource.data.accountStatus
-             == resource.data.accountStatus
-
-          && request.resource.data.uid
-             == resource.data.uid
-
-          && request.resource.data.email
-             == resource.data.email
-
-          && request.resource.data.accountType
-             == resource.data.accountType
-
-          && request.resource.data.paymentStatus
-             == resource.data.paymentStatus
-        );
-
-
-      // ---------------------------------------------------
-      // DELETE
-      // ---------------------------------------------------
-
-      allow delete:
-        if isOwner(userId);
-
-
-      // ===================================================
-      // PAYMENT REQUESTS
-      // ===================================================
-
-      match /paymentRequests/{paymentId} {
-
-
-        // -------------------------------------------------
-        // USER CREATES PAYMENT REQUEST
-        // -------------------------------------------------
-
-        allow create:
-
-          if isOwner(userId)
-
-          && request.resource.data.uid
-             == request.auth.uid
-
-          && request.resource.data.accountType
-             in [
-               "business",
-               "vip",
-               "vvip"
-             ]
-
-          && request.resource.data.paymentRequired
-             == true
-
-          && request.resource.data.status
-             == "pending"
-
-          && request.resource.data.accountStatus
-             == "pending_payment"
-
-          && request.resource.data.transactionId
-             is string
-
-          && request.resource.data.transactionId.size()
-             >= 3
-
-          && request.resource.data.transactionId.size()
-             <= 100
-
-          && request.resource.data.amount
-             is string
-
-          && request.resource.data.amount.size()
-             >= 1
-
-          && request.resource.data.amount.size()
-             <= 50
-
-          && request.resource.data.paymentMethod
-             in [
-               "bkash",
-               "nagad",
-               "rocket",
-               "upay",
-               "paypal",
-               "payoneer"
-             ];
-
-
-        // -------------------------------------------------
-        // USER OR ADMIN READ
-        // -------------------------------------------------
-
-        allow read:
-          if isOwner(userId)
-          || isAdmin();
-
-
-        // -------------------------------------------------
-        // ADMIN UPDATE ONLY
-        //
-        // This will later be used for:
-        //
-        // approved
-        // rejected
-        // verified
-        // -------------------------------------------------
-
-        allow update:
-          if isAdmin();
-
-
-        // -------------------------------------------------
-        // PAYMENT REQUEST DELETE
-        //
-        // Disabled for security.
-        // -------------------------------------------------
-
-        allow delete:
-          if false;
-
-      }
-
-    }
-
-
-    // =====================================================
-    // COLLECTION GROUP PAYMENT REQUESTS
-    //
-    // Required by admin-payment.js because it uses:
-    //
-    // collectionGroup(db, "paymentRequests")
-    //
-    // =====================================================
-
-    match /{parentPath=**}/paymentRequests/{paymentId} {
-
-      allow read:
-        if isAdmin();
-
-      allow update:
-        if isAdmin();
-
-    }
-
-
-    // =====================================================
-    // POSTS
-    // =====================================================
-
-    match /posts/{postId} {
-
-
-      allow read:
-        if true;
-
-
-      allow create:
-        if signedIn()
-
-        && request.resource.data.uid
-           == request.auth.uid
-
-        && request.resource.data.text
-           is string
-
-        && request.resource.data.text.size()
-           <= 5000;
-
-
-      allow update:
-        if signedIn()
-
-        && resource.data.uid
-           == request.auth.uid
-
-        && request.resource.data.uid
-           == resource.data.uid
-
-        && request.resource.data.text
-           is string
-
-        && request.resource.data.text.size()
-           <= 5000;
-
-
-      allow delete:
-        if signedIn()
-
-        && resource.data.uid
-           == request.auth.uid;
-
-    }
-
-
-    // =====================================================
-    // CHAT / MESSAGES
-    // =====================================================
-
-    match /rooms/{roomId}/messages/{messageId} {
-
-
-      allow read:
-        if signedIn();
-
-
-      allow create:
-        if signedIn()
-
-        && request.resource.data.uid
-           == request.auth.uid
-
-        && request.resource.data.text
-           is string
-
-        && request.resource.data.text.size()
-           > 0
-
-        && request.resource.data.text.size()
-           <= 2000;
-
-
-      allow update:
-        if false;
-
-
-      allow delete:
-        if false;
-
-    }
-
-
-    // =====================================================
-    // DEFAULT DENY
-    // =====================================================
-
+    // Deny access to all other documents by default.
     match /{document=**} {
-
-      allow read, write:
-        if false;
-
+      allow read, write: if false;
     }
-
   }
-
 }
