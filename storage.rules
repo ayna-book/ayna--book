@@ -2,77 +2,36 @@
 rules_version = '2';
 
 service firebase.storage {
-
   match /b/{bucket}/o {
-
-    // =====================================================
-    // HELPER FUNCTIONS
-    // =====================================================
 
     function signedIn() {
       return request.auth != null;
     }
 
     function isOwner(uid) {
-      return signedIn()
-        && request.auth.uid == uid;
+      return signedIn() && request.auth.uid == uid;
     }
 
-    function validImage(maxSize) {
-      return request.resource != null
-        && request.resource.size <= maxSize
+    match /profilePhotos/{uid}/{fileName} {
+
+      // Private profile photo access.
+      allow read: if isOwner(uid);
+
+      // Upload only approved image formats, up to 5 MB.
+      allow create, update: if isOwner(uid)
+        && fileName.matches('^profile\\.(jpg|png|webp)$')
+        && request.resource.size > 0
+        && request.resource.size <= 5 * 1024 * 1024
         && request.resource.contentType.matches(
           'image/(jpeg|png|webp)'
         );
+
+      allow delete: if isOwner(uid);
     }
 
-    // =====================================================
-    // USER PROFILE PHOTOS
-    // Path: users/{uid}/profile/{fileName}
-    // =====================================================
-
-    match /users/{uid}/profile/{fileName} {
-
-      allow write: if isOwner(uid)
-        && validImage(5 * 1024 * 1024);
-
-      allow read: if signedIn();
-    }
-
-    // =====================================================
-    // USER POST IMAGES
-    // Path: users/{uid}/posts/{fileName}
-    // =====================================================
-
-    match /users/{uid}/posts/{fileName} {
-
-      allow write: if isOwner(uid)
-        && validImage(10 * 1024 * 1024);
-
-      allow read: if signedIn();
-    }
-
-    // =====================================================
-    // USER FILES
-    // =====================================================
-
-    match /users/{uid}/files/{fileName} {
-
-      allow write: if isOwner(uid)
-        && request.resource != null
-        && request.resource.size <= 10 * 1024 * 1024;
-
-      allow read: if isOwner(uid);
-    }
-
-    // =====================================================
-    // DEFAULT DENY
-    // =====================================================
-
+    // Deny every other Storage path.
     match /{allPaths=**} {
       allow read, write: if false;
     }
-
   }
-
 }
