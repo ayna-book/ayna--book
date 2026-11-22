@@ -2,34 +2,28 @@
 // AYNA BOOK
 // EMAIL VERIFICATION CONTROLLER
 // File: verify-email.js
-// Firebase SDK: 13.4.0
 // =========================================================
 
 import {
-  auth,
-  db
-} from "./firebase-init.js";
+  auth
+} from "./firebase.js";
 
 import {
-  reload,
-  sendEmailVerification,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
-import {
-  doc,
-  updateDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+  watchAuthState,
+  checkEmailVerification,
+  resendVerificationEmail,
+  activateVerifiedAccount,
+  logoutUser,
+  getAuthErrorMessage
+} from "./auth.js";
 
 
 // =========================================================
-// ELEMENTS
+// DOM
 // =========================================================
 
-const emailAddress =
-  document.getElementById("emailAddress");
+const emailElement =
+  document.getElementById("email");
 
 const checkButton =
   document.getElementById("checkButton");
@@ -37,19 +31,34 @@ const checkButton =
 const resendButton =
   document.getElementById("resendButton");
 
-const loginButton =
-  document.getElementById("loginButton");
+const logoutButton =
+  document.getElementById("logoutButton");
 
-const statusMessage =
-  document.getElementById("statusMessage");
+const statusElement =
+  document.getElementById("status");
 
 
 // =========================================================
-// MESSAGE
+// STATUS
 // =========================================================
 
-function showMessage(message) {
-  statusMessage.textContent = message;
+function setStatus(
+  message
+) {
+  if (statusElement) {
+    statusElement.textContent =
+      message;
+  }
+}
+
+
+// =========================================================
+// REDIRECT
+// =========================================================
+
+function goToProfile() {
+  window.location.href =
+    "./profile.html";
 }
 
 
@@ -57,236 +66,189 @@ function showMessage(message) {
 // AUTH STATE
 // =========================================================
 
-onAuthStateChanged(auth, async (user) => {
+watchAuthState(
+  async (user) => {
 
-  if (!user) {
-    emailAddress.textContent = "No account is currently signed in.";
-
-    showMessage(
-      "Please create an account first, or return to Login."
-    );
-
-    checkButton.disabled = true;
-    resendButton.disabled = true;
-
-    return;
-  }
-
-  emailAddress.textContent =
-    user.email || "Gmail account";
-
-  try {
-    await reload(user);
-
-    if (user.emailVerified) {
-      showMessage(
-        "Your Gmail is already verified. Activating your account..."
+    if (!user) {
+      setStatus(
+        "আপনি Login করা নেই।"
       );
-
-      await activateAccount();
 
       return;
     }
 
-    showMessage(
-      "Open Gmail, verify your email, then press the button above."
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Verification page error:",
-      error
-    );
-
-    showMessage(
-      error?.message ||
-      "Unable to load verification status."
-    );
-  }
-
-});
-
-
-// =========================================================
-// ACTIVATE VERIFIED ACCOUNT
-// =========================================================
-
-async function activateAccount() {
-
-  const user = auth.currentUser;
-
-  if (!user) {
-    throw new Error(
-      "No authenticated account found."
-    );
-  }
-
-  await reload(user);
-
-  if (!user.emailVerified) {
-    throw new Error(
-      "Gmail verification is not complete yet."
-    );
-  }
-
-  // Refresh Firebase token so email_verified
-  // claim becomes available to Firestore Rules.
-  await user.getIdToken(true);
-
-  await updateDoc(
-    doc(db, "users", user.uid),
-    {
-      emailVerified: true,
-      accountStatus: "active",
-      updatedAt: serverTimestamp()
+    if (emailElement) {
+      emailElement.textContent =
+        user.email || "";
     }
-  );
-
-  showMessage(
-    "Gmail verified successfully. Your account is now active."
-  );
-
-  checkButton.disabled = true;
-  resendButton.disabled = true;
-
-  setTimeout(() => {
-    window.location.href = "./profile.html";
-  }, 1200);
-}
-
-
-// =========================================================
-// CHECK VERIFICATION
-// =========================================================
-
-checkButton.addEventListener(
-  "click",
-  async () => {
-
-    checkButton.disabled = true;
-    showMessage(
-      "Checking your Gmail verification..."
-    );
 
     try {
 
-      const user = auth.currentUser;
+      const verified =
+        await checkEmailVerification();
 
-      if (!user) {
-        throw new Error(
-          "No authenticated account found."
-        );
-      }
+      if (verified) {
 
-      await reload(user);
+        await activateVerifiedAccount();
 
-      if (!user.emailVerified) {
-
-        showMessage(
-          "Gmail is not verified yet. Open the verification email and click its link."
+        setStatus(
+          "Email verification সফল হয়েছে।"
         );
 
-        checkButton.disabled = false;
-        return;
-      }
+        setTimeout(
+          goToProfile,
+          800
+        );
 
-      await activateAccount();
+      } else {
+
+        setStatus(
+          "আপনার Gmail এখনো verify হয়নি।"
+        );
+      }
 
     } catch (error) {
 
-      console.error(
-        "Verification check failed:",
-        error
+      setStatus(
+        getAuthErrorMessage(
+          error
+        )
       );
-
-      showMessage(
-        error?.message ||
-        "Verification could not be completed."
-      );
-
-      checkButton.disabled = false;
     }
-
   }
 );
 
 
 // =========================================================
-// RESEND VERIFICATION
+// CHECK BUTTON
 // =========================================================
 
-resendButton.addEventListener(
+checkButton?.addEventListener(
+  "click",
+  async () => {
+
+    checkButton.disabled = true;
+
+    setStatus(
+      "Verification status পরীক্ষা করা হচ্ছে..."
+    );
+
+    try {
+
+      const verified =
+        await checkEmailVerification();
+
+      if (!verified) {
+
+        setStatus(
+          "এখনো verify হয়নি। Gmail থেকে verification link খুলুন।"
+        );
+
+        return;
+      }
+
+      await activateVerifiedAccount();
+
+      setStatus(
+        "Verification সফল।"
+      );
+
+      setTimeout(
+        goToProfile,
+        700
+      );
+
+    } catch (error) {
+
+      setStatus(
+        getAuthErrorMessage(
+          error
+        )
+      );
+
+    } finally {
+
+      checkButton.disabled = false;
+    }
+  }
+);
+
+
+// =========================================================
+// RESEND
+// =========================================================
+
+resendButton?.addEventListener(
   "click",
   async () => {
 
     resendButton.disabled = true;
 
-    showMessage(
-      "Sending verification email..."
+    setStatus(
+      "Verification email পাঠানো হচ্ছে..."
     );
 
     try {
 
-      const user = auth.currentUser;
+      const result =
+        await resendVerificationEmail();
 
-      if (!user) {
-        throw new Error(
-          "No authenticated account found."
+      if (result.alreadyVerified) {
+
+        setStatus(
+          "আপনার Email ইতিমধ্যে verified।"
         );
-      }
 
-      await reload(user);
+        setTimeout(
+          goToProfile,
+          700
+        );
 
-      if (user.emailVerified) {
-        await activateAccount();
         return;
       }
 
-      await sendEmailVerification(user);
-
-      showMessage(
-        "Verification email sent. Please check your Gmail inbox and Spam folder."
+      setStatus(
+        "Verification email আবার পাঠানো হয়েছে। Gmail Inbox/Spam দেখুন।"
       );
 
     } catch (error) {
 
-      console.error(
-        "Resend verification failed:",
-        error
-      );
-
-      showMessage(
-        error?.message ||
-        "Could not resend the verification email."
+      setStatus(
+        getAuthErrorMessage(
+          error
+        )
       );
 
     } finally {
 
       resendButton.disabled = false;
     }
-
   }
 );
 
 
 // =========================================================
-// GO TO LOGIN
+// LOGOUT
 // =========================================================
 
-loginButton.addEventListener(
+logoutButton?.addEventListener(
   "click",
   async () => {
 
     try {
-      await signOut(auth);
+
+      await logoutUser();
+
+      window.location.href =
+        "./index.html";
+
     } catch (error) {
-      console.error(
-        "Logout before login failed:",
-        error
+
+      setStatus(
+        getAuthErrorMessage(
+          error
+        )
       );
     }
-
-    window.location.href = "./login.html";
   }
 );
