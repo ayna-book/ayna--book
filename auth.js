@@ -3,26 +3,6 @@
 // AUTHENTICATION CONTROLLER
 // File: auth.js
 // Firebase SDK: 13.4.0
-//
-// Security:
-// - Firebase Authentication
-// - Firebase Firestore
-// - Firebase Storage
-// - Web Crypto API
-// - AES-256-GCM capability
-// - SHA-256 capability
-// - HMAC-SHA256 capability
-// - Secure random device ID
-// - Post-Quantum Cryptography readiness
-//
-// IMPORTANT:
-// Firebase remains responsible for password authentication.
-// This file does NOT store or manually hash Firebase passwords.
-// =========================================================
-
-
-// =========================================================
-// FIREBASE AUTH IMPORTS
 // =========================================================
 
 import {
@@ -37,23 +17,13 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-
-// =========================================================
-// FIRESTORE IMPORTS
-// =========================================================
-
 import {
   doc,
   setDoc,
-  deleteDoc,
   updateDoc,
+  deleteDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
-
-
-// =========================================================
-// FIREBASE STORAGE IMPORTS
-// =========================================================
 
 import {
   ref,
@@ -62,21 +32,11 @@ import {
   deleteObject
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-
-// =========================================================
-// FIREBASE INITIALIZATION
-// =========================================================
-
 import {
   auth,
   db,
   storage
 } from "./firebase-init.js";
-
-
-// =========================================================
-// AYNA BOOK SECURITY LAYER
-// =========================================================
 
 import {
   getDeviceSecurityId,
@@ -101,147 +61,62 @@ const ALLOWED_PHOTO_TYPES = [
 
 
 // =========================================================
-// GMAIL VALIDATION
+// VALIDATORS
 // =========================================================
 
-export function validateGmail(email) {
-
-  if (typeof email !== "string") {
-    return false;
-  }
-
-  return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(
-    email.trim()
-  );
-
+function normalizeEmail(email) {
+  return String(email || "")
+    .trim()
+    .toLowerCase();
 }
 
 
-// =========================================================
-// PASSWORD VALIDATION
-// =========================================================
+function isGmail(email) {
+  return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i
+    .test(email);
+}
 
-export function validatePassword(password) {
 
+function isValidPassword(password) {
   return (
     typeof password === "string" &&
     password.length >= 6 &&
     password.length <= 128
   );
-
 }
 
 
-// =========================================================
-// PHONE VALIDATION
-// INTERNATIONAL E.164 FORMAT
-// =========================================================
+function isValidPhone(phone) {
+  return /^\+[1-9]\d{7,14}$/
+    .test(String(phone || "").trim());
+}
 
-export function validatePhone(phone) {
 
-  if (typeof phone !== "string") {
-    return false;
+function validatePhoto(photo) {
+  if (!photo) {
+    throw new Error(
+      "Profile photo is required."
+    );
   }
 
-  return /^\+[1-9]\d{7,14}$/.test(
-    phone.trim()
-  );
-
-}
-
-
-// =========================================================
-// PROFILE PHOTO VALIDATION
-// =========================================================
-
-export function validateProfilePhoto(photo) {
-
-  if (!(photo instanceof File)) {
-    return false;
+  if (!ALLOWED_PHOTO_TYPES.includes(
+    photo.type
+  )) {
+    throw new Error(
+      "Only JPG, PNG or WebP images are allowed."
+    );
   }
 
-  if (!ALLOWED_PHOTO_TYPES.includes(photo.type)) {
-    return false;
+  if (photo.size > MAX_PHOTO_SIZE) {
+    throw new Error(
+      "Profile photo must be 5 MB or smaller."
+    );
   }
-
-  if (
-    photo.size <= 0 ||
-    photo.size > MAX_PHOTO_SIZE
-  ) {
-    return false;
-  }
-
-  return true;
-
 }
 
 
 // =========================================================
-// SECURITY CAPABILITIES
-// =========================================================
-//
-// This function only reports available security
-// capabilities.
-//
-// It does NOT claim that the application is already
-// quantum-safe.
-//
-// Post-Quantum Cryptography requires an actual
-// vetted PQC implementation.
-// =========================================================
-
-export function getAYNABookSecurityStatus() {
-
-  return getSecurityCapabilities();
-
-}
-
-
-// =========================================================
-// SECURITY SELF TEST
-// =========================================================
-//
-// Can be called by diagnostics/admin pages.
-//
-// It does not replace Firebase Authentication.
-// =========================================================
-
-export async function runAYNABookSecurityTest() {
-
-  return runSecuritySelfTest();
-
-}
-
-
-// =========================================================
-// DEVICE SECURITY ID
-// =========================================================
-//
-// This is NOT the Firebase UID.
-//
-// It is a locally generated random security identifier.
-// =========================================================
-
-export function getAYNABookDeviceId() {
-
-  return getDeviceSecurityId();
-
-}
-
-
-// =========================================================
-// SECURITY NONCE
-// =========================================================
-
-export function createAuthSecurityNonce() {
-
-  return createSecurityNonce();
-
-}
-
-
-// =========================================================
-// REGISTRATION
+// REGISTER
 // =========================================================
 
 export async function registerUser({
@@ -251,159 +126,96 @@ export async function registerUser({
   password,
   photo
 }) {
-
-  fullName =
+  const cleanName =
     String(fullName || "").trim();
 
-  email =
-    String(email || "")
-      .trim()
-      .toLowerCase();
+  const cleanEmail =
+    normalizeEmail(email);
 
-  phone =
+  const cleanPhone =
     String(phone || "").trim();
 
-
-  // -------------------------------------------------------
-  // VALIDATE FULL NAME
-  // -------------------------------------------------------
-
-  if (
-    fullName.length < 2 ||
-    fullName.length > 80
-  ) {
-
+  if (!cleanName) {
     throw new Error(
-      "Please enter a valid full name."
+      "Full name is required."
     );
-
   }
 
-
-  // -------------------------------------------------------
-  // VALIDATE GMAIL
-  // -------------------------------------------------------
-
-  if (!validateGmail(email)) {
-
+  if (!isGmail(cleanEmail)) {
     throw new Error(
-      "Please use a valid Gmail address."
+      "Please use a Gmail address."
     );
-
   }
 
-
-  // -------------------------------------------------------
-  // VALIDATE PHONE
-  // -------------------------------------------------------
-
-  if (!validatePhone(phone)) {
-
+  if (!isValidPhone(cleanPhone)) {
     throw new Error(
-      "Enter your international phone number with country code."
+      "Phone number must use international format, e.g. +8801XXXXXXXXX."
     );
-
   }
 
-
-  // -------------------------------------------------------
-  // VALIDATE PASSWORD
-  // -------------------------------------------------------
-
-  if (!validatePassword(password)) {
-
+  if (!isValidPassword(password)) {
     throw new Error(
-      "Password must contain 6 to 128 characters."
+      "Password must be 6–128 characters."
     );
-
   }
 
+  validatePhoto(photo);
 
-  // -------------------------------------------------------
-  // VALIDATE PROFILE PHOTO
-  // -------------------------------------------------------
-
-  if (!validateProfilePhoto(photo)) {
-
-    throw new Error(
-      "A valid JPG, PNG or WebP profile photo up to 5 MB is required."
-    );
-
-  }
-
-
-  let user = null;
-  let photoRef = null;
-  let userDocRef = null;
-
-  let photoUploaded = false;
-  let documentCreated = false;
-
+  let createdUser = null;
+  let uploadedPhotoRef = null;
 
   try {
 
-    // =====================================================
-    // CREATE FIREBASE ACCOUNT
-    // =====================================================
+    // -----------------------------------------------------
+    // CREATE AUTH USER
+    // -----------------------------------------------------
 
     const credential =
       await createUserWithEmailAndPassword(
         auth,
-        email,
+        cleanEmail,
         password
       );
 
-    user =
+    createdUser =
       credential.user;
 
 
-    // =====================================================
-    // CREATE SECURE DEVICE IDENTIFIER
-    // =====================================================
+    // -----------------------------------------------------
+    // SECURITY DATA
+    // -----------------------------------------------------
 
     const deviceSecurityId =
       getDeviceSecurityId();
-
-
-    // =====================================================
-    // CREATE REGISTRATION NONCE
-    // =====================================================
 
     const registrationNonce =
       createSecurityNonce();
 
 
-    // =====================================================
-    // PHOTO FILE EXTENSION
-    // =====================================================
+    // -----------------------------------------------------
+    // PHOTO EXTENSION
+    // -----------------------------------------------------
 
-    const extension = {
-
-      "image/jpeg":
-        "jpg",
-
-      "image/png":
-        "png",
-
-      "image/webp":
-        "webp"
-
-    }[photo.type];
+    const extension =
+      photo.type === "image/png"
+        ? "png"
+        : photo.type === "image/webp"
+          ? "webp"
+          : "jpg";
 
 
-    // =====================================================
-    // UPLOAD PROFILE PHOTO
-    // =====================================================
+    // -----------------------------------------------------
+    // STORAGE
+    // -----------------------------------------------------
 
-    photoRef =
+    uploadedPhotoRef =
       ref(
         storage,
-        `profilePhotos/${user.uid}/profile.${extension}`
+        `profilePhotos/${createdUser.uid}/profile.${extension}`
       );
 
-
     await uploadBytes(
-      photoRef,
+      uploadedPhotoRef,
       photo,
       {
         contentType:
@@ -411,65 +223,51 @@ export async function registerUser({
       }
     );
 
-    photoUploaded = true;
-
-
-    // =====================================================
-    // GET PROFILE PHOTO URL
-    // =====================================================
-
     const photoURL =
       await getDownloadURL(
-        photoRef
+        uploadedPhotoRef
       );
 
 
-    // =====================================================
-    // UPDATE FIREBASE AUTH PROFILE
-    // =====================================================
+    // -----------------------------------------------------
+    // FIREBASE AUTH PROFILE
+    // -----------------------------------------------------
 
     await updateProfile(
-      user,
+      createdUser,
       {
         displayName:
-          fullName,
+          cleanName,
 
-        photoURL:
-          photoURL
+        photoURL
       }
     );
 
 
-    // =====================================================
-    // CREATE FIRESTORE USER DOCUMENT
-    // =====================================================
+    // -----------------------------------------------------
+    // FIRESTORE USER PROFILE
+    // -----------------------------------------------------
 
-    userDocRef =
+    await setDoc(
       doc(
         db,
         "users",
-        user.uid
-      );
-
-
-    await setDoc(
-      userDocRef,
+        createdUser.uid
+      ),
       {
-
         uid:
-          user.uid,
+          createdUser.uid,
 
         fullName:
-          fullName,
+          cleanName,
 
         email:
-          email,
+          cleanEmail,
 
         phone:
-          phone,
+          cleanPhone,
 
-        photoURL:
-          photoURL,
+        photoURL,
 
         accountType:
           "personal",
@@ -483,12 +281,9 @@ export async function registerUser({
         emailVerified:
           false,
 
-        // Security metadata
-        deviceSecurityId:
-          deviceSecurityId,
+        deviceSecurityId,
 
-        registrationNonce:
-          registrationNonce,
+        registrationNonce,
 
         securityVersion:
           1,
@@ -501,133 +296,63 @@ export async function registerUser({
 
         updatedAt:
           serverTimestamp()
-
       }
     );
 
-    documentCreated = true;
 
-
-    // =====================================================
-    // SEND GMAIL VERIFICATION
-    // =====================================================
+    // -----------------------------------------------------
+    // EMAIL VERIFICATION
+    // -----------------------------------------------------
 
     await sendEmailVerification(
-      user
+      createdUser
     );
 
 
-    return user;
+    return {
+      success: true,
+      user:
+        createdUser,
+      message:
+        "Account created. Please verify your Gmail address."
+    };
 
   } catch (error) {
 
-    // =====================================================
-    // BEST-EFFORT CLEANUP
-    // =====================================================
-
-    const cleanupFailed = [];
-
-
     // -----------------------------------------------------
-    // DELETE FIRESTORE DOCUMENT
+    // CLEANUP
     // -----------------------------------------------------
 
-    if (
-      documentCreated &&
-      userDocRef
-    ) {
-
-      try {
-
-        await deleteDoc(
-          userDocRef
-        );
-
-      } catch (cleanupError) {
-
-        cleanupFailed.push(
-          cleanupError
-        );
-
-      }
-
-    }
-
-
-    // -----------------------------------------------------
-    // DELETE PROFILE PHOTO
-    // -----------------------------------------------------
-
-    if (
-      photoUploaded &&
-      photoRef
-    ) {
-
-      try {
-
+    try {
+      if (uploadedPhotoRef) {
         await deleteObject(
-          photoRef
+          uploadedPhotoRef
         );
-
-      } catch (cleanupError) {
-
-        cleanupFailed.push(
-          cleanupError
-        );
-
       }
+    } catch (_) {}
 
-    }
+    try {
+      if (createdUser) {
+        await deleteDoc(
+          doc(
+            db,
+            "users",
+            createdUser.uid
+          )
+        );
+      }
+    } catch (_) {}
 
-
-    // -----------------------------------------------------
-    // DELETE FIREBASE USER
-    // -----------------------------------------------------
-
-    if (user) {
-
-      try {
-
+    try {
+      if (createdUser) {
         await deleteUser(
-          user
+          createdUser
         );
-
-      } catch (cleanupError) {
-
-        cleanupFailed.push(
-          cleanupError
-        );
-
       }
-
-    }
-
-
-    // -----------------------------------------------------
-    // REPORT CLEANUP FAILURE
-    // -----------------------------------------------------
-
-    if (
-      cleanupFailed.length > 0
-    ) {
-
-      console.error(
-        "Registration cleanup failed:",
-        cleanupFailed
-      );
-
-
-      throw new Error(
-        "Registration setup failed. Some cleanup operations could not be completed. Please contact support."
-      );
-
-    }
-
+    } catch (_) {}
 
     throw error;
-
   }
-
 }
 
 
@@ -639,94 +364,43 @@ export async function loginUser(
   email,
   password
 ) {
+  const cleanEmail =
+    normalizeEmail(email);
 
-  email =
-    String(email || "")
-      .trim()
-      .toLowerCase();
-
-
-  // -------------------------------------------------------
-  // VALIDATE GMAIL
-  // -------------------------------------------------------
-
-  if (!validateGmail(email)) {
-
+  if (!isGmail(cleanEmail)) {
     throw new Error(
       "Please enter a valid Gmail address."
     );
-
   }
 
-
-  // -------------------------------------------------------
-  // VALIDATE PASSWORD
-  // -------------------------------------------------------
-
-  if (!validatePassword(password)) {
-
+  if (!password) {
     throw new Error(
-      "Invalid password."
+      "Password is required."
     );
-
   }
-
-
-  // =====================================================
-  // FIREBASE LOGIN
-  // =====================================================
 
   const credential =
     await signInWithEmailAndPassword(
       auth,
-      email,
+      cleanEmail,
       password
     );
-
 
   const user =
     credential.user;
 
-
-  // =====================================================
-  // REFRESH AUTHENTICATION STATE
-  // =====================================================
-
-  await reload(
-    user
-  );
-
-
-  // =====================================================
-  // REQUIRE VERIFIED GMAIL
-  // =====================================================
+  await reload(user);
 
   if (!user.emailVerified) {
 
-    await signOut(
-      auth
-    );
-
+    await signOut(auth);
 
     throw new Error(
-      "Your Gmail is not verified. Please verify your email before logging in."
+      "Please verify your Gmail address before logging in."
     );
-
   }
 
-
-  // =====================================================
-  // REFRESH FIREBASE ID TOKEN
-  // =====================================================
-
-  await user.getIdToken(
-    true
-  );
-
-
-  // =====================================================
-  // UPDATE VERIFIED ACCOUNT
-  // =====================================================
+  await user.getIdToken(true);
 
   await updateDoc(
     doc(
@@ -735,7 +409,6 @@ export async function loginUser(
       user.uid
     ),
     {
-
       emailVerified:
         true,
 
@@ -744,13 +417,10 @@ export async function loginUser(
 
       updatedAt:
         serverTimestamp()
-
     }
   );
 
-
   return user;
-
 }
 
 
@@ -759,64 +429,52 @@ export async function loginUser(
 // =========================================================
 
 export async function checkEmailVerification() {
-
   const user =
     auth.currentUser;
-
 
   if (!user) {
     return false;
   }
 
-
-  await reload(
-    user
-  );
-
+  await reload(user);
 
   return Boolean(
     user.emailVerified
   );
-
 }
 
 
 // =========================================================
-// RESEND EMAIL VERIFICATION
+// RESEND VERIFICATION
 // =========================================================
 
 export async function resendVerificationEmail() {
-
   const user =
     auth.currentUser;
 
-
   if (!user) {
-
     throw new Error(
-      "Please log in first."
+      "No signed-in user."
     );
-
   }
 
-
-  await reload(
-    user
-  );
-
+  await reload(user);
 
   if (user.emailVerified) {
-    return true;
+    return {
+      success: true,
+      alreadyVerified: true
+    };
   }
-
 
   await sendEmailVerification(
     user
   );
 
-
-  return true;
-
+  return {
+    success: true,
+    alreadyVerified: false
+  };
 }
 
 
@@ -825,46 +483,22 @@ export async function resendVerificationEmail() {
 // =========================================================
 
 export async function activateVerifiedAccount() {
-
   const user =
     auth.currentUser;
 
-
   if (!user) {
-
     throw new Error(
-      "No authenticated account found."
+      "No signed-in user."
     );
-
   }
 
-
-  await reload(
-    user
-  );
-
+  await reload(user);
 
   if (!user.emailVerified) {
-
     throw new Error(
-      "Gmail verification is not complete."
+      "Email is not verified."
     );
-
   }
-
-
-  // -------------------------------------------------------
-  // REFRESH TOKEN
-  // -------------------------------------------------------
-
-  await user.getIdToken(
-    true
-  );
-
-
-  // -------------------------------------------------------
-  // UPDATE ACCOUNT
-  // -------------------------------------------------------
 
   await updateDoc(
     doc(
@@ -873,7 +507,6 @@ export async function activateVerifiedAccount() {
       user.uid
     ),
     {
-
       emailVerified:
         true,
 
@@ -882,13 +515,10 @@ export async function activateVerifiedAccount() {
 
       updatedAt:
         serverTimestamp()
-
     }
   );
 
-
   return true;
-
 }
 
 
@@ -899,30 +529,21 @@ export async function activateVerifiedAccount() {
 export async function resetPassword(
   email
 ) {
+  const cleanEmail =
+    normalizeEmail(email);
 
-  email =
-    String(email || "")
-      .trim()
-      .toLowerCase();
-
-
-  if (!validateGmail(email)) {
-
+  if (!isGmail(cleanEmail)) {
     throw new Error(
       "Please enter a valid Gmail address."
     );
-
   }
-
 
   await sendPasswordResetEmail(
     auth,
-    email
+    cleanEmail
   );
 
-
   return true;
-
 }
 
 
@@ -931,41 +552,21 @@ export async function resetPassword(
 // =========================================================
 
 export async function logoutUser() {
-
-  await signOut(
-    auth
-  );
-
-  return true;
-
+  await signOut(auth);
 }
 
 
 // =========================================================
-// AUTH STATE LISTENER
+// AUTH STATE WATCHER
 // =========================================================
 
 export function watchAuthState(
   callback
 ) {
-
-  if (
-    typeof callback !==
-    "function"
-  ) {
-
-    throw new TypeError(
-      "Auth callback must be a function."
-    );
-
-  }
-
-
   return onAuthStateChanged(
     auth,
     callback
   );
-
 }
 
 
@@ -974,64 +575,74 @@ export function watchAuthState(
 // =========================================================
 
 export function getCurrentUser() {
-
   return auth.currentUser;
-
 }
 
 
 // =========================================================
-// EMAIL VERIFIED STATUS
+// VERIFIED STATUS
 // =========================================================
 
 export function isEmailVerified() {
-
   return Boolean(
     auth.currentUser?.emailVerified
   );
-
 }
 
 
 // =========================================================
-// AUTH ERROR MESSAGES
+// SECURITY STATUS
+// =========================================================
+
+export function getAYNABookSecurityStatus() {
+  return {
+    deviceSecurityId:
+      getDeviceSecurityId(),
+
+    capabilities:
+      getSecurityCapabilities()
+  };
+}
+
+
+// =========================================================
+// SECURITY TEST
+// =========================================================
+
+export async function runAYNABookSecurityTest() {
+  return runSecuritySelfTest();
+}
+
+
+// =========================================================
+// AUTH SECURITY NONCE
+// =========================================================
+
+export function createAuthSecurityNonce() {
+  return createSecurityNonce();
+}
+
+
+// =========================================================
+// ERROR MESSAGE
 // =========================================================
 
 export function getAuthErrorMessage(
   error
 ) {
+  const code =
+    error?.code || "";
 
   const messages = {
 
     "auth/email-already-in-use":
-      "This Gmail address already has an account.",
+      "This Gmail address is already registered.",
 
     "auth/invalid-email":
-      "Invalid Gmail address.",
+      "The email address is invalid.",
 
     "auth/invalid-credential":
-      "Incorrect Gmail or password.",
-
-    "auth/weak-password":
-      "Please choose a stronger password.",
-
-    "auth/user-disabled":
-      "This account has been disabled.",
-
-    "auth/too-many-requests":
-      "Too many attempts. Please try again later.",
-
-    "auth/network-request-failed":
-      "Network error. Check your internet connection.",
-
-    "auth/operation-not-allowed":
-      "Email/Password authentication is not enabled.",
-
-    "auth/unauthorized-domain":
-      "This website domain is not authorized in Firebase.",
-
-    "auth/requires-recent-login":
-      "Please log in again to complete this security operation.",
+      "Incorrect Gmail address or password.",
 
     "auth/user-not-found":
       "No account was found with this Gmail address.",
@@ -1039,22 +650,25 @@ export function getAuthErrorMessage(
     "auth/wrong-password":
       "Incorrect password.",
 
-    "permission-denied":
-      "Firebase security rules denied this operation."
+    "auth/weak-password":
+      "Password is too weak.",
 
+    "auth/too-many-requests":
+      "Too many attempts. Please try again later.",
+
+    "auth/network-request-failed":
+      "Network connection failed.",
+
+    "auth/user-disabled":
+      "This account has been disabled.",
+
+    "auth/requires-recent-login":
+      "Please log in again and try again."
   };
 
-
   return (
-    messages[error?.code] ||
+    messages[code] ||
     error?.message ||
-    "Something went wrong. Please try again."
+    "An authentication error occurred."
   );
-
 }
-
-
-// =========================================================
-// END OF AUTHENTICATION CONTROLLER
-// AYNA BOOK
-// =========================================================
