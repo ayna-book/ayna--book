@@ -73,7 +73,7 @@ const bioValue =
 
 
 // =========================================================
-// STATUS MESSAGE
+// STATUS
 // =========================================================
 
 function showStatus(message, type = "") {
@@ -82,7 +82,8 @@ function showStatus(message, type = "") {
     return;
   }
 
-  statusMessage.textContent = message;
+  statusMessage.textContent =
+    message;
 
   statusMessage.className =
     "status-message";
@@ -90,24 +91,33 @@ function showStatus(message, type = "") {
   if (type) {
     statusMessage.classList.add(type);
   }
+
 }
 
 
 // =========================================================
-// SHOW LOADING
+// LOADING
 // =========================================================
 
 function showLoading() {
 
   if (loadingMessage) {
-    loadingMessage.style.display = "block";
+
+    loadingMessage.style.display =
+      "block";
+
     loadingMessage.textContent =
       "Profile loading...";
+
   }
 
   if (profileCard) {
-    profileCard.style.display = "none";
+
+    profileCard.style.display =
+      "none";
+
   }
+
 }
 
 
@@ -118,12 +128,19 @@ function showLoading() {
 function showProfile() {
 
   if (loadingMessage) {
-    loadingMessage.style.display = "none";
+
+    loadingMessage.style.display =
+      "none";
+
   }
 
   if (profileCard) {
-    profileCard.style.display = "block";
+
+    profileCard.style.display =
+      "block";
+
   }
+
 }
 
 
@@ -146,7 +163,6 @@ function setDefaultAvatar() {
         height="160"
         viewBox="0 0 160 160"
       >
-
         <rect
           width="160"
           height="160"
@@ -170,7 +186,6 @@ function setDefaultAvatar() {
           "
           fill="#8d94a3"
         />
-
       </svg>
     `);
 
@@ -178,92 +193,272 @@ function setDefaultAvatar() {
 
 
 // =========================================================
-// LOAD PROFILE
+// SET AUTH PROFILE IMMEDIATELY
 // =========================================================
 
-async function loadProfile(user) {
+function showAuthProfile(user) {
 
-  showLoading();
-  showStatus("");
-
-  try {
-
-    if (!user) {
-      window.location.href = "./login.html";
-      return;
-    }
+  if (!user) {
+    return;
+  }
 
 
-    // -----------------------------------------------------
-    // Firebase Auth data
-    // -----------------------------------------------------
+  // -------------------------------------------------------
+  // Name
+  // -------------------------------------------------------
 
-    const authName =
+  if (profileName) {
+
+    profileName.textContent =
       user.displayName ||
       "AYNA BOOK User";
 
-    const authEmail =
+  }
+
+
+  // -------------------------------------------------------
+  // Email
+  // -------------------------------------------------------
+
+  if (profileEmail) {
+
+    profileEmail.textContent =
       user.email ||
-      "";
+      "Not available";
 
-    const authPhoto =
-      user.photoURL ||
-      "";
+  }
 
 
-    // -----------------------------------------------------
-    // Default values
-    // -----------------------------------------------------
+  // -------------------------------------------------------
+  // UID
+  // -------------------------------------------------------
 
-    let profileData = {};
+  if (uidValue) {
+
+    uidValue.textContent =
+      user.uid ||
+      "Not available";
+
+  }
 
 
-    // -----------------------------------------------------
-    // Firestore users/{uid}
-    // -----------------------------------------------------
+  // -------------------------------------------------------
+  // Verification
+  // -------------------------------------------------------
 
-    try {
+  if (verificationStatus) {
 
-      const userRef =
-        doc(db, "users", user.uid);
+    if (user.emailVerified) {
 
-      const snapshot =
-        await getDoc(userRef);
+      verificationStatus.textContent =
+        "Verified";
 
-      if (snapshot.exists()) {
-
-        profileData =
-          snapshot.data() || {};
-
-      }
-
-    } catch (firestoreError) {
-
-      console.error(
-        "AYNA BOOK: Firestore profile read failed:",
-        firestoreError
+      verificationStatus.classList.remove(
+        "not-verified"
       );
 
-      // Auth data দিয়ে profile দেখানোর চেষ্টা চলবে।
-      profileData = {};
+      verificationStatus.classList.add(
+        "verified"
+      );
+
+    } else {
+
+      verificationStatus.textContent =
+        "Not Verified";
+
+      verificationStatus.classList.remove(
+        "verified"
+      );
+
+      verificationStatus.classList.add(
+        "not-verified"
+      );
+
+    }
+
+  }
+
+
+  // -------------------------------------------------------
+  // Default values
+  // -------------------------------------------------------
+
+  if (accountTypeValue) {
+
+    accountTypeValue.textContent =
+      "Personal";
+
+  }
+
+
+  if (phoneValue) {
+
+    phoneValue.textContent =
+      "Not added";
+
+  }
+
+
+  if (countryValue) {
+
+    countryValue.textContent =
+      "Bangladesh";
+
+  }
+
+
+  if (planValue) {
+
+    planValue.textContent =
+      "Free";
+
+  }
+
+
+  if (accountStatusValue) {
+
+    accountStatusValue.textContent =
+      "Active";
+
+  }
+
+
+  if (bioValue) {
+
+    bioValue.textContent =
+      "No bio added.";
+
+  }
+
+
+  // -------------------------------------------------------
+  // Photo
+  // -------------------------------------------------------
+
+  if (avatar) {
+
+    if (user.photoURL) {
+
+      avatar.src =
+        user.photoURL;
+
+    } else {
+
+      setDefaultAvatar();
 
     }
 
 
+    avatar.onerror = () => {
+
+      setDefaultAvatar();
+
+    };
+
+  }
+
+
+  // -------------------------------------------------------
+  // IMPORTANT:
+  // Auth data পাওয়া গেলেই profile দেখানো হবে
+  // -------------------------------------------------------
+
+  showProfile();
+
+}
+
+
+// =========================================================
+// LOAD FIRESTORE PROFILE
+// =========================================================
+
+async function loadFirestoreProfile(user) {
+
+  if (!user || !user.uid) {
+    return;
+  }
+
+
+  try {
+
+    console.log(
+      "AYNA BOOK: Loading Firestore profile..."
+    );
+
+
+    const userRef =
+      doc(
+        db,
+        "users",
+        user.uid
+      );
+
+
+    /*
+     * Firestore response-এর জন্য সর্বোচ্চ 8 সেকেন্ড অপেক্ষা।
+     * Firestore আটকে গেলেও profile page আটকে থাকবে না।
+     */
+
+    const timeoutPromise =
+      new Promise((_, reject) => {
+
+        setTimeout(() => {
+
+          reject(
+            new Error(
+              "Firestore profile request timeout."
+            )
+          );
+
+        }, 8000);
+
+      });
+
+
+    const firestorePromise =
+      getDoc(userRef);
+
+
+    const snapshot =
+      await Promise.race([
+        firestorePromise,
+        timeoutPromise
+      ]);
+
+
     // -----------------------------------------------------
-    // Profile name
+    // Document না থাকলে Auth profile-ই থাকবে
     // -----------------------------------------------------
 
-    const fullName =
-      profileData.fullName ||
-      profileData.name ||
-      authName ||
-      "AYNA BOOK User";
+    if (!snapshot.exists()) {
 
+      console.warn(
+        "AYNA BOOK: users/" +
+        user.uid +
+        " document not found."
+      );
+
+      return;
+
+    }
+
+
+    const data =
+      snapshot.data() || {};
+
+
+    // -----------------------------------------------------
+    // Full Name
+    // -----------------------------------------------------
 
     if (profileName) {
+
       profileName.textContent =
-        fullName;
+        data.fullName ||
+        data.name ||
+        user.displayName ||
+        "AYNA BOOK User";
+
     }
 
 
@@ -274,58 +469,9 @@ async function loadProfile(user) {
     if (profileEmail) {
 
       profileEmail.textContent =
-        profileData.email ||
-        authEmail ||
+        data.email ||
+        user.email ||
         "Not available";
-
-    }
-
-
-    // -----------------------------------------------------
-    // Verification
-    // -----------------------------------------------------
-
-    if (verificationStatus) {
-
-      if (user.emailVerified) {
-
-        verificationStatus.textContent =
-          "Verified";
-
-        verificationStatus.classList.remove(
-          "not-verified"
-        );
-
-        verificationStatus.classList.add(
-          "verified"
-        );
-
-      } else {
-
-        verificationStatus.textContent =
-          "Not Verified";
-
-        verificationStatus.classList.remove(
-          "verified"
-        );
-
-        verificationStatus.classList.add(
-          "not-verified"
-        );
-
-      }
-
-    }
-
-
-    // -----------------------------------------------------
-    // UID
-    // -----------------------------------------------------
-
-    if (uidValue) {
-
-      uidValue.textContent =
-        user.uid || "Not available";
 
     }
 
@@ -337,7 +483,7 @@ async function loadProfile(user) {
     if (accountTypeValue) {
 
       accountTypeValue.textContent =
-        profileData.accountType ||
+        data.accountType ||
         "Personal";
 
     }
@@ -350,7 +496,7 @@ async function loadProfile(user) {
     if (phoneValue) {
 
       phoneValue.textContent =
-        profileData.phone ||
+        data.phone ||
         "Not added";
 
     }
@@ -363,7 +509,7 @@ async function loadProfile(user) {
     if (countryValue) {
 
       countryValue.textContent =
-        profileData.country ||
+        data.country ||
         "Bangladesh";
 
     }
@@ -376,7 +522,7 @@ async function loadProfile(user) {
     if (planValue) {
 
       planValue.textContent =
-        profileData.plan ||
+        data.plan ||
         "Free";
 
     }
@@ -389,7 +535,7 @@ async function loadProfile(user) {
     if (accountStatusValue) {
 
       accountStatusValue.textContent =
-        profileData.accountStatus ||
+        data.accountStatus ||
         "Active";
 
     }
@@ -402,31 +548,28 @@ async function loadProfile(user) {
     if (bioValue) {
 
       bioValue.textContent =
-        profileData.bio ||
+        data.bio ||
         "No bio added.";
 
     }
 
 
     // -----------------------------------------------------
-    // Profile photo
+    // Profile Photo
     // -----------------------------------------------------
-
-    const firestorePhoto =
-      profileData.photoURL ||
-      "";
 
     if (avatar) {
 
-      if (firestorePhoto) {
+      const photoURL =
+        data.photoURL ||
+        user.photoURL ||
+        "";
+
+
+      if (photoURL) {
 
         avatar.src =
-          firestorePhoto;
-
-      } else if (authPhoto) {
-
-        avatar.src =
-          authPhoto;
+          photoURL;
 
       } else {
 
@@ -444,66 +587,65 @@ async function loadProfile(user) {
     }
 
 
-    // -----------------------------------------------------
-    // Show profile
-    // -----------------------------------------------------
-
-    showProfile();
+    console.log(
+      "AYNA BOOK: Firestore profile loaded successfully."
+    );
 
 
   } catch (error) {
 
-    console.error(
-      "AYNA BOOK: Profile loading error:",
+    console.warn(
+      "AYNA BOOK: Firestore profile unavailable:",
       error
     );
 
-
-    showStatus(
-      getAuthErrorMessage(error),
-      "error"
-    );
-
-
-    // Auth data থেকে minimum profile দেখানো
-    if (profileName && user) {
-
-      profileName.textContent =
-        user.displayName ||
-        "AYNA BOOK User";
-
-    }
-
-    if (profileEmail && user) {
-
-      profileEmail.textContent =
-        user.email ||
-        "";
-
-    }
-
-    if (uidValue && user) {
-
-      uidValue.textContent =
-        user.uid ||
-        "";
-
-    }
-
-    if (verificationStatus && user) {
-
-      verificationStatus.textContent =
-        user.emailVerified
-          ? "Verified"
-          : "Not Verified";
-
-    }
-
-    setDefaultAvatar();
-
-    showProfile();
+    /*
+     * গুরুত্বপূর্ণ:
+     * Firestore ব্যর্থ হলেও Auth profile ইতিমধ্যে
+     * page-এ দেখানো হয়েছে।
+     */
 
   }
+
+}
+
+
+// =========================================================
+// LOAD PROFILE
+// =========================================================
+
+async function loadProfile(user) {
+
+  if (!user) {
+
+    window.location.href =
+      "./login.html";
+
+    return;
+
+  }
+
+
+  console.log(
+    "AYNA BOOK: Logged-in user:",
+    user.uid
+  );
+
+
+  // -------------------------------------------------------
+  // STEP 1
+  // Auth data সঙ্গে সঙ্গে দেখান
+  // -------------------------------------------------------
+
+  showAuthProfile(user);
+
+
+  // -------------------------------------------------------
+  // STEP 2
+  // Firestore data পরে load করুন
+  // -------------------------------------------------------
+
+  await loadFirestoreProfile(user);
 
 }
 
@@ -518,9 +660,11 @@ async function handleLogout() {
     return;
   }
 
+
   try {
 
-    logoutButton.disabled = true;
+    logoutButton.disabled =
+      true;
 
     logoutButton.textContent =
       "Logging out...";
@@ -529,8 +673,9 @@ async function handleLogout() {
     await logoutUser();
 
 
-    window.location.href =
-      "./login.html";
+    window.location.replace(
+      "./login.html"
+    );
 
 
   } catch (error) {
@@ -547,7 +692,8 @@ async function handleLogout() {
     );
 
 
-    logoutButton.disabled = false;
+    logoutButton.disabled =
+      false;
 
     logoutButton.textContent =
       "Logout";
@@ -572,37 +718,55 @@ if (logoutButton) {
 
 
 // =========================================================
-// AUTH STATE
+// START
 // =========================================================
 
 showLoading();
 
 
-watchAuthState(async (user) => {
+// =========================================================
+// AUTH STATE
+// =========================================================
 
-  if (!user) {
+watchAuthState(
+  async (user) => {
 
-    window.location.href =
-      "./login.html";
+    if (!user) {
 
-    return;
+      window.location.replace(
+        "./login.html"
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      await loadProfile(user);
+
+    } catch (error) {
+
+      console.error(
+        "AYNA BOOK: Profile controller error:",
+        error
+      );
+
+
+      // কোনো unexpected error হলেও
+      // loading screen-এ আটকে থাকবে না।
+
+      showAuthProfile(user);
+
+    }
 
   }
-
-
-  console.log(
-    "AYNA BOOK: Logged-in user:",
-    user.uid
-  );
-
-
-  await loadProfile(user);
-
-});
+);
 
 
 // =========================================================
-// CONSOLE
+// READY
 // =========================================================
 
 console.log(
