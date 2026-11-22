@@ -1,72 +1,239 @@
-
 rules_version = '2';
 
 service cloud.firestore {
+
   match /databases/{database}/documents {
+
+
+    // =====================================================
+    // COMMON FUNCTIONS
+    // =====================================================
 
     function signedIn() {
       return request.auth != null;
     }
 
+
     function isOwner(uid) {
-      return signedIn() && request.auth.uid == uid;
+      return signedIn()
+        && request.auth.uid == uid;
     }
+
+
+    function isVerified() {
+      return signedIn()
+        && request.auth.token.email_verified == true;
+    }
+
+
+    // =====================================================
+    // USER DOCUMENT
+    // /users/{uid}
+    // =====================================================
 
     match /users/{uid} {
 
-      // Users can read only their own account.
-      allow read: if isOwner(uid);
 
-      // Registration: Personal + Free only.
-      allow create: if isOwner(uid)
+      // ===================================================
+      // READ
+      // ===================================================
+      //
+      // A user can read only their own private user document.
+      // ===================================================
+
+      allow get: if isOwner(uid);
+
+      allow list: if false;
+
+
+      // ===================================================
+      // CREATE
+      // ===================================================
+      //
+      // Registration is allowed only for the authenticated
+      // Firebase user creating their own document.
+      //
+      // The initial account must be:
+      //
+      // accountType = personal
+      // plan        = free
+      // accountStatus = pending_email_verification
+      // emailVerified = false
+      //
+      // Security metadata is accepted during creation.
+      // ===================================================
+
+      allow create: if
+        isOwner(uid)
+
         && request.resource.data.uid == uid
-        && request.resource.data.email == request.auth.token.email
+
         && request.resource.data.accountType == "personal"
+
         && request.resource.data.plan == "free"
-        && request.resource.data.accountStatus == "pending_email_verification"
+
+        && request.resource.data.accountStatus
+            == "pending_email_verification"
+
         && request.resource.data.emailVerified == false
+
         && request.resource.data.fullName is string
+
         && request.resource.data.fullName.size() >= 2
+
         && request.resource.data.fullName.size() <= 80
+
+        && request.resource.data.email is string
+
+        && request.resource.data.email.size() > 5
+
         && request.resource.data.phone is string
+
+        && request.resource.data.phone.size() >= 8
+
+        && request.resource.data.phone.size() <= 16
+
         && request.resource.data.photoURL is string
-        && request.resource.data.createdAt is timestamp
-        && request.resource.data.updatedAt is timestamp
+
+        && request.resource.data.photoURL.size() > 0
+
+        && request.resource.data.deviceSecurityId is string
+
+        && request.resource.data.deviceSecurityId.size() >= 32
+
+        && request.resource.data.deviceSecurityId.size() <= 128
+
+        && request.resource.data.registrationNonce is string
+
+        && request.resource.data.registrationNonce.size() >= 32
+
+        && request.resource.data.registrationNonce.size() <= 128
+
+        && request.resource.data.securityVersion == 1
+
+        && request.resource.data.securityArchitecture
+            == "web-crypto-pqc-ready"
+
         && request.resource.data.keys().hasOnly([
+
           "uid",
           "fullName",
           "email",
           "phone",
           "photoURL",
+
           "accountType",
           "plan",
           "accountStatus",
           "emailVerified",
+
+          "deviceSecurityId",
+          "registrationNonce",
+
+          "securityVersion",
+          "securityArchitecture",
+
           "createdAt",
           "updatedAt"
+
         ]);
 
-      // Email verification: Firebase token must confirm verification.
-      allow update: if isOwner(uid)
-        && request.auth.token.email_verified == true
-        && request.resource.data.diff(resource.data)
-             .affectedKeys()
-             .hasOnly([
-               "emailVerified",
-               "accountStatus",
-               "updatedAt"
-             ])
+
+      // ===================================================
+      // UPDATE
+      // ===================================================
+      //
+      // IMPORTANT:
+      //
+      // A normal client must NOT be able to change:
+      //
+      // - uid
+      // - email
+      // - accountType
+      // - plan
+      // - accountStatus arbitrarily
+      // - emailVerified arbitrarily
+      // - security metadata
+      // - createdAt
+      //
+      // Only the verified-account transition is allowed here.
+      // ===================================================
+
+      allow update: if
+        isOwner(uid)
+
+        && request.resource.data.uid
+            == resource.data.uid
+
+        && request.resource.data.email
+            == resource.data.email
+
+        && request.resource.data.accountType
+            == resource.data.accountType
+
+        && request.resource.data.plan
+            == resource.data.plan
+
+        && request.resource.data.deviceSecurityId
+            == resource.data.deviceSecurityId
+
+        && request.resource.data.registrationNonce
+            == resource.data.registrationNonce
+
+        && request.resource.data.securityVersion
+            == resource.data.securityVersion
+
+        && request.resource.data.securityArchitecture
+            == resource.data.securityArchitecture
+
+        && request.resource.data.createdAt
+            == resource.data.createdAt
+
+        && isVerified()
+
         && request.resource.data.emailVerified == true
+
         && request.resource.data.accountStatus == "active"
-        && request.resource.data.updatedAt is timestamp;
 
-      // Account deletion must use a trusted server-side process.
+        && request.resource.data.diff(resource.data)
+            .affectedKeys()
+            .hasOnly([
+              "emailVerified",
+              "accountStatus",
+              "updatedAt"
+            ]);
+
+
+      // ===================================================
+      // DELETE
+      // ===================================================
+      //
+      // Client-side deletion is intentionally disabled.
+      // Account deletion should later be handled through
+      // a controlled backend/Cloud Function flow.
+      // ===================================================
+
       allow delete: if false;
+
     }
 
-    // Deny access to all other documents by default.
+
+    // =====================================================
+    // DEFAULT DENY
+    // =====================================================
+    //
+    // Any Firestore collection that has not been explicitly
+    // defined above is denied.
+    //
+    // This is critical while the platform is being built.
+    // =====================================================
+
     match /{document=**} {
+
       allow read, write: if false;
+
     }
+
   }
+
 }
