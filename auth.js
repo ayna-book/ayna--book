@@ -6,23 +6,20 @@ import {
   sendPasswordResetEmail,
   signOut,
   reload,
-  deleteUser,
-  updateProfile,
-  onAuthStateChanged
+  onAuthStateChanged,
+  updateProfile
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
   doc,
   setDoc,
-  deleteDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
 import {
   ref,
   uploadBytes,
-  getDownloadURL,
-  deleteObject
+  getDownloadURL
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
 import { auth, db, storage } from "./firebase-init.js";
@@ -43,7 +40,7 @@ export async function registerUser({
   phone = String(phone || "").trim();
 
   if (fullName.length < 2 || fullName.length > 80) {
-    throw new Error("Enter a valid name.");
+    throw new Error("Please enter a valid full name.");
   }
 
   if (!validateGmail(email)) {
@@ -51,7 +48,7 @@ export async function registerUser({
   }
 
   if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
-    throw new Error("Enter phone number with country code.");
+    throw new Error("Enter phone number with country code, e.g. +8801XXXXXXXXX.");
   }
 
   if (typeof password !== "string" || password.length < 6) {
@@ -63,44 +60,31 @@ export async function registerUser({
   }
 
   if (!["image/jpeg", "image/png", "image/webp"].includes(photo.type)) {
-    throw new Error("Only JPG, PNG and WebP photos are allowed.");
+    throw new Error("Only JPG, PNG, and WebP photos are allowed.");
   }
 
   if (photo.size > 5 * 1024 * 1024) {
-    throw new Error("Photo must be 5 MB or less.");
+    throw new Error("Profile photo must be 5 MB or less.");
   }
 
-  let user = null;
-  let photoRef = null;
-  let userDocRef = null;
-  let photoUploaded = false;
-  let documentCreated = false;
+  const credential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+
+  const user = credential.user;
 
   try {
-    const credential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    const extension = photo.type === "image/png"
+      ? "png"
+      : photo.type === "image/webp" ? "webp" : "jpg";
 
-    user = credential.user;
-
-    const extension = {
-      "image/jpeg": "jpg",
-      "image/png": "png",
-      "image/webp": "webp"
-    }[photo.type];
-
-    photoRef = ref(
-      storage,
-      `profilePhotos/${user.uid}/profile.${extension}`
-    );
+    const photoRef = ref(storage, `profilePhotos/${user.uid}/profile.${extension}`);
 
     await uploadBytes(photoRef, photo, {
       contentType: photo.type
     });
-
-    photoUploaded = true;
 
     const photoURL = await getDownloadURL(photoRef);
 
@@ -109,9 +93,7 @@ export async function registerUser({
       photoURL
     });
 
-    userDocRef = doc(db, "users", user.uid);
-
-    await setDoc(userDocRef, {
+    await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       fullName,
       email,
@@ -125,47 +107,14 @@ export async function registerUser({
       updatedAt: serverTimestamp()
     });
 
-    documentCreated = true;
-
     await sendEmailVerification(user);
-
     return user;
-
   } catch (error) {
-    // Best-effort cleanup if registration setup fails.
-    const cleanupErrors = [];
-
-    if (documentCreated && userDocRef) {
-      try {
-        await deleteDoc(userDocRef);
-      } catch (e) {
-        cleanupErrors.push(e);
-      }
-    }
-
-    if (photoUploaded && photoRef) {
-      try {
-        await deleteObject(photoRef);
-      } catch (e) {
-        cleanupErrors.push(e);
-      }
-    }
-
-    if (user) {
-      try {
-        await deleteUser(user);
-      } catch (e) {
-        cleanupErrors.push(e);
-      }
-    }
-
-    if (cleanupErrors.length) {
-      throw new Error(
-        "Registration setup failed. Some cleanup operations also failed. Contact support."
-      );
-    }
-
-    throw error;
+    // Account creation may already have succeeded.
+    // Do not silently delete the user's account or uploaded data.
+    throw new Error(
+      `Account was created, but setup was incomplete. Please contact support. Details: ${error.message}`
+    );
   }
 }
 
@@ -173,24 +122,17 @@ export async function loginUser(email, password) {
   email = String(email || "").trim().toLowerCase();
 
   if (!validateGmail(email)) {
-    throw new Error("Enter a valid Gmail address.");
+    throw new Error("Please enter your Gmail address.");
   }
 
-  const credential = await signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-
+  const credential = await signInWithEmailAndPassword(auth, email, password);
   const user = credential.user;
 
   await reload(user);
 
   if (!user.emailVerified) {
     await signOut(auth);
-    throw new Error(
-      "Your Gmail is not verified. Please verify your email first."
-    );
+    throw new Error("Please verify your Gmail before logging in. Check your inbox.");
   }
 
   return user;
@@ -216,7 +158,7 @@ export async function resetPassword(email) {
   email = String(email || "").trim().toLowerCase();
 
   if (!validateGmail(email)) {
-    throw new Error("Enter a valid Gmail address.");
+    throw new Error("Please enter a valid Gmail address.");
   }
 
   await sendPasswordResetEmail(auth, email);
@@ -240,35 +182,16 @@ export function isEmailVerified() {
 
 export function getAuthErrorMessage(error) {
   const messages = {
-    "auth/email-already-in-use":
-      "This Gmail address already has an account.",
-
-    "auth/invalid-email":
-      "Invalid email address.",
-
-    "auth/invalid-credential":
-      "Incorrect Gmail or password.",
-
-    "auth/user-disabled":
-      "This account has been disabled.",
-
-    "auth/weak-password":
-      "Please choose a stronger password.",
-
-    "auth/too-many-requests":
-      "Too many attempts. Please try again later.",
-
-    "auth/network-request-failed":
-      "Network error. Check your internet connection.",
-
-    "auth/operation-not-allowed":
-      "Enable Email/Password in Firebase Authentication.",
-
-    "auth/unauthorized-domain":
-      "This domain is not authorized in Firebase."
+    "auth/email-already-in-use": "This Gmail address already has an account.",
+    "auth/invalid-email": "Invalid email address.",
+    "auth/invalid-credential": "Incorrect Gmail or password.",
+    "auth/user-disabled": "This account has been disabled.",
+    "auth/weak-password": "Please choose a stronger password.",
+    "auth/too-many-requests": "Too many attempts. Please try again later.",
+    "auth/network-request-failed": "Network error. Check your internet connection.",
+    "auth/operation-not-allowed": "Email/Password login is not enabled in Firebase.",
+    "auth/unauthorized-domain": "This website domain is not authorized in Firebase."
   };
 
-  return messages[error?.code] ||
-    error?.message ||
-    "Something went wrong. Please try again.";
+  return messages[error?.code] || error?.message || "Something went wrong. Please try again.";
 }
