@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AYNA BOOK — Splash</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #050505;
+      color: #f5f5f5;
+      font-family: system-ui, -apple-system, sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .splash-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .logo-circle {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      border: 2px solid #d4af37;
+      box-shadow: 0 0 28px rgba(212, 175, 55, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .logo-text {
+      color: #f7c948;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .brand-title {
+      color: #f7c948;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+    .status-text {
+      color: #c7c7c7;
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+    .progress-track {
+      width: 240px;
+      height: 3px;
+      background-color: #262626;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      width: 35%;
+      height: 100%;
+      background-color: #f7c948;
+      animation: pulseSlide 1.4s ease-in-out infinite;
+    }
+    @keyframes pulseSlide {
+      0% { transform: translateX(-100%); }
+      50% { transform: translateX(180%); }
+      100% { transform: translateX(-100%); }
+    }
+    .retry-btn {
+      display: none;
+      margin-top: 18px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: 1px solid #d4af37;
+      background: transparent;
+      color: #f7c948;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-container">
+    <div class="logo-circle">
+      <span class="logo-text">AB</span>
+    </div>
+    <div class="brand-title">AYNA BOOK</div>
+    <p id="statusText" class="status-text">Starting secure platform...</p>
+    <div class="progress-track">
+      <div class="progress-fill"></div>
+    </div>
+    <button id="retryBtn" class="retry-btn" type="button">Continue / Retry</button>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById("statusText");
+    const retryBtn = document.getElementById("retryBtn");
+
+    function withTimeout(promise, ms = 5000) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Startup timeout")), ms)
+        ),
+      ]);
+    }
+
+    async function initPlatform() {
+      retryBtn.style.display = "none";
+      statusEl.textContent = "Starting secure platform...";
+
+      try {
+        // এখানে আপনার Firebase Auth / Realtime DB / config init কল বসান
+        // উদাহরণ: await withTimeout(initAynaFirebase(), 5000);
+        await withTimeout(
+          new Promise((resolve) => setTimeout(resolve, 1200)),
+          5000
+        );
+
+        window.location.replace("home.html"); // বা auth.html
+      } catch (err) {
+        console.warn("Splash fallback triggered:", err.message);
+        statusEl.textContent = "Slow network detected. Proceeding...";
+        setTimeout(() => {
+          window.location.replace("home.html");
+        }, 1000);
+        retryBtn.style.display = "inline-block";
+      }
+    }
+
+    retryBtn.addEventListener("click", () => {
+      window.location.replace("home.html");
+    });
+
+    initPlatform();
+  </script>
+</body>
+</html>
