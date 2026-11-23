@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="bn">
-
+<html lang="en">
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -10,15 +8,9 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#090a0f"
-  >
-
   <title>AYNA BOOK — Verify Email</title>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
@@ -26,13 +18,11 @@
     html,
     body {
       margin: 0;
+      padding: 0;
       min-height: 100%;
-      background: #090a0f;
-      color: #ffffff;
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #000;
+      color: #fff;
     }
 
     body {
@@ -43,138 +33,214 @@
       padding: 20px;
     }
 
-    .card {
+    .container {
       width: 100%;
-      max-width: 460px;
-      border: 1px solid #c9a227;
+      max-width: 430px;
+    }
+
+    .card {
+      background: #0b0b0b;
+      border: 1px solid #292929;
       border-radius: 18px;
       padding: 30px 24px;
       text-align: center;
-      background: #101116;
-      box-shadow:
-        0 10px 40px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.08);
     }
 
     .logo {
       width: 76px;
       height: 76px;
       margin: 0 auto 18px;
-      border: 1px solid #c9a227;
       border-radius: 50%;
+      border: 2px solid #d4af37;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #d8b33d;
-      font-size: 28px;
-      font-weight: 800;
+      color: #d4af37;
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .icon {
+      font-size: 42px;
+      margin-bottom: 12px;
     }
 
     h1 {
-      margin: 0 0 12px;
-      color: #d8b33d;
-      font-size: 26px;
+      margin: 0;
+      color: #d4af37;
+      font-size: 27px;
     }
 
-    p {
+    .subtitle {
+      margin: 10px 0 24px;
+      color: #aaa;
+      font-size: 14px;
       line-height: 1.6;
-      color: #d0d0d0;
     }
 
-    .email {
-      margin: 16px 0;
-      padding: 12px;
-      border: 1px solid #5d501e;
+    .email-box {
+      padding: 13px;
+      margin-bottom: 20px;
+      background: #151515;
+      border: 1px solid #333;
       border-radius: 10px;
+      color: #d4af37;
+      font-size: 14px;
       word-break: break-word;
-      color: #ffffff;
     }
 
     button {
       width: 100%;
-      border: 1px solid #c9a227;
-      border-radius: 10px;
-      padding: 13px;
+      padding: 14px;
       margin-top: 10px;
-      background: #c9a227;
-      color: #090a0f;
-      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    button.secondary {
+    #checkButton {
+      background: #d4af37;
+      color: #000;
+    }
+
+    #resendButton {
+      background: #1b1b1b;
+      color: #d4af37;
+      border: 1px solid #444;
+    }
+
+    #logoutButton {
       background: transparent;
-      color: #d8b33d;
+      color: #aaa;
+      border: 1px solid #333;
     }
 
     button:disabled {
-      opacity: 0.5;
+      opacity: 0.55;
       cursor: not-allowed;
     }
 
-    #status {
-      min-height: 24px;
-      margin-top: 16px;
-      color: #d8b33d;
-    }
-
-    .hidden {
+    .message {
       display: none;
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 9px;
+      font-size: 14px;
+      line-height: 1.5;
     }
 
-  </style>
+    .message.show {
+      display: block;
+    }
 
+    .message.error {
+      color: #ffb4b4;
+      background: rgba(180, 0, 0, 0.15);
+      border: 1px solid rgba(255, 80, 80, 0.25);
+    }
+
+    .message.success {
+      color: #b9f6c5;
+      background: rgba(0, 150, 50, 0.12);
+      border: 1px solid rgba(80, 220, 110, 0.25);
+    }
+
+    .info {
+      margin-top: 20px;
+      color: #777;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .login-link {
+      display: block;
+      margin-top: 20px;
+      color: #d4af37;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .login-link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 
 <body>
 
-  <main class="card">
+  <div class="container">
 
-    <div class="logo">
-      AB
+    <div class="card">
+
+      <div class="logo">
+        AB
+      </div>
+
+      <div class="icon">
+        ✉
+      </div>
+
+      <h1>Verify Your Email</h1>
+
+      <div class="subtitle">
+        We sent a verification link to your email address.
+        Please open your email and click the verification link.
+      </div>
+
+      <!-- DEFAULT / EXPECTED EMAIL -->
+      <div
+        id="emailBox"
+        class="email-box"
+      >
+        aynabookofficeal@gmail.com
+      </div>
+
+      <button
+        id="checkButton"
+        type="button"
+      >
+        I've Verified My Email
+      </button>
+
+      <button
+        id="resendButton"
+        type="button"
+      >
+        Resend Verification Email
+      </button>
+
+      <button
+        id="logoutButton"
+        type="button"
+      >
+        Sign Out
+      </button>
+
+      <div
+        id="message"
+        class="message"
+        role="alert"
+      ></div>
+
+      <div class="info">
+        Didn't receive the email?
+        Check your Spam/Junk folder and make sure
+        the email address is correct.
+      </div>
+
+      <a
+        href="login.html"
+        class="login-link"
+      >
+        Back to Sign In
+      </a>
+
     </div>
 
-    <h1>
-      Gmail Verification
-    </h1>
-
-    <p>
-      আপনার AYNA BOOK অ্যাকাউন্ট সক্রিয় করতে
-      Gmail verification সম্পন্ন করুন।
-    </p>
-
-    <div
-      id="email"
-      class="email"
-    >
-      যাচাই করা হচ্ছে...
-    </div>
-
-    <button
-      id="checkButton"
-      type="button"
-    >
-      আমি Email Verify করেছি
-    </button>
-
-    <button
-      id="resendButton"
-      class="secondary"
-      type="button"
-    >
-      Verification Email আবার পাঠান
-    </button>
-
-    <button
-      id="logoutButton"
-      class="secondary"
-      type="button"
-    >
-      Logout
-    </button>
-
-    <div id="status"></div>
-
-  </main>
+  </div>
 
   <script
     type="module"
@@ -182,5 +248,4 @@
   ></script>
 
 </body>
-
 </html>
