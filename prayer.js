@@ -1,527 +1,164 @@
-// =====================================================
-// AYNA BOOK
-// GLOBAL PRAYER + RAMADAN TIME SYSTEM
-// =====================================================
+/* =========================================================
+   AYNA BOOK
+   Prayer + Ramadan + Annual Prayer Calendar
+   ========================================================= */
 
-const API =
-  "https://api.aladhan.com/v1/timingsByCity";
+const API = "https://api.aladhan.com/v1";
 
+const $ = (id) => document.getElementById(id);
 
-// =====================================================
-// ELEMENTS
-// =====================================================
+/* ---------------------------------------------------------
+   Default Settings
+--------------------------------------------------------- */
 
-const locationText =
-  document.getElementById("locationText");
+const DEFAULTS = {
+  country: "Bangladesh",
+  city: "Cox's Bazar",
+  method: 1,
+  school: 1,
+  sehriAdjust: 0,
+  iftarAdjust: 0,
+  ramadanAlarm: false,
+  latitude: null,
+  longitude: null
+};
 
-const dateText =
-  document.getElementById("dateText");
+let settings = loadSettings();
 
-const nextPrayer =
-  document.getElementById("nextPrayer");
+let todayData = null;
+let annualData = [];
+let ramadanData = [];
 
-const countdown =
-  document.getElementById("countdown");
+let countdownTimer = null;
+let fastCountdownTimer = null;
 
-const ramadanCountdown =
-  document.getElementById("ramadanCountdown");
+let alarmState = {
+  Fajr: false,
+  Dhuhr: false,
+  Asr: false,
+  Maghrib: false,
+  Isha: false
+};
 
-const statusEl =
-  document.getElementById("status");
-
-
-// =====================================================
-// PRAYER ELEMENTS
-// =====================================================
-
-const prayerElements = {
-
-  Fajr:
-    document.getElementById("fajrTime"),
-
-  Dhuhr:
-    document.getElementById("dhuhrTime"),
-
-  Asr:
-    document.getElementById("asrTime"),
-
-  Maghrib:
-    document.getElementById("maghribTime"),
-
-  Isha:
-    document.getElementById("ishaTime")
-
+const prayerNames = {
+  Fajr: "ফজর",
+  Dhuhr: "যোহর",
+  Asr: "আসর",
+  Maghrib: "মাগরিব",
+  Isha: "এশা"
 };
 
 
-// =====================================================
-// ALARM ELEMENTS
-// =====================================================
+/* ---------------------------------------------------------
+   Local Storage
+--------------------------------------------------------- */
 
-const alarmElements = {
+function loadSettings() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem("aynaPrayerSettings")
+    );
 
-  Fajr:
-    document.getElementById("alarmFajr"),
-
-  Dhuhr:
-    document.getElementById("alarmDhuhr"),
-
-  Asr:
-    document.getElementById("alarmAsr"),
-
-  Maghrib:
-    document.getElementById("alarmMaghrib"),
-
-  Isha:
-    document.getElementById("alarmIsha")
-
-};
-
-
-const ramadanAlarm =
-  document.getElementById("ramadanAlarm");
-
-
-// =====================================================
-// SETTINGS
-// =====================================================
-
-const countryInput =
-  document.getElementById("countryInput");
-
-const cityInput =
-  document.getElementById("cityInput");
-
-const methodSelect =
-  document.getElementById("methodSelect");
-
-const schoolSelect =
-  document.getElementById("schoolSelect");
-
-const sehriAdjust =
-  document.getElementById("sehriAdjust");
-
-const iftarAdjust =
-  document.getElementById("iftarAdjust");
-
-
-// =====================================================
-// DEFAULT
-// =====================================================
-
-let settings = {
-
-  country:
-    localStorage.getItem(
-      "ayna_prayer_country"
-    ) || "Bangladesh",
-
-  city:
-    localStorage.getItem(
-      "ayna_prayer_city"
-    ) || "Cox's Bazar",
-
-  method:
-    localStorage.getItem(
-      "ayna_prayer_method"
-    ) || "1",
-
-  school:
-    localStorage.getItem(
-      "ayna_prayer_school"
-    ) || "1",
-
-  sehriAdjust:
-    Number(
-      localStorage.getItem(
-        "ayna_sehri_adjust"
-      ) || 0
-    ),
-
-  iftarAdjust:
-    Number(
-      localStorage.getItem(
-        "ayna_iftar_adjust"
-      ) || 0
-    )
-
-};
-
-
-// =====================================================
-// DATA
-// =====================================================
-
-let prayerData = null;
-
-let timings = null;
-
-let lastAlarmKey = "";
-
-
-// =====================================================
-// LOAD SETTINGS INTO UI
-// =====================================================
-
-function loadSettingsUI() {
-
-  countryInput.value =
-    settings.country;
-
-  cityInput.value =
-    settings.city;
-
-  methodSelect.value =
-    settings.method;
-
-  schoolSelect.value =
-    settings.school;
-
-  sehriAdjust.value =
-    settings.sehriAdjust;
-
-  iftarAdjust.value =
-    settings.iftarAdjust;
+    return {
+      ...DEFAULTS,
+      ...(saved || {})
+    };
+  } catch (e) {
+    return { ...DEFAULTS };
+  }
 }
-
-
-// =====================================================
-// SAVE SETTINGS
-// =====================================================
 
 function saveSettings() {
-
-  settings.country =
-    countryInput.value.trim();
-
-  settings.city =
-    cityInput.value.trim();
-
-  settings.method =
-    methodSelect.value;
-
-  settings.school =
-    schoolSelect.value;
-
-  settings.sehriAdjust =
-    Number(sehriAdjust.value || 0);
-
-  settings.iftarAdjust =
-    Number(iftarAdjust.value || 0);
-
-
   localStorage.setItem(
-    "ayna_prayer_country",
-    settings.country
-  );
-
-  localStorage.setItem(
-    "ayna_prayer_city",
-    settings.city
-  );
-
-  localStorage.setItem(
-    "ayna_prayer_method",
-    settings.method
-  );
-
-  localStorage.setItem(
-    "ayna_prayer_school",
-    settings.school
-  );
-
-  localStorage.setItem(
-    "ayna_sehri_adjust",
-    settings.sehriAdjust
-  );
-
-  localStorage.setItem(
-    "ayna_iftar_adjust",
-    settings.iftarAdjust
+    "aynaPrayerSettings",
+    JSON.stringify(settings)
   );
 }
 
 
-// =====================================================
-// DATE
-// =====================================================
+/* ---------------------------------------------------------
+   Load Alarm Settings
+--------------------------------------------------------- */
 
-function getToday() {
-
-  const now = new Date();
-
-  const day =
-    String(now.getDate())
-      .padStart(2, "0");
-
-  const month =
-    String(now.getMonth() + 1)
-      .padStart(2, "0");
-
-  const year =
-    now.getFullYear();
-
-  return `${day}-${month}-${year}`;
-}
-
-
-// =====================================================
-// LOAD PRAYER TIMES
-// =====================================================
-
-async function loadPrayerTimes() {
-
-  saveSettings();
-
-  if (!settings.city ||
-      !settings.country) {
-
-    statusEl.textContent =
-      "দেশ ও শহর দিন।";
-
-    return;
-  }
-
-
-  statusEl.textContent =
-    "⏳ নামাজের সময় লোড হচ্ছে...";
-
+function loadAlarmSettings() {
 
   try {
 
-    const date =
-      getToday();
+    const saved = JSON.parse(
+      localStorage.getItem("aynaPrayerAlarms")
+    );
 
-
-    const url =
-      `${API}/${date}` +
-      `?city=${encodeURIComponent(settings.city)}` +
-      `&country=${encodeURIComponent(settings.country)}` +
-      `&method=${encodeURIComponent(settings.method)}` +
-      `&school=${encodeURIComponent(settings.school)}` +
-      `&iso8601=true`;
-
-
-    const response =
-      await fetch(url);
-
-
-    if (!response.ok) {
-      throw new Error(
-        "API response error"
-      );
+    if (saved) {
+      alarmState = {
+        ...alarmState,
+        ...saved
+      };
     }
 
-
-    const json =
-      await response.json();
-
-
-    if (
-      json.code !== 200 ||
-      !json.data
-    ) {
-
-      throw new Error(
-        "Prayer data unavailable"
-      );
-
-    }
-
-
-    prayerData =
-      json.data;
-
-    timings =
-      json.data.timings;
-
-
-    showPrayerTimes();
-
-    showLocation();
-
-    updateNextPrayer();
-
-    statusEl.textContent =
-      "✅ সময়সূচি আপডেট হয়েছে";
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    statusEl.textContent =
-      "❌ সময়সূচি পাওয়া যায়নি। Internet connection পরীক্ষা করুন।";
-
-  }
+  } catch (e) {}
 
 }
 
 
-// =====================================================
-// TIME CLEAN
-// =====================================================
+/* ---------------------------------------------------------
+   Save Alarm Settings
+--------------------------------------------------------- */
 
-function cleanTime(value) {
+function saveAlarmSettings() {
 
-  if (!value) {
-    return "--:--";
-  }
-
-  return value.substring(0, 5);
-}
-
-
-// =====================================================
-// SHOW PRAYER TIMES
-// =====================================================
-
-function showPrayerTimes() {
-
-  const list = [
-    "Fajr",
-    "Dhuhr",
-    "Asr",
-    "Maghrib",
-    "Isha"
-  ];
-
-
-  list.forEach(
-    name => {
-
-      if (
-        prayerElements[name]
-      ) {
-
-        prayerElements[name]
-          .textContent =
-          cleanTime(
-            timings[name]
-          );
-
-      }
-
-    }
+  localStorage.setItem(
+    "aynaPrayerAlarms",
+    JSON.stringify(alarmState)
   );
 
-
-  // ---------------------------------------------------
-  // SEHRI
-  // ---------------------------------------------------
-
-  let sehri =
-    timings.Imsak ||
-    timings.Fajr;
-
-
-  sehri =
-    adjustTime(
-      cleanTime(sehri),
-      settings.sehriAdjust
-    );
-
-
-  document.getElementById(
-    "sehriTime"
-  ).textContent =
-    sehri;
-
-
-  // ---------------------------------------------------
-  // IFTAR
-  // ---------------------------------------------------
-
-  let iftar =
-    timings.Maghrib ||
-    timings.Sunset;
-
-
-  iftar =
-    adjustTime(
-      cleanTime(iftar),
-      settings.iftarAdjust
-    );
-
-
-  document.getElementById(
-    "iftarTime"
-  ).textContent =
-    iftar;
-
-
-  dateText.textContent =
-    `আজ ${getToday()} • ${prayerData.date.hijri.date} হিজরি`;
 }
 
 
-// =====================================================
-// LOCATION
-// =====================================================
+/* ---------------------------------------------------------
+   Time Helpers
+--------------------------------------------------------- */
 
-function showLocation() {
+function timeToMinutes(time) {
 
-  const city =
-    prayerData.meta?.timezone
-      ? `${settings.city}, ${settings.country}`
-      : `${settings.city}, ${settings.country}`;
+  if (!time) return null;
 
-  locationText.textContent =
-    city;
-}
+  const clean = String(time)
+    .replace(/\s/g, "")
+    .split(" ")[0];
 
+  const parts = clean.split(":");
 
-// =====================================================
-// ADJUST TIME
-// =====================================================
+  if (parts.length < 2) return null;
 
-function adjustTime(
-  time,
-  minutes
-) {
+  let h = parseInt(parts[0], 10);
+  let m = parseInt(parts[1], 10);
 
   if (
-    !time ||
-    time === "--:--"
+    Number.isNaN(h) ||
+    Number.isNaN(m)
   ) {
+    return null;
+  }
 
+  return h * 60 + m;
+}
+
+
+function addMinutes(time, amount) {
+
+  const total =
+    timeToMinutes(time) +
+    Number(amount || 0);
+
+  if (!Number.isFinite(total)) {
     return time;
-
   }
 
+  const normalized =
+    ((total % 1440) + 1440) % 1440;
 
-  const parts =
-    time.split(":");
-
-  let h =
-    Number(parts[0]);
-
-  let m =
-    Number(parts[1]);
-
-
-  m += Number(minutes || 0);
-
-
-  while (m >= 60) {
-
-    m -= 60;
-    h++;
-
-  }
-
-
-  while (m < 0) {
-
-    m += 60;
-    h--;
-
-  }
-
-
-  h =
-    (h + 24) % 24;
-
+  const h = Math.floor(normalized / 60);
+  const m = normalized % 60;
 
   return (
     String(h).padStart(2, "0") +
@@ -531,342 +168,1427 @@ function adjustTime(
 }
 
 
-// =====================================================
-// TIME TO DATE
-// =====================================================
+function formatBanglaTime(time) {
 
-function timeToDate(
-  time
-) {
+  if (!time) return "--:--";
 
-  if (
-    !time ||
-    time === "--:--"
-  ) {
+  const t = String(time)
+    .replace(/\s/g, "")
+    .split(" ")[0];
 
-    return null;
+  const parts = t.split(":");
 
+  if (parts.length < 2) {
+    return time;
   }
 
+  let h = parseInt(parts[0], 10);
+  let m = parseInt(parts[1], 10);
 
-  const parts =
-    time.split(":");
+  if (Number.isNaN(h) || Number.isNaN(m)) {
+    return time;
+  }
 
-  const date =
-    new Date();
+  const ampm = h >= 12 ? "PM" : "AM";
 
+  h = h % 12;
 
-  date.setHours(
-    Number(parts[0]),
-    Number(parts[1]),
-    0,
-    0
+  if (h === 0) h = 12;
+
+  return (
+    String(h).padStart(2, "0") +
+    ":" +
+    String(m).padStart(2, "0") +
+    " " +
+    ampm
   );
-
-
-  return date;
 }
 
 
-// =====================================================
-// NEXT PRAYER
-// =====================================================
+function toBanglaDigits(value) {
 
-function updateNextPrayer() {
+  const map = {
+    0: "০",
+    1: "১",
+    2: "২",
+    3: "৩",
+    4: "৪",
+    5: "৫",
+    6: "৬",
+    7: "৭",
+    8: "৮",
+    9: "৯"
+  };
 
-  if (!timings) {
+  return String(value).replace(
+    /\d/g,
+    d => map[d]
+  );
+}
+
+
+/* ---------------------------------------------------------
+   Date Helpers
+--------------------------------------------------------- */
+
+function getTodayString() {
+
+  const now = new Date();
+
+  const d = String(now.getDate())
+    .padStart(2, "0");
+
+  const m = String(now.getMonth() + 1)
+    .padStart(2, "0");
+
+  const y = now.getFullYear();
+
+  return `${d}-${m}-${y}`;
+}
+
+
+function getTodayISO() {
+
+  const now = new Date();
+
+  return (
+    now.getFullYear() +
+    "-" +
+    String(now.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(now.getDate()).padStart(2, "0")
+  );
+}
+
+
+function isoToDate(dateString) {
+
+  if (!dateString) return null;
+
+  const p = String(dateString).split("-");
+
+  if (p.length !== 3) return null;
+
+  return new Date(
+    Number(p[0]),
+    Number(p[1]) - 1,
+    Number(p[2])
+  );
+}
+
+
+function formatDateBangla(dateString) {
+
+  const d = isoToDate(dateString);
+
+  if (!d) return dateString || "";
+
+  const months = [
+    "জানুয়ারি",
+    "ফেব্রুয়ারি",
+    "মার্চ",
+    "এপ্রিল",
+    "মে",
+    "জুন",
+    "জুলাই",
+    "আগস্ট",
+    "সেপ্টেম্বর",
+    "অক্টোবর",
+    "নভেম্বর",
+    "ডিসেম্বর"
+  ];
+
+  return (
+    toBanglaDigits(d.getDate()) +
+    " " +
+    months[d.getMonth()] +
+    " " +
+    toBanglaDigits(d.getFullYear())
+  );
+}
+
+
+/* ---------------------------------------------------------
+   API URL
+--------------------------------------------------------- */
+
+function locationQuery() {
+
+  const params = new URLSearchParams();
+
+  params.set("method", settings.method);
+  params.set("school", settings.school);
+
+  if (settings.sehriAdjust) {
+    params.set(
+      "tune",
+      `0,0,0,0,0,${settings.iftarAdjust || 0},0,0,${settings.sehriAdjust || 0}`
+    );
+  }
+
+  return params.toString();
+}
+
+
+/* ---------------------------------------------------------
+   Fetch JSON
+--------------------------------------------------------- */
+
+async function fetchJSON(url) {
+
+  const response = await fetch(url, {
+    cache: "no-store"
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `HTTP ${response.status}`
+    );
+  }
+
+  const json = await response.json();
+
+  if (
+    json.code &&
+    json.code !== 200
+  ) {
+    throw new Error(
+      json.status || "API error"
+    );
+  }
+
+  return json;
+}
+
+
+/* ---------------------------------------------------------
+   Daily Prayer Data
+--------------------------------------------------------- */
+
+async function loadToday() {
+
+  const date = getTodayString();
+
+  let url;
+
+  if (
+    settings.latitude !== null &&
+    settings.longitude !== null
+  ) {
+
+    url =
+      `${API}/timings/${date}` +
+      `?latitude=${encodeURIComponent(settings.latitude)}` +
+      `&longitude=${encodeURIComponent(settings.longitude)}` +
+      `&method=${settings.method}` +
+      `&school=${settings.school}`;
+
+  } else {
+
+    url =
+      `${API}/timingsByCity/${date}` +
+      `?city=${encodeURIComponent(settings.city)}` +
+      `&country=${encodeURIComponent(settings.country)}` +
+      `&method=${settings.method}` +
+      `&school=${settings.school}`;
+  }
+
+  const json = await fetchJSON(url);
+
+  todayData = json.data;
+
+  renderToday();
+
+}
+
+
+/* ---------------------------------------------------------
+   Render Today's Prayer
+--------------------------------------------------------- */
+
+function renderToday() {
+
+  if (!todayData) return;
+
+  const t = todayData.timings || {};
+
+  const prayerTimes = {
+    Fajr: t.Fajr,
+    Dhuhr: t.Dhuhr,
+    Asr: t.Asr,
+    Maghrib: t.Maghrib,
+    Isha: t.Isha
+  };
+
+  setText(
+    "fajrTime",
+    formatBanglaTime(
+      addMinutes(
+        prayerTimes.Fajr,
+        0
+      )
+    )
+  );
+
+  setText(
+    "dhuhrTime",
+    formatBanglaTime(
+      prayerTimes.Dhuhr
+    )
+  );
+
+  setText(
+    "asrTime",
+    formatBanglaTime(
+      prayerTimes.Asr
+    )
+  );
+
+  setText(
+    "maghribTime",
+    formatBanglaTime(
+      prayerTimes.Maghrib
+    )
+  );
+
+  setText(
+    "ishaTime",
+    formatBanglaTime(
+      prayerTimes.Isha
+    )
+  );
+
+
+  const imsak =
+    t.Imsak ||
+    t.Fajr;
+
+  const sehri =
+    addMinutes(
+      imsak,
+      settings.sehriAdjust || 0
+    );
+
+  const iftar =
+    addMinutes(
+      t.Maghrib ||
+      t.Sunset,
+      settings.iftarAdjust || 0
+    );
+
+
+  setText(
+    "todaySehri",
+    formatBanglaTime(sehri)
+  );
+
+  setText(
+    "todayIftar",
+    formatBanglaTime(iftar)
+  );
+
+
+  const hijri =
+    todayData.date &&
+    todayData.date.hijri;
+
+  if (hijri) {
+
+    setText(
+      "currentHijri",
+      `${hijri.day} ${hijri.month.en} ${hijri.year}`
+    );
+  }
+
+
+  if (todayData.date) {
+
+    const gregorian =
+      todayData.date.gregorian;
+
+    if (gregorian) {
+
+      setText(
+        "dateText",
+        formatDateBangla(
+          gregorian.date.split("-").reverse().join("-")
+        )
+      );
+    }
+  }
+
+
+  setText(
+    "locationText",
+    `${settings.country} • ${settings.city}`
+  );
+
+  startPrayerCountdown();
+
+  startFastCountdown(
+    sehri,
+    iftar
+  );
+}
+
+
+/* ---------------------------------------------------------
+   Set Text
+--------------------------------------------------------- */
+
+function setText(id, value) {
+
+  const el = $(id);
+
+  if (el) {
+    el.textContent = value;
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   Annual Prayer Calendar
+--------------------------------------------------------- */
+
+async function loadAnnualCalendar() {
+
+  const year =
+    new Date().getFullYear();
+
+  let url;
+
+  if (
+    settings.latitude !== null &&
+    settings.longitude !== null
+  ) {
+
+    url =
+      `${API}/calendar/${year}` +
+      `?latitude=${encodeURIComponent(settings.latitude)}` +
+      `&longitude=${encodeURIComponent(settings.longitude)}` +
+      `&method=${settings.method}` +
+      `&school=${settings.school}`;
+
+  } else {
+
+    url =
+      `${API}/calendarByCity/${year}` +
+      `?city=${encodeURIComponent(settings.city)}` +
+      `&country=${encodeURIComponent(settings.country)}` +
+      `&method=${settings.method}` +
+      `&school=${settings.school}`;
+  }
+
+  const json = await fetchJSON(url);
+
+  annualData = Array.isArray(json.data)
+    ? json.data
+    : [];
+
+  renderAnnualCalendar();
+
+  /*
+    Annual data থেকে Ramadan-ও বের করা হবে।
+    Hijri month 9 = Ramadan.
+  */
+
+  ramadanData =
+    annualData.filter(item => {
+
+      const h =
+        item.date &&
+        item.date.hijri;
+
+      return (
+        h &&
+        h.month &&
+        Number(h.month.number) === 9
+      );
+    });
+
+  renderRamadanCalendar();
+
+}
+
+
+/* ---------------------------------------------------------
+   Annual Calendar UI
+--------------------------------------------------------- */
+
+function ensureAnnualSection() {
+
+  let section =
+    document.getElementById(
+      "annualPrayerSection"
+    );
+
+  if (section) {
+    return section;
+  }
+
+  section =
+    document.createElement("section");
+
+  section.id =
+    "annualPrayerSection";
+
+  section.className =
+    "section";
+
+  section.innerHTML = `
+
+    <div class="section-title">
+      <h3>📆 সারা বছরের নামাজের সময়</h3>
+      <span class="badge" id="annualYearBadge">
+        ${new Date().getFullYear()}
+      </span>
+    </div>
+
+    <div class="calendar-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>তারিখ</th>
+            <th>হিজরি</th>
+            <th>ফজর</th>
+            <th>যোহর</th>
+            <th>আসর</th>
+            <th>মাগরিব</th>
+            <th>এশা</th>
+          </tr>
+        </thead>
+
+        <tbody id="annualPrayerBody">
+          <tr>
+            <td colspan="7"
+                class="loading">
+              সারা বছরের নামাজের সময় লোড হচ্ছে...
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <div class="calendar-note">
+      এই তালিকায় নির্বাচিত বছরের প্রতিদিনের
+      ৫ ওয়াক্ত নামাজের সময় দেখানো হবে।
+    </div>
+  `;
+
+  const main =
+    document.querySelector(".container");
+
+  const footer =
+    document.querySelector(".footer");
+
+  if (main && footer) {
+    main.insertBefore(section, footer);
+  } else if (main) {
+    main.appendChild(section);
+  }
+
+  return section;
+}
+
+
+/* ---------------------------------------------------------
+   Render Annual Calendar
+--------------------------------------------------------- */
+
+function renderAnnualCalendar() {
+
+  const section =
+    ensureAnnualSection();
+
+  const body =
+    document.getElementById(
+      "annualPrayerBody"
+    );
+
+  if (!body) return;
+
+  if (!annualData.length) {
+
+    body.innerHTML = `
+      <tr>
+        <td colspan="7"
+            class="loading">
+          কোনো বার্ষিক তথ্য পাওয়া যায়নি।
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  const today =
+    getTodayISO();
+
+  let html = "";
+
+  annualData.forEach(item => {
+
+    const g =
+      item.date &&
+      item.date.gregorian;
+
+    const h =
+      item.date &&
+      item.date.hijri;
+
+    if (!g) return;
+
+    const iso =
+      `${g.year}-${String(g.month.number).padStart(2,"0")}-${String(g.day).padStart(2,"0")}`;
+
+    const isToday =
+      iso === today;
+
+    const t =
+      item.timings || {};
+
+    html += `
+
+      <tr class="${isToday ? "today" : ""}">
+
+        <td>
+          ${toBanglaDigits(g.day)}
+          /
+          ${toBanglaDigits(g.month.number)}
+        </td>
+
+        <td>
+          ${h ? toBanglaDigits(h.day) : "-"}
+          <span class="hijri">
+            ${h ? h.month.en : ""}
+          </span>
+        </td>
+
+        <td>
+          ${formatBanglaTime(t.Fajr)}
+        </td>
+
+        <td>
+          ${formatBanglaTime(t.Dhuhr)}
+        </td>
+
+        <td>
+          ${formatBanglaTime(t.Asr)}
+        </td>
+
+        <td>
+          ${formatBanglaTime(t.Maghrib)}
+        </td>
+
+        <td>
+          ${formatBanglaTime(t.Isha)}
+        </td>
+
+      </tr>
+    `;
+  });
+
+  body.innerHTML =
+    html ||
+    `
+      <tr>
+        <td colspan="7"
+            class="loading">
+          তথ্য পাওয়া যায়নি।
+        </td>
+      </tr>
+    `;
+
+}
+
+
+/* ---------------------------------------------------------
+   Ramadan Calendar
+--------------------------------------------------------- */
+
+function renderRamadanCalendar() {
+
+  const body =
+    $("ramadanCalendarBody");
+
+  if (!body) return;
+
+  if (!ramadanData.length) {
+
+    body.innerHTML = `
+      <tr>
+        <td colspan="5"
+            class="loading">
+
+          এই Gregorian বছরে Ramadan-এর
+          ৩০ দিনের তথ্য পাওয়া যায়নি।
+
+        </td>
+      </tr>
+    `;
+
+    setText(
+      "ramadanYear",
+      "Ramadan"
+    );
+
     return;
   }
 
 
+  ramadanData.sort(
+    (a,b) =>
+      Number(a.date.hijri.day) -
+      Number(b.date.hijri.day)
+  );
+
+
+  const ramadanYear =
+    ramadanData[0]
+      ?.date
+      ?.hijri
+      ?.year;
+
+  setText(
+    "ramadanYear",
+    ramadanYear
+      ? `রমজান ${ramadanYear}`
+      : "রমজান"
+  );
+
+
+  let html = "";
+
+  const today =
+    getTodayISO();
+
+
+  ramadanData.forEach(item => {
+
+    const g =
+      item.date.gregorian;
+
+    const h =
+      item.date.hijri;
+
+    const t =
+      item.timings || {};
+
+
+    const iso =
+      `${g.year}-${String(g.month.number).padStart(2,"0")}-${String(g.day).padStart(2,"0")}`;
+
+
+    const isToday =
+      iso === today;
+
+
+    let sehri =
+      t.Imsak ||
+      t.Fajr;
+
+
+    let iftar =
+      t.Maghrib ||
+      t.Sunset;
+
+
+    sehri =
+      addMinutes(
+        sehri,
+        settings.sehriAdjust || 0
+      );
+
+
+    iftar =
+      addMinutes(
+        iftar,
+        settings.iftarAdjust || 0
+      );
+
+
+    html += `
+
+      <tr class="${isToday ? "today" : ""}">
+
+        <td>
+          <span class="day-number">
+            ${toBanglaDigits(h.day)}
+          </span>
+        </td>
+
+        <td>
+          ${toBanglaDigits(h.day)}
+          <span class="hijri">
+            ${h.month.en}
+          </span>
+        </td>
+
+        <td>
+          ${formatDateBangla(iso)}
+        </td>
+
+        <td class="sehri">
+          ${formatBanglaTime(sehri)}
+        </td>
+
+        <td class="iftar">
+          ${formatBanglaTime(iftar)}
+        </td>
+
+      </tr>
+    `;
+  });
+
+
+  body.innerHTML =
+    html ||
+    `
+      <tr>
+        <td colspan="5"
+            class="loading">
+          রোজার তথ্য পাওয়া যায়নি।
+        </td>
+      </tr>
+    `;
+}
+
+
+/* ---------------------------------------------------------
+   Prayer Countdown
+--------------------------------------------------------- */
+
+function startPrayerCountdown() {
+
+  if (countdownTimer) {
+    clearInterval(countdownTimer);
+  }
+
+  updatePrayerCountdown();
+
+  countdownTimer =
+    setInterval(
+      updatePrayerCountdown,
+      1000
+    );
+}
+
+
+function updatePrayerCountdown() {
+
+  if (!todayData) return;
+
+  const t =
+    todayData.timings || {};
+
   const now =
     new Date();
 
+  const nowMinutes =
+    now.getHours() * 60 +
+    now.getMinutes() +
+    now.getSeconds() / 60;
+
 
   const prayers = [
-
     {
-      name: "ফজর",
-      key: "Fajr"
+      key: "Fajr",
+      time: t.Fajr
     },
-
     {
-      name: "যোহর",
-      key: "Dhuhr"
+      key: "Dhuhr",
+      time: t.Dhuhr
     },
-
     {
-      name: "আসর",
-      key: "Asr"
+      key: "Asr",
+      time: t.Asr
     },
-
     {
-      name: "মাগরিব",
-      key: "Maghrib"
+      key: "Maghrib",
+      time: t.Maghrib
     },
-
     {
-      name: "এশা",
-      key: "Isha"
+      key: "Isha",
+      time: t.Isha
     }
-
   ];
 
 
   let next = null;
 
+  for (const p of prayers) {
 
-  for (
-    const prayer of prayers
-  ) {
-
-    const time =
-      timeToDate(
-        cleanTime(
-          timings[prayer.key]
-        )
-      );
-
+    const mins =
+      timeToMinutes(p.time);
 
     if (
-      time &&
-      time > now
+      mins !== null &&
+      mins > nowMinutes
     ) {
-
-      next = {
-        ...prayer,
-        time
-      };
-
+      next = p;
       break;
-
     }
-
   }
 
 
-  // ---------------------------------------------------
-  // AFTER ISHA → TOMORROW FAJR
-  // ---------------------------------------------------
+  /*
+    যদি আজকের সব নামাজ শেষ হয়ে যায়,
+    তাহলে আগামীকালের ফজরকে next হিসেবে দেখাবে।
+  */
 
   if (!next) {
 
-    next = {
-      name: "ফজর",
-      key: "Fajr",
-      time: timeToDate(
-        cleanTime(
-          timings.Fajr
-        )
-      )
-    };
+    const fajr =
+      timeToMinutes(t.Fajr);
 
+    if (fajr !== null) {
 
-    if (next.time) {
-      next.time.setDate(
-        next.time.getDate() + 1
+      const diff =
+        (1440 - nowMinutes) +
+        fajr;
+
+      setText(
+        "nextPrayer",
+        "আগামীকাল " +
+        prayerNames.Fajr
       );
+
+      setText(
+        "countdown",
+        formatDuration(diff * 60)
+      );
+
+      return;
     }
-
   }
 
 
-  if (!next) {
-    return;
-  }
+  if (!next) return;
 
 
-  nextPrayer.textContent =
-    next.name;
+  const nextMinutes =
+    timeToMinutes(next.time);
+
+  const diffSeconds =
+    Math.max(
+      0,
+      Math.round(
+        (nextMinutes - nowMinutes) *
+        60
+      )
+    );
 
 
-  updateCountdown(
-    next.time
+  setText(
+    "nextPrayer",
+    prayerNames[next.key]
+  );
+
+
+  setText(
+    "countdown",
+    formatDuration(diffSeconds)
   );
 }
 
 
-// =====================================================
-// COUNTDOWN
-// =====================================================
+/* ---------------------------------------------------------
+   Duration
+--------------------------------------------------------- */
 
-function updateCountdown(
-  target
-) {
+function formatDuration(totalSeconds) {
 
-  if (!target) {
-    return;
-  }
-
-
-  const now =
-    new Date();
-
-
-  let diff =
-    target.getTime() -
-    now.getTime();
-
-
-  if (diff < 0) {
-
-    updateNextPrayer();
-
-    return;
-
-  }
-
-
-  const totalSeconds =
-    Math.floor(
-      diff / 1000
+  totalSeconds =
+    Math.max(
+      0,
+      Math.floor(totalSeconds)
     );
 
-
-  const hours =
+  const h =
     Math.floor(
       totalSeconds / 3600
     );
 
-
-  const minutes =
+  const m =
     Math.floor(
       (totalSeconds % 3600) / 60
     );
 
-
-  const seconds =
+  const s =
     totalSeconds % 60;
 
-
-  countdown.textContent =
-    `${String(hours).padStart(2,"0")}:` +
-    `${String(minutes).padStart(2,"0")}:` +
-    `${String(seconds).padStart(2,"0")}`;
+  return (
+    String(h).padStart(2,"0") +
+    ":" +
+    String(m).padStart(2,"0") +
+    ":" +
+    String(s).padStart(2,"0")
+  );
 }
 
 
-// =====================================================
-// RAMADAN COUNTDOWN
-// =====================================================
+/* ---------------------------------------------------------
+   Sehri / Iftar Countdown
+--------------------------------------------------------- */
 
-function updateRamadanCountdown() {
+function startFastCountdown(
+  sehri,
+  iftar
+) {
 
-  if (!timings) {
+  if (fastCountdownTimer) {
+    clearInterval(fastCountdownTimer);
+  }
+
+  function update() {
+
+    const now =
+      new Date();
+
+    const nowSeconds =
+      now.getHours() * 3600 +
+      now.getMinutes() * 60 +
+      now.getSeconds();
+
+
+    const sehriMin =
+      timeToMinutes(sehri);
+
+    const iftarMin =
+      timeToMinutes(iftar);
+
+
+    if (
+      sehriMin === null ||
+      iftarMin === null
+    ) {
+      return;
+    }
+
+
+    const sehriSeconds =
+      sehriMin * 60;
+
+    const iftarSeconds =
+      iftarMin * 60;
+
+
+    let target;
+    let label;
+
+
+    if (nowSeconds < sehriSeconds) {
+
+      target =
+        sehriSeconds;
+
+      label =
+        "সেহরি শেষ হতে";
+
+    } else if (
+      nowSeconds < iftarSeconds
+    ) {
+
+      target =
+        iftarSeconds;
+
+      label =
+        "ইফতার হতে";
+
+    } else {
+
+      setText(
+        "fastCountdown",
+        "আজকের ইফতার শেষ হয়েছে"
+      );
+
+      return;
+    }
+
+
+    const diff =
+      target - nowSeconds;
+
+
+    setText(
+      "fastCountdown",
+      `${label}: ${formatDuration(diff)}`
+    );
+  }
+
+
+  update();
+
+  fastCountdownTimer =
+    setInterval(
+      update,
+      1000
+    );
+}
+
+
+/* ---------------------------------------------------------
+   GPS
+--------------------------------------------------------- */
+
+function useGPS() {
+
+  if (!navigator.geolocation) {
+
+    showStatus(
+      "এই ফোনে GPS/Geolocation পাওয়া যাচ্ছে না।",
+      true
+    );
+
     return;
   }
 
 
-  const now =
-    new Date();
+  showStatus(
+    "📍 GPS অবস্থান নেওয়া হচ্ছে..."
+  );
 
 
-  const sehri =
-    timeToDate(
-      adjustTime(
-        cleanTime(
-          timings.Imsak ||
-          timings.Fajr
-        ),
-        settings.sehriAdjust
-      )
+  navigator.geolocation.getCurrentPosition(
+
+    async position => {
+
+      settings.latitude =
+        position.coords.latitude;
+
+      settings.longitude =
+        position.coords.longitude;
+
+
+      settings.city =
+        "GPS Location";
+
+
+      saveSettings();
+
+      syncForm();
+
+
+      try {
+
+        await loadToday();
+
+        await loadAnnualCalendar();
+
+        showStatus(
+          "✅ GPS অবস্থান অনুযায়ী নামাজ ও রোজার সময় আপডেট হয়েছে।"
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+        showStatus(
+          "GPS পাওয়া গেছে, কিন্তু সময়সূচী লোড করা যায়নি।",
+          true
+        );
+      }
+
+    },
+
+    error => {
+
+      console.error(error);
+
+      showStatus(
+        "GPS অনুমতি দেওয়া হয়নি অথবা অবস্থান পাওয়া যায়নি। শহরের নাম দিয়ে চেষ্টা করুন।",
+        true
+      );
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 600000
+    }
+  );
+}
+
+
+/* ---------------------------------------------------------
+   Update Settings From Form
+--------------------------------------------------------- */
+
+function readForm() {
+
+  const country =
+    $("country")?.value.trim();
+
+  const city =
+    $("city")?.value.trim();
+
+  const method =
+    Number(
+      $("method")?.value || 1
+    );
+
+  const school =
+    Number(
+      $("school")?.value || 1
+    );
+
+  const sehriAdjust =
+    Number(
+      $("sehriAdjust")?.value || 0
+    );
+
+  const iftarAdjust =
+    Number(
+      $("iftarAdjust")?.value || 0
     );
 
 
-  const iftar =
-    timeToDate(
-      adjustTime(
-        cleanTime(
-          timings.Maghrib ||
-          timings.Sunset
-        ),
-        settings.iftarAdjust
-      )
+  settings.country =
+    country || "Bangladesh";
+
+  settings.city =
+    city || "Cox's Bazar";
+
+  settings.method =
+    method;
+
+  settings.school =
+    school;
+
+  settings.sehriAdjust =
+    sehriAdjust;
+
+  settings.iftarAdjust =
+    iftarAdjust;
+
+
+  /*
+    শহর manually পরিবর্তন করলে GPS location
+    বাদ দেওয়া হবে।
+  */
+
+  settings.latitude = null;
+  settings.longitude = null;
+
+
+  saveSettings();
+}
+
+
+/* ---------------------------------------------------------
+   Sync Form
+--------------------------------------------------------- */
+
+function syncForm() {
+
+  if ($("country")) {
+    $("country").value =
+      settings.country;
+  }
+
+  if ($("city")) {
+    $("city").value =
+      settings.city;
+  }
+
+  if ($("method")) {
+    $("method").value =
+      String(settings.method);
+  }
+
+  if ($("school")) {
+    $("school").value =
+      String(settings.school);
+  }
+
+  if ($("sehriAdjust")) {
+    $("sehriAdjust").value =
+      settings.sehriAdjust;
+  }
+
+  if ($("iftarAdjust")) {
+    $("iftarAdjust").value =
+      settings.iftarAdjust;
+  }
+
+  if ($("ramadanAlarm")) {
+    $("ramadanAlarm").checked =
+      settings.ramadanAlarm;
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   Update Everything
+--------------------------------------------------------- */
+
+async function updateEverything() {
+
+  try {
+
+    readForm();
+
+    showStatus(
+      "⏳ নামাজ, রোজা ও সারা বছরের ক্যালেন্ডার লোড হচ্ছে..."
     );
 
 
-  let target = null;
+    await loadToday();
 
-  let label = "";
+    await loadAnnualCalendar();
 
+
+    showStatus(
+      "✅ নামাজের সময়, ৩০ দিনের রোজার ক্যালেন্ডার এবং সারা বছরের নামাজের সময় আপডেট হয়েছে।"
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    showStatus(
+      "❌ সময়সূচী লোড করা যায়নি। দেশ/শহরের নাম পরীক্ষা করুন এবং Internet চালু রাখুন।",
+      true
+    );
+  }
+}
+
+
+/* ---------------------------------------------------------
+   Status
+--------------------------------------------------------- */
+
+function showStatus(
+  message,
+  error = false
+) {
+
+  const el =
+    $("statusMsg");
+
+  if (!el) return;
+
+  el.textContent =
+    message;
+
+  el.classList.toggle(
+    "error",
+    error
+  );
+}
+
+
+/* ---------------------------------------------------------
+   Prayer Alarm
+--------------------------------------------------------- */
+
+function setupPrayerAlarms() {
+
+  loadAlarmSettings();
+
+
+  document
+    .querySelectorAll(
+      ".alarm"
+    )
+    .forEach(checkbox => {
+
+      const key =
+        checkbox.dataset.prayer;
+
+      checkbox.checked =
+        !!alarmState[key];
+
+
+      checkbox.addEventListener(
+        "change",
+        () => {
+
+          alarmState[key] =
+            checkbox.checked;
+
+          saveAlarmSettings();
+
+          if (
+            checkbox.checked
+          ) {
+
+            speak(
+              `${prayerNames[key]} এর অ্যালার্ম চালু হয়েছে।`
+            );
+
+          }
+
+        }
+      );
+
+    });
+}
+
+
+/* ---------------------------------------------------------
+   Voice
+--------------------------------------------------------- */
+
+function speak(text) {
 
   if (
-    sehri &&
-    now < sehri
+    !("speechSynthesis" in window)
   ) {
-
-    target = sehri;
-    label = "সেহরি শেষ হতে";
-
-  } else if (
-    iftar &&
-    now < iftar
-  ) {
-
-    target = iftar;
-    label = "ইফতার হতে";
-
-  }
-
-
-  if (!target) {
-
-    ramadanCountdown.textContent =
-      "আজকের সেহরি/ইফতার সময় শেষ";
-
     return;
   }
 
+  try {
 
-  let diff =
-    target.getTime() -
-    now.getTime();
+    window.speechSynthesis.cancel();
 
+    const utterance =
+      new SpeechSynthesisUtterance(
+        text
+      );
 
-  const seconds =
-    Math.floor(
-      diff / 1000
+    utterance.lang =
+      "bn-BD";
+
+    utterance.rate =
+      0.9;
+
+    utterance.pitch =
+      1;
+
+    window.speechSynthesis.speak(
+      utterance
     );
 
-
-  const h =
-    Math.floor(
-      seconds / 3600
-    );
-
-
-  const m =
-    Math.floor(
-      (seconds % 3600) / 60
-    );
-
-
-  const s =
-    seconds % 60;
-
-
-  ramadanCountdown.textContent =
-    `${label}: ` +
-    `${String(h).padStart(2,"0")}:` +
-    `${String(m).padStart(2,"0")}:` +
-    `${String(s).padStart(2,"0")}`;
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 
-// =====================================================
-// ALARM CHECK
-// =====================================================
+/* ---------------------------------------------------------
+   Check Prayer Alarms
+--------------------------------------------------------- */
 
-function checkAlarms() {
+let lastAlarmKey = "";
 
-  if (!timings) {
-    return;
-  }
 
+function checkPrayerAlarms() {
+
+  if (!todayData) return;
+
+  const t =
+    todayData.timings || {};
 
   const now =
     new Date();
-
 
   const currentHour =
     now.getHours();
@@ -874,10 +1596,6 @@ function checkAlarms() {
   const currentMinute =
     now.getMinutes();
 
-
-  // ---------------------------------------------------
-  // FIVE PRAYER ALARMS
-  // ---------------------------------------------------
 
   const prayers = [
     "Fajr",
@@ -888,603 +1606,408 @@ function checkAlarms() {
   ];
 
 
-  prayers.forEach(
-    prayer => {
+  prayers.forEach(key => {
 
-      const checkbox =
-        alarmElements[prayer];
+    if (!alarmState[key]) {
+      return;
+    }
+
+    const time =
+      t[key];
+
+    if (!time) return;
+
+    const minutes =
+      timeToMinutes(time);
+
+    if (minutes === null) {
+      return;
+    }
+
+
+    if (
+      currentHour ===
+      Math.floor(minutes / 60) &&
+
+      currentMinute ===
+      minutes % 60
+    ) {
+
+      const alarmKey =
+        `${getTodayISO()}-${key}-${currentHour}-${currentMinute}`;
 
 
       if (
-        !checkbox ||
-        !checkbox.checked
+        lastAlarmKey !== alarmKey
       ) {
-        return;
-      }
 
+        lastAlarmKey =
+          alarmKey;
 
-      const time =
-        cleanTime(
-          timings[prayer]
+        speak(
+          `${prayerNames[key]} এর সময় হয়েছে।`
         );
 
-
-      if (!time) {
-        return;
+        vibrate();
       }
-
-
-      const parts =
-        time.split(":");
-
-
-      const hour =
-        Number(parts[0]);
-
-      const minute =
-        Number(parts[1]);
-
-
-      if (
-        currentHour === hour &&
-        currentMinute === minute
-      ) {
-
-        const key =
-          `${prayer}-${getToday()}`;
-
-
-        if (
-          lastAlarmKey !== key
-        ) {
-
-          lastAlarmKey =
-            key;
-
-          playAlarm(
-            `এখন ${getBanglaPrayerName(prayer)} নামাজের সময়।`
-          );
-
-        }
-
-      }
-
     }
-  );
 
-
-  // ---------------------------------------------------
-  // RAMADAN ALERT
-  // ---------------------------------------------------
-
-  if (
-    ramadanAlarm.checked
-  ) {
-
-    checkRamadanAlerts();
-
-  }
-
+  });
 }
 
 
-// =====================================================
-// RAMADAN ALERTS
-// =====================================================
+/* ---------------------------------------------------------
+   Ramadan Alert
+--------------------------------------------------------- */
 
-function checkRamadanAlerts() {
+let lastRamadanAlert = "";
+
+
+function checkRamadanAlert() {
+
+  if (
+    !settings.ramadanAlarm ||
+    !todayData
+  ) {
+    return;
+  }
+
+
+  const t =
+    todayData.timings || {};
+
+
+  const sehri =
+    addMinutes(
+      t.Imsak || t.Fajr,
+      settings.sehriAdjust || 0
+    );
+
+
+  const iftar =
+    addMinutes(
+      t.Maghrib || t.Sunset,
+      settings.iftarAdjust || 0
+    );
+
 
   const now =
     new Date();
 
 
-  // ---------------------------------------------------
-  // SEHRI 90 MINUTES BEFORE
-  // ---------------------------------------------------
-
-  const sehri =
-    timeToDate(
-      adjustTime(
-        cleanTime(
-          timings.Imsak ||
-          timings.Fajr
-        ),
-        settings.sehriAdjust
-      )
-    );
+  const nowMinutes =
+    now.getHours() * 60 +
+    now.getMinutes();
 
 
-  // ---------------------------------------------------
-  // IFTAR 60 MINUTES BEFORE
-  // ---------------------------------------------------
+  const sehriMinutes =
+    timeToMinutes(sehri);
 
-  const iftar =
-    timeToDate(
-      adjustTime(
-        cleanTime(
-          timings.Maghrib ||
-          timings.Sunset
-        ),
-        settings.iftarAdjust
-      )
-    );
+  const iftarMinutes =
+    timeToMinutes(iftar);
 
 
-  if (sehri) {
+  /*
+    সেহরির ৯০ মিনিট আগে
+  */
 
-    const alertTime =
-      new Date(
-        sehri.getTime() -
-        90 * 60 * 1000
-      );
-
-
-    if (
-      sameMinute(
-        now,
-        alertTime
-      )
-    ) {
-
-      playAlarm(
-        "সেহরি শেষ হতে আর এক ঘণ্টা ত্রিশ মিনিট বাকি।"
-      );
-
-    }
-
-  }
-
-
-  if (iftar) {
-
-    const alertTime =
-      new Date(
-        iftar.getTime() -
-        60 * 60 * 1000
-      );
-
-
-    if (
-      sameMinute(
-        now,
-        alertTime
-      )
-    ) {
-
-      playAlarm(
-        "ইফতার হতে আর এক ঘণ্টা বাকি।"
-      );
-
-    }
-
-  }
-
-}
-
-
-// =====================================================
-// SAME MINUTE
-// =====================================================
-
-function sameMinute(
-  a,
-  b
-) {
-
-  return (
-    a.getHours() === b.getHours() &&
-    a.getMinutes() === b.getMinutes()
-  );
-
-}
-
-
-// =====================================================
-// PRAYER NAME
-// =====================================================
-
-function getBanglaPrayerName(
-  prayer
-) {
-
-  const names = {
-
-    Fajr: "ফজর",
-
-    Dhuhr: "যোহর",
-
-    Asr: "আসর",
-
-    Maghrib: "মাগরিব",
-
-    Isha: "এশা"
-
-  };
-
-
-  return names[prayer] ||
-    prayer;
-}
-
-
-// =====================================================
-// ALARM
-// =====================================================
-
-function playAlarm(
-  message
-) {
-
-  // Voice
   if (
-    "speechSynthesis" in window
+    sehriMinutes !== null
   ) {
 
-    window.speechSynthesis.cancel();
+    const alertTime =
+      sehriMinutes - 90;
 
 
-    const voice =
-      new SpeechSynthesisUtterance(
-        message
-      );
+    if (
+      nowMinutes === alertTime
+    ) {
 
+      const key =
+        `${getTodayISO()}-sehri`;
 
-    voice.lang =
-      "bn-BD";
+      if (
+        lastRamadanAlert !== key
+      ) {
 
+        lastRamadanAlert =
+          key;
 
-    voice.rate =
-      .85;
+        speak(
+          "সেহরি শেষ হতে ১ ঘণ্টা ৩০ মিনিট বাকি।"
+        );
 
-
-    voice.pitch =
-      1;
-
-
-    window.speechSynthesis.speak(
-      voice
-    );
-
+        vibrate();
+      }
+    }
   }
 
 
-  // Vibration
+  /*
+    ইফতারের ৬০ মিনিট আগে
+  */
+
   if (
-    navigator.vibrate
+    iftarMinutes !== null
+  ) {
+
+    const alertTime =
+      iftarMinutes - 60;
+
+
+    if (
+      nowMinutes === alertTime
+    ) {
+
+      const key =
+        `${getTodayISO()}-iftar`;
+
+      if (
+        lastRamadanAlert !== key
+      ) {
+
+        lastRamadanAlert =
+          key;
+
+        speak(
+          "ইফতার হতে ১ ঘণ্টা বাকি।"
+        );
+
+        vibrate();
+      }
+    }
+  }
+}
+
+
+/* ---------------------------------------------------------
+   Vibration
+--------------------------------------------------------- */
+
+function vibrate() {
+
+  if (
+    "vibrate" in navigator
   ) {
 
     navigator.vibrate([
-      500,
       300,
-      500,
-      300,
-      800
+      150,
+      300
     ]);
-
   }
 
 }
 
 
-// =====================================================
-// GPS
-// =====================================================
+/* ---------------------------------------------------------
+   Alarm Loop
+--------------------------------------------------------- */
 
-document
-  .getElementById("gpsBtn")
-  .addEventListener(
-    "click",
+setInterval(() => {
+
+  checkPrayerAlarms();
+
+  checkRamadanAlert();
+
+}, 1000);
+
+
+/* ---------------------------------------------------------
+   Ramadan Alarm Toggle
+--------------------------------------------------------- */
+
+function setupRamadanAlarm() {
+
+  const checkbox =
+    $("ramadanAlarm");
+
+  if (!checkbox) {
+    return;
+  }
+
+
+  checkbox.checked =
+    !!settings.ramadanAlarm;
+
+
+  checkbox.addEventListener(
+    "change",
     () => {
+
+      settings.ramadanAlarm =
+        checkbox.checked;
+
+      saveSettings();
+
 
       if (
-        !navigator.geolocation
+        checkbox.checked
       ) {
 
-        statusEl.textContent =
-          "এই ফোনে GPS পাওয়া যায়নি।";
-
-        return;
+        speak(
+          "সেহরি ও ইফতার Alert চালু হয়েছে।"
+        );
       }
-
-
-      statusEl.textContent =
-        "📍 GPS অবস্থান নেওয়া হচ্ছে...";
-
-
-      navigator.geolocation.getCurrentPosition(
-
-        async position => {
-
-          const lat =
-            position.coords.latitude;
-
-          const lon =
-            position.coords.longitude;
-
-
-          await loadPrayerTimesByCoordinates(
-            lat,
-            lon
-          );
-
-        },
-
-        error => {
-
-          console.error(error);
-
-          statusEl.textContent =
-            "GPS permission দেওয়া হয়নি অথবা অবস্থান পাওয়া যায়নি।";
-
-        },
-
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 60000
-        }
-
-      );
 
     }
   );
-
-
-// =====================================================
-// LOAD BY COORDINATES
-// =====================================================
-
-async function loadPrayerTimesByCoordinates(
-  latitude,
-  longitude
-) {
-
-  try {
-
-    statusEl.textContent =
-      "🌍 GPS অনুযায়ী সময় বের করা হচ্ছে...";
-
-
-    const date =
-      getToday();
-
-
-    const url =
-      `https://api.aladhan.com/v1/timings/${date}` +
-      `?latitude=${latitude}` +
-      `&longitude=${longitude}` +
-      `&method=${settings.method}` +
-      `&school=${settings.school}` +
-      `&iso8601=true`;
-
-
-    const response =
-      await fetch(url);
-
-
-    const json =
-      await response.json();
-
-
-    if (
-      json.code !== 200 ||
-      !json.data
-    ) {
-
-      throw new Error(
-        "GPS prayer data unavailable"
-      );
-
-    }
-
-
-    prayerData =
-      json.data;
-
-    timings =
-      json.data.timings;
-
-
-    showPrayerTimes();
-
-
-    const timezone =
-      json.data.meta?.timezone ||
-      "Local";
-
-
-    locationText.textContent =
-      `GPS Location • ${timezone}`;
-
-
-    statusEl.textContent =
-      "✅ GPS অনুযায়ী সময় আপডেট হয়েছে";
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    statusEl.textContent =
-      "❌ GPS অনুযায়ী সময় পাওয়া যায়নি।";
-
-  }
-
 }
 
 
-// =====================================================
-// LOAD BUTTON
-// =====================================================
+/* ---------------------------------------------------------
+   Reset
+--------------------------------------------------------- */
 
-document
-  .getElementById("loadBtn")
-  .addEventListener(
-    "click",
-    () => {
+function resetSettings() {
 
-      loadPrayerTimes();
+  settings =
+    { ...DEFAULTS };
 
-    }
+  localStorage.removeItem(
+    "aynaPrayerSettings"
   );
 
-
-// =====================================================
-// RESET
-// =====================================================
-
-document
-  .getElementById("resetBtn")
-  .addEventListener(
-    "click",
-    () => {
-
-      localStorage.removeItem(
-        "ayna_prayer_country"
-      );
-
-      localStorage.removeItem(
-        "ayna_prayer_city"
-      );
-
-      localStorage.removeItem(
-        "ayna_prayer_method"
-      );
-
-      localStorage.removeItem(
-        "ayna_prayer_school"
-      );
-
-      localStorage.removeItem(
-        "ayna_sehri_adjust"
-      );
-
-      localStorage.removeItem(
-        "ayna_iftar_adjust"
-      );
-
-
-      location.reload();
-
-    }
+  localStorage.removeItem(
+    "aynaPrayerAlarms"
   );
 
+  alarmState = {
+    Fajr: false,
+    Dhuhr: false,
+    Asr: false,
+    Maghrib: false,
+    Isha: false
+  };
 
-// =====================================================
-// ALARM SAVE
-// =====================================================
+  syncForm();
 
-Object.keys(
-  alarmElements
-).forEach(
-  prayer => {
-
-    const checkbox =
-      alarmElements[prayer];
-
-
-    const storageKey =
-      `ayna_alarm_${prayer}`;
-
-
-    checkbox.checked =
-      localStorage.getItem(
-        storageKey
-      ) === "true";
+  document
+    .querySelectorAll(
+      ".alarm"
+    )
+    .forEach(
+      el => el.checked = false
+    );
 
 
-    checkbox.addEventListener(
-      "change",
+  updateEverything();
+}
+
+
+/* ---------------------------------------------------------
+   Event Listeners
+--------------------------------------------------------- */
+
+function setupEvents() {
+
+  const updateBtn =
+    $("updateBtn");
+
+  if (updateBtn) {
+
+    updateBtn.addEventListener(
+      "click",
+      updateEverything
+    );
+  }
+
+
+  const resetBtn =
+    $("resetBtn");
+
+  if (resetBtn) {
+
+    resetBtn.addEventListener(
+      "click",
+      resetSettings
+    );
+  }
+
+
+  const gpsBtn =
+    $("gpsBtn");
+
+  if (gpsBtn) {
+
+    gpsBtn.addEventListener(
+      "click",
+      useGPS
+    );
+  }
+
+
+  const backBtn =
+    $("backBtn");
+
+  if (backBtn) {
+
+    backBtn.addEventListener(
+      "click",
       () => {
 
-        localStorage.setItem(
-          storageKey,
-          String(
-            checkbox.checked
-          )
-        );
+        if (
+          history.length > 1
+        ) {
+
+          history.back();
+
+        } else {
+
+          window.location.href =
+            "./index.html";
+        }
 
       }
     );
-
   }
-);
+
+}
 
 
-// =====================================================
-// RAMADAN ALARM SAVE
-// =====================================================
+/* ---------------------------------------------------------
+   Auto Refresh At Midnight
+--------------------------------------------------------- */
 
-ramadanAlarm.checked =
-  localStorage.getItem(
-    "ayna_ramadan_alarm"
-  ) === "true";
+let lastDate =
+  getTodayISO();
 
 
-ramadanAlarm.addEventListener(
-  "change",
-  () => {
+setInterval(() => {
 
-    localStorage.setItem(
-      "ayna_ramadan_alarm",
-      String(
-        ramadanAlarm.checked
-      )
-    );
+  const nowDate =
+    getTodayISO();
 
+  if (
+    nowDate !== lastDate
+  ) {
+
+    lastDate =
+      nowDate;
+
+    updateEverything();
   }
-);
+
+}, 30000);
 
 
-// =====================================================
-// BACK
-// =====================================================
+/* ---------------------------------------------------------
+   Start
+--------------------------------------------------------- */
 
-document
-  .getElementById("backBtn")
-  .addEventListener(
-    "click",
-    () => {
+async function init() {
 
-      if (
-        document.referrer
-      ) {
+  syncForm();
 
-        history.back();
+  setupEvents();
 
-      } else {
+  setupPrayerAlarms();
 
-        window.location.href =
-          "./index.html";
+  setupRamadanAlarm();
 
-      }
+  await updateEverything();
 
-    }
-  );
+}
 
 
-// =====================================================
-// REAL-TIME CLOCK
-// =====================================================
-
-setInterval(
-  () => {
-
-    updateNextPrayer();
-
-    updateRamadanCountdown();
-
-    checkAlarms();
-
-  },
-  1000
-);
-
-
-// =====================================================
-// INITIALIZE
-// =====================================================
-
-loadSettingsUI();
-
-loadPrayerTimes();
+init();
