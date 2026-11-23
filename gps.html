@@ -1,49 +1,62 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>লাইভ জিপিএস - AYNA GPS</title>
-    <style>
-        body { background: #090a0f; color: #fff; font-family: sans-serif; padding: 20px; border: 3px solid #ffd700; min-height: 100vh; margin: 0; font-size: 18px; }
-        .card { background: rgba(255,255,255,0.08); border: 2px solid #ffd700; border-radius: 14px; padding: 20px; text-align: center; margin-top: 20px; }
-        button { padding: 14px 24px; background: #ffd700; color: #000; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 15px; }
-        a.back { color: #ffd700; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
-        #coords { margin-top: 18px; font-size: 1.1rem; color: #ffd700; line-height: 1.6; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071426">
+<title>AYNA BOOK GPS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#071426;color:white;font-family:Arial}
+header{text-align:center;padding:20px;background:#102746;color:#eac75a}
+main{height:calc(100dvh - 65px);padding:20px;display:flex;flex-direction:column;justify-content:center;gap:20px}
+.box{padding:20px;background:#122b49;border:1px solid #31577e;border-radius:12px;line-height:2;overflow-wrap:anywhere}
+button{padding:15px;background:#eac75a;color:#101010;border:0;border-radius:8px;font-weight:bold}
+a{color:#71caff}
+</style>
 </head>
 <body>
-    <a href="index.html" class="back">← হোমে ফিরে যান</a>
-    <div class="card">
-        <h2 style="color: #ffd700;">📍 AYNA লাইভ জিপিএস</h2>
-        <p>আপনার বর্তমান অবস্থান জানতে নিচের বাটনে চাপ দিন</p>
-        <button onclick="getLocation()">লোকেশন বের করুন</button>
-        <div id="coords">অপেক্ষা করা হচ্ছে...</div>
-    </div>
-
-    <script>
-        function getLocation() {
-            const output = document.getElementById('coords');
-            if (!navigator.geolocation) {
-                output.textContent = "আপনার ব্রাউজারে জিপিএস সাপোর্ট নেই।";
-                return;
-            }
-            output.textContent = "লোকেশন খোঁজা হচ্ছে...";
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const lat = pos.coords.latitude.toFixed(6);
-                    const lon = pos.coords.longitude.toFixed(6);
-                    output.innerHTML = `
-                        অক্ষাংশ (Latitude): <strong>${lat}</strong><br>
-                        দ্রাঘিমাংশ (Longitude): <strong>${lon}</strong><br><br>
-                        <a href="https://maps.google.com/?q=${lat},${lon}" target="_blank" style="color:#00ffcc; text-decoration:underline;">গুগল ম্যাপে দেখুন</a>
-                    `;
-                },
-                (err) => {
-                    output.textContent = "লোকেশন পারমিশন চালু করুন। (" + err.message + ")";
-                }
-            );
-        }
-    </script>
+<header><h2>AYNA BOOK GPS</h2></header>
+<main>
+<div class="box">
+<div id="status">GPS বন্ধ আছে</div>
+<div id="lat">Latitude: --</div>
+<div id="lng">Longitude: --</div>
+<div id="accuracy">Accuracy: --</div>
+<div id="time">Updated: --</div>
+</div>
+<button onclick="startGPS()">GPS চালু করুন</button>
+<button onclick="stopGPS()">GPS বন্ধ করুন</button>
+<a id="map" href="#" target="_blank" hidden>Google Maps-এ দেখুন</a>
+</main>
+<script>
+let watchId=null;
+function startGPS(){
+if(!navigator.geolocation){
+status.textContent="এই ব্রাউজারে GPS সমর্থিত নয়";
+return;
+}
+if(watchId!==null)return;
+status.textContent="GPS খোঁজা হচ্ছে...";
+watchId=navigator.geolocation.watchPosition(p=>{
+const c=p.coords;
+lat.textContent="Latitude: "+c.latitude;
+lng.textContent="Longitude: "+c.longitude;
+accuracy.textContent="Accuracy: "+c.accuracy+" মিটার";
+time.textContent="Updated: "+new Date().toLocaleTimeString();
+map.href="https://www.google.com/maps?q="+c.latitude+","+c.longitude;
+map.hidden=false;
+status.textContent="GPS CONNECTED";
+},e=>{
+status.textContent="GPS Error: "+e.message;
+},{enableHighAccuracy:true,maximumAge:5000,timeout:20000});
+}
+function stopGPS(){
+if(watchId!==null)navigator.geolocation.clearWatch(watchId);
+watchId=null;
+status.textContent="GPS বন্ধ করা হয়েছে";
+}
+</script>
 </body>
 </html>
