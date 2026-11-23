@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -11,6 +12,7 @@
   <title>AYNA BOOK</title>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -21,215 +23,210 @@
       padding: 0;
       width: 100%;
       height: 100%;
-      background: #000;
-      overflow: hidden;
-      font-family: Arial, Helvetica, sans-serif;
     }
 
-    #splash {
-      width: 100%;
-      height: 100vh;
+    body {
       background: #000;
+      color: #d4af37;
+      font-family: Arial, Helvetica, sans-serif;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
+      overflow: hidden;
     }
 
-    .content {
+    .splash {
       width: 100%;
       max-width: 500px;
+      min-height: 100vh;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
       text-align: center;
-      padding: 20px;
+      padding: 30px;
     }
 
     .logo {
-      width: 180px;
-      height: 180px;
-      margin: 0 auto 45px;
+      width: 100px;
+      height: 100px;
 
-      border: 2px solid #d4af37;
+      border: 3px solid #d4af37;
       border-radius: 50%;
 
       display: flex;
       align-items: center;
       justify-content: center;
 
-      color: #d4af37;
-      font-size: 58px;
+      font-size: 28px;
       font-weight: bold;
+
+      margin-bottom: 25px;
 
       box-shadow:
-        0 0 25px rgba(212,175,55,0.12);
+        0 0 25px rgba(212, 175, 55, 0.35);
     }
 
-    .brand {
+    h1 {
+      margin: 0;
+
+      font-size: 34px;
+      letter-spacing: 3px;
+
       color: #d4af37;
-      font-size: 42px;
-      font-weight: bold;
-      letter-spacing: 7px;
-      margin-bottom: 25px;
     }
 
-    .status {
+    .tagline {
+      margin-top: 10px;
+
       color: #aaa;
-      font-size: 20px;
-      margin-bottom: 35px;
+
+      font-size: 14px;
     }
 
     .loader {
-      width: 310px;
-      max-width: 90%;
-      height: 5px;
-      background: #1d1d1d;
-      border-radius: 10px;
-      margin: 0 auto;
-      overflow: hidden;
+      width: 42px;
+      height: 42px;
+
+      margin-top: 35px;
+
+      border: 4px solid #333;
+      border-top-color: #d4af37;
+
+      border-radius: 50%;
+
+      animation: spin 1s linear infinite;
     }
 
-    .loader-bar {
-      width: 35%;
-      height: 100%;
-      background: #d4af37;
-      border-radius: 10px;
+    @keyframes spin {
 
-      animation: loading 1.2s infinite ease-in-out;
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+
     }
 
-    @keyframes loading {
-      0% {
-        transform: translateX(-120%);
-      }
+    #status {
+      margin-top: 20px;
 
-      50% {
-        transform: translateX(120%);
-      }
+      color: #aaa;
 
-      100% {
-        transform: translateX(300%);
-      }
+      font-size: 14px;
+
+      line-height: 1.5;
     }
 
     #errorBox {
       display: none;
-      margin: 25px auto 0;
-      max-width: 360px;
-      padding: 14px;
-      border-radius: 10px;
-      background: #180000;
-      border: 1px solid #552222;
-      color: #ffaaaa;
+
+      width: 100%;
+
+      margin-top: 20px;
+
+      padding: 15px;
+
+      border: 1px solid #8b0000;
+
+      border-radius: 8px;
+
+      background: #160000;
+
+      color: #ff6b6b;
+
       font-size: 14px;
+
       line-height: 1.5;
     }
 
     #retryButton {
       display: none;
-      margin: 15px auto 0;
+
+      margin-top: 15px;
+
       padding: 12px 25px;
-      border: none;
-      border-radius: 8px;
+
+      border: 1px solid #d4af37;
+
+      border-radius: 6px;
+
       background: #d4af37;
+
       color: #000;
+
+      font-size: 15px;
+
       font-weight: bold;
+
       cursor: pointer;
     }
+
+    #retryButton:hover {
+      background: #f0cf68;
+    }
+
   </style>
+
 </head>
+
 
 <body>
 
-  <div id="splash">
+  <main class="splash">
 
-    <div class="content">
-
-      <div class="logo">
-        AB
-      </div>
-
-      <div class="brand">
-        AYNA BOOK
-      </div>
-
-      <div
-        id="status"
-        class="status"
-      >
-        Starting secure platform...
-      </div>
-
-      <div class="loader">
-        <div class="loader-bar"></div>
-      </div>
-
-      <div id="errorBox"></div>
-
-      <button
-        id="retryButton"
-        type="button"
-      >
-        Retry
-      </button>
-
+    <div class="logo">
+      AB
     </div>
 
-  </div>
+    <h1>
+      AYNA BOOK
+    </h1>
+
+    <div class="tagline">
+      Global Social Platform
+    </div>
+
+    <div
+      id="loader"
+      class="loader">
+    </div>
+
+    <div id="status">
+      Starting secure platform...
+    </div>
+
+    <div id="errorBox">
+    </div>
+
+    <button
+      id="retryButton"
+      type="button">
+      Retry
+    </button>
+
+  </main>
 
 
   <script type="module">
 
-    // =====================================================
-    // AYNA BOOK
-    // STARTUP CONTROLLER
-    // =====================================================
-
     import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-
-    import {
-      getAuth,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+      getCurrentUser,
+      observeAuthState
+    } from "./auth.js";
 
 
-    // =====================================================
-    // FIREBASE CONFIG
-    // =====================================================
-
-    const firebaseConfig = {
-
-      apiKey:
-        "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-
-      authDomain:
-        "ayna-book.firebaseapp.com",
-
-      databaseURL:
-        "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-      projectId:
-        "ayna-book",
-
-      storageBucket:
-        "ayna-book.firebasestorage.app",
-
-      messagingSenderId:
-        "805601138500",
-
-      appId:
-        "1:805601138500:web:47acdc90cb0cb521626911",
-
-      measurementId:
-        "G-RKHHSKNB4B"
-    };
-
-
-    // =====================================================
-    // ELEMENTS
-    // =====================================================
-
-    const statusElement =
+    const status =
       document.getElementById("status");
+
+    const loader =
+      document.getElementById("loader");
 
     const errorBox =
       document.getElementById("errorBox");
@@ -238,37 +235,32 @@
       document.getElementById("retryButton");
 
 
-    // =====================================================
-    // STATUS
-    // =====================================================
-
-    function setStatus(text) {
-
-      if (statusElement) {
-        statusElement.textContent = text;
-      }
-
-    }
+    let finished = false;
 
 
     // =====================================================
-    // ERROR
+    // SHOW ERROR
     // =====================================================
 
     function showError(message) {
 
-      if (errorBox) {
-
-        errorBox.textContent = message;
-
-        errorBox.style.display = "block";
+      if (finished) {
+        return;
       }
 
-      if (retryButton) {
+      loader.style.display = "none";
 
-        retryButton.style.display = "block";
-      }
+      status.textContent =
+        "Unable to start AYNA BOOK.";
 
+      errorBox.textContent =
+        message;
+
+      errorBox.style.display =
+        "block";
+
+      retryButton.style.display =
+        "inline-block";
     }
 
 
@@ -278,173 +270,13 @@
 
     function goTo(page) {
 
-      window.location.replace(page);
-
-    }
-
-
-    // =====================================================
-    // START
-    // =====================================================
-
-    async function startAYNABook() {
-
-      try {
-
-        setStatus(
-          "Connecting to secure platform..."
-        );
-
-
-        // -------------------------------------------------
-        // INITIALIZE FIREBASE
-        // -------------------------------------------------
-
-        const app =
-          initializeApp(firebaseConfig);
-
-
-        setStatus(
-          "Checking account..."
-        );
-
-
-        // -------------------------------------------------
-        // INITIALIZE AUTH
-        // -------------------------------------------------
-
-        const auth =
-          getAuth(app);
-
-
-        let completed = false;
-
-
-        // -------------------------------------------------
-        // SAFETY TIMEOUT
-        // -------------------------------------------------
-
-        const timeout = setTimeout(
-          function () {
-
-            if (completed) return;
-
-            completed = true;
-
-            showError(
-              "AYNA BOOK could not complete startup. Please check your internet connection and try again."
-            );
-
-          },
-          8000
-        );
-
-
-        // -------------------------------------------------
-        // AUTH STATE
-        // -------------------------------------------------
-
-        onAuthStateChanged(
-          auth,
-          function (user) {
-
-            if (completed) return;
-
-            completed = true;
-
-            clearTimeout(timeout);
-
-
-            // ---------------------------------------------
-            // USER FOUND
-            // ---------------------------------------------
-
-            if (user) {
-
-              setStatus(
-                "Checking email verification..."
-              );
-
-
-              if (user.emailVerified) {
-
-                setStatus(
-                  "Opening AYNA BOOK..."
-                );
-
-                setTimeout(
-                  function () {
-
-                    goTo(
-                      "home.html"
-                    );
-
-                  },
-                  300
-                );
-
-              } else {
-
-                setStatus(
-                  "Email verification required..."
-                );
-
-                setTimeout(
-                  function () {
-
-                    goTo(
-                      "verify-email.html"
-                    );
-
-                  },
-                  300
-                );
-
-              }
-
-              return;
-            }
-
-
-            // ---------------------------------------------
-            // NO USER
-            // ---------------------------------------------
-
-            setStatus(
-              "Opening secure sign in..."
-            );
-
-
-            setTimeout(
-              function () {
-
-                goTo(
-                  "login.html"
-                );
-
-              },
-              300
-            );
-
-          }
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK Startup Error:",
-          error
-        );
-
-
-        showError(
-          "Firebase startup failed: " +
-          (error.message || "Unknown error")
-        );
-
+      if (finished) {
+        return;
       }
 
+      finished = true;
+
+      window.location.replace(page);
     }
 
 
@@ -452,25 +284,163 @@
     // RETRY
     // =====================================================
 
-    if (retryButton) {
+    retryButton.addEventListener(
+      "click",
+      function () {
 
-      retryButton.addEventListener(
-        "click",
+        window.location.reload();
+
+      }
+    );
+
+
+    // =====================================================
+    // STARTUP TIMEOUT
+    // =====================================================
+
+    const timeout =
+      setTimeout(
         function () {
 
-          window.location.reload();
+          showError(
+            "AYNA BOOK is taking too long to start. Please check your internet connection and try again."
+          );
+
+        },
+        8000
+      );
+
+
+    // =====================================================
+    // FIREBASE AUTH STATE
+    // =====================================================
+
+    try {
+
+      status.textContent =
+        "Checking secure account...";
+
+
+      observeAuthState(
+        async function (user) {
+
+          if (finished) {
+            return;
+          }
+
+          clearTimeout(timeout);
+
+
+          // =================================================
+          // NO USER
+          // =================================================
+
+          if (!user) {
+
+            status.textContent =
+              "Opening Sign In...";
+
+            setTimeout(
+              function () {
+
+                goTo("login.html");
+
+              },
+              300
+            );
+
+            return;
+          }
+
+
+          // =================================================
+          // USER EXISTS
+          // =================================================
+
+          status.textContent =
+            "Checking email verification...";
+
+
+          try {
+
+            await user.reload();
+
+          } catch (error) {
+
+            console.error(
+              "User reload error:",
+              error
+            );
+
+          }
+
+
+          const currentUser =
+            getCurrentUser();
+
+
+          // =================================================
+          // EMAIL NOT VERIFIED
+          // =================================================
+
+          if (
+            currentUser &&
+            !currentUser.emailVerified
+          ) {
+
+            status.textContent =
+              "Email verification required...";
+
+            setTimeout(
+              function () {
+
+                goTo(
+                  "verify-email.html"
+                );
+
+              },
+              300
+            );
+
+            return;
+          }
+
+
+          // =================================================
+          // VERIFIED USER
+          // =================================================
+
+          status.textContent =
+            "Opening AYNA BOOK...";
+
+
+          setTimeout(
+            function () {
+
+              goTo("home.html");
+
+            },
+            300
+          );
 
         }
       );
 
+
+    } catch (error) {
+
+      clearTimeout(timeout);
+
+      console.error(
+        "AYNA BOOK Startup Error:",
+        error
+      );
+
+      showError(
+        "Firebase could not be initialized. Please check your Firebase configuration and internet connection."
+      );
+
     }
-
-
-    // =====================================================
-    // START AYNA BOOK
-    // =====================================================
-
-    startAYNABook();
 
   </script>
 
