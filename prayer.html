@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no">
+
+  <meta name="theme-color" content="#07131f">
+
+  <title>AYNA BOOK — নামাজ ও রমজান</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #07131f;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    .app {
+      width: 100%;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at top,
+          #16466a 0%,
+          #0b2236 40%,
+          #050b12 100%
+        );
+      padding-bottom: 30px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+
+      height: 64px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 15px;
+
+      background: rgba(3, 12, 22, .92);
+      backdrop-filter: blur(10px);
+
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .back {
+      width: 44px;
+      height: 44px;
+
+      border: 0;
+      border-radius: 50%;
+
+      background: rgba(255,255,255,.1);
+      color: white;
+
+      font-size: 23px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+      margin: auto;
+      padding: 16px;
+    }
+
+    .card {
+      background: rgba(255,255,255,.07);
+
+      border: 1px solid rgba(255,255,255,.1);
+
+      border-radius: 20px;
+
+      padding: 18px;
+
+      margin-bottom: 15px;
+
+      box-shadow:
+        0 10px 30px rgba(0,0,0,.2);
+    }
+
+    .location-title {
+      font-size: 14px;
+      opacity: .7;
+    }
+
+    .location {
+      font-size: 23px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .date {
+      margin-top: 6px;
+      opacity: .8;
+      font-size: 14px;
+    }
+
+    .next-box {
+      text-align: center;
+    }
+
+    .next-label {
+      opacity: .7;
+      font-size: 14px;
+    }
+
+    .next-prayer {
+      margin-top: 6px;
+      font-size: 29px;
+      font-weight: bold;
+    }
+
+    .countdown {
+      margin-top: 8px;
+      font-size: 34px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 13px;
+    }
+
+    .prayer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 14px 12px;
+
+      margin: 8px 0;
+
+      border-radius: 15px;
+
+      background: rgba(255,255,255,.06);
+
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .prayer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .prayer-name {
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .prayer-name-en {
+      font-size: 12px;
+      opacity: .55;
+    }
+
+    .prayer-time {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .alarm {
+      width: 45px;
+      height: 27px;
+
+      appearance: none;
+
+      background: #39424a;
+
+      border-radius: 30px;
+
+      position: relative;
+
+      cursor: pointer;
+    }
+
+    .alarm::after {
+      content: "";
+
+      position: absolute;
+
+      width: 21px;
+      height: 21px;
+
+      top: 3px;
+      left: 3px;
+
+      background: white;
+
+      border-radius: 50%;
+
+      transition: .2s;
+    }
+
+    .alarm:checked {
+      background: #18a85b;
+    }
+
+    .alarm:checked::after {
+      left: 21px;
+    }
+
+    .ramadan {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(19,117,75,.35),
+          rgba(15,55,70,.35)
+        );
+    }
+
+    .ramadan-time {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .ramadan-item {
+      width: 50%;
+      text-align: center;
+
+      background: rgba(0,0,0,.18);
+
+      border-radius: 15px;
+
+      padding: 15px 8px;
+    }
+
+    .ramadan-item .label {
+      font-size: 14px;
+      opacity: .75;
+    }
+
+    .ramadan-item .time {
+      font-size: 25px;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+
+    .warning {
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      opacity: .7;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 6px;
+      font-size: 14px;
+      opacity: .8;
+    }
+
+    select,
+    input {
+      width: 100%;
+
+      min-height: 48px;
+
+      border: 1px solid rgba(255,255,255,.15);
+
+      border-radius: 12px;
+
+      background: #0d2438;
+
+      color: white;
+
+      padding: 0 12px;
+
+      font-size: 16px;
+
+      outline: none;
+    }
+
+    input[type="number"] {
+      appearance: textfield;
+    }
+
+    .grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 10px;
+    }
+
+    .btn {
+      width: 100%;
+
+      min-height: 52px;
+
+      margin-top: 13px;
+
+      border: 0;
+
+      border-radius: 14px;
+
+      background: #126aa0;
+
+      color: white;
+
+      font-size: 17px;
+
+      font-weight: bold;
+    }
+
+    .btn.green {
+      background: #13844d;
+    }
+
+    .btn.gray {
+      background: #34414d;
+    }
+
+    .status {
+      text-align: center;
+
+      font-size: 14px;
+
+      margin: 10px 0;
+
+      min-height: 20px;
+
+      opacity: .85;
+    }
+
+    .source {
+      text-align: center;
+
+      font-size: 12px;
+
+      opacity: .5;
+
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 390px) {
+
+      .container {
+        padding: 11px;
+      }
+
+      .countdown {
+        font-size: 29px;
+      }
+
+      .next-prayer {
+        font-size: 25px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+
+    <button
+      class="back"
+      id="backBtn">
+      ←
+    </button>
+
+    <h1>🕌 নামাজ ও রমজান</h1>
+
+    <div style="width:44px"></div>
+
+  </header>
+
+
+  <main class="container">
+
+
+    <!-- LOCATION -->
+
+    <section class="card">
+
+      <div class="location-title">
+        বর্তমান অবস্থান
+      </div>
+
+      <div
+        class="location"
+        id="locationText">
+        অবস্থান নির্বাচন করুন
+      </div>
+
+      <div
+        class="date"
+        id="dateText">
+        সময় লোড হচ্ছে...
+      </div>
+
+    </section>
+
+
+    <!-- NEXT PRAYER -->
+
+    <section class="card next-box">
+
+      <div class="next-label">
+        পরবর্তী নামাজ
+      </div>
+
+      <div
+        class="next-prayer"
+        id="nextPrayer">
+        —
+      </div>
+
+      <div
+        class="countdown"
+        id="countdown">
+        00:00:00
+      </div>
+
+    </section>
+
+
+    <!-- FIVE PRAYERS -->
+
+    <section class="card">
+
+      <div class="section-title">
+        🕌 আজকের ৫ ওয়াক্ত
+      </div>
+
+
+      <div class="prayer">
+
+        <div class="prayer-left">
+
+          <div class="prayer-name">
+            ফজর
+          </div>
+
+          <div class="prayer-name-en">
+            Fajr
+          </div>
+
+        </div>
+
+        <div
+          class="prayer-time"
+          id="fajrTime">
+          —
+        </div>
+
+        <input
+          class="alarm"
+          type="checkbox"
+          id="alarmFajr">
+
+      </div>
+
+
+      <div class="prayer">
+
+        <div class="prayer-left">
+
+          <div class="prayer-name">
+            যোহর
+          </div>
+
+          <div class="pr
