@@ -1,13 +1,14 @@
 
 /* =========================================================
    AYNA BOOK — COMPLETE REGISTER.JS
-   Firebase Authentication + Storage + Realtime Database
+   Firebase Authentication + Realtime Database
+   FREE VERSION — NO FIREBASE STORAGE
+   Firebase SDK: 13.4.0
    ========================================================= */
 
 import {
   auth,
-  database,
-  storage
+  database
 } from "./firebase-init.js";
 
 import {
@@ -21,48 +22,34 @@ import {
   set
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-// ---------------------------------------------------------
-// ELEMENTS
-// ---------------------------------------------------------
+// =========================================================
+// 1. HTML ELEMENTS
+// =========================================================
 
-const form =
-  document.getElementById("registerForm") ||
-  document.getElementById("signupForm");
+const form = document.getElementById("registerForm");
 
 const fullNameInput = document.getElementById("fullName");
 const emailInput = document.getElementById("email");
 const countryInput = document.getElementById("country");
 const phoneInput = document.getElementById("phone");
 
-const photoInput =
-  document.getElementById("photo") ||
-  document.getElementById("profilePhoto");
+const photoInput = document.getElementById("photo");
 
 const passwordInput = document.getElementById("password");
 const confirmPasswordInput =
   document.getElementById("confirmPassword");
 
-const termsInput =
-  document.getElementById("terms") ||
-  document.getElementById("agreeTerms");
+const termsInput = document.getElementById("terms");
 
-const submitButton =
-  document.getElementById("submitBtn") ||
-  document.getElementById("registerBtn");
+const submitButton = document.getElementById("submitBtn");
 
-const statusMessage =
-  document.getElementById("statusMsg") ||
-  document.getElementById("statusMessage");
+const statusMessage = document.getElementById("statusMsg");
 
-// ---------------------------------------------------------
-// STATUS MESSAGE
-// ---------------------------------------------------------
+
+// =========================================================
+// 2. STATUS MESSAGE
+// =========================================================
 
 function showMessage(message, type = "error") {
 
@@ -72,24 +59,28 @@ function showMessage(message, type = "error") {
   }
 
   statusMessage.textContent = message;
-
   statusMessage.style.display = "block";
-  statusMessage.style.padding = "14px";
-  statusMessage.style.marginTop = "15px";
+  statusMessage.style.padding = "15px";
+  statusMessage.style.marginTop = "18px";
   statusMessage.style.borderRadius = "10px";
 
   if (type === "success") {
+
     statusMessage.style.background = "#123d24";
     statusMessage.style.color = "#8df5a9";
+
   } else {
+
     statusMessage.style.background = "#351515";
     statusMessage.style.color = "#ff9999";
+
   }
 }
 
-// ---------------------------------------------------------
-// LOADING BUTTON
-// ---------------------------------------------------------
+
+// =========================================================
+// 3. LOADING
+// =========================================================
 
 function setLoading(loading) {
 
@@ -97,16 +88,16 @@ function setLoading(loading) {
 
   submitButton.disabled = loading;
 
-  if (loading) {
-    submitButton.textContent = "PLEASE WAIT...";
-  } else {
-    submitButton.textContent = "CREATE ACCOUNT";
-  }
+  submitButton.textContent = loading
+    ? "PLEASE WAIT..."
+    : "CREATE ACCOUNT";
+
 }
 
-// ---------------------------------------------------------
-// PASSWORD SHOW / HIDE
-// ---------------------------------------------------------
+
+// =========================================================
+// 4. PASSWORD SHOW / HIDE
+// =========================================================
 
 function togglePassword(buttonId, inputId) {
 
@@ -117,15 +108,14 @@ function togglePassword(buttonId, inputId) {
 
   button.addEventListener("click", () => {
 
-    if (input.type === "password") {
-      input.type = "text";
-      button.textContent = "🙈";
-    } else {
-      input.type = "password";
-      button.textContent = "👁️";
-    }
+    const visible = input.type === "password";
+
+    input.type = visible ? "text" : "password";
+
+    button.textContent = visible ? "🙈" : "👁️";
 
   });
+
 }
 
 togglePassword("togglePassword", "password");
@@ -135,9 +125,149 @@ togglePassword(
   "confirmPassword"
 );
 
-// ---------------------------------------------------------
-// FIREBASE ERROR HANDLING
-// ---------------------------------------------------------
+
+// =========================================================
+// 5. COMPRESS PROFILE PHOTO
+// NO FIREBASE STORAGE REQUIRED
+// =========================================================
+
+async function compressPhoto(file) {
+
+  return new Promise((resolve, reject) => {
+
+    const image = new Image();
+
+    const objectURL = URL.createObjectURL(file);
+
+    image.onload = async () => {
+
+      try {
+
+        URL.revokeObjectURL(objectURL);
+
+        let width = image.width;
+        let height = image.height;
+
+        const MAX_SIZE = 512;
+
+        if (width > MAX_SIZE || height > MAX_SIZE) {
+
+          const scale = Math.min(
+            MAX_SIZE / width,
+            MAX_SIZE / height
+          );
+
+          width = Math.round(width * scale);
+          height = Math.round(height * scale);
+
+        }
+
+        const canvas = document.createElement("canvas");
+
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          throw new Error("Image compression is not supported.");
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        // White background for transparent images
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, width, height);
+
+        context.drawImage(
+          image,
+          0,
+          0,
+          width,
+          height
+        );
+
+        let quality = 0.75;
+        let blob = null;
+
+        // Keep compressed image around 250 KB
+        for (let i = 0; i < 6; i++) {
+
+          blob = await new Promise(resolveBlob => {
+
+            canvas.toBlob(
+              resolveBlob,
+              "image/jpeg",
+              quality
+            );
+
+          });
+
+          if (!blob) {
+            throw new Error("Image compression failed.");
+          }
+
+          if (blob.size <= 250 * 1024) {
+            break;
+          }
+
+          quality -= 0.08;
+
+          if (quality < 0.35) {
+            quality = 0.35;
+            break;
+          }
+
+        }
+
+        if (!blob || blob.size > 350 * 1024) {
+
+          throw new Error(
+            "Image is too large after compression. Choose another photo."
+          );
+
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = () => {
+
+          resolve(reader.result);
+
+        };
+
+        reader.onerror = () => {
+
+          reject(new Error("Unable to read compressed image."));
+
+        };
+
+        reader.readAsDataURL(blob);
+
+      } catch (error) {
+
+        reject(error);
+
+      }
+
+    };
+
+    image.onerror = () => {
+
+      URL.revokeObjectURL(objectURL);
+
+      reject(new Error("Invalid image file."));
+
+    };
+
+    image.src = objectURL;
+
+  });
+
+}
+
+
+// =========================================================
+// 6. FRIENDLY FIREBASE ERRORS
+// =========================================================
 
 function getFriendlyError(error) {
 
@@ -153,37 +283,33 @@ function getFriendlyError(error) {
       return "Password must contain at least 6 characters.";
 
     case "auth/network-request-failed":
-      return "Network error. Please check your internet connection.";
+      return "Network error. Please check your internet.";
 
     case "auth/too-many-requests":
       return "Too many attempts. Please try again later.";
 
-    case "storage/unauthorized":
-      return "Photo upload permission denied. Please check Storage Rules.";
-
-    case "storage/canceled":
-      return "Photo upload was cancelled.";
-
-    case "storage/retry-limit-exceeded":
-      return "Photo upload timed out. Please try again.";
-
     case "PERMISSION_DENIED":
+    case "database/permission-denied":
       return "Database permission denied. Please check RTDB Rules.";
 
+    case "storage/retry-limit-exceeded":
+      return "Old Firebase Storage error. This new code does not use Storage.";
+
     default:
-      return error.message || "Registration failed. Please try again.";
+      return error.message || "Registration failed.";
+
   }
+
 }
 
-// ---------------------------------------------------------
-// REGISTRATION
-// ---------------------------------------------------------
+
+// =========================================================
+// 7. REGISTRATION FORM
+// =========================================================
 
 if (!form) {
 
-  console.error("Registration form not found.");
-
-  showMessage("Registration form not found. Check register.html.");
+  console.error("AYNA BOOK: Registration form not found.");
 
 } else {
 
@@ -191,21 +317,23 @@ if (!form) {
 
     event.preventDefault();
 
-    if (!submitButton) {
-      showMessage("Submit button not found.");
-      return;
-    }
+    let createdUser = null;
 
     // -----------------------------------------------
-    // GET FORM VALUES
+    // GET VALUES
     // -----------------------------------------------
 
     const fullName = fullNameInput?.value.trim() || "";
-    const email = emailInput?.value.trim().toLowerCase() || "";
+
+    const email =
+      emailInput?.value.trim().toLowerCase() || "";
+
     const country = countryInput?.value.trim() || "";
+
     const phone = phoneInput?.value.trim() || "";
 
     const password = passwordInput?.value || "";
+
     const confirmPassword =
       confirmPasswordInput?.value || "";
 
@@ -216,13 +344,17 @@ if (!form) {
     // -----------------------------------------------
 
     if (!fullName || !email || !country) {
+
       showMessage("Please complete all required fields.");
       return;
+
     }
 
     if (!photo) {
+
       showMessage("Please select your profile photo.");
       return;
+
     }
 
     const allowedTypes = [
@@ -232,32 +364,42 @@ if (!form) {
     ];
 
     if (!allowedTypes.includes(photo.type)) {
+
       showMessage("Only JPG, PNG or WEBP images are allowed.");
       return;
+
     }
 
     if (photo.size > 5 * 1024 * 1024) {
-      showMessage("Profile photo must be 5 MB or smaller.");
+
+      showMessage("Photo must be 5 MB or smaller.");
       return;
+
     }
 
     if (password.length < 6) {
+
       showMessage("Password must contain at least 6 characters.");
       return;
+
     }
 
     if (password !== confirmPassword) {
+
       showMessage("Passwords do not match.");
       return;
+
     }
 
     if (!termsInput?.checked) {
+
       showMessage("Please accept Terms & Conditions and Privacy Policy.");
       return;
+
     }
 
     // -----------------------------------------------
-    // START REGISTRATION
+    // START
     // -----------------------------------------------
 
     setLoading(true);
@@ -269,7 +411,18 @@ if (!form) {
     try {
 
       // ---------------------------------------------
-      // 1. CREATE FIREBASE AUTH ACCOUNT
+      // STEP 1: COMPRESS PHOTO
+      // ---------------------------------------------
+
+      showMessage(
+        "Preparing your profile photo...",
+        "success"
+      );
+
+      const photoDataURL = await compressPhoto(photo);
+
+      // ---------------------------------------------
+      // STEP 2: CREATE AUTH ACCOUNT
       // ---------------------------------------------
 
       const userCredential =
@@ -281,38 +434,24 @@ if (!form) {
 
       const user = userCredential.user;
 
+      createdUser = user;
+
       // ---------------------------------------------
-      // 2. UPDATE USER PROFILE
+      // STEP 3: UPDATE AUTH PROFILE
       // ---------------------------------------------
 
       await updateProfile(user, {
+
         displayName: fullName
+
       });
 
       // ---------------------------------------------
-      // 3. UPLOAD PROFILE PHOTO
+      // STEP 4: SAVE PROFILE IN RTDB
+      // NO STORAGE UPLOAD
       // ---------------------------------------------
 
-      const extension = photo.name.split(".").pop().toLowerCase();
-
-      const photoPath =
-        `profilePhotos/${user.uid}/profile.${extension}`;
-
-      const photoReference = storageRef(
-        storage,
-        photoPath
-      );
-
-      await uploadBytes(photoReference, photo, {
-        contentType: photo.type
-      });
-
-      const photoURL =
-        await getDownloadURL(photoReference);
-
-      // ---------------------------------------------
-      // 4. SAVE USER DATA IN REALTIME DATABASE
-      // ---------------------------------------------
+      const now = Date.now();
 
       const userData = {
 
@@ -326,27 +465,30 @@ if (!form) {
 
         phone: phone,
 
-        photoURL: photoURL,
+        // Compressed image stored directly in RTDB
+        photoURL: photoDataURL,
 
-        photoPath: photoPath,
+        photoMimeType: "image/jpeg",
 
         emailVerified: user.emailVerified,
 
         accountStatus: "active",
 
-        createdAt: Date.now(),
+        profileCompleted: true,
 
-        updatedAt: Date.now()
+        createdAt: now,
+
+        updatedAt: now
 
       };
 
       await set(
-        dbRef(database, `users/${user.uid}`),
+        dbRef(database, "users/" + user.uid),
         userData
       );
 
       // ---------------------------------------------
-      // 5. SEND EMAIL VERIFICATION
+      // STEP 5: EMAIL VERIFICATION
       // ---------------------------------------------
 
       let verificationSent = true;
@@ -367,30 +509,26 @@ if (!form) {
       }
 
       // ---------------------------------------------
-      // 6. SUCCESS MESSAGE
-      // ---------------------------------------------
-
-      if (verificationSent) {
-
-        showMessage(
-          "Account created successfully! Please check your email for verification.",
-          "success"
-        );
-
-      } else {
-
-        showMessage(
-          "Account created, but verification email could not be sent. Please try again from your account.",
-          "success"
-        );
-
-      }
-
-      // ---------------------------------------------
-      // 7. REDIRECT TO LOGIN
+      // STEP 6: SUCCESS
       // ---------------------------------------------
 
       submitButton.textContent = "ACCOUNT CREATED";
+
+      showMessage(
+
+        verificationSent
+
+          ? "Account created successfully! Please check your email for verification."
+
+          : "Account created successfully! Verification email could not be sent.",
+
+        "success"
+
+      );
+
+      // ---------------------------------------------
+      // STEP 7: REDIRECT
+      // ---------------------------------------------
 
       setTimeout(() => {
 
@@ -400,21 +538,39 @@ if (!form) {
 
     } catch (error) {
 
-      console.error("AYNA BOOK Registration Error:", error);
+      console.error(
+        "AYNA BOOK Registration Error:",
+        error
+      );
 
-      showMessage(getFriendlyError(error));
+      // ---------------------------------------------
+      // ACCOUNT ALREADY CREATED BUT PROFILE FAILED
+      // ---------------------------------------------
+
+      if (createdUser) {
+
+        showMessage(
+
+          "Your account was created, but profile saving failed. Do not register again. Please login and complete profile recovery. Error: " +
+          getFriendlyError(error)
+
+        );
+
+      } else {
+
+        showMessage(getFriendlyError(error));
+
+      }
 
     } finally {
-
-      // ---------------------------------------------
-      // ALWAYS STOP LOADING
-      // ---------------------------------------------
 
       if (
         submitButton &&
         submitButton.textContent !== "ACCOUNT CREATED"
       ) {
+
         setLoading(false);
+
       }
 
     }
@@ -422,3 +578,8 @@ if (!form) {
   });
 
 }
+
+
+// =========================================================
+// AYNA BOOK — REGISTER.JS END
+// =========================================================
