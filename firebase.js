@@ -1,8 +1,7 @@
+
 // =========================================================
-// AYNA BOOK
-// FIREBASE CENTRAL EXPORT
+// AYNA BOOK — CENTRAL FIREBASE EXPORT
 // File: firebase.js
-// Firebase SDK: 13.4.0
 // =========================================================
 
 export {
