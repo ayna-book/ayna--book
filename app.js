@@ -1,171 +1,74 @@
-/* =========================================================
-   AYNA BOOK
-   Global Application Controller
-   ========================================================= */
+// =========================================================
+// AYNA BOOK
+// FIREBASE APP INITIALIZATION
+// File: app.js
+// Firebase SDK: 13.4.0
+// =========================================================
 
 import {
-  auth,
-  db
-} from "./firebase.js";
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
 import {
-  onAuthStateChanged,
-  signOut
+  getAuth
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 
-/* =========================================================
-   GLOBAL USER STATE
-   ========================================================= */
+// =========================================================
+// FIREBASE CONFIGURATION
+// =========================================================
 
-let currentUser = null;
+const firebaseConfig = {
 
+  apiKey:
+    "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
 
-/* =========================================================
-   AUTH STATE LISTENER
-   ========================================================= */
+  authDomain:
+    "ayna-book.firebaseapp.com",
 
-onAuthStateChanged(auth, (user) => {
+  databaseURL:
+    "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
 
-  currentUser = user || null;
+  projectId:
+    "ayna-book",
 
-  /* Global access */
-  window.AYNA_BOOK_USER = currentUser;
+  storageBucket:
+    "ayna-book.firebasestorage.app",
 
-  /* Event dispatch */
-  window.dispatchEvent(
-    new CustomEvent("ayna-auth-state-changed", {
-      detail: {
-        user: currentUser
-      }
-    })
-  );
+  messagingSenderId:
+    "805601138500",
 
-  if (currentUser) {
+  appId:
+    "1:805601138500:web:47acdc90cb0cb521626911",
 
-    console.log(
-      "AYNA BOOK — User signed in:",
-      currentUser.email || currentUser.uid
-    );
-
-  } else {
-
-    console.log(
-      "AYNA BOOK — No authenticated user."
-    );
-  }
-
-});
-
-
-/* =========================================================
-   GET CURRENT USER
-   ========================================================= */
-
-export function getCurrentUser() {
-  return currentUser;
-}
-
-
-/* =========================================================
-   LOGOUT
-   ========================================================= */
-
-export async function logout() {
-
-  try {
-
-    await signOut(auth);
-
-    currentUser = null;
-    window.AYNA_BOOK_USER = null;
-
-    window.location.replace("./login.html");
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK logout error:",
-      error
-    );
-
-    alert(
-      "Logout করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।"
-    );
-  }
-}
-
-
-/* =========================================================
-   GLOBAL LOGOUT FUNCTION
-   ========================================================= */
-
-window.AYNA_BOOK_LOGOUT = logout;
-
-
-/* =========================================================
-   GLOBAL AYNA BOOK OBJECT
-   ========================================================= */
-
-window.AYNA_BOOK = {
-
-  getUser: getCurrentUser,
-
-  logout: logout,
-
-  isLoggedIn: () => {
-    return currentUser !== null;
-  }
+  measurementId:
+    "G-RKHHSKNB4B"
 
 };
 
 
-/* =========================================================
-   PROTECT DASHBOARD
-   ========================================================= */
+// =========================================================
+// INITIALIZE FIREBASE APP
+// =========================================================
 
-if (
-  window.location.pathname.endsWith("/dashboard.html")
-) {
-
-  onAuthStateChanged(auth, (user) => {
-
-    if (!user) {
-
-      window.location.replace("./login.html");
-
-    }
-
-  });
-
-}
+const app =
+  initializeApp(firebaseConfig);
 
 
-/* =========================================================
-   PROTECT PROFILE
-   ========================================================= */
+// =========================================================
+// INITIALIZE FIREBASE AUTH
+// =========================================================
 
-if (
-  window.location.pathname.endsWith("/profile.html")
-) {
-
-  onAuthStateChanged(auth, (user) => {
-
-    if (!user) {
-
-      window.location.replace("./login.html");
-
-    }
-
-  });
-
-}
+const auth =
+  getAuth(app);
 
 
-/* =========================================================
-   AYNA BOOK APP READY
-   ========================================================= */
+// =========================================================
+// EXPORT
+// =========================================================
 
-console.log(
-  "AYNA BOOK — Application controller loaded successfully."
-);
+export {
+  app,
+  auth,
+  firebaseConfig
+};
