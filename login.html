@@ -1,50 +1,505 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090a0f">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta name="theme-color" content="#000000">
+
   <title>AYNA BOOK — Login</title>
+
   <style>
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:#090a0f;color:#fff;font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:20px}
-    .container{width:100%;max-width:460px;background:#101116;border:1px solid #b99a45;border-radius:15px;padding:30px}
-    h1{text-align:center;color:#e3c46d;letter-spacing:3px}
-    .sub{text-align:center;color:#aaa;margin-bottom:28px}
-    label{display:block;margin:17px 0 7px;color:#e5d7ae}
-    input{width:100%;padding:14px;background:#08090d;color:white;border:1px solid #806c39;border-radius:7px;font-size:16px}
-    button{width:100%;padding:14px;margin-top:18px;border:1px solid #d6b65c;border-radius:7px;background:#b8953e;color:#090a0f;font-weight:bold;font-size:16px;cursor:pointer}
-    button:disabled{opacity:.5}
-    .secondary{background:transparent;color:#e3c46d}
-    a{color:#e3c46d}
-    .message{text-align:center;margin-top:15px;line-height:1.5;overflow-wrap:anywhere}
-    .links{text-align:center;margin-top:18px;line-height:2}
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loginContainer {
+      width: 100%;
+      max-width: 430px;
+      padding: 25px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .logoCircle {
+      width: 100px;
+      height: 100px;
+
+      margin: 0 auto 20px;
+
+      border: 2px solid #d4af37;
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logoText {
+      color: #ffd84d;
+      font-size: 34px;
+      font-weight: bold;
+    }
+
+    .brand {
+      color: #ffd84d;
+      font-size: 30px;
+      font-weight: bold;
+      letter-spacing: 5px;
+    }
+
+    .card {
+      padding: 28px;
+
+      border: 1px solid #292929;
+      border-radius: 15px;
+
+      background: #0b0b0b;
+    }
+
+    h1 {
+      margin: 0 0 25px;
+
+      text-align: center;
+
+      color: #fff;
+      font-size: 25px;
+    }
+
+    .formGroup {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+
+      margin-bottom: 8px;
+
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+
+      padding: 14px;
+
+      border: 1px solid #333;
+      border-radius: 8px;
+
+      outline: none;
+
+      background: #111;
+      color: #fff;
+
+      font-size: 16px;
+    }
+
+    input:focus {
+      border-color: #d4af37;
+    }
+
+    .loginButton {
+      width: 100%;
+
+      margin-top: 8px;
+      padding: 14px;
+
+      border: none;
+      border-radius: 8px;
+
+      background: #d4af37;
+      color: #000;
+
+      font-size: 16px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .loginButton:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .forgot {
+      display: block;
+
+      margin-top: 18px;
+
+      text-align: center;
+
+      color: #d4af37;
+      font-size: 14px;
+
+      text-decoration: none;
+    }
+
+    .message {
+      display: none;
+
+      margin-bottom: 18px;
+      padding: 12px;
+
+      border-radius: 7px;
+
+      text-align: center;
+
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+
+      background: #2a1010;
+      color: #ff7777;
+    }
+
+    .message.success {
+      display: block;
+
+      background: #102a16;
+      color: #7dff9a;
+    }
+
+    .registerText {
+      margin-top: 25px;
+
+      text-align: center;
+
+      color: #999;
+      font-size: 14px;
+    }
+
+    .registerText a {
+      color: #d4af37;
+      text-decoration: none;
+    }
   </style>
 </head>
+
 <body>
-  <main class="container">
-    <h1>✦ AYNA BOOK</h1>
-    <p class="sub">Welcome back</p>
 
-    <form id="loginForm">
-      <label for="email">Gmail Address</label>
-      <input id="email" type="email" autocomplete="username" required>
+  <main class="loginContainer">
 
-      <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" required>
+    <div class="logo">
 
-      <button id="loginButton" type="submit">LOGIN</button>
-    </form>
+      <div class="logoCircle">
+        <div class="logoText">
+          AB
+        </div>
+      </div>
 
-    <p id="statusMessage" class="message" role="status" aria-live="polite"></p>
+      <div class="brand">
+        AYNA BOOK
+      </div>
 
-    <div class="links">
-      <a href="./forgot-password.html">Forgot Password?</a><br>
-      <a href="./signup.html">Create New Account</a>
     </div>
-    <button class="secondary" type="button" onclick="location.href='./index.html'">Back to Home</button>
+
+
+    <section class="card">
+
+      <h1>
+        Sign In
+      </h1>
+
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
+
+      <form id="loginForm">
+
+        <div class="formGroup">
+
+          <label for="email">
+            Email Address
+          </label>
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="Enter your email"
+            required
+          >
+
+        </div>
+
+
+        <div class="formGroup">
+
+          <label for="password">
+            Password
+          </label>
+
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Enter your password"
+            required
+          >
+
+        </div>
+
+
+        <button
+          id="loginButton"
+          class="loginButton"
+          type="submit"
+        >
+          Sign In
+        </button>
+
+      </form>
+
+
+      <a
+        class="forgot"
+        href="forgot-password.html"
+      >
+        Forgot Password?
+      </a>
+
+
+      <div class="registerText">
+
+        Don't have an account?
+
+        <a href="register.html">
+          Create Account
+        </a>
+
+      </div>
+
+    </section>
+
   </main>
-  <script type="module" src="./login.js"></script>
+
+
+  <!-- =====================================
+       LOGIN JAVASCRIPT
+  ====================================== -->
+
+  <script type="module">
+
+    import {
+      loginUser
+    } from "./auth.js";
+
+
+    const loginForm =
+      document.getElementById(
+        "loginForm"
+      );
+
+    const emailInput =
+      document.getElementById(
+        "email"
+      );
+
+    const passwordInput =
+      document.getElementById(
+        "password"
+      );
+
+    const loginButton =
+      document.getElementById(
+        "loginButton"
+      );
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+
+    function showMessage(
+      text,
+      type
+    ) {
+
+      message.textContent = text;
+
+      message.className =
+        "message " + type;
+
+    }
+
+
+    loginForm.addEventListener(
+      "submit",
+      async function (event) {
+
+        event.preventDefault();
+
+
+        const email =
+          emailInput.value.trim();
+
+        const password =
+          passwordInput.value;
+
+
+        if (!email || !password) {
+
+          showMessage(
+            "Please enter your email and password.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+          "Signing In...";
+
+
+        try {
+
+          const result =
+            await loginUser(
+              email,
+              password
+            );
+
+
+          if (!result.success) {
+
+
+            // ===========================
+            // EMAIL VERIFICATION REQUIRED
+            // ===========================
+
+            if (
+              result.verificationRequired
+            ) {
+
+              sessionStorage.setItem(
+                "verificationEmail",
+                email
+              );
+
+
+              showMessage(
+                "Please verify your email address first.",
+                "error"
+              );
+
+
+              setTimeout(
+                function () {
+
+                  window.location.href =
+                    "verify-email.html";
+
+                },
+                1200
+              );
+
+
+              return;
+            }
+
+
+            // ===========================
+            // LOGIN ERROR
+            // ===========================
+
+            showMessage(
+              result.message ||
+              "Login failed. Please try again.",
+              "error"
+            );
+
+
+            return;
+          }
+
+
+          // =============================
+          // LOGIN SUCCESS
+          // =============================
+
+          showMessage(
+            "Login successful. Opening AYNA BOOK...",
+            "success"
+          );
+
+
+          setTimeout(
+            function () {
+
+              window.location.replace(
+                "home.html"
+              );
+
+            },
+            500
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            "Login page error:",
+            error
+          );
+
+
+          showMessage(
+            "An unexpected error occurred. Please try again.",
+            "error"
+          );
+
+
+        } finally {
+
+          loginButton.disabled = false;
+
+          loginButton.textContent =
+            "Sign In";
+
+        }
+
+      }
+    );
+
+  </script>
+
 </body>
 </html>
