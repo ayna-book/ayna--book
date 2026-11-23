@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
+
+<title>AYNA BOOK - Arabic Calendar</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:#061b14;
+}
+
+body{
+  position:fixed;
+  inset:0;
+}
+
+.app{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100dvh;
+  min-height:100vh;
+  overflow:hidden;
+
+  background:
+    radial-gradient(circle at top right,
+      rgba(25,170,110,.25),
+      transparent 35%),
+    linear-gradient(145deg,
+      #03130e,
+      #08271d 55%,
+      #03130e);
+
+  color:white;
+}
+
+/* TOP BAR */
+
+.topbar{
+  height:64px;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  padding:8px 12px;
+
+  background:rgba(3,20,14,.94);
+
+  border-bottom:1px solid rgba(100,220,170,.15);
+}
+
+.back{
+  width:44px;
+  height:44px;
+
+  border:0;
+  border-radius:12px;
+
+  background:#123d2f;
+  color:#7be7b8;
+
+  font-size:25px;
+}
+
+.title{
+  flex:1;
+}
+
+.title h1{
+  margin:0;
+  font-size:19px;
+}
+
+.title span{
+  color:#7eb9a2;
+  font-size:11px;
+}
+
+.today{
+  border:0;
+  border-radius:10px;
+
+  padding:10px 12px;
+
+  background:#159765;
+  color:white;
+
+  font-weight:bold;
+}
+
+/* CONTENT */
+
+.content{
+  height:calc(100dvh - 64px);
+
+  overflow-y:auto;
+  overflow-x:hidden;
+
+  padding:12px;
+
+  overscroll-behavior:contain;
+
+  scrollbar-width:none;
+}
+
+.content::-webkit-scrollbar{
+  display:none;
+}
+
+/* CARD */
+
+.card{
+  background:rgba(10,39,29,.97);
+
+  border:1px solid rgba(85,210,160,.16);
+
+  border-radius:18px;
+
+  padding:14px;
+
+  margin-bottom:12px;
+
+  box-shadow:0 8px 30px rgba(0,0,0,.2);
+}
+
+/* YEAR */
+
+.year-box{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:10px;
+}
+
+.year-box label{
+  display:block;
+
+  color:#8fc5af;
+
+  font-size:12px;
+
+  margin-bottom:5px;
+}
+
+input{
+  width:100%;
+  height:46px;
+
+  border:1px solid #2c5a49;
+
+  border-radius:10px;
+
+  outline:none;
+
+  background:#061b14;
+
+  color:white;
+
+  padding:0 12px;
+
+  font-size:16px;
+}
+
+input:focus{
+  border-color:#22c985;
+}
+
+/* MONTH HEADER */
+
+.month-head{
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+
+  margin-bottom:14px;
+}
+
+.nav{
+  width:46px;
+  height:44px;
+
+  border:0;
+
+  border-radius:11px;
+
+  background:#123d2f;
+
+  color:#75e5b4;
+
+  font-size:25px;
+}
+
+.month-title{
+  flex:1;
+
+  text-align:center;
+}
+
+.month-title strong{
+  display:block;
+
+  font-size:20px;
+
+  direction:rtl;
+}
+
+.month-title small{
+  display:block;
+
+  margin-top:4px;
+
+  color:#80b59f;
+
+  font-size:12px;
+}
+
+/* WEEK */
+
+.week{
+  display:grid;
+
+  grid-template-columns:
+    repeat(7,1fr);
+
+  gap:4px;
+
+  margin-bottom:5px;
+}
+
+.week div{
+  text-align:center;
+
+  color:#76caa6;
+
+  font-size:11px;
+
+  padding:7px 0;
+}
+
+/* DAYS */
+
+.days{
+  display:grid;
+
+  grid-template-columns:
+    repeat(7,1fr);
+
+  gap:5px;
+}
+
+.day{
+  min-height:65px;
+
+  padding:6px;
+
+  border-radius:10px;
+
+  background:#071f17;
+
+  border:1px solid #183d30;
+
+  position:relative;
+
+  cursor:pointer;
+}
+
+.day:active{
+  transform:scale(.96);
+}
+
+.empty{
+  background:transparent!important;
+  border:0!important;
+}
+
+.day-number{
+  font-size:16px;
+  font-weight:bold;
+
+  direction:rtl;
+}
+
+.gregorian{
+  margin-top:5px;
+
+  color:#79ae98;
+
+  font-size:9px;
+}
+
+.today{
+  border:2px solid #24cb88;
+
+  background:#0b3527;
+}
+
+.selected{
+  box-shadow:
+    0 0 0 2px #72e6b5 inset;
+}
+
+.special{
+  position:absolute;
+
+  right:5px;
+  bottom:5px;
+
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+
+  background:#f0c14b;
+}
+
+/* INFO */
+
+.info-title{
+  color:#73e3b1;
+
+  font-size:13px;
+
+  margin-bottom:8px;
+}
+
+.main-date{
+  font-size:23px;
+
+  font-weight:bold;
+
+  direction:rtl;
+}
+
+.sub-date{
+  margin-top:6px;
+
+  color:#8db9a6;
+
+  font-size:13px;
+}
+
+.event{
+  margin-top:10px;
+
+  padding:10px;
+
+  border-radius:10px;
+
+  background:#071f17;
+
+  color:#d8eee6;
+
+  font-size:13px;
+}
+
+.note{
+  text-align:center;
+
+  color:#628d7b;
+
+  font-size:11px;
+
+  padding:8px 0 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+
+    <button
+      class="back"
+      onclick="history.back()">
+      ‹
+    </button>
+
+    <div class="title">
+      <h1>🌙 AYNA BOOK</h1>
+      <span>আরবি / হিজরি ক্যালেন্ডার</span>
+    </div>
+
+    <button
+      class="today"
+      id="todayBtn">
+      আজ
+    </button>
+
+  </header>
+
+
+  <main class="content">
+
+    <!-- HIJRI YEAR -->
+
+    <section class="card">
+
+      <div class="year-box">
+
+        <div>
+
+          <label>
+            হিজরি বছর
+          </label>
+
+          <input
+            id="hijriYear"
+            type="number"
+            min="1"
+            max="9999"
+            inputmode="numeric">
+
+        </div>
+
+        <div>
+
+          <label>
+            হিজরি মাস
+          </label>
+
+          <input
+            id="hijriMonth"
+            type="number"
+            min="1"
+            max="12"
+            inputmode="numeric">
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CALENDAR -->
+
+    <section class="card">
+
+      <div class="month-head">
+
+        <button
+          class="nav"
+          id="prevBtn">
+          ‹
+        </button>
+
+        <div class="month-title">
+
+          <strong id="monthArabic">
+            رَمَضَان
+          </strong>
+
+          <small id="monthBangla">
+            রমজান
+          </small>
+
+        </div>
+
+        <button
+          class="nav"
+          id="nextBtn">
+          ›
+        </button>
+
+      </div>
+
+
+      <div class="week">
+
+        <div>রবি</div>
+        <div>সোম</div>
+        <div>মঙ্গল</div>
+        <div>বুধ</div>
+        <div>বৃহঃ</div>
+        <div>শুক্র</div>
+        <div>শনি</div>
+
+      </div>
+
+
+      <div
+        class="days"
+        id="days">
+      </div>
+
+    </section>
+
+
+    <!-- SELECTED DATE -->
+
+    <section class="card">
+
+      <div class="info-title">
+        নির্বাচিত হিজরি তারিখ
+      </div>
+
+      <div
+        class="main-date"
+        id="selectedHijri">
+        —
+      </div>
+
+      <div
+        class="sub-date"
+        id="selectedGregorian">
+        —
+      </div>
+
+      <div id="eventBox"></div>
+
+    </section>
+
+
+    <div class="note">
+      🌙 AYNA BOOK • Islamic / Hijri Calendar
+    </div>
+
+  </main>
+
+</div>
+
+<script src="./arabic-calendar.js"></script>
+
+</body>
+</html>
