@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
+
+<title>AYNA BOOK - World Calendar</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:#061b14;
+}
+
+body{
+  position:fixed;
+  inset:0;
+}
+
+.app{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100dvh;
+  min-height:100vh;
+  overflow:hidden;
+
+  background:
+    radial-gradient(circle at top right,
+      rgba(25,170,110,.25),
+      transparent 35%),
+    linear-gradient(145deg,
+      #03130e,
+      #08271d 55%,
+      #03130e);
+
+  color:white;
+}
+
+/* TOP BAR */
+
+.topbar{
+  height:64px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px;
+
+  border-bottom:1px solid rgba(100,220,170,.15);
+
+  background:rgba(3,20,14,.92);
+}
+
+.back{
+  width:44px;
+  height:44px;
+
+  border:0;
+  border-radius:12px;
+
+  background:#123d2f;
+  color:#7be7b8;
+
+  font-size:25px;
+}
+
+.title{
+  flex:1;
+}
+
+.title h1{
+  margin:0;
+  font-size:20px;
+}
+
+.title span{
+  color:#7eb9a2;
+  font-size:11px;
+}
+
+.today-btn{
+  border:0;
+  border-radius:10px;
+  padding:10px 12px;
+
+  background:#159765;
+  color:white;
+  font-weight:bold;
+}
+
+/* CONTENT */
+
+.content{
+  height:calc(100dvh - 64px);
+  overflow-y:auto;
+  overflow-x:hidden;
+
+  padding:12px;
+
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+}
+
+.content::-webkit-scrollbar{
+  display:none;
+}
+
+/* CONTROL CARD */
+
+.card{
+  background:rgba(10,39,29,.96);
+
+  border:1px solid rgba(85,210,160,.16);
+
+  border-radius:18px;
+
+  padding:14px;
+
+  margin-bottom:12px;
+
+  box-shadow:0 8px 30px rgba(0,0,0,.2);
+}
+
+.controls{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.control{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.control label{
+  color:#91c7b1;
+  font-size:12px;
+}
+
+select,
+input{
+  width:100%;
+  height:45px;
+
+  border:1px solid #2c5a49;
+  border-radius:10px;
+
+  outline:none;
+
+  background:#061b14;
+  color:white;
+
+  padding:0 10px;
+
+  font-size:15px;
+}
+
+select:focus,
+input:focus{
+  border-color:#22c985;
+}
+
+/* CALENDAR HEADER */
+
+.calendar-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  gap:8px;
+
+  margin-bottom:12px;
+}
+
+.month-title{
+  text-align:center;
+  flex:1;
+}
+
+.month-title strong{
+  display:block;
+  font-size:20px;
+}
+
+.month-title small{
+  color:#7fb49e;
+}
+
+.nav-btn{
+  width:45px;
+  height:43px;
+
+  border:0;
+  border-radius:11px;
+
+  background:#123d2f;
+  color:#75e5b4;
+
+  font-size:23px;
+}
+
+/* WEEK */
+
+.week{
+  display:grid;
+  grid-template-columns:
+    repeat(7,1fr);
+
+  gap:4px;
+
+  margin-bottom:5px;
+}
+
+.week div{
+  text-align:center;
+
+  padding:7px 0;
+
+  color:#79cba7;
+
+  font-size:11px;
+  font-weight:bold;
+}
+
+/* DAYS */
+
+.days{
+  display:grid;
+  grid-template-columns:
+    repeat(7,1fr);
+
+  gap:5px;
+}
+
+.day{
+  min-height:58px;
+
+  border-radius:10px;
+
+  background:#071f17;
+
+  border:1px solid #183d30;
+
+  padding:6px;
+
+  position:relative;
+
+  cursor:pointer;
+}
+
+.day:active{
+  transform:scale(.96);
+}
+
+.day.empty{
+  background:transparent;
+  border:0;
+}
+
+.day-number{
+  font-size:15px;
+  font-weight:bold;
+}
+
+.hijri{
+  margin-top:5px;
+
+  color:#7cb99f;
+
+  font-size:9px;
+
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+.today{
+  border:2px solid #23c985;
+
+  background:#0b3527;
+}
+
+.selected{
+  box-shadow:
+    0 0 0 2px #72e6b5 inset;
+}
+
+.event-dot{
+  position:absolute;
+
+  right:5px;
+  bottom:5px;
+
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:#f2c14e;
+}
+
+/* INFO */
+
+.info-title{
+  color:#73e3b1;
+  font-size:13px;
+  margin-bottom:8px;
+}
+
+.info-main{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.info-sub{
+  color:#8ebaaa;
+  margin-top:5px;
+  font-size:13px;
+}
+
+.event-list{
+  margin-top:12px;
+}
+
+.event{
+  padding:9px;
+
+  margin-top:6px;
+
+  border-radius:9px;
+
+  background:#071f17;
+
+  color:#d5eee4;
+
+  font-size:13px;
+}
+
+/* FOOTER */
+
+.note{
+  text-align:center;
+
+  color:#628d7b;
+
+  font-size:11px;
+
+  padding:8px 0 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- TOP -->
+
+  <div class="topbar">
+
+    <button
+      class="back"
+      onclick="history.back()">
+      ‹
+    </button>
+
+    <div class="title">
+      <h1>🌍 AYNA BOOK</h1>
+      <span>World Perpetual Calendar</span>
+    </div>
+
+    <button
+      class="today-btn"
+      id="todayBtn">
+      আজ
+    </button>
+
+  </div>
+
+
+  <!-- CONTENT -->
+
+  <main class="content">
+
+    <!-- COUNTRY / YEAR -->
+
+    <section class="card">
+
+      <div class="controls">
+
+        <div class="control">
+
+          <label>দেশ</label>
+
+          <select id="country">
+
+            <option value="Bangladesh">
+              🇧🇩 বাংলাদেশ
+            </option>
+
+            <option value="India">
+              🇮🇳 ভারত
+            </option>
+
+            <option value="Pakistan">
+              🇵🇰 পাকিস্তান
+            </option>
+
+            <option value="Saudi Arabia">
+              🇸🇦 সৌদি আরব
+            </option>
+
+            <option value="United Arab Emirates">
+              🇦🇪 সংযুক্ত আরব আমিরাত
+            </option>
+
+            <option value="Malaysia">
+              🇲🇾 মালয়েশিয়া
+            </option>
+
+            <option value="Indonesia">
+              🇮🇩 ইন্দোনেশিয়া
+            </option>
+
+            <option value="United Kingdom">
+              🇬🇧 যুক্তরাজ্য
+            </option>
+
+            <option value="United States">
+              🇺🇸 যুক্তরাষ্ট্র
+            </option>
+
+            <option value="Canada">
+              🇨🇦 কানাডা
+            </option>
+
+            <option value="Australia">
+              🇦🇺 অস্ট্রেলিয়া
+            </option>
+
+            <option value="Japan">
+              🇯🇵 জাপান
+            </option>
+
+            <option value="China">
+              🇨🇳 চীন
+            </option>
+
+            <option value="Turkey">
+              🇹🇷 তুরস্ক
+            </option>
+
+            <option value="Egypt">
+              🇪🇬 মিশর
+            </option>
+
+            <option value="Other">
+              🌍 অন্যান্য
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="control">
+
+          <label>সাল</label>
+
+          <input
+            id="year"
+            type="number"
+            inputmode="numeric"
+            min="1"
+            max="9999">
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CALENDAR -->
+
+    <section class="card">
+
+      <div class="calendar-head">
+
+        <button
+          class="nav-btn"
+          id="prevMonth">
+          ‹
+        </button>
+
+        <div class="month-title">
+
+          <strong id="monthName">
+            জানুয়ারি
+          </strong>
+
+          <small id="yearName">
+            2026
+          </small>
+
+        </div>
+
+        <button
+          class="nav-btn"
+          id="nextMonth">
+          ›
+        </button>
+
+      </div>
+
+
+      <div class="week">
+
+        <div>রবি</div>
+        <div>সোম</div>
+        <div>মঙ্গল</div>
+        <div>বুধ</div>
+        <div>বৃহঃ</div>
+        <div>শুক্র</div>
+        <div>শনি</div>
+
+      </div>
+
+
+      <div
+        class="days"
+        id="days">
+      </div>
+
+    </section>
+
+
+    <!-- SELECTED DATE -->
+
+    <section class="card">
+
+      <div class="info-title">
+        নির্বাচিত তারিখ
+      </div>
+
+      <div
+        class="info-main"
+        id="selectedDate">
+        —
+      </div>
+
+      <div
+        class="info-sub"
+        id="selectedHijri">
+        —
+      </div>
+
+      <div
+        class="event-list"
+        id="events">
+      </div>
+
+    </section>
+
+
+    <div class="note">
+      AYNA BOOK • বিশ্বব্যাপী আজীবন ক্যালেন্ডার
+    </div>
+
+  </main>
+
+</div>
+
+
+<script src="./calendar.js"></script>
+
+</body>
+</html>
