@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background-color: #0b132b; /* ডার্ক নেভি ব্লু ব্যাকগ্রাউন্ড */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+    padding: 20px;
+  }
+
+  /* AYNA BOOK শিরোনাম ও তারার অ্যানিমেশন */
+  .brand-header {
+    font-size: 24px;
+    font-weight: 800;
+    color: #f5b942; /* সোনালী কালার */
+    letter-spacing: 1.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(245, 185, 66, 0.4);
+  }
+
+  .twinkle-star {
+    color: #ffffff;
+    font-size: 22px;
+    display: inline-block;
+    animation: starPulse 2.5s infinite ease-in-out;
+    text-shadow: 0 0 8px #ffffff, 0 0 16px #f5b942;
+  }
+
+  @keyframes starPulse {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+    50% { transform: scale(1.3) rotate(20deg); opacity: 1; }
+  }
+
+  /* ফিচার গ্রিড লেআউট (বড় লেখা ও ২ লাইনের জন্য উপযোগী) */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  /* 3D নেভি ব্লু ও সোনালী বর্ডার বক্স */
+  .feature-card-3d {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(145deg, #162447, #0e172e);
+    border: 1.5px solid #d4af37; /* সোনালী বর্ডার */
+    border-radius: 14px;
+    padding: 18px 10px;
+    min-height: 115px; /* লেখা বড় হলে বা ২ লাইনে গেলে বক্স সুন্দরভাবে মানিয়ে নেবে */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    
+    /* 3D গভীরতা ও শ্যাডো ইফেক্ট */
+    box-shadow: 
+      0 6px 0 #7a5c12, /* নিচের 3D গোল্ডেন বেস */
+      0 10px 18px rgba(0, 0, 0, 0.6),
+      inset 0 1px 1px rgba(255, 223, 128, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  /* কার্ডে টাচ বা ক্লিক করলে 3D চাপ পড়ার ইফেক্ট */
+  .feature-card-3d:active {
+    transform: translateY(4px);
+    box-shadow: 
+      0 2px 0 #7a5c12,
+      0 4px 8px rgba(0, 0, 0, 0.6),
+      inset 0 1px 1px rgba(255, 223, 128, 0.35);
+  }
+
+  /* প্রতি ১ মিনিট (60s) পর পর সাদা আলোর ঝলকানি */
+  .feature-card-3d::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 80%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.45) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    animation: whiteLightSweep 60s infinite ease-in-out;
+  }
+
+  /* 60 সেকেন্ডের মধ্যে প্রথম ২ সেকেন্ড আলো বয়ে যাবে, বাকি ৫৮ সেকেন্ড অপেক্ষা করবে */
+  @keyframes whiteLightSweep {
+    0% { left: -150%; }
+    3% { left: 180%; }
+    100% { left: 180%; }
+  }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  /* বড় ও স্পষ্ট ফিচার টাইটেল */
+  .feature-title {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+
+  .feature-subtitle {
+    font-size: 11px;
+    color: #b8c4d9;
+    line-height: 1.2;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ব্র্যান্ড হেডার -->
+  <div class="brand-header">
+    AYNA BOOK <span class="twinkle-star">✦</span>
+  </div>
+
+  <!-- 3D ফিচার বক্স গ্রিড -->
+  <div class="features-grid">
+    <div class="feature-card-3d">
+      <div class="feature-icon">👤</div>
+      <div class="feature-title">আমার প্রোফাইল</div>
+      <div class="feature-subtitle">ব্যক্তিগত অ্যাকাউন্ট</div>
+    </div>
+
+    <div class="feature-card-3d">
+      <div class="feature-icon">💬</div>
+      <div class="feature-title">AYNA Messenger</div>
+      <div class="feature-subtitle">মেসেজ ও চ্যাট</div>
+    </div>
+
+    <div class="feature-card-3d">
+      <div class="feature-icon">🔔</div>
+      <div class="feature-title">নোটিফিকেশন ও সব আপডেট</div>
+      <div class="feature-subtitle">তাৎক্ষণিক বার্তা</div>
+    </div>
+  </div>
+
+</body>
+</html>
