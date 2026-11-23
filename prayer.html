@@ -2,389 +2,416 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-
   <meta name="viewport"
-        content="width=device-width,
-        initial-scale=1.0,
-        maximum-scale=1.0,
-        user-scalable=no">
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <meta name="theme-color" content="#07131f">
-
-  <title>AYNA BOOK — নামাজ ও রমজান</title>
+  <title>AYNA BOOK - নামাজ ও রোজা</title>
 
   <style>
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
     }
 
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background: #07131f;
-      color: white;
-      font-family: Arial, sans-serif;
+    html,body{
+      margin:0;
+      padding:0;
+      width:100%;
+      min-height:100%;
+      font-family:
+        system-ui,
+        -apple-system,
+        "Noto Sans Bengali",
+        "Noto Sans",
+        sans-serif;
+      background:#06140e;
+      color:#fff;
     }
 
-    body {
-      overflow-x: hidden;
+    body{
+      min-height:100vh;
     }
 
-    .app {
-      width: 100%;
-      min-height: 100vh;
+    button,input,select{
+      font:inherit;
+    }
+
+    .app{
+      width:100%;
+      max-width:900px;
+      margin:auto;
+      min-height:100vh;
       background:
-        radial-gradient(
-          circle at top,
-          #16466a 0%,
-          #0b2236 40%,
-          #050b12 100%
-        );
-      padding-bottom: 30px;
+        radial-gradient(circle at top,#123d2b 0,#06140e 45%,#020806 100%);
     }
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-
-      height: 64px;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: 0 15px;
-
-      background: rgba(3, 12, 22, .92);
-      backdrop-filter: blur(10px);
-
-      border-bottom: 1px solid rgba(255,255,255,.08);
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 14px;
+      background:rgba(2,12,8,.94);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(255,255,255,.1);
     }
 
-    .topbar h1 {
-      margin: 0;
-      font-size: 20px;
+    .topbar h1{
+      margin:0;
+      font-size:21px;
+      font-weight:800;
     }
 
-    .back {
-      width: 44px;
-      height: 44px;
-
-      border: 0;
-      border-radius: 50%;
-
-      background: rgba(255,255,255,.1);
-      color: white;
-
-      font-size: 23px;
+    .back-btn{
+      width:42px;
+      height:42px;
+      border:0;
+      border-radius:50%;
+      background:#123d2b;
+      color:#fff;
+      font-size:22px;
+      cursor:pointer;
     }
 
-    .container {
-      width: 100%;
-      max-width: 650px;
-      margin: auto;
-      padding: 16px;
+    .container{
+      padding:14px;
     }
 
-    .card {
-      background: rgba(255,255,255,.07);
-
-      border: 1px solid rgba(255,255,255,.1);
-
-      border-radius: 20px;
-
-      padding: 18px;
-
-      margin-bottom: 15px;
-
-      box-shadow:
-        0 10px 30px rgba(0,0,0,.2);
-    }
-
-    .location-title {
-      font-size: 14px;
-      opacity: .7;
-    }
-
-    .location {
-      font-size: 23px;
-      font-weight: bold;
-      margin-top: 5px;
-    }
-
-    .date {
-      margin-top: 6px;
-      opacity: .8;
-      font-size: 14px;
-    }
-
-    .next-box {
-      text-align: center;
-    }
-
-    .next-label {
-      opacity: .7;
-      font-size: 14px;
-    }
-
-    .next-prayer {
-      margin-top: 6px;
-      font-size: 29px;
-      font-weight: bold;
-    }
-
-    .countdown {
-      margin-top: 8px;
-      font-size: 34px;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-
-    .section-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 13px;
-    }
-
-    .prayer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: 14px 12px;
-
-      margin: 8px 0;
-
-      border-radius: 15px;
-
-      background: rgba(255,255,255,.06);
-
-      border: 1px solid rgba(255,255,255,.06);
-    }
-
-    .prayer-left {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .prayer-name {
-      font-size: 17px;
-      font-weight: bold;
-    }
-
-    .prayer-name-en {
-      font-size: 12px;
-      opacity: .55;
-    }
-
-    .prayer-time {
-      font-size: 21px;
-      font-weight: bold;
-    }
-
-    .alarm {
-      width: 45px;
-      height: 27px;
-
-      appearance: none;
-
-      background: #39424a;
-
-      border-radius: 30px;
-
-      position: relative;
-
-      cursor: pointer;
-    }
-
-    .alarm::after {
-      content: "";
-
-      position: absolute;
-
-      width: 21px;
-      height: 21px;
-
-      top: 3px;
-      left: 3px;
-
-      background: white;
-
-      border-radius: 50%;
-
-      transition: .2s;
-    }
-
-    .alarm:checked {
-      background: #18a85b;
-    }
-
-    .alarm:checked::after {
-      left: 21px;
-    }
-
-    .ramadan {
+    .hero{
+      padding:20px 16px;
+      border-radius:22px;
       background:
-        linear-gradient(
-          135deg,
-          rgba(19,117,75,.35),
-          rgba(15,55,70,.35)
-        );
+        linear-gradient(135deg,#0e5638,#092719);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      margin-bottom:14px;
     }
 
-    .ramadan-time {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
+    .hero h2{
+      margin:0 0 7px;
+      font-size:24px;
     }
 
-    .ramadan-item {
-      width: 50%;
-      text-align: center;
-
-      background: rgba(0,0,0,.18);
-
-      border-radius: 15px;
-
-      padding: 15px 8px;
+    .hero p{
+      margin:5px 0;
+      color:#c9e8da;
+      font-size:14px;
     }
 
-    .ramadan-item .label {
-      font-size: 14px;
-      opacity: .75;
+    .section{
+      margin-top:16px;
+      padding:15px;
+      border-radius:20px;
+      background:rgba(10,32,23,.92);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 8px 25px rgba(0,0,0,.18);
     }
 
-    .ramadan-item .time {
-      font-size: 25px;
-      font-weight: bold;
-      margin-top: 6px;
+    .section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:14px;
     }
 
-    .warning {
-      margin-top: 12px;
-      font-size: 13px;
-      line-height: 1.5;
-      opacity: .7;
+    .section-title h3{
+      margin:0;
+      font-size:20px;
     }
 
-    label {
-      display: block;
-      margin-top: 12px;
-      margin-bottom: 6px;
-      font-size: 14px;
-      opacity: .8;
+    .badge{
+      padding:6px 10px;
+      border-radius:20px;
+      background:#145b3d;
+      font-size:12px;
+      color:#d9fff0;
     }
 
-    select,
-    input {
-      width: 100%;
-
-      min-height: 48px;
-
-      border: 1px solid rgba(255,255,255,.15);
-
-      border-radius: 12px;
-
-      background: #0d2438;
-
-      color: white;
-
-      padding: 0 12px;
-
-      font-size: 16px;
-
-      outline: none;
+    .next-card{
+      text-align:center;
+      padding:18px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#092b1d,#104f35);
+      margin-bottom:14px;
     }
 
-    input[type="number"] {
-      appearance: textfield;
+    .next-label{
+      color:#b9d8cb;
+      font-size:13px;
     }
 
-    .grid {
-      display: grid;
-
-      grid-template-columns: 1fr 1fr;
-
-      gap: 10px;
+    #nextPrayer{
+      margin:5px 0;
+      font-size:25px;
+      font-weight:800;
     }
 
-    .btn {
-      width: 100%;
-
-      min-height: 52px;
-
-      margin-top: 13px;
-
-      border: 0;
-
-      border-radius: 14px;
-
-      background: #126aa0;
-
-      color: white;
-
-      font-size: 17px;
-
-      font-weight: bold;
+    #countdown{
+      font-size:32px;
+      font-weight:900;
+      letter-spacing:1px;
     }
 
-    .btn.green {
-      background: #13844d;
+    .prayer-list{
+      display:flex;
+      flex-direction:column;
+      gap:9px;
     }
 
-    .btn.gray {
-      background: #34414d;
+    .prayer-row{
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      align-items:center;
+      gap:10px;
+      padding:13px;
+      border-radius:15px;
+      background:#0b2118;
+      border:1px solid rgba(255,255,255,.06);
     }
 
-    .status {
-      text-align: center;
-
-      font-size: 14px;
-
-      margin: 10px 0;
-
-      min-height: 20px;
-
-      opacity: .85;
+    .prayer-name{
+      font-weight:700;
     }
 
-    .source {
-      text-align: center;
-
-      font-size: 12px;
-
-      opacity: .5;
-
-      line-height: 1.5;
+    .prayer-en{
+      display:block;
+      color:#8eb5a4;
+      font-size:11px;
+      margin-top:2px;
     }
 
-    .hidden {
-      display: none !important;
+    .prayer-time{
+      font-size:19px;
+      font-weight:800;
     }
 
-    @media (max-width: 390px) {
+    .alarm{
+      width:21px;
+      height:21px;
+      accent-color:#35d58a;
+    }
 
-      .container {
-        padding: 11px;
+    .ramadan-card{
+      padding:16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#241b08,#553a0a);
+      margin-bottom:14px;
+    }
+
+    .ramadan-card h4{
+      margin:0 0 10px;
+      font-size:19px;
+    }
+
+    .fast-times{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .fast-box{
+      padding:14px;
+      border-radius:15px;
+      background:rgba(0,0,0,.22);
+      text-align:center;
+    }
+
+    .fast-box small{
+      display:block;
+      color:#e5d7a5;
+      margin-bottom:5px;
+    }
+
+    .fast-box strong{
+      font-size:22px;
+    }
+
+    #fastCountdown{
+      margin-top:12px;
+      text-align:center;
+      font-weight:800;
+      font-size:18px;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .control-group{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .control-group.full{
+      grid-column:1 / -1;
+    }
+
+    label{
+      color:#b9d8cb;
+      font-size:13px;
+    }
+
+    input,select{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid #28543f;
+      outline:none;
+      background:#071810;
+      color:#fff;
+    }
+
+    input:focus,select:focus{
+      border-color:#35d58a;
+    }
+
+    .btns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .btn{
+      min-height:46px;
+      border:0;
+      border-radius:13px;
+      cursor:pointer;
+      font-weight:800;
+      color:#fff;
+      background:#145b3d;
+    }
+
+    .btn.primary{
+      background:#1b8b5c;
+    }
+
+    .btn.gps{
+      background:#244d72;
+    }
+
+    .calendar-wrap{
+      overflow-x:auto;
+      border-radius:15px;
+    }
+
+    table{
+      width:100%;
+      min-width:560px;
+      border-collapse:collapse;
+      overflow:hidden;
+    }
+
+    th{
+      background:#12452f;
+      color:#eafff5;
+      padding:11px 8px;
+      font-size:13px;
+      position:sticky;
+      top:0;
+      z-index:2;
+    }
+
+    td{
+      padding:10px 8px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+      text-align:center;
+      font-size:13px;
+    }
+
+    tr:nth-child(even){
+      background:rgba(255,255,255,.025);
+    }
+
+    tr.today{
+      background:#234e37;
+      box-shadow:inset 4px 0 0 #4cff9c;
+    }
+
+    .day-number{
+      font-weight:900;
+      font-size:16px;
+    }
+
+    .hijri{
+      display:block;
+      color:#9bc9b4;
+      font-size:10px;
+      margin-top:2px;
+    }
+
+    .sehri{
+      color:#d8efff;
+      font-weight:800;
+    }
+
+    .iftar{
+      color:#ffe5a4;
+      font-weight:800;
+    }
+
+    .calendar-note{
+      margin-top:10px;
+      color:#9ebcaf;
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .status{
+      margin-top:10px;
+      padding:11px;
+      border-radius:12px;
+      background:#0b2118;
+      color:#bfe7d2;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .loading{
+      text-align:center;
+      padding:20px;
+      color:#a9c8ba;
+    }
+
+    .error{
+      color:#ffb5b5;
+    }
+
+    .footer{
+      padding:25px 15px 40px;
+      text-align:center;
+      color:#789487;
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    @media(max-width:500px){
+      .controls{
+        grid-template-columns:1fr;
       }
 
-      .countdown {
-        font-size: 29px;
+      .control-group.full{
+        grid-column:auto;
       }
 
-      .next-prayer {
-        font-size: 25px;
+      .btns{
+        grid-template-columns:1fr;
       }
 
+      #countdown{
+        font-size:28px;
+      }
+
+      .hero h2{
+        font-size:21px;
+      }
     }
-
   </style>
 </head>
 
@@ -393,112 +420,345 @@
 <div class="app">
 
   <header class="topbar">
-
-    <button
-      class="back"
-      id="backBtn">
-      ←
-    </button>
-
-    <h1>🕌 নামাজ ও রমজান</h1>
-
-    <div style="width:44px"></div>
-
+    <button class="back-btn" id="backBtn">‹</button>
+    <h1>🕌 AYNA BOOK</h1>
+    <div style="width:42px"></div>
   </header>
-
 
   <main class="container">
 
-
-    <!-- LOCATION -->
-
-    <section class="card">
-
-      <div class="location-title">
-        বর্তমান অবস্থান
-      </div>
-
-      <div
-        class="location"
-        id="locationText">
-        অবস্থান নির্বাচন করুন
-      </div>
-
-      <div
-        class="date"
-        id="dateText">
-        সময় লোড হচ্ছে...
-      </div>
-
+    <!-- HERO -->
+    <section class="hero">
+      <h2>নামাজ ও রোজার সময়সূচী</h2>
+      <p id="locationText">বাংলাদেশ • Cox's Bazar</p>
+      <p id="dateText">তারিখ লোড হচ্ছে...</p>
     </section>
 
 
     <!-- NEXT PRAYER -->
+    <section class="section">
 
-    <section class="card next-box">
-
-      <div class="next-label">
-        পরবর্তী নামাজ
+      <div class="section-title">
+        <h3>⏰ পরবর্তী নামাজ</h3>
+        <span class="badge" id="currentHijri">হিজরি</span>
       </div>
 
-      <div
-        class="next-prayer"
-        id="nextPrayer">
-        —
+      <div class="next-card">
+        <div class="next-label">পরবর্তী নামাজ</div>
+        <div id="nextPrayer">লোড হচ্ছে...</div>
+        <div id="countdown">--:--:--</div>
       </div>
 
-      <div
-        class="countdown"
-        id="countdown">
-        00:00:00
+      <div class="prayer-list" id="prayerList">
+
+        <div class="prayer-row">
+          <div class="prayer-name">
+            ফজর
+            <span class="prayer-en">Fajr</span>
+          </div>
+          <div class="prayer-time" id="fajrTime">--:--</div>
+          <input class="alarm"
+                 type="checkbox"
+                 data-prayer="Fajr"
+                 title="ফজর Alarm">
+        </div>
+
+        <div class="prayer-row">
+          <div class="prayer-name">
+            যোহর
+            <span class="prayer-en">Dhuhr</span>
+          </div>
+          <div class="prayer-time" id="dhuhrTime">--:--</div>
+          <input class="alarm"
+                 type="checkbox"
+                 data-prayer="Dhuhr"
+                 title="যোহর Alarm">
+        </div>
+
+        <div class="prayer-row">
+          <div class="prayer-name">
+            আসর
+            <span class="prayer-en">Asr</span>
+          </div>
+          <div class="prayer-time" id="asrTime">--:--</div>
+          <input class="alarm"
+                 type="checkbox"
+                 data-prayer="Asr"
+                 title="আসর Alarm">
+        </div>
+
+        <div class="prayer-row">
+          <div class="prayer-name">
+            মাগরিব
+            <span class="prayer-en">Maghrib</span>
+          </div>
+          <div class="prayer-time" id="maghribTime">--:--</div>
+          <input class="alarm"
+                 type="checkbox"
+                 data-prayer="Maghrib"
+                 title="মাগরিব Alarm">
+        </div>
+
+        <div class="prayer-row">
+          <div class="prayer-name">
+            এশা
+            <span class="prayer-en">Isha</span>
+          </div>
+          <div class="prayer-time" id="ishaTime">--:--</div>
+          <input class="alarm"
+                 type="checkbox"
+                 data-prayer="Isha"
+                 title="এশা Alarm">
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- TODAY FAST -->
+    <section class="section">
+
+      <div class="section-title">
+        <h3>🌙 আজকের রোজা</h3>
+        <span class="badge">Sehri / Iftar</span>
+      </div>
+
+      <div class="ramadan-card">
+
+        <h4 id="todayFastTitle">আজকের রোজার সময়</h4>
+
+        <div class="fast-times">
+
+          <div class="fast-box">
+            <small>🌙 সেহরি শেষ</small>
+            <strong id="todaySehri">--:--</strong>
+          </div>
+
+          <div class="fast-box">
+            <small>🌇 ইফতার</small>
+            <strong id="todayIftar">--:--</strong>
+          </div>
+
+        </div>
+
+        <div id="fastCountdown">
+          Countdown: --:--:--
+        </div>
+
+        <label style="display:flex;align-items:center;gap:8px;margin-top:14px;">
+          <input id="ramadanAlarm"
+                 type="checkbox"
+                 style="width:20px;height:20px;">
+          সেহরি/ইফতার Alert চালু
+        </label>
+
       </div>
 
     </section>
 
 
-    <!-- FIVE PRAYERS -->
-
-    <section class="card">
+    <!-- 30 DAYS RAMADAN CALENDAR -->
+    <section class="section">
 
       <div class="section-title">
-        🕌 আজকের ৫ ওয়াক্ত
+        <h3>📅 ৩০ দিনের রোজার ক্যালেন্ডার</h3>
+        <span class="badge" id="ramadanYear">রমজান</span>
       </div>
 
+      <div class="calendar-wrap">
 
-      <div class="prayer">
+        <table>
 
-        <div class="prayer-left">
+          <thead>
+            <tr>
+              <th>রোজা</th>
+              <th>হিজরি</th>
+              <th>তারিখ</th>
+              <th>সেহরি শেষ</th>
+              <th>ইফতার</th>
+            </tr>
+          </thead>
 
-          <div class="prayer-name">
-            ফজর
-          </div>
+          <tbody id="ramadanCalendarBody">
 
-          <div class="prayer-name-en">
-            Fajr
-          </div>
+            <tr>
+              <td colspan="5" class="loading">
+                ৩০ দিনের রোজার ক্যালেন্ডার লোড হচ্ছে...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <div class="calendar-note">
+        বর্তমান দিন সবুজভাবে Highlight হবে।
+        রোজার সময় গণনা নির্বাচিত শহর/দেশ ও Calculation Method অনুযায়ী হবে।
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+    <section class="section">
+
+      <div class="section-title">
+        <h3>⚙️ সময়সূচীর সেটিংস</h3>
+      </div>
+
+      <div class="controls">
+
+        <div class="control-group">
+          <label for="country">দেশ</label>
+          <input id="country"
+                 type="text"
+                 value="Bangladesh"
+                 placeholder="Bangladesh">
+        </div>
+
+        <div class="control-group">
+          <label for="city">শহর</label>
+          <input id="city"
+                 type="text"
+                 value="Cox's Bazar"
+                 placeholder="Cox's Bazar">
+        </div>
+
+        <div class="control-group">
+          <label for="method">Calculation Method</label>
+
+          <select id="method">
+
+            <option value="1">
+              Karachi — Bangladesh
+            </option>
+
+            <option value="2">
+              ISNA
+            </option>
+
+            <option value="3">
+              MWL
+            </option>
+
+            <option value="4">
+              Umm Al-Qura
+            </option>
+
+            <option value="5">
+              Egyptian
+            </option>
+
+            <option value="8">
+              Gulf
+            </option>
+
+            <option value="9">
+              Kuwait
+            </option>
+
+            <option value="10">
+              Qatar
+            </option>
+
+            <option value="13">
+              Diyanet
+            </option>
+
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="school">Asr Madhab</label>
+
+          <select id="school">
+
+            <option value="1">
+              Hanafi
+            </option>
+
+            <option value="0">
+              Shafi / Standard
+            </option>
+
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="sehriAdjust">
+            সেহরি Adjustment (মিনিট)
+          </label>
+
+          <input id="sehriAdjust"
+                 type="number"
+                 value="0"
+                 step="1">
+        </div>
+
+        <div class="control-group">
+          <label for="iftarAdjust">
+            ইফতার Adjustment (মিনিট)
+          </label>
+
+          <input id="iftarAdjust"
+                 type="number"
+                 value="0"
+                 step="1">
+        </div>
+
+        <div class="control-group full">
+
+          <button class="btn gps"
+                  id="gpsBtn">
+            📍 GPS দিয়ে অবস্থান নিন
+          </button>
 
         </div>
 
-        <div
-          class="prayer-time"
-          id="fajrTime">
-          —
-        </div>
+      </div>
 
-        <input
-          class="alarm"
-          type="checkbox"
-          id="alarmFajr">
+      <div class="btns">
+
+        <button class="btn primary"
+                id="updateBtn">
+          🔄 সময়সূচী আপডেট
+        </button>
+
+        <button class="btn"
+                id="resetBtn">
+          ♻️ Reset
+        </button>
 
       </div>
 
+      <div class="status"
+           id="statusMsg">
+        সময়সূচী প্রস্তুত হচ্ছে...
+      </div>
 
-      <div class="prayer">
+    </section>
 
-        <div class="prayer-left">
+  </main>
 
-          <div class="prayer-name">
-            যোহর
-          </div>
 
-          <div class="pr
+  <footer class="footer">
+
+    AYNA BOOK<br>
+
+    নামাজ ও রোজার সময়সূচী<br>
+
+    Prayer times are calculated according to the selected
+    location and calculation method.
+
+  </footer>
+
+</div>
+
+
+<script type="module"
+        src="./prayer.js"></script>
+
+</body>
+</html>
