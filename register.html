@@ -5,7 +5,7 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   >
 
   <title>AYNA BOOK — Create Account</title>
@@ -13,304 +13,731 @@
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     html,
     body {
-      margin: 0;
-      padding: 0;
+      width: 100%;
       min-height: 100%;
-      font-family: Arial, Helvetica, sans-serif;
       background: #000;
       color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
       min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* =====================================================
+       FULL SCREEN
+    ===================================================== */
+
+    .auth-page {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+
+      padding:
+        max(20px, env(safe-area-inset-top))
+        15px
+        max(20px, env(safe-area-inset-bottom))
+        15px;
+
+      background:
+        radial-gradient(
+          circle at top,
+          #171717 0%,
+          #080808 45%,
+          #000 100%
+        );
     }
 
-    .container {
+    .auth-container {
       width: 100%;
-      max-width: 430px;
+      max-width: 500px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      padding: 15px 5px;
     }
 
-    .card {
-      background: #0b0b0b;
-      border: 1px solid #292929;
-      border-radius: 18px;
-      padding: 30px 24px;
-      box-shadow: 0 0 30px rgba(212, 175, 55, 0.08);
-    }
+    /* =====================================================
+       LOGO
+    ===================================================== */
 
     .logo {
-      width: 76px;
-      height: 76px;
-      margin: 0 auto 16px;
-      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+
       border: 2px solid #d4af37;
+      border-radius: 50%;
+
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+
       color: #d4af37;
-      font-size: 26px;
-      font-weight: bold;
+
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 2px;
+
+      margin-bottom: 12px;
+
+      box-shadow:
+        0 0 20px rgba(212, 175, 55, 0.18),
+        inset 0 0 15px rgba(212, 175, 55, 0.08);
+    }
+
+    .brand-name {
+      color: #d4af37;
+
+      font-size: 27px;
+      font-weight: 800;
+
+      letter-spacing: 4px;
+
+      text-align: center;
+
+      margin-bottom: 5px;
+    }
+
+    .brand-subtitle {
+      color: #888;
+
+      font-size: 11px;
+
       letter-spacing: 1px;
+
+      text-align: center;
+
+      margin-bottom: 22px;
     }
 
-    h1 {
-      text-align: center;
-      margin: 0;
-      color: #d4af37;
-      font-size: 28px;
+    /* =====================================================
+       REGISTER BOX
+    ===================================================== */
+
+    .auth-box {
+      width: 100%;
+
+      background: rgba(15, 15, 15, 0.97);
+
+      border: 1px solid #292929;
+
+      border-radius: 18px;
+
+      padding: 25px 22px;
+
+      box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.55),
+        0 0 25px rgba(212, 175, 55, 0.04);
     }
 
-    .subtitle {
+    .title {
+      color: #fff;
+
+      font-size: 24px;
+      font-weight: 700;
+
       text-align: center;
-      color: #aaa;
-      margin: 8px 0 28px;
-      font-size: 14px;
+
+      margin-bottom: 7px;
     }
+
+    .description {
+      color: #888;
+
+      font-size: 13px;
+
+      text-align: center;
+
+      margin-bottom: 22px;
+    }
+
+    /* =====================================================
+       FORM
+    ===================================================== */
 
     .form-group {
-      margin-bottom: 18px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #ddd;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    input {
       width: 100%;
-      padding: 14px 15px;
-      border-radius: 10px;
-      border: 1px solid #333;
-      background: #151515;
-      color: #fff;
-      outline: none;
-      font-size: 15px;
+      margin-bottom: 15px;
     }
 
-    input:focus {
-      border-color: #d4af37;
-      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.12);
+    .form-group label {
+      display: block;
+
+      color: #d4af37;
+
+      font-size: 13px;
+      font-weight: 600;
+
+      margin-bottom: 7px;
     }
 
     .required {
       color: #d4af37;
     }
 
-    .password-note {
-      margin-top: 6px;
-      color: #777;
-      font-size: 12px;
-    }
-
-    #registerButton {
+    .form-group input,
+    .form-group select {
       width: 100%;
-      padding: 14px;
-      margin-top: 8px;
-      border: none;
+
+      height: 50px;
+
+      padding: 0 14px;
+
+      background: #090909;
+
+      color: #fff;
+
+      border: 1px solid #303030;
+
       border-radius: 10px;
+
+      outline: none;
+
+      font-size: 14px;
+
+      transition: 0.25s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #d4af37;
+
+      box-shadow:
+        0 0 0 2px rgba(212, 175, 55, 0.08);
+    }
+
+    .form-group input::placeholder {
+      color: #666;
+    }
+
+    .form-group select {
+      appearance: auto;
+    }
+
+    .form-group select option {
+      background: #111;
+      color: #fff;
+    }
+
+    /* =====================================================
+       PASSWORD HINT
+    ===================================================== */
+
+    .hint {
+      color: #666;
+
+      font-size: 11px;
+
+      margin-top: 5px;
+
+      line-height: 1.4;
+    }
+
+    /* =====================================================
+       TERMS
+    ===================================================== */
+
+    .terms {
+      display: flex;
+      align-items: flex-start;
+
+      gap: 9px;
+
+      margin: 5px 0 18px;
+
+      color: #777;
+
+      font-size: 11px;
+
+      line-height: 1.5;
+    }
+
+    .terms input {
+      width: 16px;
+      height: 16px;
+
+      margin-top: 1px;
+
+      accent-color: #d4af37;
+
+      flex-shrink: 0;
+    }
+
+    .terms a {
+      color: #d4af37;
+
+      text-decoration: none;
+    }
+
+    /* =====================================================
+       REGISTER BUTTON
+    ===================================================== */
+
+    .register-button {
+      width: 100%;
+
+      height: 53px;
+
+      border: none;
+
+      border-radius: 10px;
+
       background: #d4af37;
+
       color: #000;
-      font-size: 16px;
-      font-weight: bold;
+
+      font-size: 15px;
+      font-weight: 800;
+
       cursor: pointer;
+
+      transition: 0.2s ease;
+
+      box-shadow:
+        0 8px 20px rgba(212, 175, 55, 0.15);
     }
 
-    #registerButton:hover {
-      background: #e5c04b;
+    .register-button:hover {
+      background: #e2c158;
     }
 
-    #registerButton:disabled {
+    .register-button:active {
+      transform: scale(0.98);
+    }
+
+    .register-button:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
 
-    .message {
-      display: none;
-      margin-top: 18px;
-      padding: 12px;
-      border-radius: 9px;
-      font-size: 14px;
-      line-height: 1.5;
+    /* =====================================================
+       MESSAGE
+    ===================================================== */
+
+    #message {
+      width: 100%;
+
+      margin-top: 14px;
+
+      padding: 11px;
+
+      border-radius: 8px;
+
       text-align: center;
+
+      font-size: 13px;
+
+      display: none;
     }
 
-    .message.show {
-      display: block;
-    }
-
-    .message.error {
-      color: #ffb4b4;
-      background: rgba(180, 0, 0, 0.15);
-      border: 1px solid rgba(255, 80, 80, 0.25);
-    }
-
-    .message.success {
-      color: #b9f6c5;
-      background: rgba(0, 150, 50, 0.12);
-      border: 1px solid rgba(80, 220, 110, 0.25);
-    }
+    /* =====================================================
+       LOGIN LINK
+    ===================================================== */
 
     .bottom-text {
-      margin-top: 22px;
       text-align: center;
-      color: #999;
-      font-size: 14px;
+
+      color: #888;
+
+      font-size: 13px;
+
+      margin-top: 22px;
     }
 
-    .bottom-text a {
+    .login-link {
       color: #d4af37;
+
       text-decoration: none;
-      font-weight: bold;
+
+      font-weight: 700;
+
+      margin-left: 4px;
     }
 
-    .bottom-text a:hover {
+    .login-link:hover {
       text-decoration: underline;
     }
 
-    .security {
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .footer {
       margin-top: 22px;
-      padding-top: 16px;
-      border-top: 1px solid #222;
+
       text-align: center;
-      color: #666;
-      font-size: 12px;
-      line-height: 1.5;
+
+      color: #555;
+
+      font-size: 10px;
+
+      letter-spacing: 0.5px;
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 480px) {
+
+      .auth-page {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .auth-container {
+        padding-left: 3px;
+        padding-right: 3px;
+      }
+
+      .auth-box {
+        padding: 22px 17px;
+
+        border-radius: 15px;
+      }
+
+      .logo {
+        width: 62px;
+        height: 62px;
+
+        font-size: 21px;
+      }
+
+      .brand-name {
+        font-size: 24px;
+        letter-spacing: 3px;
+      }
+
+      .brand-subtitle {
+        margin-bottom: 18px;
+      }
+
+      .title {
+        font-size: 22px;
+      }
+    }
+
+    /* =====================================================
+       SMALL HEIGHT DEVICES
+    ===================================================== */
+
+    @media (max-height: 700px) {
+
+      .auth-page {
+        align-items: flex-start;
+      }
+
+      .auth-container {
+        padding-top: 10px;
+        padding-bottom: 15px;
+      }
+
+      .logo {
+        width: 52px;
+        height: 52px;
+
+        font-size: 18px;
+
+        margin-bottom: 7px;
+      }
+
+      .brand-name {
+        font-size: 21px;
+      }
+
+      .brand-subtitle {
+        margin-bottom: 13px;
+      }
+
+      .auth-box {
+        padding-top: 18px;
+        padding-bottom: 18px;
+      }
+
+      .form-group {
+        margin-bottom: 11px;
+      }
+
+      .form-group input,
+      .form-group select {
+        height: 46px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+  <main class="auth-page">
 
-    <div class="card">
+    <div class="auth-container">
 
-      <div class="logo">AB</div>
+      <!-- =================================================
+           LOGO
+      ================================================== -->
 
-      <h1>Create Account</h1>
-
-      <div class="subtitle">
-        Join AYNA BOOK
+      <div class="logo">
+        AB
       </div>
 
-      <form id="registerForm">
+      <div class="brand-name">
+        AYNA BOOK
+      </div>
 
-        <!-- DISPLAY NAME -->
-        <div class="form-group">
-          <label for="displayName">
-            Name
-          </label>
+      <div class="brand-subtitle">
+        CONNECT • SHARE • DISCOVER
+      </div>
 
-          <input
-            id="displayName"
-            name="displayName"
-            type="text"
-            autocomplete="name"
-            maxlength="100"
-            placeholder="Enter your name"
-          >
-        </div>
 
-        <!-- EMAIL -->
-        <div class="form-group">
-          <label for="email">
-            Email
-            <span class="required">*</span>
-          </label>
+      <!-- =================================================
+           REGISTRATION BOX
+      ================================================== -->
 
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            maxlength="254"
-            placeholder="Enter your email address"
-            required
-          >
-        </div>
+      <section class="auth-box">
 
-        <!-- PASSWORD -->
-        <div class="form-group">
-          <label for="password">
-            Password
-            <span class="required">*</span>
-          </label>
-
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="new-password"
-            minlength="6"
-            placeholder="Create a password"
-            required
-          >
-
-          <div class="password-note">
-            Password must contain at least 6 characters.
-          </div>
-        </div>
-
-        <!-- CONFIRM PASSWORD -->
-        <div class="form-group">
-          <label for="confirmPassword">
-            Confirm Password
-            <span class="required">*</span>
-          </label>
-
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            autocomplete="new-password"
-            minlength="6"
-            placeholder="Enter password again"
-            required
-          >
-        </div>
-
-        <button
-          id="registerButton"
-          type="submit"
-        >
+        <h1 class="title">
           Create Account
-        </button>
+        </h1>
 
-      </form>
+        <p class="description">
+          Join AYNA BOOK and create your account
+        </p>
 
-      <!-- MESSAGE -->
-      <div
-        id="message"
-        class="message"
-        role="alert"
-      ></div>
 
-      <!-- LOGIN LINK -->
-      <div class="bottom-text">
-        Already have an account?
-        <a href="login.html">Sign In</a>
-      </div>
+        <!-- =================================================
+             REGISTRATION FORM
+        ================================================== -->
 
-      <div class="security">
-        A verification email will be sent after registration.
+        <form id="registerForm">
+
+          <!-- Full Name -->
+
+          <div class="form-group">
+
+            <label for="fullName">
+              Full Name
+              <span class="required">*</span>
+            </label>
+
+            <input
+              id="fullName"
+              name="fullName"
+              type="text"
+              placeholder="Enter your full name"
+              autocomplete="name"
+              minlength="2"
+              maxlength="100"
+              required
+            >
+
+          </div>
+
+
+          <!-- Email -->
+
+          <div class="form-group">
+
+            <label for="email">
+              Email Address
+              <span class="required">*</span>
+            </label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              autocomplete="email"
+              required
+            >
+
+          </div>
+
+
+          <!-- Country -->
+
+          <div class="form-group">
+
+            <label for="country">
+              Country
+              <span class="required">*</span>
+            </label>
+
+            <input
+              id="country"
+              name="country"
+              type="text"
+              placeholder="Enter your country"
+              autocomplete="country-name"
+              maxlength="100"
+              required
+            >
+
+          </div>
+
+
+          <!-- Phone -->
+
+          <div class="form-group">
+
+            <label for="phone">
+              Phone Number
+            </label>
+
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder="Enter your phone number"
+              autocomplete="tel"
+              maxlength="30"
+            >
+
+          </div>
+
+
+          <!-- Password -->
+
+          <div class="form-group">
+
+            <label for="password">
+              Password
+              <span class="required">*</span>
+            </label>
+
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Create a password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            >
+
+            <div class="hint">
+              Password must be at least 6 characters.
+            </div>
+
+          </div>
+
+
+          <!-- Confirm Password -->
+
+          <div class="form-group">
+
+            <label for="confirmPassword">
+              Confirm Password
+              <span class="required">*</span>
+            </label>
+
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              placeholder="Confirm your password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            >
+
+          </div>
+
+
+          <!-- Terms -->
+
+          <div class="terms">
+
+            <input
+              id="terms"
+              name="terms"
+              type="checkbox"
+              required
+            >
+
+            <label for="terms">
+              I agree to the AYNA BOOK
+              <a href="#" onclick="return false;">
+                Terms & Conditions
+              </a>
+              and
+              <a href="#" onclick="return false;">
+                Privacy Policy
+              </a>.
+            </label>
+
+          </div>
+
+
+          <!-- Register Button -->
+
+          <button
+            id="registerButton"
+            class="register-button"
+            type="submit"
+          >
+            CREATE ACCOUNT
+          </button>
+
+
+          <!-- Message -->
+
+          <div id="message"></div>
+
+        </form>
+
+
+        <!-- =================================================
+             LOGIN LINK
+        ================================================== -->
+
+        <div class="bottom-text">
+
+          Already have an account?
+
+          <a
+            href="./login.html"
+            class="login-link"
+          >
+            Login
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           FOOTER
+      ================================================== -->
+
+      <div class="footer">
+        © 2026 AYNA BOOK. All Rights Reserved.
       </div>
 
     </div>
 
-  </div>
+  </main>
 
-  <!-- REGISTER JAVASCRIPT -->
+
+  <!-- =====================================================
+       REGISTER JAVASCRIPT
+  ===================================================== -->
+
   <script
     type="module"
     src="./register.js"
