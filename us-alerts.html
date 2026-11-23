@@ -1,18 +1,405 @@
-<a
-  class="quick-card"
-  href="./us-alerts.html"
->
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <div class="quick-icon">
-    🇺🇸
-  </div>
+  <title>AYNA BOOK - US Government Alerts</title>
 
-  <div class="quick-name">
-    US Government Alerts
-  </div>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  <div class="quick-sub">
-    FEMA / IPAWS
-  </div>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #061b14;
+      color: #ffffff;
+    }
 
-</a>
+    body {
+      position: fixed;
+      inset: 0;
+    }
+
+    .page {
+      width: 100%;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top, #123b2d 0%, #061b14 45%, #03100c 100%);
+    }
+
+    .topbar {
+      flex: 0 0 auto;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+
+    .back-btn {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(255,255,255,.1);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .title-box {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: #b7d8ca;
+      margin-top: 2px;
+    }
+
+    .refresh-btn {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 14px;
+      background: #0c7c55;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 12px;
+      padding-bottom: 30px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .notice {
+      padding: 13px;
+      border-radius: 16px;
+      background: rgba(255, 190, 70, .12);
+      border: 1px solid rgba(255, 190, 70, .35);
+      color: #ffe4a8;
+      font-size: 12px;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-bottom: 10px;
+    }
+
+    .control {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .control.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      color: #b7d8ca;
+      margin-bottom: 5px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 12px;
+      background: rgba(255,255,255,.08);
+      color: white;
+      padding: 0 12px;
+      outline: none;
+      font-size: 13px;
+    }
+
+    select option {
+      color: #111;
+      background: white;
+    }
+
+    input::placeholder {
+      color: #9eb9ad;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-bottom: 12px;
+    }
+
+    .action-btn {
+      height: 46px;
+      border: 0;
+      border-radius: 13px;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .load-btn {
+      background: #0c7c55;
+    }
+
+    .voice-btn {
+      background: #245f88;
+    }
+
+    .status {
+      font-size: 12px;
+      color: #b7d8ca;
+      padding: 7px 2px;
+    }
+
+    .alert-card {
+      margin-bottom: 12px;
+      padding: 14px;
+      border-radius: 17px;
+      background: rgba(255,255,255,.075);
+      border: 1px solid rgba(255,255,255,.11);
+      box-shadow: 0 7px 20px rgba(0,0,0,.18);
+    }
+
+    .alert-top {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .alert-icon {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 44px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background: rgba(220,50,50,.18);
+    }
+
+    .alert-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .alert-event {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .alert-headline {
+      margin-top: 5px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #e6f3ed;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 9px;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.1);
+      color: #c9e4d8;
+      font-size: 10px;
+    }
+
+    .badge.red {
+      background: rgba(220,50,50,.18);
+      color: #ffb5b5;
+    }
+
+    .badge.yellow {
+      background: rgba(255,190,70,.16);
+      color: #ffe1a0;
+    }
+
+    .alert-section {
+      margin-top: 11px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+
+    .section-title {
+      font-size: 11px;
+      color: #8fc3ad;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+
+    .section-text {
+      font-size: 12px;
+      line-height: 1.55;
+      color: #dcebe5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .alert-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 11px;
+    }
+
+    .small-btn {
+      flex: 1;
+      height: 38px;
+      border: 0;
+      border-radius: 10px;
+      background: rgba(255,255,255,.1);
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 35px 15px;
+      color: #9eb9ad;
+      font-size: 13px;
+    }
+
+    .error {
+      padding: 15px;
+      border-radius: 14px;
+      background: rgba(220,50,50,.12);
+      border: 1px solid rgba(220,50,50,.25);
+      color: #ffbcbc;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #a9cdbd;
+      font-size: 13px;
+    }
+
+    @media (min-width: 700px) {
+      .content {
+        max-width: 900px;
+        width: 100%;
+        margin: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <header class="topbar">
+
+    <button
+      class="back-btn"
+      id="backBtn"
+      type="button"
+      aria-label="Back">
+      ←
+    </button>
+
+    <div class="title-box">
+      <div class="title">🇺🇸 US Government Alerts</div>
+      <div class="subtitle">FEMA / IPAWS Public Alert Archive</div>
+    </div>
+
+    <button
+      class="refresh-btn"
+      id="refreshBtn"
+      type="button"
+      aria-label="Refresh">
+      ↻
+    </button>
+
+  </header>
+
+
+  <main class="content">
+
+    <div class="notice">
+      ⚠️ এই পেজ FEMA-এর প্রকাশিত IPAWS Archive থেকে তথ্য দেখায়।
+      এটি live WEA/EAS alert পাঠায় না। FEMA archive data প্রায়
+      ২৪ ঘণ্টা delay-তে প্রকাশিত হয়।
+    </div>
+
+
+    <div class="controls">
+
+      <div class="control">
+        <label for="eventFilter">Alert Type</label>
+
+        <select id="eventFilter">
+
+          <option value="">সব Alert</option>
+
+          <option value="Tornado">Tornado</option>
+          <option value="Hurricane">Hurricane</option>
+          <option value="Flood">Flood</option>
+          <option value="Flash Flood">Flash Flood</option>
+          <option value="Wildfire">Wildfire</option>
+          <option value="Severe Thunderstorm">Severe Thunderstorm</option>
+          <option value="Winter">Winter Weather</option>
+          <option value="Earthquake">Earthquake</option>
+          <option value="Tsunami">Tsunami</option>
+          <option value="Tropical">Tropical</option>
+          <option value="Heat">Heat</option>
+          <option value="Fire">Fire</option>
+          <option value="AMBER">AMBER</option>
+          <option value="Public Safety">Public Safety</option>
+          <option value="Hazardous">Hazardous Materials</option>
+          <option value="Emergency">Emergency</option>
+
+        </select>
+      </div>
+
+
+      <div class="control">
+        <label for="stateFilter">State / Area</label>
+
+        <input
+          id="stateFilter"
+          type
