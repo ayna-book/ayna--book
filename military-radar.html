@@ -1,118 +1,42 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#071b49">
-<title>AYNA BOOK - Military Radar</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#001008">
+<title>AYNA Tactical Radar</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,"Noto Sans Bengali",sans-serif;background:#071b49;color:#fff}
-header{text-align:center;padding:20px 12px;background:linear-gradient(120deg,#071b49,#173c7c);border-bottom:2px solid #ffd700}
-.logo{font-size:27px;font-weight:bold;letter-spacing:2px;color:#ffd700}
-header h1{font-size:23px;margin:10px 0 5px}
-header p{margin:0;color:#dce7ff}
-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;padding:12px;background:#0b2458}
-nav a,button{display:inline-block;padding:11px 15px;border:1px solid #ffd700;border-radius:9px;background:#132f68;color:white;text-decoration:none;font-size:15px;cursor:pointer}
-nav a:hover,button:hover{background:#24498d}
-main{max-width:1100px;margin:auto;padding:15px}
-.hero{text-align:center;padding:25px 15px;border:1px solid #31518d;border-radius:15px;background:linear-gradient(140deg,#102b63,#071b49)}
-.hero .symbol{font-size:45px}
-.hero h2{color:#ffd700;margin:8px}
-.hero p{line-height:1.8;color:#e0eaff}
-.tag{display:inline-block;margin:5px;padding:7px 12px;border-radius:20px;background:#174c3c;color:#b9ffdb;font-size:13px}
-h2.section{color:#ffd700;margin:28px 0 12px;border-left:4px solid #ffd700;padding-left:10px;font-size:21px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.card,.country{background:#10285a;border:1px solid #34558e;border-radius:13px;padding:17px}
-.card .icon{font-size:30px}
-.card h3,.country strong{color:#ffd700}
-.card p,.country p{line-height:1.7;color:#e1e9ff}
-.search{width:100%;padding:13px;margin:10px 0;border-radius:9px;border:1px solid #6885bd;font-size:16px}
-.country{margin:9px 0}
-.country a{color:#9fd5ff}
-.notice{background:#3b2b0c;border:1px solid #d6a33a;padding:15px;border-radius:11px;line-height:1.8}
-footer{text-align:center;padding:22px 10px;margin-top:25px;background:#041332;color:#cbd8f5;line-height:1.8}
-#clock{color:#b9d5ff;font-size:13px}
+body{margin:0;background:#001008;color:#48ff80;font-family:monospace}
+header{padding:16px;text-align:center;border-bottom:1px solid #168b43}
+main{height:calc(100dvh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:12px}
+.radar{width:min(92vw,58vh);aspect-ratio:1;border:2px solid #39ff75;border-radius:50%;position:relative;overflow:hidden;background:repeating-radial-gradient(circle,transparent 0 19%,#176d35 19.5% 20%,transparent 20.5% 25%),linear-gradient(90deg,transparent 49.5%,#176d35 50%,transparent 50.5%),linear-gradient(transparent 49.5%,#176d35 50%,transparent 50.5%)}
+.sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(transparent 0deg,#36ff8055 45deg,transparent 75deg);animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dot{position:absolute;width:9px;height:9px;border-radius:50%;background:#ffdf42;box-shadow:0 0 12px #ffdf42}
+.d1{left:68%;top:32%}.d2{left:30%;top:62%}.d3{left:54%;top:78%}
+.center{position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;background:white}
+.panel{text-align:center;line-height:1.9}
+button{padding:12px 18px;background:#0d4d25;color:#55ff80;border:1px solid #39ff75;border-radius:6px}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">👁 AYNA BOOK</div>
-  <h1>GLOBAL MILITARY RADAR</h1>
-  <p>সামরিক রাডার প্রযুক্তি ও প্রকাশ্য বিশ্ব প্রতিরক্ষা তথ্য</p>
-</header>
-<nav>
-  <a href="index.html">⌂ হোম</a>
-  <a href="radar.html">🌐 বেসামরিক রাডার</a>
-  <a href="compass.html">🧭 কম্পাস</a>
-  <button type="button" onclick="toggleFullScreen()">⛶ ফুল স্ক্রিন</button>
-</nav>
-<main id="page">
-  <section class="hero">
-    <div class="symbol">📡</div>
-    <h2>সামরিক রাডার প্রযুক্তি</h2>
-    <p>রাডার কীভাবে কাজ করে, এর বিভিন্ন ধরন, ইতিহাস এবং প্রতিরক্ষা ক্ষেত্রে এর সাধারণ ব্যবহার সম্পর্কে শিক্ষামূলক তথ্য। এই পেজে গোপন সামরিক অবস্থান বা সংবেদনশীল লাইভ ট্র্যাকিং দেখানো হয় না।</p>
-    <span class="tag">● শিক্ষামূলক তথ্য</span>
-    <span class="tag">● প্রকাশ্য সূত্র</span>
-    <p id="clock"></p>
-  </section>
-
-  <h2 class="section">রাডার প্রযুক্তির প্রধান ধরন</h2>
-  <section class="grid">
-    <article class="card"><div class="icon">📡</div><h3>এয়ার সার্ভেইলেন্স রাডার</h3><p>আকাশসীমা পর্যবেক্ষণ এবং বিমান চলাচল সম্পর্কে সাধারণ ধারণা দেয়।</p></article>
-    <article class="card"><div class="icon">🛡️</div><h3>এয়ার ডিফেন্স রাডার</h3><p>আকাশ প্রতিরক্ষা ব্যবস্থায় ব্যবহৃত রাডার প্রযুক্তির পরিচিতি।</p></article>
-    <article class="card"><div class="icon">🚢</div><h3>নৌ-রাডার</h3><p>জাহাজের নেভিগেশন, সামুদ্রিক নিরাপত্তা ও আবহাওয়া পর্যবেক্ষণে ব্যবহৃত হয়।</p></article>
-    <article class="card"><div class="icon">🌦️</div><h3>আবহাওয়া রাডার</h3><p>বৃষ্টি, বজ্রঝড় এবং আবহাওয়ার পরিবর্তন পর্যবেক্ষণের প্রযুক্তি।</p></article>
-    <article class="card"><div class="icon">🛰️</div><h3>মহাকাশ পর্যবেক্ষণ</h3><p>মহাকাশ ও কক্ষপথ পর্যবেক্ষণে ব্যবহৃত রাডার বিজ্ঞানের পরিচিতি।</p></article>
-    <article class="card"><div class="icon">🎓</div><h3>রাডার শিক্ষা</h3><p>রাডারের ইতিহাস, রেডিও তরঙ্গ, প্রতিফলন ও মৌলিক বৈজ্ঞানিক ধারণা।</p></article>
-  </section>
-
-  <h2 class="section">দেশভিত্তিক প্রকাশ্য তথ্যসূত্র</h2>
-  <input class="search" id="countrySearch" type="search" placeholder="দেশ বা তথ্যসূত্র খুঁজুন..." oninput="searchCountries()">
-  <div id="countryList">
-    <div class="country"><strong>🇧🇩 বাংলাদেশ</strong><p>প্রকাশ্য প্রতিরক্ষা সংবাদ ও সরকারি তথ্য।</p><a href="https://ispr.gov.bd/" target="_blank" rel="noopener">বাংলাদেশ ISPR</a></div>
-    <div class="country"><strong>🇺🇸 যুক্তরাষ্ট্র</strong><p>প্রতিরক্ষা নীতি, সংবাদ ও প্রকাশ্য গবেষণা।</p><a href="https://www.defense.gov/" target="_blank" rel="noopener">US Department of Defense</a></div>
-    <div class="country"><strong>🇬🇧 যুক্তরাজ্য</strong><p>সরকারি প্রতিরক্ষা বিভাগ ও প্রকাশ্য তথ্য।</p><a href="https://www.gov.uk/government/organisations/ministry-of-defence" target="_blank" rel="noopener">UK Ministry of Defence</a></div>
-    <div class="country"><strong>🇫🇷 ফ্রান্স</strong><p>প্রকাশ্য প্রতিরক্ষা ও সামরিক প্রযুক্তি বিষয়ক তথ্য।</p><a href="https://www.defense.gouv.fr/" target="_blank" rel="noopener">French Ministry of Armed Forces</a></div>
-    <div class="country"><strong>🇮🇳 ভারত</strong><p>সরকারি প্রতিরক্ষা তথ্য ও প্রকাশ্য ঘোষণা।</p><a href="https://www.mod.gov.in/" target="_blank" rel="noopener">Indian Ministry of Defence</a></div>
-    <div class="country"><strong>🇯🇵 জাপান</strong><p>প্রতিরক্ষা মন্ত্রণালয়ের প্রকাশ্য তথ্য।</p><a href="https://www.mod.go.jp/en/" target="_blank" rel="noopener">Japan Ministry of Defense</a></div>
-    <div class="country"><strong>🇨🇦 কানাডা</strong><p>প্রতিরক্ষা বিভাগ ও প্রকাশ্য গবেষণা।</p><a href="https://www.canada.ca/en/department-national-defence.html" target="_blank" rel="noopener">Canada National Defence</a></div>
-    <div class="country"><strong>🇦🇺 অস্ট্রেলিয়া</strong><p>সরকারি প্রতিরক্ষা বিভাগ ও সংবাদ।</p><a href="https://www.defence.gov.au/" target="_blank" rel="noopener">Australian Department of Defence</a></div>
-  </div>
-
-  <h2 class="section">রাডার কীভাবে কাজ করে?</h2>
-  <div class="card">
-    <p>রাডার সাধারণত রেডিও তরঙ্গ পাঠায়। কোনো বস্তু থেকে প্রতিফলিত তরঙ্গ ফিরে এলে সেই সংকেত বিশ্লেষণ করে বস্তুটির দূরত্ব ও দিক সম্পর্কে ধারণা পাওয়া যায়। নির্দিষ্ট রাডার ব্যবস্থায় আরও কিছু বৈশিষ্ট্য পরিমাপ করা সম্ভব।</p>
-  </div>
-
-  <h2 class="section">গুরুত্বপূর্ণ নিরাপত্তা নোট</h2>
-  <div class="notice">
-    এই পেজটি কেবল সাধারণ শিক্ষা ও প্রকাশ্য তথ্যের জন্য। গোপন সামরিক স্থাপনা, অপারেশনাল রাডারের অবস্থান, দুর্বলতা, অস্ত্র পরিচালনা বা সংবেদনশীল লাইভ ট্র্যাকিংয়ের তথ্য এখানে দেওয়া হয় না। কোনো দেশের সরকারি তথ্যসূত্রের তথ্যও প্রকাশের আগে যাচাই করুন।
-  </div>
+<header><b>AYNA BOOK — TACTICAL RADAR</b></header>
+<main>
+<div class="radar">
+<div class="sweep"></div>
+<div class="center"></div>
+<div class="dot d1"></div>
+<div class="dot d2"></div>
+<div class="dot d3"></div>
+</div>
+<div class="panel">
+<div>SIMULATION / DEMO ONLY</div>
+<div>CONTACTS: 03 (SIMULATED)</div>
+<div>STATUS: SYSTEM ACTIVE</div>
+</div>
+<button onclick="alert('এটি শুধুমাত্র ডেমো Radar')">RADAR CONTROL</button>
 </main>
-<footer>
-  <strong style="color:#ffd700">AYNA BOOK</strong><br>
-  Connect. Create. Share. Protect.<br>
-  <small>Public information & educational technology page</small>
-</footer>
-<script>
-function searchCountries(){
-  const q=document.getElementById('countrySearch').value.trim().toLowerCase();
-  document.querySelectorAll('#countryList .country').forEach(item=>{
-    item.style.display=item.innerText.toLowerCase().includes(q)?'block':'none';
-  });
-}
-async function toggleFullScreen(){
-  try{
-    if(!document.fullscreenElement) await document.getElementById('page').requestFullscreen();
-    else await document.exitFullscreen();
-  }catch(e){alert('এই ব্রাউজারে ফুল স্ক্রিন সুবিধা পাওয়া যাচ্ছে না।');}
-}
-function updateClock(){
-  document.getElementById('clock').textContent='আপনার ডিভাইসের সময়: '+new Date().toLocaleString('bn-BD');
-}
-updateClock();
-setInterval(updateClock,1000);
-</script>
 </body>
 </html>
