@@ -1,20 +1,11 @@
 // =========================================================
 // AYNA BOOK
 // AUTHENTICATION CONTROLLER
-// Firebase JS SDK 13.4.0
-// =========================================================
-
-
-// =========================================================
-// FIREBASE IMPORTS
+// File: auth.js
+// Firebase SDK: 13.4.0
 // =========================================================
 
 import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-
-import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendEmailVerification,
@@ -26,35 +17,10 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-
-// =========================================================
-// FIREBASE CONFIGURATION
-// =========================================================
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-  authDomain: "ayna-book.firebaseapp.com",
-  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ayna-book",
-  storageBucket: "ayna-book.firebasestorage.app",
-  messagingSenderId: "805601138500",
-  appId: "1:805601138500:web:47acdc90cb0cb521626911",
-  measurementId: "G-RKHHSKNB4B"
-};
-
-
-// =========================================================
-// INITIALIZE FIREBASE
-// =========================================================
-
-const app = initializeApp(firebaseConfig);
-
-
-// =========================================================
-// FIREBASE AUTH
-// =========================================================
-
-const auth = getAuth(app);
+import {
+  app,
+  auth
+} from "./firebase-config.js";
 
 
 // =========================================================
@@ -66,9 +32,7 @@ export async function registerUser(
   password,
   displayName = ""
 ) {
-
   try {
-
     const result =
       await createUserWithEmailAndPassword(
         auth,
@@ -76,41 +40,21 @@ export async function registerUser(
         password
       );
 
-
-    const user =
-      result.user;
-
-
-    // -----------------------------------------
-    // UPDATE PROFILE NAME
-    // -----------------------------------------
+    const user = result.user;
 
     if (displayName.trim()) {
-
-      await updateProfile(
-        user,
-        {
-          displayName:
-            displayName.trim()
-        }
-      );
-
+      await updateProfile(user, {
+        displayName: displayName.trim()
+      });
     }
 
-
-    // -----------------------------------------
-    // SEND EMAIL VERIFICATION
-    // -----------------------------------------
-
     await sendEmailVerification(user);
-
 
     return {
       success: true,
       user: user,
       verificationRequired: true
     };
-
 
   } catch (error) {
 
@@ -119,16 +63,12 @@ export async function registerUser(
       error
     );
 
-
     return {
       success: false,
       code: error.code,
-      message:
-        getAuthErrorMessage(error.code)
+      message: getAuthErrorMessage(error.code)
     };
-
   }
-
 }
 
 
@@ -140,7 +80,6 @@ export async function loginUser(
   email,
   password
 ) {
-
   try {
 
     const result =
@@ -150,14 +89,7 @@ export async function loginUser(
         password
       );
 
-
-    const user =
-      result.user;
-
-
-    // -----------------------------------------
-    // EMAIL VERIFICATION CHECK
-    // -----------------------------------------
+    const user = result.user;
 
     if (!user.emailVerified) {
 
@@ -168,15 +100,12 @@ export async function loginUser(
         message:
           "Please verify your email address first."
       };
-
     }
-
 
     return {
       success: true,
       user: user
     };
-
 
   } catch (error) {
 
@@ -185,30 +114,24 @@ export async function loginUser(
       error
     );
 
-
     return {
       success: false,
       code: error.code,
-      message:
-        getAuthErrorMessage(error.code)
+      message: getAuthErrorMessage(error.code)
     };
-
   }
-
 }
 
 
 // =========================================================
-// RESEND EMAIL VERIFICATION
+// RESEND VERIFICATION EMAIL
 // =========================================================
 
 export async function resendVerificationEmail() {
 
   try {
 
-    const user =
-      auth.currentUser;
-
+    const user = auth.currentUser;
 
     if (!user) {
 
@@ -217,19 +140,15 @@ export async function resendVerificationEmail() {
         message:
           "No signed-in user found."
       };
-
     }
 
-
     await sendEmailVerification(user);
-
 
     return {
       success: true,
       message:
         "Verification email sent successfully."
     };
-
 
   } catch (error) {
 
@@ -238,16 +157,12 @@ export async function resendVerificationEmail() {
       error
     );
 
-
     return {
       success: false,
       code: error.code,
-      message:
-        getAuthErrorMessage(error.code)
+      message: getAuthErrorMessage(error.code)
     };
-
   }
-
 }
 
 
@@ -259,9 +174,7 @@ export async function checkEmailVerification() {
 
   try {
 
-    const user =
-      auth.currentUser;
-
+    const user = auth.currentUser;
 
     if (!user) {
 
@@ -271,25 +184,19 @@ export async function checkEmailVerification() {
         message:
           "No signed-in user."
       };
-
     }
-
 
     await reload(user);
 
-
     const updatedUser =
       auth.currentUser;
-
 
     return {
       success: true,
       verified:
         !!updatedUser.emailVerified,
-      user:
-        updatedUser
+      user: updatedUser
     };
-
 
   } catch (error) {
 
@@ -298,27 +205,21 @@ export async function checkEmailVerification() {
       error
     );
 
-
     return {
       success: false,
       verified: false,
       code: error.code,
-      message:
-        getAuthErrorMessage(error.code)
+      message: getAuthErrorMessage(error.code)
     };
-
   }
-
 }
 
 
 // =========================================================
-// PASSWORD RESET
+// RESET PASSWORD
 // =========================================================
 
-export async function resetPassword(
-  email
-) {
+export async function resetPassword(email) {
 
   try {
 
@@ -327,13 +228,11 @@ export async function resetPassword(
       email.trim()
     );
 
-
     return {
       success: true,
       message:
         "Password reset email sent successfully."
     };
-
 
   } catch (error) {
 
@@ -342,16 +241,12 @@ export async function resetPassword(
       error
     );
 
-
     return {
       success: false,
       code: error.code,
-      message:
-        getAuthErrorMessage(error.code)
+      message: getAuthErrorMessage(error.code)
     };
-
   }
-
 }
 
 
@@ -365,11 +260,9 @@ export async function logoutUser() {
 
     await signOut(auth);
 
-
     return {
       success: true
     };
-
 
   } catch (error) {
 
@@ -378,16 +271,12 @@ export async function logoutUser() {
       error
     );
 
-
     return {
       success: false,
       code: error.code,
-      message:
-        getAuthErrorMessage(error.code)
+      message: getAuthErrorMessage(error.code)
     };
-
   }
-
 }
 
 
@@ -413,19 +302,13 @@ export async function reloadCurrentUser() {
     const user =
       auth.currentUser;
 
-
     if (!user) {
-
       return null;
-
     }
-
 
     await reload(user);
 
-
     return auth.currentUser;
-
 
   } catch (error) {
 
@@ -434,11 +317,8 @@ export async function reloadCurrentUser() {
       error
     );
 
-
     return null;
-
   }
-
 }
 
 
@@ -453,7 +333,6 @@ export async function deleteCurrentUser() {
     const user =
       auth.currentUser;
 
-
     if (!user) {
 
       return {
@@ -461,17 +340,13 @@ export async function deleteCurrentUser() {
         message:
           "No signed-in user."
       };
-
     }
 
-
     await deleteUser(user);
-
 
     return {
       success: true
     };
-
 
   } catch (error) {
 
@@ -480,26 +355,20 @@ export async function deleteCurrentUser() {
       error
     );
 
-
     return {
       success: false,
       code: error.code,
-      message:
-        getAuthErrorMessage(error.code)
+      message: getAuthErrorMessage(error.code)
     };
-
   }
-
 }
 
 
 // =========================================================
-// AUTH STATE OBSERVER
+// OBSERVE AUTH STATE
 // =========================================================
 
-export function observeAuthState(
-  callback
-) {
+export function observeAuthState(callback) {
 
   return onAuthStateChanged(
     auth,
@@ -510,7 +379,7 @@ export function observeAuthState(
 
 
 // =========================================================
-// AUTH ERROR MESSAGE
+// FIREBASE AUTH ERROR MESSAGES
 // =========================================================
 
 function getAuthErrorMessage(code) {
@@ -518,66 +387,41 @@ function getAuthErrorMessage(code) {
   switch (code) {
 
     case "auth/email-already-in-use":
-
       return "This email address is already registered.";
 
-
     case "auth/invalid-email":
-
       return "Please enter a valid email address.";
 
-
     case "auth/weak-password":
-
       return "Password is too weak.";
 
-
     case "auth/user-not-found":
-
       return "No account was found with this email.";
 
-
     case "auth/wrong-password":
-
       return "Incorrect password.";
 
-
     case "auth/invalid-credential":
-
       return "Email or password is incorrect.";
 
-
     case "auth/too-many-requests":
-
       return "Too many attempts. Please try again later.";
 
-
     case "auth/network-request-failed":
-
       return "Network error. Please check your internet connection.";
 
-
     case "auth/user-disabled":
-
       return "This account has been disabled.";
 
-
     case "auth/requires-recent-login":
-
       return "Please sign in again and retry.";
 
-
     case "auth/operation-not-allowed":
-
       return "Email/Password authentication is not enabled in Firebase.";
 
-
     default:
-
       return "Authentication failed. Please try again.";
-
   }
-
 }
 
 
