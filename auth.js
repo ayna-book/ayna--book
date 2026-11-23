@@ -1,9 +1,3 @@
-// =========================================================
-// AYNA BOOK
-// AUTHENTICATION CONTROLLER
-// File: auth.js
-// Firebase SDK: 13.4.0
-// =========================================================
 
 import {
   createUserWithEmailAndPassword,
@@ -11,427 +5,98 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
   signOut,
+  onAuthStateChanged,
   reload,
-  deleteUser,
-  updateProfile,
-  onAuthStateChanged
+  deleteUser
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-import {
-  app,
-  auth
-} from "./firebase-config.js";
+import { auth } from "./app.js";
 
+// Registration
+export async function registerUser(email, password) {
+  const credential = await createUserWithEmailAndPassword(
+    auth,
+    email.trim(),
+    password
+  );
 
-// =========================================================
-// REGISTER USER
-// =========================================================
+  await sendEmailVerification(credential.user);
 
-export async function registerUser(
-  email,
-  password,
-  displayName = ""
-) {
-  try {
-
-    const result =
-      await createUserWithEmailAndPassword(
-        auth,
-        email.trim(),
-        password
-      );
-
-    const user = result.user;
-
-    if (displayName.trim()) {
-
-      await updateProfile(user, {
-        displayName: displayName.trim()
-      });
-
-    }
-
-    await sendEmailVerification(user);
-
-    return {
-      success: true,
-      user: user,
-      verificationRequired: true
-    };
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Registration Error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message: getAuthErrorMessage(error.code)
-    };
-  }
+  return credential;
 }
 
-
-// =========================================================
-// LOGIN USER
-// =========================================================
-
-export async function loginUser(
-  email,
-  password
-) {
-  try {
-
-    const result =
-      await signInWithEmailAndPassword(
-        auth,
-        email.trim(),
-        password
-      );
-
-    const user = result.user;
-
-    if (!user.emailVerified) {
-
-      return {
-        success: false,
-        verificationRequired: true,
-        user: user,
-        message:
-          "Please verify your email address first."
-      };
-    }
-
-    return {
-      success: true,
-      user: user
-    };
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Login Error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message: getAuthErrorMessage(error.code)
-    };
-  }
+// Login
+export async function loginUser(email, password) {
+  return await signInWithEmailAndPassword(
+    auth,
+    email.trim(),
+    password
+  );
 }
 
-
-// =========================================================
-// RESEND VERIFICATION EMAIL
-// =========================================================
-
+// Resend verification email
 export async function resendVerificationEmail() {
+  const user = auth.currentUser;
 
-  try {
-
-    const user = auth.currentUser;
-
-    if (!user) {
-
-      return {
-        success: false,
-        message:
-          "No signed-in user found."
-      };
-
-    }
-
-    await sendEmailVerification(user);
-
-    return {
-      success: true,
-      message:
-        "Verification email sent successfully."
-    };
-
-  } catch (error) {
-
-    console.error(
-      "Verification Email Error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message: getAuthErrorMessage(error.code)
-    };
+  if (!user) {
+    throw new Error("Please login first.");
   }
+
+  await sendEmailVerification(user);
 }
 
-
-// =========================================================
-// CHECK EMAIL VERIFICATION
-// =========================================================
-
+// Check email verification
 export async function checkEmailVerification() {
+  const user = auth.currentUser;
 
-  try {
+  if (!user) return false;
 
-    const user = auth.currentUser;
+  await reload(user);
 
-    if (!user) {
-
-      return {
-        success: false,
-        verified: false,
-        message:
-          "No signed-in user."
-      };
-
-    }
-
-    await reload(user);
-
-    const updatedUser =
-      auth.currentUser;
-
-    return {
-      success: true,
-      verified:
-        !!updatedUser.emailVerified,
-      user: updatedUser
-    };
-
-  } catch (error) {
-
-    console.error(
-      "Email Verification Check Error:",
-      error
-    );
-
-    return {
-      success: false,
-      verified: false,
-      code: error.code,
-      message: getAuthErrorMessage(error.code)
-    };
-  }
+  return user.emailVerified;
 }
 
-
-// =========================================================
-// RESET PASSWORD
-// =========================================================
-
+// Password reset
 export async function resetPassword(email) {
-
-  try {
-
-    await sendPasswordResetEmail(
-      auth,
-      email.trim()
-    );
-
-    return {
-      success: true,
-      message:
-        "Password reset email sent successfully."
-    };
-
-  } catch (error) {
-
-    console.error(
-      "Password Reset Error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message: getAuthErrorMessage(error.code)
-    };
-  }
+  return await sendPasswordResetEmail(
+    auth,
+    email.trim()
+  );
 }
 
-
-// =========================================================
-// LOGOUT
-// =========================================================
-
+// Logout
 export async function logoutUser() {
-
-  try {
-
-    await signOut(auth);
-
-    return {
-      success: true
-    };
-
-  } catch (error) {
-
-    console.error(
-      "Logout Error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message: getAuthErrorMessage(error.code)
-    };
-  }
+  return await signOut(auth);
 }
 
-
-// =========================================================
-// GET CURRENT USER
-// =========================================================
-
+// Current user
 export function getCurrentUser() {
   return auth.currentUser;
 }
 
-
-// =========================================================
-// RELOAD CURRENT USER
-// =========================================================
-
+// Reload user
 export async function reloadCurrentUser() {
+  const user = auth.currentUser;
 
-  try {
-
-    const user = auth.currentUser;
-
-    if (!user) {
-      return null;
-    }
-
+  if (user) {
     await reload(user);
-
-    return auth.currentUser;
-
-  } catch (error) {
-
-    console.error(
-      "Reload User Error:",
-      error
-    );
-
-    return null;
   }
+
+  return auth.currentUser;
 }
 
-
-// =========================================================
-// DELETE CURRENT USER
-// =========================================================
-
+// Delete current account
 export async function deleteCurrentUser() {
+  const user = auth.currentUser;
 
-  try {
-
-    const user = auth.currentUser;
-
-    if (!user) {
-
-      return {
-        success: false,
-        message:
-          "No signed-in user."
-      };
-
-    }
-
-    await deleteUser(user);
-
-    return {
-      success: true
-    };
-
-  } catch (error) {
-
-    console.error(
-      "Delete User Error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message: getAuthErrorMessage(error.code)
-    };
+  if (!user) {
+    throw new Error("No logged-in user.");
   }
+
+  return await deleteUser(user);
 }
 
-
-// =========================================================
-// OBSERVE AUTH STATE
-// =========================================================
-
+// Observe login state
 export function observeAuthState(callback) {
-
-  return onAuthStateChanged(
-    auth,
-    callback
-  );
-
+  return onAuthStateChanged(auth, callback);
 }
-
-
-// =========================================================
-// AUTH ERROR MESSAGES
-// =========================================================
-
-function getAuthErrorMessage(code) {
-
-  switch (code) {
-
-    case "auth/email-already-in-use":
-      return "This email address is already registered.";
-
-    case "auth/invalid-email":
-      return "Please enter a valid email address.";
-
-    case "auth/weak-password":
-      return "Password is too weak.";
-
-    case "auth/user-not-found":
-      return "No account was found with this email.";
-
-    case "auth/wrong-password":
-      return "Incorrect password.";
-
-    case "auth/invalid-credential":
-      return "Email or password is incorrect.";
-
-    case "auth/too-many-requests":
-      return "Too many attempts. Please try again later.";
-
-    case "auth/network-request-failed":
-      return "Network error. Please check your internet connection.";
-
-    case "auth/user-disabled":
-      return "This account has been disabled.";
-
-    case "auth/requires-recent-login":
-      return "Please sign in again and retry.";
-
-    case "auth/operation-not-allowed":
-      return "Email/Password authentication is not enabled in Firebase.";
-
-    default:
-      return "Authentication failed. Please try again.";
-  }
-}
-
-
-// =========================================================
-// EXPORT FIREBASE APP + AUTH
-// =========================================================
-
-export {
-  app,
-  auth
-};
