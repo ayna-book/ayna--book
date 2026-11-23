@@ -1,83 +1,88 @@
 
-import { loginUser } from "./auth.js";
-
-import { auth } from "./app.js";
+import { auth, database } from "./firebase-init.js";
 
 import {
-  onAuthStateChanged
+  signInWithEmailAndPassword,
+  signOut
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-const loginForm = document.getElementById("loginForm");
+import {
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+const form = document.getElementById("loginForm");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
-const loginButton = document.getElementById("loginButton");
-const message = document.getElementById("message");
+const loginBtn = document.getElementById("loginBtn");
+const statusMsg = document.getElementById("statusMsg");
 
-let currentUser = null;
-
-onAuthStateChanged(auth, (user) => {
-  currentUser = user;
-
-  if (user && user.emailVerified) {
-    window.location.replace("./home.html");
-  }
-});
-
-loginForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  if (loginButton.disabled) return;
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
   const email = emailInput.value.trim();
   const password = passwordInput.value;
 
   if (!email || !password) {
-    message.textContent = "Email ও Password লিখুন।";
+    statusMsg.textContent = "Email ও Password দিন।";
     return;
   }
 
-  loginButton.disabled = true;
-  loginButton.textContent = "PLEASE WAIT...";
-  message.textContent = "";
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Logging in...";
+  statusMsg.textContent = "";
+
+  let user = null;
 
   try {
-    const result = await loginUser(email, password);
+    const credential = await signInWithEmailAndPassword(
+      auth, email, password
+    );
 
-    const user = result.user || result;
+    user = credential.user;
 
-    if (!user) {
-      throw new Error("Login করা যায়নি।");
+    const snapshot = await get(ref(database, "users/" + user.uid));
+
+    if (!snapshot.exists()) {
+      await signOut(auth);
+      throw new Error("PROFILE_NOT_FOUND");
     }
 
-    if (!user.emailVerified) {
-      message.textContent = "আপনার Email Verify করা হয়নি।";
+    const profile = snapshot.val();
 
-      window.location.href = "./verify-email.html";
-      return;
+    if (profile.uid !== user.uid) {
+      await signOut(auth);
+      throw new Error("PROFILE_INVALID");
     }
 
-    message.textContent = "Login সফল হয়েছে!";
+    statusMsg.textContent = "Login successful!";
 
-    window.location.replace("./home.html");
+    window.location.replace("./index.html");
 
   } catch (error) {
-    console.error("Login Error:", error);
+    console.error(error);
 
-    const errors = {
-      "auth/invalid-email": "সঠিক Email Address দিন।",
-      "auth/user-not-found": "এই Email দিয়ে কোনো Account পাওয়া যায়নি।",
-      "auth/wrong-password": "Password সঠিক নয়।",
-      "auth/invalid-credential": "Email অথবা Password সঠিক নয়।",
-      "auth/user-disabled": "আপনার Account বন্ধ রয়েছে।",
-      "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। পরে আবার চেষ্টা করুন।",
-      "auth/network-request-failed": "Internet Connection পরীক্ষা করুন।"
-    };
+    if (error.message === "PROFILE_NOT_FOUND") {
+      statusMsg.textContent =
+        "অ্যাকাউন্ট আছে, কিন্তু Profile পাওয়া যায়নি। Profile recovery প্রয়োজন।";
+    } else if (error.message === "PROFILE_INVALID") {
+      statusMsg.textContent = "Profile তথ্য সঠিক নয়।";
+    } else {
+      const messages = {
+        "auth/invalid-credential": "Email অথবা Password ভুল।",
+        "auth/user-not-found": "এই Email দিয়ে অ্যাকাউন্ট পাওয়া যায়নি।",
+        "auth/wrong-password": "Password ভুল।",
+        "auth/invalid-email": "সঠিক Email দিন।",
+        "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। পরে চেষ্টা করুন।",
+        "auth/network-request-failed": "ইন্টারনেট সংযোগ পরীক্ষা করুন।"
+      };
 
-    message.textContent =
-      errors[error.code] || error.message || "Login ব্যর্থ হয়েছে।";
+      statusMsg.textContent =
+        messages[error.code] || "Login করা যায়নি: " + error.message;
+    }
 
   } finally {
-    loginButton.disabled = false;
-    loginButton.textContent = "LOGIN";
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Login";
   }
 });
