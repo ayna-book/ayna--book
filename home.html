@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>AYNA BOOK — Home</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .header {
+      min-height: 70px;
+      padding: 15px 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      border-bottom: 1px solid #2d2d2d;
+
+      background: #050505;
+    }
+
+    .brand {
+      color: #d4af37;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    #logoutButton {
+      padding: 10px 18px;
+
+      border: 1px solid #d4af37;
+      border-radius: 6px;
+
+      background: transparent;
+      color: #d4af37;
+
+      font-size: 14px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    #logoutButton:hover {
+      background: #d4af37;
+      color: #000;
+    }
+
+    #logoutButton:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+
+      margin: 0 auto;
+
+      padding: 40px 20px;
+    }
+
+    .welcome-card {
+      padding: 30px 20px;
+
+      border: 1px solid #292929;
+      border-radius: 12px;
+
+      background: #0a0a0a;
+
+      text-align: center;
+
+      box-shadow:
+        0 0 25px rgba(212, 175, 55, 0.08);
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+
+      margin: 0 auto 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 2px solid #d4af37;
+      border-radius: 50%;
+
+      background: #111;
+
+      color: #d4af37;
+
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+
+      color: #d4af37;
+
+      font-size: 28px;
+    }
+
+    .subtitle {
+      margin: 0 0 25px;
+
+      color: #aaa;
+
+      font-size: 14px;
+    }
+
+    .user-info {
+      padding: 18px;
+
+      border-top: 1px solid #222;
+
+      border-bottom: 1px solid #222;
+
+      text-align: left;
+    }
+
+    .info-row {
+      margin: 10px 0;
+
+      color: #ccc;
+
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .label {
+      color: #d4af37;
+      font-weight: bold;
+    }
+
+    .message {
+      display: none;
+
+      margin-top: 20px;
+      padding: 12px;
+
+      border-radius: 6px;
+
+      font-size: 14px;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .error {
+      background: #180000;
+      border: 1px solid #8b0000;
+      color: #ff6b6b;
+    }
+
+    .success {
+      background: #071807;
+      border: 1px solid #2e7d32;
+      color: #7cff7c;
+    }
+
+    .loading {
+      color: #aaa;
+      text-align: center;
+      padding: 40px;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- ===================================================
+       HEADER
+  ==================================================== -->
+
+  <header class="header">
+
+    <div class="brand">
+      AYNA BOOK
+    </div>
+
+    <button
+      id="logoutButton"
+      type="button">
+      Sign Out
+    </button>
+
+  </header>
+
+
+  <!-- ===================================================
+       MAIN
+  ==================================================== -->
+
+  <main class="container">
+
+    <section
+      id="loading"
+      class="loading">
+
+      Loading AYNA BOOK...
+
+    </section>
+
+
+    <section
+      id="homeContent"
+      class="welcome-card"
+      style="display:none;">
+
+      <div
+        id="avatar"
+        class="avatar">
+        AB
+      </div>
+
+
+      <h1 id="welcomeName">
+        Welcome to AYNA BOOK
+      </h1>
+
+
+      <p class="subtitle">
+        Your account is successfully verified.
+      </p>
+
+
+      <div class="user-info">
+
+        <div class="info-row">
+
+          <span class="label">
+            Name:
+          </span>
+
+          <span id="userName">
+            -
+          </span>
+
+        </div>
+
+
+        <div class="info-row">
+
+          <span class="label">
+            Email:
+          </span>
+
+          <span id="userEmail">
+            -
+          </span>
+
+        </div>
+
+
+        <div class="info-row">
+
+          <span class="label">
+            Email Status:
+          </span>
+
+          <span id="emailStatus">
+            Verified
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="message"
+        class="message">
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ===================================================
+       AUTH SCRIPT
+  ==================================================== -->
+
+  <script type="module">
+
+    import {
+      getCurrentUser,
+      observeAuthState,
+      logoutUser
+    } from "./auth.js";
+
+
+    const loading =
+      document.getElementById("loading");
+
+    const homeContent =
+      document.getElementById("homeContent");
+
+    const welcomeName =
+      document.getElementById("welcomeName");
+
+    const userName =
+      document.getElementById("userName");
+
+    const userEmail =
+      document.getElementById("userEmail");
+
+    const emailStatus =
+      document.getElementById("emailStatus");
+
+    const avatar =
+      document.getElementById("avatar");
+
+    const message =
+      document.getElementById("message");
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+
+    let pageReady = false;
+
+
+    // ===================================================
+    // SHOW MESSAGE
+    // ===================================================
+
+    function showMessage(
+      text,
+      type = "error"
+    ) {
+
+      message.textContent = text;
+
+      message.className =
+        "message show " + type;
+    }
+
+
+    // ===================================================
+    // GET INITIALS
+    // ===================================================
+
+    function getInitials(
+      name,
+      email
+    ) {
+
+      const value =
+        name ||
+        email ||
+        "AB";
+
+      const parts =
+        value
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean);
+
+      if (parts.length >= 2) {
+
+        return (
+          parts[0][0] +
+          parts[1][0]
+        ).toUpperCase();
+
+      }
+
+      return value
+        .substring(0, 2)
+        .toUpperCase();
+    }
+
+
+    // ===================================================
+    // DISPLAY USER
+    // ===================================================
+
+    function displayUser(user) {
+
+      if (!user) {
+        return;
+      }
+
+
+      const name =
+        user.displayName ||
+        "AYNA BOOK User";
+
+      const email =
+        user.email ||
+        "";
+
+
+      welcomeName.textContent =
+        "Welcome, " + name;
+
+
+      userName.textContent =
+        name;
+
+
+      userEmail.textContent =
+        email;
+
+
+      emailStatus.textContent =
+        user.emailVerified
+          ? "Verified"
+          : "Not Verified";
+
+
+      avatar.textContent =
+        getInitials(
+          user.displayName,
+          user.email
+        );
+
+
+      loading.style.display =
+        "none";
+
+
+      homeContent.style.display =
+        "block";
+
+
+      pageReady = true;
+    }
+
+
+    // ===================================================
+    // AUTH STATE
+    // ===================================================
+
+    observeAuthState(
+      async function (user) {
+
+        if (!user) {
+
+          window.location.replace(
+            "login.html"
+          );
+
+          return;
+        }
+
+
+        try {
+
+          await user.reload();
+
+        } catch (error) {
+
+          console.error(
+            "User reload error:",
+            error
+          );
+
+        }
+
+
+        const currentUser =
+          getCurrentUser();
+
+
+        if (!currentUser) {
+
+          window.location.replace(
+            "login.html"
+          );
+
+          return;
+        }
+
+
+        if (!currentUser.emailVerified) {
+
+          window.location.replace(
+            "verify-email.html"
+          );
+
+          return;
+        }
+
+
+        displayUser(
+          currentUser
+        );
+
+      }
+    );
+
+
+    // ===================================================
+    // LOGOUT
+    // ===================================================
+
+    logoutButton.addEventListener(
+      "click",
+      async function () {
+
+        logoutButton.disabled = true;
+
+        logoutButton.textContent =
+          "Signing Out...";
+
+
+        try {
+
+          const result =
+            await logoutUser();
+
+
+          if (result.success) {
+
+            window.location.replace(
+              "login.html"
+            );
+
+            return;
+          }
+
+
+          showMessage(
+            result.message ||
+            "Unable to sign out.",
+            "error"
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            "AYNA BOOK Logout Error:",
+            error
+          );
+
+
+          showMessage(
+            "Unable to sign out. Please try again.",
+            "error"
+          );
+
+
+        } finally {
+
+          logoutButton.disabled = false;
+
+          logoutButton.textContent =
+            "Sign Out";
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+
+</html>
