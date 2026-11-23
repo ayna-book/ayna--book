@@ -1,8 +1,3 @@
-// =========================================================
-// AYNA BOOK
-// FIREBASE STORAGE CONTROLLER
-// File: storage.js
-// =========================================================
 
 import {
   getStorage,
@@ -12,342 +7,84 @@ import {
   deleteObject
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-import {
-  app,
-  auth
-} from "./app.js";
-
-
-// =========================================================
-// FIREBASE STORAGE
-// =========================================================
+import { app, auth } from "./app.js";
 
 const storage = getStorage(app);
 
-
-// =========================================================
-// UPLOAD PROFILE PHOTO
-// =========================================================
-
+// Upload profile photo
 export async function uploadProfilePhoto(file) {
+  const user = auth.currentUser;
 
-  try {
-
-    const user = auth.currentUser;
-
-    if (!user) {
-      return {
-        success: false,
-        message: "Please sign in first."
-      };
-    }
-
-
-    if (!file) {
-      return {
-        success: false,
-        message: "Please select a photo."
-      };
-    }
-
-
-    // -----------------------------------------------------
-    // FILE TYPE
-    // -----------------------------------------------------
-
-    if (!file.type.startsWith("image/")) {
-
-      return {
-        success: false,
-        message:
-          "Please select a valid image file."
-      };
-
-    }
-
-
-    // -----------------------------------------------------
-    // FILE SIZE
-    // Maximum: 5 MB
-    // -----------------------------------------------------
-
-    const maxSize =
-      5 * 1024 * 1024;
-
-
-    if (file.size > maxSize) {
-
-      return {
-        success: false,
-        message:
-          "Profile photo must be 5 MB or smaller."
-      };
-
-    }
-
-
-    // -----------------------------------------------------
-    // FILE EXTENSION
-    // -----------------------------------------------------
-
-    const extension =
-      getFileExtension(file.name);
-
-
-    // -----------------------------------------------------
-    // UNIQUE FILE NAME
-    // -----------------------------------------------------
-
-    const fileName =
-      `profile_${Date.now()}.${extension}`;
-
-
-    // -----------------------------------------------------
-    // STORAGE PATH
-    // -----------------------------------------------------
-
-    const storagePath =
-      `profilePhotos/${user.uid}/${fileName}`;
-
-
-    const storageRef =
-      ref(storage, storagePath);
-
-
-    // -----------------------------------------------------
-    // UPLOAD
-    // -----------------------------------------------------
-
-    await uploadBytes(
-      storageRef,
-      file,
-      {
-        contentType: file.type,
-        cacheControl: "public,max-age=3600"
-      }
-    );
-
-
-    // -----------------------------------------------------
-    // DOWNLOAD URL
-    // -----------------------------------------------------
-
-    const downloadURL =
-      await getDownloadURL(
-        storageRef
-      );
-
-
-    return {
-      success: true,
-      url: downloadURL,
-      path: storagePath,
-      message:
-        "Profile photo uploaded successfully."
-    };
-
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Profile Photo Upload Error:",
-      error
-    );
-
-
-    return {
-      success: false,
-      code: error.code || "",
-      message:
-        getStorageErrorMessage(error)
-    };
-
+  if (!user) {
+    throw new Error("Please login first.");
   }
 
+  if (!file) {
+    throw new Error("Please select a profile photo.");
+  }
+
+  // Image validation
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Only image files are allowed.");
+  }
+
+  // Maximum 5 MB
+  const maxSize = 5 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    throw new Error("Image size must be under 5 MB.");
+  }
+
+  const extension = file.name.split(".").pop().toLowerCase();
+
+  const allowedExtensions = ["jpg", "jpeg", "png", "webp"];
+
+  if (!allowedExtensions.includes(extension)) {
+    throw new Error("Use JPG, JPEG, PNG or WEBP.");
+  }
+
+  const filePath =
+    `profilePhotos/${user.uid}/profile_${Date.now()}.${extension}`;
+
+  const imageRef = ref(storage, filePath);
+
+  const snapshot = await uploadBytes(imageRef, file, {
+    contentType: file.type
+  });
+
+  const downloadURL = await getDownloadURL(snapshot.ref);
+
+  return {
+    success: true,
+    url: downloadURL,
+    path: filePath
+  };
 }
 
+// Delete profile photo
+export async function deleteProfilePhoto(storagePath) {
+  const user = auth.currentUser;
 
-// =========================================================
-// DELETE PROFILE PHOTO
-// =========================================================
-
-export async function deleteProfilePhoto(
-  storagePath
-) {
-
-  try {
-
-    const user = auth.currentUser;
-
-    if (!user) {
-
-      return {
-        success: false,
-        message:
-          "Please sign in first."
-      };
-
-    }
-
-
-    if (!storagePath) {
-
-      return {
-        success: false,
-        message:
-          "No photo path was provided."
-      };
-
-    }
-
-
-    // Security check
-    if (
-      !storagePath.startsWith(
-        `profilePhotos/${user.uid}/`
-      )
-    ) {
-
-      return {
-        success: false,
-        message:
-          "Unauthorized photo deletion."
-      };
-
-    }
-
-
-    const photoRef =
-      ref(
-        storage,
-        storagePath
-      );
-
-
-    await deleteObject(
-      photoRef
-    );
-
-
-    return {
-      success: true,
-      message:
-        "Profile photo deleted successfully."
-    };
-
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Profile Photo Delete Error:",
-      error
-    );
-
-
-    return {
-      success: false,
-      code: error.code || "",
-      message:
-        getStorageErrorMessage(error)
-    };
-
+  if (!user) {
+    throw new Error("Please login first.");
   }
-
-}
-
-
-// =========================================================
-// FILE EXTENSION
-// =========================================================
-
-function getFileExtension(
-  fileName
-) {
-
-  const parts =
-    fileName.split(".");
-
-
-  if (parts.length < 2) {
-    return "jpg";
-  }
-
-
-  const extension =
-    parts.pop()
-      .toLowerCase();
-
-
-  const allowed = [
-    "jpg",
-    "jpeg",
-    "png",
-    "webp"
-  ];
-
 
   if (
-    !allowed.includes(extension)
+    typeof storagePath !== "string" ||
+    !storagePath.startsWith(`profilePhotos/${user.uid}/`)
   ) {
-
-    return "jpg";
-
+    throw new Error("You cannot delete another user's photo.");
   }
 
+  const imageRef = ref(storage, storagePath);
 
-  return extension;
+  await deleteObject(imageRef);
 
+  return {
+    success: true,
+    message: "Profile photo deleted successfully."
+  };
 }
 
-
-// =========================================================
-// STORAGE ERROR MESSAGE
-// =========================================================
-
-function getStorageErrorMessage(
-  error
-) {
-
-  switch (error?.code) {
-
-    case "storage/unauthorized":
-      return (
-        "Photo upload permission denied. " +
-        "Please check Firebase Storage Rules."
-      );
-
-    case "storage/canceled":
-      return "Photo upload was canceled.";
-
-    case "storage/quota-exceeded":
-      return "Firebase Storage quota has been exceeded.";
-
-    case "storage/retry-limit-exceeded":
-      return "Upload retry limit exceeded. Please try again.";
-
-    case "storage/network-request-failed":
-      return (
-        "Network error. Please check your internet connection."
-      );
-
-    case "storage/object-not-found":
-      return "Photo file was not found.";
-
-    default:
-      return (
-        error?.message ||
-        "Unable to upload profile photo."
-      );
-
-  }
-
-}
-
-
-// =========================================================
-// EXPORT
-// =========================================================
-
-export {
-  storage
-};
+// Get storage instance
+export { storage };
