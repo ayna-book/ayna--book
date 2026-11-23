@@ -1,12 +1,8 @@
 
-// =========================================================
-// AYNA BOOK — FIREBASE INITIALIZATION
-// Firebase SDK: 13.4.0
-// Authentication + Firestore + RTDB + Storage
-// File: firebase-init.js
-// =========================================================
-
-import { firebaseConfig } from "./firebase-config.js";
+/* =====================================================
+   AYNA BOOK - FIREBASE INITIALIZATION
+   Firebase SDK Version: 13.4.0
+===================================================== */
 
 import {
   initializeApp,
@@ -30,41 +26,50 @@ import {
   getStorage
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
 
-// CHECK CONFIGURATION
+// =====================================================
+// 1. FIREBASE CONFIGURATION
+// =====================================================
 
-if (
-  !firebaseConfig ||
-  !firebaseConfig.apiKey ||
-  !firebaseConfig.authDomain ||
-  !firebaseConfig.projectId ||
-  !firebaseConfig.storageBucket ||
-  !firebaseConfig.databaseURL ||
-  !firebaseConfig.appId
-) {
-  throw new Error(
-    "AYNA BOOK: Firebase configuration is incomplete. Check databaseURL."
-  );
-}
+import { firebaseConfig } from "./firebase-config.js";
 
-// INITIALIZE APP ONLY ONCE
+// =====================================================
+// 2. INITIALIZE FIREBASE APP
+// =====================================================
 
 export const app = getApps().length
   ? getApp()
   : initializeApp(firebaseConfig);
 
-// FIREBASE SERVICES
+// =====================================================
+// 3. FIREBASE AUTHENTICATION
+// =====================================================
 
 export const auth = getAuth(app);
 
-// FIRESTORE
+// =====================================================
+// 4. FIRESTORE DATABASE
+// =====================================================
+
 export const db = getFirestore(app);
 
-// REALTIME DATABASE
+// =====================================================
+// 5. REALTIME DATABASE
+// =====================================================
+
 export const database = getDatabase(app);
 
-// STORAGE
+// =====================================================
+// 6. FIREBASE STORAGE
+// =====================================================
+
 export const storage = getStorage(app);
 
-// CONFIRMATION
+// =====================================================
+// 7. EXPORT ALL SERVICES
+// =====================================================
 
-console.log("AYNA BOOK Firebase initialized successfully.");
+export default app;
+
+// =====================================================
+// END FIREBASE INITIALIZATION
+// =====================================================
