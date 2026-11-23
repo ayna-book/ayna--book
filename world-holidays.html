@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>AYNA BOOK - বিশ্ব সরকারি ছুটি</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, "Noto Sans Bengali", sans-serif;
+      background: #061b16;
+      color: #ffffff;
+    }
+
+    .page {
+      width: 100%;
+      height: 100dvh;
+      min-height: 100vh;
+      overflow-y: auto;
+      background:
+        radial-gradient(circle at top, #124d3c 0%, #061b16 48%, #020b08 100%);
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 14px;
+      background: rgba(3, 18, 14, 0.96);
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(10px);
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 14px;
+      background: #123d31;
+      color: white;
+      font-size: 23px;
+      cursor: pointer;
+    }
+
+    .title {
+      flex: 1;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .title p {
+      margin: 3px 0 0;
+      color: #a9c8bf;
+      font-size: 12px;
+    }
+
+    .controls {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 12px;
+      color: #a9c8bf;
+    }
+
+    select,
+    input,
+    button {
+      width: 100%;
+      min-height: 46px;
+      border-radius: 13px;
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 15px;
+    }
+
+    select,
+    input {
+      padding: 0 12px;
+      color: white;
+      background: #0d3026;
+      outline: none;
+    }
+
+    option {
+      color: #000;
+      background: #fff;
+    }
+
+    button {
+      padding: 10px;
+      background: #17634c;
+      color: white;
+      border: 0;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .secondary {
+      background: #123d31;
+    }
+
+    .search {
+      width: 100%;
+    }
+
+    .status {
+      margin: 0 14px 10px;
+      padding: 11px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      color: #bfe3d9;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .today-box {
+      margin: 0 14px 12px;
+      padding: 15px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #145f49, #0a3328);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .today-box h2 {
+      margin: 0 0 6px;
+      font-size: 17px;
+    }
+
+    .today-box p {
+      margin: 4px 0;
+      color: #c6e6dd;
+      font-size: 13px;
+    }
+
+    .holiday-list {
+      padding: 0 14px 30px;
+    }
+
+    .month-title {
+      margin: 18px 0 9px;
+      padding: 8px 11px;
+      border-radius: 10px;
+      background: #123d31;
+      color: #d5eee8;
+      font-weight: bold;
+    }
+
+    .holiday {
+      margin-bottom: 10px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .holiday.today {
+      border: 1px solid #65d8b4;
+      background: rgba(32, 126, 96, 0.25);
+    }
+
+    .holiday-date {
+      font-size: 13px;
+      color: #8ee0c4;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .holiday-name {
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .holiday-local {
+      font-size: 13px;
+      color: #c5d9d4;
+      margin-bottom: 7px;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 20px;
+      background: #16483a;
+      color: #c9eee2;
+      font-size: 11px;
+    }
+
+    .empty {
+      padding: 25px 10px;
+      text-align: center;
+      color: #a7beb8;
+    }
+
+    .loading {
+      padding: 25px;
+      text-align: center;
+      color: #9ed8c6;
+    }
+
+    .footer-note {
+      padding: 0 14px 25px;
+      text-align: center;
+      color: #78958d;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 700px) {
+      .controls,
+      .holiday-list,
+      .today-box,
+      .status {
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .holiday-list {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .today-box {
+        margin-bottom: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <header class="header">
+    <div class="top">
+
+      <button class="back" id="backBtn" aria-label="Back">
+        ←
+      </button>
+
+      <div class="title">
+        <h1>🌍 বিশ্ব সরকারি ছুটি</h1>
+        <p>AYNA BOOK • Worldwide Public Holidays</p>
+      </div>
+
+    </div>
+  </header>
+
+
+  <section class="controls">
+
+    <div>
+      <label for="country">দেশ নির্বাচন করুন</label>
+
+      <select id="country">
+
+        <option value="BD" selected>🇧🇩 বাংলাদেশ</option>
+        <option value="IN">🇮🇳 ভারত</option>
+        <option value="PK">🇵🇰 পাকিস্তান</option>
+        <option value="SA">🇸🇦 সৌদি আরব</option>
+        <option value="AE">🇦🇪 সংযুক্ত আরব আমিরাত</option>
+        <option value="MY">🇲🇾 মালয়েশিয়া</option>
+        <option value="ID">🇮🇩 ইন্দোনেশিয়া</option>
+        <option value="TR">🇹🇷 তুরস্ক</option>
+        <option value="GB">🇬🇧 যুক্তরাজ্য</option>
+        <option value="US">🇺🇸 যুক্তরাষ্ট্র</option>
+        <option value="CA">🇨🇦 কানাডা</option>
+        <option value="AU">🇦🇺 অস্ট্রেলিয়া</option>
+        <option value="DE">🇩🇪 জার্মানি</option>
+        <option value="FR">🇫🇷 ফ্রান্স</option>
+        <option value="IT">🇮🇹 ইতালি</option>
+        <option value="ES">🇪🇸 স্পেন</option>
+        <option value="JP">🇯🇵 জাপান</option>
+        <option value="CN">🇨🇳 চীন</option>
+        <option value="KR">🇰🇷 দক্ষিণ কোরিয়া</option>
+        <option value="RU">🇷🇺 রাশিয়া</option>
+        <option value="BR">🇧🇷 ব্রাজিল</option>
+        <option value="ZA">🇿🇦 দক্ষিণ আফ্রিকা</option>
+
+      </select>
+    </div>
+
+
+    <div class="row">
+
+      <div>
+        <label for="year">বছর</label>
+        <input
+          id="year"
+          type="number"
+          min="1"
+          max="9999"
+          inputmode="numeric"
+        >
+      </div>
+
+      <div>
+        <label for="filter">ছুটির ধরন</label>
+
+        <select id="filter">
+          <option value="all">সব</option>
+          <option value="Public">সরকারি / Public</option>
+          <option value="Bank">ব্যাংক / Bank</option>
+          <option value="School">স্কুল / School</option>
+          <option value="Authorities">কর্তৃপক্ষ</option>
+          <option value="Optional">ঐচ্ছিক</option>
+          <option value="Observance">বিশেষ দিবস</option>
+        </select>
+      </div>
+
+    </div>
+
+
+    <div>
+      <label for="search">ছুটি খুঁজুন</label>
+
+      <input
+        id="search"
+        class="search"
+        type="search"
+        placeholder="যেমন: Eid, Independence, Christmas..."
+        autocomplete="off"
+      >
+    </div>
+
+
+    <div class="row">
+
+      <button id="loadBtn">
+        🔄 ছুটি দেখুন
+      </button>
+
+      <button id="todayBtn" class="secondary">
+        📅 আজকের বছর
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <div id="status" class="status">
+    তথ্য লোড হচ্ছে...
+  </div>
+
+
+  <section class="today-box">
+
+    <h2>📌 আজকের অবস্থা</h2>
+
+    <p id="todayHoliday">
+      পরীক্ষা করা হচ্ছে...
+    </p>
+
+    <p id="countryInfo">
+      দেশ: বাংলাদেশ
+    </p>
+
+  </section>
+
+
+  <main id="holidayList" class="holiday-list">
+    <div class="loading">
+      সরকারি ছুটির তথ্য লোড হচ্ছে...
+    </div>
+  </main>
+
+
+  <div class="footer-note">
+
+    AYNA BOOK বিশ্ব সরকারি ছুটির তথ্য অনলাইন API থেকে সংগ্রহ করে।
+    সরকারি ছুটি দেশ ও অঞ্চলভেদে পরিবর্তিত হতে পারে।
+
+  </div>
+
+</div>
+
+
+<script type="module" src="./world-holidays.js"></script>
+
+</body>
+</html>
