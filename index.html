@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +8,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <meta
-    name="theme-color"
-    content="#000000"
-  >
+  <meta name="theme-color" content="#000000">
 
   <title>AYNA BOOK</title>
 
@@ -26,7 +22,7 @@
       margin: 0;
       padding: 0;
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       background: #000;
       color: #fff;
       font-family: Arial, sans-serif;
@@ -35,10 +31,6 @@
     body {
       overflow: hidden;
     }
-
-    /* ==============================
-       SPLASH SCREEN
-    ============================== */
 
     #splashScreen {
       position: fixed;
@@ -56,7 +48,6 @@
       width: 100%;
       max-width: 500px;
       padding: 30px;
-
       text-align: center;
     }
 
@@ -64,7 +55,7 @@
       width: 180px;
       height: 180px;
 
-      margin: 0 auto 45px;
+      margin: 0 auto 40px;
 
       border: 2px solid #d4af37;
       border-radius: 50%;
@@ -79,73 +70,64 @@
 
     .logoText {
       color: #ffd84d;
-
-      font-size: 62px;
+      font-size: 58px;
       font-weight: 700;
       letter-spacing: 2px;
     }
 
     .brandName {
-      margin-bottom: 28px;
+      margin-bottom: 25px;
 
       color: #ffd84d;
 
-      font-size: 38px;
+      font-size: 36px;
       font-weight: 700;
-      letter-spacing: 7px;
+      letter-spacing: 6px;
     }
 
-    .statusText {
+    #statusText {
+      margin-bottom: 35px;
+
       color: #999;
 
-      font-size: 22px;
-
-      margin-bottom: 42px;
+      font-size: 18px;
     }
 
     .progressTrack {
       width: 310px;
       max-width: 90%;
-
       height: 5px;
 
       margin: 0 auto;
 
-      background: #202020;
+      background: #222;
 
       border-radius: 10px;
-
       overflow: hidden;
     }
 
     .progressBar {
-      width: 0%;
+      width: 0;
       height: 100%;
 
       background: #d4af37;
 
-      border-radius: 10px;
-
-      animation: loading 3s ease-in-out forwards;
+      animation: progress 3s ease forwards;
     }
 
-    @keyframes loading {
+    @keyframes progress {
       0% {
-        width: 0%;
+        width: 0;
       }
 
-      50% {
-        width: 65%;
+      60% {
+        width: 70%;
       }
 
       100% {
         width: 100%;
       }
     }
-
-    /* ==============================
-       ERROR
-    ============================== */
 
     #startupError {
       display: none;
@@ -155,8 +137,7 @@
       color: #ff6b6b;
 
       font-size: 14px;
-
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
     #retryButton {
@@ -167,14 +148,11 @@
       padding: 12px 25px;
 
       border: 1px solid #d4af37;
-
       border-radius: 8px;
 
       background: #000;
 
       color: #ffd84d;
-
-      font-size: 15px;
 
       cursor: pointer;
     }
@@ -183,26 +161,25 @@
 
 <body>
 
-  <!-- =========================================
+  <!-- =====================================
        AYNA BOOK SPLASH SCREEN
-  ========================================== -->
+  ====================================== -->
 
   <div id="splashScreen">
 
     <div class="splashContainer">
 
       <div class="logoCircle">
-        <div class="logoText">AB</div>
+        <div class="logoText">
+          AB
+        </div>
       </div>
 
       <div class="brandName">
         AYNA BOOK
       </div>
 
-      <div
-        id="statusText"
-        class="statusText"
-      >
+      <div id="statusText">
         Starting secure platform...
       </div>
 
@@ -224,85 +201,86 @@
   </div>
 
 
-  <!-- =========================================
-       FIREBASE + APPLICATION STARTUP
-  ========================================== -->
+  <!-- =====================================
+       FIREBASE STARTUP
+  ====================================== -->
 
   <script type="module">
 
-    /*
-     * IMPORTANT:
-     * আপনার Firebase Console থেকে পাওয়া
-     * configuration এখানে বসান।
-     */
+    import {
+      initializeApp
+    } from
+    "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
-    import { initializeApp } from
-      "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
     import {
       getAuth,
       onAuthStateChanged
     } from
-      "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+    "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 
-    /* =========================================
-       FIREBASE CONFIG
-    ========================================== */
+    // =====================================
+    // FIREBASE CONFIG
+    // =====================================
 
     const firebaseConfig = {
 
-      apiKey: "YOUR_API_KEY",
+      apiKey:
+        "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
 
       authDomain:
-        "YOUR_PROJECT_ID.firebaseapp.com",
+        "ayna-book.firebaseapp.com",
+
+      databaseURL:
+        "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
 
       projectId:
-        "YOUR_PROJECT_ID",
+        "ayna-book",
 
       storageBucket:
-        "YOUR_PROJECT_ID.firebasestorage.app",
+        "ayna-book.firebasestorage.app",
 
       messagingSenderId:
-        "YOUR_MESSAGING_SENDER_ID",
+        "805601138500",
 
       appId:
-        "YOUR_APP_ID"
+        "1:805601138500:web:47acdc90cb0cb521626911",
+
+      measurementId:
+        "G-RKHHSKNB4B"
 
     };
 
 
-    /* =========================================
-       DOM
-    ========================================= */
+    // =====================================
+    // DOM
+    // =====================================
 
     const splashScreen =
-      document.getElementById("splashScreen");
+      document.getElementById(
+        "splashScreen"
+      );
 
     const statusText =
-      document.getElementById("statusText");
+      document.getElementById(
+        "statusText"
+      );
 
     const startupError =
-      document.getElementById("startupError");
+      document.getElementById(
+        "startupError"
+      );
 
     const retryButton =
-      document.getElementById("retryButton");
+      document.getElementById(
+        "retryButton"
+      );
 
 
-    /* =========================================
-       NAVIGATION
-    ========================================= */
-
-    function goToPage(page) {
-
-      window.location.replace(page);
-
-    }
-
-
-    /* =========================================
-       ERROR DISPLAY
-    ========================================= */
+    // =====================================
+    // ERROR DISPLAY
+    // =====================================
 
     function showError(message) {
 
@@ -317,17 +295,16 @@
 
       retryButton.style.display =
         "block";
-
     }
 
 
-    /* =========================================
-       RETRY
-    ========================================= */
+    // =====================================
+    // RETRY
+    // =====================================
 
     retryButton.addEventListener(
       "click",
-      () => {
+      function () {
 
         window.location.reload();
 
@@ -335,9 +312,20 @@
     );
 
 
-    /* =========================================
-       STARTUP
-    ========================================= */
+    // =====================================
+    // NAVIGATION
+    // =====================================
+
+    function goTo(page) {
+
+      window.location.replace(page);
+
+    }
+
+
+    // =====================================
+    // START AYNA BOOK
+    // =====================================
 
     async function startAynaBook() {
 
@@ -347,13 +335,15 @@
           "Connecting secure platform...";
 
 
-        /*
-         * Firebase initialization
-         */
+        // Firebase initialize
 
         const app =
-          initializeApp(firebaseConfig);
+          initializeApp(
+            firebaseConfig
+          );
 
+
+        // Firebase Auth
 
         const auth =
           getAuth(app);
@@ -363,131 +353,152 @@
           "Checking secure account...";
 
 
-        /*
-         * IMPORTANT:
-         *
-         * onAuthStateChanged কখনও কখনও
-         * network/configuration সমস্যায়
-         * অপেক্ষা করতে পারে।
-         *
-         * তাই আমরা maximum timeout রাখছি।
-         */
+        let completed = false;
 
-        let finished = false;
 
+        // =================================
+        // 10 SECOND SAFETY TIMEOUT
+        // =================================
 
         const timeoutId =
-          setTimeout(() => {
+          setTimeout(
+            function () {
 
-            if (finished) {
-              return;
-            }
+              if (completed) {
+                return;
+              }
 
-            finished = true;
+              completed = true;
 
-            showError(
-              "Firebase authentication is taking too long. Please check your Firebase configuration and internet connection."
-            );
+              showError(
+                "Firebase authentication is taking too long. Please check your internet connection and Firebase configuration."
+              );
 
-          }, 10000);
+            },
+            10000
+          );
 
+
+        // =================================
+        // AUTH STATE
+        // =================================
 
         onAuthStateChanged(
-          auth,
-          (user) => {
 
-            if (finished) {
+          auth,
+
+          function (user) {
+
+            if (completed) {
               return;
             }
 
-            finished = true;
+            completed = true;
 
-            clearTimeout(timeoutId);
+            clearTimeout(
+              timeoutId
+            );
 
 
-            /*
-             * USER LOGGED IN
-             */
+            // =============================
+            // USER EXISTS
+            // =============================
 
             if (user) {
 
-              /*
-               * Email verification check
-               */
+              // Email not verified
 
               if (!user.emailVerified) {
 
                 statusText.textContent =
                   "Email verification required...";
 
-                setTimeout(() => {
 
-                  goToPage(
-                    "verify-email.html"
-                  );
+                setTimeout(
+                  function () {
 
-                }, 300);
+                    goTo(
+                      "verify-email.html"
+                    );
+
+                  },
+                  300
+                );
 
                 return;
               }
 
 
-              /*
-               * VERIFIED USER
-               */
+              // ===========================
+              // VERIFIED USER
+              // ===========================
 
               statusText.textContent =
                 "Secure platform ready...";
 
-              setTimeout(() => {
 
-                goToPage(
-                  "home.html"
-                );
+              setTimeout(
+                function () {
 
-              }, 300);
+                  goTo(
+                    "home.html"
+                  );
+
+                },
+                300
+              );
 
               return;
             }
 
 
-            /*
-             * NO USER
-             */
+            // =============================
+            // NO USER
+            // =============================
 
             statusText.textContent =
               "Opening secure login...";
 
-            setTimeout(() => {
 
-              goToPage(
-                "login.html"
-              );
+            setTimeout(
+              function () {
 
-            }, 300);
+                goTo(
+                  "login.html"
+                );
+
+              },
+              300
+            );
 
           },
 
-          (error) => {
 
-            if (finished) {
+          function (error) {
+
+            if (completed) {
               return;
             }
 
-            finished = true;
+            completed = true;
 
-            clearTimeout(timeoutId);
+            clearTimeout(
+              timeoutId
+            );
+
 
             console.error(
               "Firebase Auth Error:",
               error
             );
 
+
             showError(
-              "Authentication could not be initialized. Please check Firebase configuration."
+              "Authentication could not be initialized. Please check Firebase settings."
             );
 
           }
+
         );
 
 
@@ -498,6 +509,7 @@
           error
         );
 
+
         showError(
           "AYNA BOOK could not start. Please check the Firebase configuration."
         );
@@ -507,9 +519,9 @@
     }
 
 
-    /* =========================================
-       START
-    ========================================= */
+    // =====================================
+    // START APPLICATION
+    // =====================================
 
     startAynaBook();
 
@@ -517,547 +529,3 @@
 
 </body>
 </html>
-Did you like this feature?
-২) auth.js
-এটি আপনার Authentication Controller-এর পরিষ্কার startup-safe version:
-Writing
-// =========================================================
-// AYNA BOOK
-// AUTHENTICATION CONTROLLER
-// Firebase SDK 13.4.0
-// =========================================================
-
-
-// =========================================================
-// FIREBASE IMPORTS
-// =========================================================
-
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendEmailVerification,
-  sendPasswordResetEmail,
-  signOut,
-  reload,
-  deleteUser,
-  updateProfile,
-  onAuthStateChanged
-} from
-"https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
-
-// =========================================================
-// FIREBASE APP
-// =========================================================
-
-import {
-  initializeApp
-} from
-"https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-
-
-// =========================================================
-// FIREBASE CONFIG
-// =========================================================
-//
-// আপনার Firebase Console-এর config এখানে বসাবেন।
-// =========================================================
-
-const firebaseConfig = {
-
-  apiKey:
-    "YOUR_API_KEY",
-
-  authDomain:
-    "YOUR_PROJECT_ID.firebaseapp.com",
-
-  projectId:
-    "YOUR_PROJECT_ID",
-
-  storageBucket:
-    "YOUR_PROJECT_ID.firebasestorage.app",
-
-  messagingSenderId:
-    "YOUR_MESSAGING_SENDER_ID",
-
-  appId:
-    "YOUR_APP_ID"
-
-};
-
-
-// =========================================================
-// INITIALIZE FIREBASE
-// =========================================================
-
-const app =
-  initializeApp(firebaseConfig);
-
-
-// =========================================================
-// AUTH INSTANCE
-// =========================================================
-
-const auth =
-  getAuth(app);
-
-
-// =========================================================
-// CREATE ACCOUNT
-// =========================================================
-
-export async function registerUser(
-  email,
-  password,
-  displayName = ""
-) {
-
-  try {
-
-    const result =
-      await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-
-    const user =
-      result.user;
-
-
-    // Update display name
-
-    if (displayName) {
-
-      await updateProfile(
-        user,
-        {
-          displayName:
-            displayName
-        }
-      );
-
-    }
-
-
-    // Send verification email
-
-    await sendEmailVerification(
-      user
-    );
-
-
-    return {
-      success: true,
-      user: user
-    };
-
-
-  } catch (error) {
-
-    console.error(
-      "Registration error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message: getAuthErrorMessage(
-        error.code
-      )
-    };
-
-  }
-
-}
-
-
-// =========================================================
-// LOGIN
-// =========================================================
-
-export async function loginUser(
-  email,
-  password
-) {
-
-  try {
-
-    const result =
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-
-    const user =
-      result.user;
-
-
-    /*
-     * Email verification required
-     */
-
-    if (!user.emailVerified) {
-
-      return {
-        success: false,
-        verificationRequired: true,
-        user: user,
-        message:
-          "Please verify your email address first."
-      };
-
-    }
-
-
-    return {
-      success: true,
-      user: user
-    };
-
-
-  } catch (error) {
-
-    console.error(
-      "Login error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message: getAuthErrorMessage(
-        error.code
-      )
-    };
-
-  }
-
-}
-
-
-// =========================================================
-// SEND VERIFICATION EMAIL
-// =========================================================
-
-export async function resendVerificationEmail() {
-
-  try {
-
-    const user =
-      auth.currentUser;
-
-
-    if (!user) {
-
-      return {
-        success: false,
-        message:
-          "No signed-in user found."
-      };
-
-    }
-
-
-    await sendEmailVerification(
-      user
-    );
-
-
-    return {
-      success: true,
-      message:
-        "Verification email sent."
-    };
-
-
-  } catch (error) {
-
-    console.error(
-      "Verification email error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message:
-        getAuthErrorMessage(
-          error.code
-        )
-    };
-
-  }
-
-}
-
-
-// =========================================================
-// PASSWORD RESET
-// =========================================================
-
-export async function resetPassword(
-  email
-) {
-
-  try {
-
-    await sendPasswordResetEmail(
-      auth,
-      email
-    );
-
-
-    return {
-      success: true,
-      message:
-        "Password reset email sent."
-    };
-
-
-  } catch (error) {
-
-    console.error(
-      "Password reset error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message:
-        getAuthErrorMessage(
-          error.code
-        )
-    };
-
-  }
-
-}
-
-
-// =========================================================
-// LOGOUT
-// =========================================================
-
-export async function logoutUser() {
-
-  try {
-
-    await signOut(auth);
-
-    return {
-      success: true
-    };
-
-
-  } catch (error) {
-
-    console.error(
-      "Logout error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message:
-        getAuthErrorMessage(
-          error.code
-        )
-    };
-
-  }
-
-}
-
-
-// =========================================================
-// CURRENT USER
-// =========================================================
-
-export function getCurrentUser() {
-
-  return auth.currentUser;
-
-}
-
-
-// =========================================================
-// RELOAD CURRENT USER
-// =========================================================
-
-export async function reloadCurrentUser() {
-
-  const user =
-    auth.currentUser;
-
-
-  if (!user) {
-
-    return null;
-
-  }
-
-
-  await reload(user);
-
-  return auth.currentUser;
-
-}
-
-
-// =========================================================
-// DELETE CURRENT USER
-// =========================================================
-
-export async function deleteCurrentUser() {
-
-  try {
-
-    const user =
-      auth.currentUser;
-
-
-    if (!user) {
-
-      return {
-        success: false,
-        message:
-          "No signed-in user."
-      };
-
-    }
-
-
-    await deleteUser(user);
-
-
-    return {
-      success: true
-    };
-
-
-  } catch (error) {
-
-    console.error(
-      "Delete account error:",
-      error
-    );
-
-    return {
-      success: false,
-      code: error.code,
-      message:
-        getAuthErrorMessage(
-          error.code
-        )
-    };
-
-  }
-
-}
-
-
-// =========================================================
-// AUTH STATE OBSERVER
-// =========================================================
-
-export function observeAuthState(
-  callback
-) {
-
-  return onAuthStateChanged(
-    auth,
-    callback
-  );
-
-}
-
-
-// =========================================================
-// AUTH ERROR HANDLER
-// =========================================================
-
-function getAuthErrorMessage(
-  code
-) {
-
-  switch (code) {
-
-    case "auth/email-already-in-use":
-
-      return "This email address is already registered.";
-
-    case "auth/invalid-email":
-
-      return "Please enter a valid email address.";
-
-    case "auth/weak-password":
-
-      return "Password is too weak.";
-
-    case "auth/user-not-found":
-
-      return "No account was found with this email.";
-
-    case "auth/wrong-password":
-
-      return "Incorrect password.";
-
-    case "auth/invalid-credential":
-
-      return "Email or password is incorrect.";
-
-    case "auth/too-many-requests":
-
-      return "Too many attempts. Please try again later.";
-
-    case "auth/network-request-failed":
-
-      return "Network error. Please check your internet connection.";
-
-    case "auth/user-disabled":
-
-      return "This account has been disabled.";
-
-    case "auth/requires-recent-login":
-
-      return "Please sign in again and retry.";
-
-    default:
-
-      return "Authentication failed. Please try again.";
-
-  }
-
-}
-
-
-// =========================================================
-// EXPORT AUTH
-// =========================================================
-
-export {
-  auth,
-  app
-};
-Did you like this feature?
-৩) সবচেয়ে গুরুত্বপূর্ণ: Firebase Config
-উপরের এই অংশে:
-JavaScript
-const firebaseConfig = {
-
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-
-};
