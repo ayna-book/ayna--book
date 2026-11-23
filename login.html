@@ -5,501 +5,594 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   >
-
-  <meta name="theme-color" content="#000000">
 
   <title>AYNA BOOK — Login</title>
 
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     html,
     body {
-      margin: 0;
-      padding: 0;
+      width: 100%;
       min-height: 100%;
       background: #000;
       color: #fff;
-      font-family: Arial, sans-serif;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
     }
 
     body {
       min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* =====================================================
+       FULL SCREEN CONTAINER
+    ===================================================== */
+
+    .auth-page {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+
       display: flex;
       justify-content: center;
       align-items: center;
+
+      padding:
+        max(25px, env(safe-area-inset-top))
+        20px
+        max(25px, env(safe-area-inset-bottom))
+        20px;
+
+      background:
+        radial-gradient(
+          circle at top,
+          #171717 0%,
+          #080808 42%,
+          #000 100%
+        );
     }
 
-    .loginContainer {
+    /* =====================================================
+       MAIN CONTENT
+    ===================================================== */
+
+    .auth-container {
       width: 100%;
-      max-width: 430px;
-      padding: 25px;
+      max-width: 460px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      padding: 25px 20px;
     }
+
+    /* =====================================================
+       LOGO
+    ===================================================== */
 
     .logo {
-      text-align: center;
-      margin-bottom: 35px;
-    }
-
-    .logoCircle {
-      width: 100px;
-      height: 100px;
-
-      margin: 0 auto 20px;
+      width: 82px;
+      height: 82px;
 
       border: 2px solid #d4af37;
       border-radius: 50%;
 
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+
+      margin-bottom: 18px;
+
+      color: #d4af37;
+
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 2px;
+
+      box-shadow:
+        0 0 20px rgba(212, 175, 55, 0.18),
+        inset 0 0 15px rgba(212, 175, 55, 0.08);
     }
 
-    .logoText {
-      color: #ffd84d;
-      font-size: 34px;
-      font-weight: bold;
-    }
+    .brand-name {
+      color: #d4af37;
 
-    .brand {
-      color: #ffd84d;
       font-size: 30px;
-      font-weight: bold;
-      letter-spacing: 5px;
-    }
+      font-weight: 800;
 
-    .card {
-      padding: 28px;
-
-      border: 1px solid #292929;
-      border-radius: 15px;
-
-      background: #0b0b0b;
-    }
-
-    h1 {
-      margin: 0 0 25px;
+      letter-spacing: 4px;
 
       text-align: center;
 
-      color: #fff;
-      font-size: 25px;
+      margin-bottom: 7px;
     }
 
-    .formGroup {
+    .brand-subtitle {
+      color: #999;
+
+      font-size: 13px;
+
+      text-align: center;
+
+      margin-bottom: 35px;
+
+      letter-spacing: 1px;
+    }
+
+    /* =====================================================
+       LOGIN BOX
+    ===================================================== */
+
+    .auth-box {
+      width: 100%;
+
+      background: rgba(15, 15, 15, 0.96);
+
+      border: 1px solid #292929;
+
+      border-radius: 18px;
+
+      padding: 28px 22px;
+
+      box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.55),
+        0 0 25px rgba(212, 175, 55, 0.04);
+    }
+
+    .title {
+      color: #fff;
+
+      font-size: 25px;
+      font-weight: 700;
+
+      text-align: center;
+
+      margin-bottom: 8px;
+    }
+
+    .description {
+      color: #888;
+
+      font-size: 13px;
+
+      text-align: center;
+
+      margin-bottom: 28px;
+    }
+
+    /* =====================================================
+       FORM
+    ===================================================== */
+
+    .form-group {
+      width: 100%;
       margin-bottom: 18px;
     }
 
-    label {
+    .form-group label {
       display: block;
 
-      margin-bottom: 8px;
+      color: #d4af37;
 
-      color: #ccc;
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 600;
+
+      margin-bottom: 8px;
     }
 
-    input {
+    .form-group input {
       width: 100%;
 
-      padding: 14px;
+      height: 52px;
 
-      border: 1px solid #333;
-      border-radius: 8px;
+      padding: 0 15px;
+
+      background: #090909;
+
+      color: #fff;
+
+      border: 1px solid #303030;
+
+      border-radius: 10px;
 
       outline: none;
 
-      background: #111;
-      color: #fff;
+      font-size: 15px;
 
-      font-size: 16px;
+      transition: 0.25s ease;
     }
 
-    input:focus {
+    .form-group input:focus {
       border-color: #d4af37;
+
+      box-shadow:
+        0 0 0 2px rgba(212, 175, 55, 0.08);
     }
 
-    .loginButton {
+    .form-group input::placeholder {
+      color: #666;
+    }
+
+    /* =====================================================
+       FORGOT PASSWORD
+    ===================================================== */
+
+    .forgot-row {
       width: 100%;
 
-      margin-top: 8px;
-      padding: 14px;
+      display: flex;
+      justify-content: flex-end;
 
-      border: none;
-      border-radius: 8px;
+      margin-top: -5px;
+      margin-bottom: 20px;
+    }
 
-      background: #d4af37;
-      color: #000;
+    .forgot-link {
+      color: #d4af37;
 
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 13px;
+
+      text-decoration: none;
 
       cursor: pointer;
     }
 
-    .loginButton:disabled {
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    /* =====================================================
+       LOGIN BUTTON
+    ===================================================== */
+
+    .login-button {
+      width: 100%;
+
+      height: 54px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #d4af37;
+
+      color: #000;
+
+      font-size: 16px;
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition: 0.2s ease;
+
+      box-shadow:
+        0 8px 20px rgba(212, 175, 55, 0.15);
+    }
+
+    .login-button:hover {
+      background: #e2c158;
+    }
+
+    .login-button:active {
+      transform: scale(0.98);
+    }
+
+    .login-button:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
 
-    .forgot {
-      display: block;
+    /* =====================================================
+       STATUS MESSAGE
+    ===================================================== */
 
-      margin-top: 18px;
+    #message {
+      width: 100%;
+
+      margin-top: 15px;
+
+      padding: 11px;
+
+      border-radius: 8px;
 
       text-align: center;
 
-      color: #d4af37;
-      font-size: 14px;
+      font-size: 13px;
 
-      text-decoration: none;
-    }
-
-    .message {
       display: none;
+    }
 
-      margin-bottom: 18px;
-      padding: 12px;
+    /* =====================================================
+       REGISTER LINK
+    ===================================================== */
 
-      border-radius: 7px;
-
+    .bottom-text {
       text-align: center;
 
-      font-size: 14px;
-      line-height: 1.5;
-    }
+      color: #888;
 
-    .message.error {
-      display: block;
+      font-size: 13px;
 
-      background: #2a1010;
-      color: #ff7777;
-    }
-
-    .message.success {
-      display: block;
-
-      background: #102a16;
-      color: #7dff9a;
-    }
-
-    .registerText {
       margin-top: 25px;
+    }
+
+    .register-link {
+      color: #d4af37;
+
+      text-decoration: none;
+
+      font-weight: 700;
+
+      margin-left: 4px;
+    }
+
+    .register-link:hover {
+      text-decoration: underline;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .footer {
+      margin-top: 30px;
 
       text-align: center;
 
-      color: #999;
-      font-size: 14px;
+      color: #555;
+
+      font-size: 11px;
+
+      letter-spacing: 0.5px;
     }
 
-    .registerText a {
-      color: #d4af37;
-      text-decoration: none;
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 480px) {
+
+      .auth-page {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .auth-container {
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+
+      .logo {
+        width: 72px;
+        height: 72px;
+
+        font-size: 24px;
+      }
+
+      .brand-name {
+        font-size: 26px;
+        letter-spacing: 3px;
+      }
+
+      .brand-subtitle {
+        margin-bottom: 27px;
+      }
+
+      .auth-box {
+        padding: 24px 18px;
+        border-radius: 15px;
+      }
+
+      .title {
+        font-size: 23px;
+      }
+    }
+
+    /* =====================================================
+       SMALL HEIGHT DEVICES
+    ===================================================== */
+
+    @media (max-height: 650px) {
+
+      .auth-page {
+        align-items: flex-start;
+      }
+
+      .auth-container {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      .logo {
+        width: 58px;
+        height: 58px;
+
+        font-size: 20px;
+
+        margin-bottom: 10px;
+      }
+
+      .brand-name {
+        font-size: 23px;
+      }
+
+      .brand-subtitle {
+        margin-bottom: 20px;
+      }
+
+      .auth-box {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <main class="loginContainer">
+  <main class="auth-page">
 
-    <div class="logo">
+    <div class="auth-container">
 
-      <div class="logoCircle">
-        <div class="logoText">
-          AB
-        </div>
+      <!-- =================================================
+           AYNA BOOK LOGO
+      ================================================== -->
+
+      <div class="logo">
+        AB
       </div>
 
-      <div class="brand">
+      <div class="brand-name">
         AYNA BOOK
+      </div>
+
+      <div class="brand-subtitle">
+        CONNECT • SHARE • DISCOVER
+      </div>
+
+
+      <!-- =================================================
+           LOGIN BOX
+      ================================================== -->
+
+      <section class="auth-box">
+
+        <h1 class="title">
+          Welcome Back
+        </h1>
+
+        <p class="description">
+          Sign in to your AYNA BOOK account
+        </p>
+
+
+        <!-- =================================================
+             LOGIN FORM
+        ================================================== -->
+
+        <form id="loginForm">
+
+          <div class="form-group">
+
+            <label for="email">
+              Email Address
+            </label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              autocomplete="email"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="password">
+              Password
+            </label>
+
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            >
+
+          </div>
+
+
+          <!-- Forgot Password -->
+
+          <div class="forgot-row">
+
+            <a
+              href="./forgot-password.html"
+              class="forgot-link"
+            >
+              Forgot Password?
+            </a>
+
+          </div>
+
+
+          <!-- Login Button -->
+
+          <button
+            id="loginButton"
+            class="login-button"
+            type="submit"
+          >
+            LOGIN
+          </button>
+
+
+          <!-- Status -->
+
+          <div id="message"></div>
+
+        </form>
+
+
+        <!-- =================================================
+             REGISTER
+        ================================================== -->
+
+        <div class="bottom-text">
+
+          Don't have an account?
+
+          <a
+            href="./register.html"
+            class="register-link"
+          >
+            Create Account
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           FOOTER
+      ================================================== -->
+
+      <div class="footer">
+        © 2026 AYNA BOOK. All Rights Reserved.
       </div>
 
     </div>
 
-
-    <section class="card">
-
-      <h1>
-        Sign In
-      </h1>
-
-
-      <div
-        id="message"
-        class="message"
-      ></div>
-
-
-      <form id="loginForm">
-
-        <div class="formGroup">
-
-          <label for="email">
-            Email Address
-          </label>
-
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            placeholder="Enter your email"
-            required
-          >
-
-        </div>
-
-
-        <div class="formGroup">
-
-          <label for="password">
-            Password
-          </label>
-
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            placeholder="Enter your password"
-            required
-          >
-
-        </div>
-
-
-        <button
-          id="loginButton"
-          class="loginButton"
-          type="submit"
-        >
-          Sign In
-        </button>
-
-      </form>
-
-
-      <a
-        class="forgot"
-        href="forgot-password.html"
-      >
-        Forgot Password?
-      </a>
-
-
-      <div class="registerText">
-
-        Don't have an account?
-
-        <a href="register.html">
-          Create Account
-        </a>
-
-      </div>
-
-    </section>
-
   </main>
 
 
-  <!-- =====================================
+  <!-- =====================================================
        LOGIN JAVASCRIPT
-  ====================================== -->
-
-  <script type="module">
-
-    import {
-      loginUser
-    } from "./auth.js";
-
-
-    const loginForm =
-      document.getElementById(
-        "loginForm"
-      );
-
-    const emailInput =
-      document.getElementById(
-        "email"
-      );
-
-    const passwordInput =
-      document.getElementById(
-        "password"
-      );
-
-    const loginButton =
-      document.getElementById(
-        "loginButton"
-      );
-
-    const message =
-      document.getElementById(
-        "message"
-      );
-
-
-    function showMessage(
-      text,
-      type
-    ) {
-
-      message.textContent = text;
-
-      message.className =
-        "message " + type;
-
-    }
-
-
-    loginForm.addEventListener(
-      "submit",
-      async function (event) {
-
-        event.preventDefault();
-
-
-        const email =
-          emailInput.value.trim();
-
-        const password =
-          passwordInput.value;
-
-
-        if (!email || !password) {
-
-          showMessage(
-            "Please enter your email and password.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        loginButton.disabled = true;
-
-        loginButton.textContent =
-          "Signing In...";
-
-
-        try {
-
-          const result =
-            await loginUser(
-              email,
-              password
-            );
-
-
-          if (!result.success) {
-
-
-            // ===========================
-            // EMAIL VERIFICATION REQUIRED
-            // ===========================
-
-            if (
-              result.verificationRequired
-            ) {
-
-              sessionStorage.setItem(
-                "verificationEmail",
-                email
-              );
-
-
-              showMessage(
-                "Please verify your email address first.",
-                "error"
-              );
-
-
-              setTimeout(
-                function () {
-
-                  window.location.href =
-                    "verify-email.html";
-
-                },
-                1200
-              );
-
-
-              return;
-            }
-
-
-            // ===========================
-            // LOGIN ERROR
-            // ===========================
-
-            showMessage(
-              result.message ||
-              "Login failed. Please try again.",
-              "error"
-            );
-
-
-            return;
-          }
-
-
-          // =============================
-          // LOGIN SUCCESS
-          // =============================
-
-          showMessage(
-            "Login successful. Opening AYNA BOOK...",
-            "success"
-          );
-
-
-          setTimeout(
-            function () {
-
-              window.location.replace(
-                "home.html"
-              );
-
-            },
-            500
-          );
-
-
-        } catch (error) {
-
-          console.error(
-            "Login page error:",
-            error
-          );
-
-
-          showMessage(
-            "An unexpected error occurred. Please try again.",
-            "error"
-          );
-
-
-        } finally {
-
-          loginButton.disabled = false;
-
-          loginButton.textContent =
-            "Sign In";
-
-        }
-
-      }
-    );
-
-  </script>
+  ===================================================== -->
+
+  <script
+    type="module"
+    src="./login.js"
+  ></script>
 
 </body>
 </html>
