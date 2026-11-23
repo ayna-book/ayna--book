@@ -2,6 +2,7 @@
 // AYNA BOOK
 // FIREBASE REALTIME DATABASE CONTROLLER
 // File: database.js
+// RTDB Rules Compatible Version
 // =========================================================
 
 import {
@@ -28,7 +29,7 @@ const database = getDatabase(app);
 
 
 // =========================================================
-// GET CURRENT USER
+// AUTHENTICATED USER
 // =========================================================
 
 function getAuthenticatedUser() {
@@ -56,7 +57,7 @@ export async function getUserProfile(uid = null) {
     const userId = uid || user.uid;
 
 
-    // Security: user can only access own profile
+    // Security check
     if (userId !== user.uid) {
 
       return {
@@ -69,6 +70,7 @@ export async function getUserProfile(uid = null) {
 
     const userRef =
       ref(database, `users/${userId}`);
+
 
     const snapshot =
       await get(userRef);
@@ -99,12 +101,10 @@ export async function getUserProfile(uid = null) {
       error
     );
 
-
     return {
       success: false,
       code: error.code || "",
-      message:
-        getDatabaseErrorMessage(error)
+      message: getDatabaseErrorMessage(error)
     };
 
   }
@@ -142,35 +142,42 @@ export async function saveUserProfile(
 
 
     // -----------------------------------------------------
-    // CLEAN DATA
+    // REQUIRED DATA
     // -----------------------------------------------------
 
-    const displayName =
+    const fullName =
       String(
-        profileData.displayName || ""
+        profileData.fullName ||
+        profileData.displayName ||
+        ""
       ).trim();
+
+
+    const country =
+      String(
+        profileData.country || ""
+      ).trim();
+
 
     const email =
       String(
-        profileData.email ||
-        user.email ||
-        ""
+        user.email || ""
       ).trim();
+
+
+    const aynaId =
+      "AYNA-" + user.uid;
+
+
+    // -----------------------------------------------------
+    // OPTIONAL DATA
+    // -----------------------------------------------------
 
     const phone =
       String(
         profileData.phone || ""
       ).trim();
 
-    const birthDate =
-      String(
-        profileData.birthDate || ""
-      ).trim();
-
-    const bio =
-      String(
-        profileData.bio || ""
-      ).trim();
 
     const photoURL =
       String(
@@ -178,26 +185,73 @@ export async function saveUserProfile(
       ).trim();
 
 
+    const privacy =
+      profileData.privacy === "private"
+        ? "private"
+        : "public";
+
+
+    const bio =
+      String(
+        profileData.bio || ""
+      ).trim();
+
+
+    const plan =
+      [
+        "free",
+        "business",
+        "vip",
+        "vvip"
+      ].includes(profileData.plan)
+        ? profileData.plan
+        : "free";
+
+
     // -----------------------------------------------------
     // VALIDATION
     // -----------------------------------------------------
 
-    if (!displayName) {
+    if (!fullName) {
 
       return {
         success: false,
-        message: "Name is required."
+        message: "Full name is required."
       };
 
     }
 
 
-    if (displayName.length > 100) {
+    if (
+      fullName.length < 2 ||
+      fullName.length > 100
+    ) {
 
       return {
         success: false,
         message:
-          "Name cannot exceed 100 characters."
+          "Full name must contain 2 to 100 characters."
+      };
+
+    }
+
+
+    if (!country) {
+
+      return {
+        success: false,
+        message: "Country is required."
+      };
+
+    }
+
+
+    if (country.length > 100) {
+
+      return {
+        success: false,
+        message:
+          "Country cannot exceed 100 characters."
       };
 
     }
@@ -208,7 +262,7 @@ export async function saveUserProfile(
       return {
         success: false,
         message:
-          "Phone number is too long."
+          "Phone number cannot exceed 30 characters."
       };
 
     }
@@ -226,7 +280,7 @@ export async function saveUserProfile(
 
 
     // -----------------------------------------------------
-    // USER REFERENCE
+    // USER DATABASE REFERENCE
     // -----------------------------------------------------
 
     const userRef =
@@ -234,7 +288,7 @@ export async function saveUserProfile(
 
 
     // -----------------------------------------------------
-    // CHECK EXISTING DATA
+    // CHECK EXISTING PROFILE
     // -----------------------------------------------------
 
     const snapshot =
@@ -248,31 +302,43 @@ export async function saveUserProfile(
 
 
     // -----------------------------------------------------
-    // PROFILE DATA
+    // CREATED TIME
+    // -----------------------------------------------------
+
+    const createdAt =
+      existingData.createdAt ||
+      Date.now();
+
+
+    // -----------------------------------------------------
+    // PROFILE OBJECT
     // -----------------------------------------------------
 
     const profile = {
 
-      uid,
+      uid: user.uid,
 
-      displayName,
+      aynaId,
+
+      fullName,
 
       email,
 
+      country,
+
       phone,
-
-      birthDate,
-
-      bio,
 
       photoURL,
 
-      createdAt:
-        existingData.createdAt ||
-        serverTimestamp(),
+      privacy,
 
-      updatedAt:
-        serverTimestamp()
+      bio,
+
+      plan,
+
+      createdAt,
+
+      updatedAt: Date.now()
 
     };
 
@@ -289,6 +355,7 @@ export async function saveUserProfile(
 
     return {
       success: true,
+      exists: true,
       data: profile,
       message:
         "Profile saved successfully."
@@ -302,12 +369,10 @@ export async function saveUserProfile(
       error
     );
 
-
     return {
       success: false,
       code: error.code || "",
-      message:
-        getDatabaseErrorMessage(error)
+      message: getDatabaseErrorMessage(error)
     };
 
   }
@@ -346,103 +411,272 @@ export async function updateUserProfile(
 
 
     // -----------------------------------------------------
-    // ALLOWED FIELDS ONLY
-    // -----------------------------------------------------
-
-    const allowedFields = [
-      "displayName",
-      "phone",
-      "birthDate",
-      "bio",
-      "photoURL"
-    ];
-
-
-    const cleanUpdates = {};
-
-
-    for (
-      const field of allowedFields
-    ) {
-
-      if (
-        Object.prototype.hasOwnProperty.call(
-          updates,
-          field
-        )
-      ) {
-
-        cleanUpdates[field] =
-          String(
-            updates[field] ?? ""
-          ).trim();
-
-      }
-
-    }
-
-
-    // -----------------------------------------------------
-    // VALIDATION
-    // -----------------------------------------------------
-
-    if (
-      cleanUpdates.displayName &&
-      cleanUpdates.displayName.length > 100
-    ) {
-
-      return {
-        success: false,
-        message:
-          "Name cannot exceed 100 characters."
-      };
-
-    }
-
-
-    if (
-      cleanUpdates.phone &&
-      cleanUpdates.phone.length > 30
-    ) {
-
-      return {
-        success: false,
-        message:
-          "Phone number is too long."
-      };
-
-    }
-
-
-    if (
-      cleanUpdates.bio &&
-      cleanUpdates.bio.length > 500
-    ) {
-
-      return {
-        success: false,
-        message:
-          "Bio cannot exceed 500 characters."
-      };
-
-    }
-
-
-    // -----------------------------------------------------
-    // UPDATED TIME
-    // -----------------------------------------------------
-
-    cleanUpdates.updatedAt =
-      serverTimestamp();
-
-
-    // -----------------------------------------------------
-    // UPDATE DATABASE
+    // GET EXISTING PROFILE
     // -----------------------------------------------------
 
     const userRef =
       ref(database, `users/${uid}`);
 
+
+    const snapshot =
+      await get(userRef);
+
+
+    if (!snapshot.exists()) {
+
+      return {
+        success: false,
+        message:
+          "Profile does not exist yet."
+      };
+
+    }
+
+
+    const existing =
+      snapshot.val();
+
+
+    // -----------------------------------------------------
+    // ALLOWED FIELDS
+    // -----------------------------------------------------
+
+    const cleanUpdates = {};
+
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        updates,
+        "fullName"
+      )
+    ) {
+
+      const fullName =
+        String(
+          updates.fullName || ""
+        ).trim();
+
+
+      if (
+        fullName.length < 2 ||
+        fullName.length > 100
+      ) {
+
+        return {
+          success: false,
+          message:
+            "Full name must contain 2 to 100 characters."
+        };
+
+      }
+
+
+      cleanUpdates.fullName =
+        fullName;
+
+    }
+
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        updates,
+        "country"
+      )
+    ) {
+
+      const country =
+        String(
+          updates.country || ""
+        ).trim();
+
+
+      if (
+        country.length < 1 ||
+        country.length > 100
+      ) {
+
+        return {
+          success: false,
+          message:
+            "Country must contain 1 to 100 characters."
+        };
+
+      }
+
+
+      cleanUpdates.country =
+        country;
+
+    }
+
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        updates,
+        "phone"
+      )
+    ) {
+
+      const phone =
+        String(
+          updates.phone || ""
+        ).trim();
+
+
+      if (phone.length > 30) {
+
+        return {
+          success: false,
+          message:
+            "Phone number cannot exceed 30 characters."
+        };
+
+      }
+
+
+      cleanUpdates.phone =
+        phone;
+
+    }
+
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        updates,
+        "photoURL"
+      )
+    ) {
+
+      cleanUpdates.photoURL =
+        String(
+          updates.photoURL || ""
+        ).trim();
+
+    }
+
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        updates,
+        "privacy"
+      )
+    ) {
+
+      const privacy =
+        updates.privacy === "private"
+          ? "private"
+          : updates.privacy === "public"
+            ? "public"
+            : null;
+
+
+      if (!privacy) {
+
+        return {
+          success: false,
+          message:
+            "Invalid privacy setting."
+        };
+
+      }
+
+
+      cleanUpdates.privacy =
+        privacy;
+
+    }
+
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        updates,
+        "bio"
+      )
+    ) {
+
+      const bio =
+        String(
+          updates.bio || ""
+        ).trim();
+
+
+      if (bio.length > 500) {
+
+        return {
+          success: false,
+          message:
+            "Bio cannot exceed 500 characters."
+        };
+
+      }
+
+
+      cleanUpdates.bio =
+        bio;
+
+    }
+
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        updates,
+        "plan"
+      )
+    ) {
+
+      const allowedPlans = [
+        "free",
+        "business",
+        "vip",
+        "vvip"
+      ];
+
+
+      if (
+        !allowedPlans.includes(
+          updates.plan
+        )
+      ) {
+
+        return {
+          success: false,
+          message:
+            "Invalid account plan."
+        };
+
+      }
+
+
+      cleanUpdates.plan =
+        updates.plan;
+
+    }
+
+
+    // -----------------------------------------------------
+    // NEVER ALLOW CLIENT TO CHANGE THESE
+    // -----------------------------------------------------
+
+    cleanUpdates.uid =
+      existing.uid || user.uid;
+
+    cleanUpdates.aynaId =
+      existing.aynaId ||
+      ("AYNA-" + user.uid);
+
+    cleanUpdates.email =
+      user.email || existing.email || "";
+
+    cleanUpdates.createdAt =
+      existing.createdAt || Date.now();
+
+    cleanUpdates.updatedAt =
+      Date.now();
+
+
+    // -----------------------------------------------------
+    // UPDATE
+    // -----------------------------------------------------
 
     await update(
       userRef,
@@ -464,12 +698,10 @@ export async function updateUserProfile(
       error
     );
 
-
     return {
       success: false,
       code: error.code || "",
-      message:
-        getDatabaseErrorMessage(error)
+      message: getDatabaseErrorMessage(error)
     };
 
   }
@@ -478,7 +710,7 @@ export async function updateUserProfile(
 
 
 // =========================================================
-// DELETE USER PROFILE DATA
+// DELETE USER PROFILE
 // =========================================================
 
 export async function deleteUserProfile(
@@ -512,7 +744,7 @@ export async function deleteUserProfile(
     return {
       success: true,
       message:
-        "Profile data deleted successfully."
+        "Profile deleted successfully."
     };
 
 
@@ -523,12 +755,10 @@ export async function deleteUserProfile(
       error
     );
 
-
     return {
       success: false,
       code: error.code || "",
-      message:
-        getDatabaseErrorMessage(error)
+      message: getDatabaseErrorMessage(error)
     };
 
   }
@@ -537,7 +767,7 @@ export async function deleteUserProfile(
 
 
 // =========================================================
-// DATABASE ERROR MESSAGES
+// DATABASE ERROR HANDLER
 // =========================================================
 
 function getDatabaseErrorMessage(error) {
@@ -550,23 +780,13 @@ function getDatabaseErrorMessage(error) {
 
     case "PERMISSION_DENIED":
 
-    case "PERMISSION_DENIED: Permission denied":
-
       return (
         "Database permission denied. " +
-        "Please check your Realtime Database Security Rules."
+        "Please check your Realtime Database Rules."
       );
 
 
     case "NETWORK_ERROR":
-
-      return (
-        "Network error. " +
-        "Please check your internet connection."
-      );
-
-
-    case "NETWORK_REQUEST_FAILED":
 
       return (
         "Network error. " +
@@ -587,7 +807,7 @@ function getDatabaseErrorMessage(error) {
 
 
 // =========================================================
-// EXPORT
+// EXPORT DATABASE
 // =========================================================
 
 export {
