@@ -37,6 +37,7 @@ const phoneInput = document.getElementById("phone");
 const photoInput = document.getElementById("photo");
 
 const passwordInput = document.getElementById("password");
+
 const confirmPasswordInput =
   document.getElementById("confirmPassword");
 
@@ -48,7 +49,7 @@ const statusMessage = document.getElementById("statusMsg");
 
 
 // =========================================================
-// 2. STATUS MESSAGE
+// 2. MESSAGE
 // =========================================================
 
 function showMessage(message, type = "error") {
@@ -127,8 +128,7 @@ togglePassword(
 
 
 // =========================================================
-// 5. COMPRESS PROFILE PHOTO
-// NO FIREBASE STORAGE REQUIRED
+// 5. IMAGE COMPRESSION
 // =========================================================
 
 async function compressPhoto(file) {
@@ -164,17 +164,17 @@ async function compressPhoto(file) {
 
         const canvas = document.createElement("canvas");
 
+        canvas.width = width;
+        canvas.height = height;
+
         const context = canvas.getContext("2d");
 
         if (!context) {
           throw new Error("Image compression is not supported.");
         }
 
-        canvas.width = width;
-        canvas.height = height;
-
-        // White background for transparent images
         context.fillStyle = "#ffffff";
+
         context.fillRect(0, 0, width, height);
 
         context.drawImage(
@@ -188,7 +188,6 @@ async function compressPhoto(file) {
         let quality = 0.75;
         let blob = null;
 
-        // Keep compressed image around 250 KB
         for (let i = 0; i < 6; i++) {
 
           blob = await new Promise(resolveBlob => {
@@ -205,23 +204,18 @@ async function compressPhoto(file) {
             throw new Error("Image compression failed.");
           }
 
-          if (blob.size <= 250 * 1024) {
+          if (blob.size <= 200 * 1024) {
             break;
           }
 
           quality -= 0.08;
 
-          if (quality < 0.35) {
-            quality = 0.35;
-            break;
-          }
-
         }
 
-        if (!blob || blob.size > 350 * 1024) {
+        if (!blob || blob.size > 300 * 1024) {
 
           throw new Error(
-            "Image is too large after compression. Choose another photo."
+            "Image is too large. Please select another photo."
           );
 
         }
@@ -229,15 +223,11 @@ async function compressPhoto(file) {
         const reader = new FileReader();
 
         reader.onload = () => {
-
           resolve(reader.result);
-
         };
 
         reader.onerror = () => {
-
-          reject(new Error("Unable to read compressed image."));
-
+          reject(new Error("Unable to read profile photo."));
         };
 
         reader.readAsDataURL(blob);
@@ -254,7 +244,7 @@ async function compressPhoto(file) {
 
       URL.revokeObjectURL(objectURL);
 
-      reject(new Error("Invalid image file."));
+      reject(new Error("Invalid profile photo."));
 
     };
 
@@ -266,7 +256,7 @@ async function compressPhoto(file) {
 
 
 // =========================================================
-// 6. FRIENDLY FIREBASE ERRORS
+// 6. FIREBASE ERROR
 // =========================================================
 
 function getFriendlyError(error) {
@@ -277,23 +267,20 @@ function getFriendlyError(error) {
       return "This email is already registered. Please login.";
 
     case "auth/invalid-email":
-      return "Please enter a valid email address.";
+      return "Please enter a valid email.";
 
     case "auth/weak-password":
       return "Password must contain at least 6 characters.";
 
     case "auth/network-request-failed":
-      return "Network error. Please check your internet.";
+      return "Internet connection failed. Please try again.";
 
     case "auth/too-many-requests":
-      return "Too many attempts. Please try again later.";
+      return "Too many attempts. Try again later.";
 
     case "PERMISSION_DENIED":
     case "database/permission-denied":
-      return "Database permission denied. Please check RTDB Rules.";
-
-    case "storage/retry-limit-exceeded":
-      return "Old Firebase Storage error. This new code does not use Storage.";
+      return "Database permission denied. Check RTDB Rules.";
 
     default:
       return error.message || "Registration failed.";
@@ -304,7 +291,7 @@ function getFriendlyError(error) {
 
 
 // =========================================================
-// 7. REGISTRATION FORM
+// 7. REGISTRATION
 // =========================================================
 
 if (!form) {
@@ -320,7 +307,7 @@ if (!form) {
     let createdUser = null;
 
     // -----------------------------------------------
-    // GET VALUES
+    // FORM VALUES
     // -----------------------------------------------
 
     const fullName = fullNameInput?.value.trim() || "";
@@ -338,6 +325,7 @@ if (!form) {
       confirmPasswordInput?.value || "";
 
     const photo = photoInput?.files?.[0];
+
 
     // -----------------------------------------------
     // VALIDATION
@@ -393,10 +381,11 @@ if (!form) {
 
     if (!termsInput?.checked) {
 
-      showMessage("Please accept Terms & Conditions and Privacy Policy.");
+      showMessage("Please accept Terms and Privacy Policy.");
       return;
 
     }
+
 
     // -----------------------------------------------
     // START
@@ -415,11 +404,12 @@ if (!form) {
       // ---------------------------------------------
 
       showMessage(
-        "Preparing your profile photo...",
+        "Preparing profile photo...",
         "success"
       );
 
       const photoDataURL = await compressPhoto(photo);
+
 
       // ---------------------------------------------
       // STEP 2: CREATE AUTH ACCOUNT
@@ -436,8 +426,16 @@ if (!form) {
 
       createdUser = user;
 
+
       // ---------------------------------------------
-      // STEP 3: UPDATE AUTH PROFILE
+      // STEP 3: GENERATE AYNA ID
+      // ---------------------------------------------
+
+      const aynaId = "AYNA-" + user.uid;
+
+
+      // ---------------------------------------------
+      // STEP 4: UPDATE AUTH PROFILE
       // ---------------------------------------------
 
       await updateProfile(user, {
@@ -446,9 +444,9 @@ if (!form) {
 
       });
 
+
       // ---------------------------------------------
-      // STEP 4: SAVE PROFILE IN RTDB
-      // NO STORAGE UPLOAD
+      // STEP 5: USER DATA
       // ---------------------------------------------
 
       const now = Date.now();
@@ -456,6 +454,8 @@ if (!form) {
       const userData = {
 
         uid: user.uid,
+
+        aynaId: aynaId,
 
         fullName: fullName,
 
@@ -465,7 +465,6 @@ if (!form) {
 
         phone: phone,
 
-        // Compressed image stored directly in RTDB
         photoURL: photoDataURL,
 
         photoMimeType: "image/jpeg",
@@ -482,13 +481,19 @@ if (!form) {
 
       };
 
+
+      // ---------------------------------------------
+      // STEP 6: SAVE IN REALTIME DATABASE
+      // ---------------------------------------------
+
       await set(
         dbRef(database, "users/" + user.uid),
         userData
       );
 
+
       // ---------------------------------------------
-      // STEP 5: EMAIL VERIFICATION
+      // STEP 7: SEND VERIFICATION EMAIL
       // ---------------------------------------------
 
       let verificationSent = true;
@@ -502,14 +507,15 @@ if (!form) {
         verificationSent = false;
 
         console.error(
-          "Email verification error:",
+          "Verification email error:",
           verificationError
         );
 
       }
 
+
       // ---------------------------------------------
-      // STEP 6: SUCCESS
+      // STEP 8: SUCCESS
       // ---------------------------------------------
 
       submitButton.textContent = "ACCOUNT CREATED";
@@ -518,7 +524,7 @@ if (!form) {
 
         verificationSent
 
-          ? "Account created successfully! Please check your email for verification."
+          ? "AYNA BOOK account created successfully! Check your email for verification."
 
           : "Account created successfully! Verification email could not be sent.",
 
@@ -526,8 +532,9 @@ if (!form) {
 
       );
 
+
       // ---------------------------------------------
-      // STEP 7: REDIRECT
+      // STEP 9: LOGIN REDIRECT
       // ---------------------------------------------
 
       setTimeout(() => {
@@ -536,6 +543,7 @@ if (!form) {
 
       }, 2500);
 
+
     } catch (error) {
 
       console.error(
@@ -543,15 +551,11 @@ if (!form) {
         error
       );
 
-      // ---------------------------------------------
-      // ACCOUNT ALREADY CREATED BUT PROFILE FAILED
-      // ---------------------------------------------
-
       if (createdUser) {
 
         showMessage(
 
-          "Your account was created, but profile saving failed. Do not register again. Please login and complete profile recovery. Error: " +
+          "Your account was created, but profile saving failed. Do not register again. Please login and recover your profile. Error: " +
           getFriendlyError(error)
 
         );
