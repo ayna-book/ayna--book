@@ -1,16 +1,71 @@
 // =========================================================
 // AYNA BOOK
 // FIREBASE CONFIGURATION
-// Firebase JS SDK
+// File: firebase-config.js
 // =========================================================
 
-export const firebaseConfig = {
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-  authDomain: "ayna-book.firebaseapp.com",
-  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ayna-book",
-  storageBucket: "ayna-book.firebasestorage.app",
-  messagingSenderId: "805601138500",
-  appId: "1:805601138500:web:47acdc90cb0cb521626911",
-  measurementId: "G-RKHHSKNB4B"
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+
+import { getAuth } from
+  "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+
+// =========================================================
+// FIREBASE CONFIG
+// =========================================================
+
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+
+  authDomain:
+    "ayna-book.firebaseapp.com",
+
+  databaseURL:
+    "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId:
+    "ayna-book",
+
+  storageBucket:
+    "ayna-book.firebasestorage.app",
+
+  messagingSenderId:
+    "805601138500",
+
+  appId:
+    "1:805601138500:web:47acdc90cb0cb521626911",
+
+  measurementId:
+    "G-RKHHSKNB4B"
+
+};
+
+
+// =========================================================
+// INITIALIZE FIREBASE
+// =========================================================
+
+const app =
+  initializeApp(firebaseConfig);
+
+
+// =========================================================
+// INITIALIZE AUTH
+// =========================================================
+
+const auth =
+  getAuth(app);
+
+
+// =========================================================
+// EXPORT
+// =========================================================
+
+export {
+  app,
+  auth,
+  firebaseConfig
 };
