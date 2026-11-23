@@ -1,46 +1,88 @@
 
-import { registerUser } from "./auth.js";
-import { saveUserProfile } from "./database.js";
-import { uploadProfilePhoto } from "./storage.js";
+import { app, auth } from "./app.js";
 
-const registerForm = document.getElementById("registerForm");
-const registerButton = document.getElementById("registerButton");
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {
+  getDatabase,
+  ref,
+  set
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
+
+const db = getDatabase(app);
+const storage = getStorage(app);
+
+const form = document.getElementById("registerForm");
+const button = document.getElementById("registerButton");
 const message = document.getElementById("message");
 
+let accountCreated = false;
+
 function showMessage(text, success = false) {
+  message.style.display = "block";
   message.textContent = text;
-  message.style.color = success ? "#4caf50" : "#ff5252";
+  message.style.color = success ? "#8ee6a0" : "#ff8d8d";
+  message.style.background = success ? "#102719" : "#301414";
 }
 
-registerForm.addEventListener("submit", async (event) => {
+// Password show/hide
+document.querySelectorAll(".toggle-password").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const input = document.getElementById(btn.dataset.target);
+    const showing = input.type === "password";
+
+    input.type = showing ? "text" : "password";
+    btn.textContent = showing ? "🙈" : "👁";
+  });
+});
+
+// Registration
+form.addEventListener("submit", async event => {
   event.preventDefault();
+
+  if (accountCreated) {
+    showMessage("Account already created. Please login.");
+    return;
+  }
 
   const fullName = document.getElementById("fullName").value.trim();
   const email = document.getElementById("email").value.trim();
-  const country = document.getElementById("country").value;
+  const country = document.getElementById("country").value.trim();
   const phone = document.getElementById("phone").value.trim();
-
-  const photoFile = document.getElementById("photo").files[0];
-
+  const photo = document.getElementById("photo").files[0];
   const password = document.getElementById("password").value;
   const confirmPassword =
     document.getElementById("confirmPassword").value;
-
   const terms = document.getElementById("terms").checked;
 
   // Validation
-  if (fullName.length < 2) {
-    showMessage("Please enter your full name.");
+  if (fullName.length < 2 || fullName.length > 100) {
+    showMessage("Please enter a valid full name.");
     return;
   }
 
-  if (!email || !country || !photoFile) {
-    showMessage("Please complete all required fields.");
+  if (!email) {
+    showMessage("Please enter your email.");
     return;
   }
 
-  if (password.length < 8) {
-    showMessage("Password must be at least 8 characters.");
+  if (!country || country.length > 100) {
+    showMessage("Please enter your country.");
+    return;
+  }
+
+  if (password.length < 6) {
+    showMessage("Password must be at least 6 characters.");
     return;
   }
 
@@ -49,90 +91,121 @@ registerForm.addEventListener("submit", async (event) => {
     return;
   }
 
+  if (!photo) {
+    showMessage("Please select a profile photo.");
+    return;
+  }
+
+  if (!["image/jpeg", "image/png", "image/webp"].includes(photo.type)) {
+    showMessage("Only JPG, PNG and WEBP images are allowed.");
+    return;
+  }
+
+  if (photo.size > 5 * 1024 * 1024) {
+    showMessage("Photo must be smaller than 5 MB.");
+    return;
+  }
+
   if (!terms) {
     showMessage("Please accept Terms & Conditions.");
     return;
   }
 
-  registerButton.disabled = true;
-  registerButton.textContent = "CREATING ACCOUNT...";
-  showMessage("Please wait. Creating your account...", true);
+  button.disabled = true;
+  button.textContent = "PLEASE WAIT...";
 
-  let accountCreated = false;
+  let user = null;
 
   try {
     // 1. Create Firebase Auth account
-    const credential = await registerUser(email, password);
+    const credential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-    const user = credential.user;
+    user = credential.user;
     accountCreated = true;
 
     // 2. Upload profile photo
-    showMessage("Uploading profile photo...", true);
+    const extension =
+      photo.type === "image/png" ? "png" :
+      photo.type === "image/webp" ? "webp" : "jpg";
 
-    const uploadResult = await uploadProfilePhoto(photoFile);
+    const path =
+      `profilePhotos/${user.uid}/profile_${Date.now()}.${extension}`;
 
-    // 3. Save profile in Realtime Database
-    showMessage("Saving your profile...", true);
+    const photoRef = storageRef(storage, path);
 
-    await saveUserProfile({
-      uid: user.uid,
-      aynaId: "AYNA-" + user.uid,
-      fullName: fullName,
-      email: user.email,
-      country: country,
-      phone: phone,
-      photoURL: uploadResult.url,
-      privacy: "public",
-      bio: "",
-      plan: "free",
-      createdAt: Date.now()
+    await uploadBytes(photoRef, photo, {
+      contentType: photo.type
     });
 
-    // 4. Registration completed
+    const photoURL = await getDownloadURL(photoRef);
+
+    // 3. Save profile in Realtime Database
+    const profile = {
+      uid: user.uid,
+      aynaId: "AYNA-" + user.uid,
+      fullName,
+      email: user.email,
+      country,
+      phone,
+      photoURL,
+      createdAt: Date.now(),
+      privacy: "public",
+      bio: "",
+      plan: "free"
+    };
+
+    await set(ref(db, "users/" + user.uid), profile);
+
+    // 4. Send verification email
+    await sendEmailVerification(user);
+
     showMessage(
-      "Account created successfully! Verification email sent.",
+      "Account created successfully! Check your email for verification.",
       true
     );
 
-    registerButton.textContent = "SUCCESS";
+    button.textContent = "ACCOUNT CREATED";
 
-    // 5. Go to email verification page
     setTimeout(() => {
       window.location.href = "verify-email.html";
-    }, 1500);
+    }, 1800);
 
   } catch (error) {
     console.error("Registration error:", error);
 
-    let errorMessage = "Registration failed. Please try again.";
+    const errorMessages = {
+      "auth/email-already-in-use":
+        "This email is already registered. Please login.",
+      "auth/invalid-email":
+        "Please enter a valid email address.",
+      "auth/weak-password":
+        "Please choose a stronger password.",
+      "auth/network-request-failed":
+        "Network error. Check your internet connection.",
+      "storage/unauthorized":
+        "Photo upload permission denied. Check Storage Rules.",
+      "database/permission-denied":
+        "Profile save permission denied. Check RTDB Rules."
+    };
 
-    if (error.code === "auth/email-already-in-use") {
-      errorMessage = "This email is already registered.";
-    } else if (error.code === "auth/invalid-email") {
-      errorMessage = "Please enter a valid email address.";
-    } else if (error.code === "auth/weak-password") {
-      errorMessage = "Please use a stronger password.";
-    } else if (error.code === "auth/network-request-failed") {
-      errorMessage = "Network error. Check your internet connection.";
-    } else if (error.code === "storage/unauthorized" ||
-               error.code === "storage/unauthenticated") {
-      errorMessage = "Photo upload permission denied. Check Storage Rules.";
-    } else if (error.code === "storage/quota-exceeded") {
-      errorMessage = "Firebase Storage quota exceeded.";
-    } else if (accountCreated) {
-      errorMessage =
-        "Your login account was created, but profile setup failed. " +
-        "Please contact support before trying to register again.";
-    }
+    if (user) {
+      showMessage(
+        "Your account was created, but profile setup did not finish. Do not register again with this email. Please login and complete profile recovery. Error: " +
+        (errorMessages[error.code] || error.message)
+      );
 
-    showMessage(errorMessage);
+      button.textContent = "ACCOUNT CREATED";
+    } else {
+      showMessage(
+        errorMessages[error.code] || error.message
+      );
 
-  } finally {
-    if (!accountCreated || message.textContent.includes("failed") ||
-        message.textContent.includes("denied")) {
-      registerButton.disabled = false;
-      registerButton.textContent = "CREATE ACCOUNT";
+      button.disabled = false;
+      button.textContent = "CREATE ACCOUNT";
     }
   }
 });
