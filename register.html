@@ -1,747 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
-
-  <title>AYNA BOOK — Create Account</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
-      background: #000;
-      color: #fff;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      min-height: 100dvh;
-      overflow-x: hidden;
-    }
-
-    /* =====================================================
-       FULL SCREEN
-    ===================================================== */
-
-    .auth-page {
-      width: 100%;
-      min-height: 100vh;
-      min-height: 100dvh;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      padding:
-        max(20px, env(safe-area-inset-top))
-        15px
-        max(20px, env(safe-area-inset-bottom))
-        15px;
-
-      background:
-        radial-gradient(
-          circle at top,
-          #171717 0%,
-          #080808 45%,
-          #000 100%
-        );
-    }
-
-    .auth-container {
-      width: 100%;
-      max-width: 500px;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      padding: 15px 5px;
-    }
-
-    /* =====================================================
-       LOGO
-    ===================================================== */
-
-    .logo {
-      width: 70px;
-      height: 70px;
-
-      border: 2px solid #d4af37;
-      border-radius: 50%;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      color: #d4af37;
-
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: 2px;
-
-      margin-bottom: 12px;
-
-      box-shadow:
-        0 0 20px rgba(212, 175, 55, 0.18),
-        inset 0 0 15px rgba(212, 175, 55, 0.08);
-    }
-
-    .brand-name {
-      color: #d4af37;
-
-      font-size: 27px;
-      font-weight: 800;
-
-      letter-spacing: 4px;
-
-      text-align: center;
-
-      margin-bottom: 5px;
-    }
-
-    .brand-subtitle {
-      color: #888;
-
-      font-size: 11px;
-
-      letter-spacing: 1px;
-
-      text-align: center;
-
-      margin-bottom: 22px;
-    }
-
-    /* =====================================================
-       REGISTER BOX
-    ===================================================== */
-
-    .auth-box {
-      width: 100%;
-
-      background: rgba(15, 15, 15, 0.97);
-
-      border: 1px solid #292929;
-
-      border-radius: 18px;
-
-      padding: 25px 22px;
-
-      box-shadow:
-        0 15px 45px rgba(0, 0, 0, 0.55),
-        0 0 25px rgba(212, 175, 55, 0.04);
-    }
-
-    .title {
-      color: #fff;
-
-      font-size: 24px;
-      font-weight: 700;
-
-      text-align: center;
-
-      margin-bottom: 7px;
-    }
-
-    .description {
-      color: #888;
-
-      font-size: 13px;
-
-      text-align: center;
-
-      margin-bottom: 22px;
-    }
-
-    /* =====================================================
-       FORM
-    ===================================================== */
-
-    .form-group {
-      width: 100%;
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-
-      color: #d4af37;
-
-      font-size: 13px;
-      font-weight: 600;
-
-      margin-bottom: 7px;
-    }
-
-    .required {
-      color: #d4af37;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-
-      height: 50px;
-
-      padding: 0 14px;
-
-      background: #090909;
-
-      color: #fff;
-
-      border: 1px solid #303030;
-
-      border-radius: 10px;
-
-      outline: none;
-
-      font-size: 14px;
-
-      transition: 0.25s ease;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: #d4af37;
-
-      box-shadow:
-        0 0 0 2px rgba(212, 175, 55, 0.08);
-    }
-
-    .form-group input::placeholder {
-      color: #666;
-    }
-
-    .form-group select {
-      appearance: auto;
-    }
-
-    .form-group select option {
-      background: #111;
-      color: #fff;
-    }
-
-    /* =====================================================
-       PASSWORD HINT
-    ===================================================== */
-
-    .hint {
-      color: #666;
-
-      font-size: 11px;
-
-      margin-top: 5px;
-
-      line-height: 1.4;
-    }
-
-    /* =====================================================
-       TERMS
-    ===================================================== */
-
-    .terms {
-      display: flex;
-      align-items: flex-start;
-
-      gap: 9px;
-
-      margin: 5px 0 18px;
-
-      color: #777;
-
-      font-size: 11px;
-
-      line-height: 1.5;
-    }
-
-    .terms input {
-      width: 16px;
-      height: 16px;
-
-      margin-top: 1px;
-
-      accent-color: #d4af37;
-
-      flex-shrink: 0;
-    }
-
-    .terms a {
-      color: #d4af37;
-
-      text-decoration: none;
-    }
-
-    /* =====================================================
-       REGISTER BUTTON
-    ===================================================== */
-
-    .register-button {
-      width: 100%;
-
-      height: 53px;
-
-      border: none;
-
-      border-radius: 10px;
-
-      background: #d4af37;
-
-      color: #000;
-
-      font-size: 15px;
-      font-weight: 800;
-
-      cursor: pointer;
-
-      transition: 0.2s ease;
-
-      box-shadow:
-        0 8px 20px rgba(212, 175, 55, 0.15);
-    }
-
-    .register-button:hover {
-      background: #e2c158;
-    }
-
-    .register-button:active {
-      transform: scale(0.98);
-    }
-
-    .register-button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* =====================================================
-       MESSAGE
-    ===================================================== */
-
-    #message {
-      width: 100%;
-
-      margin-top: 14px;
-
-      padding: 11px;
-
-      border-radius: 8px;
-
-      text-align: center;
-
-      font-size: 13px;
-
-      display: none;
-    }
-
-    /* =====================================================
-       LOGIN LINK
-    ===================================================== */
-
-    .bottom-text {
-      text-align: center;
-
-      color: #888;
-
-      font-size: 13px;
-
-      margin-top: 22px;
-    }
-
-    .login-link {
-      color: #d4af37;
-
-      text-decoration: none;
-
-      font-weight: 700;
-
-      margin-left: 4px;
-    }
-
-    .login-link:hover {
-      text-decoration: underline;
-    }
-
-    /* =====================================================
-       FOOTER
-    ===================================================== */
-
-    .footer {
-      margin-top: 22px;
-
-      text-align: center;
-
-      color: #555;
-
-      font-size: 10px;
-
-      letter-spacing: 0.5px;
-    }
-
-    /* =====================================================
-       MOBILE
-    ===================================================== */
-
-    @media (max-width: 480px) {
-
-      .auth-page {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .auth-container {
-        padding-left: 3px;
-        padding-right: 3px;
-      }
-
-      .auth-box {
-        padding: 22px 17px;
-
-        border-radius: 15px;
-      }
-
-      .logo {
-        width: 62px;
-        height: 62px;
-
-        font-size: 21px;
-      }
-
-      .brand-name {
-        font-size: 24px;
-        letter-spacing: 3px;
-      }
-
-      .brand-subtitle {
-        margin-bottom: 18px;
-      }
-
-      .title {
-        font-size: 22px;
-      }
-    }
-
-    /* =====================================================
-       SMALL HEIGHT DEVICES
-    ===================================================== */
-
-    @media (max-height: 700px) {
-
-      .auth-page {
-        align-items: flex-start;
-      }
-
-      .auth-container {
-        padding-top: 10px;
-        padding-bottom: 15px;
-      }
-
-      .logo {
-        width: 52px;
-        height: 52px;
-
-        font-size: 18px;
-
-        margin-bottom: 7px;
-      }
-
-      .brand-name {
-        font-size: 21px;
-      }
-
-      .brand-subtitle {
-        margin-bottom: 13px;
-      }
-
-      .auth-box {
-        padding-top: 18px;
-        padding-bottom: 18px;
-      }
-
-      .form-group {
-        margin-bottom: 11px;
-      }
-
-      .form-group input,
-      .form-group select {
-        height: 46px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <main class="auth-page">
-
-    <div class="auth-container">
-
-      <!-- =================================================
-           LOGO
-      ================================================== -->
-
-      <div class="logo">
-        AB
-      </div>
-
-      <div class="brand-name">
-        AYNA BOOK
-      </div>
-
-      <div class="brand-subtitle">
-        CONNECT • SHARE • DISCOVER
-      </div>
-
-
-      <!-- =================================================
-           REGISTRATION BOX
-      ================================================== -->
-
-      <section class="auth-box">
-
-        <h1 class="title">
-          Create Account
-        </h1>
-
-        <p class="description">
-          Join AYNA BOOK and create your account
-        </p>
-
-
-        <!-- =================================================
-             REGISTRATION FORM
-        ================================================== -->
-
-        <form id="registerForm">
-
-          <!-- Full Name -->
-
-          <div class="form-group">
-
-            <label for="fullName">
-              Full Name
-              <span class="required">*</span>
-            </label>
-
-            <input
-              id="fullName"
-              name="fullName"
-              type="text"
-              placeholder="Enter your full name"
-              autocomplete="name"
-              minlength="2"
-              maxlength="100"
-              required
-            >
-
-          </div>
-
-
-          <!-- Email -->
-
-          <div class="form-group">
-
-            <label for="email">
-              Email Address
-              <span class="required">*</span>
-            </label>
-
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              autocomplete="email"
-              required
-            >
-
-          </div>
-
-
-          <!-- Country -->
-
-          <div class="form-group">
-
-            <label for="country">
-              Country
-              <span class="required">*</span>
-            </label>
-
-            <input
-              id="country"
-              name="country"
-              type="text"
-              placeholder="Enter your country"
-              autocomplete="country-name"
-              maxlength="100"
-              required
-            >
-
-          </div>
-
-
-          <!-- Phone -->
-
-          <div class="form-group">
-
-            <label for="phone">
-              Phone Number
-            </label>
-
-            <input
-              id="phone"
-              name="phone"
-              type="tel"
-              placeholder="Enter your phone number"
-              autocomplete="tel"
-              maxlength="30"
-            >
-
-          </div>
-
-
-          <!-- Password -->
-
-          <div class="form-group">
-
-            <label for="password">
-              Password
-              <span class="required">*</span>
-            </label>
-
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Create a password"
-              autocomplete="new-password"
-              minlength="6"
-              required
-            >
-
-            <div class="hint">
-              Password must be at least 6 characters.
-            </div>
-
-          </div>
-
-
-          <!-- Confirm Password -->
-
-          <div class="form-group">
-
-            <label for="confirmPassword">
-              Confirm Password
-              <span class="required">*</span>
-            </label>
-
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              placeholder="Confirm your password"
-              autocomplete="new-password"
-              minlength="6"
-              required
-            >
-
-          </div>
-
-
-          <!-- Terms -->
-
-          <div class="terms">
-
-            <input
-              id="terms"
-              name="terms"
-              type="checkbox"
-              required
-            >
-
-            <label for="terms">
-              I agree to the AYNA BOOK
-              <a href="#" onclick="return false;">
-                Terms & Conditions
-              </a>
-              and
-              <a href="#" onclick="return false;">
-                Privacy Policy
-              </a>.
-            </label>
-
-          </div>
-
-
-          <!-- Register Button -->
-
-          <button
-            id="registerButton"
-            class="register-button"
-            type="submit"
-          >
-            CREATE ACCOUNT
-          </button>
-
-
-          <!-- Message -->
-
-          <div id="message"></div>
-
-        </form>
-
-
-        <!-- =================================================
-             LOGIN LINK
-        ================================================== -->
-
-        <div class="bottom-text">
-
-          Already have an account?
-
-          <a
-            href="./login.html"
-            class="login-link"
-          >
-            Login
-          </a>
-
-        </div>
-
-      </section>
-
-
-      <!-- =================================================
-           FOOTER
-      ================================================== -->
-
-      <div class="footer">
-        © 2026 AYNA BOOK. All Rights Reserved.
-      </div>
-
-    </div>
-
-  </main>
-
-
-  <!-- =====================================================
-       REGISTER JAVASCRIPT
-  ===================================================== -->
-
-  <script
-    type="module"
-    src="./register.js"
-  ></script>
-
-</body>
-</html>
+/* AYNA BOOK — FULL SCREEN AUTH DESIGN */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.auth-page {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: #080808;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 560px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 68px;
+  height: 68px;
+  font-size: 25px;
+}
+
+.brand-name {
+  font-size: 27px;
+  letter-spacing: 4px;
+  margin-top: 12px;
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 560px;
+  padding: 30px 26px;
+  margin-top: 22px;
+  background: #101010;
+  border: 1px solid #292929;
+  border-radius: 18px;
+}
+
+.title {
+  font-size: 25px;
+  text-align: center;
+}
+
+.description {
+  font-size: 14px;
+  text-align: center;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.login-button,
+.register-button {
+  width: 100%;
+  min-height: 56px;
+  font-size: 16px;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+
+.terms {
+  font-size: 13px;
+  margin: 15px 0;
+}
+
+.bottom-text {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 22px;
+}
+
+.footer {
+  margin-top: 20px;
+  font-size: 11px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .auth-page {
+    padding: 20px 12px;
+    align-items: flex-start;
+  }
+
+  .auth-container {
+    max-width: 100%;
+  }
+
+  .auth-box {
+    max-width: 100%;
+    padding: 26px 20px;
+    margin-top: 20px;
+  }
+
+  .logo {
+    width: 64px;
+    height: 64px;
+  }
+
+  .brand-name {
+    font-size: 24px;
+  }
+
+  .form-group input,
+  .form-group select {
+    min-height: 54px;
+    font-size: 16px;
+  }
+}
