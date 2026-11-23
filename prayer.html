@@ -2,18 +2,25 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <title>AYNA BOOK - নামাজ ও রোজা</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <meta name="theme-color" content="#06140e">
+
+  <title>AYNA BOOK</title>
 
   <style>
+
     *{
       box-sizing:border-box;
       -webkit-tap-highlight-color:transparent;
     }
 
-    html,body{
+    html,
+    body{
       margin:0;
       padding:0;
       width:100%;
@@ -32,386 +39,596 @@
       min-height:100vh;
     }
 
-    button,input,select{
+    button{
       font:inherit;
     }
 
     .app{
       width:100%;
       max-width:900px;
-      margin:auto;
       min-height:100vh;
+      margin:auto;
+
       background:
-        radial-gradient(circle at top,#123d2b 0,#06140e 45%,#020806 100%);
+        radial-gradient(
+          circle at top,
+          #123d2b 0,
+          #06140e 45%,
+          #020806 100%
+        );
     }
 
+    /* =========================
+       TOP BAR
+    ========================= */
+
     .topbar{
+
       position:sticky;
       top:0;
-      z-index:20;
+      z-index:100;
+
       height:64px;
+
       display:flex;
       align-items:center;
       justify-content:space-between;
+
       padding:0 14px;
-      background:rgba(2,12,8,.94);
-      backdrop-filter:blur(12px);
-      border-bottom:1px solid rgba(255,255,255,.1);
+
+      background:
+        rgba(2,12,8,.95);
+
+      backdrop-filter:blur(14px);
+
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
     }
 
-    .topbar h1{
-      margin:0;
-      font-size:21px;
-      font-weight:800;
+    .logo{
+
+      font-size:22px;
+      font-weight:900;
+
+      letter-spacing:.3px;
     }
 
-    .back-btn{
+    .top-actions{
+
+      display:flex;
+      gap:8px;
+    }
+
+    .icon-btn{
+
       width:42px;
       height:42px;
+
       border:0;
       border-radius:50%;
+
       background:#123d2b;
       color:#fff;
-      font-size:22px;
+
+      font-size:20px;
+
       cursor:pointer;
     }
+
+    /* =========================
+       MAIN
+    ========================= */
 
     .container{
       padding:14px;
+      padding-bottom:90px;
     }
 
-    .hero{
-      padding:20px 16px;
+    /* =========================
+       WELCOME
+    ========================= */
+
+    .welcome{
+
+      padding:20px;
+
       border-radius:22px;
+
       background:
-        linear-gradient(135deg,#0e5638,#092719);
-      box-shadow:0 10px 30px rgba(0,0,0,.25);
+        linear-gradient(
+          135deg,
+          #0e5638,
+          #092719
+        );
+
+      box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.25);
+
       margin-bottom:14px;
     }
 
-    .hero h2{
-      margin:0 0 7px;
-      font-size:24px;
+    .welcome h2{
+
+      margin:0 0 6px;
+
+      font-size:25px;
+      font-weight:900;
     }
 
-    .hero p{
-      margin:5px 0;
-      color:#c9e8da;
+    .welcome p{
+
+      margin:4px 0;
+
+      color:#c8e7d9;
+
       font-size:14px;
     }
 
+    /* =========================
+       QUICK MENU
+    ========================= */
+
     .section{
-      margin-top:16px;
+
       padding:15px;
+
+      margin-top:14px;
+
       border-radius:20px;
-      background:rgba(10,32,23,.92);
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 8px 25px rgba(0,0,0,.18);
+
+      background:
+        rgba(10,32,23,.92);
+
+      border:
+        1px solid
+        rgba(255,255,255,.07);
+
+      box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.18);
     }
 
     .section-title{
+
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      margin-bottom:14px;
+
+      margin-bottom:13px;
     }
 
     .section-title h3{
+
       margin:0;
-      font-size:20px;
+
+      font-size:19px;
     }
 
-    .badge{
-      padding:6px 10px;
-      border-radius:20px;
-      background:#145b3d;
-      font-size:12px;
-      color:#d9fff0;
-    }
+    .quick-grid{
 
-    .next-card{
-      text-align:center;
-      padding:18px;
-      border-radius:18px;
-      background:linear-gradient(135deg,#092b1d,#104f35);
-      margin-bottom:14px;
-    }
+      display:grid;
 
-    .next-label{
-      color:#b9d8cb;
-      font-size:13px;
-    }
+      grid-template-columns:
+        repeat(4,1fr);
 
-    #nextPrayer{
-      margin:5px 0;
-      font-size:25px;
-      font-weight:800;
-    }
-
-    #countdown{
-      font-size:32px;
-      font-weight:900;
-      letter-spacing:1px;
-    }
-
-    .prayer-list{
-      display:flex;
-      flex-direction:column;
       gap:9px;
     }
 
-    .prayer-row{
-      display:grid;
-      grid-template-columns:1fr auto auto;
-      align-items:center;
-      gap:10px;
-      padding:13px;
-      border-radius:15px;
-      background:#0b2118;
-      border:1px solid rgba(255,255,255,.06);
-    }
+    .quick-btn{
 
-    .prayer-name{
-      font-weight:700;
-    }
+      min-height:90px;
 
-    .prayer-en{
-      display:block;
-      color:#8eb5a4;
-      font-size:11px;
-      margin-top:2px;
-    }
+      padding:10px 5px;
 
-    .prayer-time{
-      font-size:19px;
-      font-weight:800;
-    }
-
-    .alarm{
-      width:21px;
-      height:21px;
-      accent-color:#35d58a;
-    }
-
-    .ramadan-card{
-      padding:16px;
-      border-radius:18px;
-      background:linear-gradient(135deg,#241b08,#553a0a);
-      margin-bottom:14px;
-    }
-
-    .ramadan-card h4{
-      margin:0 0 10px;
-      font-size:19px;
-    }
-
-    .fast-times{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .fast-box{
-      padding:14px;
-      border-radius:15px;
-      background:rgba(0,0,0,.22);
-      text-align:center;
-    }
-
-    .fast-box small{
-      display:block;
-      color:#e5d7a5;
-      margin-bottom:5px;
-    }
-
-    .fast-box strong{
-      font-size:22px;
-    }
-
-    #fastCountdown{
-      margin-top:12px;
-      text-align:center;
-      font-weight:800;
-      font-size:18px;
-    }
-
-    .controls{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .control-group{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-
-    .control-group.full{
-      grid-column:1 / -1;
-    }
-
-    label{
-      color:#b9d8cb;
-      font-size:13px;
-    }
-
-    input,select{
-      width:100%;
-      padding:12px;
-      border-radius:12px;
-      border:1px solid #28543f;
-      outline:none;
-      background:#071810;
-      color:#fff;
-    }
-
-    input:focus,select:focus{
-      border-color:#35d58a;
-    }
-
-    .btns{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:12px;
-    }
-
-    .btn{
-      min-height:46px;
       border:0;
-      border-radius:13px;
-      cursor:pointer;
-      font-weight:800;
+
+      border-radius:17px;
+
+      background:#0b2118;
+
       color:#fff;
+
+      cursor:pointer;
+
+      border:
+        1px solid
+        rgba(255,255,255,.06);
+
+      transition:.15s;
+    }
+
+    .quick-btn:active{
+
+      transform:scale(.96);
+
       background:#145b3d;
     }
 
-    .btn.primary{
-      background:#1b8b5c;
-    }
+    .quick-icon{
 
-    .btn.gps{
-      background:#244d72;
-    }
-
-    .calendar-wrap{
-      overflow-x:auto;
-      border-radius:15px;
-    }
-
-    table{
-      width:100%;
-      min-width:560px;
-      border-collapse:collapse;
-      overflow:hidden;
-    }
-
-    th{
-      background:#12452f;
-      color:#eafff5;
-      padding:11px 8px;
-      font-size:13px;
-      position:sticky;
-      top:0;
-      z-index:2;
-    }
-
-    td{
-      padding:10px 8px;
-      border-bottom:1px solid rgba(255,255,255,.07);
-      text-align:center;
-      font-size:13px;
-    }
-
-    tr:nth-child(even){
-      background:rgba(255,255,255,.025);
-    }
-
-    tr.today{
-      background:#234e37;
-      box-shadow:inset 4px 0 0 #4cff9c;
-    }
-
-    .day-number{
-      font-weight:900;
-      font-size:16px;
-    }
-
-    .hijri{
       display:block;
-      color:#9bc9b4;
-      font-size:10px;
-      margin-top:2px;
+
+      font-size:29px;
+
+      margin-bottom:6px;
     }
 
-    .sehri{
-      color:#d8efff;
-      font-weight:800;
-    }
+    .quick-text{
 
-    .iftar{
-      color:#ffe5a4;
-      font-weight:800;
-    }
-
-    .calendar-note{
-      margin-top:10px;
-      color:#9ebcaf;
       font-size:12px;
-      line-height:1.5;
+
+      font-weight:700;
     }
 
-    .status{
+    /* =========================
+       PRAYER CARD
+    ========================= */
+
+    .prayer-card{
+
+      padding:16px;
+
+      border-radius:18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #092b1d,
+          #104f35
+        );
+
       margin-top:10px;
-      padding:11px;
-      border-radius:12px;
-      background:#0b2118;
-      color:#bfe7d2;
+    }
+
+    .prayer-card h3{
+
+      margin:0 0 6px;
+
+      font-size:20px;
+    }
+
+    .prayer-card p{
+
+      margin:4px 0;
+
+      color:#c8e7d9;
+
       font-size:13px;
       line-height:1.5;
     }
 
-    .loading{
-      text-align:center;
-      padding:20px;
-      color:#a9c8ba;
+    .prayer-open{
+
+      width:100%;
+
+      margin-top:12px;
+
+      min-height:45px;
+
+      border:0;
+
+      border-radius:13px;
+
+      background:#1b8b5c;
+
+      color:#fff;
+
+      font-weight:900;
+
+      cursor:pointer;
     }
 
-    .error{
-      color:#ffb5b5;
+    /* =========================
+       CREATE POST
+    ========================= */
+
+    .create-post{
+
+      display:flex;
+      align-items:center;
+
+      gap:10px;
     }
 
-    .footer{
-      padding:25px 15px 40px;
+    .create-avatar{
+
+      width:45px;
+      height:45px;
+
+      border-radius:50%;
+
+      object-fit:cover;
+
+      background:#173f2e;
+
+      border:
+        2px solid
+        rgba(255,255,255,.08);
+    }
+
+    .create-input{
+
+      flex:1;
+
+      min-height:45px;
+
+      display:flex;
+      align-items:center;
+
+      padding:0 15px;
+
+      border-radius:25px;
+
+      background:#071810;
+
+      color:#91aa9f;
+
+      font-size:14px;
+
+      cursor:pointer;
+    }
+
+    /* =========================
+       FEED
+    ========================= */
+
+    .empty-feed{
+
+      padding:30px 15px;
+
       text-align:center;
+
       color:#789487;
-      font-size:12px;
-      line-height:1.5;
+
+      font-size:14px;
     }
 
-    @media(max-width:500px){
-      .controls{
-        grid-template-columns:1fr;
-      }
+    /* =========================
+       PROFILE DRAWER
+    ========================= */
 
-      .control-group.full{
-        grid-column:auto;
-      }
+    .drawer-overlay{
 
-      .btns{
-        grid-template-columns:1fr;
-      }
+      position:fixed;
 
-      #countdown{
-        font-size:28px;
-      }
+      inset:0;
 
-      .hero h2{
-        font-size:21px;
-      }
+      z-index:300;
+
+      background:
+        rgba(0,0,0,.6);
+
+      display:none;
     }
+
+    .drawer-overlay.show{
+      display:block;
+    }
+
+    .drawer{
+
+      position:absolute;
+
+      top:0;
+      right:0;
+
+      width:min(360px,90%);
+
+      height:100%;
+
+      padding:20px;
+
+      background:#071810;
+
+      box-shadow:
+        -10px 0 35px
+        rgba(0,0,0,.35);
+
+      overflow-y:auto;
+    }
+
+    .profile-head{
+
+      text-align:center;
+
+      padding:20px 0;
+    }
+
+    .profile-photo{
+
+      width:90px;
+      height:90px;
+
+      border-radius:50%;
+
+      object-fit:cover;
+
+      background:#173f2e;
+
+      border:
+        3px solid
+        #1b8b5c;
+    }
+
+    .profile-name{
+
+      margin-top:10px;
+
+      font-size:20px;
+      font-weight:900;
+    }
+
+    .profile-email{
+
+      margin-top:3px;
+
+      color:#91aa9f;
+
+      font-size:13px;
+      word-break:break-word;
+    }
+
+    .drawer-btn{
+
+      width:100%;
+
+      min-height:47px;
+
+      margin-top:9px;
+
+      border:0;
+
+      border-radius:13px;
+
+      background:#0d271c;
+
+      color:#fff;
+
+      text-align:left;
+
+      padding:0 15px;
+
+      font-weight:700;
+
+      cursor:pointer;
+    }
+
+    .drawer-btn.logout{
+
+      background:#672727;
+    }
+
+    /* =========================
+       BOTTOM NAV
+    ========================= */
+
+    .bottom-nav{
+
+      position:fixed;
+
+      left:50%;
+
+      bottom:0;
+
+      transform:translateX(-50%);
+
+      z-index:150;
+
+      width:100%;
+
+      max-width:900px;
+
+      height:68px;
+
+      display:grid;
+
+      grid-template-columns:
+        repeat(4,1fr);
+
+      background:
+        rgba(3,15,10,.96);
+
+      backdrop-filter:blur(14px);
+
+      border-top:
+        1px solid
+        rgba(255,255,255,.08);
+    }
+
+    .nav-btn{
+
+      border:0;
+
+      background:transparent;
+
+      color:#829b90;
+
+      cursor:pointer;
+
+      font-size:11px;
+
+      font-weight:700;
+    }
+
+    .nav-icon{
+
+      display:block;
+
+      font-size:22px;
+
+      margin-bottom:2px;
+    }
+
+    .nav-btn.active{
+
+      color:#45dc91;
+    }
+
+    /* =========================
+       ALERT
+    ========================= */
+
+    .toast{
+
+      position:fixed;
+
+      left:50%;
+
+      bottom:82px;
+
+      transform:
+        translateX(-50%)
+        translateY(20px);
+
+      z-index:500;
+
+      width:
+        min(90%,420px);
+
+      padding:13px 15px;
+
+      border-radius:13px;
+
+      background:#173f2e;
+
+      color:#fff;
+
+      text-align:center;
+
+      font-size:13px;
+
+      opacity:0;
+
+      pointer-events:none;
+
+      transition:.25s;
+    }
+
+    .toast.show{
+
+      opacity:1;
+
+      transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media(max-width:600px){
+
+      .quick-grid{
+
+        grid-template-columns:
+          repeat(2,1fr);
+      }
+
+    }
+
   </style>
 </head>
 
@@ -419,323 +636,300 @@
 
 <div class="app">
 
+  <!-- =========================
+       TOP BAR
+  ========================= -->
+
   <header class="topbar">
-    <button class="back-btn" id="backBtn">‹</button>
-    <h1>🕌 AYNA BOOK</h1>
-    <div style="width:42px"></div>
+
+    <div class="logo">
+      AYNA BOOK
+    </div>
+
+    <div class="top-actions">
+
+      <button
+        class="icon-btn"
+        id="notificationBtn"
+        aria-label="Notifications">
+        🔔
+      </button>
+
+      <button
+        class="icon-btn"
+        id="profileBtn"
+        aria-label="Profile">
+        👤
+      </button>
+
+    </div>
+
   </header>
+
+
+  <!-- =========================
+       MAIN
+  ========================= -->
 
   <main class="container">
 
-    <!-- HERO -->
-    <section class="hero">
-      <h2>নামাজ ও রোজার সময়সূচী</h2>
-      <p id="locationText">বাংলাদেশ • Cox's Bazar</p>
-      <p id="dateText">তারিখ লোড হচ্ছে...</p>
-    </section>
 
+    <!-- WELCOME -->
 
-    <!-- NEXT PRAYER -->
-    <section class="section">
+    <section class="welcome">
 
-      <div class="section-title">
-        <h3>⏰ পরবর্তী নামাজ</h3>
-        <span class="badge" id="currentHijri">হিজরি</span>
-      </div>
+      <h2 id="welcomeText">
+        স্বাগতম 👋
+      </h2>
 
-      <div class="next-card">
-        <div class="next-label">পরবর্তী নামাজ</div>
-        <div id="nextPrayer">লোড হচ্ছে...</div>
-        <div id="countdown">--:--:--</div>
-      </div>
-
-      <div class="prayer-list" id="prayerList">
-
-        <div class="prayer-row">
-          <div class="prayer-name">
-            ফজর
-            <span class="prayer-en">Fajr</span>
-          </div>
-          <div class="prayer-time" id="fajrTime">--:--</div>
-          <input class="alarm"
-                 type="checkbox"
-                 data-prayer="Fajr"
-                 title="ফজর Alarm">
-        </div>
-
-        <div class="prayer-row">
-          <div class="prayer-name">
-            যোহর
-            <span class="prayer-en">Dhuhr</span>
-          </div>
-          <div class="prayer-time" id="dhuhrTime">--:--</div>
-          <input class="alarm"
-                 type="checkbox"
-                 data-prayer="Dhuhr"
-                 title="যোহর Alarm">
-        </div>
-
-        <div class="prayer-row">
-          <div class="prayer-name">
-            আসর
-            <span class="prayer-en">Asr</span>
-          </div>
-          <div class="prayer-time" id="asrTime">--:--</div>
-          <input class="alarm"
-                 type="checkbox"
-                 data-prayer="Asr"
-                 title="আসর Alarm">
-        </div>
-
-        <div class="prayer-row">
-          <div class="prayer-name">
-            মাগরিব
-            <span class="prayer-en">Maghrib</span>
-          </div>
-          <div class="prayer-time" id="maghribTime">--:--</div>
-          <input class="alarm"
-                 type="checkbox"
-                 data-prayer="Maghrib"
-                 title="মাগরিব Alarm">
-        </div>
-
-        <div class="prayer-row">
-          <div class="prayer-name">
-            এশা
-            <span class="prayer-en">Isha</span>
-          </div>
-          <div class="prayer-time" id="ishaTime">--:--</div>
-          <input class="alarm"
-                 type="checkbox"
-                 data-prayer="Isha"
-                 title="এশা Alarm">
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- TODAY FAST -->
-    <section class="section">
-
-      <div class="section-title">
-        <h3>🌙 আজকের রোজা</h3>
-        <span class="badge">Sehri / Iftar</span>
-      </div>
-
-      <div class="ramadan-card">
-
-        <h4 id="todayFastTitle">আজকের রোজার সময়</h4>
-
-        <div class="fast-times">
-
-          <div class="fast-box">
-            <small>🌙 সেহরি শেষ</small>
-            <strong id="todaySehri">--:--</strong>
-          </div>
-
-          <div class="fast-box">
-            <small>🌇 ইফতার</small>
-            <strong id="todayIftar">--:--</strong>
-          </div>
-
-        </div>
-
-        <div id="fastCountdown">
-          Countdown: --:--:--
-        </div>
-
-        <label style="display:flex;align-items:center;gap:8px;margin-top:14px;">
-          <input id="ramadanAlarm"
-                 type="checkbox"
-                 style="width:20px;height:20px;">
-          সেহরি/ইফতার Alert চালু
-        </label>
-
-      </div>
+      <p id="welcomeSub">
+        AYNA BOOK-এ আপনাকে স্বাগতম।
+      </p>
 
     </section>
 
 
-    <!-- 30 DAYS RAMADAN CALENDAR -->
+    <!-- QUICK MENU -->
+
     <section class="section">
 
       <div class="section-title">
-        <h3>📅 ৩০ দিনের রোজার ক্যালেন্ডার</h3>
-        <span class="badge" id="ramadanYear">রমজান</span>
-      </div>
 
-      <div class="calendar-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>রোজা</th>
-              <th>হিজরি</th>
-              <th>তারিখ</th>
-              <th>সেহরি শেষ</th>
-              <th>ইফতার</th>
-            </tr>
-          </thead>
-
-          <tbody id="ramadanCalendarBody">
-
-            <tr>
-              <td colspan="5" class="loading">
-                ৩০ দিনের রোজার ক্যালেন্ডার লোড হচ্ছে...
-              </td>
-            </tr>
-
-          </tbody>
-
-        </table>
+        <h3>
+          ⚡ দ্রুত সেবা
+        </h3>
 
       </div>
 
-      <div class="calendar-note">
-        বর্তমান দিন সবুজভাবে Highlight হবে।
-        রোজার সময় গণনা নির্বাচিত শহর/দেশ ও Calculation Method অনুযায়ী হবে।
-      </div>
 
-    </section>
+      <div class="quick-grid">
 
 
-    <!-- SETTINGS -->
-    <section class="section">
+        <!-- RADAR -->
 
-      <div class="section-title">
-        <h3>⚙️ সময়সূচীর সেটিংস</h3>
-      </div>
+        <button
+          class="quick-btn"
+          id="radarBtn">
 
-      <div class="controls">
+          <span class="quick-icon">
+            📡
+          </span>
 
-        <div class="control-group">
-          <label for="country">দেশ</label>
-          <input id="country"
-                 type="text"
-                 value="Bangladesh"
-                 placeholder="Bangladesh">
-        </div>
+          <span class="quick-text">
+            রাডার
+          </span>
 
-        <div class="control-group">
-          <label for="city">শহর</label>
-          <input id="city"
-                 type="text"
-                 value="Cox's Bazar"
-                 placeholder="Cox's Bazar">
-        </div>
-
-        <div class="control-group">
-          <label for="method">Calculation Method</label>
-
-          <select id="method">
-
-            <option value="1">
-              Karachi — Bangladesh
-            </option>
-
-            <option value="2">
-              ISNA
-            </option>
-
-            <option value="3">
-              MWL
-            </option>
-
-            <option value="4">
-              Umm Al-Qura
-            </option>
-
-            <option value="5">
-              Egyptian
-            </option>
-
-            <option value="8">
-              Gulf
-            </option>
-
-            <option value="9">
-              Kuwait
-            </option>
-
-            <option value="10">
-              Qatar
-            </option>
-
-            <option value="13">
-              Diyanet
-            </option>
-
-          </select>
-        </div>
-
-        <div class="control-group">
-          <label for="school">Asr Madhab</label>
-
-          <select id="school">
-
-            <option value="1">
-              Hanafi
-            </option>
-
-            <option value="0">
-              Shafi / Standard
-            </option>
-
-          </select>
-        </div>
-
-        <div class="control-group">
-          <label for="sehriAdjust">
-            সেহরি Adjustment (মিনিট)
-          </label>
-
-          <input id="sehriAdjust"
-                 type="number"
-                 value="0"
-                 step="1">
-        </div>
-
-        <div class="control-group">
-          <label for="iftarAdjust">
-            ইফতার Adjustment (মিনিট)
-          </label>
-
-          <input id="iftarAdjust"
-                 type="number"
-                 value="0"
-                 step="1">
-        </div>
-
-        <div class="control-group full">
-
-          <button class="btn gps"
-                  id="gpsBtn">
-            📍 GPS দিয়ে অবস্থান নিন
-          </button>
-
-        </div>
-
-      </div>
-
-      <div class="btns">
-
-        <button class="btn primary"
-                id="updateBtn">
-          🔄 সময়সূচী আপডেট
         </button>
 
-        <button class="btn"
-                id="resetBtn">
-          ♻️ Reset
+
+        <!-- MILITARY RADAR -->
+
+        <button
+          class="quick-btn"
+          id="militaryRadarBtn">
+
+          <span class="quick-icon">
+            🎯
+          </span>
+
+          <span class="quick-text">
+            সামরিক রাডার
+          </span>
+
+        </button>
+
+
+        <!-- COMPASS -->
+
+        <button
+          class="quick-btn"
+          id="compassBtn">
+
+          <span class="quick-icon">
+            🧭
+          </span>
+
+          <span class="quick-text">
+            কম্পাস
+          </span>
+
+        </button>
+
+
+        <!-- GPS -->
+
+        <button
+          class="quick-btn"
+          id="gpsBtn">
+
+          <span class="quick-icon">
+            📍
+          </span>
+
+          <span class="quick-text">
+            GPS
+          </span>
+
+        </button>
+
+
+        <!-- CLOCK -->
+
+        <button
+          class="quick-btn"
+          id="clockBtn">
+
+          <span class="quick-icon">
+            🕐
+          </span>
+
+          <span class="quick-text">
+            সময় / ঘড়ি
+          </span>
+
+        </button>
+
+
+        <!-- PRAYER -->
+
+        <button
+          class="quick-btn"
+          id="prayerBtn">
+
+          <span class="quick-icon">
+            🕌
+          </span>
+
+          <span class="quick-text">
+            নামাজ ও রোজা
+          </span>
+
+        </button>
+
+
+        <!-- LIVE -->
+
+        <button
+          class="quick-btn"
+          id="liveBtn">
+
+          <span class="quick-icon">
+            📺
+          </span>
+
+          <span class="quick-text">
+            Live
+          </span>
+
+        </button>
+
+
+        <!-- NOTIFICATION -->
+
+        <button
+          class="quick-btn"
+          id="quickNotificationBtn">
+
+          <span class="quick-icon">
+            🔔
+          </span>
+
+          <span class="quick-text">
+            Notification
+          </span>
+
         </button>
 
       </div>
 
-      <div class="status"
-           id="statusMsg">
-        সময়সূচী প্রস্তুত হচ্ছে...
+    </section>
+
+
+    <!-- PRAYER CARD -->
+
+    <section class="section">
+
+      <div class="prayer-card">
+
+        <h3>
+          🕌 নামাজ ও 🌙 রোজা
+        </h3>
+
+        <p>
+          ৫ ওয়াক্ত নামাজের সময়,
+          ৩০ দিনের সেহরি–ইফতার ক্যালেন্ডার
+          এবং সারা বছরের নামাজের সময়সূচী।
+        </p>
+
+        <p>
+          দেশ, শহর অথবা GPS অনুযায়ী
+          সময়সূচী দেখা যাবে।
+        </p>
+
+        <button
+          class="prayer-open"
+          id="prayerOpenBtn">
+
+          🕌 নামাজ ও রোজার সময়সূচী দেখুন
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- CREATE POST -->
+
+    <section class="section">
+
+      <div class="section-title">
+
+        <h3>
+          ✍️ পোস্ট তৈরি করুন
+        </h3>
+
+      </div>
+
+
+      <div class="create-post">
+
+        <img
+          id="createAvatar"
+          class="create-avatar"
+          alt="Profile">
+
+        <div
+          class="create-input"
+          id="createPostBtn">
+
+          কী ভাবছেন?
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- FEED -->
+
+    <section class="section">
+
+      <div class="section-title">
+
+        <h3>
+          📰 Feed
+        </h3>
+
+      </div>
+
+      <div class="empty-feed">
+
+        এখনো কোনো পোস্ট নেই।<br>
+
+        আপনার প্রথম পোস্ট তৈরি করুন।
+
       </div>
 
     </section>
@@ -743,22 +937,661 @@
   </main>
 
 
-  <footer class="footer">
+  <!-- =========================
+       BOTTOM NAV
+  ========================= -->
 
-    AYNA BOOK<br>
+  <nav class="bottom-nav">
 
-    নামাজ ও রোজার সময়সূচী<br>
+    <button
+      class="nav-btn active"
+      id="homeNav">
 
-    Prayer times are calculated according to the selected
-    location and calculation method.
+      <span class="nav-icon">
+        🏠
+      </span>
 
-  </footer>
+      Home
+
+    </button>
+
+
+    <button
+      class="nav-btn"
+      id="prayerNav">
+
+      <span class="nav-icon">
+        🕌
+      </span>
+
+      Prayer
+
+    </button>
+
+
+    <button
+      class="nav-btn"
+      id="notificationNav">
+
+      <span class="nav-icon">
+        🔔
+      </span>
+
+      Notification
+
+    </button>
+
+
+    <button
+      class="nav-btn"
+      id="profileNav">
+
+      <span class="nav-icon">
+        👤
+      </span>
+
+      Profile
+
+    </button>
+
+  </nav>
+
+
+  <!-- =========================
+       PROFILE DRAWER
+  ========================= -->
+
+  <div
+    class="drawer-overlay"
+    id="drawerOverlay">
+
+    <aside class="drawer">
+
+      <div class="profile-head">
+
+        <img
+          id="profilePhoto"
+          class="profile-photo"
+          alt="Profile">
+
+        <div
+          id="profileName"
+          class="profile-name">
+
+          AYNA BOOK User
+
+        </div>
+
+        <div
+          id="profileEmail"
+          class="profile-email">
+
+          --
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="drawer-btn"
+        id="myProfileBtn">
+
+        👤 আমার Profile
+
+      </button>
+
+
+      <button
+        class="drawer-btn"
+        id="prayerDrawerBtn">
+
+        🕌 নামাজ ও রোজা
+
+      </button>
+
+
+      <button
+        class="drawer-btn"
+        id="clockDrawerBtn">
+
+        🕐 সময় / Voice Clock
+
+      </button>
+
+
+      <button
+        class="drawer-btn"
+        id="settingsBtn">
+
+        ⚙️ Settings
+
+      </button>
+
+
+      <button
+        class="drawer-btn logout"
+        id="logoutBtn">
+
+        🚪 Logout
+
+      </button>
+
+
+      <button
+        class="drawer-btn"
+        id="closeDrawerBtn">
+
+        ✕ বন্ধ করুন
+
+      </button>
+
+    </aside>
+
+  </div>
+
+
+  <!-- TOAST -->
+
+  <div
+    class="toast"
+    id="toast">
+
+    --
+
+  </div>
+
 
 </div>
 
 
-<script type="module"
-        src="./prayer.js"></script>
+<!-- =========================
+     FIREBASE + APP SCRIPT
+========================= -->
+
+<script type="module">
+
+  import {
+    auth,
+    database
+  } from "./firebase-init.js";
+
+  import {
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+  import {
+    ref,
+    get
+  } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+
+  /* =========================
+     ELEMENTS
+  ========================= */
+
+  const $ = id =>
+    document.getElementById(id);
+
+
+  /* =========================
+     TOAST
+  ========================= */
+
+  let toastTimer = null;
+
+  function showToast(message){
+
+    const toast =
+      $("toast");
+
+    if(!toast) return;
+
+    toast.textContent =
+      message;
+
+    toast.classList.add(
+      "show"
+    );
+
+    clearTimeout(
+      toastTimer
+    );
+
+    toastTimer =
+      setTimeout(() => {
+
+        toast.classList.remove(
+          "show"
+        );
+
+      }, 2500);
+
+  }
+
+
+  /* =========================
+     NAVIGATION
+  ========================= */
+
+  function go(page){
+
+    window.location.href =
+      `./${page}`;
+
+  }
+
+
+  /* =========================
+     RADAR
+  ========================= */
+
+  $("radarBtn")?.addEventListener(
+    "click",
+    () => go("radar.html")
+  );
+
+
+  /* =========================
+     MILITARY RADAR
+  ========================= */
+
+  $("militaryRadarBtn")?.addEventListener(
+    "click",
+    () => go("military-radar.html")
+  );
+
+
+  /* =========================
+     COMPASS
+  ========================= */
+
+  $("compassBtn")?.addEventListener(
+    "click",
+    () => go("compass.html")
+  );
+
+
+  /* =========================
+     GPS
+  ========================= */
+
+  $("gpsBtn")?.addEventListener(
+    "click",
+    () => go("gps.html")
+  );
+
+
+  /* =========================
+     CLOCK
+  ========================= */
+
+  $("clockBtn")?.addEventListener(
+    "click",
+    () => go("clock.html")
+  );
+
+
+  /* =========================
+     PRAYER
+  ========================= */
+
+  $("prayerBtn")?.addEventListener(
+    "click",
+    () => go("prayer.html")
+  );
+
+
+  $("prayerOpenBtn")?.addEventListener(
+    "click",
+    () => go("prayer.html")
+  );
+
+
+  $("prayerNav")?.addEventListener(
+    "click",
+    () => go("prayer.html")
+  );
+
+
+  $("prayerDrawerBtn")?.addEventListener(
+    "click",
+    () => go("prayer.html")
+  );
+
+
+  /* =========================
+     LIVE
+  ========================= */
+
+  $("liveBtn")?.addEventListener(
+    "click",
+    () => {
+
+      showToast(
+        "📺 Live ফিচার প্রস্তুত হচ্ছে।"
+      );
+
+    }
+  );
+
+
+  /* =========================
+     NOTIFICATION
+  ========================= */
+
+  function notificationMessage(){
+
+    showToast(
+      "🔔 Notification ফিচার এখানে থাকবে।"
+    );
+
+  }
+
+
+  $("notificationBtn")?.addEventListener(
+    "click",
+    notificationMessage
+  );
+
+
+  $("quickNotificationBtn")?.addEventListener(
+    "click",
+    notificationMessage
+  );
+
+
+  $("notificationNav")?.addEventListener(
+    "click",
+    notificationMessage
+  );
+
+
+  /* =========================
+     PROFILE DRAWER
+  ========================= */
+
+  const overlay =
+    $("drawerOverlay");
+
+
+  function openDrawer(){
+
+    overlay?.classList.add(
+      "show"
+    );
+
+  }
+
+
+  function closeDrawer(){
+
+    overlay?.classList.remove(
+      "show"
+    );
+
+  }
+
+
+  $("profileBtn")?.addEventListener(
+    "click",
+    openDrawer
+  );
+
+
+  $("profileNav")?.addEventListener(
+    "click",
+    openDrawer
+  );
+
+
+  $("closeDrawerBtn")?.addEventListener(
+    "click",
+    closeDrawer
+  );
+
+
+  overlay?.addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target === overlay
+      ){
+
+        closeDrawer();
+
+      }
+
+    }
+  );
+
+
+  /* =========================
+     MY PROFILE
+  ========================= */
+
+  $("myProfileBtn")?.addEventListener(
+    "click",
+    () => {
+
+      showToast(
+        "👤 Profile page প্রস্তুত হলে এখানে খুলবে।"
+      );
+
+    }
+  );
+
+
+  /* =========================
+     SETTINGS
+  ========================= */
+
+  $("settingsBtn")?.addEventListener(
+    "click",
+    () => {
+
+      showToast(
+        "⚙️ Settings ফিচার এখানে থাকবে।"
+      );
+
+    }
+  );
+
+
+  /* =========================
+     CREATE POST
+  ========================= */
+
+  $("createPostBtn")?.addEventListener(
+    "click",
+    () => {
+
+      showToast(
+        "✍️ Post composer এখানে যুক্ত হবে।"
+      );
+
+    }
+  );
+
+
+  /* =========================
+     LOAD USER
+  ========================= */
+
+  async function loadUser(user){
+
+    if(!user) return;
+
+
+    let profile = null;
+
+
+    try{
+
+      const snapshot =
+        await get(
+          ref(
+            database,
+            `users/${user.uid}`
+          )
+        );
+
+
+      if(
+        snapshot.exists()
+      ){
+
+        profile =
+          snapshot.val();
+
+      }
+
+    }catch(error){
+
+      console.error(
+        "Profile load error:",
+        error
+      );
+
+    }
+
+
+    const name =
+      profile?.fullName ||
+      user.displayName ||
+      "AYNA BOOK User";
+
+
+    const email =
+      profile?.email ||
+      user.email ||
+      "";
+
+
+    const photo =
+      profile?.photoURL ||
+      user.photoURL ||
+      "";
+
+
+    $("welcomeText").textContent =
+      `স্বাগতম, ${name} 👋`;
+
+
+    $("profileName").textContent =
+      name;
+
+
+    $("profileEmail").textContent =
+      email;
+
+
+    if(photo){
+
+      $("profilePhoto").src =
+        photo;
+
+      $("createAvatar").src =
+        photo;
+
+    }else{
+
+      $("profilePhoto").src =
+        "data:image/svg+xml;charset=UTF-8," +
+        encodeURIComponent(`
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="200"
+            height="200">
+
+            <rect
+              width="100%"
+              height="100%"
+              fill="#173f2e"/>
+
+            <text
+              x="50%"
+              y="55%"
+              dominant-baseline="middle"
+              text-anchor="middle"
+              fill="white"
+              font-size="70">
+
+              👤
+
+            </text>
+
+          </svg>
+
+        `);
+
+
+      $("createAvatar").src =
+        $("profilePhoto").src;
+
+    }
+
+  }
+
+
+  /* =========================
+     AUTH
+  ========================= */
+
+  onAuthStateChanged(
+    auth,
+    async user => {
+
+      if(!user){
+
+        window.location.replace(
+          "./login.html"
+        );
+
+        return;
+
+      }
+
+
+      await loadUser(user);
+
+    }
+  );
+
+
+  /* =========================
+     LOGOUT
+  ========================= */
+
+  $("logoutBtn")?.addEventListener(
+    "click",
+    async () => {
+
+      try{
+
+        await signOut(auth);
+
+        window.location.replace(
+          "./login.html"
+        );
+
+      }catch(error){
+
+        console.error(error);
+
+        showToast(
+          "Logout করা যায়নি।"
+        );
+
+      }
+
+    }
+  );
+
+</script>
 
 </body>
 </html>
