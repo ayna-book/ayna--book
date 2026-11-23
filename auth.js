@@ -33,6 +33,7 @@ export async function registerUser(
   displayName = ""
 ) {
   try {
+
     const result =
       await createUserWithEmailAndPassword(
         auth,
@@ -43,9 +44,11 @@ export async function registerUser(
     const user = result.user;
 
     if (displayName.trim()) {
+
       await updateProfile(user, {
         displayName: displayName.trim()
       });
+
     }
 
     await sendEmailVerification(user);
@@ -140,6 +143,7 @@ export async function resendVerificationEmail() {
         message:
           "No signed-in user found."
       };
+
     }
 
     await sendEmailVerification(user);
@@ -184,6 +188,7 @@ export async function checkEmailVerification() {
         message:
           "No signed-in user."
       };
+
     }
 
     await reload(user);
@@ -285,9 +290,7 @@ export async function logoutUser() {
 // =========================================================
 
 export function getCurrentUser() {
-
   return auth.currentUser;
-
 }
 
 
@@ -299,8 +302,7 @@ export async function reloadCurrentUser() {
 
   try {
 
-    const user =
-      auth.currentUser;
+    const user = auth.currentUser;
 
     if (!user) {
       return null;
@@ -330,8 +332,7 @@ export async function deleteCurrentUser() {
 
   try {
 
-    const user =
-      auth.currentUser;
+    const user = auth.currentUser;
 
     if (!user) {
 
@@ -340,6 +341,7 @@ export async function deleteCurrentUser() {
         message:
           "No signed-in user."
       };
+
     }
 
     await deleteUser(user);
@@ -379,7 +381,7 @@ export function observeAuthState(callback) {
 
 
 // =========================================================
-// FIREBASE AUTH ERROR MESSAGES
+// AUTH ERROR MESSAGES
 // =========================================================
 
 function getAuthErrorMessage(code) {
@@ -426,7 +428,7 @@ function getAuthErrorMessage(code) {
 
 
 // =========================================================
-// EXPORT
+// EXPORT FIREBASE APP + AUTH
 // =========================================================
 
 export {
