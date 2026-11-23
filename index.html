@@ -8,7 +8,7 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   >
 
-  <meta name="theme-color" content="#061b16">
+  <meta name="theme-color" content="#061b14">
 
   <title>AYNA BOOK</title>
 
@@ -29,154 +29,197 @@
         Arial,
         "Noto Sans Bengali",
         sans-serif;
-      background: #061b16;
+      background: #061b14;
       color: #ffffff;
     }
 
     body {
-      overscroll-behavior: none;
+      position: fixed;
+      inset: 0;
     }
 
-    .app {
+    button,
+    a,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* =========================
+       PAGE
+    ========================= */
+
+    .page {
       width: 100%;
       height: 100dvh;
-      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
-      position: relative;
+
       background:
         radial-gradient(
           circle at top,
-          #14503e 0%,
-          #061b16 48%,
-          #020b08 100%
+          #154331 0%,
+          #08251b 42%,
+          #03100c 100%
         );
     }
 
-    .scroll-area {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 72px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding-bottom: 25px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* TOP BAR */
+    /* =========================
+       TOP BAR
+    ========================= */
 
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      height: 64px;
+      min-height: 64px;
 
       display: flex;
       align-items: center;
 
       padding:
-        max(12px, env(safe-area-inset-top))
-        14px
-        12px
-        14px;
+        8px 12px;
 
-      background: rgba(3, 18, 14, 0.94);
-      backdrop-filter: blur(12px);
+      gap: 10px;
+
+      background:
+        rgba(0, 0, 0, .30);
 
       border-bottom:
-        1px solid rgba(255,255,255,0.08);
+        1px solid rgba(255,255,255,.10);
     }
 
     .brand {
-      flex: 1;
-    }
+      width: 44px;
+      height: 44px;
 
-    .brand h1 {
-      margin: 0;
-      font-size: 22px;
-      letter-spacing: 1px;
-    }
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-    .brand p {
-      margin: 3px 0 0;
-      font-size: 11px;
-      color: #a7c9bf;
-    }
-
-    .top-btn {
-      width: 43px;
-      height: 43px;
-
-      margin-left: 8px;
-
-      border: 0;
       border-radius: 14px;
-
-      color: white;
-      background: #123d31;
-
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .top-btn:active {
-      transform: scale(.94);
-    }
-
-    /* CONTENT */
-
-    .content {
-      padding: 14px;
-    }
-
-    .welcome {
-      padding: 18px;
-      border-radius: 22px;
 
       background:
         linear-gradient(
           135deg,
-          rgba(29,111,84,.95),
-          rgba(7,43,33,.95)
+          #19a86f,
+          #075b3d
+        );
+
+      font-size: 22px;
+
+      box-shadow:
+        0 6px 20px rgba(0,0,0,.25);
+    }
+
+    .title-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      margin-top: 2px;
+      font-size: 11px;
+      color: #a9cfc0;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+
+      border: 0;
+      border-radius: 14px;
+
+      background:
+        rgba(255,255,255,.08);
+
+      color: white;
+
+      font-size: 21px;
+    }
+
+    .icon-btn:active {
+      transform: scale(.96);
+    }
+
+    /* =========================
+       MAIN SCROLL
+    ========================= */
+
+    .content {
+      flex: 1;
+
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      padding: 12px;
+
+      padding-bottom: 90px;
+
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* =========================
+       WELCOME
+    ========================= */
+
+    .welcome {
+      padding: 16px;
+
+      border-radius: 20px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(21,134,91,.32),
+          rgba(255,255,255,.06)
         );
 
       border:
         1px solid rgba(255,255,255,.10);
 
       box-shadow:
-        0 12px 30px rgba(0,0,0,.18);
+        0 10px 30px rgba(0,0,0,.18);
+
+      margin-bottom: 12px;
     }
 
-    .welcome h2 {
-      margin: 0 0 7px;
-      font-size: 21px;
+    .welcome-title {
+      font-size: 20px;
+      font-weight: 800;
     }
 
-    .welcome p {
-      margin: 0;
-      color: #c7e6dd;
-      line-height: 1.5;
-      font-size: 13px;
+    .welcome-sub {
+      margin-top: 5px;
+      color: #b8d7ca;
+      font-size: 12px;
     }
 
-    /* QUICK MENU */
+    /* =========================
+       PROFILE
+    ========================= */
 
-    .section-title {
-      margin: 20px 2px 10px;
-      font-size: 17px;
-      font-weight: bold;
-    }
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
 
-    .quick-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
+      padding: 13px;
 
-    .quick-card {
-      min-height: 105px;
-
-      padding: 15px;
+      margin-bottom: 12px;
 
       border-radius: 18px;
 
@@ -185,81 +228,276 @@
 
       border:
         1px solid rgba(255,255,255,.08);
+    }
 
-      color: white;
-      text-decoration: none;
+    .avatar {
+      width: 54px;
+      height: 54px;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #164b38;
+
+      border:
+        2px solid rgba(255,255,255,.12);
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-name {
+      font-size: 15px;
+      font-weight: 800;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .profile-email {
+      margin-top: 4px;
+
+      font-size: 11px;
+
+      color: #a7c9bc;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* =========================
+       SECTION
+    ========================= */
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin:
+        16px 3px 9px;
+    }
+
+    .section-title strong {
+      font-size: 15px;
+    }
+
+    .section-title span {
+      font-size: 11px;
+      color: #8fb6a7;
+    }
+
+    /* =========================
+       QUICK GRID
+    ========================= */
+
+    .quick-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 9px;
+    }
+
+    .quick-card {
+      min-height: 112px;
+
+      padding: 13px;
 
       display: flex;
       flex-direction: column;
       justify-content: center;
 
-      transition: .15s;
+      border-radius: 18px;
+
+      background:
+        rgba(255,255,255,.065);
+
+      border:
+        1px solid rgba(255,255,255,.09);
+
+      box-shadow:
+        0 8px 22px rgba(0,0,0,.14);
+
+      transition:
+        transform .15s ease,
+        background .15s ease;
     }
 
     .quick-card:active {
       transform: scale(.97);
-      background: rgba(255,255,255,.12);
+
+      background:
+        rgba(255,255,255,.12);
     }
 
     .quick-icon {
-      font-size: 30px;
-      margin-bottom: 7px;
+      font-size: 28px;
+      margin-bottom: 8px;
     }
 
     .quick-name {
-      font-size: 14px;
-      font-weight: bold;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.25;
     }
 
     .quick-sub {
-      margin-top: 3px;
+      margin-top: 4px;
+
       font-size: 10px;
-      color: #9fbdb5;
+
+      color: #9fc4b5;
+
+      line-height: 1.3;
     }
 
-    /* PRAYER */
+    /* =========================
+       FEATURE CARD
+    ========================= */
 
-    .prayer-card {
+    .feature-card {
       display: block;
 
-      margin-top: 14px;
-      padding: 17px;
+      padding: 16px;
+
+      margin-top: 12px;
 
       border-radius: 20px;
-
-      text-decoration: none;
-      color: white;
 
       background:
         linear-gradient(
           135deg,
-          #145d47,
-          #092c22
+          rgba(19,137,91,.25),
+          rgba(255,255,255,.06)
         );
 
       border:
-        1px solid rgba(255,255,255,.08);
+        1px solid rgba(255,255,255,.10);
     }
 
-    .prayer-card h3 {
-      margin: 0 0 6px;
-      font-size: 18px;
+    .feature-icon {
+      font-size: 30px;
     }
 
-    .prayer-card p {
-      margin: 0;
-      font-size: 12px;
-      color: #c2e0d7;
+    .feature-title {
+      margin-top: 8px;
+
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .feature-text {
+      margin-top: 5px;
+
+      font-size: 11px;
       line-height: 1.5;
+
+      color: #b7d3c8;
     }
 
-    /* CREATE POST */
+    /* =========================
+       POST
+    ========================= */
 
     .post-box {
-      margin-top: 15px;
-      padding: 15px;
+      margin-top: 12px;
+
+      padding: 14px;
 
       border-radius: 18px;
+
+      background:
+        rgba(255,255,255,.065);
+
+      border:
+        1px solid rgba(255,255,255,.09);
+    }
+
+    .post-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+
+      resize: none;
+
+      border:
+        1px solid rgba(255,255,255,.12);
+
+      border-radius: 13px;
+
+      background:
+        rgba(0,0,0,.18);
+
+      color: white;
+
+      padding: 11px;
+
+      outline: none;
+
+      font-size: 13px;
+    }
+
+    textarea::placeholder {
+      color: #8faea2;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: flex-end;
+
+      margin-top: 8px;
+    }
+
+    .post-btn {
+      min-width: 100px;
+      height: 40px;
+
+      border: 0;
+      border-radius: 11px;
+
+      background: #0c8058;
+
+      color: white;
+
+      font-weight: 700;
+    }
+
+    /* =========================
+       FEED
+    ========================= */
+
+    .feed {
+      margin-top: 12px;
+    }
+
+    .feed-empty {
+      padding: 25px 10px;
+
+      text-align: center;
+
+      color: #87a99c;
+
+      font-size: 12px;
+    }
+
+    .post-item {
+      padding: 13px;
+
+      margin-bottom: 9px;
+
+      border-radius: 16px;
 
       background:
         rgba(255,255,255,.055);
@@ -268,143 +506,130 @@
         1px solid rgba(255,255,255,.08);
     }
 
-    .post-box-title {
-      font-weight: bold;
-      margin-bottom: 10px;
+    .post-user {
+      display: flex;
+      align-items: center;
+      gap: 9px;
     }
 
-    .post-input {
-      width: 100%;
-      min-height: 70px;
+    .post-user img {
+      width: 38px;
+      height: 38px;
 
-      resize: none;
+      border-radius: 50%;
 
-      padding: 12px;
+      object-fit: cover;
 
-      border-radius: 14px;
-      border:
-        1px solid rgba(255,255,255,.10);
-
-      outline: none;
-
-      background: #09271f;
-      color: white;
-
-      font-size: 14px;
+      background: #174a37;
     }
 
-    .post-input::placeholder {
-      color: #75958c;
+    .post-user-name {
+      font-size: 12px;
+      font-weight: 700;
     }
 
-    .post-button {
-      width: 100%;
-      min-height: 44px;
+    .post-time {
+      margin-top: 2px;
 
-      margin-top: 9px;
+      color: #7fa295;
 
-      border: 0;
-      border-radius: 13px;
-
-      background: #17634c;
-      color: white;
-
-      font-weight: bold;
+      font-size: 9px;
     }
 
-    /* FEED */
-
-    .feed {
-      margin-top: 15px;
-    }
-
-    .feed-empty {
-      padding: 25px 15px;
-
-      text-align: center;
-
-      border-radius: 18px;
-
-      background:
-        rgba(255,255,255,.045);
-
-      color: #78978e;
+    .post-text {
+      margin-top: 10px;
 
       font-size: 13px;
+
+      line-height: 1.55;
+
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
-    /* BOTTOM NAV */
+    /* =========================
+       BOTTOM NAV
+    ========================= */
 
     .bottom-nav {
-      position: absolute;
+      position: fixed;
 
       left: 0;
       right: 0;
       bottom: 0;
 
-      height: 72px;
+      height: 70px;
 
       display: grid;
+
       grid-template-columns:
         repeat(4, 1fr);
 
       padding:
-        7px
-        7px
-        max(7px, env(safe-area-inset-bottom))
-        7px;
+        7px 8px;
+
+      padding-bottom:
+        max(7px, env(safe-area-inset-bottom));
 
       background:
-        rgba(3,18,14,.97);
+        rgba(2,14,10,.95);
+
+      backdrop-filter:
+        blur(12px);
 
       border-top:
-        1px solid rgba(255,255,255,.09);
+        1px solid rgba(255,255,255,.10);
 
-      backdrop-filter: blur(12px);
-
-      z-index: 100;
+      z-index: 50;
     }
 
-    .nav-btn {
-      border: 0;
-      background: transparent;
-      color: #8ba9a0;
-
+    .nav-item {
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
       justify-content: center;
 
       gap: 3px;
 
-      font-size: 11px;
-      cursor: pointer;
+      color: #89a99d;
+
+      font-size: 10px;
     }
 
     .nav-icon {
-      font-size: 22px;
+      font-size: 21px;
     }
 
-    .nav-btn.active {
-      color: #73e0bb;
+    .nav-item.active {
+      color: #59d6a6;
     }
 
-    /* DRAWER */
+    /* =========================
+       DRAWER
+    ========================= */
 
-    .drawer-bg {
+    .overlay {
       position: fixed;
+
       inset: 0;
 
       background:
-        rgba(0,0,0,.58);
+        rgba(0,0,0,.60);
 
-      z-index: 200;
+      z-index: 100;
 
-      display: none;
+      opacity: 0;
+      visibility: hidden;
+
+      transition:
+        opacity .2s ease;
     }
 
-    .drawer-bg.show {
-      display: block;
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
     }
 
     .drawer {
@@ -412,49 +637,49 @@
 
       top: 0;
       right: 0;
+      bottom: 0;
 
-      width: min(330px, 88vw);
-      height: 100dvh;
+      width: min(88vw, 380px);
 
       background:
         linear-gradient(
           180deg,
-          #0b3328,
-          #04150f
+          #0b3023,
+          #04140e
         );
 
-      z-index: 201;
+      z-index: 110;
 
-      transform: translateX(100%);
-      transition: transform .25s ease;
+      transform:
+        translateX(100%);
+
+      transition:
+        transform .25s ease;
 
       overflow-y: auto;
 
-      box-shadow:
-        -15px 0 40px rgba(0,0,0,.35);
-
-      padding:
-        max(20px, env(safe-area-inset-top))
-        18px
-        25px;
+      padding: 16px;
     }
 
     .drawer.show {
-      transform: translateX(0);
+      transform:
+        translateX(0);
     }
 
     .drawer-head {
       display: flex;
-      align-items: center;
-      gap: 12px;
 
-      padding-bottom: 18px;
+      align-items: center;
+
+      gap: 11px;
+
+      padding-bottom: 15px;
 
       border-bottom:
         1px solid rgba(255,255,255,.09);
     }
 
-    .profile-photo {
+    .drawer-avatar {
       width: 58px;
       height: 58px;
 
@@ -462,126 +687,154 @@
 
       object-fit: cover;
 
-      background: #123d31;
-
-      border:
-        2px solid #5bc6a4;
+      background: #174a37;
     }
 
-    .profile-name {
-      font-weight: bold;
-      font-size: 16px;
+    .drawer-name {
+      font-size: 15px;
+      font-weight: 800;
     }
 
-    .profile-email {
-      margin-top: 4px;
+    .drawer-email {
+      margin-top: 3px;
 
-      font-size: 11px;
-      color: #8faea5;
+      font-size: 10px;
 
-      word-break: break-all;
+      color: #9dbeb1;
     }
 
-    .drawer-menu {
-      margin-top: 15px;
-    }
+    .drawer-close {
+      margin-left: auto;
 
-    .drawer-link {
-      width: 100%;
-
-      min-height: 49px;
-
-      display: flex;
-      align-items: center;
-      gap: 12px;
-
-      padding: 10px 12px;
-      margin-bottom: 7px;
+      width: 40px;
+      height: 40px;
 
       border: 0;
-      border-radius: 13px;
+
+      border-radius: 12px;
 
       background:
-        rgba(255,255,255,.055);
+        rgba(255,255,255,.08);
 
       color: white;
 
-      text-decoration: none;
+      font-size: 20px;
+    }
 
-      font-size: 14px;
+    .drawer-menu {
+      margin-top: 14px;
+    }
 
-      text-align: left;
+    .drawer-link {
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      width: 100%;
+
+      min-height: 48px;
+
+      padding: 9px 11px;
+
+      margin-bottom: 6px;
+
+      border-radius: 13px;
+
+      background:
+        rgba(255,255,255,.045);
+
+      color: #e7f2ed;
+
+      font-size: 13px;
     }
 
     .drawer-link:active {
       background:
-        rgba(255,255,255,.12);
+        rgba(255,255,255,.10);
     }
 
-    .logout {
-      margin-top: 14px;
+    .drawer-link span {
+      flex: 1;
+    }
+
+    .logout-link {
+      margin-top: 12px;
 
       background:
-        #642b2b;
+        rgba(220,60,60,.12);
 
-      color: #ffdede;
+      color: #ffb7b7;
     }
 
-    /* STATUS */
+    /* =========================
+       TOAST
+    ========================= */
 
-    .status {
+    .toast {
       position: fixed;
 
       left: 50%;
+
       bottom: 82px;
 
       transform:
         translate(-50%, 20px);
 
-      opacity: 0;
-      pointer-events: none;
+      width: calc(100% - 30px);
+      max-width: 430px;
 
-      width: calc(100% - 35px);
-      max-width: 450px;
-
-      padding: 11px 15px;
+      padding: 12px 14px;
 
       border-radius: 13px;
 
       background:
-        #123d31;
+        rgba(0,0,0,.88);
 
       color: white;
 
+      font-size: 12px;
+
       text-align: center;
 
-      font-size: 13px;
+      z-index: 200;
 
-      z-index: 300;
+      opacity: 0;
+      visibility: hidden;
 
-      transition: .25s;
+      transition:
+        opacity .2s ease,
+        transform .2s ease;
     }
 
-    .status.show {
+    .toast.show {
       opacity: 1;
+      visibility: visible;
+
       transform:
         translate(-50%, 0);
     }
 
-    @media (min-width: 650px) {
+    /* =========================
+       DESKTOP
+    ========================= */
+
+    @media (min-width: 700px) {
 
       .content {
-        max-width: 850px;
+        width: 100%;
+        max-width: 1000px;
         margin: auto;
       }
 
       .quick-grid {
         grid-template-columns:
-          repeat(4, 1fr);
+          repeat(4, minmax(0, 1fr));
       }
 
       .quick-card {
-        min-height: 120px;
+        min-height: 125px;
       }
     }
 
@@ -591,455 +844,579 @@
 
 <body>
 
-<div class="app">
+<div class="page">
 
-  <!-- SCROLL AREA -->
+  <!-- =========================
+       TOP BAR
+  ========================== -->
 
-  <div class="scroll-area" id="scrollArea">
+  <header class="topbar">
 
-    <!-- TOP BAR -->
+    <div class="brand">
+      🪞
+    </div>
 
-    <header class="topbar">
+    <div class="title-area">
 
-      <div class="brand">
+      <div class="title">
+        AYNA BOOK
+      </div>
 
-        <h1>AYNA BOOK</h1>
+      <div class="subtitle">
+        All-in-one world information
+      </div>
 
-        <p>Connect • Explore • Discover</p>
+    </div>
+
+    <button
+      class="icon-btn"
+      id="notificationBtn"
+      type="button"
+      aria-label="Notifications"
+    >
+      🔔
+    </button>
+
+    <button
+      class="icon-btn"
+      id="menuBtn"
+      type="button"
+      aria-label="Menu"
+    >
+      ☰
+    </button>
+
+  </header>
+
+
+  <!-- =========================
+       MAIN
+  ========================== -->
+
+  <main class="content">
+
+
+    <!-- WELCOME -->
+
+    <section class="welcome">
+
+      <div class="welcome-title">
+        স্বাগতম AYNA BOOK-এ 👋
+      </div>
+
+      <div class="welcome-sub">
+        ক্যালেন্ডার, সময়, নামাজ, GPS, Radar,
+        Government Alerts এবং আরও অনেক কিছু এক জায়গায়।
+      </div>
+
+    </section>
+
+
+    <!-- PROFILE -->
+
+    <section class="profile-card">
+
+      <img
+        id="userAvatar"
+        class="avatar"
+        src=""
+        alt="Profile"
+      >
+
+      <div class="profile-info">
+
+        <div
+          id="userName"
+          class="profile-name"
+        >
+          Loading...
+        </div>
+
+        <div
+          id="userEmail"
+          class="profile-email"
+        >
+          ...
+        </div>
 
       </div>
 
-      <button
-        class="top-btn"
-        id="notificationBtn"
-        aria-label="Notifications"
-      >
-        🔔
-      </button>
+    </section>
 
-      <button
-        class="top-btn"
-        id="profileBtn"
-        aria-label="Profile"
-      >
-        👤
-      </button>
 
-    </header>
+    <!-- =========================
+         QUICK FEATURES
+    ========================== -->
 
+    <div class="section-title">
 
-    <main class="content">
+      <strong>
+        ⚡ Quick Features
+      </strong>
 
-      <!-- WELCOME -->
+      <span>
+        AYNA BOOK
+      </span>
 
-      <section class="welcome">
+    </div>
 
-        <h2 id="welcomeText">
-          স্বাগতম 👋
-        </h2>
 
-        <p id="welcomeSub">
-          AYNA BOOK-এ আপনাকে স্বাগতম।
-        </p>
+    <section class="quick-grid">
 
-      </section>
 
-
-      <!-- QUICK MENU -->
-
-      <div class="section-title">
-        ⚡ দ্রুত ব্যবহার
-      </div>
-
-
-      <section class="quick-grid">
-
-        <!-- RADAR -->
-
-        <a
-          class="quick-card"
-          href="./radar.html"
-        >
-
-          <div class="quick-icon">
-            📡
-          </div>
-
-          <div class="quick-name">
-            Radar
-          </div>
-
-          <div class="quick-sub">
-            রাডার
-          </div>
-
-        </a>
-
-
-        <!-- MILITARY RADAR -->
-
-        <a
-          class="quick-card"
-          href="./military-radar.html"
-        >
-
-          <div class="quick-icon">
-            🛰️
-          </div>
-
-          <div class="quick-name">
-            Military Radar
-          </div>
-
-          <div class="quick-sub">
-            Simulation
-          </div>
-
-        </a>
-
-
-        <!-- COMPASS -->
-
-        <a
-          class="quick-card"
-          href="./compass.html"
-        >
-
-          <div class="quick-icon">
-            🧭
-          </div>
-
-          <div class="quick-name">
-            Compass
-          </div>
-
-          <div class="quick-sub">
-            দিক নির্ণয়
-          </div>
-
-        </a>
-
-
-        <!-- GPS -->
-
-        <a
-          class="quick-card"
-          href="./gps.html"
-        >
-
-          <div class="quick-icon">
-            📍
-          </div>
-
-          <div class="quick-name">
-            GPS
-          </div>
-
-          <div class="quick-sub">
-            অবস্থান
-          </div>
-
-        </a>
-
-
-        <!-- CLOCK -->
-
-        <a
-          class="quick-card"
-          href="./clock.html"
-        >
-
-          <div class="quick-icon">
-            🕐
-          </div>
-
-          <div class="quick-name">
-            Voice Clock
-          </div>
-
-          <div class="quick-sub">
-            সময় বলবে
-          </div>
-
-        </a>
-
-
-        <!-- PRAYER -->
-
-        <a
-          class="quick-card"
-          href="./prayer.html"
-        >
-
-          <div class="quick-icon">
-            🕌
-          </div>
-
-          <div class="quick-name">
-            Prayer
-          </div>
-
-          <div class="quick-sub">
-            নামাজ ও রমজান
-          </div>
-
-        </a>
-
-
-        <!-- WORLD CALENDAR -->
-
-        <a
-          class="quick-card"
-          href="./calendar.html"
-        >
-
-          <div class="quick-icon">
-            📅
-          </div>
-
-          <div class="quick-name">
-            World Calendar
-          </div>
-
-          <div class="quick-sub">
-            বিশ্ব ক্যালেন্ডার
-          </div>
-
-        </a>
-
-
-        <!-- ARABIC CALENDAR -->
-
-        <a
-          class="quick-card"
-          href="./arabic-calendar.html"
-        >
-
-          <div class="quick-icon">
-            🌙
-          </div>
-
-          <div class="quick-name">
-            Arabic Calendar
-          </div>
-
-          <div class="quick-sub">
-            আরবি / হিজরি
-          </div>
-
-        </a>
-
-
-        <!-- WORLD HOLIDAYS -->
-
-        <a
-          class="quick-card"
-          href="./world-holidays.html"
-        >
-
-          <div class="quick-icon">
-            🌍
-          </div>
-
-          <div class="quick-name">
-            World Holidays
-          </div>
-
-          <div class="quick-sub">
-            সরকারি ছুটি
-          </div>
-
-        </a>
-
-
-        <!-- LIVE -->
-
-        <a
-          class="quick-card"
-          href="#"
-          id="liveBtn"
-        >
-
-          <div class="quick-icon">
-            📺
-          </div>
-
-          <div class="quick-name">
-            Live
-          </div>
-
-          <div class="quick-sub">
-            Live TV / Radio
-          </div>
-
-        </a>
-
-
-      </section>
-
-
-      <!-- PRAYER CARD -->
+      <!-- RADAR -->
 
       <a
-        class="prayer-card"
-        href="./prayer.html"
+        class="quick-card"
+        href="./radar.html"
       >
 
-        <h3>
-          🕌 Prayer & Ramadan
-        </h3>
+        <div class="quick-icon">
+          📡
+        </div>
 
-        <p>
-          ৫ ওয়াক্ত নামাজ, সেহরি, ইফতার,
-          রমজান ক্যালেন্ডার ও অ্যালার্ম।
-        </p>
+        <div class="quick-name">
+          Radar
+        </div>
+
+        <div class="quick-sub">
+          Radar simulation
+        </div>
 
       </a>
 
 
-      <!-- CREATE POST -->
+      <!-- MILITARY RADAR -->
 
-      <div class="section-title">
+      <a
+        class="quick-card"
+        href="./military-radar.html"
+      >
+
+        <div class="quick-icon">
+          🛰️
+        </div>
+
+        <div class="quick-name">
+          Military Radar
+        </div>
+
+        <div class="quick-sub">
+          Visual simulation
+        </div>
+
+      </a>
+
+
+      <!-- COMPASS -->
+
+      <a
+        class="quick-card"
+        href="./compass.html"
+      >
+
+        <div class="quick-icon">
+          🧭
+        </div>
+
+        <div class="quick-name">
+          Compass
+        </div>
+
+        <div class="quick-sub">
+          Digital compass
+        </div>
+
+      </a>
+
+
+      <!-- GPS -->
+
+      <a
+        class="quick-card"
+        href="./gps.html"
+      >
+
+        <div class="quick-icon">
+          📍
+        </div>
+
+        <div class="quick-name">
+          GPS
+        </div>
+
+        <div class="quick-sub">
+          Location & accuracy
+        </div>
+
+      </a>
+
+
+      <!-- CLOCK -->
+
+      <a
+        class="quick-card"
+        href="./clock.html"
+      >
+
+        <div class="quick-icon">
+          🕐
+        </div>
+
+        <div class="quick-name">
+          Voice Clock
+        </div>
+
+        <div class="quick-sub">
+          সময় শুনুন
+        </div>
+
+      </a>
+
+
+      <!-- PRAYER -->
+
+      <a
+        class="quick-card"
+        href="./prayer.html"
+      >
+
+        <div class="quick-icon">
+          🕌
+        </div>
+
+        <div class="quick-name">
+          Prayer & Ramadan
+        </div>
+
+        <div class="quick-sub">
+          নামাজ ও রমজান
+        </div>
+
+      </a>
+
+
+      <!-- WORLD CALENDAR -->
+
+      <a
+        class="quick-card"
+        href="./calendar.html"
+      >
+
+        <div class="quick-icon">
+          📅
+        </div>
+
+        <div class="quick-name">
+          World Calendar
+        </div>
+
+        <div class="quick-sub">
+          আজীবন ক্যালেন্ডার
+        </div>
+
+      </a>
+
+
+      <!-- ARABIC CALENDAR -->
+
+      <a
+        class="quick-card"
+        href="./arabic-calendar.html"
+      >
+
+        <div class="quick-icon">
+          🌙
+        </div>
+
+        <div class="quick-name">
+          Arabic / Hijri
+        </div>
+
+        <div class="quick-sub">
+          আরবি মাসের ক্যালেন্ডার
+        </div>
+
+      </a>
+
+
+      <!-- WORLD HOLIDAYS -->
+
+      <a
+        class="quick-card"
+        href="./world-holidays.html"
+      >
+
+        <div class="quick-icon">
+          🌍
+        </div>
+
+        <div class="quick-name">
+          World Holidays
+        </div>
+
+        <div class="quick-sub">
+          সরকারি ছুটি
+        </div>
+
+      </a>
+
+
+      <!-- US GOVERNMENT ALERTS -->
+
+      <a
+        class="quick-card"
+        href="./us-alerts.html"
+      >
+
+        <div class="quick-icon">
+          🇺🇸
+        </div>
+
+        <div class="quick-name">
+          US Government Alerts
+        </div>
+
+        <div class="quick-sub">
+          FEMA / IPAWS
+        </div>
+
+      </a>
+
+
+      <!-- LIVE -->
+
+      <a
+        class="quick-card"
+        href="#"
+        id="liveBtn"
+      >
+
+        <div class="quick-icon">
+          🔴
+        </div>
+
+        <div class="quick-name">
+          Live
+        </div>
+
+        <div class="quick-sub">
+          Live services
+        </div>
+
+      </a>
+
+
+      <!-- NOTIFICATIONS -->
+
+      <a
+        class="quick-card"
+        href="./notifications.html"
+      >
+
+        <div class="quick-icon">
+          🔔
+        </div>
+
+        <div class="quick-name">
+          Notifications
+        </div>
+
+        <div class="quick-sub">
+          আপনার নোটিফিকেশন
+        </div>
+
+      </a>
+
+    </section>
+
+
+    <!-- =========================
+         PRAYER FEATURE
+    ========================== -->
+
+    <a
+      class="feature-card"
+      href="./prayer.html"
+    >
+
+      <div class="feature-icon">
+        🕌
+      </div>
+
+      <div class="feature-title">
+        নামাজ, সেহরি ও ইফতার
+      </div>
+
+      <div class="feature-text">
+        আপনার দেশ/শহর বা GPS অনুযায়ী
+        নামাজের সময়, সেহরি, ইফতার,
+        রমজান ক্যালেন্ডার ও অ্যালার্ম।
+      </div>
+
+    </a>
+
+
+    <!-- =========================
+         POST
+    ========================== -->
+
+    <section class="post-box">
+
+      <div class="post-title">
         ✍️ নতুন পোস্ট
       </div>
 
+      <textarea
+        id="postText"
+        maxlength="2000"
+        placeholder="আপনার মনের কথা লিখুন..."
+      ></textarea>
 
-      <section class="post-box">
-
-        <div class="post-box-title">
-          আপনি কী ভাবছেন?
-        </div>
-
-        <textarea
-          class="post-input"
-          id="postText"
-          maxlength="1000"
-          placeholder="আপনার পোস্ট লিখুন..."
-        ></textarea>
+      <div class="post-actions">
 
         <button
-          class="post-button"
+          class="post-btn"
           id="postBtn"
+          type="button"
         >
-          প্রকাশ করুন
+          পোস্ট করুন
         </button>
 
-      </section>
-
-
-      <!-- FEED -->
-
-      <div class="section-title">
-        📰 Feed
       </div>
 
-
-      <section class="feed">
-
-        <div
-          class="feed-empty"
-          id="feedEmpty"
-        >
-          এখনো কোনো পোস্ট লোড হয়নি।
-        </div>
-
-      </section>
-
-    </main>
-
-  </div>
+    </section>
 
 
-  <!-- BOTTOM NAV -->
+    <!-- =========================
+         FEED
+    ========================== -->
+
+    <div class="section-title">
+
+      <strong>
+        📰 Feed
+      </strong>
+
+      <span>
+        Posts
+      </span>
+
+    </div>
+
+
+    <section
+      class="feed"
+      id="feed"
+    >
+
+      <div class="feed-empty">
+        পোস্ট লোড হচ্ছে...
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- =========================
+       BOTTOM NAV
+  ========================== -->
 
   <nav class="bottom-nav">
 
-    <button
-      class="nav-btn active"
-      id="homeNav"
+    <a
+      class="nav-item active"
+      href="./index.html"
     >
 
-      <span class="nav-icon">
+      <div class="nav-icon">
         🏠
-      </span>
+      </div>
 
-      <span>
+      <div>
         Home
-      </span>
+      </div>
 
-    </button>
+    </a>
 
 
-    <button
-      class="nav-btn"
-      id="exploreNav"
+    <a
+      class="nav-item"
+      href="./calendar.html"
     >
 
-      <span class="nav-icon">
-        🔎
-      </span>
+      <div class="nav-icon">
+        📅
+      </div>
 
-      <span>
-        Explore
-      </span>
+      <div>
+        Calendar
+      </div>
 
-    </button>
+    </a>
 
 
-    <button
-      class="nav-btn"
-      id="liveNav"
+    <a
+      class="nav-item"
+      href="./notifications.html"
     >
 
-      <span class="nav-icon">
-        📺
-      </span>
+      <div class="nav-icon">
+        🔔
+      </div>
 
-      <span>
-        Live
-      </span>
+      <div>
+        Alerts
+      </div>
 
-    </button>
+    </a>
 
 
-    <button
-      class="nav-btn"
+    <a
+      class="nav-item"
+      href="#"
       id="profileNav"
     >
 
-      <span class="nav-icon">
+      <div class="nav-icon">
         👤
-      </span>
+      </div>
 
-      <span>
+      <div>
         Profile
-      </span>
+      </div>
 
-    </button>
+    </a>
 
   </nav>
 
 
-  <!-- DRAWER BACKGROUND -->
+  <!-- =========================
+       OVERLAY
+  ========================== -->
 
   <div
-    class="drawer-bg"
-    id="drawerBg"
+    class="overlay"
+    id="overlay"
   ></div>
 
 
-  <!-- PROFILE DRAWER -->
+  <!-- =========================
+       DRAWER
+  ========================== -->
 
   <aside
     class="drawer"
-    id="profileDrawer"
+    id="drawer"
   >
 
     <div class="drawer-head">
 
       <img
-        class="profile-photo"
-        id="profilePhoto"
+        id="drawerAvatar"
+        class="drawer-avatar"
         src=""
         alt="Profile"
       >
@@ -1047,25 +1424,34 @@
       <div>
 
         <div
-          class="profile-name"
-          id="profileName"
+          id="drawerName"
+          class="drawer-name"
         >
           AYNA BOOK User
         </div>
 
         <div
-          class="profile-email"
-          id="profileEmail"
+          id="drawerEmail"
+          class="drawer-email"
         >
-          Loading...
+          ...
         </div>
 
       </div>
+
+      <button
+        class="drawer-close"
+        id="drawerClose"
+        type="button"
+      >
+        ×
+      </button>
 
     </div>
 
 
     <div class="drawer-menu">
+
 
       <a
         class="drawer-link"
@@ -1075,6 +1461,7 @@
         <span>
           Prayer & Ramadan
         </span>
+        →
       </a>
 
 
@@ -1086,6 +1473,7 @@
         <span>
           Voice Clock
         </span>
+        →
       </a>
 
 
@@ -1097,6 +1485,7 @@
         <span>
           World Calendar
         </span>
+        →
       </a>
 
 
@@ -1108,6 +1497,7 @@
         <span>
           Arabic / Hijri Calendar
         </span>
+        →
       </a>
 
 
@@ -1119,6 +1509,19 @@
         <span>
           World Government Holidays
         </span>
+        →
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="./us-alerts.html"
+      >
+        🇺🇸
+        <span>
+          US Government Alerts
+        </span>
+        →
       </a>
 
 
@@ -1130,6 +1533,7 @@
         <span>
           Radar
         </span>
+        →
       </a>
 
 
@@ -1141,6 +1545,7 @@
         <span>
           Military Radar
         </span>
+        →
       </a>
 
 
@@ -1152,6 +1557,7 @@
         <span>
           Compass
         </span>
+        →
       </a>
 
 
@@ -1163,29 +1569,32 @@
         <span>
           GPS
         </span>
+        →
       </a>
 
 
       <a
         class="drawer-link"
-        href="#"
-        id="notificationMenu"
+        href="./notifications.html"
       >
         🔔
         <span>
           Notifications
         </span>
+        →
       </a>
 
 
       <button
-        class="drawer-link logout"
+        class="drawer-link logout-link"
         id="logoutBtn"
+        type="button"
       >
         🚪
         <span>
           Logout
         </span>
+        →
       </button>
 
     </div>
@@ -1193,86 +1602,66 @@
   </aside>
 
 
-  <!-- STATUS -->
+  <!-- TOAST -->
 
   <div
-    class="status"
-    id="status"
-  >
-    সম্পন্ন
-  </div>
+    class="toast"
+    id="toast"
+  ></div>
 
 </div>
 
 
-<!-- FIREBASE / APP -->
+<!-- =========================
+     FIREBASE / APP SCRIPT
+========================== -->
 
 <script type="module">
 
-  import { auth, database } from "./firebase-init.js";
+  import {
+    auth,
+    database
+  } from "./firebase-init.js";
+
 
   import {
     onAuthStateChanged,
     signOut
   } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
+
   import {
     ref,
     get,
     push,
     set,
-    serverTimestamp
+    query,
+    orderByChild,
+    limitToLast
   } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
 
-  // ====================================================
-  // ELEMENTS
-  // ====================================================
+  /* =========================
+     ELEMENTS
+  ========================== */
 
-  const welcomeText =
-    document.getElementById("welcomeText");
+  const userName =
+    document.getElementById("userName");
 
-  const welcomeSub =
-    document.getElementById("welcomeSub");
+  const userEmail =
+    document.getElementById("userEmail");
 
-  const profileBtn =
-    document.getElementById("profileBtn");
+  const userAvatar =
+    document.getElementById("userAvatar");
 
-  const profileNav =
-    document.getElementById("profileNav");
+  const drawerName =
+    document.getElementById("drawerName");
 
-  const profileDrawer =
-    document.getElementById("profileDrawer");
+  const drawerEmail =
+    document.getElementById("drawerEmail");
 
-  const drawerBg =
-    document.getElementById("drawerBg");
-
-  const profileName =
-    document.getElementById("profileName");
-
-  const profileEmail =
-    document.getElementById("profileEmail");
-
-  const profilePhoto =
-    document.getElementById("profilePhoto");
-
-  const logoutBtn =
-    document.getElementById("logoutBtn");
-
-  const notificationBtn =
-    document.getElementById("notificationBtn");
-
-  const notificationMenu =
-    document.getElementById("notificationMenu");
-
-  const liveBtn =
-    document.getElementById("liveBtn");
-
-  const liveNav =
-    document.getElementById("liveNav");
-
-  const exploreNav =
-    document.getElementById("exploreNav");
+  const drawerAvatar =
+    document.getElementById("drawerAvatar");
 
   const postText =
     document.getElementById("postText");
@@ -1280,53 +1669,93 @@
   const postBtn =
     document.getElementById("postBtn");
 
-  const status =
-    document.getElementById("status");
+  const feed =
+    document.getElementById("feed");
+
+  const drawer =
+    document.getElementById("drawer");
+
+  const overlay =
+    document.getElementById("overlay");
+
+  const menuBtn =
+    document.getElementById("menuBtn");
+
+  const drawerClose =
+    document.getElementById("drawerClose");
+
+  const profileNav =
+    document.getElementById("profileNav");
+
+  const notificationBtn =
+    document.getElementById("notificationBtn");
+
+  const liveBtn =
+    document.getElementById("liveBtn");
+
+  const logoutBtn =
+    document.getElementById("logoutBtn");
+
+  const toast =
+    document.getElementById("toast");
 
 
-  // ====================================================
-  // STATUS MESSAGE
-  // ====================================================
+  let currentUser = null;
 
-  let statusTimer = null;
 
-  function showStatus(message) {
+  /* =========================
+     TOAST
+  ========================== */
 
-    status.textContent = message;
+  function showToast(message) {
 
-    status.classList.add("show");
+    toast.textContent =
+      message;
 
-    clearTimeout(statusTimer);
+    toast.classList.add("show");
 
-    statusTimer = setTimeout(() => {
+    clearTimeout(
+      window.__aynaToastTimer
+    );
 
-      status.classList.remove("show");
+    window.__aynaToastTimer =
+      setTimeout(
+        () => {
 
-    }, 2500);
+          toast.classList.remove(
+            "show"
+          );
+
+        },
+        2600
+      );
+
   }
 
 
-  // ====================================================
-  // PROFILE DRAWER
-  // ====================================================
+  /* =========================
+     DRAWER
+  ========================== */
 
   function openDrawer() {
 
-    profileDrawer.classList.add("show");
+    drawer.classList.add("show");
 
-    drawerBg.classList.add("show");
+    overlay.classList.add("show");
+
   }
 
 
   function closeDrawer() {
 
-    profileDrawer.classList.remove("show");
+    drawer.classList.remove("show");
 
-    drawerBg.classList.remove("show");
+    overlay.classList.remove("show");
+
   }
 
 
-  profileBtn.addEventListener(
+  menuBtn.addEventListener(
     "click",
     openDrawer
   );
@@ -1334,23 +1763,35 @@
 
   profileNav.addEventListener(
     "click",
-    openDrawer
+    event => {
+
+      event.preventDefault();
+
+      openDrawer();
+
+    }
   );
 
 
-  drawerBg.addEventListener(
+  drawerClose.addEventListener(
     "click",
     closeDrawer
   );
 
 
-  // ====================================================
-  // AUTH
-  // ====================================================
+  overlay.addEventListener(
+    "click",
+    closeDrawer
+  );
+
+
+  /* =========================
+     AUTH
+  ========================== */
 
   onAuthStateChanged(
     auth,
-    async (user) => {
+    async user => {
 
       if (!user) {
 
@@ -1359,80 +1800,76 @@
         );
 
         return;
+
       }
 
 
-      // Welcome
+      currentUser =
+        user;
 
-      const displayName =
+
+      userName.textContent =
         user.displayName ||
         "AYNA BOOK User";
 
 
-      welcomeText.textContent =
-        `স্বাগতম, ${displayName} 👋`;
+      userEmail.textContent =
+        user.email ||
+        "";
 
 
-      welcomeSub.textContent =
-        "AYNA BOOK-এ আপনার দিনটি সুন্দর হোক।";
+      drawerName.textContent =
+        user.displayName ||
+        "AYNA BOOK User";
 
 
-      profileName.textContent =
-        displayName;
+      drawerEmail.textContent =
+        user.email ||
+        "";
 
 
-      profileEmail.textContent =
-        user.email || "";
+      let avatarURL = "";
 
-
-      // Default photo
-
-      profilePhoto.src =
-        createAvatar(displayName);
-
-
-      // Firebase profile
 
       try {
 
-        const userRef =
+        const profileRef =
           ref(
             database,
-            `users/${user.uid}`
+            "users/" + user.uid
           );
 
 
         const snapshot =
-          await get(userRef);
+          await get(profileRef);
 
 
         if (snapshot.exists()) {
 
-          const data =
+          const profile =
             snapshot.val();
 
 
-          if (data.fullName) {
+          if (
+            profile.photoURL
+          ) {
 
-            profileName.textContent =
-              data.fullName;
+            avatarURL =
+              profile.photoURL;
 
-            welcomeText.textContent =
-              `স্বাগতম, ${data.fullName} 👋`;
           }
 
 
-          if (data.email) {
+          if (
+            profile.fullName
+          ) {
 
-            profileEmail.textContent =
-              data.email;
-          }
+            userName.textContent =
+              profile.fullName;
 
+            drawerName.textContent =
+              profile.fullName;
 
-          if (data.photoURL) {
-
-            profilePhoto.src =
-              data.photoURL;
           }
 
         }
@@ -1446,50 +1883,74 @@
 
       }
 
+
+      if (!avatarURL) {
+
+        avatarURL =
+          createAvatar(
+            user.displayName ||
+            "A"
+          );
+
+      }
+
+
+      userAvatar.src =
+        avatarURL;
+
+      drawerAvatar.src =
+        avatarURL;
+
+
+      loadPosts();
+
     }
   );
 
 
-  // ====================================================
-  // AVATAR
-  // ====================================================
+  /* =========================
+     AVATAR
+  ========================== */
 
   function createAvatar(name) {
 
     const letter =
-      String(name || "A")
+      String(name)
         .trim()
         .charAt(0)
-        .toUpperCase();
+        .toUpperCase() ||
+      "A";
 
 
     const svg = `
+
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="120"
-        height="120"
-        viewBox="0 0 120 120"
+        width="160"
+        height="160"
       >
 
         <rect
-          width="120"
-          height="120"
-          rx="60"
-          fill="#17634c"
+          width="160"
+          height="160"
+          rx="80"
+          fill="#126a49"
         />
 
         <text
-          x="60"
-          y="76"
+          x="50%"
+          y="55%"
+          dominant-baseline="middle"
           text-anchor="middle"
-          font-size="55"
-          font-family="Arial"
+          font-size="70"
           fill="white"
+          font-family="Arial"
         >
           ${letter}
         </text>
 
       </svg>
+
     `;
 
 
@@ -1497,12 +1958,405 @@
       "data:image/svg+xml;charset=UTF-8," +
       encodeURIComponent(svg)
     );
+
   }
 
 
-  // ====================================================
-  // LOGOUT
-  // ====================================================
+  /* =========================
+     POST
+  ========================== */
+
+  postBtn.addEventListener(
+    "click",
+    createPost
+  );
+
+
+  async function createPost() {
+
+    if (!currentUser) {
+
+      showToast(
+        "প্রথমে Login করুন।"
+      );
+
+      return;
+
+    }
+
+
+    const text =
+      postText.value.trim();
+
+
+    if (!text) {
+
+      showToast(
+        "পোস্টের লেখা লিখুন।"
+      );
+
+      postText.focus();
+
+      return;
+
+    }
+
+
+    if (text.length > 2000) {
+
+      showToast(
+        "পোস্ট সর্বোচ্চ ২০০০ অক্ষর হতে পারে।"
+      );
+
+      return;
+
+    }
+
+
+    postBtn.disabled =
+      true;
+
+    postBtn.textContent =
+      "পোস্ট হচ্ছে...";
+
+
+    try {
+
+      const postsRef =
+        ref(
+          database,
+          "posts"
+        );
+
+
+      const newPostRef =
+        push(postsRef);
+
+
+      await set(
+        newPostRef,
+        {
+
+          uid:
+            currentUser.uid,
+
+          fullName:
+            currentUser.displayName ||
+            "AYNA BOOK User",
+
+          email:
+            currentUser.email ||
+            "",
+
+          text:
+            text,
+
+          createdAt:
+            Date.now()
+
+        }
+      );
+
+
+      postText.value =
+        "";
+
+
+      showToast(
+        "পোস্ট সফলভাবে তৈরি হয়েছে।"
+      );
+
+
+      loadPosts();
+
+
+    } catch (error) {
+
+      console.error(
+        "Post error:",
+        error
+      );
+
+
+      showToast(
+        "পোস্ট করা যায়নি: " +
+        error.message
+      );
+
+
+    } finally {
+
+      postBtn.disabled =
+        false;
+
+      postBtn.textContent =
+        "পোস্ট করুন";
+
+    }
+
+  }
+
+
+  /* =========================
+     LOAD POSTS
+  ========================== */
+
+  async function loadPosts() {
+
+    feed.innerHTML = `
+      <div class="feed-empty">
+        পোস্ট লোড হচ্ছে...
+      </div>
+    `;
+
+
+    try {
+
+      const postsQuery =
+        query(
+          ref(
+            database,
+            "posts"
+          ),
+          orderByChild(
+            "createdAt"
+          ),
+          limitToLast(30)
+        );
+
+
+      const snapshot =
+        await get(postsQuery);
+
+
+      if (!snapshot.exists()) {
+
+        feed.innerHTML = `
+          <div class="feed-empty">
+            এখনো কোনো পোস্ট নেই।
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      const posts = [];
+
+
+      snapshot.forEach(
+        child => {
+
+          posts.push({
+
+            id:
+              child.key,
+
+            ...child.val()
+
+          });
+
+        }
+      );
+
+
+      posts.reverse();
+
+
+      feed.innerHTML =
+        posts
+          .map(
+            post =>
+              renderPost(post)
+          )
+          .join("");
+
+
+    } catch (error) {
+
+      console.error(
+        "Feed error:",
+        error
+      );
+
+
+      feed.innerHTML = `
+        <div class="feed-empty">
+          Feed লোড করা যায়নি।
+          <br><br>
+          ${escapeHTML(error.message)}
+        </div>
+      `;
+
+    }
+
+  }
+
+
+  /* =========================
+     RENDER POST
+  ========================== */
+
+  function renderPost(post) {
+
+    const name =
+      post.fullName ||
+      "AYNA BOOK User";
+
+
+    const text =
+      post.text ||
+      "";
+
+
+    const time =
+      formatDate(
+        post.createdAt
+      );
+
+
+    return `
+
+      <article class="post-item">
+
+        <div class="post-user">
+
+          <img
+            src="${createAvatar(name)}"
+            alt="User"
+          >
+
+          <div>
+
+            <div class="post-user-name">
+              ${escapeHTML(name)}
+            </div>
+
+            <div class="post-time">
+              ${escapeHTML(time)}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="post-text">
+          ${escapeHTML(text)}
+        </div>
+
+      </article>
+
+    `;
+
+  }
+
+
+  /* =========================
+     HELPERS
+  ========================== */
+
+  function escapeHTML(value) {
+
+    return String(
+      value ?? ""
+    )
+      .replaceAll(
+        "&",
+        "&amp;"
+      )
+      .replaceAll(
+        "<",
+        "&lt;"
+      )
+      .replaceAll(
+        ">",
+        "&gt;"
+      )
+      .replaceAll(
+        '"',
+        "&quot;"
+      )
+      .replaceAll(
+        "'",
+        "&#039;"
+      );
+
+  }
+
+
+  function formatDate(timestamp) {
+
+    if (!timestamp) {
+
+      return "";
+
+    }
+
+
+    try {
+
+      return new Intl.DateTimeFormat(
+        "bn-BD",
+        {
+          dateStyle:
+            "medium",
+
+          timeStyle:
+            "short"
+        }
+      ).format(
+        new Date(timestamp)
+      );
+
+    } catch {
+
+      return new Date(
+        timestamp
+      ).toLocaleString();
+
+    }
+
+  }
+
+
+  /* =========================
+     NOTIFICATION
+  ========================== */
+
+  notificationBtn.addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "./notifications.html";
+
+    }
+  );
+
+
+  /* =========================
+     LIVE
+  ========================== */
+
+  liveBtn.addEventListener(
+    "click",
+    event => {
+
+      event.preventDefault();
+
+      showToast(
+        "Live service পেজটি পরে যুক্ত করা যাবে।"
+      );
+
+    }
+  );
+
+
+  /* =========================
+     LOGOUT
+  ========================== */
 
   logoutBtn.addEventListener(
     "click",
@@ -1518,237 +2372,15 @@
 
       } catch (error) {
 
-        console.error(error);
-
-        showStatus(
-          "Logout করা যায়নি।"
+        showToast(
+          "Logout করা যায়নি: " +
+          error.message
         );
 
       }
 
     }
   );
-
-
-  // ====================================================
-  // NOTIFICATIONS
-  // ====================================================
-
-  function openNotifications() {
-
-    window.location.href =
-      "./notifications.html";
-
-  }
-
-
-  notificationBtn.addEventListener(
-    "click",
-    openNotifications
-  );
-
-
-  notificationMenu.addEventListener(
-    "click",
-    openNotifications
-  );
-
-
-  // ====================================================
-  // LIVE
-  // ====================================================
-
-  function openLive() {
-
-    showStatus(
-      "Live TV / Radio পেজ প্রস্তুত করা হচ্ছে।"
-    );
-
-    // পরে live.html তৈরি করলে:
-    // window.location.href = "./live.html";
-
-  }
-
-
-  liveBtn.addEventListener(
-    "click",
-    event => {
-
-      event.preventDefault();
-
-      openLive();
-
-    }
-  );
-
-
-  liveNav.addEventListener(
-    "click",
-    openLive
-  );
-
-
-  // ====================================================
-  // EXPLORE
-  // ====================================================
-
-  exploreNav.addEventListener(
-    "click",
-    () => {
-
-      document
-        .querySelector(".quick-grid")
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-
-    }
-  );
-
-
-  // ====================================================
-  // HOME
-  // ====================================================
-
-  document
-    .getElementById("homeNav")
-    .addEventListener(
-      "click",
-      () => {
-
-        document
-          .getElementById("scrollArea")
-          .scrollTo({
-            top: 0,
-            behavior: "smooth"
-          });
-
-      }
-    );
-
-
-  // ====================================================
-  // CREATE POST
-  // ====================================================
-
-  postBtn.addEventListener(
-    "click",
-    async () => {
-
-      const text =
-        postText.value.trim();
-
-
-      if (!text) {
-
-        showStatus(
-          "আগে পোস্ট লিখুন।"
-        );
-
-        postText.focus();
-
-        return;
-      }
-
-
-      if (text.length > 1000) {
-
-        showStatus(
-          "পোস্ট সর্বোচ্চ ১০০০ অক্ষর হতে পারে।"
-        );
-
-        return;
-      }
-
-
-      const user =
-        auth.currentUser;
-
-
-      if (!user) {
-
-        window.location.replace(
-          "./login.html"
-        );
-
-        return;
-      }
-
-
-      postBtn.disabled = true;
-
-      postBtn.textContent =
-        "প্রকাশ হচ্ছে...";
-
-
-      try {
-
-        const postsRef =
-          ref(
-            database,
-            "posts"
-          );
-
-
-        const newPost =
-          push(postsRef);
-
-
-        await set(
-          newPost,
-          {
-
-            postId: newPost.key,
-
-            uid: user.uid,
-
-            text: text,
-
-            authorName:
-              user.displayName ||
-              "AYNA BOOK User",
-
-            createdAt:
-              serverTimestamp()
-
-          }
-        );
-
-
-        postText.value = "";
-
-
-        showStatus(
-          "✅ পোস্ট প্রকাশ হয়েছে।"
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "Post error:",
-          error
-        );
-
-
-        showStatus(
-          "❌ পোস্ট প্রকাশ করা যায়নি।"
-        );
-
-
-      } finally {
-
-        postBtn.disabled = false;
-
-        postBtn.textContent =
-          "প্রকাশ করুন";
-
-      }
-
-    }
-  );
-
 
 </script>
 
