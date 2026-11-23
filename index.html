@@ -1,447 +1,1140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
+
+  <meta name="theme-color" content="#101827">
 
   <title>AYNA BOOK</title>
 
   <style>
-
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     html,
     body {
-      margin: 0;
-      padding: 0;
       width: 100%;
-      height: 100%;
+      min-height: 100%;
     }
 
     body {
-      background: #000;
-      color: #d4af37;
-      font-family: Arial, Helvetica, sans-serif;
+      background: #101827;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      padding-bottom: 75px;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      width: 100%;
+      min-height: 62px;
 
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
 
-      overflow: hidden;
+      padding:
+        10px
+        max(15px, env(safe-area-inset-right))
+        10px
+        max(15px, env(safe-area-inset-left));
+
+      background: #182235;
+      border-bottom: 1px solid #34445c;
     }
 
-    .splash {
+    .brand {
+      color: #e8bd55;
+      font-size: 25px;
+      font-weight: bold;
+      letter-spacing: .5px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+
+      border: 0;
+      border-radius: 50%;
+
+      background: #27364d;
+      color: #ffffff;
+
+      font-size: 19px;
+      cursor: pointer;
+    }
+
+    .icon-btn:active {
+      transform: scale(.95);
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    main {
       width: 100%;
-      max-width: 500px;
-      min-height: 100vh;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* =========================
+       WELCOME CARD
+    ========================= */
+
+    .welcome-card {
+      background: #1b2638;
+      border: 1px solid #34445c;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 15px;
+    }
+
+    .welcome-title {
+      font-size: 21px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .welcome-text {
+      color: #bfc9d8;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #userName {
+      color: #e8bd55;
+    }
+
+    /* =========================
+       QUICK MENU
+    ========================= */
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .quick-item {
+      min-height: 82px;
 
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
 
-      text-align: center;
-      padding: 30px;
+      gap: 7px;
+
+      background: #1b2638;
+      border: 1px solid #34445c;
+      border-radius: 14px;
+
+      color: white;
+      cursor: pointer;
     }
 
-    .logo {
-      width: 100px;
-      height: 100px;
+    .quick-icon {
+      font-size: 25px;
+    }
 
-      border: 3px solid #d4af37;
+    .quick-label {
+      font-size: 12px;
+    }
+
+    /* =========================
+       CREATE POST
+    ========================= */
+
+    .create-post {
+      background: #1b2638;
+      border: 1px solid #34445c;
+      border-radius: 16px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .create-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+
+      flex-shrink: 0;
+
       border-radius: 50%;
+      background: #34445c;
 
       display: flex;
       align-items: center;
       justify-content: center;
 
-      font-size: 28px;
-      font-weight: bold;
-
-      margin-bottom: 25px;
-
-      box-shadow:
-        0 0 25px rgba(212, 175, 55, 0.35);
+      font-size: 20px;
     }
 
-    h1 {
-      margin: 0;
+    .post-input {
+      flex: 1;
 
-      font-size: 34px;
-      letter-spacing: 3px;
+      border: 1px solid #52627a;
+      border-radius: 22px;
 
-      color: #d4af37;
-    }
+      background: #101827;
+      color: #bfc9d8;
 
-    .tagline {
-      margin-top: 10px;
-
-      color: #aaa;
-
-      font-size: 14px;
-    }
-
-    .loader {
-      width: 42px;
-      height: 42px;
-
-      margin-top: 35px;
-
-      border: 4px solid #333;
-      border-top-color: #d4af37;
-
-      border-radius: 50%;
-
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
-
-    }
-
-    #status {
-      margin-top: 20px;
-
-      color: #aaa;
-
-      font-size: 14px;
-
-      line-height: 1.5;
-    }
-
-    #errorBox {
-      display: none;
-
-      width: 100%;
-
-      margin-top: 20px;
-
-      padding: 15px;
-
-      border: 1px solid #8b0000;
-
-      border-radius: 8px;
-
-      background: #160000;
-
-      color: #ff6b6b;
-
-      font-size: 14px;
-
-      line-height: 1.5;
-    }
-
-    #retryButton {
-      display: none;
-
-      margin-top: 15px;
-
-      padding: 12px 25px;
-
-      border: 1px solid #d4af37;
-
-      border-radius: 6px;
-
-      background: #d4af37;
-
-      color: #000;
-
-      font-size: 15px;
-
-      font-weight: bold;
+      padding: 12px 15px;
 
       cursor: pointer;
     }
 
-    #retryButton:hover {
-      background: #f0cf68;
+    .post-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+
+      margin-top: 13px;
     }
 
+    .post-action {
+      padding: 10px;
+
+      border: 0;
+      border-radius: 9px;
+
+      background: #27364d;
+      color: white;
+
+      cursor: pointer;
+    }
+
+    /* =========================
+       FEED
+    ========================= */
+
+    .section-title {
+      font-size: 19px;
+      font-weight: bold;
+      margin: 20px 0 12px;
+    }
+
+    .empty-feed {
+      background: #1b2638;
+      border: 1px solid #34445c;
+      border-radius: 16px;
+
+      padding: 30px 20px;
+
+      text-align: center;
+      color: #aeb9c9;
+    }
+
+    .empty-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    /* =========================
+       PROFILE DRAWER
+    ========================= */
+
+    .drawer {
+      position: fixed;
+      inset: 0;
+
+      z-index: 3000;
+
+      background: #0008;
+
+      display: none;
+    }
+
+    .drawer.active {
+      display: block;
+    }
+
+    .drawer-panel {
+      position: absolute;
+
+      top: 0;
+      right: 0;
+
+      width: min(360px, 90%);
+
+      height: 100%;
+
+      background: #182235;
+
+      padding: 22px;
+
+      overflow-y: auto;
+    }
+
+    .drawer-close {
+      width: 40px;
+      height: 40px;
+
+      float: right;
+
+      border: 0;
+      border-radius: 50%;
+
+      background: #34445c;
+      color: white;
+
+      font-size: 20px;
+    }
+
+    .drawer-profile {
+      clear: both;
+
+      padding-top: 30px;
+
+      text-align: center;
+    }
+
+    .large-avatar {
+      width: 90px;
+      height: 90px;
+
+      margin: 0 auto 12px;
+
+      border-radius: 50%;
+
+      background: #34445c;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 38px;
+    }
+
+    #profileName {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    #profileEmail {
+      margin-top: 6px;
+      color: #aeb9c9;
+      font-size: 13px;
+      word-break: break-word;
+    }
+
+    .drawer-menu {
+      margin-top: 25px;
+    }
+
+    .drawer-menu button {
+      width: 100%;
+
+      padding: 14px;
+
+      margin-bottom: 9px;
+
+      border: 0;
+      border-radius: 10px;
+
+      background: #27364d;
+      color: white;
+
+      text-align: left;
+
+      cursor: pointer;
+    }
+
+    #logoutBtn {
+      background: #8f3d3d;
+    }
+
+    /* =========================
+       BOTTOM NAV
+    ========================= */
+
+    .bottom-nav {
+      position: fixed;
+
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      z-index: 2000;
+
+      height: 65px;
+
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+
+      background: #182235;
+      border-top: 1px solid #34445c;
+
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .nav-item {
+      border: 0;
+      background: transparent;
+
+      color: #aeb9c9;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      gap: 3px;
+
+      cursor: pointer;
+    }
+
+    .nav-item.active {
+      color: #e8bd55;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    .nav-text {
+      font-size: 10px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 420px) {
+
+      main {
+        padding: 12px;
+      }
+
+      .brand {
+        font-size: 22px;
+      }
+
+      .quick-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .top-actions {
+        gap: 5px;
+      }
+
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    @media (min-width: 700px) {
+
+      body {
+        padding-bottom: 0;
+      }
+
+      .bottom-nav {
+        position: static;
+
+        max-width: 900px;
+
+        margin: 0 auto;
+
+        border: 1px solid #34445c;
+        border-radius: 14px;
+
+        margin-bottom: 20px;
+      }
+    }
   </style>
-
 </head>
-
 
 <body>
 
-  <main class="splash">
+  <!-- =========================
+       TOP BAR
+  ========================= -->
 
-    <div class="logo">
-      AB
-    </div>
+  <header class="topbar">
 
-    <h1>
+    <div class="brand">
       AYNA BOOK
-    </h1>
-
-    <div class="tagline">
-      Global Social Platform
     </div>
 
-    <div
-      id="loader"
-      class="loader">
+    <div class="top-actions">
+
+      <button
+        class="icon-btn"
+        id="notificationBtn"
+        type="button"
+        aria-label="Notifications"
+      >
+        🔔
+      </button>
+
+      <button
+        class="icon-btn"
+        id="profileBtn"
+        type="button"
+        aria-label="Profile"
+      >
+        👤
+      </button>
+
     </div>
 
-    <div id="status">
-      Starting secure platform...
+  </header>
+
+
+  <!-- =========================
+       MAIN
+  ========================= -->
+
+  <main>
+
+    <!-- Welcome -->
+
+    <section class="welcome-card">
+
+      <div class="welcome-title">
+        Welcome, <span id="userName">AYNA BOOK User</span> 👋
+      </div>
+
+      <div class="welcome-text">
+        AYNA BOOK-এ আপনাকে স্বাগতম।
+        আপনার বন্ধুদের সঙ্গে যুক্ত হন এবং নতুন কিছু শেয়ার করুন।
+      </div>
+
+    </section>
+
+
+    <!-- Quick Menu -->
+
+    <section class="quick-grid">
+
+      <button class="quick-item" id="radarBtn">
+        <span class="quick-icon">📡</span>
+        <span class="quick-label">Radar</span>
+      </button>
+
+      <button class="quick-item" id="compassBtn">
+        <span class="quick-icon">🧭</span>
+        <span class="quick-label">Compass</span>
+      </button>
+
+      <button class="quick-item" id="gpsBtn">
+        <span class="quick-icon">📍</span>
+        <span class="quick-label">GPS</span>
+      </button>
+
+      <button class="quick-item" id="liveBtn">
+        <span class="quick-icon">📺</span>
+        <span class="quick-label">Live</span>
+      </button>
+
+    </section>
+
+
+    <!-- Create Post -->
+
+    <section class="create-post">
+
+      <div class="create-row">
+
+        <div class="avatar" id="userAvatar">
+          👤
+        </div>
+
+        <div
+          class="post-input"
+          id="createPostBtn"
+        >
+          What's on your mind?
+        </div>
+
+      </div>
+
+      <div class="post-buttons">
+
+        <button
+          class="post-action"
+          id="photoPostBtn"
+          type="button"
+        >
+          📷 Photo
+        </button>
+
+        <button
+          class="post-action"
+          id="videoPostBtn"
+          type="button"
+        >
+          🎥 Video
+        </button>
+
+        <button
+          class="post-action"
+          id="textPostBtn"
+          type="button"
+        >
+          📝 Post
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- Feed -->
+
+    <div class="section-title">
+      News Feed
     </div>
 
-    <div id="errorBox">
-    </div>
+    <section class="empty-feed">
 
-    <button
-      id="retryButton"
-      type="button">
-      Retry
-    </button>
+      <div class="empty-icon">
+        📰
+      </div>
+
+      <div>
+        আপনার News Feed এখানে দেখা যাবে।
+      </div>
+
+      <div style="margin-top:8px;font-size:13px;">
+        নতুন Post তৈরি করুন অথবা বন্ধুদের Follow করুন।
+      </div>
+
+    </section>
 
   </main>
 
 
+  <!-- =========================
+       PROFILE DRAWER
+  ========================= -->
+
+  <div
+    class="drawer"
+    id="profileDrawer"
+  >
+
+    <aside class="drawer-panel">
+
+      <button
+        class="drawer-close"
+        id="closeDrawer"
+        type="button"
+      >
+        ×
+      </button>
+
+      <div class="drawer-profile">
+
+        <div
+          class="large-avatar"
+          id="largeAvatar"
+        >
+          👤
+        </div>
+
+        <div id="profileName">
+          AYNA BOOK User
+        </div>
+
+        <div id="profileEmail">
+          Loading...
+        </div>
+
+      </div>
+
+
+      <div class="drawer-menu">
+
+        <button
+          type="button"
+          id="myProfileBtn"
+        >
+          👤 My Profile
+        </button>
+
+        <button
+          type="button"
+          id="settingsBtn"
+        >
+          ⚙️ Settings
+        </button>
+
+        <button
+          type="button"
+          id="helpBtn"
+        >
+          ❓ Help
+        </button>
+
+        <button
+          type="button"
+          id="logoutBtn"
+        >
+          🚪 Logout
+        </button>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+
+  <!-- =========================
+       BOTTOM NAVIGATION
+  ========================= -->
+
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-item active"
+      id="homeNav"
+      type="button"
+    >
+      <span class="nav-icon">🏠</span>
+      <span class="nav-text">Home</span>
+    </button>
+
+    <button
+      class="nav-item"
+      id="searchNav"
+      type="button"
+    >
+      <span class="nav-icon">🔎</span>
+      <span class="nav-text">Search</span>
+    </button>
+
+    <button
+      class="nav-item"
+      id="postNav"
+      type="button"
+    >
+      <span class="nav-icon">➕</span>
+      <span class="nav-text">Post</span>
+    </button>
+
+    <button
+      class="nav-item"
+      id="notificationNav"
+      type="button"
+    >
+      <span class="nav-icon">🔔</span>
+      <span class="nav-text">Alerts</span>
+    </button>
+
+    <button
+      class="nav-item"
+      id="profileNav"
+      type="button"
+    >
+      <span class="nav-icon">👤</span>
+      <span class="nav-text">Profile</span>
+    </button>
+
+  </nav>
+
+
+  <!-- =========================
+       FIREBASE / AUTH
+  ========================= -->
+
   <script type="module">
 
+    import { auth, database } from "./firebase-init.js";
+
     import {
-      getCurrentUser,
-      observeAuthState
-    } from "./auth.js";
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+    import {
+      ref,
+      get
+    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
 
-    const status =
-      document.getElementById("status");
+    /*
+      Auth Guard
+    */
 
-    const loader =
-      document.getElementById("loader");
+    onAuthStateChanged(auth, async (user) => {
 
-    const errorBox =
-      document.getElementById("errorBox");
+      if (!user) {
 
-    const retryButton =
-      document.getElementById("retryButton");
+        window.location.replace(
+          "./login.html"
+        );
 
-
-    let finished = false;
-
-
-    // =====================================================
-    // SHOW ERROR
-    // =====================================================
-
-    function showError(message) {
-
-      if (finished) {
         return;
       }
 
-      loader.style.display = "none";
 
-      status.textContent =
-        "Unable to start AYNA BOOK.";
+      /*
+        Firebase Auth-এর নাম
+      */
 
-      errorBox.textContent =
-        message;
-
-      errorBox.style.display =
-        "block";
-
-      retryButton.style.display =
-        "inline-block";
-    }
+      const authName =
+        user.displayName ||
+        user.email ||
+        "AYNA BOOK User";
 
 
-    // =====================================================
-    // NAVIGATION
-    // =====================================================
+      document.getElementById(
+        "userName"
+      ).textContent = authName;
 
-    function goTo(page) {
+      document.getElementById(
+        "profileName"
+      ).textContent = authName;
 
-      if (finished) {
-        return;
+      document.getElementById(
+        "profileEmail"
+      ).textContent =
+        user.email || "";
+
+
+      /*
+        RTDB Profile
+      */
+
+      try {
+
+        const snapshot =
+          await get(
+            ref(
+              database,
+              "users/" + user.uid
+            )
+          );
+
+
+        if (snapshot.exists()) {
+
+          const profile =
+            snapshot.val();
+
+
+          const name =
+            profile.fullName ||
+            authName;
+
+
+          document.getElementById(
+            "userName"
+          ).textContent = name;
+
+          document.getElementById(
+            "profileName"
+          ).textContent = name;
+
+
+          /*
+            Profile Photo থাকলে দেখানো
+          */
+
+          if (profile.photoURL) {
+
+            const avatar =
+              document.getElementById(
+                "userAvatar"
+              );
+
+            const largeAvatar =
+              document.getElementById(
+                "largeAvatar"
+              );
+
+
+            avatar.innerHTML =
+              `<img
+                src="${profile.photoURL}"
+                alt="Profile"
+                style="
+                  width:100%;
+                  height:100%;
+                  object-fit:cover;
+                  border-radius:50%;
+                "
+              >`;
+
+
+            largeAvatar.innerHTML =
+              `<img
+                src="${profile.photoURL}"
+                alt="Profile"
+                style="
+                  width:100%;
+                  height:100%;
+                  object-fit:cover;
+                  border-radius:50%;
+                "
+              >`;
+          }
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Profile loading error:",
+          error
+        );
+
       }
 
-      finished = true;
-
-      window.location.replace(page);
-    }
+    });
 
 
-    // =====================================================
-    // RETRY
-    // =====================================================
+    /*
+      Profile Drawer
+    */
 
-    retryButton.addEventListener(
+    const drawer =
+      document.getElementById(
+        "profileDrawer"
+      );
+
+    const openDrawer = () => {
+      drawer.classList.add("active");
+    };
+
+    const closeDrawer = () => {
+      drawer.classList.remove("active");
+    };
+
+
+    document.getElementById(
+      "profileBtn"
+    ).addEventListener(
       "click",
-      function () {
+      openDrawer
+    );
 
-        window.location.reload();
+
+    document.getElementById(
+      "profileNav"
+    ).addEventListener(
+      "click",
+      openDrawer
+    );
+
+
+    document.getElementById(
+      "closeDrawer"
+    ).addEventListener(
+      "click",
+      closeDrawer
+    );
+
+
+    drawer.addEventListener(
+      "click",
+      (event) => {
+
+        if (event.target === drawer) {
+          closeDrawer();
+        }
 
       }
     );
 
 
-    // =====================================================
-    // STARTUP TIMEOUT
-    // =====================================================
+    /*
+      Logout
+    */
 
-    const timeout =
-      setTimeout(
-        function () {
+    document.getElementById(
+      "logoutBtn"
+    ).addEventListener(
+      "click",
+      async () => {
 
-          showError(
-            "AYNA BOOK is taking too long to start. Please check your internet connection and try again."
+        const button =
+          document.getElementById(
+            "logoutBtn"
           );
 
-        },
-        8000
-      );
+        button.disabled = true;
+        button.textContent =
+          "Logging out...";
 
 
-    // =====================================================
-    // FIREBASE AUTH STATE
-    // =====================================================
+        try {
 
-    try {
+          await signOut(auth);
 
-      status.textContent =
-        "Checking secure account...";
-
-
-      observeAuthState(
-        async function (user) {
-
-          if (finished) {
-            return;
-          }
-
-          clearTimeout(timeout);
-
-
-          // =================================================
-          // NO USER
-          // =================================================
-
-          if (!user) {
-
-            status.textContent =
-              "Opening Sign In...";
-
-            setTimeout(
-              function () {
-
-                goTo("login.html");
-
-              },
-              300
-            );
-
-            return;
-          }
-
-
-          // =================================================
-          // USER EXISTS
-          // =================================================
-
-          status.textContent =
-            "Checking email verification...";
-
-
-          try {
-
-            await user.reload();
-
-          } catch (error) {
-
-            console.error(
-              "User reload error:",
-              error
-            );
-
-          }
-
-
-          const currentUser =
-            getCurrentUser();
-
-
-          // =================================================
-          // EMAIL NOT VERIFIED
-          // =================================================
-
-          if (
-            currentUser &&
-            !currentUser.emailVerified
-          ) {
-
-            status.textContent =
-              "Email verification required...";
-
-            setTimeout(
-              function () {
-
-                goTo(
-                  "verify-email.html"
-                );
-
-              },
-              300
-            );
-
-            return;
-          }
-
-
-          // =================================================
-          // VERIFIED USER
-          // =================================================
-
-          status.textContent =
-            "Opening AYNA BOOK...";
-
-
-          setTimeout(
-            function () {
-
-              goTo("home.html");
-
-            },
-            300
+          window.location.replace(
+            "./login.html"
           );
 
+        } catch (error) {
+
+          console.error(error);
+
+          alert(
+            "Logout করা যায়নি।"
+          );
+
+          button.disabled = false;
+          button.textContent =
+            "🚪 Logout";
         }
-      );
+
+      }
+    );
 
 
-    } catch (error) {
+    /*
+      Temporary navigation buttons
+    */
 
-      clearTimeout(timeout);
+    document.getElementById(
+      "notificationBtn"
+    ).onclick = () => {
+      alert("Notifications page পরে যুক্ত হবে।");
+    };
 
-      console.error(
-        "AYNA BOOK Startup Error:",
-        error
-      );
 
-      showError(
-        "Firebase could not be initialized. Please check your Firebase configuration and internet connection."
-      );
+    document.getElementById(
+      "notificationNav"
+    ).onclick = () => {
+      alert("Notifications page পরে যুক্ত হবে।");
+    };
 
-    }
 
+    document.getElementById(
+      "searchNav"
+    ).onclick = () => {
+      alert("Search page পরে যুক্ত হবে।");
+    };
+
+
+    document.getElementById(
+      "createPostBtn"
+    ).onclick = () => {
+      alert("Post composer পরে যুক্ত হবে।");
+    };
+
+
+    document.getElementById(
+      "postNav"
+    ).onclick = () => {
+      alert("Post composer পরে যুক্ত হবে।");
+    };
+
+
+    document.getElementById(
+      "photoPostBtn"
+    ).onclick = () => {
+      alert("Photo Post পরে যুক্ত হবে।");
+    };
+
+
+    document.getElementById(
+      "videoPostBtn"
+    ).onclick = () => {
+      alert("Video Post পরে যুক্ত হবে।");
+    };
+
+
+    document.getElementById(
+      "textPostBtn"
+    ).onclick = () => {
+      alert("Text Post পরে যুক্ত হবে।");
+    };
+
+
+    document.getElementById(
+      "radarBtn"
+    ).onclick = () => {
+      window.location.href =
+        "./radar.html";
+    };
+
+
+    document.getElementById(
+      "compassBtn"
+    ).onclick = () => {
+      window.location.href =
+        "./compass.html";
+    };
+
+
+    document.getElementById(
+      "gpsBtn"
+    ).onclick = () => {
+      window.location.href =
+        "./gps.html";
+    };
+
+
+    document.getElementById(
+      "liveBtn"
+    ).onclick = () => {
+      alert("Live TV/Radio পরে যুক্ত হবে।");
+    };
+
+
+    document.getElementById(
+      "myProfileBtn"
+    ).onclick = () => {
+      alert("Profile page পরে যুক্ত হবে।");
+    };
+
+
+    document.getElementById(
+      "settingsBtn"
+    ).onclick = () => {
+      alert("Settings page পরে যুক্ত হবে।");
+    };
+
+
+    document.getElementById(
+      "helpBtn"
+    ).onclick = () => {
+      alert("AYNA BOOK Help");
+    };
+
+
+  </script>
+
+
+  <!-- Extra Auth Guard -->
+  <script
+    type="module"
+    src="./auth-guard.js">
   </script>
 
 </body>
