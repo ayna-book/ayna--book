@@ -2,13 +2,16 @@
 // AYNA BOOK
 // FIREBASE CONFIGURATION
 // File: firebase-config.js
+// Firebase SDK: 13.4.0
 // =========================================================
 
-import { initializeApp } from
-  "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
-import { getAuth } from
-  "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import {
+  getAuth
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 
 // =========================================================
@@ -53,7 +56,7 @@ const app =
 
 
 // =========================================================
-// INITIALIZE AUTH
+// INITIALIZE FIREBASE AUTH
 // =========================================================
 
 const auth =
