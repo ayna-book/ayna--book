@@ -1,71 +1,45 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#071b49">
-<title>AYNA BOOK - Global Weather Radar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#020b08">
+<title>AYNA BOOK Radar</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#071b49;color:#fff;font-family:Arial,"Noto Sans Bengali",sans-serif}
-header{padding:16px;text-align:center;background:#102b63;border-bottom:2px solid #ffd700}
-.logo{font-size:25px;font-weight:bold;color:#ffd700}h1{font-size:22px;margin:8px 0}
-nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px;background:#0b2458}
-a,button{padding:10px 14px;border:1px solid #ffd700;border-radius:9px;background:#17366f;color:#fff;text-decoration:none;font-size:15px;cursor:pointer}
-main{max-width:1200px;margin:auto;padding:12px}
-.note{background:#10285a;border:1px solid #34558e;padding:13px;border-radius:10px;line-height:1.7;margin:10px 0}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-select{padding:11px;border-radius:8px;min-width:190px;font-size:15px}
-.mapwrap{height:72vh;min-height:440px;border:2px solid #ffd700;border-radius:12px;overflow:hidden;background:#132f68}
-iframe{width:100%;height:100%;border:0}
-footer{text-align:center;padding:18px;color:#cbd8f5}
+*{box-sizing:border-box}
+body{margin:0;background:#020b08;color:#00ff99;font-family:Arial,sans-serif}
+header{padding:18px;text-align:center;background:#061b13}
+h2{margin:0;color:#00ff99}
+main{height:calc(100dvh - 65px);display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:12px}
+.radar{width:min(88vw,55vh);aspect-ratio:1;border:2px solid #00ff99;border-radius:50%;position:relative;overflow:hidden;background:repeating-radial-gradient(circle,transparent 0 18%,#0b5138 19% 19.5%,transparent 20% 25%),linear-gradient(90deg,transparent 49.7%,#176c48 50%,transparent 50.3%),linear-gradient(transparent 49.7%,#176c48 50%,transparent 50.3%)}
+.sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,#00ff9955 45deg,transparent 75deg);animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.center{position:absolute;left:50%;top:50%;width:9px;height:9px;background:#fff;border-radius:50%;transform:translate(-50%,-50%)}
+.info{text-align:center;line-height:1.8}
+button{background:#00bb70;color:#001b10;border:0;border-radius:8px;padding:13px 24px;font-weight:bold}
 </style>
 </head>
 <body>
-<header><div class="logo">👁 AYNA BOOK</div><h1>GLOBAL CIVILIAN RADAR</h1><div>আবহাওয়া ও বেসামরিক রাডার পর্যবেক্ষণ</div></header>
-<nav>
-<a href="index.html">⌂ হোম</a>
-<a href="military-radar.html">📡 সামরিক রাডার তথ্য</a>
-<a href="compass.html">🧭 কম্পাস</a>
-<button onclick="fullScreen()">⛶ ফুল স্ক্রিন</button>
-</nav>
+<header><h2>AYNA BOOK RADAR</h2></header>
 <main>
-<div class="note"><b style="color:#ffd700">বিশ্ব আবহাওয়া রাডার</b><br>মানচিত্রে বৃষ্টি ও আবহাওয়ার স্তর দেখতে নিচের মানচিত্র ব্যবহার করুন। এটি তৃতীয় পক্ষের Windy সেবা; তথ্য ও কভারেজ অঞ্চলভেদে ভিন্ন হতে পারে।</div>
-<div class="controls">
-<select id="place" onchange="changePlace()">
-<option value="21.5|92.0|5">বাংলাদেশ – কক্সবাজার</option>
-<option value="23.8|90.4|6">বাংলাদেশ – ঢাকা</option>
-<option value="22.35|91.8|6">বাংলাদেশ – চট্টগ্রাম</option>
-<option value="19.07|72.87|5">ভারত – মুম্বাই</option>
-<option value="25.2|55.27|5">UAE – দুবাই</option>
-<option value="51.5|-0.12|5">যুক্তরাজ্য – লন্ডন</option>
-<option value="40.7|-74.0|5">যুক্তরাষ্ট্র – নিউইয়র্ক</option>
-<option value="35.68|139.69|5">জাপান – টোকিও</option>
-</select>
-<button onclick="reloadMap()">↻ মানচিত্র রিফ্রেশ</button>
+<div class="radar"><div class="sweep"></div><div class="center"></div></div>
+<div class="info">
+<div id="status">RADAR READY</div>
+<div id="gps">GPS: অপেক্ষমাণ</div>
+<div>MODE: VISUAL RADAR</div>
 </div>
-<div class="mapwrap" id="mapwrap">
-<iframe id="weatherMap" title="Windy weather radar map" loading="lazy"
-src="https://embed.windy.com/embed2.html?lat=21.5&lon=92.0&detailLat=21.5&detailLon=92.0&width=650&height=450&zoom=5&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=true&type=map&location=coordinates&detail=true&metricWind=default&metricTemp=default&radarRange=-1"
-allowfullscreen></iframe>
-</div>
-<div class="note">জরুরি ঘূর্ণিঝড় বা দুর্যোগের সিদ্ধান্তের জন্য বাংলাদেশ আবহাওয়া অধিদপ্তর ও সরকারি সতর্কবার্তা অনুসরণ করুন। রাডার মানচিত্রে বিলম্ব বা ডেটা-ঘাটতি থাকতে পারে।</div>
+<button onclick="startGPS()">GPS চালু করুন</button>
 </main>
-<footer>AYNA BOOK • Connect. Create. Share. Protect.</footer>
 <script>
-function changePlace(){
- const v=document.getElementById('place').value.split('|');
- const lat=v[0],lon=v[1],zoom=v[2];
- document.getElementById('weatherMap').src=
- 'https://embed.windy.com/embed2.html?lat='+lat+'&lon='+lon+
- '&detailLat='+lat+'&detailLon='+lon+
- '&width=650&height=450&zoom='+zoom+
- '&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=true&type=map&location=coordinates&detail=true&metricWind=default&metricTemp=default&radarRange=-1';
-}
-function reloadMap(){const f=document.getElementById('weatherMap');f.src=f.src;}
-async function fullScreen(){
- const el=document.getElementById('mapwrap');
- try{if(!document.fullscreenElement)await el.requestFullscreen();else await document.exitFullscreen();}
- catch(e){alert('এই ব্রাউজারে ফুল স্ক্রিন চালু করা যায়নি।');}
+function startGPS(){
+if(!navigator.geolocation){gps.textContent="GPS সমর্থিত নয়";return}
+status.textContent="GPS CONNECTING...";
+navigator.geolocation.watchPosition(p=>{
+gps.textContent="LAT: "+p.coords.latitude.toFixed(5)+" | LNG: "+p.coords.longitude.toFixed(5);
+status.textContent="GPS CONNECTED";
+},e=>status.textContent="GPS ERROR: "+e.message,
+{enableHighAccuracy:true,maximumAge:5000});
 }
 </script>
 </body>
