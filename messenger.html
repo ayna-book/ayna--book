@@ -2,744 +2,776 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="theme-color" content="#063b73">
-<title>AYNA MESSENGER</title>
-
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  font-family: Arial, sans-serif;
-  background: #edf3f9;
-  color: #172b42;
-}
-
-body {
-  overflow: hidden;
-}
-
-button, input, textarea {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-#app {
-  width: 100%;
-  height: 100dvh;
-  display: flex;
-  background: white;
-}
-
-/* SIDEBAR */
-
-.sidebar {
-  width: 350px;
-  min-width: 350px;
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid #dce5ef;
-  background: #f8fbff;
-}
-
-.sidebar-header {
-  background: #063b73;
-  color: white;
-  padding: 16px;
-}
-
-.brand-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.brand {
-  font-size: 25px;
-  font-weight: 900;
-  letter-spacing: .5px;
-}
-
-.top-btn {
-  width: 48px;
-  height: 48px;
-  border: 0;
-  border-radius: 14px;
-  background: white;
-  color: #063b73;
-  font-size: 27px;
-  font-weight: bold;
-}
-
-.chat-search {
-  width: 100%;
-  height: 52px;
-  margin-top: 14px;
-  padding: 0 16px;
-  border: 0;
-  outline: none;
-  border-radius: 14px;
-  font-size: 16px;
-  background: white;
-}
-
-.chat-list {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.chat-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px;
-  border-bottom: 1px solid #e6edf4;
-  cursor: pointer;
-  background: white;
-}
-
-.chat-item:active {
-  background: #eaf3ff;
-}
-
-.chat-item img {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  object-fit: contain;
-  background: #e6edf4;
-}
-
-.chat-item-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.chat-item-name {
-  font-size: 17px;
-  font-weight: 800;
-  color: #12375e;
-}
-
-.chat-item-last {
-  font-size: 13px;
-  color: #718096;
-  margin-top: 5px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-/* CHAT PANEL */
-
-.chat-panel {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  background: #eef4fa;
-}
-
-.chat-header {
-  min-height: 75px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: #063b73;
-  color: white;
-}
-
-.back-btn {
-  display: none;
-  border: 0;
-  background: transparent;
-  color: white;
-  font-size: 27px;
-}
-
-.chat-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: contain;
-  background: white;
-}
-
-.chat-person {
-  flex: 1;
-  min-width: 0;
-}
-
-.chat-person h2 {
-  font-size: 19px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.chat-person p {
-  font-size: 12px;
-  margin-top: 4px;
-  color: #d4e7ff;
-}
-
-.call-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.call-btn {
-  width: 43px;
-  height: 43px;
-  border: 0;
-  border-radius: 13px;
-  background: #ffffff;
-  color: #063b73;
-  font-size: 21px;
-}
-
-/* MESSAGES */
-
-.messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 18px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.empty-state {
-  margin: auto;
-  text-align: center;
-  color: #70849a;
-  line-height: 1.8;
-  padding: 20px;
-}
-
-.empty-state strong {
-  display: block;
-  color: #063b73;
-  font-size: 23px;
-}
-
-.message {
-  max-width: 82%;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: white;
-  box-shadow: 0 2px 5px #0000000a;
-  overflow-wrap: anywhere;
-}
-
-.message.mine {
-  align-self: flex-end;
-  background: #d9ebff;
-  border-bottom-right-radius: 4px;
-}
-
-.message.theirs {
-  align-self: flex-start;
-  border-bottom-left-radius: 4px;
-}
-
-.message-text {
-  font-size: 16px;
-  line-height: 1.55;
-  white-space: pre-wrap;
-}
-
-.message-time {
-  font-size: 10px;
-  color: #73859a;
-  text-align: right;
-  margin-top: 6px;
-}
-
-.message img,
-.message video {
-  display: block;
-  width: 100%;
-  max-width: 300px;
-  max-height: 350px;
-  border-radius: 12px;
-  object-fit: contain;
-  background: #111;
-}
-
-.message audio {
-  width: min(270px, 100%);
-}
-
-.message a {
-  color: #075db5;
-  font-weight: bold;
-}
-
-.location-link {
-  display: inline-block;
-  margin-top: 5px;
-}
-
-/* COMPOSER */
-
-.composer {
-  padding: 10px;
-  background: white;
-  border-top: 1px solid #dce5ef;
-}
-
-.composer-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.composer-input {
-  flex: 1;
-  min-width: 0;
-  min-height: 49px;
-  max-height: 130px;
-  resize: none;
-  border: 1px solid #d8e2ed;
-  border-radius: 16px;
-  padding: 13px;
-  outline: none;
-  font-size: 16px;
-}
-
-.action-btn {
-  width: 45px;
-  height: 45px;
-  flex-shrink: 0;
-  border: 0;
-  border-radius: 14px;
-  background: #eaf2fb;
-  color: #06477f;
-  font-size: 21px;
-}
-
-.send-btn {
-  background: #0864ce;
-  color: white;
-  font-size: 20px;
-}
-
-.attach-menu {
-  display: none;
-  flex-wrap: wrap;
-  gap: 9px;
-  padding: 12px 4px;
-}
-
-.attach-menu.show {
-  display: flex;
-}
-
-.attach-option {
-  border: 0;
-  background: #edf4fc;
-  color: #16446e;
-  padding: 11px 13px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-/* MODALS */
-
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: #071a30a8;
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modal-box {
-  width: 100%;
-  max-width: 470px;
-  max-height: 85dvh;
-  overflow-y: auto;
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 15px 50px #0004;
-}
-
-.modal-title {
-  font-size: 22px;
-  font-weight: 900;
-  color: #063b73;
-  margin-bottom: 18px;
-}
-
-.modal-input {
-  width: 100%;
-  height: 52px;
-  padding: 0 15px;
-  border: 1px solid #cad8e7;
-  border-radius: 13px;
-  outline: none;
-  font-size: 16px;
-}
-
-.modal-btn {
-  width: 100%;
-  min-height: 48px;
-  margin-top: 14px;
-  border: 0;
-  border-radius: 13px;
-  background: #0864ce;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.modal-btn.secondary {
-  background: #e8eef5;
-  color: #26435f;
-}
-
-.user-search-status {
-  font-size: 14px;
-  color: #70849a;
-  margin: 12px 2px;
-}
-
-.user-result {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 5px;
-  border-bottom: 1px solid #e5edf5;
-  cursor: pointer;
-}
-
-.user-result img {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  object-fit: contain;
-  background: #edf3f9;
-}
-
-.user-result-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.user-result-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #12375e;
-}
-
-.user-result-id {
-  font-size: 12px;
-  margin-top: 4px;
-  color: #68809a;
-}
-
-.user-result button {
-  border: 0;
-  border-radius: 10px;
-  padding: 10px 12px;
-  color: white;
-  background: #0864ce;
-  font-weight: bold;
-}
-
-/* CALL MODAL */
-
-.call-icon {
-  font-size: 55px;
-  text-align: center;
-  margin: 15px;
-}
-
-.call-description {
-  text-align: center;
-  color: #60758c;
-  line-height: 1.7;
-}
-
-/* TOAST */
-
-.toast {
-  position: fixed;
-  z-index: 2000;
-  left: 50%;
-  bottom: 25px;
-  transform: translateX(-50%);
-  background: #102f50;
-  color: white;
-  padding: 13px 20px;
-  border-radius: 14px;
-  font-size: 14px;
-  display: none;
-  max-width: 90%;
-  text-align: center;
-}
-
-.toast.show {
-  display: block;
-}
-
-/* MOBILE */
-
-@media(max-width:760px) {
-  .sidebar {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .chat-panel {
-    display: none;
-    width: 100%;
-  }
-
-  #app.chat-open .sidebar {
-    display: none;
-  }
-
-  #app.chat-open .chat-panel {
-    display: flex;
-  }
-
-  .back-btn {
-    display: block;
-  }
-
-  .chat-header {
-    padding: 10px;
-  }
-
-  .chat-person h2 {
-    font-size: 16px;
-  }
-
-  .call-btn {
-    width: 39px;
-    height: 39px;
-  }
-
-  .message {
-    max-width: 88%;
-  }
-
-  .brand {
-    font-size: 23px;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#102b50">
+  <title>AYNA BOOK - Messenger</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f8;
+      color: #17243a;
+      min-height: 100vh;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1200px;
+      min-height: 100vh;
+      margin: auto;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 20px #0001;
+    }
+
+    /* HEADER */
+
+    .header {
+      background: #102b50;
+      color: white;
+      padding: 17px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    .header small {
+      display: block;
+      font-size: 13px;
+      margin-top: 4px;
+      color: #c8d9ef;
+    }
+
+    .new-chat-btn {
+      border: none;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #102b50;
+      padding: 12px 15px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    /* MAIN */
+
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 0;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      border-right: 1px solid #dce3ed;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .sidebar-title {
+      padding: 17px;
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .search-box {
+      padding: 0 12px 14px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    #chatList {
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .chat-list-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-bottom: 1px solid #edf0f5;
+      background: white;
+      text-align: left;
+    }
+
+    .chat-list-item.active,
+    .chat-list-item:hover {
+      background: #eaf2ff;
+    }
+
+    .chat-list-avatar,
+    .user-search-avatar {
+      width: 53px;
+      height: 53px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #dce8f8;
+      display: grid;
+      place-items: center;
+    }
+
+    .ayna-avatar-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .ayna-avatar-letter {
+      font-size: 23px;
+      font-weight: bold;
+      color: #173d6a;
+    }
+
+    .chat-list-info {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .chat-list-info strong {
+      font-size: 17px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .chat-list-info small {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .empty-chat-list {
+      padding: 25px 15px;
+      text-align: center;
+      color: #777;
+      font-size: 15px;
+    }
+
+    /* CHAT PANEL */
+
+    .chat-panel {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 650px;
+      background: #f5f7fb;
+    }
+
+    .chat-header {
+      min-height: 76px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border-bottom: 1px solid #e0e6ee;
+    }
+
+    .back-btn {
+      display: none;
+      border: none;
+      background: #edf2f8;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 21px;
+    }
+
+    #chatAvatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #dce8f8;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .chat-user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .chat-user-info h2 {
+      font-size: 18px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #chatStatus {
+      display: block;
+      font-size: 13px;
+      color: #16834a;
+      margin-top: 5px;
+    }
+
+    .call-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .call-actions button {
+      width: 43px;
+      height: 43px;
+      border: none;
+      border-radius: 12px;
+      background: #eaf2ff;
+      font-size: 20px;
+    }
+
+    /* MESSAGES */
+
+    #messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 300px;
+    }
+
+    .message-item {
+      display: flex;
+      width: 100%;
+    }
+
+    .message-mine {
+      justify-content: flex-end;
+    }
+
+    .message-other {
+      justify-content: flex-start;
+    }
+
+    .message-bubble {
+      max-width: 85%;
+      min-width: 75px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0 2px 5px #0001;
+      overflow-wrap: anywhere;
+    }
+
+    .message-mine .message-bubble {
+      background: #dcecff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message-other .message-bubble {
+      border-bottom-left-radius: 4px;
+    }
+
+    .message-text {
+      font-size: 16px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .message-time {
+      display: block;
+      text-align: right;
+      font-size: 11px;
+      color: #718096;
+      margin-top: 7px;
+    }
+
+    .message-media {
+      display: block;
+      max-width: 100%;
+      max-height: 350px;
+      border-radius: 10px;
+      object-fit: contain;
+    }
+
+    .message-bubble audio {
+      max-width: 100%;
+    }
+
+    /* COMPOSER */
+
+    .composer {
+      background: white;
+      padding: 12px;
+      border-top: 1px solid #dfe5ed;
+    }
+
+    .composer-tools {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tool-btn {
+      min-width: 42px;
+      min-height: 42px;
+      border: none;
+      border-radius: 11px;
+      background: #edf3fb;
+      font-size: 19px;
+    }
+
+    .composer-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #messageInput {
+      flex: 1;
+      min-width: 0;
+      height: 49px;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    #sendBtn {
+      width: 52px;
+      height: 49px;
+      border: none;
+      border-radius: 13px;
+      background: #1456a0;
+      color: white;
+      font-size: 21px;
+    }
+
+    /* ATTACHMENT MENU */
+
+    #attachmentMenu {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #f1f5fb;
+      border-radius: 12px;
+    }
+
+    #attachmentMenu[hidden] {
+      display: none;
+    }
+
+    .attachment-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .attachment-grid button {
+      padding: 12px 5px;
+      border: none;
+      border-radius: 10px;
+      background: white;
+      font-size: 14px;
+    }
+
+    /* MODALS */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 15px;
+      background: #0009;
+    }
+
+    .modal[hidden] {
+      display: none;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 450px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 15px 50px #0004;
+    }
+
+    .modal-card h2 {
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    .modal-card input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 11px;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .modal-close {
+      float: right;
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 10px;
+      background: #edf2f7;
+      font-size: 19px;
+    }
+
+    .modal-status {
+      color: #64748b;
+      font-size: 14px;
+      margin: 8px 0;
+    }
+
+    .user-search-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-bottom: 1px solid #eee;
+      background: white;
+      text-align: left;
+    }
+
+    .user-search-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .user-search-info strong {
+      font-size: 16px;
+    }
+
+    .user-search-info small {
+      color: #64748b;
+    }
+
+    .user-search-item > span:last-child {
+      color: #1456a0;
+      font-weight: bold;
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #1456a0;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    /* TOAST */
+
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 25px;
+      transform: translateX(-50%);
+      z-index: 2000;
+      background: #17243a;
+      color: white;
+      padding: 13px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      max-width: 90%;
+      text-align: center;
+      display: none;
+    }
+
+    #toast.show {
+      display: block;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+      .app {
+        min-height: 100dvh;
+      }
+
+      .main {
+        display: block;
+        position: relative;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .sidebar {
+        height: 100%;
+        border-right: none;
+      }
+
+      .chat-panel {
+        display: none;
+        min-height: 0;
+        height: 100%;
+      }
+
+      .chat-panel.chat-open {
+        display: flex;
+      }
+
+      .main:has(.chat-panel.chat-open) .sidebar {
+        display: none;
+      }
+
+      .back-btn {
+        display: block;
+      }
+
+      .chat-header {
+        min-height: 70px;
+        padding: 9px;
+      }
+
+      #messages {
+        min-height: 0;
+      }
+
+      .composer {
+        padding: 10px;
+      }
+
+      .brand {
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .call-actions {
+        gap: 4px;
+      }
+
+      .call-actions button {
+        width: 37px;
+        height: 39px;
+      }
+
+      .chat-user-info h2 {
+        font-size: 16px;
+      }
+
+      .tool-btn {
+        min-width: 38px;
+        min-height: 38px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="app">
+<div class="app">
 
-  <!-- CHAT SIDEBAR -->
+  <!-- HEADER -->
 
-  <aside class="sidebar">
+  <header class="header">
+    <div>
+      <div class="brand">AYNA BOOK</div>
+      <small>GLOBAL MESSENGER</small>
+    </div>
 
-    <div class="sidebar-header">
+    <button class="new-chat-btn" id="newChatBtn">
+      ＋ নতুন চ্যাট
+    </button>
+  </header>
 
-      <div class="brand-row">
+  <!-- MAIN -->
 
-        <div class="brand">
-          AYNA MESSENGER
+  <main class="main">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-title">
+        💬 মেসেজ
+      </div>
+
+      <div class="search-box">
+        <input
+          type="search"
+          id="chatSearch"
+          placeholder="চ্যাট খুঁজুন..."
+        >
+      </div>
+
+      <div id="chatList">
+        <div class="empty-chat-list">
+          চ্যাট লোড হচ্ছে...
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- CHAT PANEL -->
+
+    <section class="chat-panel" id="chatPanel">
+
+      <!-- CHAT HEADER -->
+
+      <div class="chat-header">
+
+        <button
+          class="back-btn"
+          id="backToChatsBtn"
+          aria-label="চ্যাট তালিকায় ফিরে যান"
+        >
+          ←
+        </button>
+
+        <div id="chatAvatar">
+          <span class="ayna-avatar-letter">A</span>
         </div>
 
-        <button
-          class="top-btn"
-          id="newChatBtn"
-          type="button"
-          title="New Chat">＋</button>
+        <div class="chat-user-info">
+          <h2 id="chatName">একটি চ্যাট নির্বাচন করুন</h2>
+          <span id="chatStatus">AYNA MESSENGER</span>
+        </div>
+
+        <div class="call-actions">
+          <button id="voiceCallBtn" title="অডিও কল">
+            📞
+          </button>
+
+          <button id="videoCallBtn" title="ভিডিও কল">
+            📹
+          </button>
+        </div>
 
       </div>
 
-      <input
-        class="chat-search"
-        id="chatSearch"
-        type="search"
-        placeholder="চ্যাট খুঁজুন...">
+      <!-- MESSAGES -->
 
-    </div>
-
-    <div class="chat-list" id="chatList">
-
-      <div class="empty-state">
-        <strong>AYNA MESSENGER</strong>
-        আপনার Chat এখানে দেখা যাবে।
+      <div id="messages">
+        <div class="empty-chat-list">
+          <h2>AYNA MESSENGER</h2>
+          <p style="margin-top:10px">
+            চ্যাট তালিকা থেকে একজনকে নির্বাচন করুন।
+          </p>
+        </div>
       </div>
 
-    </div>
+      <!-- COMPOSER -->
 
-  </aside>
+      <div class="composer">
 
+        <!-- ATTACHMENT MENU -->
 
-  <!-- CHAT PANEL -->
+        <div id="attachmentMenu" hidden>
+          <div class="attachment-grid">
 
-  <main class="chat-panel">
+            <button id="imageBtn">
+              🖼️ ছবি
+            </button>
 
-    <header class="chat-header">
+            <button id="videoBtn">
+              🎬 ভিডিও
+            </button>
 
-      <button
-        class="back-btn"
-        id="mobileBack"
-        type="button">‹</button>
+            <button id="audioBtn">
+              🎵 অডিও
+            </button>
 
-      <img
-        class="chat-avatar"
-        id="chatAvatar"
-        src="https://ui-avatars.com/api/?name=AYNA&background=0864ce&color=fff"
-        alt="Profile">
+            <button id="documentBtn">
+              📄 ডকুমেন্ট
+            </button>
 
-      <div class="chat-person">
+            <button id="locationBtn">
+              📍 লোকেশন
+            </button>
 
-        <h2 id="chatName">
-          AYNA MESSENGER
-        </h2>
+          </div>
+        </div>
 
-        <p id="chatStatus">
-          একজন User নির্বাচন করুন
-        </p>
+        <!-- TOOL BUTTONS -->
 
-      </div>
+        <div class="composer-tools">
 
-      <div class="call-actions">
+          <button class="tool-btn" id="attachBtn" title="ফাইল">
+            📎
+          </button>
 
-        <button
-          class="call-btn"
-          id="voiceCallBtn"
-          type="button"
-          title="Voice Call">☎</button>
+          <button class="tool-btn" id="emojiBtn" title="ইমোজি">
+            😊
+          </button>
 
-        <button
-          class="call-btn"
-          id="videoCallBtn"
-          type="button"
-          title="Video Call">▣</button>
+          <button class="tool-btn" id="voiceBtn" title="ভয়েস রেকর্ড">
+            🎤
+          </button>
 
-      </div>
+        </div>
 
-    </header>
+        <!-- MESSAGE INPUT -->
 
+        <div class="composer-row">
 
-    <!-- MESSAGES -->
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="মেসেজ লিখুন..."
+            autocomplete="off"
+          >
 
-    <section
-      class="messages"
-      id="messages">
+          <button id="sendBtn" title="পাঠান">
+            ➤
+          </button>
 
-      <div class="empty-state">
-
-        <strong>AYNA BOOK</strong>
-
-        আপনার বন্ধুদের সঙ্গে<br>
-        মেসেজ আদান-প্রদান করুন।
+        </div>
 
       </div>
 
     </section>
 
-
-    <!-- COMPOSER -->
-
-    <footer class="composer">
-
-      <div
-        class="attach-menu"
-        id="attachMenu">
-
-        <button
-          class="attach-option"
-          id="imageBtn"
-          type="button">📷 ছবি</button>
-
-        <button
-          class="attach-option"
-          id="videoBtn"
-          type="button">🎬 ভিডিও</button>
-
-        <button
-          class="attach-option"
-          id="audioBtn"
-          type="button">🎵 অডিও</button>
-
-        <button
-          class="attach-option"
-          id="documentBtn"
-          type="button">📄 ফাইল</button>
-
-        <button
-          class="attach-option"
-          id="locationBtn"
-          type="button">📍 লোকেশন</button>
-
-      </div>
-
-
-      <div class="composer-row">
-
-        <button
-          class="action-btn"
-          id="attachBtn"
-          type="button"
-          title="Attachment">＋</button>
-
-        <button
-          class="action-btn"
-          id="emojiBtn"
-          type="button"
-          title="Emoji">☺</button>
-
-        <textarea
-          class="composer-input"
-          id="messageInput"
-          rows="1"
-          placeholder="মেসেজ লিখুন..."></textarea>
-
-        <button
-          class="action-btn"
-          id="voiceBtn"
-          type="button"
-          title="Voice Record">🎙</button>
-
-        <button
-          class="action-btn send-btn"
-          id="sendBtn"
-          type="button"
-          title="Send">➤</button>
-
-      </div>
-
-    </footer>
-
   </main>
 
 </div>
-
 
 <!-- HIDDEN FILE INPUTS -->
 
@@ -747,102 +779,122 @@ button {
   type="file"
   id="imageInput"
   accept="image/*"
-  hidden>
+  hidden
+>
 
 <input
   type="file"
   id="videoInput"
   accept="video/*"
-  hidden>
+  hidden
+>
 
 <input
   type="file"
   id="audioInput"
   accept="audio/*"
-  hidden>
+  hidden
+>
 
 <input
   type="file"
   id="documentInput"
-  accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx"
-  hidden>
-
+  accept=".pdf,.doc,.docx,.txt"
+  hidden
+>
 
 <!-- NEW CHAT MODAL -->
 
-<div class="modal" id="newChatModal">
+<div class="modal" id="newChatModal" hidden>
 
-  <div class="modal-box">
+  <div class="modal-card">
 
-    <div class="modal-title">
-      👤 নতুন Chat
-    </div>
+    <button
+      class="modal-close"
+      id="closeNewChatBtn"
+      aria-label="বন্ধ করুন"
+    >
+      ✕
+    </button>
+
+    <h2>নতুন চ্যাট শুরু করুন</h2>
 
     <input
-      class="modal-input"
-      id="userSearchInput"
       type="search"
-      placeholder="AYNA ID অথবা নাম লিখুন...">
+      id="userSearchInput"
+      placeholder="নাম অথবা AYNA ID লিখুন"
+    >
 
     <div
-      class="user-search-status"
-      id="userSearchStatus">
+      class="modal-status"
+      id="userSearchStatus"
+    >
       ব্যবহারকারী খুঁজুন
     </div>
 
     <div id="userSearchResults"></div>
 
-    <button
-      class="modal-btn secondary"
-      id="closeNewChatBtn"
-      type="button">বন্ধ করুন</button>
-
   </div>
 
 </div>
-
 
 <!-- CALL MODAL -->
 
-<div class="modal" id="callModal">
+<div class="modal" id="callModal" hidden>
 
-  <div class="modal-box">
-
-    <div class="modal-title" id="callTitle">
-      AYNA CALL
-    </div>
-
-    <div class="call-icon">
-      📞
-    </div>
-
-    <div class="call-description" id="callText">
-      কল শুরু করার প্রস্তুতি।
-    </div>
+  <div class="modal-card">
 
     <button
-      class="modal-btn"
-      id="startCallBtn"
-      type="button">কল শুরু করুন</button>
-
-    <button
-      class="modal-btn secondary"
+      class="modal-close"
       id="closeCallBtn"
-      type="button">বন্ধ করুন</button>
+      aria-label="বন্ধ করুন"
+    >
+      ✕
+    </button>
+
+    <h2 id="callTitle">কল</h2>
+
+    <p id="callText">
+      কল রিকোয়েস্টের তথ্য এখানে দেখানো হবে।
+    </p>
+
+    <button
+      class="primary-btn"
+      id="startCallBtn"
+      type="button"
+    >
+      কল শুরু করুন
+    </button>
 
   </div>
 
 </div>
 
-
 <!-- TOAST -->
 
-<div class="toast" id="toast"></div>
-
+<div id="toast" role="status" aria-live="polite"></div>
 
 <!-- FIREBASE MESSENGER SCRIPT -->
 
 <script type="module" src="./messenger.js"></script>
+
+<script>
+  // Attachment menu
+  const attachButton = document.getElementById("attachBtn");
+  const attachmentMenu = document.getElementById("attachmentMenu");
+
+  attachButton.addEventListener("click", () => {
+    attachmentMenu.hidden = !attachmentMenu.hidden;
+  });
+
+  // Close attachment menu after choosing a file
+  ["imageBtn", "videoBtn", "audioBtn", "documentBtn", "locationBtn"]
+    .forEach(id => {
+      document.getElementById(id).addEventListener("click", () => {
+        attachmentMenu.hidden = true;
+      });
+    });
+</script>
 
 </body>
 </html>
