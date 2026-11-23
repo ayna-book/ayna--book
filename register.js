@@ -4,101 +4,78 @@ import { saveUserProfile } from "./database.js";
 import { uploadProfilePhoto } from "./storage.js";
 
 const registerForm = document.getElementById("registerForm");
-
-const fullNameInput = document.getElementById("fullName");
-const emailInput = document.getElementById("email");
-const countryInput = document.getElementById("country");
-const phoneInput = document.getElementById("phone");
-const photoInput = document.getElementById("photo");
-const passwordInput = document.getElementById("password");
-const confirmPasswordInput =
-  document.getElementById("confirmPassword");
-
-const termsInput = document.getElementById("terms");
-const registerButton =
-  document.getElementById("registerButton");
+const registerButton = document.getElementById("registerButton");
 const message = document.getElementById("message");
+
+function showMessage(text, success = false) {
+  message.textContent = text;
+  message.style.color = success ? "#4caf50" : "#ff5252";
+}
 
 registerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  if (registerButton.disabled) return;
+  const fullName = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const country = document.getElementById("country").value;
+  const phone = document.getElementById("phone").value.trim();
 
-  const fullName = fullNameInput.value.trim();
-  const email = emailInput.value.trim();
-  const country = countryInput.value.trim();
-  const phone = phoneInput.value.trim();
-  const password = passwordInput.value;
-  const confirmPassword = confirmPasswordInput.value;
-  const photoFile = photoInput?.files?.[0];
+  const photoFile = document.getElementById("photo").files[0];
 
-  // Required field validation
-  if (!fullName || !email || !country || !password) {
-    message.textContent = "সব প্রয়োজনীয় তথ্য পূরণ করুন।";
+  const password = document.getElementById("password").value;
+  const confirmPassword =
+    document.getElementById("confirmPassword").value;
+
+  const terms = document.getElementById("terms").checked;
+
+  // Validation
+  if (fullName.length < 2) {
+    showMessage("Please enter your full name.");
     return;
   }
 
-  if (fullName.length < 2 || fullName.length > 100) {
-    message.textContent = "নাম ২ থেকে ১০০ অক্ষরের মধ্যে দিন।";
+  if (!email || !country || !photoFile) {
+    showMessage("Please complete all required fields.");
     return;
   }
 
-  if (!photoFile) {
-    message.textContent = "Profile Photo নির্বাচন করুন।";
-    return;
-  }
-
-  if (!photoFile.type.startsWith("image/")) {
-    message.textContent = "শুধু Image File নির্বাচন করুন।";
-    return;
-  }
-
-  if (photoFile.size > 5 * 1024 * 1024) {
-    message.textContent = "ছবির সাইজ সর্বোচ্চ ৫ MB হতে পারবে।";
-    return;
-  }
-
-  if (password.length < 6) {
-    message.textContent = "Password কমপক্ষে ৬ অক্ষরের দিন।";
+  if (password.length < 8) {
+    showMessage("Password must be at least 8 characters.");
     return;
   }
 
   if (password !== confirmPassword) {
-    message.textContent = "দুটি Password মিলছে না।";
+    showMessage("Passwords do not match.");
     return;
   }
 
-  if (!termsInput.checked) {
-    message.textContent =
-      "Terms & Conditions গ্রহণ করতে হবে।";
+  if (!terms) {
+    showMessage("Please accept Terms & Conditions.");
     return;
   }
 
   registerButton.disabled = true;
   registerButton.textContent = "CREATING ACCOUNT...";
-  message.textContent = "অ্যাকাউন্ট তৈরি হচ্ছে...";
+  showMessage("Please wait. Creating your account...", true);
+
+  let accountCreated = false;
 
   try {
-    // 1. Create Firebase Authentication Account
+    // 1. Create Firebase Auth account
     const credential = await registerUser(email, password);
 
-    const user = credential.user || credential;
+    const user = credential.user;
+    accountCreated = true;
 
-    if (!user || !user.uid) {
-      throw new Error("Firebase User পাওয়া যায়নি।");
-    }
-
-    // 2. Upload Profile Photo
-    message.textContent = "Profile Photo Upload হচ্ছে...";
+    // 2. Upload profile photo
+    showMessage("Uploading profile photo...", true);
 
     const uploadResult = await uploadProfilePhoto(photoFile);
 
-    if (!uploadResult || !uploadResult.success || !uploadResult.url) {
-      throw new Error("Profile Photo Upload ব্যর্থ হয়েছে।");
-    }
+    // 3. Save profile in Realtime Database
+    showMessage("Saving your profile...", true);
 
-    // 3. Create User Profile
-    const profile = {
+    await saveUserProfile({
       uid: user.uid,
       aynaId: "AYNA-" + user.uid,
       fullName: fullName,
@@ -110,46 +87,52 @@ registerForm.addEventListener("submit", async (event) => {
       bio: "",
       plan: "free",
       createdAt: Date.now()
-    };
+    });
 
-    // 4. Save Profile in Realtime Database
-    message.textContent = "Profile Save হচ্ছে...";
+    // 4. Registration completed
+    showMessage(
+      "Account created successfully! Verification email sent.",
+      true
+    );
 
-    await saveUserProfile(profile);
+    registerButton.textContent = "SUCCESS";
 
-    // 5. Go to Email Verification
-    message.textContent =
-      "Registration সফল হয়েছে। Email Verify করুন।";
-
-    window.location.replace("./verify-email.html");
+    // 5. Go to email verification page
+    setTimeout(() => {
+      window.location.href = "verify-email.html";
+    }, 1500);
 
   } catch (error) {
-    console.error("Registration Error:", error);
+    console.error("Registration error:", error);
 
-    const errors = {
-      "auth/email-already-in-use":
-        "এই Email দিয়ে আগে Account তৈরি হয়েছে।",
+    let errorMessage = "Registration failed. Please try again.";
 
-      "auth/invalid-email":
-        "সঠিক Email Address দিন।",
+    if (error.code === "auth/email-already-in-use") {
+      errorMessage = "This email is already registered.";
+    } else if (error.code === "auth/invalid-email") {
+      errorMessage = "Please enter a valid email address.";
+    } else if (error.code === "auth/weak-password") {
+      errorMessage = "Please use a stronger password.";
+    } else if (error.code === "auth/network-request-failed") {
+      errorMessage = "Network error. Check your internet connection.";
+    } else if (error.code === "storage/unauthorized" ||
+               error.code === "storage/unauthenticated") {
+      errorMessage = "Photo upload permission denied. Check Storage Rules.";
+    } else if (error.code === "storage/quota-exceeded") {
+      errorMessage = "Firebase Storage quota exceeded.";
+    } else if (accountCreated) {
+      errorMessage =
+        "Your login account was created, but profile setup failed. " +
+        "Please contact support before trying to register again.";
+    }
 
-      "auth/weak-password":
-        "আরও শক্তিশালী Password ব্যবহার করুন।",
-
-      "auth/network-request-failed":
-        "Internet Connection পরীক্ষা করুন।",
-
-      "storage/unauthorized":
-        "Photo Upload অনুমতি নেই। Storage Rules পরীক্ষা করুন।"
-    };
-
-    message.textContent =
-      errors[error.code] ||
-      error.message ||
-      "Registration ব্যর্থ হয়েছে।";
+    showMessage(errorMessage);
 
   } finally {
-    registerButton.disabled = false;
-    registerButton.textContent = "CREATE ACCOUNT";
+    if (!accountCreated || message.textContent.includes("failed") ||
+        message.textContent.includes("denied")) {
+      registerButton.disabled = false;
+      registerButton.textContent = "CREATE ACCOUNT";
+    }
   }
 });
