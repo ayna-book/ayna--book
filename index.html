@@ -8,1113 +8,1208 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   >
 
-  <meta name="theme-color" content="#06140e">
+  <meta name="theme-color" content="#061b16">
 
   <title>AYNA BOOK</title>
 
   <style>
-
-    *{
-      box-sizing:border-box;
-      -webkit-tap-highlight-color:transparent;
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html,
-    body{
-      margin:0;
-      padding:0;
-      width:100%;
-      min-height:100%;
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       font-family:
-        system-ui,
-        -apple-system,
+        Arial,
         "Noto Sans Bengali",
-        "Noto Sans",
         sans-serif;
-      background:#06140e;
-      color:#fff;
+      background: #061b16;
+      color: #ffffff;
     }
 
-    body{
-      min-height:100vh;
+    body {
+      overscroll-behavior: none;
     }
 
-    button{
-      font:inherit;
-    }
-
-    .app{
-      width:100%;
-      max-width:900px;
-      min-height:100vh;
-      margin:auto;
-
+    .app {
+      width: 100%;
+      height: 100dvh;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
       background:
         radial-gradient(
           circle at top,
-          #123d2b 0,
-          #06140e 45%,
-          #020806 100%
+          #14503e 0%,
+          #061b16 48%,
+          #020b08 100%
         );
     }
 
-    /* =========================
-       TOP BAR
-    ========================= */
+    .scroll-area {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 72px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 25px;
+      -webkit-overflow-scrolling: touch;
+    }
 
-    .topbar{
+    /* TOP BAR */
 
-      position:sticky;
-      top:0;
-      z-index:100;
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
 
-      height:64px;
+      display: flex;
+      align-items: center;
 
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      padding:
+        max(12px, env(safe-area-inset-top))
+        14px
+        12px
+        14px;
 
-      padding:0 14px;
-
-      background:
-        rgba(2,12,8,.95);
-
-      backdrop-filter:blur(14px);
+      background: rgba(3, 18, 14, 0.94);
+      backdrop-filter: blur(12px);
 
       border-bottom:
-        1px solid
-        rgba(255,255,255,.08);
+        1px solid rgba(255,255,255,0.08);
     }
 
-    .logo{
-
-      font-size:22px;
-      font-weight:900;
-
-      letter-spacing:.3px;
+    .brand {
+      flex: 1;
     }
 
-    .top-actions{
-
-      display:flex;
-      gap:8px;
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 1px;
     }
 
-    .icon-btn{
-
-      width:42px;
-      height:42px;
-
-      border:0;
-      border-radius:50%;
-
-      background:#123d2b;
-      color:#fff;
-
-      font-size:20px;
-
-      cursor:pointer;
+    .brand p {
+      margin: 3px 0 0;
+      font-size: 11px;
+      color: #a7c9bf;
     }
 
-    /* =========================
-       MAIN
-    ========================= */
+    .top-btn {
+      width: 43px;
+      height: 43px;
 
-    .container{
-      padding:14px;
-      padding-bottom:90px;
+      margin-left: 8px;
+
+      border: 0;
+      border-radius: 14px;
+
+      color: white;
+      background: #123d31;
+
+      font-size: 20px;
+      cursor: pointer;
     }
 
-    /* =========================
-       WELCOME
-    ========================= */
+    .top-btn:active {
+      transform: scale(.94);
+    }
 
-    .welcome{
+    /* CONTENT */
 
-      padding:20px;
+    .content {
+      padding: 14px;
+    }
 
-      border-radius:22px;
+    .welcome {
+      padding: 18px;
+      border-radius: 22px;
 
       background:
         linear-gradient(
           135deg,
-          #0e5638,
-          #092719
+          rgba(29,111,84,.95),
+          rgba(7,43,33,.95)
         );
 
+      border:
+        1px solid rgba(255,255,255,.10);
+
       box-shadow:
-        0 10px 30px
-        rgba(0,0,0,.25);
-
-      margin-bottom:14px;
+        0 12px 30px rgba(0,0,0,.18);
     }
 
-    .welcome h2{
-
-      margin:0 0 6px;
-
-      font-size:25px;
-      font-weight:900;
+    .welcome h2 {
+      margin: 0 0 7px;
+      font-size: 21px;
     }
 
-    .welcome p{
-
-      margin:4px 0;
-
-      color:#c8e7d9;
-
-      font-size:14px;
+    .welcome p {
+      margin: 0;
+      color: #c7e6dd;
+      line-height: 1.5;
+      font-size: 13px;
     }
 
-    /* =========================
-       QUICK MENU
-    ========================= */
+    /* QUICK MENU */
 
-    .section{
+    .section-title {
+      margin: 20px 2px 10px;
+      font-size: 17px;
+      font-weight: bold;
+    }
 
-      padding:15px;
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
 
-      margin-top:14px;
+    .quick-card {
+      min-height: 105px;
 
-      border-radius:20px;
+      padding: 15px;
+
+      border-radius: 18px;
 
       background:
-        rgba(10,32,23,.92);
+        rgba(255,255,255,.065);
 
       border:
-        1px solid
-        rgba(255,255,255,.07);
+        1px solid rgba(255,255,255,.08);
 
-      box-shadow:
-        0 8px 25px
-        rgba(0,0,0,.18);
+      color: white;
+      text-decoration: none;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      transition: .15s;
     }
 
-    .section-title{
-
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-
-      margin-bottom:13px;
+    .quick-card:active {
+      transform: scale(.97);
+      background: rgba(255,255,255,.12);
     }
 
-    .section-title h3{
-
-      margin:0;
-
-      font-size:19px;
+    .quick-icon {
+      font-size: 30px;
+      margin-bottom: 7px;
     }
 
-    .quick-grid{
-
-      display:grid;
-
-      grid-template-columns:
-        repeat(4,1fr);
-
-      gap:9px;
+    .quick-name {
+      font-size: 14px;
+      font-weight: bold;
     }
 
-    .quick-btn{
-
-      min-height:90px;
-
-      padding:10px 5px;
-
-      border:0;
-
-      border-radius:17px;
-
-      background:#0b2118;
-
-      color:#fff;
-
-      cursor:pointer;
-
-      border:
-        1px solid
-        rgba(255,255,255,.06);
-
-      transition:.15s;
+    .quick-sub {
+      margin-top: 3px;
+      font-size: 10px;
+      color: #9fbdb5;
     }
 
-    .quick-btn:active{
+    /* PRAYER */
 
-      transform:scale(.96);
+    .prayer-card {
+      display: block;
 
-      background:#145b3d;
-    }
+      margin-top: 14px;
+      padding: 17px;
 
-    .quick-icon{
+      border-radius: 20px;
 
-      display:block;
-
-      font-size:29px;
-
-      margin-bottom:6px;
-    }
-
-    .quick-text{
-
-      font-size:12px;
-
-      font-weight:700;
-    }
-
-    /* =========================
-       PRAYER CARD
-    ========================= */
-
-    .prayer-card{
-
-      padding:16px;
-
-      border-radius:18px;
+      text-decoration: none;
+      color: white;
 
       background:
         linear-gradient(
           135deg,
-          #092b1d,
-          #104f35
+          #145d47,
+          #092c22
         );
 
-      margin-top:10px;
-    }
-
-    .prayer-card h3{
-
-      margin:0 0 6px;
-
-      font-size:20px;
-    }
-
-    .prayer-card p{
-
-      margin:4px 0;
-
-      color:#c8e7d9;
-
-      font-size:13px;
-      line-height:1.5;
-    }
-
-    .prayer-open{
-
-      width:100%;
-
-      margin-top:12px;
-
-      min-height:45px;
-
-      border:0;
-
-      border-radius:13px;
-
-      background:#1b8b5c;
-
-      color:#fff;
-
-      font-weight:900;
-
-      cursor:pointer;
-    }
-
-    /* =========================
-       CREATE POST
-    ========================= */
-
-    .create-post{
-
-      display:flex;
-      align-items:center;
-
-      gap:10px;
-    }
-
-    .create-avatar{
-
-      width:45px;
-      height:45px;
-
-      border-radius:50%;
-
-      object-fit:cover;
-
-      background:#173f2e;
-
       border:
-        2px solid
-        rgba(255,255,255,.08);
+        1px solid rgba(255,255,255,.08);
     }
 
-    .create-input{
-
-      flex:1;
-
-      min-height:45px;
-
-      display:flex;
-      align-items:center;
-
-      padding:0 15px;
-
-      border-radius:25px;
-
-      background:#071810;
-
-      color:#91aa9f;
-
-      font-size:14px;
-
-      cursor:pointer;
+    .prayer-card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
     }
 
-    /* =========================
-       FEED
-    ========================= */
-
-    .empty-feed{
-
-      padding:30px 15px;
-
-      text-align:center;
-
-      color:#789487;
-
-      font-size:14px;
+    .prayer-card p {
+      margin: 0;
+      font-size: 12px;
+      color: #c2e0d7;
+      line-height: 1.5;
     }
 
-    /* =========================
-       PROFILE DRAWER
-    ========================= */
+    /* CREATE POST */
 
-    .drawer-overlay{
+    .post-box {
+      margin-top: 15px;
+      padding: 15px;
 
-      position:fixed;
-
-      inset:0;
-
-      z-index:300;
+      border-radius: 18px;
 
       background:
-        rgba(0,0,0,.6);
-
-      display:none;
-    }
-
-    .drawer-overlay.show{
-      display:block;
-    }
-
-    .drawer{
-
-      position:absolute;
-
-      top:0;
-      right:0;
-
-      width:min(360px,90%);
-
-      height:100%;
-
-      padding:20px;
-
-      background:#071810;
-
-      box-shadow:
-        -10px 0 35px
-        rgba(0,0,0,.35);
-
-      overflow-y:auto;
-    }
-
-    .profile-head{
-
-      text-align:center;
-
-      padding:20px 0;
-    }
-
-    .profile-photo{
-
-      width:90px;
-      height:90px;
-
-      border-radius:50%;
-
-      object-fit:cover;
-
-      background:#173f2e;
+        rgba(255,255,255,.055);
 
       border:
-        3px solid
-        #1b8b5c;
+        1px solid rgba(255,255,255,.08);
     }
 
-    .profile-name{
-
-      margin-top:10px;
-
-      font-size:20px;
-      font-weight:900;
+    .post-box-title {
+      font-weight: bold;
+      margin-bottom: 10px;
     }
 
-    .profile-email{
+    .post-input {
+      width: 100%;
+      min-height: 70px;
 
-      margin-top:3px;
+      resize: none;
 
-      color:#91aa9f;
+      padding: 12px;
 
-      font-size:13px;
-      word-break:break-word;
+      border-radius: 14px;
+      border:
+        1px solid rgba(255,255,255,.10);
+
+      outline: none;
+
+      background: #09271f;
+      color: white;
+
+      font-size: 14px;
     }
 
-    .drawer-btn{
-
-      width:100%;
-
-      min-height:47px;
-
-      margin-top:9px;
-
-      border:0;
-
-      border-radius:13px;
-
-      background:#0d271c;
-
-      color:#fff;
-
-      text-align:left;
-
-      padding:0 15px;
-
-      font-weight:700;
-
-      cursor:pointer;
+    .post-input::placeholder {
+      color: #75958c;
     }
 
-    .drawer-btn.logout{
+    .post-button {
+      width: 100%;
+      min-height: 44px;
 
-      background:#672727;
+      margin-top: 9px;
+
+      border: 0;
+      border-radius: 13px;
+
+      background: #17634c;
+      color: white;
+
+      font-weight: bold;
     }
 
-    /* =========================
-       BOTTOM NAV
-    ========================= */
+    /* FEED */
 
-    .bottom-nav{
+    .feed {
+      margin-top: 15px;
+    }
 
-      position:fixed;
+    .feed-empty {
+      padding: 25px 15px;
 
-      left:50%;
+      text-align: center;
 
-      bottom:0;
+      border-radius: 18px;
 
-      transform:translateX(-50%);
+      background:
+        rgba(255,255,255,.045);
 
-      z-index:150;
+      color: #78978e;
 
-      width:100%;
+      font-size: 13px;
+    }
 
-      max-width:900px;
+    /* BOTTOM NAV */
 
-      height:68px;
+    .bottom-nav {
+      position: absolute;
 
-      display:grid;
+      left: 0;
+      right: 0;
+      bottom: 0;
 
+      height: 72px;
+
+      display: grid;
       grid-template-columns:
-        repeat(4,1fr);
+        repeat(4, 1fr);
+
+      padding:
+        7px
+        7px
+        max(7px, env(safe-area-inset-bottom))
+        7px;
 
       background:
-        rgba(3,15,10,.96);
-
-      backdrop-filter:blur(14px);
+        rgba(3,18,14,.97);
 
       border-top:
-        1px solid
-        rgba(255,255,255,.08);
+        1px solid rgba(255,255,255,.09);
+
+      backdrop-filter: blur(12px);
+
+      z-index: 100;
     }
 
-    .nav-btn{
+    .nav-btn {
+      border: 0;
+      background: transparent;
+      color: #8ba9a0;
 
-      border:0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
-      background:transparent;
+      gap: 3px;
 
-      color:#829b90;
-
-      cursor:pointer;
-
-      font-size:11px;
-
-      font-weight:700;
+      font-size: 11px;
+      cursor: pointer;
     }
 
-    .nav-icon{
-
-      display:block;
-
-      font-size:22px;
-
-      margin-bottom:2px;
+    .nav-icon {
+      font-size: 22px;
     }
 
-    .nav-btn.active{
-
-      color:#45dc91;
+    .nav-btn.active {
+      color: #73e0bb;
     }
 
-    /* =========================
-       ALERT
-    ========================= */
+    /* DRAWER */
 
-    .toast{
+    .drawer-bg {
+      position: fixed;
+      inset: 0;
 
-      position:fixed;
+      background:
+        rgba(0,0,0,.58);
 
-      left:50%;
+      z-index: 200;
 
-      bottom:82px;
+      display: none;
+    }
+
+    .drawer-bg.show {
+      display: block;
+    }
+
+    .drawer {
+      position: fixed;
+
+      top: 0;
+      right: 0;
+
+      width: min(330px, 88vw);
+      height: 100dvh;
+
+      background:
+        linear-gradient(
+          180deg,
+          #0b3328,
+          #04150f
+        );
+
+      z-index: 201;
+
+      transform: translateX(100%);
+      transition: transform .25s ease;
+
+      overflow-y: auto;
+
+      box-shadow:
+        -15px 0 40px rgba(0,0,0,.35);
+
+      padding:
+        max(20px, env(safe-area-inset-top))
+        18px
+        25px;
+    }
+
+    .drawer.show {
+      transform: translateX(0);
+    }
+
+    .drawer-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      padding-bottom: 18px;
+
+      border-bottom:
+        1px solid rgba(255,255,255,.09);
+    }
+
+    .profile-photo {
+      width: 58px;
+      height: 58px;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #123d31;
+
+      border:
+        2px solid #5bc6a4;
+    }
+
+    .profile-name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .profile-email {
+      margin-top: 4px;
+
+      font-size: 11px;
+      color: #8faea5;
+
+      word-break: break-all;
+    }
+
+    .drawer-menu {
+      margin-top: 15px;
+    }
+
+    .drawer-link {
+      width: 100%;
+
+      min-height: 49px;
+
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      padding: 10px 12px;
+      margin-bottom: 7px;
+
+      border: 0;
+      border-radius: 13px;
+
+      background:
+        rgba(255,255,255,.055);
+
+      color: white;
+
+      text-decoration: none;
+
+      font-size: 14px;
+
+      text-align: left;
+    }
+
+    .drawer-link:active {
+      background:
+        rgba(255,255,255,.12);
+    }
+
+    .logout {
+      margin-top: 14px;
+
+      background:
+        #642b2b;
+
+      color: #ffdede;
+    }
+
+    /* STATUS */
+
+    .status {
+      position: fixed;
+
+      left: 50%;
+      bottom: 82px;
 
       transform:
-        translateX(-50%)
-        translateY(20px);
+        translate(-50%, 20px);
 
-      z-index:500;
+      opacity: 0;
+      pointer-events: none;
 
-      width:
-        min(90%,420px);
+      width: calc(100% - 35px);
+      max-width: 450px;
 
-      padding:13px 15px;
+      padding: 11px 15px;
 
-      border-radius:13px;
+      border-radius: 13px;
 
-      background:#173f2e;
+      background:
+        #123d31;
 
-      color:#fff;
+      color: white;
 
-      text-align:center;
+      text-align: center;
 
-      font-size:13px;
+      font-size: 13px;
 
-      opacity:0;
+      z-index: 300;
 
-      pointer-events:none;
-
-      transition:.25s;
+      transition: .25s;
     }
 
-    .toast.show{
-
-      opacity:1;
-
+    .status.show {
+      opacity: 1;
       transform:
-        translateX(-50%)
-        translateY(0);
+        translate(-50%, 0);
     }
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
+    @media (min-width: 650px) {
 
-    @media(max-width:600px){
-
-      .quick-grid{
-
-        grid-template-columns:
-          repeat(2,1fr);
+      .content {
+        max-width: 850px;
+        margin: auto;
       }
 
+      .quick-grid {
+        grid-template-columns:
+          repeat(4, 1fr);
+      }
+
+      .quick-card {
+        min-height: 120px;
+      }
     }
 
   </style>
 </head>
 
+
 <body>
 
 <div class="app">
 
-  <!-- =========================
-       TOP BAR
-  ========================= -->
+  <!-- SCROLL AREA -->
 
-  <header class="topbar">
+  <div class="scroll-area" id="scrollArea">
 
-    <div class="logo">
-      AYNA BOOK
-    </div>
+    <!-- TOP BAR -->
 
-    <div class="top-actions">
+    <header class="topbar">
+
+      <div class="brand">
+
+        <h1>AYNA BOOK</h1>
+
+        <p>Connect • Explore • Discover</p>
+
+      </div>
 
       <button
-        class="icon-btn"
+        class="top-btn"
         id="notificationBtn"
-        aria-label="Notifications">
+        aria-label="Notifications"
+      >
         🔔
       </button>
 
       <button
-        class="icon-btn"
+        class="top-btn"
         id="profileBtn"
-        aria-label="Profile">
+        aria-label="Profile"
+      >
         👤
       </button>
 
-    </div>
-
-  </header>
+    </header>
 
 
-  <!-- =========================
-       MAIN
-  ========================= -->
+    <main class="content">
 
-  <main class="container">
+      <!-- WELCOME -->
 
+      <section class="welcome">
 
-    <!-- WELCOME -->
+        <h2 id="welcomeText">
+          স্বাগতম 👋
+        </h2>
 
-    <section class="welcome">
+        <p id="welcomeSub">
+          AYNA BOOK-এ আপনাকে স্বাগতম।
+        </p>
 
-      <h2 id="welcomeText">
-        স্বাগতম 👋
-      </h2>
-
-      <p id="welcomeSub">
-        AYNA BOOK-এ আপনাকে স্বাগতম।
-      </p>
-
-    </section>
+      </section>
 
 
-    <!-- QUICK MENU -->
-
-    <section class="section">
+      <!-- QUICK MENU -->
 
       <div class="section-title">
-
-        <h3>
-          ⚡ দ্রুত সেবা
-        </h3>
-
+        ⚡ দ্রুত ব্যবহার
       </div>
 
 
-      <div class="quick-grid">
-
+      <section class="quick-grid">
 
         <!-- RADAR -->
 
-        <button
-          class="quick-btn"
-          id="radarBtn">
+        <a
+          class="quick-card"
+          href="./radar.html"
+        >
 
-          <span class="quick-icon">
+          <div class="quick-icon">
             📡
-          </span>
+          </div>
 
-          <span class="quick-text">
+          <div class="quick-name">
+            Radar
+          </div>
+
+          <div class="quick-sub">
             রাডার
-          </span>
+          </div>
 
-        </button>
+        </a>
 
 
         <!-- MILITARY RADAR -->
 
-        <button
-          class="quick-btn"
-          id="militaryRadarBtn">
+        <a
+          class="quick-card"
+          href="./military-radar.html"
+        >
 
-          <span class="quick-icon">
-            🎯
-          </span>
+          <div class="quick-icon">
+            🛰️
+          </div>
 
-          <span class="quick-text">
-            সামরিক রাডার
-          </span>
+          <div class="quick-name">
+            Military Radar
+          </div>
 
-        </button>
+          <div class="quick-sub">
+            Simulation
+          </div>
+
+        </a>
 
 
         <!-- COMPASS -->
 
-        <button
-          class="quick-btn"
-          id="compassBtn">
+        <a
+          class="quick-card"
+          href="./compass.html"
+        >
 
-          <span class="quick-icon">
+          <div class="quick-icon">
             🧭
-          </span>
+          </div>
 
-          <span class="quick-text">
-            কম্পাস
-          </span>
+          <div class="quick-name">
+            Compass
+          </div>
 
-        </button>
+          <div class="quick-sub">
+            দিক নির্ণয়
+          </div>
+
+        </a>
 
 
         <!-- GPS -->
 
-        <button
-          class="quick-btn"
-          id="gpsBtn">
+        <a
+          class="quick-card"
+          href="./gps.html"
+        >
 
-          <span class="quick-icon">
+          <div class="quick-icon">
             📍
-          </span>
+          </div>
 
-          <span class="quick-text">
+          <div class="quick-name">
             GPS
-          </span>
+          </div>
 
-        </button>
+          <div class="quick-sub">
+            অবস্থান
+          </div>
+
+        </a>
 
 
         <!-- CLOCK -->
 
-        <button
-          class="quick-btn"
-          id="clockBtn">
+        <a
+          class="quick-card"
+          href="./clock.html"
+        >
 
-          <span class="quick-icon">
+          <div class="quick-icon">
             🕐
-          </span>
+          </div>
 
-          <span class="quick-text">
-            সময় / ঘড়ি
-          </span>
+          <div class="quick-name">
+            Voice Clock
+          </div>
 
-        </button>
+          <div class="quick-sub">
+            সময় বলবে
+          </div>
+
+        </a>
 
 
         <!-- PRAYER -->
 
-        <button
-          class="quick-btn"
-          id="prayerBtn">
+        <a
+          class="quick-card"
+          href="./prayer.html"
+        >
 
-          <span class="quick-icon">
+          <div class="quick-icon">
             🕌
-          </span>
+          </div>
 
-          <span class="quick-text">
-            নামাজ ও রোজা
-          </span>
+          <div class="quick-name">
+            Prayer
+          </div>
 
-        </button>
+          <div class="quick-sub">
+            নামাজ ও রমজান
+          </div>
+
+        </a>
+
+
+        <!-- WORLD CALENDAR -->
+
+        <a
+          class="quick-card"
+          href="./calendar.html"
+        >
+
+          <div class="quick-icon">
+            📅
+          </div>
+
+          <div class="quick-name">
+            World Calendar
+          </div>
+
+          <div class="quick-sub">
+            বিশ্ব ক্যালেন্ডার
+          </div>
+
+        </a>
+
+
+        <!-- ARABIC CALENDAR -->
+
+        <a
+          class="quick-card"
+          href="./arabic-calendar.html"
+        >
+
+          <div class="quick-icon">
+            🌙
+          </div>
+
+          <div class="quick-name">
+            Arabic Calendar
+          </div>
+
+          <div class="quick-sub">
+            আরবি / হিজরি
+          </div>
+
+        </a>
+
+
+        <!-- WORLD HOLIDAYS -->
+
+        <a
+          class="quick-card"
+          href="./world-holidays.html"
+        >
+
+          <div class="quick-icon">
+            🌍
+          </div>
+
+          <div class="quick-name">
+            World Holidays
+          </div>
+
+          <div class="quick-sub">
+            সরকারি ছুটি
+          </div>
+
+        </a>
 
 
         <!-- LIVE -->
 
-        <button
-          class="quick-btn"
-          id="liveBtn">
+        <a
+          class="quick-card"
+          href="#"
+          id="liveBtn"
+        >
 
-          <span class="quick-icon">
+          <div class="quick-icon">
             📺
-          </span>
+          </div>
 
-          <span class="quick-text">
+          <div class="quick-name">
             Live
-          </span>
+          </div>
 
-        </button>
+          <div class="quick-sub">
+            Live TV / Radio
+          </div>
 
-
-        <!-- NOTIFICATION -->
-
-        <button
-          class="quick-btn"
-          id="quickNotificationBtn">
-
-          <span class="quick-icon">
-            🔔
-          </span>
-
-          <span class="quick-text">
-            Notification
-          </span>
-
-        </button>
-
-      </div>
-
-    </section>
+        </a>
 
 
-    <!-- PRAYER CARD -->
+      </section>
 
-    <section class="section">
 
-      <div class="prayer-card">
+      <!-- PRAYER CARD -->
+
+      <a
+        class="prayer-card"
+        href="./prayer.html"
+      >
 
         <h3>
-          🕌 নামাজ ও 🌙 রোজা
+          🕌 Prayer & Ramadan
         </h3>
 
         <p>
-          ৫ ওয়াক্ত নামাজের সময়,
-          ৩০ দিনের সেহরি–ইফতার ক্যালেন্ডার
-          এবং সারা বছরের নামাজের সময়সূচী।
+          ৫ ওয়াক্ত নামাজ, সেহরি, ইফতার,
+          রমজান ক্যালেন্ডার ও অ্যালার্ম।
         </p>
 
-        <p>
-          দেশ, শহর অথবা GPS অনুযায়ী
-          সময়সূচী দেখা যাবে।
-        </p>
-
-        <button
-          class="prayer-open"
-          id="prayerOpenBtn">
-
-          🕌 নামাজ ও রোজার সময়সূচী দেখুন
-
-        </button>
-
-      </div>
-
-    </section>
+      </a>
 
 
-    <!-- CREATE POST -->
-
-    <section class="section">
+      <!-- CREATE POST -->
 
       <div class="section-title">
-
-        <h3>
-          ✍️ পোস্ট তৈরি করুন
-        </h3>
-
+        ✍️ নতুন পোস্ট
       </div>
 
 
-      <div class="create-post">
+      <section class="post-box">
 
-        <img
-          id="createAvatar"
-          class="create-avatar"
-          alt="Profile">
-
-        <div
-          class="create-input"
-          id="createPostBtn">
-
-          কী ভাবছেন?
-
+        <div class="post-box-title">
+          আপনি কী ভাবছেন?
         </div>
 
-      </div>
+        <textarea
+          class="post-input"
+          id="postText"
+          maxlength="1000"
+          placeholder="আপনার পোস্ট লিখুন..."
+        ></textarea>
 
-    </section>
+        <button
+          class="post-button"
+          id="postBtn"
+        >
+          প্রকাশ করুন
+        </button>
+
+      </section>
 
 
-    <!-- FEED -->
-
-    <section class="section">
+      <!-- FEED -->
 
       <div class="section-title">
-
-        <h3>
-          📰 Feed
-        </h3>
-
+        📰 Feed
       </div>
 
-      <div class="empty-feed">
 
-        এখনো কোনো পোস্ট নেই।<br>
+      <section class="feed">
 
-        আপনার প্রথম পোস্ট তৈরি করুন।
+        <div
+          class="feed-empty"
+          id="feedEmpty"
+        >
+          এখনো কোনো পোস্ট লোড হয়নি।
+        </div>
 
-      </div>
+      </section>
 
-    </section>
+    </main>
 
-  </main>
+  </div>
 
 
-  <!-- =========================
-       BOTTOM NAV
-  ========================= -->
+  <!-- BOTTOM NAV -->
 
   <nav class="bottom-nav">
 
     <button
       class="nav-btn active"
-      id="homeNav">
+      id="homeNav"
+    >
 
       <span class="nav-icon">
         🏠
       </span>
 
-      Home
-
-    </button>
-
-
-    <button
-      class="nav-btn"
-      id="prayerNav">
-
-      <span class="nav-icon">
-        🕌
+      <span>
+        Home
       </span>
 
-      Prayer
-
     </button>
 
 
     <button
       class="nav-btn"
-      id="notificationNav">
+      id="exploreNav"
+    >
 
       <span class="nav-icon">
-        🔔
+        🔎
       </span>
 
-      Notification
+      <span>
+        Explore
+      </span>
 
     </button>
 
 
     <button
       class="nav-btn"
-      id="profileNav">
+      id="liveNav"
+    >
+
+      <span class="nav-icon">
+        📺
+      </span>
+
+      <span>
+        Live
+      </span>
+
+    </button>
+
+
+    <button
+      class="nav-btn"
+      id="profileNav"
+    >
 
       <span class="nav-icon">
         👤
       </span>
 
-      Profile
+      <span>
+        Profile
+      </span>
 
     </button>
 
   </nav>
 
 
-  <!-- =========================
-       PROFILE DRAWER
-  ========================= -->
+  <!-- DRAWER BACKGROUND -->
 
   <div
-    class="drawer-overlay"
-    id="drawerOverlay">
+    class="drawer-bg"
+    id="drawerBg"
+  ></div>
 
-    <aside class="drawer">
 
-      <div class="profile-head">
+  <!-- PROFILE DRAWER -->
 
-        <img
-          id="profilePhoto"
-          class="profile-photo"
-          alt="Profile">
+  <aside
+    class="drawer"
+    id="profileDrawer"
+  >
+
+    <div class="drawer-head">
+
+      <img
+        class="profile-photo"
+        id="profilePhoto"
+        src=""
+        alt="Profile"
+      >
+
+      <div>
 
         <div
+          class="profile-name"
           id="profileName"
-          class="profile-name">
-
+        >
           AYNA BOOK User
-
         </div>
 
         <div
+          class="profile-email"
           id="profileEmail"
-          class="profile-email">
-
-          --
-
+        >
+          Loading...
         </div>
 
       </div>
 
+    </div>
+
+
+    <div class="drawer-menu">
+
+      <a
+        class="drawer-link"
+        href="./prayer.html"
+      >
+        🕌
+        <span>
+          Prayer & Ramadan
+        </span>
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="./clock.html"
+      >
+        🕐
+        <span>
+          Voice Clock
+        </span>
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="./calendar.html"
+      >
+        📅
+        <span>
+          World Calendar
+        </span>
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="./arabic-calendar.html"
+      >
+        🌙
+        <span>
+          Arabic / Hijri Calendar
+        </span>
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="./world-holidays.html"
+      >
+        🌍
+        <span>
+          World Government Holidays
+        </span>
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="./radar.html"
+      >
+        📡
+        <span>
+          Radar
+        </span>
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="./military-radar.html"
+      >
+        🛰️
+        <span>
+          Military Radar
+        </span>
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="./compass.html"
+      >
+        🧭
+        <span>
+          Compass
+        </span>
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="./gps.html"
+      >
+        📍
+        <span>
+          GPS
+        </span>
+      </a>
+
+
+      <a
+        class="drawer-link"
+        href="#"
+        id="notificationMenu"
+      >
+        🔔
+        <span>
+          Notifications
+        </span>
+      </a>
+
 
       <button
-        class="drawer-btn"
-        id="myProfileBtn">
-
-        👤 আমার Profile
-
+        class="drawer-link logout"
+        id="logoutBtn"
+      >
+        🚪
+        <span>
+          Logout
+        </span>
       </button>
 
+    </div>
 
-      <button
-        class="drawer-btn"
-        id="prayerDrawerBtn">
-
-        🕌 নামাজ ও রোজা
-
-      </button>
+  </aside>
 
 
-      <button
-        class="drawer-btn"
-        id="clockDrawerBtn">
-
-        🕐 সময় / Voice Clock
-
-      </button>
-
-
-      <button
-        class="drawer-btn"
-        id="settingsBtn">
-
-        ⚙️ Settings
-
-      </button>
-
-
-      <button
-        class="drawer-btn logout"
-        id="logoutBtn">
-
-        🚪 Logout
-
-      </button>
-
-
-      <button
-        class="drawer-btn"
-        id="closeDrawerBtn">
-
-        ✕ বন্ধ করুন
-
-      </button>
-
-    </aside>
-
-  </div>
-
-
-  <!-- TOAST -->
+  <!-- STATUS -->
 
   <div
-    class="toast"
-    id="toast">
-
-    --
-
+    class="status"
+    id="status"
+  >
+    সম্পন্ন
   </div>
-
 
 </div>
 
 
-<!-- =========================
-     FIREBASE + APP SCRIPT
-========================= -->
+<!-- FIREBASE / APP -->
 
 <script type="module">
 
-  import {
-    auth,
-    database
-  } from "./firebase-init.js";
+  import { auth, database } from "./firebase-init.js";
 
   import {
     onAuthStateChanged,
@@ -1123,454 +1218,297 @@
 
   import {
     ref,
-    get
+    get,
+    push,
+    set,
+    serverTimestamp
   } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
 
-  /* =========================
-     ELEMENTS
-  ========================= */
+  // ====================================================
+  // ELEMENTS
+  // ====================================================
 
-  const $ = id =>
-    document.getElementById(id);
+  const welcomeText =
+    document.getElementById("welcomeText");
+
+  const welcomeSub =
+    document.getElementById("welcomeSub");
+
+  const profileBtn =
+    document.getElementById("profileBtn");
+
+  const profileNav =
+    document.getElementById("profileNav");
+
+  const profileDrawer =
+    document.getElementById("profileDrawer");
+
+  const drawerBg =
+    document.getElementById("drawerBg");
+
+  const profileName =
+    document.getElementById("profileName");
+
+  const profileEmail =
+    document.getElementById("profileEmail");
+
+  const profilePhoto =
+    document.getElementById("profilePhoto");
+
+  const logoutBtn =
+    document.getElementById("logoutBtn");
+
+  const notificationBtn =
+    document.getElementById("notificationBtn");
+
+  const notificationMenu =
+    document.getElementById("notificationMenu");
+
+  const liveBtn =
+    document.getElementById("liveBtn");
+
+  const liveNav =
+    document.getElementById("liveNav");
+
+  const exploreNav =
+    document.getElementById("exploreNav");
+
+  const postText =
+    document.getElementById("postText");
+
+  const postBtn =
+    document.getElementById("postBtn");
+
+  const status =
+    document.getElementById("status");
 
 
-  /* =========================
-     TOAST
-  ========================= */
+  // ====================================================
+  // STATUS MESSAGE
+  // ====================================================
 
-  let toastTimer = null;
+  let statusTimer = null;
 
-  function showToast(message){
+  function showStatus(message) {
 
-    const toast =
-      $("toast");
+    status.textContent = message;
 
-    if(!toast) return;
+    status.classList.add("show");
 
-    toast.textContent =
-      message;
+    clearTimeout(statusTimer);
 
-    toast.classList.add(
-      "show"
-    );
+    statusTimer = setTimeout(() => {
 
-    clearTimeout(
-      toastTimer
-    );
+      status.classList.remove("show");
 
-    toastTimer =
-      setTimeout(() => {
-
-        toast.classList.remove(
-          "show"
-        );
-
-      }, 2500);
-
+    }, 2500);
   }
 
 
-  /* =========================
-     NAVIGATION
-  ========================= */
+  // ====================================================
+  // PROFILE DRAWER
+  // ====================================================
 
-  function go(page){
+  function openDrawer() {
 
-    window.location.href =
-      `./${page}`;
+    profileDrawer.classList.add("show");
 
+    drawerBg.classList.add("show");
   }
 
 
-  /* =========================
-     RADAR
-  ========================= */
+  function closeDrawer() {
 
-  $("radarBtn")?.addEventListener(
-    "click",
-    () => go("radar.html")
-  );
+    profileDrawer.classList.remove("show");
 
-
-  /* =========================
-     MILITARY RADAR
-  ========================= */
-
-  $("militaryRadarBtn")?.addEventListener(
-    "click",
-    () => go("military-radar.html")
-  );
-
-
-  /* =========================
-     COMPASS
-  ========================= */
-
-  $("compassBtn")?.addEventListener(
-    "click",
-    () => go("compass.html")
-  );
-
-
-  /* =========================
-     GPS
-  ========================= */
-
-  $("gpsBtn")?.addEventListener(
-    "click",
-    () => go("gps.html")
-  );
-
-
-  /* =========================
-     CLOCK
-  ========================= */
-
-  $("clockBtn")?.addEventListener(
-    "click",
-    () => go("clock.html")
-  );
-
-
-  /* =========================
-     PRAYER
-  ========================= */
-
-  $("prayerBtn")?.addEventListener(
-    "click",
-    () => go("prayer.html")
-  );
-
-
-  $("prayerOpenBtn")?.addEventListener(
-    "click",
-    () => go("prayer.html")
-  );
-
-
-  $("prayerNav")?.addEventListener(
-    "click",
-    () => go("prayer.html")
-  );
-
-
-  $("prayerDrawerBtn")?.addEventListener(
-    "click",
-    () => go("prayer.html")
-  );
-
-
-  /* =========================
-     LIVE
-  ========================= */
-
-  $("liveBtn")?.addEventListener(
-    "click",
-    () => {
-
-      showToast(
-        "📺 Live ফিচার প্রস্তুত হচ্ছে।"
-      );
-
-    }
-  );
-
-
-  /* =========================
-     NOTIFICATION
-  ========================= */
-
-  function notificationMessage(){
-
-    showToast(
-      "🔔 Notification ফিচার এখানে থাকবে।"
-    );
-
+    drawerBg.classList.remove("show");
   }
 
 
-  $("notificationBtn")?.addEventListener(
-    "click",
-    notificationMessage
-  );
-
-
-  $("quickNotificationBtn")?.addEventListener(
-    "click",
-    notificationMessage
-  );
-
-
-  $("notificationNav")?.addEventListener(
-    "click",
-    notificationMessage
-  );
-
-
-  /* =========================
-     PROFILE DRAWER
-  ========================= */
-
-  const overlay =
-    $("drawerOverlay");
-
-
-  function openDrawer(){
-
-    overlay?.classList.add(
-      "show"
-    );
-
-  }
-
-
-  function closeDrawer(){
-
-    overlay?.classList.remove(
-      "show"
-    );
-
-  }
-
-
-  $("profileBtn")?.addEventListener(
+  profileBtn.addEventListener(
     "click",
     openDrawer
   );
 
 
-  $("profileNav")?.addEventListener(
+  profileNav.addEventListener(
     "click",
     openDrawer
   );
 
 
-  $("closeDrawerBtn")?.addEventListener(
+  drawerBg.addEventListener(
     "click",
     closeDrawer
   );
 
 
-  overlay?.addEventListener(
-    "click",
-    event => {
-
-      if(
-        event.target === overlay
-      ){
-
-        closeDrawer();
-
-      }
-
-    }
-  );
-
-
-  /* =========================
-     MY PROFILE
-  ========================= */
-
-  $("myProfileBtn")?.addEventListener(
-    "click",
-    () => {
-
-      showToast(
-        "👤 Profile page প্রস্তুত হলে এখানে খুলবে।"
-      );
-
-    }
-  );
-
-
-  /* =========================
-     SETTINGS
-  ========================= */
-
-  $("settingsBtn")?.addEventListener(
-    "click",
-    () => {
-
-      showToast(
-        "⚙️ Settings ফিচার এখানে থাকবে।"
-      );
-
-    }
-  );
-
-
-  /* =========================
-     CREATE POST
-  ========================= */
-
-  $("createPostBtn")?.addEventListener(
-    "click",
-    () => {
-
-      showToast(
-        "✍️ Post composer এখানে যুক্ত হবে।"
-      );
-
-    }
-  );
-
-
-  /* =========================
-     LOAD USER
-  ========================= */
-
-  async function loadUser(user){
-
-    if(!user) return;
-
-
-    let profile = null;
-
-
-    try{
-
-      const snapshot =
-        await get(
-          ref(
-            database,
-            `users/${user.uid}`
-          )
-        );
-
-
-      if(
-        snapshot.exists()
-      ){
-
-        profile =
-          snapshot.val();
-
-      }
-
-    }catch(error){
-
-      console.error(
-        "Profile load error:",
-        error
-      );
-
-    }
-
-
-    const name =
-      profile?.fullName ||
-      user.displayName ||
-      "AYNA BOOK User";
-
-
-    const email =
-      profile?.email ||
-      user.email ||
-      "";
-
-
-    const photo =
-      profile?.photoURL ||
-      user.photoURL ||
-      "";
-
-
-    $("welcomeText").textContent =
-      `স্বাগতম, ${name} 👋`;
-
-
-    $("profileName").textContent =
-      name;
-
-
-    $("profileEmail").textContent =
-      email;
-
-
-    if(photo){
-
-      $("profilePhoto").src =
-        photo;
-
-      $("createAvatar").src =
-        photo;
-
-    }else{
-
-      $("profilePhoto").src =
-        "data:image/svg+xml;charset=UTF-8," +
-        encodeURIComponent(`
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="200"
-            height="200">
-
-            <rect
-              width="100%"
-              height="100%"
-              fill="#173f2e"/>
-
-            <text
-              x="50%"
-              y="55%"
-              dominant-baseline="middle"
-              text-anchor="middle"
-              fill="white"
-              font-size="70">
-
-              👤
-
-            </text>
-
-          </svg>
-
-        `);
-
-
-      $("createAvatar").src =
-        $("profilePhoto").src;
-
-    }
-
-  }
-
-
-  /* =========================
-     AUTH
-  ========================= */
+  // ====================================================
+  // AUTH
+  // ====================================================
 
   onAuthStateChanged(
     auth,
-    async user => {
+    async (user) => {
 
-      if(!user){
+      if (!user) {
 
         window.location.replace(
           "./login.html"
         );
 
         return;
-
       }
 
 
-      await loadUser(user);
+      // Welcome
+
+      const displayName =
+        user.displayName ||
+        "AYNA BOOK User";
+
+
+      welcomeText.textContent =
+        `স্বাগতম, ${displayName} 👋`;
+
+
+      welcomeSub.textContent =
+        "AYNA BOOK-এ আপনার দিনটি সুন্দর হোক।";
+
+
+      profileName.textContent =
+        displayName;
+
+
+      profileEmail.textContent =
+        user.email || "";
+
+
+      // Default photo
+
+      profilePhoto.src =
+        createAvatar(displayName);
+
+
+      // Firebase profile
+
+      try {
+
+        const userRef =
+          ref(
+            database,
+            `users/${user.uid}`
+          );
+
+
+        const snapshot =
+          await get(userRef);
+
+
+        if (snapshot.exists()) {
+
+          const data =
+            snapshot.val();
+
+
+          if (data.fullName) {
+
+            profileName.textContent =
+              data.fullName;
+
+            welcomeText.textContent =
+              `স্বাগতম, ${data.fullName} 👋`;
+          }
+
+
+          if (data.email) {
+
+            profileEmail.textContent =
+              data.email;
+          }
+
+
+          if (data.photoURL) {
+
+            profilePhoto.src =
+              data.photoURL;
+          }
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Profile load error:",
+          error
+        );
+
+      }
 
     }
   );
 
 
-  /* =========================
-     LOGOUT
-  ========================= */
+  // ====================================================
+  // AVATAR
+  // ====================================================
 
-  $("logoutBtn")?.addEventListener(
+  function createAvatar(name) {
+
+    const letter =
+      String(name || "A")
+        .trim()
+        .charAt(0)
+        .toUpperCase();
+
+
+    const svg = `
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="120"
+        height="120"
+        viewBox="0 0 120 120"
+      >
+
+        <rect
+          width="120"
+          height="120"
+          rx="60"
+          fill="#17634c"
+        />
+
+        <text
+          x="60"
+          y="76"
+          text-anchor="middle"
+          font-size="55"
+          font-family="Arial"
+          fill="white"
+        >
+          ${letter}
+        </text>
+
+      </svg>
+    `;
+
+
+    return (
+      "data:image/svg+xml;charset=UTF-8," +
+      encodeURIComponent(svg)
+    );
+  }
+
+
+  // ====================================================
+  // LOGOUT
+  // ====================================================
+
+  logoutBtn.addEventListener(
     "click",
     async () => {
 
-      try{
+      try {
 
         await signOut(auth);
 
@@ -1578,11 +1516,11 @@
           "./login.html"
         );
 
-      }catch(error){
+      } catch (error) {
 
         console.error(error);
 
-        showToast(
+        showStatus(
           "Logout করা যায়নি।"
         );
 
@@ -1590,6 +1528,227 @@
 
     }
   );
+
+
+  // ====================================================
+  // NOTIFICATIONS
+  // ====================================================
+
+  function openNotifications() {
+
+    window.location.href =
+      "./notifications.html";
+
+  }
+
+
+  notificationBtn.addEventListener(
+    "click",
+    openNotifications
+  );
+
+
+  notificationMenu.addEventListener(
+    "click",
+    openNotifications
+  );
+
+
+  // ====================================================
+  // LIVE
+  // ====================================================
+
+  function openLive() {
+
+    showStatus(
+      "Live TV / Radio পেজ প্রস্তুত করা হচ্ছে।"
+    );
+
+    // পরে live.html তৈরি করলে:
+    // window.location.href = "./live.html";
+
+  }
+
+
+  liveBtn.addEventListener(
+    "click",
+    event => {
+
+      event.preventDefault();
+
+      openLive();
+
+    }
+  );
+
+
+  liveNav.addEventListener(
+    "click",
+    openLive
+  );
+
+
+  // ====================================================
+  // EXPLORE
+  // ====================================================
+
+  exploreNav.addEventListener(
+    "click",
+    () => {
+
+      document
+        .querySelector(".quick-grid")
+        .scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+    }
+  );
+
+
+  // ====================================================
+  // HOME
+  // ====================================================
+
+  document
+    .getElementById("homeNav")
+    .addEventListener(
+      "click",
+      () => {
+
+        document
+          .getElementById("scrollArea")
+          .scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+
+      }
+    );
+
+
+  // ====================================================
+  // CREATE POST
+  // ====================================================
+
+  postBtn.addEventListener(
+    "click",
+    async () => {
+
+      const text =
+        postText.value.trim();
+
+
+      if (!text) {
+
+        showStatus(
+          "আগে পোস্ট লিখুন।"
+        );
+
+        postText.focus();
+
+        return;
+      }
+
+
+      if (text.length > 1000) {
+
+        showStatus(
+          "পোস্ট সর্বোচ্চ ১০০০ অক্ষর হতে পারে।"
+        );
+
+        return;
+      }
+
+
+      const user =
+        auth.currentUser;
+
+
+      if (!user) {
+
+        window.location.replace(
+          "./login.html"
+        );
+
+        return;
+      }
+
+
+      postBtn.disabled = true;
+
+      postBtn.textContent =
+        "প্রকাশ হচ্ছে...";
+
+
+      try {
+
+        const postsRef =
+          ref(
+            database,
+            "posts"
+          );
+
+
+        const newPost =
+          push(postsRef);
+
+
+        await set(
+          newPost,
+          {
+
+            postId: newPost.key,
+
+            uid: user.uid,
+
+            text: text,
+
+            authorName:
+              user.displayName ||
+              "AYNA BOOK User",
+
+            createdAt:
+              serverTimestamp()
+
+          }
+        );
+
+
+        postText.value = "";
+
+
+        showStatus(
+          "✅ পোস্ট প্রকাশ হয়েছে।"
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Post error:",
+          error
+        );
+
+
+        showStatus(
+          "❌ পোস্ট প্রকাশ করা যায়নি।"
+        );
+
+
+      } finally {
+
+        postBtn.disabled = false;
+
+        postBtn.textContent =
+          "প্রকাশ করুন";
+
+      }
+
+    }
+  );
+
 
 </script>
 
