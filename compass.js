@@ -1,61 +1,114 @@
+const compass =
+  document.getElementById("compass");
 
-const compassNeedle = document.getElementById("needle");
-const compassHeading = document.getElementById("heading");
+const degreeText =
+  document.getElementById("degree");
 
-let compassActive = false;
+function updateCompass(event) {
+
+  let heading;
+
+  if (
+    typeof event.webkitCompassHeading ===
+    "number"
+  ) {
+
+    heading =
+      event.webkitCompassHeading;
+
+  } else if (
+    typeof event.alpha ===
+    "number"
+  ) {
+
+    heading =
+      360 - event.alpha;
+
+  } else {
+
+    return;
+
+  }
+
+
+  heading =
+    (heading + 360) % 360;
+
+
+  compass.style.transform =
+    `rotate(${-heading}deg)`;
+
+
+  degreeText.textContent =
+    `${Math.round(heading)}°`;
+
+}
+
 
 async function startCompass() {
-  if (compassActive) return;
 
-  try {
-    if (!window.isSecureContext) {
-      throw new Error("HTTPS প্রয়োজন");
-    }
+  if (
+    typeof DeviceOrientationEvent !==
+    "undefined" &&
+    typeof DeviceOrientationEvent
+      .requestPermission ===
+      "function"
+  ) {
 
-    if (typeof DeviceOrientationEvent === "undefined") {
-      throw new Error("ফোনে Compass Sensor পাওয়া যায়নি");
-    }
+    try {
 
-    if (typeof DeviceOrientationEvent.requestPermission === "function") {
       const permission =
-        await DeviceOrientationEvent.requestPermission();
+        await DeviceOrientationEvent
+          .requestPermission();
 
-      if (permission !== "granted") {
-        throw new Error("Sensor permission denied");
+      if (
+        permission !==
+        "granted"
+      ) {
+
+        alert(
+          "Compass permission দেওয়া হয়নি।"
+        );
+
+        return;
+
       }
+
+    } catch (error) {
+
+      console.error(error);
+
+      return;
+
     }
 
-    window.addEventListener("deviceorientation", handleCompass);
-
-    compassActive = true;
-    compassHeading.textContent = "Compass চালু হয়েছে";
-
-  } catch (error) {
-    compassHeading.textContent = error.message;
-  }
-}
-
-function handleCompass(event) {
-  let angle;
-
-  if (typeof event.webkitCompassHeading === "number") {
-    angle = event.webkitCompassHeading;
-  } else if (event.alpha !== null) {
-    angle = (360 - event.alpha) % 360;
-  } else {
-    compassHeading.textContent = "Compass data পাওয়া যায়নি";
-    return;
   }
 
-  compassNeedle.style.transform =
-    `translate(-50%, -50%) rotate(${angle}deg)`;
 
-  compassHeading.textContent =
-    "Direction: " + Math.round(angle) + "°";
+  window.addEventListener(
+    "deviceorientation",
+    updateCompass,
+    true
+  );
+
 }
 
-function stopCompass() {
-  window.removeEventListener("deviceorientation", handleCompass);
-  compassActive = false;
-  compassHeading.textContent = "Compass বন্ধ";
+
+const startButton =
+  document.getElementById(
+    "startCompass"
+  );
+
+
+if (startButton) {
+
+  startButton.addEventListener(
+    "click",
+    startCompass
+  );
+
+} else {
+
+  startCompass();
+
 }
