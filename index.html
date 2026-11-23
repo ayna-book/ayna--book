@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,1411 +6,1058 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0"
   >
 
   <meta
     name="theme-color"
-    content="#070707"
-  >
-
-  <meta
-    name="description"
-    content="AYNA BOOK — Global Social Platform, Secure Identity, Private Communication, Business, AI and Advanced Security."
-  >
-
-  <meta name="color-scheme" content="dark">
-
-  <link rel="manifest" href="./manifest.json">
-
-  <link
-    rel="icon"
-    href="./favicon.ico"
-    type="image/x-icon"
+    content="#000000"
   >
 
   <title>AYNA BOOK</title>
 
-  <!-- =====================================================
-       CRITICAL CSS
-       Kept small so the first screen appears immediately.
-       ===================================================== -->
-
   <style>
-    :root {
-      --bg: #070707;
-      --panel: #0d0d0d;
-      --panel-2: #111111;
-      --text: #ffffff;
-      --muted: #a7a7a7;
-      --gold: #d4af37;
-      --gold-bright: #f2cf58;
-      --border: rgba(212,175,55,.55);
-      --danger: #ff5c5c;
-      --success: #48d597;
-      --radius: 14px;
-      --header-height: 62px;
-      --bottom-height: 62px;
-    }
-
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
-      background: var(--bg);
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
     }
 
     body {
-      min-height: 100vh;
-      background:
-        radial-gradient(
-          circle at top,
-          rgba(212,175,55,.07),
-          transparent 34%
-        ),
-        var(--bg);
-      color: var(--text);
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
-    button,
-    input,
-    textarea,
-    select {
-      font: inherit;
-    }
+    /* ==============================
+       SPLASH SCREEN
+    ============================== */
 
-    button {
-      cursor: pointer;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    /* =====================================================
-       STARTUP SCREEN
-       ===================================================== */
-
-    #startupScreen {
+    #splashScreen {
       position: fixed;
       inset: 0;
-      z-index: 99999;
+      z-index: 999999;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg);
-      transition:
-        opacity .25s ease,
-        visibility .25s ease;
+
+      background: #000;
     }
 
-    #startupScreen.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
+    .splashContainer {
+      width: 100%;
+      max-width: 500px;
+      padding: 30px;
 
-    .startup-inner {
       text-align: center;
-      padding: 24px;
     }
 
-    .startup-logo {
-      width: 76px;
-      height: 76px;
-      margin: 0 auto 18px;
-      border: 1px solid var(--gold);
+    .logoCircle {
+      width: 180px;
+      height: 180px;
+
+      margin: 0 auto 45px;
+
+      border: 2px solid #d4af37;
       border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: var(--gold-bright);
-      font-size: 25px;
-      font-weight: 800;
-      letter-spacing: 2px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
       box-shadow:
-        0 0 30px rgba(212,175,55,.12);
+        0 0 25px rgba(212, 175, 55, 0.15);
     }
 
-    .startup-title {
-      color: var(--gold-bright);
+    .logoText {
+      color: #ffd84d;
+
+      font-size: 62px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .brandName {
+      margin-bottom: 28px;
+
+      color: #ffd84d;
+
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: 7px;
+    }
+
+    .statusText {
+      color: #999;
+
       font-size: 22px;
-      font-weight: 800;
-      letter-spacing: 3px;
+
+      margin-bottom: 42px;
     }
 
-    .startup-status {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 13px;
-    }
+    .progressTrack {
+      width: 310px;
+      max-width: 90%;
 
-    .startup-loader {
-      width: 130px;
-      height: 2px;
-      margin: 18px auto 0;
-      overflow: hidden;
+      height: 5px;
+
+      margin: 0 auto;
+
       background: #202020;
+
+      border-radius: 10px;
+
+      overflow: hidden;
     }
 
-    .startup-loader::after {
-      content: "";
-      display: block;
-      width: 45%;
+    .progressBar {
+      width: 0%;
       height: 100%;
-      background: var(--gold);
-      animation: startupLoading 1s infinite ease-in-out;
+
+      background: #d4af37;
+
+      border-radius: 10px;
+
+      animation: loading 3s ease-in-out forwards;
     }
 
-    @keyframes startupLoading {
+    @keyframes loading {
       0% {
-        transform: translateX(-110%);
+        width: 0%;
+      }
+
+      50% {
+        width: 65%;
       }
 
       100% {
-        transform: translateX(330%);
+        width: 100%;
       }
     }
 
-    /* =====================================================
-       HEADER
-       ===================================================== */
+    /* ==============================
+       ERROR
+    ============================== */
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      height: var(--header-height);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding:
-        0 max(12px, env(safe-area-inset-right))
-        0 max(12px, env(safe-area-inset-left));
-      background: rgba(7,7,7,.96);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      flex: 0 0 38px;
-      border: 1px solid var(--gold);
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: var(--gold-bright);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .brand-name {
-      color: var(--gold-bright);
-      font-size: 17px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      white-space: nowrap;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .icon-button {
-      width: 38px;
-      height: 38px;
-      border: 1px solid #303030;
-      border-radius: 50%;
-      background: #0d0d0d;
-      color: #fff;
-      display: grid;
-      place-items: center;
-    }
-
-    .icon-button:hover {
-      border-color: var(--gold);
-      color: var(--gold-bright);
-    }
-
-    /* =====================================================
-       SEARCH
-       ===================================================== */
-
-    .search-area {
-      padding: 12px;
-      border-bottom: 1px solid #1e1e1e;
-      background: #090909;
-    }
-
-    .search-box {
-      max-width: 760px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    #globalSearch {
-      width: 100%;
-      height: 44px;
-      padding: 0 45px 0 15px;
-      border: 1px solid #303030;
-      border-radius: 22px;
-      outline: none;
-      background: #111;
-      color: #fff;
-    }
-
-    #globalSearch:focus {
-      border-color: var(--gold);
-    }
-
-    #searchButton {
-      position: absolute;
-      right: 5px;
-      top: 5px;
-      width: 34px;
-      height: 34px;
-      border: 0;
-      border-radius: 50%;
-      background: transparent;
-      color: var(--gold-bright);
-    }
-
-    #searchResults {
+    #startupError {
       display: none;
-      max-width: 760px;
-      margin: 8px auto 0;
-      border: 1px solid #292929;
-      border-radius: 12px;
-      background: #101010;
-      overflow: hidden;
-    }
 
-    /* =====================================================
-       MAIN LAYOUT
-       ===================================================== */
+      margin-top: 25px;
 
-    .app-shell {
-      width: 100%;
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 14px 12px calc(80px + env(safe-area-inset-bottom));
-    }
+      color: #ff6b6b;
 
-    .page-grid {
-      display: grid;
-      grid-template-columns:
-        minmax(0, 1fr)
-        300px;
-      gap: 14px;
-    }
-
-    .main-column {
-      min-width: 0;
-    }
-
-    .side-column {
-      min-width: 0;
-    }
-
-    /* =====================================================
-       STORIES
-       ===================================================== */
-
-    .section-card {
-      border: 1px solid #282828;
-      border-radius: var(--radius);
-      background: var(--panel);
-      overflow: hidden;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 13px 14px;
-      border-bottom: 1px solid #222;
-    }
-
-    .section-title {
       font-size: 14px;
-      font-weight: 700;
-    }
 
-    .section-link {
-      color: var(--gold-bright);
-      font-size: 12px;
-    }
-
-    .stories-row {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding: 14px;
-      scrollbar-width: none;
-    }
-
-    .stories-row::-webkit-scrollbar {
-      display: none;
-    }
-
-    .story {
-      min-width: 72px;
-      text-align: center;
-    }
-
-    .story-avatar {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 6px;
-      border-radius: 50%;
-      border: 1px solid var(--gold);
-      background: #161616;
-      display: grid;
-      place-items: center;
-      color: var(--gold-bright);
-      overflow: hidden;
-    }
-
-    .story-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .story-name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 11px;
-      color: #ddd;
-    }
-
-    /* =====================================================
-       COMPOSER
-       ===================================================== */
-
-    .composer {
-      margin-top: 14px;
-      padding: 14px;
-    }
-
-    .composer-top {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .composer-avatar {
-      width: 42px;
-      height: 42px;
-      flex: 0 0 42px;
-      border-radius: 50%;
-      border: 1px solid var(--gold);
-      background: #181818;
-      overflow: hidden;
-    }
-
-    .composer-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    #postInput {
-      width: 100%;
-      min-height: 44px;
-      max-height: 180px;
-      padding: 12px;
-      resize: vertical;
-      border: 1px solid #2d2d2d;
-      border-radius: 10px;
-      outline: none;
-      background: #111;
-      color: #fff;
-    }
-
-    #postInput:focus {
-      border-color: var(--gold);
-    }
-
-    .composer-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-top: 10px;
-    }
-
-    .action-button {
-      min-height: 36px;
-      padding: 0 12px;
-      border: 1px solid #303030;
-      border-radius: 9px;
-      background: #111;
-      color: #ddd;
-      font-size: 12px;
-    }
-
-    .action-button:hover {
-      border-color: var(--gold);
-      color: var(--gold-bright);
-    }
-
-    .gold-button {
-      border-color: var(--gold);
-      color: #050505;
-      background: var(--gold);
-      font-weight: 700;
-    }
-
-    /* =====================================================
-       FEED NAVIGATION
-       ===================================================== */
-
-    .feed-tabs {
-      display: flex;
-      gap: 4px;
-      overflow-x: auto;
-      margin-top: 14px;
-      padding: 4px;
-      border: 1px solid #252525;
-      border-radius: 11px;
-      background: #0c0c0c;
-      scrollbar-width: none;
-    }
-
-    .feed-tabs::-webkit-scrollbar {
-      display: none;
-    }
-
-    .feed-tab {
-      min-width: 92px;
-      height: 38px;
-      padding: 0 12px;
-      border: 0;
-      border-radius: 8px;
-      background: transparent;
-      color: #aaa;
-      font-size: 12px;
-    }
-
-    .feed-tab.active {
-      background: #1b1b1b;
-      color: var(--gold-bright);
-    }
-
-    /* =====================================================
-       FEED
-       ===================================================== */
-
-    #feed {
-      display: grid;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .post-card {
-      padding: 14px;
-      border: 1px solid #282828;
-      border-radius: var(--radius);
-      background: var(--panel);
-    }
-
-    .post-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .post-avatar {
-      width: 42px;
-      height: 42px;
-      flex: 0 0 42px;
-      border-radius: 50%;
-      border: 1px solid #444;
-      background: #171717;
-      overflow: hidden;
-    }
-
-    .post-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .post-author {
-      min-width: 0;
-    }
-
-    .post-author-name {
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .post-meta {
-      margin-top: 3px;
-      color: #777;
-      font-size: 11px;
-    }
-
-    .post-content {
-      margin-top: 12px;
       line-height: 1.6;
-      color: #eee;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
     }
 
-    .post-media {
-      margin-top: 12px;
-      overflow: hidden;
-      border-radius: 10px;
-      border: 1px solid #252525;
-    }
+    #retryButton {
+      display: none;
 
-    .post-media img,
-    .post-media video {
-      width: 100%;
-      max-height: 520px;
-      object-fit: cover;
-    }
+      margin: 20px auto 0;
 
-    .post-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid #222;
-    }
+      padding: 12px 25px;
 
-    .post-action {
-      flex: 1 1 auto;
-      min-height: 36px;
-      border: 0;
+      border: 1px solid #d4af37;
+
       border-radius: 8px;
-      background: transparent;
-      color: #aaa;
-      font-size: 12px;
-    }
 
-    .post-action:hover {
-      background: #181818;
-      color: var(--gold-bright);
-    }
+      background: #000;
 
-    .empty-state {
-      padding: 40px 20px;
-      text-align: center;
-      color: #777;
-    }
+      color: #ffd84d;
 
-    .loading-state {
-      padding: 28px;
-      text-align: center;
-      color: #888;
-    }
+      font-size: 15px;
 
-    /* =====================================================
-       SIDEBAR
-       ===================================================== */
-
-    .side-card {
-      padding: 14px;
-      margin-bottom: 12px;
-      border: 1px solid #282828;
-      border-radius: var(--radius);
-      background: var(--panel);
-    }
-
-    .side-title {
-      margin-bottom: 12px;
-      color: var(--gold-bright);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .profile-mini {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .profile-mini-photo {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 1px solid var(--gold);
-      background: #171717;
-      overflow: hidden;
-    }
-
-    .profile-mini-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .profile-mini-name {
-      font-weight: 700;
-    }
-
-    .profile-mini-status {
-      margin-top: 3px;
-      color: #777;
-      font-size: 11px;
-    }
-
-    .side-list {
-      display: grid;
-      gap: 7px;
-    }
-
-    .side-list a,
-    .side-list button {
-      width: 100%;
-      min-height: 38px;
-      padding: 0 10px;
-      border: 1px solid #222;
-      border-radius: 8px;
-      background: #101010;
-      color: #ccc;
-      text-align: left;
-      font-size: 12px;
-    }
-
-    .side-list a:hover,
-    .side-list button:hover {
-      border-color: var(--gold);
-      color: var(--gold-bright);
-    }
-
-    /* =====================================================
-       ACCOUNT STATUS
-       ===================================================== */
-
-    #accountStatus {
-      margin-top: 12px;
-      padding: 10px 12px;
-      border: 1px solid #282828;
-      border-radius: 9px;
-      color: #aaa;
-      background: #0d0d0d;
-      font-size: 11px;
-    }
-
-    #accountStatus strong {
-      color: var(--gold-bright);
-    }
-
-    /* =====================================================
-       BOTTOM NAVIGATION
-       ===================================================== */
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1200;
-      min-height: var(--bottom-height);
-      padding-bottom: env(safe-area-inset-bottom);
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      background: rgba(8,8,8,.97);
-      border-top: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-    }
-
-    .bottom-nav button,
-    .bottom-nav a {
-      min-width: 58px;
-      min-height: 52px;
-      padding: 5px;
-      border: 0;
-      background: transparent;
-      color: #888;
-      text-align: center;
-      font-size: 10px;
-    }
-
-    .bottom-nav button span,
-    .bottom-nav a span {
-      display: block;
-      margin-top: 3px;
-    }
-
-    .bottom-nav .active {
-      color: var(--gold-bright);
-    }
-
-    /* =====================================================
-       TOAST
-       ===================================================== */
-
-    #aynaToast {
-      position: fixed;
-      left: 50%;
-      bottom: calc(
-        var(--bottom-height) +
-        env(safe-area-inset-bottom) +
-        14px
-      );
-      z-index: 99998;
-      width: min(92vw, 420px);
-      padding: 12px 14px;
-      transform: translate(-50%, 20px);
-      opacity: 0;
-      pointer-events: none;
-      border: 1px solid var(--gold);
-      border-radius: 10px;
-      background: #111;
-      color: #fff;
-      text-align: center;
-      font-size: 12px;
-      transition: .22s ease;
-    }
-
-    #aynaToast.show {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-
-    /* =====================================================
-       ACCESSIBILITY
-       ===================================================== */
-
-    :focus-visible {
-      outline: 2px solid var(--gold-bright);
-      outline-offset: 2px;
-    }
-
-    @media (max-width: 850px) {
-      .page-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .side-column {
-        display: none;
-      }
-    }
-
-    @media (min-width: 851px) {
-      .bottom-nav {
-        display: none;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .brand-name {
-        font-size: 14px;
-      }
-
-      .app-shell {
-        padding-left: 8px;
-        padding-right: 8px;
-      }
-
-      .post-card,
-      .composer,
-      .section-card,
-      .side-card {
-        border-radius: 11px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation-duration: .001ms !important;
-        transition-duration: .001ms !important;
-      }
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- =====================================================
-       FAST STARTUP SCREEN
-       ===================================================== -->
+  <!-- =========================================
+       AYNA BOOK SPLASH SCREEN
+  ========================================== -->
 
-  <div id="startupScreen" aria-label="Loading AYNA BOOK">
-    <div class="startup-inner">
-      <div class="startup-logo">AB</div>
-      <div class="startup-title">AYNA BOOK</div>
-      <div
-        id="startupStatus"
-        class="startup-status"
-      >
-        Starting secure platform…
+  <div id="splashScreen">
+
+    <div class="splashContainer">
+
+      <div class="logoCircle">
+        <div class="logoText">AB</div>
       </div>
-      <div class="startup-loader"></div>
-    </div>
-  </div>
 
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
-
-  <header class="topbar">
-
-    <a
-      class="brand"
-      href="./index.html"
-      aria-label="AYNA BOOK Home"
-    >
-      <div class="brand-logo">AB</div>
-
-      <div class="brand-name">
+      <div class="brandName">
         AYNA BOOK
       </div>
-    </a>
 
-    <div class="top-actions">
+      <div
+        id="statusText"
+        class="statusText"
+      >
+        Starting secure platform...
+      </div>
+
+      <div class="progressTrack">
+        <div class="progressBar"></div>
+      </div>
+
+      <div id="startupError"></div>
 
       <button
-        id="headerSearchButton"
-        class="icon-button"
+        id="retryButton"
         type="button"
-        aria-label="Search"
-        title="Search"
       >
-        🔎
-      </button>
-
-      <button
-        id="notificationButton"
-        class="icon-button"
-        type="button"
-        aria-label="Notifications"
-        title="Notifications"
-      >
-        🔔
-      </button>
-
-      <a
-        id="authActionLink"
-        class="icon-button"
-        href="./login.html"
-        aria-label="Sign in"
-        title="Sign in"
-      >
-        👤
-      </a>
-
-    </div>
-
-  </header>
-
-  <!-- =====================================================
-       SEARCH
-       ===================================================== -->
-
-  <section
-    id="searchArea"
-    class="search-area"
-  >
-    <div class="search-box">
-
-      <input
-        id="globalSearch"
-        type="search"
-        autocomplete="off"
-        placeholder="Search people, posts, business, groups…"
-        aria-label="Global search"
-      >
-
-      <button
-        id="searchButton"
-        type="button"
-        aria-label="Search"
-      >
-        🔎
+        Retry
       </button>
 
     </div>
 
-    <div id="searchResults"></div>
-
-  </section>
+  </div>
 
-  <!-- =====================================================
-       MAIN APPLICATION
-       ===================================================== -->
-
-  <main
-    id="app"
-    class="app-shell"
-  >
 
-    <div class="page-grid">
+  <!-- =========================================
+       FIREBASE + APPLICATION STARTUP
+  ========================================== -->
 
-      <!-- =================================================
-           MAIN COLUMN
-           ================================================= -->
-
-      <section class="main-column">
-
-        <!-- STORIES -->
-
-        <section
-          class="section-card"
-          aria-label="Stories"
-        >
-
-          <div class="section-header">
-
-            <h2 class="section-title">
-              Stories
-            </h2>
-
-            <a
-              class="section-link"
-              href="./stories.html"
-            >
-              View all
-            </a>
-
-          </div>
-
-          <div
-            id="stories"
-            class="stories-row"
-          >
-
-            <div class="story">
-              <div class="story-avatar">
-                +
-              </div>
-
-              <div class="story-name">
-                Your story
-              </div>
-            </div>
-
-            <div class="story">
-              <div class="story-avatar">
-                AB
-              </div>
-
-              <div class="story-name">
-                AYNA
-              </div>
-            </div>
-
-            <div class="story">
-              <div class="story-avatar">
-                AB
-              </div>
-
-              <div class="story-name">
-                Global
-              </div>
-            </div>
-
-          </div>
-
-        </section>
-
-        <!-- =================================================
-             COMPOSER
-             ================================================= -->
-
-        <section
-          class="section-card composer"
-          aria-label="Create post"
-        >
-
-          <div class="composer-top">
-
-            <div class="composer-avatar">
-              <img
-                id="composerAvatar"
-                src="./assets/default-avatar.png"
-                alt=""
-                loading="lazy"
-                onerror="this.style.display='none'"
-              >
-            </div>
-
-            <textarea
-              id="postInput"
-              maxlength="10000"
-              placeholder="What's happening?"
-              aria-label="Create a post"
-            ></textarea>
-
-          </div>
-
-          <div class="composer-actions">
-
-            <button
-              id="photoPostButton"
-              class="action-button"
-              type="button"
-            >
-              📷 Photo
-            </button>
-
-            <button
-              id="videoPostButton"
-              class="action-button"
-              type="button"
-            >
-              🎥 Video
-            </button>
-
-            <button
-              id="pollPostButton"
-              class="action-button"
-              type="button"
-            >
-              📊 Poll
-            </button>
-
-            <button
-              id="storyPostButton"
-              class="action-button"
-              type="button"
-            >
-              ⭕ Story
-            </button>
-
-            <button
-              id="publishButton"
-              class="action-button gold-button"
-              type="button"
-            >
-              Publish
-            </button>
-
-          </div>
-
-          <input
-            id="photoInput"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            hidden
-          >
-
-          <input
-            id="videoInput"
-            type="file"
-            accept="video/*"
-            hidden
-          >
-
-        </section>
-
-        <!-- =================================================
-             FEED TABS
-             ================================================= -->
-
-        <nav
-          class="feed-tabs"
-          aria-label="Feed navigation"
-        >
-
-          <button
-            class="feed-tab active"
-            data-feed="home"
-            type="button"
-          >
-            Home
-          </button>
-
-          <button
-            class="feed-tab"
-            data-feed="following"
-            type="button"
-          >
-            Following
-          </button>
-
-          <button
-            class="feed-tab"
-            data-feed="friends"
-            type="button"
-          >
-            Friends
-          </button>
-
-          <button
-            class="feed-tab"
-            data-feed="business"
-            type="button"
-          >
-            Business
-          </button>
-
-          <button
-            class="feed-tab"
-            data-feed="trending"
-            type="button"
-          >
-            Trending
-          </button>
-
-        </nav>
-
-        <!-- =================================================
-             FEED
-             ================================================= -->
-
-        <section
-          id="feed"
-          aria-label="News feed"
-        >
-
-          <div
-            id="feedLoading"
-            class="loading-state"
-          >
-            Loading feed…
-          </div>
-
-        </section>
-
-      </section>
-
-      <!-- =================================================
-           SIDEBAR
-           ================================================= -->
-
-      <aside class="side-column">
-
-        <!-- ACCOUNT -->
-
-        <section class="side-card">
-
-          <div class="side-title">
-            Account
-          </div>
-
-          <div class="profile-mini">
-
-            <div class="profile-mini-photo">
-
-              <img
-                id="userFramePhoto"
-                src="./assets/default-avatar.png"
-                alt=""
-                loading="lazy"
-                onerror="this.style.display='none'"
-              >
-
-            </div>
-
-            <div>
-
-              <div
-                id="userName"
-                class="profile-mini-name"
-              >
-                AYNA BOOK User
-              </div>
-
-              <div
-                id="userEmail"
-                class="profile-mini-status"
-              >
-                Guest
-              </div>
-
-            </div>
-
-          </div>
-
-          <div id="accountStatus">
-            Account:
-            <strong id="authStateLabel">
-              GUEST
-            </strong>
-          </div>
-
-        </section>
-
-        <!-- QUICK MENU -->
-
-        <section class="side-card">
-
-          <div class="side-title">
-            Quick Access
-          </div>
-
-          <div class="side-list">
-
-            <a href="./profile.html">
-              👤 My Profile
-            </a>
-
-            <a href="./messages.html">
-              💬 Messenger
-            </a>
-
-            <a href="./groups.html">
-              👥 Groups & Communities
-            </a>
-
-            <a href="./business.html">
-              💼 Business
-            </a>
-
-            <a href="./vip.html">
-              ⭐ VIP
-            </a>
-
-            <a href="./vvip.html">
-              👑 VVIP
-            </a>
-
-            <a href="./notifications.html">
-              🔔 Notifications
-            </a>
-
-            <a href="./settings.html">
-              ⚙️ Settings
-            </a>
-
-            <a href="./security.html">
-              🔐 Security
-            </a>
-
-          </div>
-
-        </section>
-
-        <!-- PLATFORM -->
-
-        <section class="side-card">
-
-          <div class="side-title">
-            AYNA BOOK
-          </div>
-
-          <div class="side-list">
-
-            <a href="./about.html">
-              About
-            </a>
-
-            <a href="./help.html">
-              Help Center
-            </a>
-
-            <a href="./privacy.html">
-              Privacy
-            </a>
-
-            <a href="./terms.html">
-              Terms
-            </a>
-
-            <a href="./community-guidelines.html">
-              Community Guidelines
-            </a>
-
-          </div>
-
-        </section>
-
-      </aside>
-
-    </div>
-
-  </main>
-
-  <!-- =====================================================
-       MOBILE NAVIGATION
-       ===================================================== -->
-
-  <nav
-    class="bottom-nav"
-    aria-label="Mobile navigation"
-  >
-
-    <a
-      href="./index.html"
-      class="active"
-    >
-      🏠
-      <span>Home</span>
-    </a>
-
-    <button
-      id="mobileSearchButton"
-      type="button"
-    >
-      🔎
-      <span>Search</span>
-    </button>
-
-    <button
-      id="mobileCreateButton"
-      type="button"
-    >
-      ➕
-      <span>Create</span>
-    </button>
-
-    <a href="./messages.html">
-      💬
-      <span>Chat</span>
-    </a>
-
-    <a href="./profile.html">
-      👤
-      <span>Profile</span>
-    </a>
-
-  </nav>
-
-  <!-- =====================================================
-       TOAST
-       ===================================================== -->
-
-  <div
-    id="aynaToast"
-    role="status"
-    aria-live="polite"
-  ></div>
-
-  <!-- =====================================================
-       FAST APPLICATION CONTROLLER
-       ===================================================== -->
-
-  <script
-    type="module"
-    src="./index.js"
-  ></script>
+  <script type="module">
+
+    /*
+     * IMPORTANT:
+     * আপনার Firebase Console থেকে পাওয়া
+     * configuration এখানে বসান।
+     */
+
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from
+      "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+
+    /* =========================================
+       FIREBASE CONFIG
+    ========================================== */
+
+    const firebaseConfig = {
+
+      apiKey: "YOUR_API_KEY",
+
+      authDomain:
+        "YOUR_PROJECT_ID.firebaseapp.com",
+
+      projectId:
+        "YOUR_PROJECT_ID",
+
+      storageBucket:
+        "YOUR_PROJECT_ID.firebasestorage.app",
+
+      messagingSenderId:
+        "YOUR_MESSAGING_SENDER_ID",
+
+      appId:
+        "YOUR_APP_ID"
+
+    };
+
+
+    /* =========================================
+       DOM
+    ========================================= */
+
+    const splashScreen =
+      document.getElementById("splashScreen");
+
+    const statusText =
+      document.getElementById("statusText");
+
+    const startupError =
+      document.getElementById("startupError");
+
+    const retryButton =
+      document.getElementById("retryButton");
+
+
+    /* =========================================
+       NAVIGATION
+    ========================================= */
+
+    function goToPage(page) {
+
+      window.location.replace(page);
+
+    }
+
+
+    /* =========================================
+       ERROR DISPLAY
+    ========================================= */
+
+    function showError(message) {
+
+      statusText.textContent =
+        "Platform startup failed";
+
+      startupError.textContent =
+        message;
+
+      startupError.style.display =
+        "block";
+
+      retryButton.style.display =
+        "block";
+
+    }
+
+
+    /* =========================================
+       RETRY
+    ========================================= */
+
+    retryButton.addEventListener(
+      "click",
+      () => {
+
+        window.location.reload();
+
+      }
+    );
+
+
+    /* =========================================
+       STARTUP
+    ========================================= */
+
+    async function startAynaBook() {
+
+      try {
+
+        statusText.textContent =
+          "Connecting secure platform...";
+
+
+        /*
+         * Firebase initialization
+         */
+
+        const app =
+          initializeApp(firebaseConfig);
+
+
+        const auth =
+          getAuth(app);
+
+
+        statusText.textContent =
+          "Checking secure account...";
+
+
+        /*
+         * IMPORTANT:
+         *
+         * onAuthStateChanged কখনও কখনও
+         * network/configuration সমস্যায়
+         * অপেক্ষা করতে পারে।
+         *
+         * তাই আমরা maximum timeout রাখছি।
+         */
+
+        let finished = false;
+
+
+        const timeoutId =
+          setTimeout(() => {
+
+            if (finished) {
+              return;
+            }
+
+            finished = true;
+
+            showError(
+              "Firebase authentication is taking too long. Please check your Firebase configuration and internet connection."
+            );
+
+          }, 10000);
+
+
+        onAuthStateChanged(
+          auth,
+          (user) => {
+
+            if (finished) {
+              return;
+            }
+
+            finished = true;
+
+            clearTimeout(timeoutId);
+
+
+            /*
+             * USER LOGGED IN
+             */
+
+            if (user) {
+
+              /*
+               * Email verification check
+               */
+
+              if (!user.emailVerified) {
+
+                statusText.textContent =
+                  "Email verification required...";
+
+                setTimeout(() => {
+
+                  goToPage(
+                    "verify-email.html"
+                  );
+
+                }, 300);
+
+                return;
+              }
+
+
+              /*
+               * VERIFIED USER
+               */
+
+              statusText.textContent =
+                "Secure platform ready...";
+
+              setTimeout(() => {
+
+                goToPage(
+                  "home.html"
+                );
+
+              }, 300);
+
+              return;
+            }
+
+
+            /*
+             * NO USER
+             */
+
+            statusText.textContent =
+              "Opening secure login...";
+
+            setTimeout(() => {
+
+              goToPage(
+                "login.html"
+              );
+
+            }, 300);
+
+          },
+
+          (error) => {
+
+            if (finished) {
+              return;
+            }
+
+            finished = true;
+
+            clearTimeout(timeoutId);
+
+            console.error(
+              "Firebase Auth Error:",
+              error
+            );
+
+            showError(
+              "Authentication could not be initialized. Please check Firebase configuration."
+            );
+
+          }
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "AYNA BOOK Startup Error:",
+          error
+        );
+
+        showError(
+          "AYNA BOOK could not start. Please check the Firebase configuration."
+        );
+
+      }
+
+    }
+
+
+    /* =========================================
+       START
+    ========================================= */
+
+    startAynaBook();
+
+  </script>
 
 </body>
 </html>
+Did you like this feature?
+২) auth.js
+এটি আপনার Authentication Controller-এর পরিষ্কার startup-safe version:
+Writing
+// =========================================================
+// AYNA BOOK
+// AUTHENTICATION CONTROLLER
+// Firebase SDK 13.4.0
+// =========================================================
+
+
+// =========================================================
+// FIREBASE IMPORTS
+// =========================================================
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signOut,
+  reload,
+  deleteUser,
+  updateProfile,
+  onAuthStateChanged
+} from
+"https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+
+// =========================================================
+// FIREBASE APP
+// =========================================================
+
+import {
+  initializeApp
+} from
+"https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+
+
+// =========================================================
+// FIREBASE CONFIG
+// =========================================================
+//
+// আপনার Firebase Console-এর config এখানে বসাবেন।
+// =========================================================
+
+const firebaseConfig = {
+
+  apiKey:
+    "YOUR_API_KEY",
+
+  authDomain:
+    "YOUR_PROJECT_ID.firebaseapp.com",
+
+  projectId:
+    "YOUR_PROJECT_ID",
+
+  storageBucket:
+    "YOUR_PROJECT_ID.firebasestorage.app",
+
+  messagingSenderId:
+    "YOUR_MESSAGING_SENDER_ID",
+
+  appId:
+    "YOUR_APP_ID"
+
+};
+
+
+// =========================================================
+// INITIALIZE FIREBASE
+// =========================================================
+
+const app =
+  initializeApp(firebaseConfig);
+
+
+// =========================================================
+// AUTH INSTANCE
+// =========================================================
+
+const auth =
+  getAuth(app);
+
+
+// =========================================================
+// CREATE ACCOUNT
+// =========================================================
+
+export async function registerUser(
+  email,
+  password,
+  displayName = ""
+) {
+
+  try {
+
+    const result =
+      await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+
+    const user =
+      result.user;
+
+
+    // Update display name
+
+    if (displayName) {
+
+      await updateProfile(
+        user,
+        {
+          displayName:
+            displayName
+        }
+      );
+
+    }
+
+
+    // Send verification email
+
+    await sendEmailVerification(
+      user
+    );
+
+
+    return {
+      success: true,
+      user: user
+    };
+
+
+  } catch (error) {
+
+    console.error(
+      "Registration error:",
+      error
+    );
+
+    return {
+      success: false,
+      code: error.code,
+      message: getAuthErrorMessage(
+        error.code
+      )
+    };
+
+  }
+
+}
+
+
+// =========================================================
+// LOGIN
+// =========================================================
+
+export async function loginUser(
+  email,
+  password
+) {
+
+  try {
+
+    const result =
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+
+    const user =
+      result.user;
+
+
+    /*
+     * Email verification required
+     */
+
+    if (!user.emailVerified) {
+
+      return {
+        success: false,
+        verificationRequired: true,
+        user: user,
+        message:
+          "Please verify your email address first."
+      };
+
+    }
+
+
+    return {
+      success: true,
+      user: user
+    };
+
+
+  } catch (error) {
+
+    console.error(
+      "Login error:",
+      error
+    );
+
+    return {
+      success: false,
+      code: error.code,
+      message: getAuthErrorMessage(
+        error.code
+      )
+    };
+
+  }
+
+}
+
+
+// =========================================================
+// SEND VERIFICATION EMAIL
+// =========================================================
+
+export async function resendVerificationEmail() {
+
+  try {
+
+    const user =
+      auth.currentUser;
+
+
+    if (!user) {
+
+      return {
+        success: false,
+        message:
+          "No signed-in user found."
+      };
+
+    }
+
+
+    await sendEmailVerification(
+      user
+    );
+
+
+    return {
+      success: true,
+      message:
+        "Verification email sent."
+    };
+
+
+  } catch (error) {
+
+    console.error(
+      "Verification email error:",
+      error
+    );
+
+    return {
+      success: false,
+      code: error.code,
+      message:
+        getAuthErrorMessage(
+          error.code
+        )
+    };
+
+  }
+
+}
+
+
+// =========================================================
+// PASSWORD RESET
+// =========================================================
+
+export async function resetPassword(
+  email
+) {
+
+  try {
+
+    await sendPasswordResetEmail(
+      auth,
+      email
+    );
+
+
+    return {
+      success: true,
+      message:
+        "Password reset email sent."
+    };
+
+
+  } catch (error) {
+
+    console.error(
+      "Password reset error:",
+      error
+    );
+
+    return {
+      success: false,
+      code: error.code,
+      message:
+        getAuthErrorMessage(
+          error.code
+        )
+    };
+
+  }
+
+}
+
+
+// =========================================================
+// LOGOUT
+// =========================================================
+
+export async function logoutUser() {
+
+  try {
+
+    await signOut(auth);
+
+    return {
+      success: true
+    };
+
+
+  } catch (error) {
+
+    console.error(
+      "Logout error:",
+      error
+    );
+
+    return {
+      success: false,
+      code: error.code,
+      message:
+        getAuthErrorMessage(
+          error.code
+        )
+    };
+
+  }
+
+}
+
+
+// =========================================================
+// CURRENT USER
+// =========================================================
+
+export function getCurrentUser() {
+
+  return auth.currentUser;
+
+}
+
+
+// =========================================================
+// RELOAD CURRENT USER
+// =========================================================
+
+export async function reloadCurrentUser() {
+
+  const user =
+    auth.currentUser;
+
+
+  if (!user) {
+
+    return null;
+
+  }
+
+
+  await reload(user);
+
+  return auth.currentUser;
+
+}
+
+
+// =========================================================
+// DELETE CURRENT USER
+// =========================================================
+
+export async function deleteCurrentUser() {
+
+  try {
+
+    const user =
+      auth.currentUser;
+
+
+    if (!user) {
+
+      return {
+        success: false,
+        message:
+          "No signed-in user."
+      };
+
+    }
+
+
+    await deleteUser(user);
+
+
+    return {
+      success: true
+    };
+
+
+  } catch (error) {
+
+    console.error(
+      "Delete account error:",
+      error
+    );
+
+    return {
+      success: false,
+      code: error.code,
+      message:
+        getAuthErrorMessage(
+          error.code
+        )
+    };
+
+  }
+
+}
+
+
+// =========================================================
+// AUTH STATE OBSERVER
+// =========================================================
+
+export function observeAuthState(
+  callback
+) {
+
+  return onAuthStateChanged(
+    auth,
+    callback
+  );
+
+}
+
+
+// =========================================================
+// AUTH ERROR HANDLER
+// =========================================================
+
+function getAuthErrorMessage(
+  code
+) {
+
+  switch (code) {
+
+    case "auth/email-already-in-use":
+
+      return "This email address is already registered.";
+
+    case "auth/invalid-email":
+
+      return "Please enter a valid email address.";
+
+    case "auth/weak-password":
+
+      return "Password is too weak.";
+
+    case "auth/user-not-found":
+
+      return "No account was found with this email.";
+
+    case "auth/wrong-password":
+
+      return "Incorrect password.";
+
+    case "auth/invalid-credential":
+
+      return "Email or password is incorrect.";
+
+    case "auth/too-many-requests":
+
+      return "Too many attempts. Please try again later.";
+
+    case "auth/network-request-failed":
+
+      return "Network error. Please check your internet connection.";
+
+    case "auth/user-disabled":
+
+      return "This account has been disabled.";
+
+    case "auth/requires-recent-login":
+
+      return "Please sign in again and retry.";
+
+    default:
+
+      return "Authentication failed. Please try again.";
+
+  }
+
+}
+
+
+// =========================================================
+// EXPORT AUTH
+// =========================================================
+
+export {
+  auth,
+  app
+};
+Did you like this feature?
+৩) সবচেয়ে গুরুত্বপূর্ণ: Firebase Config
+উপরের এই অংশে:
+JavaScript
+const firebaseConfig = {
+
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+
+};
