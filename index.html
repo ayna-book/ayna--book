@@ -1,2227 +1,1369 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-
-  <meta name="theme-color" content="#07152f">
-  <meta name="description"
-        content="AYNA BOOK — Global Social Network, Messenger, 8K Multimedia, Calls and Advanced Technology">
-
-  <title>AYNA BOOK</title>
-
-  <style>
-    :root{
-      --navy:#07152f;
-      --navy2:#0b2045;
-      --black:#030508;
-      --card:#0a101c;
-      --card2:#0e1726;
-      --white:#ffffff;
-      --muted:#aebbd0;
-      --gold:#d8b45a;
-      --gold2:#f0d58a;
-      --line:rgba(216,180,90,.45);
-      --blue:#1688ff;
-      --green:#16c784;
-      --red:#ff4d5f;
-    }
-
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-      -webkit-tap-highlight-color:transparent;
-    }
-
-    html,
-    body{
-      width:100%;
-      min-height:100%;
-      background:var(--black);
-      color:var(--white);
-      font-family:
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Noto Sans Bengali",
-        sans-serif;
-    }
-
-    body{
-      overflow-x:hidden;
-    }
-
-    button,
-    input,
-    textarea,
-    select{
-      font:inherit;
-    }
-
-    button,
-    a{
-      touch-action:manipulation;
-    }
-
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
-
-    /* =========================
-       HEADER
-    ========================= */
-
-    .top-header{
-      width:100%;
-      background:
-        linear-gradient(135deg,#06132d,#0b2148 55%,#07152f);
-      border-bottom:1px solid var(--line);
-      position:sticky;
-      top:0;
-      z-index:1000;
-      box-shadow:0 5px 25px rgba(0,0,0,.45);
-    }
-
-    .header-inner{
-      width:min(1200px,100%);
-      margin:auto;
-      min-height:82px;
-      padding:12px 16px;
-      display:flex;
-      align-items:center;
-      gap:14px;
-    }
-
-    .brand{
-      min-width:0;
-      flex:1;
-    }
-
-    .brand-title{
-      font-size:clamp(23px,6vw,34px);
-      font-weight:900;
-      letter-spacing:.5px;
-      color:#fff;
-      line-height:1.05;
-    }
-
-    .brand-sub{
-      margin-top:5px;
-      color:#c7d4e8;
-      font-size:12px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .header-actions{
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .icon-btn{
-      width:46px;
-      height:46px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.08);
-      color:#fff;
-      display:grid;
-      place-items:center;
-      font-size:21px;
-      cursor:pointer;
-    }
-
-    .icon-btn:active{
-      transform:scale(.96);
-    }
-
-    /* =========================
-       MAIN
-    ========================= */
-
-    .page{
-      width:min(1200px,100%);
-      margin:auto;
-      padding:18px 14px 110px;
-    }
-
-    .welcome{
-      margin-bottom:16px;
-    }
-
-    .welcome h1{
-      font-size:clamp(23px,6vw,36px);
-      line-height:1.15;
-      margin-bottom:7px;
-    }
-
-    .welcome p{
-      color:var(--muted);
-      line-height:1.55;
-      font-size:14px;
-    }
-
-    /* =========================
-       PROFILE HERO
-    ========================= */
-
-    .profile-hero{
-      background:
-        linear-gradient(145deg,#0d1c35,#07101e);
-      border:1px solid var(--line);
-      border-radius:24px;
-      padding:18px;
-      margin-bottom:18px;
-      display:flex;
-      align-items:center;
-      gap:16px;
-      box-shadow:0 10px 35px rgba(0,0,0,.32);
-    }
-
-    .profile-photo-wrap{
-      width:100px;
-      height:100px;
-      flex:0 0 100px;
-      border-radius:50%;
-      padding:3px;
-      background:linear-gradient(135deg,var(--gold),#fff,var(--gold));
-    }
-
-    .profile-photo{
-      width:100%;
-      height:100%;
-      border-radius:50%;
-      background:#162033;
-      object-fit:contain;
-      display:block;
-    }
-
-    .profile-info{
-      min-width:0;
-      flex:1;
-    }
-
-    .profile-name{
-      font-size:21px;
-      font-weight:800;
-      word-break:break-word;
-    }
-
-    .profile-email{
-      margin-top:5px;
-      color:#b7c4d8;
-      font-size:13px;
-      word-break:break-word;
-    }
-
-    .profile-badges{
-      display:flex;
-      flex-wrap:wrap;
-      gap:7px;
-      margin-top:9px;
-    }
-
-    .badge{
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:5px 9px;
-      font-size:11px;
-      color:#f5e6b8;
-      background:rgba(216,180,90,.08);
-    }
-
-    /* =========================
-       SEARCH
-    ========================= */
-
-    .search-box{
-      display:flex;
-      gap:8px;
-      margin-bottom:18px;
-    }
-
-    .search-box input{
-      flex:1;
-      min-width:0;
-      height:50px;
-      border-radius:15px;
-      border:1px solid rgba(255,255,255,.13);
-      outline:none;
-      background:#0b111d;
-      color:#fff;
-      padding:0 15px;
-    }
-
-    .search-box button{
-      width:52px;
-      border:1px solid var(--line);
-      border-radius:15px;
-      background:var(--navy2);
-      color:#fff;
-      cursor:pointer;
-    }
-
-    /* =========================
-       FEATURE GRID
-    ========================= */
-
-    .section-title{
-      font-size:20px;
-      font-weight:850;
-      margin:24px 0 12px;
-    }
-
-    .feature-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
-    }
-
-    .feature-card{
-      min-height:145px;
-      border-radius:20px;
-      padding:17px;
-      border:1px solid rgba(255,255,255,.11);
-      background:
-        linear-gradient(145deg,#0d1726,#070c15);
-      position:relative;
-      overflow:hidden;
-      transition:.2s;
-    }
-
-    .feature-card:active{
-      transform:scale(.985);
-    }
-
-    .feature-card.gold{
-      border-color:var(--line);
-      background:
-        linear-gradient(145deg,#151713,#080b0a);
-    }
-
-    .feature-icon{
-      font-size:36px;
-      margin-bottom:10px;
-    }
-
-    .feature-name{
-      font-size:17px;
-      font-weight:850;
-    }
-
-    .feature-description{
-      color:#aab8cb;
-      font-size:12px;
-      line-height:1.45;
-      margin-top:5px;
-    }
-
-    .feature-tag{
-      position:absolute;
-      top:12px;
-      right:12px;
-      font-size:9px;
-      padding:4px 7px;
-      border-radius:999px;
-      background:rgba(255,255,255,.08);
-      color:#dce7f5;
-    }
-
-    /* =========================
-       BIG MEDIA HUB
-    ========================= */
-
-    .media-hub{
-      margin-top:18px;
-      padding:18px;
-      border:1px solid var(--line);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at top right,rgba(20,110,255,.15),transparent 40%),
-        linear-gradient(145deg,#0c1421,#05080d);
-    }
-
-    .media-title{
-      font-size:24px;
-      font-weight:900;
-    }
-
-    .media-sub{
-      margin-top:6px;
-      color:#aebbd0;
-      font-size:13px;
-      line-height:1.5;
-    }
-
-    .media-actions{
-      margin-top:16px;
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .media-btn{
-      min-height:78px;
-      border-radius:17px;
-      border:1px solid rgba(255,255,255,.13);
-      background:#0b1220;
-      color:#fff;
-      cursor:pointer;
-      padding:12px;
-      text-align:left;
-    }
-
-    .media-btn strong{
-      display:block;
-      font-size:15px;
-    }
-
-    .media-btn span{
-      display:block;
-      color:#9eacc0;
-      font-size:11px;
-      margin-top:4px;
-    }
-
-    /* =========================
-       MESSENGER
-    ========================= */
-
-    .messenger-card{
-      margin-top:18px;
-      border:1px solid var(--line);
-      border-radius:24px;
-      overflow:hidden;
-      background:#080d16;
-    }
-
-    .messenger-head{
-      padding:18px;
-      background:
-        linear-gradient(135deg,#07152f,#0d2752);
-    }
-
-    .messenger-head h2{
-      font-size:25px;
-    }
-
-    .messenger-head p{
-      color:#c1cee1;
-      font-size:13px;
-      margin-top:5px;
-    }
-
-    .messenger-features{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:1px;
-      background:rgba(255,255,255,.08);
-    }
-
-    .messenger-feature{
-      min-height:85px;
-      background:#090f19;
-      padding:14px;
-    }
-
-    .messenger-feature b{
-      display:block;
-      font-size:14px;
-    }
-
-    .messenger-feature span{
-      display:block;
-      color:#94a4ba;
-      font-size:11px;
-      margin-top:5px;
-      line-height:1.4;
-    }
-
-    .open-messenger{
-      display:block;
-      margin:14px;
-      text-align:center;
-      padding:15px;
-      border-radius:15px;
-      background:var(--navy2);
-      border:1px solid rgba(255,255,255,.14);
-      font-weight:800;
-    }
-
-    /* =========================
-       CALL HUB
-    ========================= */
-
-    .call-hub{
-      margin-top:18px;
-      padding:18px;
-      border-radius:24px;
-      border:1px solid rgba(22,199,132,.4);
-      background:
-        linear-gradient(145deg,#071a17,#07100f);
-    }
-
-    .call-hub h2{
-      font-size:24px;
-    }
-
-    .call-hub p{
-      color:#a9c7bf;
-      margin-top:6px;
-      font-size:13px;
-    }
-
-    .call-buttons{
-      margin-top:15px;
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:10px;
-    }
-
-    .call-btn{
-      padding:15px;
-      border-radius:15px;
-      border:1px solid rgba(255,255,255,.1);
-      background:#0b1715;
-      color:#fff;
-      cursor:pointer;
-      font-weight:700;
-    }
-
-    /* =========================
-       CREATE POST
-    ========================= */
-
-    .post-box{
-      margin-top:18px;
-      border-radius:24px;
-      padding:17px;
-      background:#090f18;
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .post-box h2{
-      font-size:21px;
-      margin-bottom:12px;
-    }
-
-    .post-box textarea{
-      width:100%;
-      min-height:105px;
-      resize:vertical;
-      border-radius:16px;
-      padding:14px;
-      background:#050910;
-      color:#fff;
-      border:1px solid rgba(255,255,255,.12);
-      outline:none;
-    }
-
-    .post-tools{
-      margin-top:10px;
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:7px;
-    }
-
-    .post-tool{
-      min-height:55px;
-      border-radius:13px;
-      border:1px solid rgba(255,255,255,.1);
-      background:#0d1522;
-      color:#fff;
-      cursor:pointer;
-      font-size:12px;
-    }
-
-    .post-submit{
-      width:100%;
-      margin-top:11px;
-      height:52px;
-      border-radius:15px;
-      border:1px solid var(--line);
-      background:var(--navy2);
-      color:#fff;
-      font-weight:850;
-      cursor:pointer;
-    }
-
-    /* =========================
-       FEED
-    ========================= */
-
-    .feed{
-      margin-top:18px;
-    }
-
-    .feed-status{
-      color:#9ba9bc;
-      font-size:13px;
-      padding:10px 2px;
-    }
-
-    .post{
-      margin-top:12px;
-      border-radius:20px;
-      padding:15px;
-      background:#090f18;
-      border:1px solid rgba(255,255,255,.1);
-    }
-
-    .post-author{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-
-    .post-avatar{
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      object-fit:contain;
-      background:#182235;
-    }
-
-    .post-name{
-      font-weight:800;
-    }
-
-    .post-time{
-      color:#8d9bae;
-      font-size:11px;
-      margin-top:2px;
-    }
-
-    .post-text{
-      margin-top:13px;
-      line-height:1.6;
-      white-space:pre-wrap;
-      word-break:break-word;
-    }
-
-    .post-actions{
-      margin-top:14px;
-      padding-top:10px;
-      border-top:1px solid rgba(255,255,255,.08);
-      display:flex;
-      gap:8px;
-    }
-
-    .post-action{
-      flex:1;
-      min-height:42px;
-      border:0;
-      border-radius:11px;
-      background:#101a29;
-      color:#d5dfec;
-    }
-
-    /* =========================
-       BOTTOM NAV
-    ========================= */
-
-    .bottom-nav{
-      position:fixed;
-      z-index:2000;
-      left:0;
-      right:0;
-      bottom:0;
-      background:rgba(5,10,18,.97);
-      backdrop-filter:blur(14px);
-      border-top:1px solid var(--line);
-      padding:
-        8px
-        max(8px,env(safe-area-inset-right))
-        calc(8px + env(safe-area-inset-bottom))
-        max(8px,env(safe-area-inset-left));
-    }
-
-    .bottom-inner{
-      width:min(700px,100%);
-      margin:auto;
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:5px;
-    }
-
-    .nav-item{
-      min-height:55px;
-      display:grid;
-      place-items:center;
-      border-radius:13px;
-      color:#9ba9bc;
-      font-size:10px;
-    }
-
-    .nav-item span{
-      display:block;
-      font-size:21px;
-      margin-bottom:2px;
-    }
-
-    .nav-item.active{
-      color:#fff;
-      background:#102344;
-    }
-
-    /* =========================
-       DRAWER
-    ========================= */
-
-    .drawer{
-      position:fixed;
-      inset:0;
-      z-index:3000;
-      background:rgba(0,0,0,.7);
-      display:none;
-    }
-
-    .drawer.show{
-      display:block;
-    }
-
-    .drawer-panel{
-      position:absolute;
-      top:0;
-      right:0;
-      width:min(390px,92%);
-      height:100%;
-      overflow:auto;
-      background:#070c14;
-      border-left:1px solid var(--line);
-      padding:20px;
-    }
-
-    .drawer-close{
-      width:45px;
-      height:45px;
-      border-radius:13px;
-      border:1px solid rgba(255,255,255,.12);
-      background:#101927;
-      color:#fff;
-      float:right;
-    }
-
-    .drawer-title{
-      clear:both;
-      padding-top:20px;
-      font-size:27px;
-      font-weight:900;
-    }
-
-    .drawer-link{
-      display:block;
-      margin-top:10px;
-      padding:15px;
-      border-radius:14px;
-      background:#0d1522;
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .logout{
-      width:100%;
-      margin-top:20px;
-      height:50px;
-      border-radius:14px;
-      background:#291017;
-      border:1px solid rgba(255,77,95,.35);
-      color:#fff;
-    }
-
-    /* =========================
-       TOAST
-    ========================= */
-
-    .toast{
-      position:fixed;
-      z-index:5000;
-      left:50%;
-      bottom:88px;
-      transform:translateX(-50%) translateY(20px);
-      width:min(92%,420px);
-      background:#111a29;
-      border:1px solid var(--line);
-      color:#fff;
-      padding:13px 15px;
-      border-radius:14px;
-      text-align:center;
-      opacity:0;
-      pointer-events:none;
-      transition:.25s;
-    }
-
-    .toast.show{
-      opacity:1;
-      transform:translateX(-50%) translateY(0);
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media (min-width:700px){
-      .feature-grid{
-        grid-template-columns:repeat(4,minmax(0,1fr));
-      }
-
-      .media-actions{
-        grid-template-columns:repeat(4,1fr);
-      }
-
-      .messenger-features{
-        grid-template-columns:repeat(4,1fr);
-      }
-
-      .profile-photo-wrap{
-        width:120px;
-        height:120px;
-        flex-basis:120px;
-      }
-    }
-
-    @media (max-width:430px){
-      .header-inner{
-        min-height:72px;
-        padding:10px 12px;
-      }
-
-      .brand-title{
-        font-size:24px;
-      }
-
-      .icon-btn{
-        width:42px;
-        height:42px;
-      }
-
-      .profile-hero{
-        padding:14px;
-      }
-
-      .profile-photo-wrap{
-        width:82px;
-        height:82px;
-        flex-basis:82px;
-      }
-
-      .post-tools{
-        grid-template-columns:repeat(2,1fr);
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>AYNA BOOK</title>
+
+<style>
+:root {
+  --bg:#0b1220;
+  --panel:#172235;
+  --panel2:#202e45;
+  --gold:#e8bd48;
+  --white:#ffffff;
+  --muted:#aebbd0;
+  --green:#16c784;
+  --border:rgba(255,255,255,.12);
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  font-size:17px;
+}
+
+button,input,textarea {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+header {
+  background:#111c30;
+  border-bottom:2px solid var(--gold);
+  padding:15px;
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+
+.header-inner {
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.logo {
+  color:var(--gold);
+  font-size:27px;
+  font-weight:1000;
+  letter-spacing:1px;
+}
+
+.header-actions {
+  display:flex;
+  gap:8px;
+}
+
+.header-actions a,
+.header-actions button {
+  text-decoration:none;
+  color:white;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  padding:10px 13px;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+.container {
+  max-width:1100px;
+  margin:auto;
+  padding:14px;
+}
+
+.hero {
+  background:linear-gradient(135deg,#182943,#273e5f);
+  border:1px solid rgba(232,189,72,.45);
+  border-radius:22px;
+  padding:25px 18px;
+  margin-bottom:18px;
+  text-align:center;
+}
+
+.hero h1 {
+  font-size:30px;
+  margin:0 0 10px;
+  color:var(--gold);
+}
+
+.hero p {
+  font-size:18px;
+  line-height:1.7;
+  margin:0;
+  color:#e2eaf5;
+}
+
+.section-title {
+  font-size:25px;
+  font-weight:1000;
+  margin:22px 0 14px;
+  color:var(--gold);
+}
+
+.profile-bar {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:var(--panel);
+  border-radius:16px;
+  padding:14px;
+  margin-bottom:18px;
+}
+
+.profile-bar img {
+  width:55px;
+  height:55px;
+  object-fit:cover;
+  border-radius:50%;
+  background:#34445c;
+}
+
+.profile-info {
+  flex:1;
+  min-width:0;
+}
+
+.profile-info strong {
+  font-size:19px;
+}
+
+.profile-info small {
+  display:block;
+  color:var(--muted);
+  margin-top:5px;
+}
+
+.feature-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+
+.feature-card {
+  min-height:175px;
+  padding:18px 9px;
+  border-radius:20px;
+  background:linear-gradient(145deg,#1c2c43,#111d30);
+  border:1px solid rgba(232,189,72,.45);
+  color:white;
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  transition:.2s;
+}
+
+.feature-card:active {
+  transform:scale(.97);
+}
+
+.feature-icon {
+  font-size:39px;
+  margin-bottom:12px;
+}
+
+.feature-name {
+  font-size:19px;
+  line-height:1.4;
+  font-weight:1000;
+  min-height:2.8em;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.feature-desc {
+  color:var(--muted);
+  font-size:14px;
+  margin-top:7px;
+}
+
+.panel {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:19px;
+  padding:17px;
+  margin:18px 0;
+}
+
+.panel h2 {
+  margin:0 0 15px;
+  font-size:24px;
+  color:var(--gold);
+}
+
+.post-textarea {
+  width:100%;
+  min-height:130px;
+  resize:vertical;
+  background:#0d1829;
+  border:1px solid #52637b;
+  color:white;
+  border-radius:14px;
+  padding:15px;
+  font-size:19px;
+  line-height:1.6;
+  outline:none;
+}
+
+.post-textarea:focus,
+input:focus {
+  border-color:var(--gold);
+}
+
+.post-tools {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:13px;
+}
+
+.tool-button {
+  min-height:58px;
+  padding:10px;
+  border-radius:13px;
+  border:1px solid var(--border);
+  background:#263751;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.primary-button {
+  width:100%;
+  min-height:58px;
+  margin-top:13px;
+  border:0;
+  border-radius:14px;
+  background:var(--gold);
+  color:#151515;
+  font-size:19px;
+  font-weight:1000;
+}
+
+.preview {
+  display:none;
+  margin-top:12px;
+  background:#0c1727;
+  padding:10px;
+  border-radius:14px;
+  text-align:center;
+}
+
+.preview img,
+.preview video {
+  max-width:100%;
+  max-height:350px;
+  border-radius:12px;
+}
+
+.preview audio {
+  width:100%;
+}
+
+.preview-name {
+  font-size:14px;
+  color:var(--muted);
+  margin-top:8px;
+  overflow-wrap:anywhere;
+}
+
+.feed-post {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
+.post-header {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-bottom:12px;
+}
+
+.post-avatar {
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#34445c;
+}
+
+.post-author {
+  font-size:17px;
+  font-weight:900;
+}
+
+.post-date {
+  font-size:13px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.post-content {
+  font-size:19px;
+  line-height:1.7;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  margin:12px 0;
+}
+
+.post-media {
+  width:100%;
+  max-height:500px;
+  object-fit:contain;
+  background:#050a12;
+  border-radius:12px;
+  margin-top:10px;
+}
+
+.post-media-audio {
+  width:100%;
+  margin-top:12px;
+}
+
+.post-actions {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  border-top:1px solid var(--border);
+  padding-top:12px;
+  margin-top:12px;
+}
+
+.post-actions button {
+  background:#263751;
+  color:white;
+  border:0;
+  border-radius:10px;
+  min-height:46px;
+  font-weight:bold;
+  font-size:15px;
+}
+
+.comments {
+  margin-top:12px;
+  border-top:1px solid var(--border);
+  padding-top:10px;
+}
+
+.comment-item {
+  background:#0e1a2b;
+  padding:10px;
+  border-radius:10px;
+  margin:7px 0;
+  font-size:15px;
+  overflow-wrap:anywhere;
+}
+
+.comment-form {
+  display:flex;
+  gap:7px;
+  margin-top:10px;
+}
+
+.comment-form input {
+  flex:1;
+  min-width:0;
+  background:#0d1829;
+  color:white;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+}
+
+.comment-form button {
+  background:var(--gold);
+  border:0;
+  border-radius:10px;
+  padding:0 14px;
+  font-weight:bold;
+}
+
+.media-box {
+  text-align:center;
+}
+
+.media-box video {
+  width:100%;
+  max-height:480px;
+  background:#000;
+  border-radius:15px;
+}
+
+.media-buttons {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+
+.media-buttons button {
+  min-height:58px;
+  border:0;
+  border-radius:12px;
+  background:#263751;
+  color:white;
+  font-weight:bold;
+  font-size:16px;
+}
+
+.status {
+  font-size:14px;
+  color:var(--muted);
+  margin-top:10px;
+  overflow-wrap:anywhere;
+}
+
+.empty {
+  text-align:center;
+  color:var(--muted);
+  padding:30px 10px;
+  font-size:17px;
+}
+
+footer {
+  text-align:center;
+  padding:25px 12px 100px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.bottom-nav {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:60;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:#111c30;
+  border-top:1px solid var(--gold);
+  padding:8px 3px calc(8px + env(safe-area-inset-bottom));
+}
+
+.bottom-nav a {
+  color:white;
+  text-decoration:none;
+  text-align:center;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.bottom-nav span {
+  display:block;
+  font-size:23px;
+  margin-bottom:4px;
+}
+
+.hidden {
+  display:none!important;
+}
+
+#notice {
+  position:fixed;
+  top:75px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#263751;
+  color:white;
+  border:1px solid var(--gold);
+  padding:12px 18px;
+  border-radius:12px;
+  z-index:100;
+  display:none;
+  max-width:90%;
+  text-align:center;
+}
+
+@media(min-width:700px) {
+  .feature-grid {
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .post-tools {
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+
+@media(max-width:360px) {
+  .feature-name {
+    font-size:17px;
+  }
+
+  .feature-card {
+    min-height:155px;
+  }
+
+  .logo {
+    font-size:22px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================== -->
+<header>
+  <div class="header-inner">
+    <div class="logo">AYNA BOOK</div>
 
-  <header class="top-header">
-    <div class="header-inner">
-
-      <div class="brand">
-        <div class="brand-title">AYNA BOOK</div>
-        <div class="brand-sub">
-          Global Social • Messenger • 8K Multimedia • AI
-        </div>
-      </div>
-
-      <div class="header-actions">
-
-        <button
-          class="icon-btn"
-          id="notificationBtn"
-          aria-label="Notifications">
-          🔔
-        </button>
-
-        <button
-          class="icon-btn"
-          id="menuBtn"
-          aria-label="Menu">
-          ☰
-        </button>
-
-      </div>
+    <div class="header-actions">
+      <a href="notifications.html">🔔</a>
+      <a href="messenger.html">💬 Messenger</a>
     </div>
-  </header>
-
-
-  <main class="page">
-
-    <!-- =========================
-         WELCOME
-    ========================== -->
-
-    <section class="welcome">
-
-      <h1>স্বাগতম AYNA BOOK-এ 👋</h1>
-
-      <p>
-        একটি Global Social Platform —
-        Social Network, Messenger, 8K Multimedia,
-        Voice/Video Calling, AI এবং আরও অনেক প্রযুক্তি।
-      </p>
-
-    </section>
-
-
-    <!-- =========================
-         PROFILE
-    ========================== -->
-
-    <section class="profile-hero">
-
-      <div class="profile-photo-wrap">
-
-        <img
-          id="profilePhoto"
-          class="profile-photo"
-          src=""
-          alt="Profile Photo">
-
-      </div>
-
-      <div class="profile-info">
-
-        <div
-          id="profileName"
-          class="profile-name">
-          AYNA BOOK User
-        </div>
-
-        <div
-          id="profileEmail"
-          class="profile-email">
-          Loading...
-        </div>
-
-        <div class="profile-badges">
-
-          <span class="badge">
-            ✓ Account
-          </span>
-
-          <span class="badge">
-            🌍 Global
-          </span>
-
-          <span class="badge">
-            🔐 Secure
-          </span>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         SEARCH
-    ========================== -->
-
-    <div class="search-box">
-
-      <input
-        id="globalSearch"
-        type="search"
-        placeholder="People, Posts, Videos, Groups, Business...">
-
-      <button id="searchBtn">
-        🔎
-      </button>
-
-    </div>
-
-
-    <!-- =========================
-         QUICK FEATURES
-    ========================== -->
-
-    <h2 class="section-title">
-      ⚡ AYNA BOOK Features
-    </h2>
-
-    <section class="feature-grid">
-
-      <a class="feature-card gold" href="./messenger.html">
-        <span class="feature-tag">NEW</span>
-        <div class="feature-icon">💬</div>
-        <div class="feature-name">AYNA Messenger</div>
-        <div class="feature-description">
-          Chat, voice message, photo, video, file ও calling।
-        </div>
-      </a>
-
-
-      <a class="feature-card gold" href="./radio.html">
-        <span class="feature-tag">LIVE</span>
-        <div class="feature-icon">📻</div>
-        <div class="feature-name">AYNA Radio</div>
-        <div class="feature-description">
-          Live radio station ও audio streaming।
-        </div>
-      </a>
-
-
-      <a class="feature-card gold" href="./tv.html">
-        <span class="feature-tag">LIVE</span>
-        <div class="feature-icon">📺</div>
-        <div class="feature-name">AYNA TV</div>
-        <div class="feature-description">
-          Live TV ও video channels।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./radar.html">
-        <div class="feature-icon">📡</div>
-        <div class="feature-name">Radar</div>
-        <div class="feature-description">
-          Radar visual simulation।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./military-radar.html">
-        <div class="feature-icon">🛰️</div>
-        <div class="feature-name">Military Radar</div>
-        <div class="feature-description">
-          Safe visual radar simulation।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./compass.html">
-        <div class="feature-icon">🧭</div>
-        <div class="feature-name">Compass</div>
-        <div class="feature-description">
-          Digital compass।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./gps.html">
-        <div class="feature-icon">📍</div>
-        <div class="feature-name">GPS</div>
-        <div class="feature-description">
-          Location ও accuracy।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./clock.html">
-        <div class="feature-icon">🕐</div>
-        <div class="feature-name">Voice Clock</div>
-        <div class="feature-description">
-          সময় বলার voice clock।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./prayer.html">
-        <div class="feature-icon">🕌</div>
-        <div class="feature-name">Prayer & Ramadan</div>
-        <div class="feature-description">
-          নামাজ, সেহরি, ইফতার ও Ramadan।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./calendar.html">
-        <div class="feature-icon">📅</div>
-        <div class="feature-name">World Calendar</div>
-        <div class="feature-description">
-          Perpetual world calendar।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./arabic-calendar.html">
-        <div class="feature-icon">🌙</div>
-        <div class="feature-name">Arabic / Hijri</div>
-        <div class="feature-description">
-          Hijri ও Arabic calendar।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./world-holidays.html">
-        <div class="feature-icon">🌍</div>
-        <div class="feature-name">World Holidays</div>
-        <div class="feature-description">
-          বিভিন্ন দেশের সরকারি ছুটি।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./us-alerts.html">
-        <div class="feature-icon">🇺🇸</div>
-        <div class="feature-name">US Alerts</div>
-        <div class="feature-description">
-          FEMA / IPAWS alert viewer।
-        </div>
-      </a>
-
-
-      <a class="feature-card" href="./notifications.html">
-        <div class="feature-icon">🔔</div>
-        <div class="feature-name">Notifications</div>
-        <div class="feature-description">
-          আপনার notifications।
-        </div>
-      </a>
-
-    </section>
-
-
-    <!-- =========================
-         8K MEDIA HUB
-    ========================== -->
-
-    <section class="media-hub">
-
-      <div class="media-title">
-        🎬 8K Multimedia Center
-      </div>
-
-      <div class="media-sub">
-        উচ্চমানের ছবি, ভিডিও ও অডিও পোস্ট করার
-        জন্য AYNA BOOK-এর Multimedia Hub।
-      </div>
-
-      <div class="media-actions">
-
-        <button
-          class="media-btn"
-          id="photoPostBtn">
-          🖼️
-          <strong>8K Photo</strong>
-          <span>High-resolution photo post</span>
-        </button>
-
-        <button
-          class="media-btn"
-          id="audioPostBtn">
-          🎵
-          <strong>High Quality Audio</strong>
-          <span>Audio post ও playback</span>
-        </button>
-
-        <button
-          class="media-btn"
-          id="videoPostBtn">
-          🎥
-          <strong>8K Video</strong>
-          <span>High-quality video post</span>
-        </button>
-
-        <button
-          class="media-btn"
-          id="livePostBtn">
-          🔴
-          <strong>Live</strong>
-          <span>Future live streaming module</span>
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         MESSENGER
-    ========================== -->
-
-    <section class="messenger-card">
-
-      <div class="messenger-head">
-
-        <h2>💬 AYNA MESSENGER</h2>
-
-        <p>
-          Modern private communication platform
-        </p>
-
-      </div>
-
-      <div class="messenger-features">
-
-        <div class="messenger-feature">
-          <b>💬 Private Chat</b>
-          <span>One-to-one ও group messaging</span>
-        </div>
-
-        <div class="messenger-feature">
-          <b>🎤 Voice Message</b>
-          <span>Voice recording ও playback</span>
-        </div>
-
-        <div class="messenger-feature">
-          <b>🖼️ Media</b>
-          <span>Image, video ও audio messages</span>
-        </div>
-
-        <div class="messenger-feature">
-          <b>📄 Documents</b>
-          <span>Document ও file sharing</span>
-        </div>
-
-        <div class="messenger-feature">
-          <b>↩️ Reply</b>
-          <span>Reply, forward ও edit</span>
-        </div>
-
-        <div class="messenger-feature">
-          <b>❤️ Reactions</b>
-          <span>Message reactions</span>
-        </div>
-
-        <div class="messenger-feature">
-          <b>✓ Read Status</b>
-          <span>Delivered / read indicators</span>
-        </div>
-
-        <div class="messenger-feature">
-          <b>🔎 Search</b>
-          <span>Message search</span>
-        </div>
-
-      </div>
-
-      <a
-        class="open-messenger"
-        href="./messenger.html">
-        OPEN AYNA MESSENGER →
-      </a>
-
-    </section>
-
-
-    <!-- =========================
-         CALL HUB
-    ========================== -->
-
-    <section class="call-hub">
-
-      <h2>📞 AYNA CALL</h2>
-
-      <p>
-        Voice ও Video Calling-এর জন্য
-        modern WebRTC-based interface।
-      </p>
-
-      <div class="call-buttons">
-
-        <button
-          class="call-btn"
-          id="voiceCallBtn">
-          📞 Voice Call
-        </button>
-
-        <button
-          class="call-btn"
-          id="videoCallBtn">
-          🎥 Video Call
-        </button>
-
-        <button
-          class="call-btn"
-          id="groupVoiceBtn">
-          👥 Group Voice
-        </button>
-
-        <button
-          class="call-btn"
-          id="groupVideoBtn">
-          👥 Group Video
-        </button>
-
-        <button
-          class="call-btn"
-          id="screenShareBtn">
-          🖥️ Screen Share
-        </button>
-
-        <button
-          class="call-btn"
-          id="callHistoryBtn">
-          🕘 Call History
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         CREATE POST
-    ========================== -->
-
-    <section class="post-box">
-
-      <h2>✍️ নতুন পোস্ট</h2>
-
-      <textarea
-        id="postText"
-        maxlength="5000"
-        placeholder="আপনি কী ভাবছেন?"></textarea>
-
-      <div class="post-tools">
-
-        <button
-          class="post-tool"
-          id="imagePostBtn">
-          🖼️ ছবি
-        </button>
-
-        <button
-          class="post-tool"
-          id="audioPostBtn2">
-          🎵 অডিও
-        </button>
-
-        <button
-          class="post-tool"
-          id="videoPostBtn2">
-          🎥 ভিডিও
-        </button>
-
-        <button
-          class="post-tool"
-          id="filePostBtn">
-          📎 ফাইল
-        </button>
-
-      </div>
-
-      <button
-        class="post-submit"
-        id="postBtn">
-        🚀 পোস্ট করুন
-      </button>
-
-      <div
-        id="postStatus"
-        class="feed-status">
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         FEED
-    ========================== -->
-
-    <section class="feed">
-
-      <h2 class="section-title">
-        📰 AYNA Feed
-      </h2>
-
-      <div
-        id="feedStatus"
-        class="feed-status">
-        Feed লোড হচ্ছে...
-      </div>
-
-      <div id="feed"></div>
-
-    </section>
-
-  </main>
-
-
-  <!-- =========================
-       DRAWER
-  ========================== -->
-
-  <div
-    id="drawer"
-    class="drawer">
-
-    <div class="drawer-panel">
-
-      <button
-        id="drawerClose"
-        class="drawer-close">
-        ✕
-      </button>
-
-      <div class="drawer-title">
-        AYNA BOOK
-      </div>
-
-      <a
-        class="drawer-link"
-        href="./messenger.html">
-        💬 AYNA Messenger
-      </a>
-
-      <a
-        class="drawer-link"
-        href="./radio.html">
-        📻 Radio
-      </a>
-
-      <a
-        class="drawer-link"
-        href="./tv.html">
-        📺 TV
-      </a>
-
-      <a
-        class="drawer-link"
-        href="./calendar.html">
-        📅 World Calendar
-      </a>
-
-      <a
-        class="drawer-link"
-        href="./prayer.html">
-        🕌 Prayer & Ramadan
-      </a>
-
-      <a
-        class="drawer-link"
-        href="./notifications.html">
-        🔔 Notifications
-      </a>
-
-      <a
-        class="drawer-link"
-        href="./profile.html">
-        👤 Profile
-      </a>
-
-      <button
-        id="logoutBtn"
-        class="logout">
-        🚪 Logout
-      </button>
-
-    </div>
-
   </div>
-
-
-  <!-- =========================
-       TOAST
-  ========================== -->
-
-  <div
-    id="toast"
-    class="toast">
-  </div>
-
-
-  <!-- =========================
-       FIREBASE + INDEX JS
-  ========================== -->
-
-  <script type="module">
-
-    import {
-      auth,
-      database
-    } from "./firebase-init.js";
-
-    import {
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
-    import {
-      ref,
-      get,
-      push,
-      set,
-      query,
-      orderByChild,
-      limitToLast
-    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
-
-
-    /* =========================
-       ELEMENTS
-    ========================== */
-
-    const profileName =
-      document.getElementById("profileName");
-
-    const profileEmail =
-      document.getElementById("profileEmail");
-
-    const profilePhoto =
-      document.getElementById("profilePhoto");
-
-    const feed =
-      document.getElementById("feed");
-
-    const feedStatus =
-      document.getElementById("feedStatus");
-
-    const postText =
-      document.getElementById("postText");
-
-    const postBtn =
-      document.getElementById("postBtn");
-
-    const postStatus =
-      document.getElementById("postStatus");
-
-    const toast =
-      document.getElementById("toast");
-
-
-    let currentUser = null;
-
-
-    /* =========================
-       TOAST
-    ========================== */
-
-    function showToast(message){
-
-      toast.textContent = message;
-
-      toast.classList.add("show");
-
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 2600);
-    }
-
-
-    /* =========================
-       DEFAULT PHOTO
-    ========================== */
-
-    function createAvatar(name){
-
-      const first =
-        String(name || "A")
-        .trim()
-        .charAt(0)
-        .toUpperCase();
-
-      const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="300"
-             height="300"
-             viewBox="0 0 300 300">
-
-          <rect width="300"
-                height="300"
-                rx="150"
-                fill="#102344"/>
-
-          <text x="150"
-                y="180"
-                text-anchor="middle"
-                font-size="130"
-                font-family="Arial"
-                fill="white">
-            ${first}
-          </text>
-
-        </svg>
-      `;
-
-      return "data:image/svg+xml;charset=UTF-8," +
-        encodeURIComponent(svg);
-    }
-
-
-    /* =========================
-       AUTH
-    ========================== */
-
-    onAuthStateChanged(
-      auth,
-      async user => {
-
-        if(!user){
-
-          window.location.replace(
-            "./login.html"
-          );
-
-          return;
-        }
-
-        currentUser = user;
-
-        profileName.textContent =
-          user.displayName ||
-          "AYNA BOOK User";
-
-        profileEmail.textContent =
-          user.email || "";
-
-        profilePhoto.src =
-          createAvatar(
-            user.displayName ||
-            user.email ||
-            "A"
-          );
-
-        await loadProfile(user.uid);
-
-        await loadFeed();
-
-      }
-    );
-
-
-    /* =========================
-       LOAD PROFILE
-    ========================== */
-
-    async function loadProfile(uid){
-
-      try{
-
-        const snap =
-          await get(
-            ref(database, "users/" + uid)
-          );
-
-        if(!snap.exists()){
-          return;
-        }
-
-        const data =
-          snap.val();
-
-        if(data.fullName){
-          profileName.textContent =
-            data.fullName;
-        }
-
-        if(data.email){
-          profileEmail.textContent =
-            data.email;
-        }
-
-        if(data.photoURL){
-
-          profilePhoto.src =
-            data.photoURL;
-
-        }
-
-      }catch(error){
-
-        console.error(
-          "Profile error:",
-          error
-        );
-
-      }
-
-    }
-
-
-    /* =========================
-       LOAD FEED
-    ========================== */
-
-    async function loadFeed(){
-
-      feedStatus.textContent =
-        "Feed লোড হচ্ছে...";
-
-      try{
-
-        const postsQuery =
-          query(
-            ref(database, "posts"),
-            orderByChild("createdAt"),
-            limitToLast(50)
-          );
-
-        const snap =
-          await get(postsQuery);
-
-        feed.innerHTML = "";
-
-        if(!snap.exists()){
-
-          feedStatus.textContent =
-            "এখনও কোনো পোস্ট নেই।";
-
-          return;
-        }
-
-        const posts = [];
-
-        snap.forEach(child => {
-
-          posts.push({
-            id: child.key,
-            ...child.val()
-          });
-
-        });
-
-        posts.reverse();
-
-        posts.forEach(renderPost);
-
-        feedStatus.textContent =
-          `${posts.length}টি পোস্ট`;
-
-      }catch(error){
-
-        console.error(error);
-
-        feedStatus.textContent =
-          "Feed লোড করা যায়নি: " +
-          (error.message || "Unknown error");
-
-      }
-
-    }
-
-
-    /* =========================
-       RENDER POST
-    ========================= */
-
-    function renderPost(post){
-
-      const article =
-        document.createElement("article");
-
-      article.className =
-        "post";
-
-      const author =
-        post.fullName ||
-        "AYNA BOOK User";
-
-      const avatar =
-        post.photoURL ||
-        createAvatar(author);
-
-      const time =
-        post.createdAt
-          ? new Date(
-              post.createdAt
-            ).toLocaleString(
-              "bn-BD"
-            )
-          : "";
-
-      article.innerHTML = `
-
-        <div class="post-author">
-
-          <img
-            class="post-avatar"
-            src="${avatar}"
-            alt="User">
-
-          <div>
-
-            <div class="post-name">
-              ${escapeHTML(author)}
-            </div>
-
-            <div class="post-time">
-              ${escapeHTML(time)}
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="post-text">
-          ${escapeHTML(post.text || "")}
-        </div>
-
-        <div class="post-actions">
-
-          <button class="post-action">
-            ❤️ React
-          </button>
-
-          <button class="post-action">
-            💬 Comment
-          </button>
-
-          <button class="post-action">
-            ↗️ Share
-          </button>
-
-        </div>
-      `;
-
-      feed.appendChild(article);
-
-    }
-
-
-    /* =========================
-       ESCAPE HTML
-    ========================== */
-
-    function escapeHTML(value){
-
-      return String(value)
-
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-
-    }
-
-
-    /* =========================
-       CREATE TEXT POST
-    ========================== */
-
-    postBtn.addEventListener(
-      "click",
-      async () => {
-
-        if(!currentUser){
-
-          showToast(
-            "আগে Login করুন।"
-          );
-
-          return;
-        }
-
-        const text =
-          postText.value.trim();
-
-        if(!text){
-
-          showToast(
-            "পোস্টের লেখা লিখুন।"
-          );
-
-          return;
-        }
-
-        if(text.length > 5000){
-
-          showToast(
-            "পোস্ট সর্বোচ্চ 5000 অক্ষর।"
-          );
-
-          return;
-        }
-
-        postBtn.disabled = true;
-
-        postStatus.textContent =
-          "পোস্ট Save হচ্ছে...";
-
-        try{
-
-          const postRef =
-            push(
-              ref(database,"posts")
-            );
-
-          await set(
-            postRef,
-            {
-              uid:currentUser.uid,
-
-              fullName:
-                profileName.textContent ||
-                currentUser.displayName ||
-                "AYNA BOOK User",
-
-              email:
-                currentUser.email || "",
-
-              photoURL:
-                profilePhoto.src || "",
-
-              text:text,
-
-              type:"text",
-
-              createdAt:
-                Date.now()
-            }
-          );
-
-          postText.value = "";
-
-          postStatus.textContent =
-            "পোস্ট সফলভাবে Save হয়েছে।";
-
-          showToast(
-            "পোস্ট প্রকাশ হয়েছে ✓"
-          );
-
-          await loadFeed();
-
-        }catch(error){
-
-          console.error(error);
-
-          postStatus.textContent =
-            "পোস্ট Save হয়নি: " +
-            (error.message || "");
-
-          showToast(
-            "পোস্ট Save করতে সমস্যা হয়েছে।"
-          );
-
-        }finally{
-
-          postBtn.disabled = false;
-
-        }
-
-      }
-    );
-
-
-    /* =========================
-       MEDIA BUTTONS
-    ========================== */
-
-    function mediaComingSoon(type){
-
-      showToast(
-        type +
-        " Media module পরের ধাপে যুক্ত হবে।"
-      );
-
-    }
-
-
-    document
-      .getElementById("photoPostBtn")
-      .addEventListener(
-        "click",
-        () => mediaComingSoon("8K Photo")
-      );
-
-
-    document
-      .getElementById("audioPostBtn")
-      .addEventListener(
-        "click",
-        () => mediaComingSoon("Audio")
-      );
-
-
-    document
-      .getElementById("videoPostBtn")
-      .addEventListener(
-        "click",
-        () => mediaComingSoon("8K Video")
-      );
-
-
-    document
-      .getElementById("livePostBtn")
-      .addEventListener(
-        "click",
-        () => mediaComingSoon("Live")
-      );
-
-
-    document
-      .getElementById("imagePostBtn")
-      .addEventListener(
-        "click",
-        () => mediaComingSoon("Image")
-      );
-
-
-    document
-      .getElementById("audioPostBtn2")
-      .addEventListener(
-        "click",
-        () => mediaComingSoon("Audio")
-      );
-
-
-    document
-      .getElementById("videoPostBtn2")
-      .addEventListener(
-        "click",
-        () => mediaComingSoon("Video")
-      );
-
-
-    document
-      .getElementById("filePostBtn")
-      .addEventListener(
-        "click",
-        () => mediaComingSoon("File")
-      );
-
-
-    /* =========================
-       CALL BUTTONS
-    ========================== */
-
-    document
-      .getElementById("voiceCallBtn")
-      .addEventListener(
-        "click",
-        () => showToast(
-          "AYNA Voice Call module পরের ধাপে চালু হবে।"
-        )
-      );
-
-
-    document
-      .getElementById("videoCallBtn")
-      .addEventListener(
-        "click",
-        () => showToast(
-          "AYNA Video Call module পরের ধাপে চালু হবে।"
-        )
-      );
-
-
-    document
-      .getElementById("groupVoiceBtn")
-      .addEventListener(
-        "click",
-        () => showToast(
-          "Group Voice Call module পরের ধাপে চালু হবে।"
-        )
-      );
-
-
-    document
-      .getElementById("groupVideoBtn")
-      .addEventListener(
-        "click",
-        () => showToast(
-          "Group Video Call module পরের ধাপে চালু হবে।"
-        )
-      );
-
-
-    document
-      .getElementById("screenShareBtn")
-      .addEventListener(
-        "click",
-        () => showToast(
-          "Screen Share module পরের ধাপে চালু হবে।"
-        )
-      );
-
-
-    document
-      .getElementById("callHistoryBtn")
-      .addEventListener(
-        "click",
-        () => showToast(
-          "Call History module পরের ধাপে চালু হবে।"
-        )
-      );
-
-
-    /* =========================
-       SEARCH
-    ========================== */
-
-    function doSearch(){
-
-      const value =
-        document
-          .getElementById("globalSearch")
-          .value
-          .trim();
-
-      if(!value){
-
-        showToast(
-          "Search লিখুন।"
-        );
-
-        return;
-      }
-
-      showToast(
-        "Global Search module পরের ধাপে যুক্ত হবে।"
-      );
-
-    }
-
-
-    document
-      .getElementById("searchBtn")
-      .addEventListener(
-        "click",
-        doSearch
-      );
-
-
-    document
-      .getElementById("globalSearch")
-      .addEventListener(
-        "keydown",
-        event => {
-
-          if(event.key === "Enter"){
-            doSearch();
-          }
-
-        }
-      );
-
-
-    /* =========================
-       NOTIFICATION
-    ========================== */
-
-    document
-      .getElementById("notificationBtn")
-      .addEventListener(
-        "click",
-        () => {
-
-          window.location.href =
-            "./notifications.html";
-
-        }
-      );
-
-
-    /* =========================
-       DRAWER
-    ========================== */
-
-    const drawer =
-      document.getElementById("drawer");
-
-    document
-      .getElementById("menuBtn")
-      .addEventListener(
-        "click",
-        () => drawer.classList.add("show")
-      );
-
-
-    document
-      .getElementById("drawerClose")
-      .addEventListener(
-        "click",
-        () => drawer.classList.remove("show")
-      );
-
-
-    drawer.addEventListener(
-      "click",
-      event => {
-
-        if(event.target === drawer){
-
-          drawer.classList.remove(
-            "show"
-          );
-
-        }
-
-      }
-    );
-
-
-    /* =========================
-       LOGOUT
-    ========================== */
-
-    document
-      .getElementById("logoutBtn")
-      .addEventListener(
-        "click",
-        async () => {
-
-          try{
-
-            await signOut(auth);
-
-            window.location.replace(
-              "./login.html"
-            );
-
-          }catch(error){
-
-            showToast(
-              "Logout করা যায়নি।"
-            );
-
-          }
-
-        }
-      );
-
-  </script>
-
-
-  <!-- =========================
-       BOTTOM NAV
-  ========================== -->
-
-  <nav class="bottom-nav">
-
-    <div class="bottom-inner">
-
-      <a
-        class="nav-item active"
-        href="./index.html">
-        <span>🏠</span>
-        Home
-      </a>
-
-      <a
-        class="nav-item"
-        href="./messenger.html">
-        <span>💬</span>
-        Messenger
-      </a>
-
-      <a
-        class="nav-item"
-        href="./calendar.html">
-        <span>📅</span>
-        Calendar
-      </a>
-
-      <a
-        class="nav-item"
-        href="./notifications.html">
-        <span>🔔</span>
-        Alerts
-      </a>
-
-      <a
-        class="nav-item"
-        href="./profile.html">
-        <span>👤</span>
-        Profile
-      </a>
-
+</header>
+
+<div id="notice"></div>
+
+<main class="container">
+
+  <section class="hero">
+    <h1>WELCOME TO AYNA BOOK</h1>
+    <p>
+      আপনার বিশ্ব, আপনার বন্ধু, আপনার গল্প।
+      সবার সঙ্গে যুক্ত থাকুন AYNA BOOK-এ।
+    </p>
+  </section>
+
+  <section class="profile-bar">
+    <img id="myPhoto" alt="Profile photo">
+    <div class="profile-info">
+      <strong id="myName">লোড হচ্ছে...</strong>
+      <small id="myEmail">আপনার AYNA BOOK অ্যাকাউন্ট</small>
+    </div>
+    <a href="profile.html" style="color:#e8bd48;text-decoration:none">
+      প্রোফাইল
+    </a>
+  </section>
+
+  <h2 class="section-title">🌍 AYNA BOOK FEATURES</h2>
+
+  <section class="feature-grid">
+
+    <a class="feature-card" href="profile.html">
+      <span class="feature-icon">👤</span>
+      <span class="feature-name">আমার প্রোফাইল</span>
+      <span class="feature-desc">ব্যক্তিগত অ্যাকাউন্ট</span>
+    </a>
+
+    <a class="feature-card" href="messenger.html">
+      <span class="feature-icon">💬</span>
+      <span class="feature-name">AYNA Messenger</span>
+      <span class="feature-desc">মেসেজ ও চ্যাট</span>
+    </a>
+
+    <a class="feature-card" href="notifications.html">
+      <span class="feature-icon">🔔</span>
+      <span class="feature-name">নোটিফিকেশন</span>
+      <span class="feature-desc">সব আপডেট</span>
+    </a>
+
+    <a class="feature-card" href="radio.html">
+      <span class="feature-icon">📻</span>
+      <span class="feature-name">বিশ্ব রেডিও</span>
+      <span class="feature-desc">রেডিও শুনুন</span>
+    </a>
+
+    <a class="feature-card" href="tv.html">
+      <span class="feature-icon">📺</span>
+      <span class="feature-name">বিশ্ব টেলিভিশন</span>
+      <span class="feature-desc">টিভি দেখুন</span>
+    </a>
+
+    <a class="feature-card" href="gps.html">
+      <span class="feature-icon">🛰️</span>
+      <span class="feature-name">GPS নেভিগেশন</span>
+      <span class="feature-desc">অবস্থান ও দিকনির্দেশ</span>
+    </a>
+
+    <a class="feature-card" href="compass.html">
+      <span class="feature-icon">🧭</span>
+      <span class="feature-name">ডিজিটাল কম্পাস</span>
+      <span class="feature-desc">দিক নির্ণয়</span>
+    </a>
+
+    <a class="feature-card" href="radar.html">
+      <span class="feature-icon">📡</span>
+      <span class="feature-name">রাডার সিস্টেম</span>
+      <span class="feature-desc">রাডার পেজ</span>
+    </a>
+
+    <a class="feature-card" href="military-radar.html">
+      <span class="feature-icon">🎯</span>
+      <span class="feature-name">মিলিটারি রাডার</span>
+      <span class="feature-desc">তথ্যভিত্তিক রাডার</span>
+    </a>
+
+    <a class="feature-card" href="clock.html">
+      <span class="feature-icon">🕒</span>
+      <span class="feature-name">বিশ্ব ঘড়ি</span>
+      <span class="feature-desc">সময় ও অ্যালার্ম</span>
+    </a>
+
+    <a class="feature-card" href="calendar.html">
+      <span class="feature-icon">📅</span>
+      <span class="feature-name">বিশ্ব ক্যালেন্ডার</span>
+      <span class="feature-desc">তারিখ ও দিন</span>
+    </a>
+
+    <a class="feature-card" href="arabic-calendar.html">
+      <span class="feature-icon">🌙</span>
+      <span class="feature-name">আরবি ক্যালেন্ডার</span>
+      <span class="feature-desc">হিজরি তারিখ</span>
+    </a>
+
+    <a class="feature-card" href="world-holidays.html">
+      <span class="feature-icon">🎉</span>
+      <span class="feature-name">বিশ্বের সরকারি ছুটি</span>
+      <span class="feature-desc">ছুটির তালিকা</span>
+    </a>
+
+    <a class="feature-card" href="us-alerts.html">
+      <span class="feature-icon">🚨</span>
+      <span class="feature-name">জরুরি এলার্ট</span>
+      <span class="feature-desc">এলার্ট তথ্য</span>
+    </a>
+
+    <a class="feature-card" href="prayer.html">
+      <span class="feature-icon">🕌</span>
+      <span class="feature-name">নামাজের সময়</span>
+      <span class="feature-desc">প্রার্থনার সময়সূচি</span>
+    </a>
+
+  </section>
+
+  <!-- POST CREATOR -->
+
+  <section class="panel" id="createPost">
+    <h2>✍️ নতুন পোস্ট তৈরি করুন</h2>
+
+    <textarea
+      id="postText"
+      class="post-textarea"
+      placeholder="আপনার মনের কথা লিখুন..."
+    ></textarea>
+
+    <div class="post-tools">
+      <button class="tool-button" id="chooseImage">🖼️ ছবি</button>
+      <button class="tool-button" id="chooseAudio">🎵 অডিও</button>
+      <button class="tool-button" id="chooseVideo">🎬 ভিডিও</button>
+      <button class="tool-button" id="clearMedia">✖️ মিডিয়া বাদ দিন</button>
     </div>
 
-  </nav>
+    <input id="imageInput" type="file" accept="image/*" hidden>
+    <input id="audioInput" type="file" accept="audio/*" hidden>
+    <input id="videoInput" type="file" accept="video/*" hidden>
+
+    <div class="preview" id="mediaPreview">
+      <div id="previewContent"></div>
+      <div class="preview-name" id="previewName"></div>
+    </div>
+
+    <button class="primary-button" id="publishPost">
+      🚀 পোস্ট প্রকাশ করুন
+    </button>
+
+    <div class="status" id="postStatus">
+      লেখা অথবা একটি মিডিয়া নির্বাচন করে পোস্ট করুন।
+    </div>
+  </section>
+
+  <!-- LIVE CAMERA -->
+
+  <section class="panel media-box" id="liveSection">
+    <h2>🔴 AYNA LIVE VIDEO</h2>
+
+    <video id="liveVideo" autoplay muted playsinline></video>
+
+    <div class="media-buttons">
+      <button id="startCamera">📹 ক্যামেরা চালু</button>
+      <button id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
+    </div>
+
+    <div class="status" id="cameraStatus">
+      ক্যামেরা এখন বন্ধ।
+    </div>
+
+    <p class="status">
+      এটি আপনার ডিভাইসে লাইভ ক্যামেরা প্রিভিউ।
+      অন্যদের কাছে সরাসরি সম্প্রচারের জন্য আলাদা লাইভ সার্ভার প্রয়োজন।
+    </p>
+  </section>
+
+  <!-- FEED -->
+
+  <h2 class="section-title">🌐 AYNA BOOK NEWS FEED</h2>
+
+  <section id="feed">
+    <div class="empty">পোস্ট লোড হচ্ছে...</div>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 AYNA BOOK — Global Social Platform
+</footer>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Home</a>
+  <a href="#createPost"><span>➕</span>Post</a>
+  <a href="messenger.html"><span>💬</span>Chat</a>
+  <a href="profile.html"><span>👤</span>Profile</a>
+</nav>
+
+<script type="module">
+import { auth, database } from "./firebase-init.js";
+
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {
+  ref,
+  get,
+  set,
+  push,
+  update,
+  onValue
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+// ==================================================
+// APP STATE
+// ==================================================
+
+let currentUser = null;
+let userProfile = {};
+let selectedFile = null;
+let selectedType = null;
+let cameraStream = null;
+
+const $ = id => document.getElementById(id);
+
+function notify(message) {
+  const box = $("notice");
+  box.textContent = message;
+  box.style.display = "block";
+
+  clearTimeout(notify.timer);
+
+  notify.timer = setTimeout(() => {
+    box.style.display = "none";
+  }, 3000);
+}
+
+function safePhoto(photo) {
+  return typeof photo === "string" && photo
+    ? photo
+    : "data:image/svg+xml," + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="#334155"/><circle cx="50" cy="38" r="20" fill="#cbd5e1"/><path d="M15 100 Q20 65 50 65 Q80 65 85 100" fill="#cbd5e1"/></svg>'
+      );
+}
+
+function formatDate(timestamp) {
+  if (!timestamp) return "";
+
+  return new Date(timestamp).toLocaleString();
+}
+
+// ==================================================
+// AUTHENTICATION
+// ==================================================
+
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    $("myName").textContent = "লগইন করুন";
+    $("myEmail").textContent = "পোস্ট করতে লগইন প্রয়োজন";
+    $("publishPost").disabled = true;
+
+    notify("পোস্ট করতে আগে লগইন করুন");
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
+
+    return;
+  }
+
+  currentUser = user;
+
+  try {
+    const snapshot = await get(
+      ref(database, "users/" + user.uid)
+    );
+
+    userProfile = snapshot.val() || {};
+
+    $("myName").textContent =
+      userProfile.fullName ||
+      user.displayName ||
+      "AYNA User";
+
+    $("myEmail").textContent =
+      user.email || "AYNA BOOK Member";
+
+    $("myPhoto").src =
+      safePhoto(userProfile.photoURL);
+
+    $("publishPost").disabled = false;
+
+    startFeed();
+
+  } catch (error) {
+    console.error(error);
+    notify("প্রোফাইল লোড করা যায়নি");
+  }
+});
+
+// ==================================================
+// MEDIA SELECTOR
+// ==================================================
+
+$("chooseImage").addEventListener("click", () => {
+  $("imageInput").click();
+});
+
+$("chooseAudio").addEventListener("click", () => {
+  $("audioInput").click();
+});
+
+$("chooseVideo").addEventListener("click", () => {
+  $("videoInput").click();
+});
+
+$("imageInput").addEventListener("change", event => {
+  handleSelectedFile(event, "image");
+});
+
+$("audioInput").addEventListener("change", event => {
+  handleSelectedFile(event, "audio");
+});
+
+$("videoInput").addEventListener("change", event => {
+  handleSelectedFile(event, "video");
+});
+
+function handleSelectedFile(event, type) {
+  const file = event.target.files?.[0];
+
+  if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    notify("পরীক্ষামূলকভাবে সর্বোচ্চ 2MB ফাইল দেওয়া যাবে");
+    event.target.value = "";
+    return;
+  }
+
+  if (!file.type.startsWith(type + "/")) {
+    notify("সঠিক ফাইল নির্বাচন করুন");
+    event.target.value = "";
+    return;
+  }
+
+  selectedFile = file;
+  selectedType = type;
+
+  showPreview(file, type);
+}
+
+function showPreview(file, type) {
+  const preview = $("mediaPreview");
+  const content = $("previewContent");
+
+  content.innerHTML = "";
+
+  const url = URL.createObjectURL(file);
+
+  if (type === "image") {
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = "Selected image";
+    content.appendChild(img);
+  }
+
+  if (type === "video") {
+    const video = document.createElement("video");
+    video.src = url;
+    video.controls = true;
+    video.playsInline = true;
+    content.appendChild(video);
+  }
+
+  if (type === "audio") {
+    const audio = document.createElement("audio");
+    audio.src = url;
+    audio.controls = true;
+    content.appendChild(audio);
+  }
+
+  $("previewName").textContent = file.name;
+  preview.style.display = "block";
+}
+
+$("clearMedia").addEventListener("click", clearSelectedMedia);
+
+function clearSelectedMedia() {
+  selectedFile = null;
+  selectedType = null;
+
+  $("imageInput").value = "";
+  $("audioInput").value = "";
+  $("videoInput").value = "";
+
+  $("previewContent").innerHTML = "";
+  $("previewName").textContent = "";
+  $("mediaPreview").style.display = "none";
+}
+
+// ==================================================
+// CREATE POST
+// ==================================================
+
+$("publishPost").addEventListener("click", publishPost);
+
+async function publishPost() {
+  if (!currentUser) {
+    notify("আগে লগইন করুন");
+    return;
+  }
+
+  const text = $("postText").value.trim();
+
+  if (!text && !selectedFile) {
+    notify("লেখা অথবা মিডিয়া যোগ করুন");
+    return;
+  }
+
+  const button = $("publishPost");
+
+  button.disabled = true;
+  button.textContent = "প্রকাশ করা হচ্ছে...";
+
+  try {
+    let mediaData = "";
+
+    if (selectedFile) {
+      mediaData = await fileToDataURL(selectedFile);
+    }
+
+    const postRef = push(ref(database, "posts"));
+
+    const post = {
+      uid: currentUser.uid,
+      authorName:
+        userProfile.fullName ||
+        currentUser.displayName ||
+        "AYNA User",
+
+      authorPhoto: userProfile.photoURL || "",
+      text: text,
+      type: selectedType || "text",
+      media: mediaData,
+      fileName: selectedFile?.name || "",
+      mimeType: selectedFile?.type || "",
+      createdAt: Date.now(),
+      likes: {},
+      comments: {}
+    };
+
+    await set(postRef, post);
+
+    $("postText").value = "";
+    clearSelectedMedia();
+
+    notify("আপনার পোস্ট প্রকাশ হয়েছে");
+
+  } catch (error) {
+    console.error("Post error:", error);
+
+    notify(
+      error.code === "PERMISSION_DENIED"
+        ? "Firebase Rules অনুমতি দেয়নি"
+        : "পোস্ট প্রকাশ করা যায়নি"
+    );
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "🚀 পোস্ট প্রকাশ করুন";
+  }
+}
+
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(
+      new Error("ফাইল পড়া যায়নি")
+    );
+
+    reader.readAsDataURL(file);
+  });
+}
+
+// ==================================================
+// REALTIME FEED
+// ==================================================
+
+function startFeed() {
+  onValue(
+    ref(database, "posts"),
+
+    snapshot => {
+      const posts = snapshot.val() || {};
+
+      const list = Object.entries(posts)
+        .map(([id, post]) => ({ id, ...post }))
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+      renderFeed(list);
+    },
+
+    error => {
+      console.error("Feed error:", error);
+      $("feed").innerHTML =
+        '<div class="empty">ফিড লোড হয়নি। Firebase Rules পরীক্ষা করুন।</div>';
+    }
+  );
+}
+
+// ==================================================
+// RENDER FEED
+// ==================================================
+
+function renderFeed(posts) {
+  const feed = $("feed");
+  feed.innerHTML = "";
+
+  if (!posts.length) {
+    feed.innerHTML =
+      '<div class="empty">এখনও কোনো পোস্ট নেই। প্রথম পোস্টটি আপনিই করুন!</div>';
+    return;
+  }
+
+  posts.forEach(post => {
+    const card = document.createElement("article");
+    card.className = "feed-post";
+
+    const header = document.createElement("div");
+    header.className = "post-header";
+
+    const avatar = document.createElement("img");
+    avatar.className = "post-avatar";
+    avatar.src = safePhoto(post.authorPhoto);
+    avatar.alt = "Profile";
+
+    const authorBox = document.createElement("div");
+
+    const author = document.createElement("div");
+    author.className = "post-author";
+    author.textContent = post.authorName || "AYNA User";
+
+    const date = document.createElement("div");
+    date.className = "post-date";
+    date.textContent = formatDate(post.createdAt);
+
+    authorBox.append(author, date);
+    header.append(avatar, authorBox);
+
+    card.appendChild(header);
+
+    if (post.text) {
+      const text = document.createElement("div");
+      text.className = "post-content";
+      text.textContent = post.text;
+      card.appendChild(text);
+    }
+
+    if (post.media && post.type === "image") {
+      const img = document.createElement("img");
+      img.className = "post-media";
+      img.src = post.media;
+      img.alt = "Post image";
+      img.loading = "lazy";
+      card.appendChild(img);
+    }
+
+    if (post.media && post.type === "video") {
+      const video = document.createElement("video");
+      video.className = "post-media";
+      video.src = post.media;
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = "metadata";
+      card.appendChild(video);
+    }
+
+    if (post.media && post.type === "audio") {
+      const audio = document.createElement("audio");
+      audio.className = "post-media-audio";
+      audio.src = post.media;
+      audio.controls = true;
+      card.appendChild(audio);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "post-actions";
+
+    const likes = post.likes || {};
+    const likeCount = Object.keys(likes).length;
+    const liked = !!likes[currentUser?.uid];
+
+    const likeButton = document.createElement("button");
+    likeButton.textContent =
+      (liked ? "❤️ " : "🤍 ") + "লাইক " + likeCount;
+
+    likeButton.addEventListener("click", () => {
+      toggleLike(post.id, liked);
+    });
+
+    const commentButton = document.createElement("button");
+    commentButton.textContent = "💬 কমেন্ট";
+
+    commentButton.addEventListener("click", () => {
+      const input = card.querySelector(".comment-input");
+      input?.focus();
+    });
+
+    const shareButton = document.createElement("button");
+    shareButton.textContent = "↗️ শেয়ার";
+
+    shareButton.addEventListener("click", () => {
+      sharePost(post);
+    });
+
+    actions.append(likeButton, commentButton, shareButton);
+    card.appendChild(actions);
+
+    renderComments(card, post);
+
+    feed.appendChild(card);
+  });
+}
+
+// ==================================================
+// LIKE
+// ==================================================
+
+async function toggleLike(postId, liked) {
+  if (!currentUser) {
+    notify("লাইক দিতে লগইন করুন");
+    return;
+  }
+
+  try {
+    const likeRef = ref(
+      database,
+      `posts/${postId}/likes/${currentUser.uid}`
+    );
+
+    if (liked) {
+      await set(likeRef, null);
+    } else {
+      await set(likeRef, true);
+    }
+
+  } catch (error) {
+    console.error(error);
+    notify("লাইক কাজ করেনি। Rules পরীক্ষা করুন।");
+  }
+}
+
+// ==================================================
+// COMMENTS
+// ==================================================
+
+function renderComments(card, post) {
+  const section = document.createElement("div");
+  section.className = "comments";
+
+  const comments = post.comments || {};
+
+  Object.values(comments).forEach(comment => {
+    const item = document.createElement("div");
+    item.className = "comment-item";
+
+    const name = document.createElement("strong");
+    name.textContent = (comment.name || "AYNA User") + ": ";
+
+    const text = document.createElement("span");
+    text.textContent = comment.text || "";
+
+    item.append(name, text);
+    section.appendChild(item);
+  });
+
+  const form = document.createElement("div");
+  form.className = "comment-form";
+
+  const input = document.createElement("input");
+  input.className = "comment-input";
+  input.placeholder = "কমেন্ট লিখুন...";
+
+  const button = document.createElement("button");
+  button.textContent = "পাঠান";
+
+  button.addEventListener("click", () => {
+    addComment(post.id, input);
+  });
+
+  input.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      addComment(post.id, input);
+    }
+  });
+
+  form.append(input, button);
+  section.appendChild(form);
+
+  card.appendChild(section);
+}
+
+async function addComment(postId, input) {
+  if (!currentUser) {
+    notify("কমেন্ট করতে লগইন করুন");
+    return;
+  }
+
+  const text = input.value.trim();
+
+  if (!text) return;
+
+  try {
+    const commentRef = push(
+      ref(database, `posts/${postId}/comments`)
+    );
+
+    await set(commentRef, {
+      uid: currentUser.uid,
+      name: userProfile.fullName || "AYNA User",
+      text,
+      createdAt: Date.now()
+    });
+
+    input.value = "";
+
+  } catch (error) {
+    console.error(error);
+    notify("কমেন্ট পাঠানো যায়নি");
+  }
+}
+
+// ==================================================
+// SHARE
+// ==================================================
+
+async function sharePost(post) {
+  const url = location.origin + location.pathname +
+    "?post=" + encodeURIComponent(post.id);
+
+  const shareData = {
+    title: "AYNA BOOK",
+    text: post.text || "AYNA BOOK পোস্ট দেখুন",
+    url
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(url);
+      notify("পোস্টের লিংক কপি হয়েছে");
+    } else {
+      notify("এই ব্রাউজারে শেয়ার সুবিধা নেই");
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      console.error(error);
+    }
+  }
+}
+
+// ==================================================
+// LIVE CAMERA PREVIEW
+// ==================================================
+
+$("startCamera").addEventListener("click", startCamera);
+$("stopCamera").addEventListener("click", stopCamera);
+
+async function startCamera() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    notify("ক্যামেরার জন্য HTTPS প্রয়োজন");
+    return;
+  }
+
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "user"
+      },
+      audio: true
+    });
+
+    $("liveVideo").srcObject = cameraStream;
+
+    $("cameraStatus").textContent =
+      "ক্যামেরা চালু হয়েছে। এটি শুধু আপনার ডিভাইসে দেখা যাচ্ছে।";
+
+    notify("ক্যামেরা চালু হয়েছে");
+
+  } catch (error) {
+    console.error(error);
+
+    $("cameraStatus").textContent =
+      "ক্যামেরা চালু হয়নি। Permission পরীক্ষা করুন।";
+
+    notify("Camera Permission দিন");
+  }
+}
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop());
+    cameraStream = null;
+  }
+
+  $("liveVideo").srcObject = null;
+
+  $("cameraStatus").textContent = "ক্যামেরা বন্ধ।";
+
+  notify("ক্যামেরা বন্ধ হয়েছে");
+}
+
+// ==================================================
+// PAGE CLEANUP
+// ==================================================
+
+window.addEventListener("pagehide", () => {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop());
+  }
+});
+
+// ==================================================
+// END AYNA BOOK INDEX
+// ==================================================
+</script>
 
 </body>
 </html>
