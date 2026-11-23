@@ -2,243 +2,339 @@
 // AYNA BOOK
 // REGISTRATION CONTROLLER
 // File: register.js
+// Firebase SDK: 13.4.0
 // =========================================================
 
-import { registerUser } from "./auth.js";
+import {
+  registerUser
+} from "./auth.js";
+
+import {
+  saveUserProfile
+} from "./database.js";
+
+import {
+  auth
+} from "./app.js";
 
 
 // =========================================================
-// ELEMENTS
+// HTML ELEMENTS
 // =========================================================
 
 const registerForm = document.getElementById("registerForm");
 
-const displayNameInput =
-  document.getElementById("displayName");
+const fullNameInput = document.getElementById("fullName");
+const emailInput = document.getElementById("email");
+const countryInput = document.getElementById("country");
+const phoneInput = document.getElementById("phone");
+const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirmPassword");
 
-const emailInput =
-  document.getElementById("email");
-
-const passwordInput =
-  document.getElementById("password");
-
-const confirmPasswordInput =
-  document.getElementById("confirmPassword");
-
-const registerButton =
-  document.getElementById("registerButton");
-
-const messageBox =
-  document.getElementById("message");
+const registerButton = document.getElementById("registerButton");
+const messageBox = document.getElementById("message");
 
 
 // =========================================================
-// MESSAGE FUNCTION
+// SHOW MESSAGE
 // =========================================================
 
-function showMessage(text, type = "error") {
+function showMessage(message, type = "error") {
 
   if (!messageBox) return;
 
-  messageBox.textContent = text;
+  messageBox.style.display = "block";
+  messageBox.textContent = message;
 
-  messageBox.className =
-    "message show " + type;
+  if (type === "success") {
+
+    messageBox.style.background = "#102b18";
+    messageBox.style.color = "#75e69a";
+    messageBox.style.border = "1px solid #287a42";
+
+  } else {
+
+    messageBox.style.background = "#351313";
+    messageBox.style.color = "#ff8585";
+    messageBox.style.border = "1px solid #803333";
+
+  }
 }
 
 
 // =========================================================
-// FORM SUBMIT
+// CLEAR MESSAGE
 // =========================================================
 
-if (registerForm) {
+function clearMessage() {
 
-  registerForm.addEventListener(
-    "submit",
-    async function (event) {
+  if (!messageBox) return;
 
-      event.preventDefault();
+  messageBox.style.display = "none";
+  messageBox.textContent = "";
 
+}
 
-      // ---------------------------------------------------
-      // GET VALUES
-      // ---------------------------------------------------
 
-      const displayName =
-        displayNameInput.value.trim();
+// =========================================================
+// VALIDATE FORM
+// =========================================================
 
-      const email =
-        emailInput.value.trim();
+function validateRegistration(data) {
 
-      const password =
-        passwordInput.value;
+  if (!data.fullName || data.fullName.length < 2) {
+    return "Please enter your full name.";
+  }
 
-      const confirmPassword =
-        confirmPasswordInput.value;
+  if (data.fullName.length > 100) {
+    return "Full name must be within 100 characters.";
+  }
 
+  if (!data.email) {
+    return "Please enter your email address.";
+  }
 
-      // ---------------------------------------------------
-      // VALIDATION
-      // ---------------------------------------------------
+  if (!data.country || data.country.length < 1) {
+    return "Please enter your country.";
+  }
 
-      if (!email) {
+  if (data.country.length > 100) {
+    return "Country name is too long.";
+  }
 
-        showMessage(
-          "Please enter your email address.",
-          "error"
-        );
+  if (data.phone.length > 30) {
+    return "Phone number must be within 30 characters.";
+  }
 
-        emailInput.focus();
+  if (data.password.length < 6) {
+    return "Password must be at least 6 characters.";
+  }
 
-        return;
-      }
+  if (data.password !== data.confirmPassword) {
+    return "Passwords do not match.";
+  }
 
+  if (!document.getElementById("terms")?.checked) {
+    return "Please accept the Terms & Conditions.";
+  }
 
-      if (!password) {
+  return null;
+}
 
-        showMessage(
-          "Please enter a password.",
-          "error"
-        );
 
-        passwordInput.focus();
+// =========================================================
+// GENERATE AYNA ID
+// =========================================================
 
-        return;
-      }
+function generateAynaId(uid) {
 
+  return "AYNA-" + uid;
 
-      if (password.length < 6) {
+}
 
-        showMessage(
-          "Password must contain at least 6 characters.",
-          "error"
-        );
 
-        passwordInput.focus();
+// =========================================================
+// REGISTRATION SUBMIT
+// =========================================================
 
-        return;
-      }
+registerForm?.addEventListener("submit", async (event) => {
 
+  event.preventDefault();
 
-      if (!confirmPassword) {
+  clearMessage();
 
-        showMessage(
-          "Please confirm your password.",
-          "error"
-        );
 
-        confirmPasswordInput.focus();
+  // -------------------------------------------------------
+  // GET FORM DATA
+  // -------------------------------------------------------
 
-        return;
-      }
+  const fullName = fullNameInput.value.trim();
+  const email = emailInput.value.trim().toLowerCase();
+  const country = countryInput.value.trim();
+  const phone = phoneInput.value.trim();
 
+  const password = passwordInput.value;
+  const confirmPassword = confirmPasswordInput.value;
 
-      if (password !== confirmPassword) {
 
-        showMessage(
-          "Passwords do not match.",
-          "error"
-        );
+  const formData = {
+    fullName,
+    email,
+    country,
+    phone,
+    password,
+    confirmPassword
+  };
 
-        confirmPasswordInput.focus();
 
-        return;
-      }
+  // -------------------------------------------------------
+  // VALIDATION
+  // -------------------------------------------------------
 
+  const validationError = validateRegistration(formData);
 
-      // ---------------------------------------------------
-      // DISABLE BUTTON
-      // ---------------------------------------------------
+  if (validationError) {
 
-      registerButton.disabled = true;
+    showMessage(validationError);
 
-      registerButton.textContent =
-        "Creating Account...";
+    return;
 
+  }
 
-      // ---------------------------------------------------
-      // FIREBASE REGISTRATION
-      // ---------------------------------------------------
 
-      try {
+  // -------------------------------------------------------
+  // BUTTON LOADING
+  // -------------------------------------------------------
 
-        const result =
-          await registerUser(
-            email,
-            password,
-            displayName
-          );
+  registerButton.disabled = true;
+  registerButton.textContent = "CREATING ACCOUNT...";
 
 
-        // -------------------------------------------------
-        // REGISTRATION FAILED
-        // -------------------------------------------------
+  try {
 
-        if (!result.success) {
+    // =====================================================
+    // STEP 1: CREATE FIREBASE AUTH ACCOUNT
+    // =====================================================
 
-          showMessage(
-            result.message ||
-            "Registration failed. Please try again.",
-            "error"
-          );
+    const result = await registerUser(
+      email,
+      password
+    );
 
-          return;
-        }
 
+    if (!result || result.success !== true || !result.user) {
 
-        // -------------------------------------------------
-        // REGISTRATION SUCCESS
-        // -------------------------------------------------
-
-        sessionStorage.setItem(
-          "verificationEmail",
-          email
-        );
-
-
-        showMessage(
-          "Account created successfully. Please verify your email address.",
-          "success"
-        );
-
-
-        // -------------------------------------------------
-        // GO TO VERIFICATION PAGE
-        // -------------------------------------------------
-
-        setTimeout(function () {
-
-          window.location.replace(
-            "verify-email.html"
-          );
-
-        }, 1000);
-
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK Registration Error:",
-          error
-        );
-
-
-        showMessage(
-          "An unexpected error occurred. Please try again.",
-          "error"
-        );
-
-
-      } finally {
-
-        registerButton.disabled = false;
-
-        registerButton.textContent =
-          "Create Account";
-
-      }
+      throw new Error(
+        result?.message || "Account registration failed."
+      );
 
     }
-  );
 
-}
+
+    const user = result.user;
+
+
+    // =====================================================
+    // STEP 2: GENERATE AYNA ID
+    // =====================================================
+
+    const aynaId = generateAynaId(user.uid);
+
+
+    // =====================================================
+    // STEP 3: SAVE USER PROFILE TO RTDB
+    // =====================================================
+
+    const profileData = {
+
+      uid: user.uid,
+
+      aynaId: aynaId,
+
+      fullName: fullName,
+
+      email: user.email,
+
+      country: country,
+
+      phone: phone,
+
+      photoURL: "",
+
+      privacy: "public",
+
+      bio: "",
+
+      plan: "free",
+
+      createdAt: Date.now()
+
+    };
+
+
+    const databaseResult = await saveUserProfile(
+      user.uid,
+      profileData
+    );
+
+
+    if (!databaseResult || databaseResult.success !== true) {
+
+      throw new Error(
+        databaseResult?.message ||
+        "Account created, but profile could not be saved."
+      );
+
+    }
+
+
+    // =====================================================
+    // STEP 4: EMAIL VERIFICATION
+    // =====================================================
+
+    sessionStorage.setItem(
+      "verificationEmail",
+      user.email
+    );
+
+
+    // =====================================================
+    // STEP 5: SUCCESS
+    // =====================================================
+
+    showMessage(
+      "Account created successfully! Redirecting...",
+      "success"
+    );
+
+
+    setTimeout(() => {
+
+      window.location.href = "./verify-email.html";
+
+    }, 1200);
+
+
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK Registration Error:",
+      error
+    );
+
+    showMessage(
+      error.message || "Registration failed. Please try again."
+    );
+
+
+    registerButton.disabled = false;
+    registerButton.textContent = "CREATE ACCOUNT";
+
+  }
+
+});
+
+
+// =========================================================
+// CLEAR ERRORS WHEN USER TYPES
+// =========================================================
+
+[
+  fullNameInput,
+  emailInput,
+  countryInput,
+  phoneInput,
+  passwordInput,
+  confirmPasswordInput
+].forEach((input) => {
+
+  input?.addEventListener("input", clearMessage);
+
+});
+
+
+// =========================================================
+// INITIALIZATION
+// =========================================================
+
+console.log("AYNA BOOK Registration Controller Loaded.");
