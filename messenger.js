@@ -1,2146 +1,1312 @@
-// ============================================================
-// AYNA MESSENGER - ADVANCED VERSION
-// ============================================================
+
+/* =========================================================
+   AYNA BOOK - COMPLETE MESSENGER.JS
+   Firebase Realtime Database
+   Firebase SDK 13.4.0
+   ========================================================= */
+
+import { auth, database } from "./firebase-init.js";
 
 import {
-  auth,
-  database
-} from "./firebase-init.js";
-
-import {
-  onAuthStateChanged,
-  updateProfile
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
   ref,
-  push,
+  get,
   set,
   update,
-  get,
+  push,
   onValue,
   onDisconnect,
   query,
   orderByChild,
-  limitToLast,
-  serverTimestamp
+  limitToLast
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
+// =========================================================
+// 1. HTML ELEMENTS
+// =========================================================
 
-// ============================================================
-// ELEMENTS
-// ============================================================
+const E = {
+  app: document.getElementById("app"),
 
-const app = document.getElementById("app");
+  chatList: document.getElementById("chatList"),
+  chatSearch: document.getElementById("chatSearch"),
 
-const chatList = document.getElementById("chatList");
-const chatSearch = document.getElementById("chatSearch");
+  chatName: document.getElementById("chatName"),
+  chatStatus: document.getElementById("chatStatus"),
+  chatAvatar: document.getElementById("chatAvatar"),
 
-const chatName = document.getElementById("chatName");
-const chatStatus = document.getElementById("chatStatus");
-const chatAvatar = document.getElementById("chatAvatar");
+  messages: document.getElementById("messages"),
+  messageInput: document.getElementById("messageInput"),
+  sendBtn: document.getElementById("sendBtn"),
 
-const messages = document.getElementById("messages");
-const messageInput = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
+  attachBtn: document.getElementById("attachBtn"),
+  attachMenu: document.getElementById("attachMenu"),
 
-const attachBtn = document.getElementById("attachBtn");
-const attachMenu = document.getElementById("attachMenu");
+  imageBtn: document.getElementById("imageBtn"),
+  videoBtn: document.getElementById("videoBtn"),
+  audioBtn: document.getElementById("audioBtn"),
+  documentBtn: document.getElementById("documentBtn"),
+  locationBtn: document.getElementById("locationBtn"),
 
-const imageBtn = document.getElementById("imageBtn");
-const videoBtn = document.getElementById("videoBtn");
-const audioBtn = document.getElementById("audioBtn");
-const documentBtn = document.getElementById("documentBtn");
-const locationBtn = document.getElementById("locationBtn");
+  imageInput: document.getElementById("imageInput"),
+  videoInput: document.getElementById("videoInput"),
+  audioInput: document.getElementById("audioInput"),
+  documentInput: document.getElementById("documentInput"),
 
-const imageInput = document.getElementById("imageInput");
-const videoInput = document.getElementById("videoInput");
-const audioInput = document.getElementById("audioInput");
-const documentInput = document.getElementById("documentInput");
+  voiceBtn: document.getElementById("voiceBtn"),
+  emojiBtn: document.getElementById("emojiBtn"),
 
-const voiceBtn = document.getElementById("voiceBtn");
-const emojiBtn = document.getElementById("emojiBtn");
+  voiceCallBtn: document.getElementById("voiceCallBtn"),
+  videoCallBtn: document.getElementById("videoCallBtn"),
 
-const voiceCallBtn = document.getElementById("voiceCallBtn");
-const videoCallBtn = document.getElementById("videoCallBtn");
+  callModal: document.getElementById("callModal"),
+  callTitle: document.getElementById("callTitle"),
+  callText: document.getElementById("callText"),
+  startCallBtn: document.getElementById("startCallBtn"),
+  closeCallBtn: document.getElementById("closeCallBtn"),
 
-const callModal = document.getElementById("callModal");
-const callTitle = document.getElementById("callTitle");
-const callText = document.getElementById("callText");
+  newChatBtn: document.getElementById("newChatBtn"),
+  newChatModal: document.getElementById("newChatModal"),
+  userSearchInput: document.getElementById("userSearchInput"),
+  userSearchResults: document.getElementById("userSearchResults"),
+  userSearchStatus: document.getElementById("userSearchStatus"),
+  closeNewChatBtn: document.getElementById("closeNewChatBtn"),
 
-const startCallBtn = document.getElementById("startCallBtn");
-const closeCallBtn = document.getElementById("closeCallBtn");
+  mobileBack: document.getElementById("mobileBack"),
+  toast: document.getElementById("toast")
+};
 
-const newChatBtn = document.getElementById("newChatBtn");
-const searchBtn = document.getElementById("searchBtn");
+// =========================================================
+// 2. GLOBAL VARIABLES
+// =========================================================
 
-const mobileBack = document.getElementById("mobileBack");
+let me = null;
+let profile = {};
 
-const toast = document.getElementById("toast");
+let currentChat = null;
+let otherUser = null;
 
+let chatCache = {};
+let chatListeners = {};
 
-// ============================================================
-// STATE
-// ============================================================
+let indexUnsubscribe = null;
+let messageUnsubscribe = null;
+let presenceUnsubscribe = null;
+let typingUnsubscribe = null;
 
-let currentUser = null;
-
-let currentProfile = null;
-
-let currentChatId = "ayna-system";
-
-let currentChatName = "AYNA Messenger";
-
-let currentChatPhoto =
-  "https://ui-avatars.com/api/?name=AYNA+Messenger&background=062b63&color=fff";
-
-let currentOtherUid = null;
-
-let messagesListener = null;
-
-let messagesQuery = null;
-
+let searchTimer = null;
 let typingTimer = null;
 
-let isTyping = false;
-
-let mediaRecorder = null;
-
+let recorder = null;
+let mediaStream = null;
 let audioChunks = [];
+let isRecording = false;
 
-let recording = false;
+let selectedCallType = "";
 
-let currentCallType = "";
+// =========================================================
+// 3. COMMON FUNCTIONS
+// =========================================================
 
+function toast(message) {
+  if (!E.toast) {
+    console.log(message);
+    return;
+  }
 
-// ============================================================
-// TOAST
-// ============================================================
+  E.toast.textContent = message;
+  E.toast.classList.add("show");
 
-function showToast(text) {
+  clearTimeout(E.toastTimer);
 
-  if (!toast) return;
-
-  toast.textContent = text;
-
-  toast.style.display = "block";
-
-  clearTimeout(showToast.timer);
-
-  showToast.timer = setTimeout(() => {
-
-    toast.style.display = "none";
-
-  }, 2800);
-
+  E.toastTimer = setTimeout(() => {
+    E.toast.classList.remove("show");
+  }, 3000);
 }
 
+function getPhoto(photo) {
+  if (typeof photo === "string" && photo.trim()) {
+    return photo;
+  }
 
-// ============================================================
-// AUTH
-// ============================================================
+  return "data:image/svg+xml," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
+    '<rect width="100%" height="100%" fill="#dbeafe"/>' +
+    '<circle cx="50" cy="38" r="20" fill="#64748b"/>' +
+    '<path d="M15 100 Q20 65 50 65 Q80 65 85 100" fill="#64748b"/>' +
+    '</svg>'
+  );
+}
+
+function formatTime(timestamp) {
+  if (!timestamp) return "";
+
+  return new Date(timestamp).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function createChatId(uid1, uid2) {
+  return [uid1, uid2].sort().join("_");
+}
+
+function getOtherUserId(members) {
+  if (!members || !me) return null;
+
+  return Object.keys(members).find(
+    uid => uid !== me.uid && members[uid] === true
+  ) || null;
+}
+
+function scrollToBottom() {
+  if (E.messages) {
+    E.messages.scrollTop = E.messages.scrollHeight;
+  }
+}
+
+function showWelcome() {
+  if (!E.messages) return;
+
+  E.messages.innerHTML = "";
+
+  const box = document.createElement("div");
+  box.className = "empty-state";
+  box.textContent = "আপনার কথোপকথন শুরু করুন";
+
+  E.messages.appendChild(box);
+}
+
+// =========================================================
+// 4. AUTHENTICATION
+// =========================================================
 
 onAuthStateChanged(auth, async user => {
-
   if (!user) {
-
-    location.href = "login.html";
-
+    window.location.href = "login.html";
     return;
-
   }
 
-  currentUser = user;
+  me = user;
 
-  await loadMyProfile();
-
-  await setOnline();
-
-  loadMyChats();
-
-  loadMessages("ayna-system");
-
+  try {
+    await loadProfile();
+    await setOnline();
+    await loadChatIndex();
+  } catch (error) {
+    console.error("Messenger startup:", error);
+    toast("Messenger চালু করা যায়নি");
+  }
 });
 
+// =========================================================
+// 5. LOAD PROFILE
+// =========================================================
 
-// ============================================================
-// LOAD PROFILE
-// ============================================================
+async function loadProfile() {
+  const snapshot = await get(
+    ref(database, "users/" + me.uid)
+  );
 
-async function loadMyProfile() {
+  profile = snapshot.val() || {};
 
-  try {
-
-    const snap = await get(
-      ref(
-        database,
-        "users/" + currentUser.uid
-      )
-    );
-
-    if (snap.exists()) {
-
-      currentProfile =
-        snap.val();
-
-    }
-
-  }
-  catch (error) {
-
-    console.error(error);
-
-  }
-
+  profile.fullName =
+    profile.fullName ||
+    me.displayName ||
+    "AYNA User";
 }
 
-
-// ============================================================
-// ONLINE STATUS
-// ============================================================
+// =========================================================
+// 6. ONLINE / OFFLINE
+// =========================================================
 
 async function setOnline() {
+  const presenceRef = ref(
+    database,
+    "presence/" + me.uid
+  );
 
-  const statusRef =
-    ref(
-      database,
-      "presence/" +
-      currentUser.uid
-    );
-
-  await set(statusRef, {
-
-    online: true,
-
+  await onDisconnect(presenceRef).set({
+    online: false,
     lastSeen: Date.now()
-
   });
 
-  onDisconnect(statusRef)
-    .set({
-
-      online: false,
-
-      lastSeen: serverTimestamp()
-
-    });
-
-}
-
-
-// ============================================================
-// LOAD CHATS
-// ============================================================
-
-function loadMyChats() {
-
-  const chatsRef =
-    ref(database, "chats");
-
-  onValue(
-    chatsRef,
-    snapshot => {
-
-      const data =
-        snapshot.val();
-
-      const chats = [];
-
-      if (data) {
-
-        Object.entries(data)
-          .forEach(([id, chat]) => {
-
-            if (
-              chat &&
-              chat.members &&
-              chat.members[currentUser.uid]
-            ) {
-
-              chats.push({
-                id,
-                ...chat
-              });
-
-            }
-
-          });
-
-      }
-
-      renderChats(chats);
-
-    },
-    error => {
-
-      console.error(error);
-
-      showToast(
-        "Chat লোড হয়নি"
-      );
-
-    }
-  );
-
-}
-
-
-// ============================================================
-// RENDER CHATS
-// ============================================================
-
-function renderChats(chats) {
-
-  chatList.innerHTML = "";
-
-  // AYNA system
-  const system =
-    document.createElement("div");
-
-  system.className =
-    "chat-item active";
-
-  system.dataset.chat =
-    "ayna-system";
-
-  system.dataset.name =
-    "AYNA Messenger";
-
-  system.dataset.photo =
-    currentChatPhoto;
-
-  system.innerHTML = `
-
-    <img
-      class="avatar"
-      src="${escapeAttr(currentChatPhoto)}">
-
-    <div class="chat-info">
-
-      <div
-        class="chat-name"
-        style="font-size:18px;">
-        AYNA Messenger
-      </div>
-
-      <div
-        class="chat-preview"
-        style="font-size:14px;">
-        Messenger
-      </div>
-
-    </div>
-
-    <div class="chat-time">
-      এখন
-    </div>
-  `;
-
-  chatList.appendChild(system);
-
-
-  // Real chats
-  chats.forEach(chat => {
-
-    if (
-      chat.id === "ayna-system"
-    ) return;
-
-    const members =
-      chat.members || {};
-
-    const otherUid =
-      Object.keys(members)
-        .find(
-          uid =>
-            uid !== currentUser.uid
-        );
-
-    const other =
-      chat.users &&
-      otherUid &&
-      chat.users[otherUid]
-        ? chat.users[otherUid]
-        : null;
-
-    const name =
-      other?.fullName ||
-      "AYNA User";
-
-    const photo =
-      other?.photoURL ||
-      "https://ui-avatars.com/api/?name=" +
-      encodeURIComponent(name) +
-      "&background=0864ce&color=fff";
-
-    const item =
-      document.createElement("div");
-
-    item.className =
-      "chat-item";
-
-    item.dataset.chat =
-      chat.id;
-
-    item.dataset.name =
-      name;
-
-    item.dataset.photo =
-      photo;
-
-    item.dataset.uid =
-      otherUid || "";
-
-    item.innerHTML = `
-
-      <img
-        class="avatar"
-        src="${escapeAttr(photo)}">
-
-      <div class="chat-info">
-
-        <div
-          class="chat-name"
-          style="font-size:18px;">
-          ${escapeHTML(name)}
-        </div>
-
-        <div
-          class="chat-preview"
-          style="font-size:14px;">
-          ${escapeHTML(
-            chat.lastMessage ||
-            "নতুন মেসেজ"
-          )}
-        </div>
-
-      </div>
-
-      <div class="chat-time">
-        ${formatTime(chat.updatedAt)}
-      </div>
-
-    `;
-
-    chatList.appendChild(item);
-
+  await set(presenceRef, {
+    online: true,
+    lastSeen: Date.now()
   });
-
 }
 
+// =========================================================
+// 7. LOAD CHAT INDEX
+// =========================================================
 
-// ============================================================
-// CHAT SELECT
-// ============================================================
+async function loadChatIndex() {
+  indexUnsubscribe?.();
 
-chatList.addEventListener(
-  "click",
-  event => {
+  indexUnsubscribe = onValue(
+    ref(database, "userChats/" + me.uid),
 
-    const item =
-      event.target.closest(
-        ".chat-item"
-      );
-
-    if (!item) return;
-
-    document
-      .querySelectorAll(
-        ".chat-item"
-      )
-      .forEach(el =>
-        el.classList.remove(
-          "active"
-        )
-      );
-
-    item.classList.add("active");
-
-    currentChatId =
-      item.dataset.chat;
-
-    currentChatName =
-      item.dataset.name ||
-      "AYNA User";
-
-    currentChatPhoto =
-      item.dataset.photo ||
-      currentChatPhoto;
-
-    currentOtherUid =
-      item.dataset.uid ||
-      null;
-
-    chatName.textContent =
-      currentChatName;
-
-    chatAvatar.src =
-      currentChatPhoto;
-
-    if (
-      currentOtherUid
-    ) {
-
-      watchOtherUser();
-
-    }
-    else {
-
-      chatStatus.textContent =
-        "অনলাইন";
-
-    }
-
-    loadMessages(
-      currentChatId
-    );
-
-    if (
-      window.innerWidth <= 760
-    ) {
-
-      app.classList.add(
-        "chat-open"
-      );
-
-    }
-
-  }
-);
-
-
-// ============================================================
-// WATCH OTHER USER
-// ============================================================
-
-function watchOtherUser() {
-
-  if (!currentOtherUid)
-    return;
-
-  const presenceRef =
-    ref(
-      database,
-      "presence/" +
-      currentOtherUid
-    );
-
-  onValue(
-    presenceRef,
     snapshot => {
+      const indexes = snapshot.val() || {};
+      const activeIds = new Set(Object.keys(indexes));
 
-      const data =
-        snapshot.val();
-
-      if (
-        data &&
-        data.online === true
-      ) {
-
-        chatStatus.textContent =
-          "● অনলাইন";
-
-        chatStatus.style.color =
-          "#159447";
-
-      }
-      else {
-
-        chatStatus.textContent =
-          "শেষ দেখা: " +
-          formatTime(
-            data?.lastSeen
-          );
-
-        chatStatus.style.color =
-          "#778899";
-
-      }
-
-    }
-  );
-
-}
-
-
-// ============================================================
-// LOAD MESSAGES
-// ============================================================
-
-function loadMessages(chatId) {
-
-  if (
-    messagesListener &&
-    messagesQuery
-  ) {
-
-    messagesQuery.off?.();
-
-  }
-
-  messages.innerHTML = "";
-
-  if (
-    chatId === "ayna-system"
-  ) {
-
-    renderWelcome();
-
-    return;
-
-  }
-
-  messagesQuery =
-    query(
-      ref(
-        database,
-        "messages/" +
-        chatId
-      ),
-      orderByChild(
-        "createdAt"
-      ),
-      limitToLast(100)
-    );
-
-  messagesListener =
-    onValue(
-      messagesQuery,
-      snapshot => {
-
-        messages.innerHTML = "";
-
-        const data =
-          snapshot.val();
-
-        if (!data) {
-
-          renderWelcome();
-
-          return;
-
+      Object.keys(chatListeners).forEach(id => {
+        if (!activeIds.has(id)) {
+          chatListeners[id]?.();
+          delete chatListeners[id];
+          delete chatCache[id];
         }
+      });
 
-        Object.entries(data)
-          .forEach(
-            ([id, message]) => {
+      Object.keys(indexes).forEach(chatId => {
+        if (chatListeners[chatId]) return;
 
-              renderMessage(
-                id,
-                message
-              );
+        chatListeners[chatId] = onValue(
+          ref(database, "chats/" + chatId),
 
-            }
-          );
+          chatSnapshot => {
+            const chat = chatSnapshot.val();
 
-        scrollMessages();
+            if (!chat) return;
 
-      },
-      error => {
+            const uid = getOtherUserId(chat.members);
 
-        console.error(error);
+            if (!uid) return;
 
-        showToast(
-          "Message Permission Error"
+            chatCache[chatId] = {
+              id: chatId,
+              uid,
+              name: chat.users?.[uid]?.name || "AYNA User",
+              photo: chat.users?.[uid]?.photo || "",
+              lastMessage: chat.lastMessage || "",
+              updatedAt: chat.updatedAt || 0
+            };
+
+            renderChats();
+          },
+
+          error => {
+            console.error("Chat listener:", error);
+          }
         );
+      });
 
+      renderChats();
+    },
+
+    error => {
+      console.error(error);
+      toast("Chat List Permission Error");
+    }
+  );
+}
+
+// =========================================================
+// 8. RENDER CHAT LIST
+// =========================================================
+
+function renderChats() {
+  if (!E.chatList) return;
+
+  E.chatList.innerHTML = "";
+
+  const chats = Object.values(chatCache).sort(
+    (a, b) => b.updatedAt - a.updatedAt
+  );
+
+  if (!chats.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = "এখনও কোনো Chat নেই";
+
+    E.chatList.appendChild(empty);
+    return;
+  }
+
+  chats.forEach(chat => {
+    const item = document.createElement("div");
+
+    item.className = "chat-item";
+
+    if (currentChat === chat.id) {
+      item.classList.add("active");
+    }
+
+    item.dataset.chat = chat.id;
+    item.dataset.uid = chat.uid;
+    item.dataset.name = chat.name;
+    item.dataset.photo = chat.photo;
+
+    const avatar = document.createElement("img");
+    avatar.src = getPhoto(chat.photo);
+    avatar.alt = "Profile";
+    avatar.className = "chat-avatar";
+
+    const info = document.createElement("div");
+    info.className = "chat-item-info";
+
+    const name = document.createElement("div");
+    name.className = "chat-item-name";
+    name.textContent = chat.name;
+
+    const last = document.createElement("div");
+    last.className = "chat-item-last";
+    last.textContent = chat.lastMessage;
+
+    info.append(name, last);
+    item.append(avatar, info);
+
+    E.chatList.appendChild(item);
+  });
+
+  filterChats();
+}
+
+function filterChats() {
+  const search = (
+    E.chatSearch?.value || ""
+  ).toLowerCase();
+
+  E.chatList?.querySelectorAll(".chat-item").forEach(item => {
+    item.style.display =
+      item.dataset.name.toLowerCase().includes(search)
+        ? ""
+        : "none";
+  });
+}
+
+E.chatSearch?.addEventListener("input", filterChats);
+
+// =========================================================
+// 9. OPEN CHAT
+// =========================================================
+
+E.chatList?.addEventListener("click", event => {
+  const item = event.target.closest(".chat-item");
+
+  if (!item) return;
+
+  openChat({
+    id: item.dataset.chat,
+    uid: item.dataset.uid,
+    name: item.dataset.name,
+    photo: item.dataset.photo
+  });
+});
+
+function openChat(user) {
+  currentChat = user.id;
+  otherUser = user.uid;
+
+  if (E.chatName) {
+    E.chatName.textContent = user.name;
+  }
+
+  if (E.chatAvatar) {
+    E.chatAvatar.src = getPhoto(user.photo);
+  }
+
+  E.app?.classList.add("chat-open");
+
+  E.newChatModal?.classList.remove("show");
+
+  renderChats();
+  watchPresence();
+  watchTyping();
+  loadMessages();
+}
+
+// =========================================================
+// 10. WATCH PRESENCE
+// =========================================================
+
+function watchPresence() {
+  presenceUnsubscribe?.();
+  presenceUnsubscribe = null;
+
+  if (!otherUser) return;
+
+  presenceUnsubscribe = onValue(
+    ref(database, "presence/" + otherUser),
+
+    snapshot => {
+      const data = snapshot.val();
+
+      if (!E.chatStatus) return;
+
+      E.chatStatus.textContent =
+        data?.online ? "● অনলাইন" : "অফলাইন";
+
+      E.chatStatus.style.color =
+        data?.online ? "#16a34a" : "";
+    }
+  );
+}
+
+// =========================================================
+// 11. TYPING STATUS
+// =========================================================
+
+function watchTyping() {
+  typingUnsubscribe?.();
+  typingUnsubscribe = null;
+
+  if (!currentChat) return;
+
+  typingUnsubscribe = onValue(
+    ref(database, "typing/" + currentChat),
+
+    snapshot => {
+      const data = snapshot.val() || {};
+
+      const someoneTyping = Object.entries(data).some(
+        ([uid, value]) =>
+          uid !== me.uid && value === true
+      );
+
+      if (someoneTyping && E.chatStatus) {
+        E.chatStatus.textContent = "লিখছেন...";
       }
-    );
-
-}
-
-
-// ============================================================
-// WELCOME
-// ============================================================
-
-function renderWelcome() {
-
-  messages.innerHTML = `
-
-    <div
-      class="welcome"
-      style="font-size:17px;">
-
-      <div
-        class="welcome-icon"
-        style="font-size:70px;">
-        💬
-      </div>
-
-      <h2
-        style="font-size:25px;">
-        ${escapeHTML(
-          currentChatName
-        )}
-      </h2>
-
-      <p>
-        AYNA Messenger-এ স্বাগতম।
-      </p>
-
-      <p>
-        নিচে মেসেজ লিখে শুরু করুন।
-      </p>
-
-    </div>
-
-  `;
-
-}
-
-
-// ============================================================
-// RENDER MESSAGE
-// ============================================================
-
-function renderMessage(
-  id,
-  message
-) {
-
-  if (!message) return;
-
-  const mine =
-    message.uid ===
-    currentUser.uid;
-
-  const row =
-    document.createElement(
-      "div"
-    );
-
-  row.className =
-    "message-row" +
-    (
-      mine
-        ? " mine"
-        : ""
-    );
-
-  const bubble =
-    document.createElement(
-      "div"
-    );
-
-  bubble.className =
-    "message";
-
-  let html = "";
-
-  // TEXT
-  if (
-    message.type === "text"
-  ) {
-
-    html = `
-
-      <div
-        class="message-text"
-        style="font-size:17px;">
-        ${escapeHTML(
-          message.text || ""
-        )}
-      </div>
-
-    `;
-
-  }
-
-  // IMAGE
-  else if (
-    message.type === "image"
-  ) {
-
-    html = `
-
-      <div
-        style="
-          font-size:15px;
-          font-weight:bold;
-          margin-bottom:7px;">
-        🖼️ ছবি
-      </div>
-
-      <img
-        src="${escapeAttr(
-          message.data || ""
-        )}"
-        style="
-          width:100%;
-          max-width:500px;
-          max-height:500px;
-          object-fit:contain;
-          border-radius:14px;
-          display:block;"
-        alt="Image">
-
-    `;
-
-  }
-
-  // VIDEO
-  else if (
-    message.type === "video"
-  ) {
-
-    html = `
-
-      <div
-        style="
-          font-size:15px;
-          font-weight:bold;
-          margin-bottom:7px;">
-        🎬 ভিডিও
-      </div>
-
-      <video
-        controls
-        playsinline
-        preload="metadata"
-        style="
-          width:100%;
-          max-width:600px;
-          max-height:500px;
-          border-radius:14px;
-          display:block;
-          background:#000;"
-        src="${escapeAttr(
-          message.data || ""
-        )}">
-      </video>
-
-    `;
-
-  }
-
-  // AUDIO
-  else if (
-    message.type === "audio"
-  ) {
-
-    html = `
-
-      <div
-        style="
-          font-size:15px;
-          font-weight:bold;
-          margin-bottom:7px;">
-        🎵 অডিও
-      </div>
-
-      <audio
-        controls
-        preload="metadata"
-        style="
-          width:100%;
-          min-width:240px;"
-        src="${escapeAttr(
-          message.data || ""
-        )}">
-      </audio>
-
-    `;
-
-  }
-
-  // DOCUMENT
-  else if (
-    message.type === "document"
-  ) {
-
-    html = `
-
-      <div
-        style="font-size:16px;">
-        📄
-        ${escapeHTML(
-          message.fileName ||
-          "Document"
-        )}
-      </div>
-
-    `;
-
-  }
-
-  // LOCATION
-  else if (
-    message.type === "location"
-  ) {
-
-    html = `
-
-      <div
-        style="
-          font-size:17px;
-          font-weight:bold;">
-        📍 লোকেশন
-      </div>
-
-      <button
-        class="location-open"
-        data-lat="${escapeAttr(
-          message.lat
-        )}"
-        data-lon="${escapeAttr(
-          message.lon
-        )}"
-        style="
-          margin-top:8px;
-          border:0;
-          padding:11px 16px;
-          border-radius:12px;
-          font-size:15px;
-          cursor:pointer;">
-        Google Maps-এ খুলুন
-      </button>
-
-    `;
-
-  }
-
-  bubble.innerHTML =
-    html +
-    `
-
-      <div
-        class="message-meta"
-        style="font-size:11px;">
-        ${formatTime(
-          message.createdAt
-        )}
-        ${mine ? " ✓✓" : ""}
-      </div>
-
-    `;
-
-  row.appendChild(
-    bubble
+    }
   );
-
-  messages.appendChild(
-    row
-  );
-
 }
 
-
-// ============================================================
-// SEND TEXT
-// ============================================================
-
-async function sendTextMessage() {
-
-  if (!currentUser)
-    return;
-
-  const text =
-    messageInput.value.trim();
-
-  if (!text)
-    return;
-
-  if (
-    currentChatId ===
-    "ayna-system"
-  ) {
-
-    showToast(
-      "আগে একজন User নির্বাচন করুন"
-    );
-
-    return;
-
-  }
+async function setTyping(value) {
+  if (!me || !currentChat) return;
 
   try {
+    await set(
+      ref(database, `typing/${currentChat}/${me.uid}`),
+      value
+    );
+  } catch (error) {
+    console.error("Typing:", error);
+  }
+}
 
-    await createMessage({
+// =========================================================
+// 12. LOAD MESSAGES
+// =========================================================
 
+function loadMessages() {
+  messageUnsubscribe?.();
+
+  if (!E.messages || !currentChat) return;
+
+  E.messages.innerHTML = "";
+
+  const messageQuery = query(
+    ref(database, "messages/" + currentChat),
+    orderByChild("createdAt"),
+    limitToLast(100)
+  );
+
+  messageUnsubscribe = onValue(
+    messageQuery,
+
+    snapshot => {
+      E.messages.innerHTML = "";
+
+      const data = snapshot.val();
+
+      if (!data) {
+        showWelcome();
+        return;
+      }
+
+      Object.entries(data)
+        .sort((a, b) =>
+          (a[1].createdAt || 0) -
+          (b[1].createdAt || 0)
+        )
+        .forEach(([id, message]) => {
+          renderMessage(id, message);
+        });
+
+      scrollToBottom();
+    },
+
+    error => {
+      console.error(error);
+      toast("Message Permission Error");
+    }
+  );
+}
+
+// =========================================================
+// 13. RENDER MESSAGE
+// =========================================================
+
+function renderMessage(id, message) {
+  if (!E.messages) return;
+
+  const mine = message.uid === me.uid;
+
+  const bubble = document.createElement("div");
+
+  bubble.className =
+    "message " + (mine ? "mine" : "theirs");
+
+  if (message.type === "text") {
+    const text = document.createElement("div");
+
+    text.className = "message-text";
+    text.textContent = message.text || "";
+
+    bubble.appendChild(text);
+  }
+
+  else if (message.type === "image") {
+    const img = document.createElement("img");
+
+    img.src = message.data || "";
+    img.alt = "Shared image";
+    img.loading = "lazy";
+    img.style.maxWidth = "100%";
+
+    bubble.appendChild(img);
+  }
+
+  else if (message.type === "video") {
+    const video = document.createElement("video");
+
+    video.src = message.data || "";
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    video.style.maxWidth = "100%";
+
+    bubble.appendChild(video);
+  }
+
+  else if (message.type === "audio") {
+    const audio = document.createElement("audio");
+
+    audio.src = message.data || "";
+    audio.controls = true;
+
+    bubble.appendChild(audio);
+  }
+
+  else if (message.type === "document") {
+    const link = document.createElement("a");
+
+    link.href = message.data || "";
+    link.download = message.fileName || "document";
+    link.textContent =
+      "📄 " + (message.fileName || "Document");
+
+    bubble.appendChild(link);
+  }
+
+  else if (message.type === "location") {
+    const link = document.createElement("a");
+
+    const coordinates =
+      `${message.lat},${message.lon}`;
+
+    link.href =
+      "https://www.google.com/maps?q=" +
+      encodeURIComponent(coordinates);
+
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "📍 Google Maps-এ লোকেশন দেখুন";
+
+    bubble.appendChild(link);
+  }
+
+  const meta = document.createElement("div");
+
+  meta.className = "message-time";
+
+  meta.textContent =
+    formatTime(message.createdAt) +
+    (mine ? " ✓✓" : "");
+
+  bubble.appendChild(meta);
+  E.messages.appendChild(bubble);
+}
+
+// =========================================================
+// 14. SEND MESSAGE
+// =========================================================
+
+async function sendMessage(data) {
+  if (!me || !currentChat) {
+    throw new Error("আগে একটি Chat নির্বাচন করুন");
+  }
+
+  const messageRef = push(
+    ref(database, "messages/" + currentChat)
+  );
+
+  const message = {
+    ...data,
+    uid: me.uid,
+    senderName: profile.fullName || "AYNA User",
+    createdAt: Date.now()
+  };
+
+  await set(messageRef, message);
+
+  const labels = {
+    text: message.text,
+    image: "🖼️ ছবি",
+    video: "🎬 ভিডিও",
+    audio: "🎵 অডিও",
+    document: "📄 ডকুমেন্ট",
+    location: "📍 লোকেশন"
+  };
+
+  await update(
+    ref(database, "chats/" + currentChat),
+    {
+      lastMessage: labels[message.type] || "নতুন মেসেজ",
+      updatedAt: Date.now()
+    }
+  );
+}
+
+// =========================================================
+// 15. TEXT MESSAGE
+// =========================================================
+
+async function sendText() {
+  const text = E.messageInput?.value.trim();
+
+  if (!text) return;
+
+  try {
+    await sendMessage({
       type: "text",
-
-      text: text
-
+      text
     });
 
-    messageInput.value = "";
-
-    autoResize();
+    E.messageInput.value = "";
+    E.messageInput.style.height = "auto";
 
     setTyping(false);
 
-  }
-  catch(error) {
-
+  } catch (error) {
     console.error(error);
-
-    showToast(
-      "Message পাঠানো যায়নি"
-    );
-
+    toast(error.message || "মেসেজ পাঠানো যায়নি");
   }
-
 }
 
+E.sendBtn?.addEventListener("click", sendText);
 
-// ============================================================
-// CREATE MESSAGE
-// ============================================================
+E.messageInput?.addEventListener("keydown", event => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    sendText();
+  }
+});
 
-async function createMessage(
-  data
-) {
+E.messageInput?.addEventListener("input", () => {
+  E.messageInput.style.height = "auto";
 
-  const messageRef =
-    push(
-      ref(
-        database,
-        "messages/" +
-        currentChatId
-      )
-    );
+  E.messageInput.style.height =
+    Math.min(E.messageInput.scrollHeight, 120) + "px";
 
-  const message = {
+  setTyping(true);
 
-    uid:
-      currentUser.uid,
+  clearTimeout(typingTimer);
 
-    senderName:
-      currentProfile?.fullName ||
-      currentUser.displayName ||
-      "AYNA User",
+  typingTimer = setTimeout(() => {
+    setTyping(false);
+  }, 1500);
+});
 
-    type:
-      data.type,
+// =========================================================
+// 16. ATTACHMENT MENU
+// =========================================================
 
-    createdAt:
-      Date.now(),
+E.attachBtn?.addEventListener("click", () => {
+  E.attachMenu?.classList.toggle("show");
+});
 
-    ...data
+function selectFile(button, input, type) {
+  if (!button || !input) return;
 
-  };
+  button.addEventListener("click", () => {
+    E.attachMenu?.classList.remove("show");
+    input.click();
+  });
 
-  await set(
-    messageRef,
-    message
-  );
+  input.addEventListener("change", async () => {
+    const file = input.files?.[0];
+    input.value = "";
 
-  await update(
-    ref(
-      database,
-      "chats/" +
-      currentChatId
-    ),
-    {
-
-      lastMessage:
-        getLastMessageText(
-          message
-        ),
-
-      updatedAt:
-        Date.now()
-
+    if (file) {
+      await sendMedia(file, type);
     }
-  );
-
+  });
 }
 
+selectFile(E.imageBtn, E.imageInput, "image");
+selectFile(E.videoBtn, E.videoInput, "video");
+selectFile(E.audioBtn, E.audioInput, "audio");
+selectFile(E.documentBtn, E.documentInput, "document");
 
-// ============================================================
-// LAST MESSAGE
-// ============================================================
+// =========================================================
+// 17. MEDIA FILE SENDING
+// =========================================================
 
-function getLastMessageText(
-  message
-) {
-
-  if (
-    message.type === "text"
-  )
-    return message.text;
-
-  if (
-    message.type === "image"
-  )
-    return "🖼️ ছবি";
-
-  if (
-    message.type === "video"
-  )
-    return "🎬 ভিডিও";
-
-  if (
-    message.type === "audio"
-  )
-    return "🎵 অডিও";
-
-  if (
-    message.type === "document"
-  )
-    return "📄 ডকুমেন্ট";
-
-  if (
-    message.type === "location"
-  )
-    return "📍 লোকেশন";
-
-  return "নতুন মেসেজ";
-
-}
-
-
-// ============================================================
-// SEND BUTTON
-// ============================================================
-
-sendBtn.addEventListener(
-  "click",
-  sendTextMessage
-);
-
-
-// ============================================================
-// ENTER
-// ============================================================
-
-messageInput.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey
-    ) {
-
-      event.preventDefault();
-
-      sendTextMessage();
-
-    }
-
-  }
-);
-
-
-// ============================================================
-// TYPING
-// ============================================================
-
-messageInput.addEventListener(
-  "input",
-  () => {
-
-    autoResize();
-
-    if (
-      currentChatId ===
-      "ayna-system"
-    )
-      return;
-
-    setTyping(true);
-
-    clearTimeout(
-      typingTimer
-    );
-
-    typingTimer =
-      setTimeout(
-        () => {
-          setTyping(false);
-        },
-        1500
-      );
-
-  }
-);
-
-
-async function setTyping(value) {
-
-  if (
-    !currentUser ||
-    currentChatId ===
-    "ayna-system"
-  )
+async function sendMedia(file, type) {
+  if (!currentChat) {
+    toast("আগে Chat নির্বাচন করুন");
     return;
-
-  try {
-
-    await set(
-      ref(
-        database,
-        "typing/" +
-        currentChatId +
-        "/" +
-        currentUser.uid
-      ),
-      value
-    );
-
-  }
-  catch(error) {
-
-    console.error(
-      "Typing:",
-      error
-    );
-
   }
 
-}
+  const MAX_SIZE = 2 * 1024 * 1024;
 
-
-// ============================================================
-// ATTACH MENU
-// ============================================================
-
-attachBtn.addEventListener(
-  "click",
-  () => {
-
-    attachMenu.classList.toggle(
-      "show"
-    );
-
-  }
-);
-
-
-// ============================================================
-// IMAGE
-// ============================================================
-
-imageBtn.addEventListener(
-  "click",
-  () => {
-
-    attachMenu.classList.remove(
-      "show"
-    );
-
-    imageInput.click();
-
-  }
-);
-
-imageInput.addEventListener(
-  "change",
-  () => {
-
-    const file =
-      imageInput.files[0];
-
-    if (file)
-      sendMedia(
-        file,
-        "image"
-      );
-
-    imageInput.value = "";
-
-  }
-);
-
-
-// ============================================================
-// VIDEO
-// ============================================================
-
-videoBtn.addEventListener(
-  "click",
-  () => {
-
-    attachMenu.classList.remove(
-      "show"
-    );
-
-    videoInput.click();
-
-  }
-);
-
-videoInput.addEventListener(
-  "change",
-  () => {
-
-    const file =
-      videoInput.files[0];
-
-    if (file)
-      sendMedia(
-        file,
-        "video"
-      );
-
-    videoInput.value = "";
-
-  }
-);
-
-
-// ============================================================
-// AUDIO
-// ============================================================
-
-audioBtn.addEventListener(
-  "click",
-  () => {
-
-    attachMenu.classList.remove(
-      "show"
-    );
-
-    audioInput.click();
-
-  }
-);
-
-audioInput.addEventListener(
-  "change",
-  () => {
-
-    const file =
-      audioInput.files[0];
-
-    if (file)
-      sendMedia(
-        file,
-        "audio"
-      );
-
-    audioInput.value = "";
-
-  }
-);
-
-
-// ============================================================
-// DOCUMENT
-// ============================================================
-
-documentBtn.addEventListener(
-  "click",
-  () => {
-
-    attachMenu.classList.remove(
-      "show"
-    );
-
-    documentInput.click();
-
-  }
-);
-
-documentInput.addEventListener(
-  "change",
-  () => {
-
-    const file =
-      documentInput.files[0];
-
-    if (file)
-      sendMedia(
-        file,
-        "document"
-      );
-
-    documentInput.value = "";
-
-  }
-);
-
-
-// ============================================================
-// SEND MEDIA
-// ============================================================
-
-function sendMedia(
-  file,
-  type
-) {
-
-  if (
-    currentChatId ===
-    "ayna-system"
-  ) {
-
-    showToast(
-      "আগে একটি Chat নির্বাচন করুন"
-    );
-
+  if (file.size > MAX_SIZE) {
+    toast("সর্বোচ্চ 2MB ফাইল পাঠানো যাবে");
     return;
-
   }
 
-  // RTDB Base64 test limit
-  const MAX =
-    2 * 1024 * 1024;
-
-  if (
-    file.size > MAX
-  ) {
-
-    showToast(
-      "Test mode: সর্বোচ্চ 2MB"
-    );
-
+  if (type === "image" && !file.type.startsWith("image/")) {
+    toast("সঠিক ছবি নির্বাচন করুন");
     return;
-
   }
 
-  showToast(
-    "Media প্রস্তুত হচ্ছে..."
-  );
+  if (type === "video" && !file.type.startsWith("video/")) {
+    toast("সঠিক ভিডিও নির্বাচন করুন");
+    return;
+  }
 
-  const reader =
-    new FileReader();
+  if (type === "audio" && !file.type.startsWith("audio/")) {
+    toast("সঠিক অডিও নির্বাচন করুন");
+    return;
+  }
+
+  const reader = new FileReader();
 
   reader.onload = async () => {
-
     try {
-
-      await createMessage({
-
+      await sendMessage({
         type,
-
-        data:
-          reader.result,
-
-        fileName:
-          file.name,
-
-        mimeType:
-          file.type,
-
-        size:
-          file.size
-
+        data: reader.result,
+        fileName: file.name,
+        mimeType: file.type,
+        size: file.size
       });
 
-      showToast(
-        "Media পাঠানো হয়েছে"
-      );
+      toast("ফাইল পাঠানো হয়েছে");
 
-    }
-    catch(error) {
-
+    } catch (error) {
       console.error(error);
-
-      showToast(
-        "Media পাঠানো যায়নি"
-      );
-
+      toast("ফাইল পাঠানো যায়নি");
     }
+  };
 
+  reader.onerror = () => {
+    toast("ফাইল পড়া যায়নি");
   };
 
   reader.readAsDataURL(file);
-
 }
 
+// =========================================================
+// 18. VOICE RECORDING
+// =========================================================
 
-// ============================================================
-// VOICE RECORDING
-// ============================================================
-
-voiceBtn.addEventListener(
-  "click",
-  async () => {
-
-    if (recording) {
-
-      stopRecording();
-
-    }
-    else {
-
-      await startRecording();
-
-    }
-
+E.voiceBtn?.addEventListener("click", async () => {
+  if (isRecording) {
+    stopVoiceRecording();
+  } else {
+    await startVoiceRecording();
   }
-);
+});
 
-
-async function startRecording() {
-
-  if (
-    currentChatId ===
-    "ayna-system"
-  ) {
-
-    showToast(
-      "আগে একটি Chat নির্বাচন করুন"
-    );
-
+async function startVoiceRecording() {
+  if (!currentChat) {
+    toast("আগে Chat নির্বাচন করুন");
     return;
+  }
 
+  if (!navigator.mediaDevices?.getUserMedia) {
+    toast("Microphone ব্যবহারে HTTPS প্রয়োজন");
+    return;
   }
 
   try {
-
-    const stream =
-      await navigator
-        .mediaDevices
-        .getUserMedia({
-          audio:true
-        });
+    mediaStream = await navigator.mediaDevices.getUserMedia({
+      audio: true
+    });
 
     audioChunks = [];
 
-    mediaRecorder =
-      new MediaRecorder(
-        stream
-      );
-
-    mediaRecorder.ondataavailable =
-      event => {
-
-        if (
-          event.data.size > 0
-        ) {
-
-          audioChunks.push(
-            event.data
-          );
-
-        }
-
-      };
-
-    mediaRecorder.onstop =
-      async () => {
-
-        const blob =
-          new Blob(
-            audioChunks,
-            {
-              type:
-                mediaRecorder.mimeType ||
-                "audio/webm"
-            }
-          );
-
-        stream
-          .getTracks()
-          .forEach(
-            track =>
-              track.stop()
-          );
-
-        const reader =
-          new FileReader();
-
-        reader.onload =
-          async () => {
-
-            try {
-
-              await createMessage({
-
-                type:"audio",
-
-                data:
-                  reader.result,
-
-                mimeType:
-                  blob.type
-
-              });
-
-              showToast(
-                "Voice message পাঠানো হয়েছে"
-              );
-
-            }
-            catch(error) {
-
-              console.error(error);
-
-              showToast(
-                "Voice message পাঠানো যায়নি"
-              );
-
-            }
-
-          };
-
-        reader.readAsDataURL(
-          blob
-        );
-
-      };
-
-    mediaRecorder.start();
-
-    recording = true;
-
-    voiceBtn.textContent =
-      "⏹";
-
-    showToast(
-      "🎙️ রেকর্ডিং চলছে..."
-    );
-
-  }
-  catch(error) {
-
-    console.error(error);
-
-    showToast(
-      "Microphone Permission দিন"
-    );
-
-  }
-
-}
-
-
-function stopRecording() {
-
-  if (
-    mediaRecorder &&
-    recording
-  ) {
-
-    mediaRecorder.stop();
-
-    recording = false;
-
-    voiceBtn.textContent =
-      "🎙️";
-
-  }
-
-}
-
-
-// ============================================================
-// EMOJI
-// ============================================================
-
-emojiBtn.addEventListener(
-  "click",
-  () => {
-
-    const list = [
-      "😀",
-      "😂",
-      "😍",
-      "🥰",
-      "😘",
-      "😎",
-      "👍",
-      "❤️",
-      "🔥",
-      "🎉",
-      "👏",
-      "🙏",
-      "😊",
-      "😢",
-      "😮",
-      "🤣",
-      "💯",
-      "✨",
-      "🌹",
-      "🤝"
-    ];
-
-    const emoji =
-      list[
-        Math.floor(
-          Math.random() *
-          list.length
-        )
-      ];
-
-    messageInput.value +=
-      emoji;
-
-    messageInput.focus();
-
-    autoResize();
-
-  }
-);
-
-
-// ============================================================
-// LOCATION
-// ============================================================
-
-locationBtn.addEventListener(
-  "click",
-  () => {
-
-    attachMenu.classList.remove(
-      "show"
-    );
-
-    if (
-      !navigator.geolocation
-    ) {
-
-      showToast(
-        "GPS পাওয়া যায়নি"
-      );
-
-      return;
-
-    }
-
-    showToast(
-      "📍 Location নেওয়া হচ্ছে..."
-    );
-
-    navigator.geolocation.getCurrentPosition(
-
-      async position => {
-
-        try {
-
-          await createMessage({
-
-            type:
-              "location",
-
-            lat:
-              position.coords.latitude,
-
-            lon:
-              position.coords.longitude
-
-          });
-
-          showToast(
-            "Location পাঠানো হয়েছে"
-          );
-
-        }
-        catch(error) {
-
-          console.error(error);
-
-          showToast(
-            "Location পাঠানো যায়নি"
-          );
-
-        }
-
-      },
-
-      error => {
-
-        console.error(error);
-
-        showToast(
-          "GPS Permission দিন"
-        );
-
-      },
-
-      {
-        enableHighAccuracy:true,
-        timeout:15000,
-        maximumAge:0
+    recorder = new MediaRecorder(mediaStream);
+
+    recorder.ondataavailable = event => {
+      if (event.data.size > 0) {
+        audioChunks.push(event.data);
       }
+    };
 
-    );
-
-  }
-);
-
-
-// ============================================================
-// LOCATION OPEN
-// ============================================================
-
-messages.addEventListener(
-  "click",
-  event => {
-
-    const button =
-      event.target.closest(
-        ".location-open"
-      );
-
-    if (!button)
-      return;
-
-    const lat =
-      button.dataset.lat;
-
-    const lon =
-      button.dataset.lon;
-
-    if (!lat || !lon)
-      return;
-
-    window.open(
-      "https://www.google.com/maps?q=" +
-      encodeURIComponent(
-        lat + "," + lon
-      ),
-      "_blank"
-    );
-
-  }
-);
-
-
-// ============================================================
-// CHAT SEARCH
-// ============================================================
-
-chatSearch.addEventListener(
-  "input",
-  () => {
-
-    const value =
-      chatSearch.value
-        .toLowerCase()
-        .trim();
-
-    document
-      .querySelectorAll(
-        ".chat-item"
-      )
-      .forEach(item => {
-
-        const name =
-          (
-            item.dataset.name ||
-            ""
-          ).toLowerCase();
-
-        item.style.display =
-          name.includes(value)
-            ? "flex"
-            : "none";
-
+    recorder.onstop = async () => {
+      const blob = new Blob(audioChunks, {
+        type: recorder.mimeType || "audio/webm"
       });
 
+      mediaStream?.getTracks().forEach(track => {
+        track.stop();
+      });
+
+      mediaStream = null;
+
+      if (blob.size > 2 * 1024 * 1024) {
+        toast("Voice ফাইল 2MB সীমা ছাড়িয়েছে");
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = async () => {
+        try {
+          await sendMessage({
+            type: "audio",
+            data: reader.result,
+            fileName: "voice-message.webm",
+            mimeType: blob.type,
+            size: blob.size
+          });
+
+          toast("Voice Message পাঠানো হয়েছে");
+
+        } catch (error) {
+          console.error(error);
+          toast("Voice পাঠানো যায়নি");
+        }
+      };
+
+      reader.onerror = () => toast("Voice ফাইল পড়া যায়নি");
+
+      reader.readAsDataURL(blob);
+    };
+
+    recorder.start();
+    isRecording = true;
+
+    if (E.voiceBtn) E.voiceBtn.textContent = "⏹";
+
+    toast("রেকর্ডিং চলছে");
+
+  } catch (error) {
+    console.error(error);
+    toast("Microphone Permission দিন");
   }
-);
-
-
-// ============================================================
-// SEARCH BUTTON
-// ============================================================
-
-searchBtn.addEventListener(
-  "click",
-  () => {
-
-    chatSearch.focus();
-
-  }
-);
-
-
-// ============================================================
-// NEW CHAT
-// ============================================================
-
-newChatBtn.addEventListener(
-  "click",
-  () => {
-
-    showToast(
-      "পরের ধাপে User Search + New Chat যুক্ত হবে"
-    );
-
-  }
-);
-
-
-// ============================================================
-// CALL BUTTONS
-// ============================================================
-
-voiceCallBtn.addEventListener(
-  "click",
-  () => {
-
-    openCall(
-      "voice"
-    );
-
-  }
-);
-
-videoCallBtn.addEventListener(
-  "click",
-  () => {
-
-    openCall(
-      "video"
-    );
-
-  }
-);
-
-
-function openCall(type) {
-
-  currentCallType =
-    type;
-
-  callModal.classList.add(
-    "show"
-  );
-
-  if (
-    type === "voice"
-  ) {
-
-    callTitle.textContent =
-      "☎️ AYNA Voice Call";
-
-    callText.textContent =
-      currentChatName +
-      " কে Voice Call";
-
-  }
-  else {
-
-    callTitle.textContent =
-      "📹 AYNA Video Call";
-
-    callText.textContent =
-      currentChatName +
-      " কে Video Call";
-
-  }
-
 }
 
+function stopVoiceRecording() {
+  if (!recorder || !isRecording) return;
 
-closeCallBtn.addEventListener(
-  "click",
-  () => {
+  recorder.stop();
+  isRecording = false;
 
-    callModal.classList.remove(
-      "show"
-    );
-
+  if (E.voiceBtn) {
+    E.voiceBtn.textContent = "🎙";
   }
-);
+}
 
+// =========================================================
+// 19. EMOJI
+// =========================================================
 
-// ============================================================
-// START CALL
-// ============================================================
+E.emojiBtn?.addEventListener("click", () => {
+  if (!E.messageInput) return;
 
-startCallBtn.addEventListener(
-  "click",
-  async () => {
+  const emojis = [
+    "😀", "😂", "😍", "🥰", "😘",
+    "😎", "👍", "❤️", "🔥", "🎉",
+    "👏", "🙏", "😊", "😢", "😮",
+    "🤣", "💯", "✨", "🌹", "🤝"
+  ];
 
-    callModal.classList.remove(
-      "show"
+  const emoji = emojis[
+    Math.floor(Math.random() * emojis.length)
+  ];
+
+  E.messageInput.value += emoji;
+  E.messageInput.focus();
+});
+
+// =========================================================
+// 20. GPS LOCATION
+// =========================================================
+
+E.locationBtn?.addEventListener("click", () => {
+  E.attachMenu?.classList.remove("show");
+
+  if (!currentChat) {
+    toast("আগে Chat নির্বাচন করুন");
+    return;
+  }
+
+  if (!navigator.geolocation) {
+    toast("GPS পাওয়া যায়নি");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async position => {
+      try {
+        await sendMessage({
+          type: "location",
+          lat: position.coords.latitude,
+          lon: position.coords.longitude
+        });
+
+        toast("Location পাঠানো হয়েছে");
+
+      } catch (error) {
+        console.error(error);
+        toast("Location পাঠানো যায়নি");
+      }
+    },
+
+    error => {
+      console.error(error);
+      toast("GPS Permission দিন");
+
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+});
+
+// =========================================================
+// 21. NEW CHAT MODAL
+// =========================================================
+
+E.newChatBtn?.addEventListener("click", () => {
+  E.newChatModal?.classList.add("show");
+
+  if (E.userSearchInput) {
+    E.userSearchInput.value = "";
+    E.userSearchInput.focus();
+  }
+
+  if (E.userSearchResults) {
+    E.userSearchResults.innerHTML = "";
+  }
+
+  if (E.userSearchStatus) {
+    E.userSearchStatus.textContent =
+      "নাম অথবা AYNA ID দিয়ে খুঁজুন";
+  }
+});
+
+E.closeNewChatBtn?.addEventListener("click", () => {
+  E.newChatModal?.classList.remove("show");
+});
+
+// =========================================================
+// 22. SEARCH USERS
+// =========================================================
+
+E.userSearchInput?.addEventListener("input", () => {
+  clearTimeout(searchTimer);
+
+  searchTimer = setTimeout(searchUsers, 400);
+});
+
+async function searchUsers() {
+  const term = (
+    E.userSearchInput?.value || ""
+  ).trim().toLowerCase();
+
+  if (!E.userSearchResults) return;
+
+  E.userSearchResults.innerHTML = "";
+
+  if (term.length < 2) {
+    if (E.userSearchStatus) {
+      E.userSearchStatus.textContent =
+        "কমপক্ষে ২টি অক্ষর লিখুন";
+    }
+    return;
+  }
+
+  if (E.userSearchStatus) {
+    E.userSearchStatus.textContent = "খোঁজা হচ্ছে...";
+  }
+
+  try {
+    const snapshot = await get(
+      ref(database, "userDirectory")
     );
 
-    if (
-      !currentOtherUid
-    ) {
+    const users = snapshot.val() || {};
 
-      showToast(
-        "একজন User নির্বাচন করুন"
+    const matches = Object.values(users).filter(user => {
+      if (!user.uid || user.uid === me.uid) return false;
+
+      const name = (user.fullName || "").toLowerCase();
+      const id = (user.aynaId || "").toLowerCase();
+      const country = (user.country || "").toLowerCase();
+
+      return (
+        name.includes(term) ||
+        id.includes(term) ||
+        country.includes(term)
       );
+    }).slice(0, 30);
 
+    E.userSearchResults.innerHTML = "";
+
+    if (!matches.length) {
+      E.userSearchStatus.textContent =
+        "কোনো ব্যবহারকারী পাওয়া যায়নি";
       return;
-
     }
 
-    const callRef =
-      push(
-        ref(
-          database,
-          "calls"
-        )
-      );
+    E.userSearchStatus.textContent =
+      matches.length + " জন ব্যবহারকারী পাওয়া গেছে";
+
+    matches.forEach(user => {
+      const item = document.createElement("div");
+      item.className = "chat-item";
+
+      const img = document.createElement("img");
+      img.className = "chat-avatar";
+      img.src = getPhoto(user.photoURL);
+      img.alt = "Profile";
+
+      const info = document.createElement("div");
+      info.className = "chat-item-info";
+
+      const name = document.createElement("div");
+      name.className = "chat-item-name";
+      name.textContent = user.fullName || "AYNA User";
+
+      const id = document.createElement("div");
+      id.className = "chat-item-last";
+      id.textContent = user.aynaId || "";
+
+      info.append(name, id);
+      item.append(img, info);
+
+      item.addEventListener("click", () => {
+        startNewChat(user);
+      });
+
+      E.userSearchResults.appendChild(item);
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    E.userSearchStatus.textContent =
+      "User Search Permission Error";
+  }
+}
+
+// =========================================================
+// 23. CREATE OR OPEN CHAT
+// =========================================================
+
+async function startNewChat(user) {
+  if (!me || !user.uid || user.uid === me.uid) return;
+
+  const id = createChatId(me.uid, user.uid);
+  const chatRef = ref(database, "chats/" + id);
+
+  try {
+    const snapshot = await get(chatRef);
+
+    if (!snapshot.exists()) {
+      const chat = {
+        members: {
+          [me.uid]: true,
+          [user.uid]: true
+        },
+
+        users: {
+          [me.uid]: {
+            name: profile.fullName || "AYNA User",
+            photo: profile.photoURL || ""
+          },
+
+          [user.uid]: {
+            name: user.fullName || "AYNA User",
+            photo: user.photoURL || ""
+          }
+        },
+
+        lastMessage: "",
+        updatedAt: Date.now()
+      };
+
+      await set(chatRef, chat);
+    }
 
     await set(
-      callRef,
-      {
-
-        callerId:
-          currentUser.uid,
-
-        receiverId:
-          currentOtherUid,
-
-        type:
-          currentCallType,
-
-        status:
-          "calling",
-
-        createdAt:
-          Date.now()
-
-      }
+      ref(database, `userChats/${me.uid}/${id}`),
+      true
     );
 
-    showToast(
-      currentCallType === "voice"
-        ? "☎️ Voice Call শুরু হচ্ছে..."
-        : "📹 Video Call শুরু হচ্ছে..."
+    await set(
+      ref(database, `userChats/${user.uid}/${id}`),
+      true
     );
 
+    openChat({
+      id,
+      uid: user.uid,
+      name: user.fullName || "AYNA User",
+      photo: user.photoURL || ""
+    });
+
+  } catch (error) {
+    console.error(error);
+    toast("Chat তৈরি করা যায়নি");
   }
-);
+}
 
+// =========================================================
+// 24. CALL REQUEST MODAL
+// =========================================================
 
-// ============================================================
-// MOBILE BACK
-// ============================================================
-
-mobileBack.addEventListener(
-  "click",
-  () => {
-
-    app.classList.remove(
-      "chat-open"
-    );
-
+function openCallModal(type) {
+  if (!currentChat || !otherUser) {
+    toast("আগে একজন ব্যবহারকারী নির্বাচন করুন");
+    return;
   }
-);
 
+  selectedCallType = type;
 
-// ============================================================
-// CLOSE ATTACH MENU
-// ============================================================
-
-document.addEventListener(
-  "click",
-  event => {
-
-    if (
-      !attachMenu.contains(
-        event.target
-      ) &&
-      event.target !== attachBtn
-    ) {
-
-      attachMenu.classList.remove(
-        "show"
-      );
-
-    }
-
+  if (E.callTitle) {
+    E.callTitle.textContent =
+      type === "video" ? "ভিডিও কল" : "ভয়েস কল";
   }
-);
 
+  if (E.callText) {
+    E.callText.textContent =
+      "আপনি কি কলের অনুরোধ পাঠাতে চান?";
+  }
 
-// ============================================================
-// AUTO RESIZE
-// ============================================================
-
-function autoResize() {
-
-  messageInput.style.height =
-    "auto";
-
-  messageInput.style.height =
-    Math.min(
-      messageInput.scrollHeight,
-      120
-    ) + "px";
-
+  E.callModal?.classList.add("show");
 }
 
+E.voiceCallBtn?.addEventListener("click", () => {
+  openCallModal("voice");
+});
 
-// ============================================================
-// SCROLL
-// ============================================================
+E.videoCallBtn?.addEventListener("click", () => {
+  openCallModal("video");
+});
 
-function scrollMessages() {
+E.closeCallBtn?.addEventListener("click", () => {
+  E.callModal?.classList.remove("show");
+});
 
-  requestAnimationFrame(
-    () => {
+// =========================================================
+// 25. SEND CALL REQUEST
+// =========================================================
 
-      messages.scrollTop =
-        messages.scrollHeight;
+E.startCallBtn?.addEventListener("click", async () => {
+  if (!me || !currentChat || !otherUser) {
+    toast("Chat নির্বাচন করুন");
+    return;
+  }
 
+  try {
+    const callRef = push(ref(database, "calls"));
+
+    await set(callRef, {
+      callId: callRef.key,
+      chatId: currentChat,
+      callerId: me.uid,
+      receiverId: otherUser,
+      type: selectedCallType,
+      status: "ringing",
+      createdAt: Date.now()
+    });
+
+    E.callModal?.classList.remove("show");
+
+    toast("কলের অনুরোধ পাঠানো হয়েছে");
+
+  } catch (error) {
+    console.error(error);
+    toast("কলের অনুরোধ পাঠানো যায়নি");
+  }
+});
+
+// =========================================================
+// 26. MOBILE BACK BUTTON
+// =========================================================
+
+E.mobileBack?.addEventListener("click", () => {
+  E.app?.classList.remove("chat-open");
+
+  currentChat = null;
+  otherUser = null;
+
+  messageUnsubscribe?.();
+  presenceUnsubscribe?.();
+  typingUnsubscribe?.();
+
+  messageUnsubscribe = null;
+  presenceUnsubscribe = null;
+  typingUnsubscribe = null;
+
+  setTyping(false);
+});
+
+// =========================================================
+// 27. CLOSE ATTACHMENT MENU
+// =========================================================
+
+document.addEventListener("click", event => {
+  if (
+    E.attachMenu &&
+    E.attachBtn &&
+    !E.attachMenu.contains(event.target) &&
+    !E.attachBtn.contains(event.target)
+  ) {
+    E.attachMenu.classList.remove("show");
+  }
+});
+
+// =========================================================
+// 28. PAGE CLEANUP
+// =========================================================
+
+window.addEventListener("pagehide", () => {
+  indexUnsubscribe?.();
+  messageUnsubscribe?.();
+  presenceUnsubscribe?.();
+  typingUnsubscribe?.();
+
+  Object.values(chatListeners).forEach(unsubscribe => {
+    unsubscribe?.();
+  });
+
+  if (isRecording && recorder) {
+    try {
+      recorder.stop();
+    } catch (error) {
+      console.error(error);
     }
-  );
+  }
 
-}
+  mediaStream?.getTracks().forEach(track => {
+    track.stop();
+  });
+});
 
-
-// ============================================================
-// TIME
-// ============================================================
-
-function formatTime(timestamp) {
-
-  if (!timestamp)
-    return "";
-
-  const date =
-    new Date(timestamp);
-
-  return date.toLocaleTimeString(
-    "bn-BD",
-    {
-      hour:"numeric",
-      minute:"2-digit"
-    }
-  );
-
-}
-
-
-// ============================================================
-// HTML SECURITY
-// ============================================================
-
-function escapeHTML(value) {
-
-  return String(
-    value ?? ""
-  )
-  .replaceAll(
-    "&",
-    "&amp;"
-  )
-  .replaceAll(
-    "<",
-    "&lt;"
-  )
-  .replaceAll(
-    ">",
-    "&gt;"
-  )
-  .replaceAll(
-    '"',
-    "&quot;"
-  )
-  .replaceAll(
-    "'",
-    "&#039;"
-  );
-
-}
-
-
-function escapeAttr(value) {
-
-  return escapeHTML(
-    value
-  );
-
-}
-
-
-// ============================================================
-// START
-// ============================================================
-
-console.log(
-  "AYNA Messenger Advanced JS loaded."
-);
+// =========================================================
+// 29. END OF AYNA MESSENGER.JS
+// =========================================================
