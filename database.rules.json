@@ -1,35 +1,49 @@
-
 {
   "rules": {
-    ".read": false,
-    ".write": false,
-
-    "users": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid"
+    "posts": {
+      ".read": "auth != null",
+      ".indexOn": ["createdAt", "uid"],
+      "$postId": {
+        ".write": "auth != null && (!data.exists() || data.child('uid').val() === auth.uid)",
+        ".validate": "newData.hasChildren(['uid', 'text', 'createdAt']) && newData.child('uid').val() === auth.uid && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 5000 && newData.child('createdAt').isNumber()",
+        "reactions": {
+          "$reactionType": {
+            "$uid": {
+              ".write": "auth != null && auth.uid === $uid",
+              ".validate": "newData.isBoolean()"
+            }
+          }
+        }
       }
     },
 
-    "userDirectory": {
+    "aynaGroups": {
       ".read": "auth != null",
-      "$uid": {
-        ".write": "auth != null && auth.uid === $uid",
-        ".validate": "newData.hasChildren(['uid','fullName']) && newData.child('uid').val() === $uid",
-        "uid": {
-          ".validate": "newData.isString() && newData.val() === $uid"
-        },
-        "fullName": {
-          ".validate": "newData.isString() && newData.val().length <= 100"
-        },
-        "photoURL": {
-          ".validate": "newData.isString() && newData.val().length <= 2048"
-        },
-        "aynaId": {
-          ".validate": "newData.isString() && newData.val().length <= 50"
-        },
-        "$other": {
-          ".validate": false
+      ".indexOn": ["createdAt", "platform"],
+      "$groupId": {
+        ".write": "auth != null && (!data.exists() || data.child('createdBy').val() === auth.uid)",
+        ".validate": "newData.hasChildren(['name', 'createdBy', 'createdAt']) && newData.child('createdBy').val() === auth.uid && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 120 && newData.child('createdAt').isNumber()"
+      }
+    },
+
+    "aynaGroupMessages": {
+      "$groupId": {
+        ".read": "auth != null && root.child('aynaGroups/' + $groupId).exists()",
+        ".indexOn": ["time", "uid"],
+        "$msgId": {
+          ".write": "auth != null && root.child('aynaGroups/' + $groupId).exists() && (!data.exists() || data.child('uid').val() === auth.uid)",
+          ".validate": "newData.hasChildren(['text', 'uid', 'time']) && newData.child('uid').val() === auth.uid && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 3000 && newData.child('time').isNumber()"
+        }
+      }
+    },
+
+    "postReports": {
+      ".read": "auth != null && root.child('admins/' + auth.uid).val() === true",
+      ".indexOn": ["createdAt", "reporterUid"],
+      "$postId": {
+        "$reportId": {
+          ".write": "auth != null && !data.exists() && newData.child('reporterUid').val() === auth.uid",
+          ".validate": "newData.hasChildren(['reporterUid', 'postId', 'reason', 'createdAt']) && newData.child('reporterUid').val() === auth.uid && newData.child('postId').val() === $postId && newData.child('reason').isString() && newData.child('reason').val().length > 0 && newData.child('reason').val().length <= 500 && newData.child('createdAt').isNumber()"
         }
       }
     },
@@ -37,80 +51,14 @@
     "presence": {
       ".read": "auth != null",
       "$uid": {
-        ".write": "auth != null && auth.uid === $uid"
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['online']) && newData.child('online').isBoolean()"
       }
     },
 
-    "userChats": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        "$chatId": {
-          ".write": "auth != null && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true && root.child('chats').child($chatId).child('members').child($uid).val() === true",
-          ".validate": "newData.val() === true"
-        }
-      }
-    },
-
-    "chats": {
-      "$chatId": {
-        ".read": "auth != null && data.child('members').child(auth.uid).val() === true",
-        ".write": "auth != null && !data.exists() && newData.child('createdBy').val() === auth.uid && newData.child('members').child(auth.uid).val() === true && newData.child('otherUid').isString() && newData.child('otherUid').val() !== auth.uid && newData.child('members').child(newData.child('otherUid').val()).val() === true",
-        ".validate": "newData.hasChildren(['createdBy','otherUid','members','createdAt']) && newData.child('createdAt').isNumber()"
-      }
-    },
-
-    "messages": {
-      "$chatId": {
-        ".read": "auth != null && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true",
-        "$messageId": {
-          ".write": "auth != null && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true && ((!data.exists() && newData.child('uid').val() === auth.uid) || (data.exists() && data.child('uid').val() === auth.uid))",
-          ".validate": "newData.hasChildren(['uid','type','createdAt']) && newData.child('uid').val() === auth.uid && newData.child('createdAt').isNumber() && (newData.child('type').val() === 'text' || newData.child('type').val() === 'image' || newData.child('type').val() === 'audio' || newData.child('type').val() === 'video' || newData.child('type').val() === 'document')"
-        }
-      }
-    },
-
-    "typing": {
-      "$chatId": {
-        ".read": "auth != null && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true",
-        "$uid": {
-          ".write": "auth != null && auth.uid === $uid && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true",
-          ".validate": "newData.isBoolean()"
-        }
-      }
-    },
-
-    "incomingCalls": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        "$callId": {
-          ".write": "auth != null && auth.uid !== $uid && newData.val() === true && root.child('calls').child($callId).child('from').val() === auth.uid && root.child('calls').child($callId).child('to').val() === $uid",
-          ".validate": "newData.val() === true"
-        }
-      }
-    },
-
-    "calls": {
-      "$callId": {
-        ".read": "auth != null && (data.child('from').val() === auth.uid || data.child('to').val() === auth.uid)",
-        ".write": "auth != null && !data.exists() && newData.child('from').val() === auth.uid && newData.child('to').isString() && newData.child('to').val() !== auth.uid && (newData.child('type').val() === 'audio' || newData.child('type').val() === 'video') && newData.child('status').val() === 'ringing'",
-        ".validate": "newData.hasChildren(['from','to','type','status','createdAt']) && newData.child('createdAt').isNumber()",
-        "answer": {
-          ".write": "auth != null && data.parent().child('to').val() === auth.uid && !data.exists()",
-          ".validate": "newData.hasChildren(['type','sdp']) && newData.child('type').val() === 'answer' && newData.child('sdp').isString()"
-        },
-        "status": {
-          ".write": "auth != null && (data.parent().child('from').val() === auth.uid || data.parent().child('to').val() === auth.uid) && (newData.val() === 'accepted' || newData.val() === 'rejected' || newData.val() === 'ended')",
-          ".validate": "newData.isString()"
-        },
-        "candidates": {
-          "$uid": {
-            ".write": "auth != null && auth.uid === $uid && (root.child('calls').child($callId).child('from').val() === auth.uid || root.child('calls').child($callId).child('to').val() === auth.uid)",
-            "$candidateId": {
-              ".validate": "newData.hasChildren(['candidate','sdpMid','sdpMLineIndex']) && newData.child('candidate').isString()"
-            }
-          }
-        }
-      }
+    "admins": {
+      ".read": "auth != null && root.child('admins/' + auth.uid).val() === true",
+      ".write": false
     }
   }
 }
