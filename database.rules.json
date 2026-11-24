@@ -48,6 +48,16 @@
       }
     },
 
+    "fcmTokens": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        "$tokenKey": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['token', 'updatedAt']) && newData.child('token').isString() && newData.child('token').val().length >= 20 && newData.child('token').val().length <= 2048 && newData.child('updatedAt').isNumber()"
+        }
+      }
+    },
+
     "presence": {
       ".read": "auth != null",
       "$uid": {
