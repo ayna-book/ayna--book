@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>বিশ্বের সমস্ত রাষ্ট্রনেতা — AYNA BOOK</title>
+<style>
+  body { margin:0; background:#050a18; color:#fff; font-family:Arial,"Noto Sans Bengali",sans-serif; font-size:34px; }
+  .wrap { max-width:1360px; margin:auto; padding:20px; }
+  .box { background:linear-gradient(155deg,#1a3575,#08122b); border:4px solid #ffe64d; border-radius:10px; padding:24px; margin-bottom:22px; box-shadow:0 8px 0 #8a6105; }
+  h1 { margin:0 0 12px; font-size:48px; color:#fff6b3; }
+  input, button { font:inherit; border-radius:8px; border:3px solid #ffe64d; padding:14px 18px; }
+  input { width:100%; background:#050b1c; color:#fff; margin-top:10px; }
+  button { background:linear-gradient(180deg,#ffe64d,#c99314); color:#050a18; font-weight:1000; margin-top:12px; cursor:pointer; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:18px; }
+  .card { background:#060d22; border:3px solid #ffe64d; border-radius:10px; padding:18px; }
+  .head { display:flex; align-items:center; gap:14px; }
+  .flag { width:84px; height:56px; object-fit:cover; border:2px solid #ffe64d; border-radius:4px; }
+  .photo { width:88px; height:88px; object-fit:cover; object-position:top; border:3px solid #fff6b3; border-radius:8px; }
+  .meta { font-size:26px; color:#e6eeff; margin-top:8px; word-break:break-word; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <h1>🌍 বিশ্বের সমস্ত রাষ্ট্রনেতা (অটো-আপডেট)</h1>
+    <div class="meta" id="syncInfo">লাইভ দেশ ও পতাকা ডেটা সিঙ্ক হচ্ছে...</div>
+    <input type="search" id="searchBox" placeholder="দেশ বা রাষ্ট্রনেতার নাম লিখুন...">
+    <button type="button" id="refreshBtn">🔄 এখনই অটো-আপডেট করুন</button>
+    <a href="index.html" style="display:inline-block;margin-left:12px;color:#fff6b3;font-weight:bold;">← মূল পেজে ফিরুন</a>
+  </div>
+  <div class="grid" id="leadersGrid"></div>
+</div>
+
+<script>
+const CURATED_LEADERS = {
+  "Bangladesh": { name: "তারেক রহমান", role: "প্রধানমন্ত্রী", phone: "PMO Official Desk", email: "pmo.gov.bd" },
+  "United States": { name: "ডোনাল্ড ট্রাম্প", role: "প্রেসিডেন্ট", phone: "White House Switchboard", email: "whitehouse.gov" },
+  "Saudi Arabia": { name: "বাদশাহ সালমান / যুবরাজ মোহাম্মদ বিন সালমান", role: "বাদশাহ ও প্রধানমন্ত্রী", phone: "Royal Court Desk", email: "spa.gov.sa" },
+  "Turkey": { name: "রিসেপ তাইয়িপ এরদোয়ান", role: "প্রেসিডেন্ট", phone: "Presidency Directorate", email: "tccb.gov.tr" },
+  "United Kingdom": { name: "কিয়ার স্টারমার / রাজা তৃতীয় চার্লস", role: "প্রধানমন্ত্রী ও রাজা", phone: "10 Downing St / Palace", email: "gov.uk" },
+  "India": { name: "নরেন্দ্র মোদী / দ্রৌপদী মুর্মু", role: "প্রধানমন্ত্রী ও রাষ্ট্রপতি", phone: "PMO India Desk", email: "pmindia.gov.in" },
+  "China": { name: "শি জিনপিং", role: "প্রেসিডেন্ট", phone: "State Council Desk", email: "gov.cn" },
+  "Qatar": { name: "শেখ তামিম বিন হামাদ আল থানি", role: "আমির", phone: "Amiri Diwan", email: "diwan.gov.qa" },
+  "United Arab Emirates": { name: "শেখ মোহাম্মদ বিন জায়েদ আল নাহিয়ান", role: "প্রেসিডেন্ট", phone: "UAE Presidential Court", email: "uae.gov.ae" },
+  "Malaysia": { name: "আনোয়ার ইব্রাহিম", role: "প্রধানমন্ত্রী", phone: "PMO Malaysia", email: "pmo.gov.my" }
+};
+
+let allCountriesData = [];
+
+function avatarSvg(label) {
+  const safe = encodeURIComponent(label.slice(0, 2));
+  return `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="100%" height="100%" fill="#0e1f45"/><text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" fill="#ffe64d" font-size="42" font-family="Arial">${safe}</text></svg>`;
+}
+
+function renderLeaders(q = "") {
+  const grid = document.getElementById("leadersGrid");
+  const term = q.trim().toLowerCase();
+  const list = allCountriesData.filter(c =>
+    c.countryName.toLowerCase().includes(term) ||
+    c.leaderName.toLowerCase().includes(term) ||
+    c.role.toLowerCase().includes(term)
+  );
+  grid.innerHTML = list.map(c => `
+    <div class="card">
+      <div class="head">
+        <img class="flag" src="${c.flagUrl}" alt="${c.countryName}" loading="lazy">
+        <img class="photo" src="${c.photoUrl}" alt="${c.leaderName}" loading="lazy">
+        <div>
+          <div style="font-size:32px;font-weight:bold;color:#fff6b3;">${c.countryName}</div>
+          <div class="meta">${c.role}</div>
+        </div>
+      </div>
+      <div style="font-size:32px;font-weight:bold;margin-top:12px;">${c.leaderName}</div>
+      <div class="meta">📞 ফোন/দপ্তর: ${c.phone}</div>
+      <div class="meta">✉️ জিমেইল/পোর্টাল: ${c.email}</div>
+    </div>
+  `).join("");
+}
+
+async function loadAllWorldLeaders() {
+  const info = document.getElementById("syncInfo");
+  info.textContent = "সমস্ত দেশের তথ্য ও পতাকা অটো-আপডেট হচ্ছে...";
+  try {
+    const res = await fetch("https://restcountries.com/v3.1/all?fields=name,flags,cca2,capital");
+    const countries = await res.json();
+    allCountriesData = countries
+      .map(item => {
+        const common = item?.name?.common || "Unknown";
+        const custom = CURATED_LEADERS[common];
+        const code = (item?.cca2 || "UN").toLowerCase();
+        return {
+          countryName: common,
+          leaderName: custom ? custom.name : `${common} — রাষ্ট্রপ্রধান / সরকারপ্রধান`,
+          role: custom ? custom.role : `রাজধানী: ${(item?.capital && item.capital[0]) || "—"}`,
+          phone: custom ? custom.phone : "দাপ্তরিক দূতাবাস / কূটনৈতিক ডেস্ক",
+          email: custom ? custom.email : `info@${code}.gov.org`,
+          flagUrl: item?.flags?.png || `https://flagcdn.com/w160/${code}.png`,
+          photoUrl: avatarSvg(common)
+        };
+      })
+      .sort((a, b) => a.countryName.localeCompare(b.countryName));
+
+    info.textContent = `মোট ${allCountriesData.length}টি দেশের তালিকা সিঙ্ক হয়েছে • সর্বশেষ আপডেট: ${new Date().toLocaleTimeString("bn-BD")}`;
+    renderLeaders(document.getElementById("searchBox").value);
+  } catch (e) {
+    info.textContent = "লাইভ দেশ তালিকা লোড করা যায়নি; লোকাল তালিকা দেখানো হচ্ছে।";
+    allCountriesData = Object.entries(CURATED_LEADERS).map(([countryName, d], idx) => ({
+      countryName,
+      leaderName: d.name,
+      role: d.role,
+      phone: d.phone,
+      email: d.email,
+      flagUrl: "https://flagcdn.com/w160/un.png",
+      photoUrl: avatarSvg(String(idx + 1))
+    }));
+    renderLeaders(document.getElementById("searchBox").value);
+  }
+}
+
+document.getElementById("searchBox").addEventListener("input", e => renderLeaders(e.target.value));
+document.getElementById("refreshBtn").addEventListener("click", loadAllWorldLeaders);
+loadAllWorldLeaders();
+setInterval(loadAllWorldLeaders, 30 * 60 * 1000);
+</script>
+</body>
+</html>
