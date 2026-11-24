@@ -1,147 +1,152 @@
+(() => {
+  // এখানে আপনার কার্যকর লাইভ টিভি চ্যানেল (.m3u8 বা .mp4) লিংকগুলো যুক্ত করুন
+  const TV_CHANNELS = [
+    {
+      name: "NASA TV Public (Live HLS)",
+      url: "https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8"
+    },
+    {
+      name: "DW English Live (HLS)",
+      url: "https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8"
+    },
+    {
+      name: "France 24 English Live (HLS)",
+      url: "https://stream.france24.com/hls/live/2037279/F24_EN_LO_HLS/master.m3u8"
+    }
+  ];
 
-import Hls from "https://cdn.jsdelivr.net/npm/hls.js@1.5.17/+esm";
+  const video = document.getElementById("tvVideo");
+  const playerBox = document.getElementById("playerBox");
+  const selectEl = document.getElementById("channelSelect");
+  const customUrlEl = document.getElementById("customStreamUrl");
+  const playBtn = document.getElementById("playBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const fullscreenBtn = document.getElementById("fullscreenBtn");
+  const statusEl = document.getElementById("tvStatus");
 
-// =====================================================
-// AYNA BOOK — TV LIVE
-// File: tv-live.js
-// =====================================================
+  let hlsInstance = null;
 
-const channels = [
-  {
-    name: "AYNA TV",
-    url: ""
+  function setStatus(msg) {
+    if (statusEl) statusEl.textContent = msg;
   }
 
-  // নিজের অনুমোদিত লাইভ TV Stream URL যোগ করুন:
-  // {
-  //   name: "Channel Name",
-  //   url: "https://example.com/live/stream.m3u8"
-  // }
-];
-
-const video = document.getElementById("tvPlayer");
-const select = document.getElementById("channelSelect");
-const nameElement = document.getElementById("channelName");
-const status = document.getElementById("status");
-
-const playButton = document.getElementById("playButton");
-const stopButton = document.getElementById("stopButton");
-const fullscreenButton =
-  document.getElementById("fullscreenButton");
-
-let hls = null;
-
-channels.forEach((channel, index) => {
-  if (!channel.url) return;
-
-  const option = document.createElement("option");
-  option.value = String(index);
-  option.textContent = channel.name;
-  select.appendChild(option);
-});
-
-function destroyHls() {
-  if (hls) {
-    hls.destroy();
-    hls = null;
+  function populateChannels() {
+    TV_CHANNELS.forEach((ch, idx) => {
+      const opt = document.createElement("option");
+      opt.value = ch.url;
+      opt.textContent = `${idx + 1}. ${ch.name}`;
+      selectEl.appendChild(opt);
+    });
   }
-}
 
-function loadChannel(channel) {
-  destroyHls();
+  function destroyHls() {
+    if (hlsInstance) {
+      hlsInstance.destroy();
+      hlsInstance = null;
+    }
+  }
 
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
+  function getActiveUrl() {
+    const custom = customUrlEl.value.trim();
+    if (custom) return custom;
+    return selectEl.value.trim();
+  }
 
-  nameElement.textContent = channel.name;
+  function loadAndPlay(url) {
+    if (!url) {
+      setStatus("Please select a valid TV channel.");
+      return;
+    }
 
-  if (channel.url.endsWith(".m3u8") ||
-      channel.url.includes(".m3u8?")) {
+    destroyHls();
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
 
-    if (Hls.isSupported()) {
-      hls = new Hls();
+    const isHls = url.toLowerCase().includes(".m3u8");
 
-      hls.loadSource(channel.url);
-      hls.attachMedia(video);
+    if (isHls && window.Hls && window.Hls.isSupported()) {
+      hlsInstance = new window.Hls({
+        enableWorker: true,
+        lowLatencyMode: true
+      });
+      hlsInstance.loadSource(url);
+      hlsInstance.attachMedia(video);
 
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        status.textContent = "Channel ready. Press Play.";
+      hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => {
+        video.play().then(() => {
+          setStatus("লাইভ স্ট্রিম চলছে...");
+        }).catch(() => {
+          setStatus("স্ট্রিমে ক্লিক করে বা PLAY চেপে চালু করুন।");
+        });
       });
 
-      hls.on(Hls.Events.ERROR, (event, data) => {
+      hlsInstance.on(window.Hls.Events.ERROR, (_, data) => {
         if (data.fatal) {
-          status.textContent = "TV stream unavailable.";
+          setStatus("স্ট্রিম লোড করা যায়নি (লিঙ্ক বা CORS/নেটওয়ার্ক পরীক্ষা করুন)।");
           destroyHls();
         }
       });
-
-    } else if (video.canPlayType(
-      "application/vnd.apple.mpegurl"
-    )) {
-      video.src = channel.url;
-      status.textContent = "Channel ready.";
+    } else if (video.canPlayType("application/vnd.apple.mpegurl") || !isHls) {
+      video.src = url;
+      video.play().then(() => {
+        setStatus("লাইভ স্ট্রিম চলছে...");
+      }).catch(() => {
+        setStatus("স্ট্রিম লোড করা যায়নি বা চালু করতে PLAY চাপুন।");
+      });
     } else {
-      status.textContent = "HLS is not supported.";
+      setStatus("এই ব্রাউজারে HLS স্ট্রিম সাপোর্ট করছে না।");
     }
-
-  } else {
-    video.src = channel.url;
-    status.textContent = "Channel ready.";
-  }
-}
-
-select.addEventListener("change", () => {
-  const channel = channels[Number(select.value)];
-
-  if (!channel || !channel.url) return;
-
-  loadChannel(channel);
-});
-
-playButton.addEventListener("click", async () => {
-  if (!video.src && !hls) {
-    status.textContent = "Please select a valid TV channel.";
-    return;
   }
 
-  try {
-    await video.play();
-    status.textContent = "TV is playing live.";
-  } catch (error) {
-    console.error(error);
-    status.textContent = "Playback failed. Check the stream.";
+  function stopStream() {
+    destroyHls();
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
+    setStatus("স্ট্রিম বন্ধ করা হয়েছে।");
   }
-});
 
-stopButton.addEventListener("click", () => {
-  video.pause();
-  status.textContent = "TV stopped.";
-});
-
-fullscreenButton.addEventListener("click", async () => {
-  try {
-    if (video.requestFullscreen) {
-      await video.requestFullscreen();
-    } else if (video.webkitEnterFullscreen) {
-      video.webkitEnterFullscreen();
+  async function toggleFullscreen() {
+    try {
+      if (!document.fullscreenElement) {
+        if (playerBox.requestFullscreen) {
+          await playerBox.requestFullscreen();
+        } else if (video.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen();
+        }
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (_) {
+      setStatus("ফুলস্ক্রিন চালু করা যায়নি।");
     }
-  } catch (error) {
-    console.error(error);
-    status.textContent = "Fullscreen unavailable.";
   }
-});
 
-video.addEventListener("playing", () => {
-  status.textContent = "Playing live TV.";
-});
+  selectEl.addEventListener("change", () => {
+    if (selectEl.value) {
+      customUrlEl.value = "";
+      loadAndPlay(selectEl.value);
+    } else {
+      setStatus("Please select a valid TV channel.");
+    }
+  });
 
-video.addEventListener("waiting", () => {
-  status.textContent = "Connecting to TV...";
-});
+  playBtn.addEventListener("click", () => {
+    const url = getActiveUrl();
+    if (!url) {
+      setStatus("Please select a valid TV channel.");
+      return;
+    }
+    if (video.src && video.src === url && video.paused) {
+      video.play().then(() => setStatus("লাইভ স্ট্রিম চলছে...")).catch(() => loadAndPlay(url));
+    } else {
+      loadAndPlay(url);
+    }
+  });
 
-video.addEventListener("error", () => {
-  status.textContent = "TV stream error.";
-});
+  stopBtn.addEventListener("click", stopStream);
+  fullscreenBtn.addEventListener("click", toggleFullscreen);
 
-window.addEventListener("beforeunload", destroyHls);
+  populateChannels();
+})();
