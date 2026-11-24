@@ -1,117 +1,167 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080808">
-  <title>AYNA BOOK — TV Live</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#060d21">
+<title>AYNA BOOK — Real Live TV</title>
+<style>
+  :root {
+    --bg: #050a18;
+    --panel: #0b1633;
+    --gold: #ffe64d;
+    --gold-bright: #fff6b3;
+    --gold-base: #8a6105;
+    --text: #ffffff;
+    --muted: #dce6fa;
+  }
 
-  <style>
-    * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
-    body {
-      margin: 0;
-      background: #080808;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, "Noto Sans Bengali", sans-serif;
+    font-size: 20px;
+    padding: 16px;
+  }
 
-    header {
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #d4af37;
-    }
+  .tv-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    background: var(--panel);
+    border: 3px solid var(--gold);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 0 18px rgba(255, 230, 77, 0.45), 0 7px 0 var(--gold-base);
+  }
 
-    header h1 { color: #d4af37; margin: 0; }
+  .tv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
 
-    .container {
-      width: 94%;
-      max-width: 850px;
-      margin: 25px auto;
-    }
+  .tv-title {
+    margin: 0;
+    font-size: 28px;
+    color: var(--gold-bright);
+  }
 
-    .player-box {
-      background: #171717;
-      border: 1px solid #d4af37;
-      border-radius: 15px;
-      padding: 15px;
-    }
+  .back-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid var(--gold);
+    padding: 8px 14px;
+    border-radius: 6px;
+  }
 
-    video {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: black;
-      border-radius: 10px;
-    }
+  .player-box {
+    position: relative;
+    width: 100%;
+    background: #141414;
+    border: 2.5px solid var(--gold);
+    border-radius: 8px;
+    overflow: hidden;
+  }
 
-    h2 { color: #d4af37; }
+  video {
+    width: 100%;
+    max-height: 520px;
+    display: block;
+    background: #141414;
+  }
 
-    select {
-      width: 100%;
-      padding: 14px;
-      background: #222;
-      color: white;
-      border: 1px solid #d4af37;
-      border-radius: 8px;
-      margin: 12px 0;
-    }
+  .channel-select,
+  .custom-url-input {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px 16px;
+    font-size: 20px;
+    border-radius: 8px;
+    border: 2.5px solid var(--gold);
+    background: #ffffff;
+    color: #050a18;
+    font-weight: bold;
+  }
 
-    button {
-      padding: 12px 20px;
-      margin: 5px;
-      border: none;
-      border-radius: 25px;
-      background: #d4af37;
-      color: black;
-      font-weight: bold;
-    }
+  .custom-url-input {
+    background: #050b1c;
+    color: #ffffff;
+    font-weight: normal;
+  }
 
-    #status {
-      color: #d4af37;
-      min-height: 24px;
-    }
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
 
-  </style>
+  .tv-btn {
+    padding: 12px 22px;
+    font-size: 19px;
+    font-weight: 900;
+    border-radius: 8px;
+    border: 2px solid var(--gold-bright);
+    background: linear-gradient(180deg, #e5b82e 0%, #9b720b 100%);
+    color: #050a18;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--gold-base);
+  }
+
+  .tv-btn:active {
+    transform: translateY(3px);
+  }
+
+  .status-msg {
+    margin-top: 16px;
+    font-size: 20px;
+    color: var(--muted);
+    min-height: 28px;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
 </head>
-
 <body>
 
-<header>
-  <h1>AYNA BOOK</h1>
-  <p>GLOBAL TV LIVE</p>
-</header>
+<div class="tv-wrap">
+  <div class="tv-header">
+    <h1 class="tv-title">📺 AYNA BOOK REAL TV</h1>
+    <a class="back-link" href="index.html">← হোমে ফিরুন</a>
+  </div>
 
-<main class="container">
+  <div class="player-box" id="playerBox">
+    <video id="tvVideo" controls playsinline></video>
+  </div>
 
-  <section class="player-box">
+  <select id="channelSelect" class="channel-select" aria-label="Select TV Channel">
+    <option value="">Select TV Channel</option>
+  </select>
 
-    <h2 id="channelName">AYNA TV</h2>
+  <input
+    type="url"
+    id="customStreamUrl"
+    class="custom-url-input"
+    placeholder="অথবা সরাসরি .m3u8 / .mp4 স্ট্রিম লিংক দিন..."
+  >
 
-    <video
-      id="tvPlayer"
-      controls
-      playsinline
-      preload="none">
-    </video>
+  <div class="controls">
+    <button type="button" class="tv-btn" id="playBtn">▶ PLAY</button>
+    <button type="button" class="tv-btn" id="stopBtn">■ STOP</button>
+    <button type="button" class="tv-btn" id="fullscreenBtn">⛶ FULL SCREEN</button>
+  </div>
 
-    <select id="channelSelect">
-      <option value="">Select TV Channel</option>
-    </select>
+  <div class="status-msg" id="tvStatus">Please select a valid TV channel.</div>
+</div>
 
-    <div>
-      <button id="playButton">▶ PLAY</button>
-      <button id="stopButton">■ STOP</button>
-      <button id="fullscreenButton">⛶ FULL SCREEN</button>
-    </div>
-
-    <p id="status">Select a channel to start.</p>
-
-  </section>
-
-</main>
-
-<script type="module" src="./tv-live.js"></script>
-
+<script src="tv-live.js"></script>
 </body>
 </html>
