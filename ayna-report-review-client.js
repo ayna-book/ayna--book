@@ -2,19 +2,42 @@
 // AYNA BOOK — MODERATION REVIEW CLIENT (ayna-report-review-client.js)
 // =====================================================================
 
-export async function resolveAynaAuth() {
-  const [initMod, jsFbMod, authMod] = await Promise.all([
+export async function resolveAynaFirebase() {
+  const [initMod, jsFbMod, authMod, rtdbMod] = await Promise.all([
     import("./firebase-init.js").catch(() => null),
     import("./js/firebase.js").catch(() => null),
-    import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js")
+    import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"),
+    import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js")
   ]);
 
   const auth = initMod?.auth || jsFbMod?.auth || authMod.getAuth();
+  const database = initMod?.database || jsFbMod?.database || rtdbMod.getDatabase();
+
+  return { auth, database, authMod, rtdbMod };
+}
+
+export async function resolveAynaAuth() {
+  const { auth } = await resolveAynaFirebase();
   const user = auth?.currentUser;
   if (!user) {
     throw new Error("Please sign in first to review reports.");
   }
   return { auth, user };
+}
+
+export async function isCurrentUserAdmin() {
+  try {
+    const { auth, database, rtdbMod } = await resolveAynaFirebase();
+    const user = auth?.currentUser;
+    if (!user?.uid || !database) {
+      return false;
+    }
+
+    const adminSnap = await rtdbMod.get(rtdbMod.ref(database, `admins/${user.uid}`));
+    return adminSnap.val() === true;
+  } catch {
+    return false;
+  }
 }
 
 export async function submitModerationReview({
