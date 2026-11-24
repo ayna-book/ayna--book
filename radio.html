@@ -31,7 +31,7 @@
   }
 
   .radio-wrap {
-    max-width: 1020px;
+    max-width: 1040px;
     margin: 0 auto;
     background: var(--panel);
     border: 3px solid var(--gold);
@@ -89,7 +89,7 @@
 
   .search-row {
     display: grid;
-    grid-template-columns: 1fr 220px;
+    grid-template-columns: 1fr 240px;
     gap: 12px;
     margin-bottom: 12px;
   }
@@ -123,6 +123,31 @@
     background: #ffffff;
     color: #050a18;
     font-weight: bold;
+  }
+
+  .freq-tuner {
+    background: #050b1c;
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+
+  .freq-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: var(--cyan);
+    font-weight: bold;
+  }
+
+  .freq-slider {
+    width: 100%;
+    cursor: pointer;
   }
 
   .controls {
@@ -197,10 +222,11 @@
   </div>
 
   <div class="filter-bar" role="group" aria-label="Region & Band Filter">
-    <button type="button" class="filter-btn active" data-scope="BD">🇧🇩 বাংলাদেশ</button>
+    <button type="button" class="filter-btn active" data-scope="ALL">🌐 সব (BD + বিশ্ব)</button>
+    <button type="button" class="filter-btn" data-scope="BD">🇧🇩 বাংলাদেশ</button>
     <button type="button" class="filter-btn" data-scope="WORLD">🌍 বিশ্ব রেডিও</button>
-    <button type="button" class="filter-btn" data-scope="FM">FM ফ্রিকোয়েন্সি</button>
-    <button type="button" class="filter-btn" data-scope="AM">AM ফ্রিকোয়েন্সি</button>
+    <button type="button" class="filter-btn" data-scope="FM">📻 FM ফ্রিকোয়েন্সি</button>
+    <button type="button" class="filter-btn" data-scope="AM">📡 AM ফ্রিকোয়েন্সি</button>
   </div>
 
   <div class="search-row">
@@ -208,17 +234,35 @@
       type="search"
       id="stationSearch"
       class="search-input"
-      placeholder="স্টেশন, ফ্রিকোয়েন্সি (যেমন 693 AM, 100.8 FM, BBC) লিখে খুঁজুন..."
+      placeholder="স্টেশন, ফ্রিকোয়েন্সি (যেমন 693 AM, 88.8 FM, 100.8 FM, BBC) লিখে খুঁজুন..."
     >
     <select id="countryFilter" class="country-select" aria-label="Select Country">
+      <option value="">All World + BD</option>
       <option value="BD">Bangladesh (BD)</option>
-      <option value="">All World</option>
       <option value="IN">India (IN)</option>
       <option value="GB">UK (GB)</option>
       <option value="US">USA (US)</option>
       <option value="SA">Saudi Arabia (SA)</option>
       <option value="AE">UAE (AE)</option>
+      <option value="DE">Germany (DE)</option>
+      <option value="FR">France (FR)</option>
     </select>
+  </div>
+
+  <div class="freq-tuner">
+    <div class="freq-top">
+      <span>⚡ HIGH-SPEED FREQUENCY TUNER</span>
+      <span id="freqReadout">98.1 FM</span>
+    </div>
+    <input
+      type="range"
+      id="freqSlider"
+      class="freq-slider"
+      min="0"
+      max="100"
+      value="25"
+      aria-label="Frequency Tuner"
+    >
   </div>
 
   <select id="stationSelect" class="station-select" aria-label="Select Radio Station">
@@ -236,7 +280,7 @@
     <button type="button" class="radio-btn" id="playRadioBtn">▶ PLAY</button>
     <button type="button" class="radio-btn" id="stopRadioBtn">■ STOP</button>
     <button type="button" class="radio-btn" id="nextStationBtn">⏭ NEXT</button>
-    <button type="button" class="radio-btn" id="reloadListBtn">🔄 REFRESH LIST</button>
+    <button type="button" class="radio-btn" id="reloadListBtn">🔄 REFRESH ALL</button>
 
     <div class="volume-wrap">
       <label for="volumeRange">🔊</label>
@@ -247,8 +291,8 @@
   <audio id="radioAudio" controls preload="none"></audio>
 
   <div class="live-meta">
-    <div class="live-badge" id="stationBandTag">ALL.API.RADIO-BROWSER.INFO • HIGH-SPEED ENGINE</div>
-    <p class="status-msg" id="radioStatus">বাংলাদেশ ও বিশ্ব রেডিও স্টেশন লোড করা হচ্ছে...</p>
+    <div class="live-badge" id="stationBandTag">ALL.API.RADIO-BROWSER.INFO • HIGH-SPEED AM/FM ENGINE</div>
+    <p class="status-msg" id="radioStatus">বাংলাদেশ ও বিশ্ব রেডিও ফ্রিকোয়েন্সি লোড করা হচ্ছে...</p>
   </div>
 </div>
 
