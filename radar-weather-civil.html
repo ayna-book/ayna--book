@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>রাডার, আবহাওয়া ও বেসামরিক প্রযুক্তি — AYNA BOOK</title>
+<style>
+  body { margin:0; background:#050a18; color:#fff; font-family:Arial,"Noto Sans Bengali",sans-serif; font-size:34px; }
+  .wrap { max-width:1360px; margin:auto; padding:20px; }
+  .box { background:linear-gradient(155deg,#1a3575,#08122b); border:4px solid #ffe64d; border-radius:10px; padding:24px; margin-bottom:22px; box-shadow:0 8px 0 #8a6105; }
+  h1, h2 { margin:0 0 12px; color:#fff6b3; }
+  h1 { font-size:48px; }
+  .meta { font-size:28px; color:#e6eeff; line-height:1.5; }
+  .radar-ring { width:220px; height:220px; border-radius:50%; border:4px solid #38f2ff; margin:16px auto; position:relative; background:radial-gradient(circle,rgba(56,242,255,.18),rgba(5,11,28,.95)); }
+  .sweep { position:absolute; width:50%; height:4px; top:50%; left:50%; transform-origin:0 50%; background:#38f2ff; animation:spin 3s linear infinite; }
+  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  button { font:inherit; background:linear-gradient(180deg,#ffe64d,#c99314); color:#050a18; font-weight:1000; border:3px solid #fff6b3; border-radius:8px; padding:14px 20px; cursor:pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <h1>📡 রাডার, আবহাওয়া ও বেসামরিক প্রযুক্তি (অটো-আপডেট)</h1>
+    <button type="button" id="syncAllTech">🔄 লাইভ রাডার ও আবহাওয়া সিঙ্ক</button>
+    <a href="index.html" style="display:inline-block;margin-left:12px;color:#fff6b3;font-weight:bold;">← মূল পেজে ফিরুন</a>
+  </div>
+
+  <div class="box">
+    <h2>🌦️ লাইভ আবহাওয়া (Auto-Update)</h2>
+    <div class="meta" id="weatherBox">তাপমাত্রা, বাতাস ও আর্দ্রতা লোড হচ্ছে...</div>
+  </div>
+
+  <div class="box">
+    <h2>📡 বেসামরিক রাডার ও GPS / কম্পাস টেলিমেট্রি</h2>
+    <div class="radar-ring"><div class="sweep"></div></div>
+    <div class="meta" id="radarBox">অবস্থান ও সেন্সর যাচাই হচ্ছে...</div>
+  </div>
+
+  <div class="box">
+    <h2>🛠️ বেসামরিক প্রযুক্তি মডিউল</h2>
+    <div class="meta">
+      • সিভিল নেভিগেশন ও GPS স্থানাঙ্ক পর্যবেক্ষণ<br>
+      • দুর্যোগ সতর্কতা ও আবহাওয়া পূর্বानुমান সিঙ্ক<br>
+      • বেসামরিক যোগাযোগ, রেডিও ও স্যাটেলাইট টাইম সিঙ্ক
+    </div>
+  </div>
+</div>
+
+<script>
+async function updateWeatherAndRadar(lat = 21.21, lon = 92.26) {
+  try {
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`);
+    const data = await res.json();
+    const cur = data?.current || {};
+    document.getElementById("weatherBox").innerHTML = `
+      তাপমাত্রা: <strong>${cur.temperature_2m ?? "--"}°C</strong><br>
+      আর্দ্রতা: <strong>${cur.relative_humidity_2m ?? "--"}%</strong><br>
+      বাতাসের গতি: <strong>${cur.wind_speed_10m ?? "--"} km/h</strong><br>
+      সর্বশেষ সিঙ্ক: <strong>${new Date().toLocaleTimeString("bn-BD")}</strong>
+    `;
+  } catch {
+    document.getElementById("weatherBox").textContent = "আবহাওয়া API সিঙ্ক করা যায়নি; নেটওয়ার্ক পরীক্ষা করুন।";
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        document.getElementById("radarBox").innerHTML = `
+          রাডার স্ট্যাটাস: <strong>ACTIVE (CIVIL MODE)</strong><br>
+          অক্ষাংশ (Lat): <strong>${pos.coords.latitude.toFixed(4)}</strong>, দ্রাঘিমাংশ (Lon): <strong>${pos.coords.longitude.toFixed(4)}</strong>
+        `;
+      },
+      () => {
+        document.getElementById("radarBox").innerHTML = `
+          রাডার স্ট্যাটাস: <strong>ACTIVE (DEFAULT SECTOR)</strong><br>
+          স্থানাঙ্ক: <strong>${lat}, ${lon}</strong>
+        `;
+      }
+    );
+  }
+}
+
+document.getElementById("syncAllTech").addEventListener("click", () => updateWeatherAndRadar());
+updateWeatherAndRadar();
+setInterval(() => updateWeatherAndRadar(), 10 * 60 * 1000);
+</script>
+</body>
+</html>
