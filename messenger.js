@@ -1,1290 +1,434 @@
-
-import { auth, database } from "./firebase-init.js";
-
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
-import {
-  ref, get, set, push, onValue, update, onDisconnect
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
-
-// =====================================================
-// AYNA BOOK REAL MESSENGER
-// Firebase RTDB + WebRTC
-// =====================================================
+const MAX_LARGE_FILE_BYTES = 250 * 1024 * 1024;
+const LOCAL_STORAGE_KEY = "ayna_messenger_messages_v1";
 
 const $ = id => document.getElementById(id);
 
-const ui = {
-  main: $("main"),
-  chatList: $("chatList"),
-  chatSearch: $("chatSearch"),
-  chatPanel: $("chatPanel"),
-  chatName: $("chatName"),
-  chatStatus: $("chatStatus"),
-  messages: $("messages"),
-  messageInput: $("messageInput"),
-  sendBtn: $("sendBtn"),
+async function loadOptionalScript(path) {
+  try {
+    return await import(path);
+  } catch (_) {
+    return null;
+  }
+}
 
-  newChatBtn: $("newChatBtn"),
-  newChatModal: $("newChatModal"),
-  userSearch: $("userSearch"),
-  searchStatus: $("searchStatus"),
-  searchResults: $("searchResults"),
-  closeSearch: $("closeSearch"),
+const jsFirebaseMod = await loadOptionalScript("./js/firebase.js");
+const initMod = await loadOptionalScript("./firebase-init.js");
 
-  fileBtn: $("fileBtn"),
-  fileInput: $("fileInput"),
-  recordBtn: $("recordBtn"),
-  emojiBtn: $("emojiBtn"),
+const appInstance = initMod?.app || jsFirebaseMod?.app || null;
+const auth = initMod?.auth || jsFirebaseMod?.auth || null;
+const database = initMod?.database || jsFirebaseMod?.database || null;
+const firebaseReady = !!(auth && database);
 
-  audioCallBtn: $("audioCallBtn"),
-  videoCallBtn: $("videoCallBtn"),
+let currentUser = null;
+let selectedBigFile = null;
+let mediaStream = null;
+let audioCtx = null;
+let analyser = null;
+let freqAnimId = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+let unsubscribeChat = null;
 
-  incomingModal: $("incomingModal"),
-  incomingTitle: $("incomingTitle"),
-  incomingText: $("incomingText"),
-  acceptCall: $("acceptCall"),
-  rejectCall: $("rejectCall"),
+function setStatus(msg) {
+  if ($("msgStatus")) $("msgStatus").textContent = msg;
+}
 
-  callModal: $("callModal"),
-  callTitle: $("callTitle"),
-  callStatus: $("callStatus"),
-  localVideo: $("localVideo"),
-  remoteVideo: $("remoteVideo"),
-  muteBtn: $("muteBtn"),
-  cameraBtn: $("cameraBtn"),
-  endCallBtn: $("endCallBtn"),
+function formatSize(bytes = 0) {
+  if (!bytes) return "";
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
 
-  backBtn: $("backBtn"),
-  toast: $("toast")
-};
+function formatTime(ts) {
+  if (!ts) return "";
+  return new Date(ts).toLocaleTimeString();
+}
 
-let me = null;
-let currentChat = null;
-let currentOther = null;
+function getRoomName() {
+  return $("roomSelect")?.value || "quantum_global";
+}
 
-let chatIndex = {};
-let chatObjects = {};
+function readLocalMessages(room) {
+  try {
+    const all = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "{}");
+    return Array.isArray(all[room]) ? all[room] : [];
+  } catch (_) {
+    return [];
+  }
+}
 
-let chatListStop = null;
-let messageStop = null;
-let typingStop = null;
-let incomingStop = null;
-let callStop = null;
-let remoteCandidateStop = null;
-let presenceStop = null;
+function writeLocalMessage(room, msgObj) {
+  try {
+    const all = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "{}");
+    if (!Array.isArray(all[room])) all[room] = [];
+    all[room].push(msgObj);
+    if (all[room].length > 80) all[room] = all[room].slice(-80);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(all));
+  } catch (_) {
+    // বড় Base64 স্টোরেজ সীমা ছাড়ালে এড়িয়ে যাওয়া হবে
+  }
+}
 
-let peer = null;
-let localStream = null;
-let remoteStream = null;
+function renderMessages(messages) {
+  const box = $("chatBox");
+  if (!box) return;
 
-let activeCallId = null;
-let activeCallRole = null;
-let pendingIncomingCall = null;
-
-let recorder = null;
-let recorderStream = null;
-let recordingParts = [];
-let isRecording = false;
-
-let candidateQueue = [];
-let remoteDescriptionReady = false;
-
-const MAX_FILE_SIZE = 180 * 1024;
-
-const ICE_SERVERS = {
-  iceServers: [
-    {
-      urls: "stun:stun.l.google.com:19302"
-    },
-    {
-      urls: "stun:stun1.l.google.com:19302"
-    }
-  ]
-};
-
-// =====================================================
-// HELPERS
-// =====================================================
-
-function toast(message) {
-  if (!ui.toast) {
-    alert(message);
+  if (!messages.length) {
+    box.innerHTML = '<div style="text-align:center;color:#dce6fa;">এই রুমে এখনো কোনো মেসেজ বা ফাইল নেই।</div>';
     return;
   }
 
-  ui.toast.textContent = message;
-  ui.toast.classList.add("show");
+  box.innerHTML = "";
 
-  clearTimeout(toast.timer);
+  messages.forEach(m => {
+    const item = document.createElement("div");
+    item.className = "msg-item";
 
-  toast.timer = setTimeout(() => {
-    ui.toast.classList.remove("show");
-  }, 3000);
+    const meta = document.createElement("div");
+    meta.className = "msg-meta";
+    meta.innerHTML = `<strong>${m.sender || "AYNA User"}</strong><span>${formatTime(m.createdAt)}</span>`;
+    item.appendChild(meta);
+
+    if (m.text) {
+      const textEl = document.createElement("div");
+      textEl.className = "msg-text";
+      textEl.textContent = m.text;
+      item.appendChild(textEl);
+    }
+
+    if (m.fileUrl) {
+      const mime = (m.mimeType || "").toLowerCase();
+      if (mime.startsWith("image/")) {
+        const img = document.createElement("img");
+        img.className = "msg-media";
+        img.src = m.fileUrl;
+        img.alt = m.fileName || "Image";
+        item.appendChild(img);
+      } else if (mime.startsWith("video/")) {
+        const vid = document.createElement("video");
+        vid.className = "msg-media";
+        vid.src = m.fileUrl;
+        vid.controls = true;
+        vid.playsInline = true;
+        item.appendChild(vid);
+      } else if (mime.startsWith("audio/")) {
+        const aud = document.createElement("audio");
+        aud.className = "msg-media";
+        aud.src = m.fileUrl;
+        aud.controls = true;
+        item.appendChild(aud);
+      }
+
+      const link = document.createElement("a");
+      link.className = "msg-file-link";
+      link.href = m.fileUrl;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = `📥 ${m.fileName || "File"} ${m.fileSize ? `(${formatSize(m.fileSize)})` : ""}`;
+      item.appendChild(link);
+    }
+
+    box.appendChild(item);
+  });
+
+  box.scrollTop = box.scrollHeight;
 }
 
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[c]);
-}
+async function subscribeRoomMessages() {
+  const room = getRoomName();
+  if (typeof unsubscribeChat === "function") {
+    unsubscribeChat();
+    unsubscribeChat = null;
+  }
 
-function userName(user) {
-  return user?.fullName || user?.displayName || "AYNA User";
-}
+  renderMessages(readLocalMessages(room));
 
-function userPhoto(user) {
-  return user?.photoURL || "";
-}
+  if (!firebaseReady) return;
 
-function db(path) {
-  return ref(database, path);
-}
-
-function fileToDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
+  const { ref, onValue } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
+  const chatRef = ref(database, `messenger_rooms/${room}`);
+  unsubscribeChat = onValue(chatRef, snap => {
+    const val = snap.val() || {};
+    const list = Object.entries(val)
+      .map(([id, item]) => ({ id, ...item }))
+      .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+    renderMessages(list);
   });
 }
 
-function showModal(element, show = true) {
-  if (element) element.hidden = !show;
-}
-
-// =====================================================
-// AUTH
-// =====================================================
-
-onAuthStateChanged(auth, async user => {
-  if (!user) {
-    location.href = "login.html";
-    return;
+async function uploadMessageFile(file) {
+  if (file.size <= 3 * 1024 * 1024 && !firebaseReady) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("ফাইল পড়া যায়নি"));
+      reader.readAsDataURL(file);
+    });
   }
 
-  me = user;
+  if (firebaseReady) {
+    const { getStorage, ref: sRef, uploadBytesResumable, getDownloadURL } =
+      await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js");
 
-  await setMyDirectory();
-  await setupPresence();
-  await loadChatIndex();
-  listenForIncomingCalls();
+    const storage = appInstance ? getStorage(appInstance) : getStorage();
+    const uid = currentUser?.uid || "guest";
+    const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+    const targetRef = sRef(storage, `ayna_messenger/${getRoomName()}/${uid}/${safeName}`);
 
-  toast("AYNA Messenger সংযুক্ত হয়েছে");
-});
-
-// =====================================================
-// PUBLIC USER DIRECTORY
-// =====================================================
-
-async function setMyDirectory() {
-  try {
-    const profileSnap = await get(db(`users/${me.uid}`));
-    const profile = profileSnap.val() || {};
-
-    await set(db(`userDirectory/${me.uid}`), {
-      uid: me.uid,
-      fullName: profile.fullName || me.displayName || "AYNA User",
-      photoURL: profile.photoURL || me.photoURL || "",
-      aynaId: profile.aynaId || ""
-    });
-  } catch (error) {
-    console.error("Directory:", error);
-  }
-}
-
-// =====================================================
-// PRESENCE
-// =====================================================
-
-async function setupPresence() {
-  const presenceRef = db(`presence/${me.uid}`);
-
-  try {
-    await onDisconnect(presenceRef).set({
-      online: false,
-      lastSeen: Date.now()
-    });
-
-    await set(presenceRef, {
-      online: true,
-      lastSeen: Date.now()
-    });
-  } catch (error) {
-    console.error("Presence:", error);
-  }
-
-  document.addEventListener("visibilitychange", async () => {
-    try {
-      await set(presenceRef, {
-        online: !document.hidden,
-        lastSeen: Date.now()
+    return new Promise((resolve, reject) => {
+      const task = uploadBytesResumable(targetRef, file, {
+        contentType: file.type || "application/octet-stream"
       });
-    } catch (error) {
-      console.error(error);
-    }
-  });
-}
+      $("msgProgressWrap").style.display = "block";
 
-// =====================================================
-// CHAT INDEX
-// =====================================================
-
-async function loadChatIndex() {
-  chatListStop?.();
-
-  chatListStop = onValue(
-    db(`userChats/${me.uid}`),
-    async snapshot => {
-      chatIndex = snapshot.val() || {};
-      chatObjects = {};
-
-      await Promise.all(
-        Object.keys(chatIndex).map(async chatId => {
-          try {
-            const snap = await get(db(`chats/${chatId}`));
-            if (snap.exists()) {
-              const chat = snap.val();
-
-              if (chat.members?.[me.uid] === true) {
-                chatObjects[chatId] = chat;
-              }
-            }
-          } catch (error) {
-            console.error(error);
-          }
-        })
+      task.on(
+        "state_changed",
+        snap => {
+          const pct = snap.totalBytes ? Math.round((snap.bytesTransferred / snap.totalBytes) * 100) : 0;
+          $("msgProgressBar").style.width = `${pct}%`;
+          setStatus(`বড় ফাইল আপলোড হচ্ছে: ${pct}% (${formatSize(snap.bytesTransferred)} / ${formatSize(snap.totalBytes)})`);
+        },
+        err => reject(err),
+        async () => {
+          const url = await getDownloadURL(task.snapshot.ref);
+          resolve(url);
+        }
       );
+    });
+  }
 
-      renderChatList();
-    }
-  );
+  return URL.createObjectURL(file);
 }
 
-// =====================================================
-// RENDER CHAT LIST
-// =====================================================
-
-function renderChatList() {
-  if (!ui.chatList) return;
-
-  ui.chatList.innerHTML = "";
-
-  const filter = (ui.chatSearch?.value || "").toLowerCase();
-
-  const entries = Object.entries(chatObjects).filter(([, chat]) => {
-    const otherUid = Object.keys(chat.members || {})
-      .find(uid => uid !== me.uid);
-
-    const other = chat.users?.[otherUid] || {};
-
-    return userName(other).toLowerCase().includes(filter);
-  });
-
-  if (!entries.length) {
-    ui.chatList.textContent = "কোনো চ্যাট নেই। নতুন চ্যাট শুরু করুন।";
+async function sendMessagePayload({ text = "", file = null }) {
+  const cleanText = text.trim();
+  if (!cleanText && !file) {
+    setStatus("মেসেজ লিখুন অথবা একটি ফাইল/অডিও/ভিডিও নির্বাচন করুন।");
     return;
   }
 
-  entries.forEach(([chatId, chat]) => {
-    const otherUid = Object.keys(chat.members || {})
-      .find(uid => uid !== me.uid);
+  $("sendMsgBtn").disabled = true;
 
-    if (!otherUid) return;
-
-    const other = chat.users?.[otherUid] || {};
-
-    const button = document.createElement("button");
-    button.className = "chat-item" +
-      (currentChat === chatId ? " active" : "");
-
-    button.innerHTML = `
-      <strong>${esc(userName(other))}</strong>
-      <small>চ্যাট খুলতে চাপ দিন</small>
-    `;
-
-    button.addEventListener("click", () => {
-      openChat(chatId, otherUid, other);
-    });
-
-    ui.chatList.appendChild(button);
-  });
-}
-
-ui.chatSearch?.addEventListener("input", renderChatList);
-
-// =====================================================
-// OPEN CHAT
-// =====================================================
-
-async function openChat(chatId, otherUid, otherUser) {
   try {
-    const snap = await get(db(`chats/${chatId}`));
-
-    if (!snap.exists()) {
-      toast("চ্যাট পাওয়া যায়নি");
-      return;
+    let fileUrl = "";
+    if (file) {
+      fileUrl = await uploadMessageFile(file);
     }
 
-    const chat = snap.val();
-
-    if (
-      chat.members?.[me.uid] !== true ||
-      chat.members?.[otherUid] !== true
-    ) {
-      toast("চ্যাটে প্রবেশের অনুমতি নেই");
-      return;
-    }
-
-    currentChat = chatId;
-    currentOther = {
-      uid: otherUid,
-      ...otherUser
+    const msgObj = {
+      sender: currentUser?.displayName || currentUser?.email || "AYNA Member",
+      uid: currentUser?.uid || "guest",
+      text: cleanText,
+      fileName: file?.name || "",
+      fileSize: file?.size || 0,
+      mimeType: file?.type || "",
+      fileUrl,
+      createdAt: Date.now()
     };
 
-    ui.chatName.textContent = userName(currentOther);
-    ui.chatStatus.textContent = "সংযুক্ত";
+    const room = getRoomName();
 
-    ui.chatPanel.classList.add("open");
-    ui.main.classList.add("chatting");
-
-    watchMessages(chatId);
-    watchTyping(chatId);
-    watchOtherPresence(otherUid);
-
-    renderChatList();
-
-  } catch (error) {
-    console.error(error);
-    toast("চ্যাট খুলতে সমস্যা হয়েছে");
-  }
-}
-
-// =====================================================
-// MESSAGES
-// =====================================================
-
-function watchMessages(chatId) {
-  messageStop?.();
-
-  messageStop = onValue(
-    db(`messages/${chatId}`),
-    snapshot => {
-      ui.messages.innerHTML = "";
-
-      const messages = snapshot.val() || {};
-
-      Object.entries(messages)
-        .sort((a, b) =>
-          (a[1].createdAt || 0) - (b[1].createdAt || 0)
-        )
-        .forEach(([id, message]) => {
-          renderMessage(id, message);
-        });
-
-      ui.messages.scrollTop = ui.messages.scrollHeight;
-    },
-    error => {
-      console.error(error);
-      toast("মেসেজ পড়া যাচ্ছে না");
+    if (firebaseReady) {
+      const { ref, push, set } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
+      const newRef = push(ref(database, `messenger_rooms/${room}`));
+      await set(newRef, msgObj);
+    } else {
+      writeLocalMessage(room, msgObj);
+      renderMessages(readLocalMessages(room));
     }
-  );
+
+    $("msgInput").value = "";
+    selectedBigFile = null;
+    $("bigFileInput").value = "";
+    $("pickedFileInfo").textContent = "কোনো ফাইল নির্বাচিত নয়";
+    $("msgProgressWrap").style.display = "none";
+    $("msgProgressBar").style.width = "0%";
+    setStatus("মেসেজ / ফাইল পাঠানো হয়েছে!");
+  } catch (err) {
+    console.error(err);
+    setStatus("পাঠাতে সমস্যা হয়েছে (Firebase Storage/Database অনুমোদন পরীক্ষা করুন)।");
+  } finally {
+    $("sendMsgBtn").disabled = false;
+  }
 }
 
-function renderMessage(id, message) {
-  const mine = message.uid === me.uid;
+function drawFrequencyWave() {
+  const canvas = $("freqCanvas");
+  if (!canvas || !analyser) return;
+  const ctx = canvas.getContext("2d");
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
 
-  const item = document.createElement("div");
-  item.className = "msg " + (mine ? "mine" : "other");
+  function renderFrame() {
+    freqAnimId = requestAnimationFrame(renderFrame);
+    analyser.getByteFrequencyData(dataArray);
 
-  let content = "";
+    ctx.fillStyle = "#030712";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (message.type === "text") {
-    content = `<div>${esc(message.text || "")}</div>`;
-  } else if (message.type === "image") {
-    content = `<img src="${esc(message.media)}" alt="ছবি">`;
-  } else if (message.type === "video") {
-    content = `<video controls playsinline src="${esc(message.media)}"></video>`;
-  } else if (message.type === "audio") {
-    content = `<audio controls src="${esc(message.media)}"></audio>`;
-  } else if (message.type === "document") {
-    content = `<a href="${esc(message.media)}" download="${esc(message.fileName || "file")}">${esc(message.fileName || "ডকুমেন্ট ডাউনলোড")}</a>`;
+    const barWidth = (canvas.width / bufferLength) * 2.4;
+    let x = 0;
+
+    for (let i = 0; i < bufferLength; i++) {
+      const barHeight = (dataArray[i] / 255) * (canvas.height - 8);
+      ctx.fillStyle = i % 2 === 0 ? "#ffe64d" : "#38f2ff";
+      ctx.fillRect(x, canvas.height - barHeight, Math.max(2, barWidth - 1), barHeight);
+      x += barWidth;
+    }
   }
 
-  const time = message.createdAt
-    ? new Date(message.createdAt).toLocaleTimeString()
-    : "";
-
-  item.innerHTML = `${content}<small>${esc(time)}</small>`;
-
-  ui.messages.appendChild(item);
+  renderFrame();
 }
 
-async function sendMessage(type, data = {}) {
-  if (!currentChat) {
-    toast("প্রথমে চ্যাট নির্বাচন করুন");
+async function startHighQualityMic() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    setStatus("মাইক্রোফোনের জন্য HTTPS বা অনুমতি প্রয়োজন।");
     return;
   }
 
-  const message = {
-    uid: me.uid,
-    type,
-    createdAt: Date.now(),
-    ...data
-  };
+  const mode = $("audioQualitySelect")?.value || "high";
+  const sampleRate = mode === "high" ? 48000 : 44100;
 
   try {
-    const newRef = push(db(`messages/${currentChat}`));
-    await set(newRef, message);
-
-    await set(db(`typing/${currentChat}/${me.uid}`), false);
-  } catch (error) {
-    console.error(error);
-    toast("মেসেজ পাঠানো যায়নি: " + error.message);
-  }
-}
-
-async function sendText() {
-  const text = ui.messageInput.value.trim();
-
-  if (!text) return;
-
-  await sendMessage("text", { text });
-
-  ui.messageInput.value = "";
-  ui.messageInput.focus();
-}
-
-ui.sendBtn.addEventListener("click", sendText);
-
-ui.messageInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    sendText();
-  }
-});
-
-// =====================================================
-// TYPING
-// =====================================================
-
-let typingTimer;
-
-ui.messageInput.addEventListener("input", () => {
-  if (!currentChat) return;
-
-  set(db(`typing/${currentChat}/${me.uid}`), true)
-    .catch(console.error);
-
-  clearTimeout(typingTimer);
-
-  typingTimer = setTimeout(() => {
-    if (currentChat) {
-      set(db(`typing/${currentChat}/${me.uid}`), false)
-        .catch(console.error);
-    }
-  }, 1500);
-});
-
-function watchTyping(chatId) {
-  typingStop?.();
-
-  typingStop = onValue(
-    db(`typing/${chatId}`),
-    snapshot => {
-      const data = snapshot.val() || {};
-
-      const someone = Object.entries(data).some(
-        ([uid, value]) => uid !== me.uid && value === true
-      );
-
-      if (someone) {
-        ui.chatStatus.textContent = "লিখছেন...";
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        sampleRate,
+        channelCount: 2,
+        echoCancellation: true,
+        noiseSuppression: true
       }
-    }
-  );
-}
-
-function watchOtherPresence(uid) {
-  onValue(db(`presence/${uid}`), snapshot => {
-    if (currentOther?.uid !== uid) return;
-
-    const data = snapshot.val() || {};
-
-    ui.chatStatus.textContent = data.online
-      ? "অনলাইন"
-      : "অফলাইন";
-  });
-}
-
-// =====================================================
-// USER SEARCH
-// =====================================================
-
-ui.newChatBtn.addEventListener("click", () => {
-  showModal(ui.newChatModal);
-  ui.userSearch.value = "";
-  ui.searchResults.innerHTML = "";
-  ui.searchStatus.textContent = "নাম অথবা AYNA ID লিখুন";
-});
-
-ui.closeSearch.addEventListener("click", () => {
-  showModal(ui.newChatModal, false);
-});
-
-let searchTimer;
-
-ui.userSearch.addEventListener("input", () => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(searchUsers, 400);
-});
-
-async function searchUsers() {
-  const term = ui.userSearch.value.trim().toLowerCase();
-
-  ui.searchResults.innerHTML = "";
-
-  if (term.length < 2) {
-    ui.searchStatus.textContent = "কমপক্ষে ২টি অক্ষর লিখুন";
-    return;
-  }
-
-  ui.searchStatus.textContent = "খোঁজা হচ্ছে...";
-
-  try {
-    const snap = await get(db("userDirectory"));
-    const users = snap.val() || {};
-
-    const matches = Object.entries(users)
-      .filter(([uid, user]) =>
-        uid !== me.uid &&
-        (
-          userName(user).toLowerCase().includes(term) ||
-          String(user.aynaId || "").toLowerCase().includes(term)
-        )
-      )
-      .slice(0, 25);
-
-    ui.searchStatus.textContent =
-      matches.length + " জন পাওয়া গেছে";
-
-    matches.forEach(([uid, user]) => {
-      const button = document.createElement("button");
-      button.className = "user-result";
-      button.textContent = userName(user);
-
-      button.addEventListener("click", () => {
-        createOrOpenChat(uid, user);
-      });
-
-      ui.searchResults.appendChild(button);
     });
 
-  } catch (error) {
-    console.error(error);
-    ui.searchStatus.textContent = "ব্যবহারকারী খোঁজা যায়নি";
+    mediaStream = stream;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContextClass({ sampleRate });
+    const source = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    source.connect(analyser);
+
+    drawFrequencyWave();
+    setStatus(`হাই-কোয়ালিটি অডিও ফ্রিকোয়েন্সি সক্রিয় (${sampleRate}Hz)।`);
+    return stream;
+  } catch (err) {
+    console.error(err);
+    setStatus("মাইক্রোফোন চালু করা যায়নি।");
+    return null;
   }
 }
 
-// =====================================================
-// CREATE OR OPEN CHAT
-// =====================================================
-
-async function createOrOpenChat(otherUid, otherUser) {
-  if (!otherUid || otherUid === me.uid) return;
-
-  try {
-    const snap = await get(db(`userChats/${me.uid}`));
-    const existing = snap.val() || {};
-
-    for (const chatId of Object.keys(existing)) {
-      const chatSnap = await get(db(`chats/${chatId}`));
-
-      if (!chatSnap.exists()) continue;
-
-      const chat = chatSnap.val();
-
-      if (
-        chat.members?.[me.uid] === true &&
-        chat.members?.[otherUid] === true
-      ) {
-        showModal(ui.newChatModal, false);
-        await openChat(chatId, otherUid, otherUser);
-        return;
-      }
-    }
-
-    const chatRef = push(db("chats"));
-    const chatId = chatRef.key;
-    const now = Date.now();
-
-    await set(chatRef, {
-      createdBy: me.uid,
-      otherUid,
-      members: {
-        [me.uid]: true,
-        [otherUid]: true
-      },
-      createdAt: now
-    });
-
-    await Promise.all([
-      set(db(`userChats/${me.uid}/${chatId}`), true),
-      set(db(`userChats/${otherUid}/${chatId}`), true)
-    ]);
-
-    showModal(ui.newChatModal, false);
-
-    await openChat(chatId, otherUid, otherUser);
-
-  } catch (error) {
-    console.error(error);
-    toast("চ্যাট তৈরি হয়নি: " + error.message);
+function stopAudioAndVideo() {
+  if (freqAnimId) {
+    cancelAnimationFrame(freqAnimId);
+    freqAnimId = null;
+  }
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(t => t.stop());
+    mediaStream = null;
+  }
+  if (audioCtx) {
+    audioCtx.close().catch(() => {});
+    audioCtx = null;
+  }
+  if ($("callVideo")) {
+    $("callVideo").srcObject = null;
   }
 }
 
-// =====================================================
-// SMALL FILE SHARING
-// =====================================================
+$("startMicFreqBtn").addEventListener("click", () => startHighQualityMic());
 
-ui.fileBtn.addEventListener("click", () => {
-  if (!currentChat) {
-    toast("আগে চ্যাট নির্বাচন করুন");
-    return;
-  }
+$("recordVoiceBtn").addEventListener("click", async () => {
+  const stream = mediaStream || (await startHighQualityMic());
+  if (!stream) return;
 
-  ui.fileInput.click();
-});
-
-ui.fileInput.addEventListener("change", async () => {
-  const file = ui.fileInput.files?.[0];
-
-  if (!file) return;
-
-  if (file.size > MAX_FILE_SIZE) {
-    toast("Free RTDB সংস্করণে ফাইল ১৮০ KB-এর মধ্যে রাখুন");
-    ui.fileInput.value = "";
-    return;
-  }
-
-  let type;
-
-  if (file.type.startsWith("image/")) type = "image";
-  else if (file.type.startsWith("video/")) type = "video";
-  else if (file.type.startsWith("audio/")) type = "audio";
-  else type = "document";
+  const bitsPerSecond = $("audioQualitySelect")?.value === "high" ? 192000 : 128000;
+  recordedChunks = [];
 
   try {
-    const media = await fileToDataURL(file);
-
-    await sendMessage(type, {
-      media,
-      fileName: file.name,
-      mimeType: file.type
-    });
-
-  } catch (error) {
-    console.error(error);
-    toast("ফাইল পাঠানো যায়নি");
-  }
-
-  ui.fileInput.value = "";
-});
-
-// =====================================================
-// EMOJI
-// =====================================================
-
-ui.emojiBtn.addEventListener("click", () => {
-  const emoji = prompt("ইমোজি লিখুন", "😊");
-
-  if (emoji) {
-    ui.messageInput.value += emoji;
-    ui.messageInput.focus();
+    mediaRecorder = new MediaRecorder(stream, { audioBitsPerSecond: bitsPerSecond });
+    mediaRecorder.ondataavailable = e => {
+      if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+    };
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || "audio/webm" });
+      const voiceFile = new File([blob], `ayna_voice_${Date.now()}.webm`, { type: blob.type });
+      await sendMessagePayload({ text: "🎙️ হাই-কোয়ালিটি ভয়েস মেসেজ", file: voiceFile });
+    };
+    mediaRecorder.start();
+    setStatus(`ভয়েস রেকর্ড চলছে (${bitsPerSecond / 1000}kbps)... শেষ হলে স্টপ চাপুন।`);
+  } catch (err) {
+    console.error(err);
+    setStatus("ভয়েস রেকর্ডিং শুরু করা যায়নি।");
   }
 });
 
-// =====================================================
-// VOICE MESSAGE RECORDING
-// =====================================================
+$("stopVoiceBtn").addEventListener("click", () => {
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+  }
+  stopAudioAndVideo();
+  setStatus("অডিও/রেকর্ডিং বন্ধ করা হয়েছে।");
+});
 
-ui.recordBtn.addEventListener("click", async () => {
-  if (!currentChat) {
-    toast("আগে চ্যাট নির্বাচন করুন");
+$("startVideoStreamBtn").addEventListener("click", async () => {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    setStatus("ভিডিও স্ট্রিমের জন্য HTTPS প্রয়োজন।");
     return;
   }
-
-  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
-    toast("এই ব্রাউজারে রেকর্ডিং সমর্থিত নয়");
-    return;
-  }
-
-  if (isRecording) {
-    recorder.stop();
-    return;
-  }
-
   try {
-    recorderStream = await navigator.mediaDevices.getUserMedia({
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" },
       audio: true
     });
-
-    recordingParts = [];
-    recorder = new MediaRecorder(recorderStream);
-
-    recorder.ondataavailable = event => {
-      if (event.data.size) recordingParts.push(event.data);
-    };
-
-    recorder.onstop = async () => {
-      recorderStream.getTracks().forEach(track => track.stop());
-      isRecording = false;
-      ui.recordBtn.textContent = "🎤";
-
-      const blob = new Blob(recordingParts, {
-        type: recorder.mimeType || "audio/webm"
-      });
-
-      if (blob.size > MAX_FILE_SIZE) {
-        toast("ভয়েস রেকর্ডিং ১৮০ KB-এর বেশি হয়েছে");
-        return;
-      }
-
-      const file = new File([blob], "voice-message.webm", {
-        type: blob.type
-      });
-
-      const media = await fileToDataURL(file);
-      await sendMessage("audio", {
-        media,
-        fileName: file.name,
-        mimeType: file.type
-      });
-    };
-
-    recorder.start();
-    isRecording = true;
-    ui.recordBtn.textContent = "⏹";
-
-    toast("রেকর্ডিং চলছে। বন্ধ করতে আবার চাপ দিন।");
-
-  } catch (error) {
-    console.error(error);
-    toast("মাইক্রোফোন অনুমতি পাওয়া যায়নি");
+    mediaStream = stream;
+    $("callVideo").srcObject = stream;
+    setStatus("হাই-কোয়ালিটি লাইভ ভিডিও স্ট্রিম চালু হয়েছে।");
+  } catch (err) {
+    console.error(err);
+    setStatus("ভিডিও স্ট্রিম চালু করা যায়নি।");
   }
 });
 
-// =====================================================
-// WEBRTC CALL ENGINE
-// =====================================================
+$("stopVideoStreamBtn").addEventListener("click", () => {
+  stopAudioAndVideo();
+  setStatus("ভিডিও স্ট্রিম বন্ধ করা হয়েছে।");
+});
 
-async function getLocalMedia(type) {
-  const constraints = {
-    audio: true,
-    video: type === "video"
-      ? { facingMode: "user" }
-      : false
-  };
+$("pickBigFileBtn").addEventListener("click", () => $("bigFileInput").click());
 
-  localStream = await navigator.mediaDevices.getUserMedia(constraints);
+$("bigFileInput").addEventListener("change", e => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-  ui.localVideo.srcObject = localStream;
-  ui.localVideo.style.display = type === "video" ? "block" : "none";
+  if (file.size > MAX_LARGE_FILE_BYTES) {
+    setStatus("সর্বোচ্চ 250MB পর্যন্ত বড় ফাইল পাঠানো যাবে।");
+    e.target.value = "";
+    return;
+  }
 
-  remoteStream = new MediaStream();
-  ui.remoteVideo.srcObject = remoteStream;
-}
+  selectedBigFile = file;
+  $("pickedFileInfo").textContent = `📎 ${file.name} (${formatSize(file.size)})`;
+  setStatus("ফাইল প্রস্তুত — পাঠান বাটনে চাপ দিন।");
+});
 
-function createPeerConnection(callId) {
-  peer = new RTCPeerConnection(ICE_SERVERS);
+$("sendMsgBtn").addEventListener("click", () => {
+  sendMessagePayload({ text: $("msgInput").value, file: selectedBigFile });
+});
 
-  localStream.getTracks().forEach(track => {
-    peer.addTrack(track, localStream);
+$("msgInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    sendMessagePayload({ text: $("msgInput").value, file: selectedBigFile });
+  }
+});
+
+$("roomSelect").addEventListener("change", subscribeRoomMessages);
+
+if (firebaseReady && auth) {
+  import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js").then(({ onAuthStateChanged }) => {
+    onAuthStateChanged(auth, user => {
+      currentUser = user || null;
+    });
   });
-
-  peer.ontrack = event => {
-    event.streams[0].getTracks().forEach(track => {
-      if (!remoteStream.getTracks().some(t => t.id === track.id)) {
-        remoteStream.addTrack(track);
-      }
-    });
-  };
-
-  peer.onicecandidate = async event => {
-    if (!event.candidate) return;
-
-    try {
-      const candidate = event.candidate.toJSON();
-
-      await set(
-        push(db(`calls/${callId}/candidates/${me.uid}`)),
-        {
-          candidate: candidate.candidate,
-          sdpMid: candidate.sdpMid || "",
-          sdpMLineIndex: candidate.sdpMLineIndex ?? 0
-        }
-      );
-    } catch (error) {
-      console.error("ICE candidate write:", error);
-    }
-  };
-
-  peer.onconnectionstatechange = () => {
-    ui.callStatus.textContent = peer.connectionState;
-
-    if (peer.connectionState === "connected") {
-      ui.callStatus.textContent = "কল সংযুক্ত হয়েছে";
-    }
-
-    if (
-      peer.connectionState === "failed" ||
-      peer.connectionState === "disconnected"
-    ) {
-      ui.callStatus.textContent =
-        "নেটওয়ার্ক সংযোগ সমস্যা। আবার চেষ্টা করুন।";
-    }
-  };
-
-  return peer;
 }
 
-async function listenRemoteCandidates(callId, otherUid) {
-  remoteDescriptionReady = false;
-  candidateQueue = [];
-
-  remoteCandidateStop?.();
-
-  remoteCandidateStop = onValue(
-    db(`calls/${callId}/candidates/${otherUid}`),
-    async snapshot => {
-      const candidates = snapshot.val() || {};
-
-      for (const [id, item] of Object.entries(candidates)) {
-        if (peer?.__seenCandidates?.has(id)) continue;
-
-        if (!peer) return;
-
-        peer.__seenCandidates ||= new Set();
-        peer.__seenCandidates.add(id);
-
-        const candidate = new RTCIceCandidate({
-          candidate: item.candidate,
-          sdpMid: item.sdpMid || null,
-          sdpMLineIndex: item.sdpMLineIndex
-        });
-
-        if (remoteDescriptionReady) {
-          try {
-            await peer.addIceCandidate(candidate);
-          } catch (error) {
-            console.error("Add ICE:", error);
-          }
-        } else {
-          candidateQueue.push(candidate);
-        }
-      }
-    }
-  );
-}
-
-async function applyRemoteDescription(description) {
-  await peer.setRemoteDescription(
-    new RTCSessionDescription(description)
-  );
-
-  remoteDescriptionReady = true;
-
-  for (const candidate of candidateQueue) {
-    try {
-      await peer.addIceCandidate(candidate);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  candidateQueue = [];
-}
-
-// =====================================================
-// START OUTGOING CALL
-// =====================================================
-
-async function startCall(type) {
-  if (!currentOther?.uid) {
-    toast("প্রথমে একজন ব্যবহারকারীর চ্যাট খুলুন");
-    return;
-  }
-
-  if (!navigator.mediaDevices?.getUserMedia) {
-    toast("ক্যামেরা/মাইক্রোফোনের জন্য HTTPS প্রয়োজন");
-    return;
-  }
-
-  try {
-    await getLocalMedia(type);
-
-    const callRef = push(db("calls"));
-    activeCallId = callRef.key;
-    activeCallRole = "caller";
-
-    createPeerConnection(activeCallId);
-
-    const offer = await peer.createOffer();
-    await peer.setLocalDescription(offer);
-
-    await set(callRef, {
-      from: me.uid,
-      to: currentOther.uid,
-      type,
-      status: "ringing",
-      createdAt: Date.now(),
-      offer: {
-        type: offer.type,
-        sdp: offer.sdp
-      }
-    });
-
-    await set(
-      db(`incomingCalls/${currentOther.uid}/${activeCallId}`),
-      true
-    );
-
-    listenRemoteCandidates(activeCallId, currentOther.uid);
-
-    showModal(ui.callModal);
-    ui.callTitle.textContent = type === "video"
-      ? "ভিডিও কল"
-      : "অডিও কল";
-
-    ui.callStatus.textContent = "কল করা হচ্ছে...";
-
-    listenToOutgoingCall(activeCallId);
-
-  } catch (error) {
-    console.error("Start call:", error);
-    toast("কল শুরু করা যায়নি: " + error.message);
-    await cleanupCall();
-  }
-}
-
-ui.audioCallBtn.addEventListener("click", () => startCall("audio"));
-ui.videoCallBtn.addEventListener("click", () => startCall("video"));
-
-// =====================================================
-// OUTGOING CALL LISTENER
-// =====================================================
-
-function listenToOutgoingCall(callId) {
-  callStop?.();
-
-  callStop = onValue(
-    db(`calls/${callId}`),
-    async snapshot => {
-      const call = snapshot.val();
-
-      if (!call) return;
-
-      if (call.status === "rejected") {
-        toast("কল প্রত্যাখ্যান করা হয়েছে");
-        await cleanupCall();
-        return;
-      }
-
-      if (call.status === "ended") {
-        toast("কল শেষ হয়েছে");
-        await cleanupCall();
-        return;
-      }
-
-      if (call.answer && peer && !peer.currentRemoteDescription) {
-        try {
-          await applyRemoteDescription(call.answer);
-          ui.callStatus.textContent = "উত্তর পাওয়া গেছে। সংযোগ হচ্ছে...";
-        } catch (error) {
-          console.error("Set answer:", error);
-        }
-      }
-    }
-  );
-}
-
-// =====================================================
-// INCOMING CALL LISTENER
-// =====================================================
-
-function listenForIncomingCalls() {
-  incomingStop?.();
-
-  incomingStop = onValue(
-    db(`incomingCalls/${me.uid}`),
-    async snapshot => {
-      const calls = snapshot.val() || {};
-
-      for (const callId of Object.keys(calls)) {
-        if (activeCallId === callId) continue;
-
-        try {
-          const callSnap = await get(db(`calls/${callId}`));
-
-          if (!callSnap.exists()) continue;
-
-          const call = callSnap.val();
-
-          if (
-            call.to === me.uid &&
-            call.status === "ringing" &&
-            !pendingIncomingCall
-          ) {
-            pendingIncomingCall = {
-              id: callId,
-              ...call
-            };
-
-            ui.incomingTitle.textContent =
-              call.type === "video" ? "📹 ভিডিও কল" : "📞 অডিও কল";
-
-            ui.incomingText.textContent =
-              "আপনাকে একটি কল করা হচ্ছে।";
-
-            showModal(ui.incomingModal);
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    }
-  );
-}
-
-// =====================================================
-// ACCEPT INCOMING CALL
-// =====================================================
-
-ui.acceptCall.addEventListener("click", async () => {
-  const call = pendingIncomingCall;
-
-  if (!call) return;
-
-  try {
-    await getLocalMedia(call.type);
-
-    activeCallId = call.id;
-    activeCallRole = "receiver";
-
-    createPeerConnection(call.id);
-
-    await applyRemoteDescription(call.offer);
-
-    listenRemoteCandidates(call.id, call.from);
-
-    const answer = await peer.createAnswer();
-    await peer.setLocalDescription(answer);
-
-    await update(db(`calls/${call.id}`), {
-      answer: {
-        type: answer.type,
-        sdp: answer.sdp
-      },
-      status: "accepted"
-    });
-
-    showModal(ui.incomingModal, false);
-    showModal(ui.callModal);
-
-    ui.callTitle.textContent =
-      call.type === "video" ? "ভিডিও কল" : "অডিও কল";
-
-    ui.callStatus.textContent = "কল সংযুক্ত হচ্ছে...";
-
-    callStop?.();
-
-    callStop = onValue(
-      db(`calls/${call.id}/status`),
-      async snapshot => {
-        if (snapshot.val() === "ended") {
-          toast("অপর ব্যবহারকারী কল শেষ করেছেন");
-          await cleanupCall();
-        }
-      }
-    );
-
-    pendingIncomingCall = null;
-
-  } catch (error) {
-    console.error("Accept call:", error);
-    toast("কল গ্রহণ করা যায়নি: " + error.message);
-    await cleanupCall();
-  }
-});
-
-// =====================================================
-// REJECT INCOMING CALL
-// =====================================================
-
-ui.rejectCall.addEventListener("click", async () => {
-  if (!pendingIncomingCall) return;
-
-  try {
-    await update(
-      db(`calls/${pendingIncomingCall.id}`),
-      { status: "rejected" }
-    );
-
-    await remove(
-      db(`incomingCalls/${me.uid}/${pendingIncomingCall.id}`)
-    );
-
-  } catch (error) {
-    console.error(error);
-  }
-
-  pendingIncomingCall = null;
-  showModal(ui.incomingModal, false);
-});
-
-// =====================================================
-// MUTE / CAMERA
-// =====================================================
-
-ui.muteBtn.addEventListener("click", () => {
-  const track = localStream?.getAudioTracks()[0];
-
-  if (!track) return;
-
-  track.enabled = !track.enabled;
-
-  ui.muteBtn.textContent = track.enabled
-    ? "🎙️ মাইক"
-    : "🔇 মাইক বন্ধ";
-});
-
-ui.cameraBtn.addEventListener("click", () => {
-  const track = localStream?.getVideoTracks()[0];
-
-  if (!track) {
-    toast("এই অডিও কলে ভিডিও নেই");
-    return;
-  }
-
-  track.enabled = !track.enabled;
-
-  ui.cameraBtn.textContent = track.enabled
-    ? "📷 ক্যামেরা"
-    : "🚫 ক্যামেরা বন্ধ";
-});
-
-// =====================================================
-// END CALL
-// =====================================================
-
-ui.endCallBtn.addEventListener("click", async () => {
-  if (activeCallId) {
-    try {
-      await update(
-        db(`calls/${activeCallId}`),
-        { status: "ended" }
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  await cleanupCall();
-});
-
-async function cleanupCall() {
-  callStop?.();
-  callStop = null;
-
-  remoteCandidateStop?.();
-  remoteCandidateStop = null;
-
-  if (peer) {
-    peer.ontrack = null;
-    peer.onicecandidate = null;
-    peer.close();
-    peer = null;
-  }
-
-  if (localStream) {
-    localStream.getTracks().forEach(track => track.stop());
-    localStream = null;
-  }
-
-  if (remoteStream) {
-    remoteStream.getTracks().forEach(track => track.stop());
-    remoteStream = null;
-  }
-
-  if (ui.localVideo) ui.localVideo.srcObject = null;
-  if (ui.remoteVideo) ui.remoteVideo.srcObject = null;
-
-  if (activeCallId && me) {
-    try {
-      await remove(
-        db(`incomingCalls/${me.uid}/${activeCallId}`)
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  activeCallId = null;
-  activeCallRole = null;
-  remoteDescriptionReady = false;
-  candidateQueue = [];
-
-  showModal(ui.callModal, false);
-}
-
-// =====================================================
-// BACK TO CHAT LIST
-// =====================================================
-
-ui.backBtn.addEventListener("click", async () => {
-  if (currentChat) {
-    try {
-      await set(db(`typing/${currentChat}/${me.uid}`), false);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  messageStop?.();
-  typingStop?.();
-
-  currentChat = null;
-  currentOther = null;
-
-  ui.chatPanel.classList.remove("open");
-  ui.main.classList.remove("chatting");
-});
-
-// =====================================================
-// CLEANUP
-// =====================================================
-
-window.addEventListener("beforeunload", () => {
-  chatListStop?.();
-  messageStop?.();
-  typingStop?.();
-  incomingStop?.();
-  callStop?.();
-  remoteCandidateStop?.();
-
-  peer?.close();
-
-  localStream?.getTracks().forEach(track => track.stop());
-  recorderStream?.getTracks().forEach(track => track.stop());
-});
-
-// =====================================================
-// END
-// =====================================================
+subscribeRoomMessages();
