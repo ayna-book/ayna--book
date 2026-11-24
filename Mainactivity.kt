@@ -12,9 +12,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aynabook.app.data.isCurrentUserAdmin
 import com.aynabook.app.ui.screens.AuthScreen
 import com.aynabook.app.ui.screens.HomeScreen
 import com.aynabook.app.ui.screens.MessagingScreen
+import com.aynabook.app.ui.screens.ModerationScreen
 import com.aynabook.app.ui.screens.PostScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -26,7 +28,7 @@ private val AppGoldBright = Color(0xFFFFF6B3)
 private val AppGoldBorder = Color(0xFFFFE64D)
 
 private enum class AynaRoute {
-    HOME, MESSENGER, POST
+    HOME, MESSENGER, POST, MODERATION
 }
 
 class MainActivity : ComponentActivity() {
@@ -39,6 +41,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             var currentUser by remember { mutableStateOf<FirebaseUser?>(auth.currentUser) }
             var currentRoute by remember { mutableStateOf(AynaRoute.HOME) }
+            var isAdmin by remember { mutableStateOf(false) }
 
             DisposableEffect(auth) {
                 val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
@@ -46,6 +49,20 @@ class MainActivity : ComponentActivity() {
                 }
                 auth.addAuthStateListener(listener)
                 onDispose { auth.removeAuthStateListener(listener) }
+            }
+
+            LaunchedEffect(currentUser?.uid) {
+                if (currentUser == null) {
+                    isAdmin = false
+                    currentRoute = AynaRoute.HOME
+                    return@LaunchedEffect
+                }
+
+                val adminStatus = isCurrentUserAdmin(auth = auth, database = database)
+                isAdmin = adminStatus
+                if (!adminStatus && currentRoute == AynaRoute.MODERATION) {
+                    currentRoute = AynaRoute.HOME
+                }
             }
 
             if (currentUser == null) {
@@ -109,6 +126,14 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.weight(1f),
                                 onClick = { currentRoute = AynaRoute.POST }
                             )
+                            if (isAdmin) {
+                                NavTabButton(
+                                    label = "🛡️ মডারেটর",
+                                    selected = currentRoute == AynaRoute.MODERATION,
+                                    modifier = Modifier.weight(1f),
+                                    onClick = { currentRoute = AynaRoute.MODERATION }
+                                )
+                            }
                         }
                     }
                 ) { innerPadding ->
@@ -125,6 +150,16 @@ class MainActivity : ComponentActivity() {
                                 auth = auth,
                                 onPostPublished = { currentRoute = AynaRoute.HOME }
                             )
+                            AynaRoute.MODERATION -> {
+                                if (isAdmin) {
+                                    ModerationScreen(
+                                        database = database,
+                                        auth = auth
+                                    )
+                                } else {
+                                    HomeScreen(database = database, auth = auth)
+                                }
+                            }
                         }
                     }
                 }
@@ -150,7 +185,7 @@ private fun NavTabButton(
     ) {
         Text(
             text = label,
-            fontSize = 16.sp,
+            fontSize = 15.sp,
             fontWeight = FontWeight.ExtraBold,
             maxLines = 1
         )
