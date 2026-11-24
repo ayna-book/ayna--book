@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>বিশ্ব বাজার — নতুন ও পুরাতন পণ্য বেচা-কেনার হাট</title>
+<style>
+  body { margin:0; background:#050a18; color:#fff; font-family:Arial,"Noto Sans Bengali",sans-serif; font-size:34px; }
+  .wrap { max-width:1360px; margin:auto; padding:20px; }
+  .box { background:linear-gradient(155deg,#1a3575,#08122b); border:4px solid #ffe64d; border-radius:10px; padding:24px; margin-bottom:22px; box-shadow:0 8px 0 #8a6105; }
+  h1 { margin:0 0 12px; font-size:48px; color:#fff6b3; }
+  input, select, button { font:inherit; border-radius:8px; border:3px solid #ffe64d; padding:14px 18px; }
+  input, select { background:#050b1c; color:#fff; margin-top:10px; }
+  button { background:linear-gradient(180deg,#ffe64d,#c99314); color:#050a18; font-weight:1000; margin-top:12px; cursor:pointer; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+  .card { background:#060d22; border:3px solid #ffe64d; border-radius:10px; padding:16px; }
+  .meta { font-size:26px; color:#e6eeff; margin-top:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <h1>🏪 বিশ্ব বাজার — নতুন ও পুরাতন পণ্য বেচা-কেনার হাট</h1>
+    <input type="text" id="itemTitle" placeholder="পণ্যের নাম লিখুন...">
+    <input type="text" id="itemPrice" placeholder="দাম ও লোকেশন লিখুন (যেমন: ৳18,500 — চট্টগ্রাম)...">
+    <select id="itemCondition">
+      <option value="নতুন পণ্য">নতুন পণ্য</option>
+      <option value="পুরাতন পণ্য">পুরাতন পণ্য</option>
+    </select>
+    <button type="button" id="addMarketItem">➕ বাজারে পণ্য যুক্ত করুন</button>
+    <a href="index.html" style="display:inline-block;margin-left:12px;color:#fff6b3;font-weight:bold;">← মূল পেজে ফিরুন</a>
+  </div>
+
+  <div class="box">
+    <select id="filterCond">
+      <option value="all">সব পণ্য (নতুন + পুরাতন)</option>
+      <option value="নতুন পণ্য">শুধু নতুন পণ্য</option>
+      <option value="পুরাতন পণ্য">শুধু পুরাতন পণ্য</option>
+    </select>
+    <div class="grid" id="bazaarGrid" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = "ayna_world_bazaar_items_v1";
+const DEFAULT_ITEMS = [
+  { title: "ইলেকট্রিক বাইক ও সোলার প্যানেল সেট", price: "আলোচনা সাপেক্ষে • ঢাকা", cond: "নতুন পণ্য" },
+  { title: "ব্যবহৃত ল্যাপটপ ও স্মার্টফোন কালেকশন", price: "সুলভ মূল্য • দুবাই ও ঢাকা", cond: "পুরাতন পণ্য" },
+  { title: "কৃষি পাম্প, সেচ যন্ত্র ও সারের বস্তা", price: "পাইকারি দর • বিশ্ব কৃষি হাট", cond: "নতুন পণ্য" },
+  { title: "ব্যবহৃত ফার্নিচার ও ঘরের আসবাবপত্র", price: "সাশ্রয়ী মূল্য • লোকাল হাট", cond: "পুরাতন পণ্য" }
+];
+
+function getItems() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    return Array.isArray(saved) && saved.length ? saved : DEFAULT_ITEMS;
+  } catch {
+    return DEFAULT_ITEMS;
+  }
+}
+
+function saveItems(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+function renderBazaar() {
+  const condFilter = document.getElementById("filterCond").value;
+  const list = getItems().filter(x => condFilter === "all" || x.cond === condFilter);
+  document.getElementById("bazaarGrid").innerHTML = list.map((item, i) => `
+    <div class="card">
+      <div style="font-size:24px;color:#38f2ff;">${item.cond}</div>
+      <div style="font-size:32px;font-weight:bold;color:#fff6b3;margin-top:6px;">${item.title}</div>
+      <div class="meta">${item.price}</div>
+      <button type="button" onclick="deleteBazaarItem(${i})" style="font-size:24px;padding:8px 14px;">মুছুন</button>
+    </div>
+  `).join("");
+}
+
+window.deleteBazaarItem = function(index) {
+  const list = getItems();
+  list.splice(index, 1);
+  saveItems(list);
+  renderBazaar();
+};
+
+document.getElementById("addMarketItem").addEventListener("click", () => {
+  const title = document.getElementById("itemTitle").value.trim();
+  const price = document.getElementById("itemPrice").value.trim() || "যোগাযোগ করুন";
+  const cond = document.getElementById("itemCondition").value;
+  if (!title) return;
+  const list = getItems();
+  list.unshift({ title, price, cond });
+  saveItems(list);
+  document.getElementById("itemTitle").value = "";
+  document.getElementById("itemPrice").value = "";
+  renderBazaar();
+});
+
+document.getElementById("filterCond").addEventListener("change", renderBazaar);
+renderBazaar();
+</script>
+</body>
+</html>
