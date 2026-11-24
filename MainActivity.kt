@@ -1,5 +1,6 @@
 package com.aynabook.app
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,9 +33,19 @@ private enum class AynaRoute {
     HOME, MESSENGER, POST, MODERATION
 }
 
+private data class AynaNotificationTarget(
+    val route: String = "",
+    val postId: String = "",
+    val nonce: Int = 0
+)
+
 class MainActivity : ComponentActivity() {
+    private var notificationTargetState by mutableStateOf(AynaNotificationTarget())
+    private var targetCounter = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        consumeNotificationIntent(intent)
 
         val auth = FirebaseAuth.getInstance()
         val database = FirebaseDatabase.getInstance()
@@ -68,6 +79,31 @@ class MainActivity : ComponentActivity() {
                 isAdmin = adminStatus
                 if (!adminStatus && currentRoute == AynaRoute.MODERATION) {
                     currentRoute = AynaRoute.HOME
+                }
+            }
+
+            LaunchedEffect(currentUser?.uid, isAdmin, notificationTargetState.nonce) {
+                val target = notificationTargetState
+                if (currentUser == null || target.route.isBlank()) return@LaunchedEffect
+
+                val normalizedRoute = target.route.trim().lowercase()
+                when (normalizedRoute) {
+                    "reports", "moderation" -> {
+                        if (isAdmin) {
+                            currentRoute = AynaRoute.MODERATION
+                        } else {
+                            currentRoute = AynaRoute.HOME
+                        }
+                    }
+                    "messages", "messenger", "chat" -> {
+                        currentRoute = AynaRoute.MESSENGER
+                    }
+                    "post", "create_post" -> {
+                        currentRoute = AynaRoute.POST
+                    }
+                    "feed", "home" -> {
+                        currentRoute = AynaRoute.HOME
+                    }
                 }
             }
 
@@ -175,6 +211,29 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        consumeNotificationIntent(intent)
+    }
+
+    private fun consumeNotificationIntent(intent: Intent?) {
+        val extras = intent?.extras ?: return
+        val route = extras.getString("ayna_route")
+            ?: extras.getString("route")
+            ?: return
+        val postId = extras.getString("ayna_post_id")
+            ?: extras.getString("postId")
+            ?: ""
+
+        targetCounter += 1
+        notificationTargetState = AynaNotificationTarget(
+            route = route,
+            postId = postId,
+            nonce = targetCounter
+        )
     }
 }
 
