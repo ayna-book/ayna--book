@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#060d21">
+<title>AYNA BOOK — বিশ্বনেতা</title>
+
+<style>
+:root {
+  --bg: #050a18;
+  --navy-top: #172e63;
+  --navy-bottom: #08122b;
+  --gold: #ffd700;
+  --gold-base: #755206;
+  --white: #ffffff;
+  --muted: #dce6fa;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: Arial, "Noto Sans Bengali", sans-serif;
+  font-size: 20px;
+  padding-bottom: 70px;
+}
+
+.gold-3d {
+  background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
+  border: 2.5px solid var(--gold);
+  border-radius: 6px;
+  box-shadow:
+    0 7px 0 var(--gold-base),
+    0 12px 22px rgba(0, 0, 0, 0.8),
+    inset 0 2px 3px rgba(255, 242, 166, 0.5);
+}
+
+header {
+  background: linear-gradient(180deg, #0f1f47 0%, #060d21 100%);
+  border-bottom: 2.5px solid var(--gold);
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  color: var(--gold);
+  font-size: 24px;
+  font-weight: 1000;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star-1s {
+  color: #ffffff;
+  font-size: 26px;
+  display: inline-block;
+  animation: starFlash1s 1s infinite alternate ease-in-out;
+}
+
+@keyframes starFlash1s {
+  0% { transform: scale(0.95); text-shadow: 0 0 6px #ffd700; }
+  100% { transform: scale(1.35); text-shadow: 0 0 14px #ffffff, 0 0 32px #ffd700; }
+}
+
+.back-btn {
+  text-decoration: none;
+  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
+  color: #050a18;
+  font-weight: 1000;
+  font-size: 17px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1.5px solid #fff2a6;
+  box-shadow: 0 4px 0 #664604;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 18px auto;
+  padding: 0 14px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 1000;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.box-pad {
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.box-pad h2 {
+  color: var(--gold);
+  font-size: 23px;
+  margin-bottom: 12px;
+}
+
+input, select, textarea {
+  width: 100%;
+  background: #050b1c;
+  color: var(--white);
+  border: 2px solid var(--gold);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 19px;
+  margin-bottom: 12px;
+}
+
+.btn-gold-3d {
+  width: 100%;
+  min-height: 56px;
+  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
+  color: #050a18;
+  font-size: 21px;
+  font-weight: 1000;
+  border: 2px solid #fff2a6;
+  border-radius: 6px;
+  box-shadow: 0 5px 0 #664604;
+  cursor: pointer;
+}
+
+.btn-gold-3d:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #664604;
+}
+
+.leaders-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media(min-width: 700px) {
+  .leaders-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.leader-card {
+  padding: 18px;
+}
+
+.leader-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.leader-photo {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border: 3px solid var(--gold);
+  border-radius: 6px;
+  background: #050b1c;
+  flex-shrink: 0;
+  box-shadow: 0 4px 0 var(--gold-base);
+}
+
+.leader-name {
+  font-size: 23px;
+  font-weight: 1000;
+  color: var(--white);
+}
+
+.leader-role {
+  font-size: 17px;
+  color: var(--gold);
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.leader-country {
+  font-size: 16px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.leader-bio {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--muted);
+  white-space: pre-wrap;
+}
+
+#notice {
+  position: fixed;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0a1636;
+  color: #ffffff;
+  border: 2px solid var(--gold);
+  padding: 12px 18px;
+  border-radius: 6px;
+  z-index: 100;
+  display: none;
+  font-size: 18px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="brand">AYNA BOOK <span class="star-1s">★</span></a>
+  <a href="index.html" class="back-btn">🏠 হোম</a>
+</header>
+
+<div id="notice"></div>
+
+<main class="container">
+  <h1 class="page-title">🌐 বিশ্বনেতা</h1>
+
+  <!-- ফিল্টার ও অনুসন্ধান -->
+  <section class="gold-3d box-pad">
+    <h2>🔍 দেশ বা নাম দিয়ে বিশ্বনেতা খুঁজুন</h2>
+    <input id="leaderCountryFilter" type="text" placeholder="দেশের নাম দিয়ে ফিল্টার করুন (যেমন: বাংলাদেশ, সৌদি আরব, যুক্তরাষ্ট্র)...">
+    <input id="leaderSearch" type="text" placeholder="নেতার নাম, পদবি বা তথ্য খুঁজুন...">
+  </section>
+
+  <!-- নতুন বিশ্বনেতার তথ্য যুক্ত করার ফর্ম -->
+  <section class="gold-3d box-pad">
+    <h2>➕ নতুন বিশ্বনেতার তথ্য যুক্ত করুন</h2>
+    <input id="leaderCountry" type="text" placeholder="দেশ (যেমন: বাংলাদেশ, তুরস্ক, যুক্তরাজ্য)...">
+    <input id="leaderName" type="text" placeholder="নেতার নাম...">
+    <input id="leaderRole" type="text" placeholder="পদবি / ভূমিকা (যেমন: রাষ্ট্রপ্রধান, সরকারপ্রধান, ঐতিহাসিক নেতা)...">
+    <input id="leaderPhoto" type="url" placeholder="ছবির লিংক (ঐচ্ছিক)...">
+    <textarea id="leaderBio" rows="3" placeholder="সংক্ষিপ্ত পরিচিতি বা গুরুত্বপূর্ণ তথ্য লিখুন..."></textarea>
+    <button id="addLeaderBtn" class="btn-gold-3d">🚀 বিশ্বনেতা তালিকায় যুক্ত করুন</button>
+  </section>
+
+  <!-- বিশ্বনেতা তালিকা -->
+  <section id="leadersList" class="leaders-grid">
+    <div class="gold-3d box-pad">তথ্য লোড হচ্ছে...</div>
+  </section>
+</main>
+
+<script type="module">
+import { auth, database } from "./firebase-init.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import { ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+const $ = (id) => document.getElementById(id);
+let currentUser = null;
+let allLeaders = [];
+
+function notify(msg) {
+  const box = $("notice");
+  if (!box) return alert(msg);
+  box.textContent = msg;
+  box.style.display = "block";
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => {
+    box.style.display = "none";
+  }, 3000);
+}
+
+function escapeHTML(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function defaultAvatar() {
+  return "data:image/svg+xml," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="100%" height="100%" fill="#0a1636"/><circle cx="48" cy="36" r="18" fill="#ffd700"/><path d="M14 96 Q20 62 48 62 Q76 62 82 96" fill="#ffd700"/></svg>'
+  );
+}
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+});
+
+$("addLeaderBtn")?.addEventListener("click", async () => {
+  if (!currentUser) {
+    notify("তথ্য যুক্ত করতে আগে লগইন করুন।");
+    return;
+  }
+
+  const country = $("leaderCountry").value.trim();
+  const name = $("leaderName").value.trim();
+  const role = $("leaderRole").value.trim();
+  const photo = $("leaderPhoto").value.trim();
+  const bio = $("leaderBio").value.trim();
+
+  if (!name || !country) {
+    notify("অনুগ্রহ করে নেতার নাম এবং দেশ লিখুন।");
+    return;
+  }
+
+  const newRef = push(ref(database, "worldLeaders"));
+  await set(newRef, {
+    country,
+    name,
+    role: role || "বিশ্বনেতা",
+    photo,
+    bio,
+    uid: currentUser.uid,
+    createdAt: Date.now()
+  });
+
+  $("leaderCountry").value = "";
+  $("leaderName").value = "";
+  $("leaderRole").value = "";
+  $("leaderPhoto").value = "";
+  $("leaderBio").value = "";
+  notify("বিশ্বনেতা তালিকায় যুক্ত হয়েছে!");
+});
+
+$("leaderCountryFilter")?.addEventListener("input", renderLeaders);
+$("leaderSearch")?.addEventListener("input", renderLeaders);
+
+onValue(ref(database, "worldLeaders"), (snap) => {
+  const data = snap.val() || {};
+  allLeaders = Object.entries(data)
+    .map(([id, item]) => ({ id, ...item }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  renderLeaders();
+});
+
+function renderLeaders() {
+  const container = $("leadersList");
+  if (!container) return;
+
+  const countryQ = ($("leaderCountryFilter")?.value || "").trim().toLowerCase();
+  const searchQ = ($("leaderSearch")?.value || "").trim().toLowerCase();
+
+  const filtered = allLeaders.filter((item) => {
+    const matchCountry = !countryQ || (item.country && item.country.toLowerCase().includes(countryQ));
+    const matchSearch =
+      !searchQ ||
+      (item.name && item.name.toLowerCase().includes(searchQ)) ||
+      (item.role && item.role.toLowerCase().includes(searchQ)) ||
+      (item.bio && item.bio.toLowerCase().includes(searchQ)) ||
+      (item.country && item.country.toLowerCase().includes(searchQ));
+    return matchCountry && matchSearch;
+  });
+
+  container.innerHTML = "";
+
+  if (!filtered.length) {
+    container.innerHTML = '<div class="gold-3d box-pad">কোনো বিশ্বনেতার তথ্য পাওয়া যায়নি।</div>';
+    return;
+  }
+
+  filtered.forEach((item) => {
+    const card = document.createElement("article");
+    card.className = "gold-3d leader-card";
+    const isOwner = currentUser && item.uid === currentUser.uid;
+
+    card.innerHTML = `
+      <div class="leader-top">
+        <img class="leader-photo" src="${escapeHTML(item.photo || defaultAvatar())}" alt="${escapeHTML(item.name)}">
+        <div>
+          <div class="leader-name">${escapeHTML(item.name)}</div>
+          <div class="leader-role">${escapeHTML(item.role || "")}</div>
+          <div class="leader-country">🌍 ${escapeHTML(item.country || "")}</div>
+        </div>
+      </div>
+      <p class="leader-bio">${escapeHTML(item.bio || "")}</p>
+      ${
+        isOwner
+          ? `<button type="button" class="del-leader-btn" style="margin-top:12px;padding:8px 14px;background:#7f1d1d;color:#fff;border:1.5px solid #ffd700;border-radius:6px;font-weight:bold;cursor:pointer;">🗑️ মুছে ফেলুন</button>`
+          : ""
+      }
+    `;
+
+    if (isOwner) {
+      card.querySelector(".del-leader-btn")?.addEventListener("click", async () => {
+        if (!confirm("এই তথ্যটি মুছে ফেলতে চান?")) return;
+        await remove(ref(database, `worldLeaders/${item.id}`));
+        notify("তথ্যটি মুছে ফেলা হয়েছে।");
+      });
+    }
+
+    container.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
