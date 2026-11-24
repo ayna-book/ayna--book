@@ -55,6 +55,16 @@ class MainActivity : ComponentActivity() {
             var currentRoute by remember { mutableStateOf(AynaRoute.HOME) }
             var isAdmin by remember { mutableStateOf(false) }
 
+            fun selectRouteManually(route: AynaRoute) {
+                currentRoute = route
+                if (notificationTargetState.postId.isNotEmpty() || notificationTargetState.route.isNotEmpty()) {
+                    notificationTargetState = notificationTargetState.copy(
+                        route = "",
+                        postId = ""
+                    )
+                }
+            }
+
             DisposableEffect(auth) {
                 val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
                     currentUser = firebaseAuth.currentUser
@@ -158,26 +168,26 @@ class MainActivity : ComponentActivity() {
                                 label = "🏠 ফিড",
                                 selected = currentRoute == AynaRoute.HOME,
                                 modifier = Modifier.weight(1f),
-                                onClick = { currentRoute = AynaRoute.HOME }
+                                onClick = { selectRouteManually(AynaRoute.HOME) }
                             )
                             NavTabButton(
                                 label = "💬 চ্যাট",
                                 selected = currentRoute == AynaRoute.MESSENGER,
                                 modifier = Modifier.weight(1f),
-                                onClick = { currentRoute = AynaRoute.MESSENGER }
+                                onClick = { selectRouteManually(AynaRoute.MESSENGER) }
                             )
                             NavTabButton(
                                 label = "✍️ পোস্ট",
                                 selected = currentRoute == AynaRoute.POST,
                                 modifier = Modifier.weight(1f),
-                                onClick = { currentRoute = AynaRoute.POST }
+                                onClick = { selectRouteManually(AynaRoute.POST) }
                             )
                             if (isAdmin) {
                                 NavTabButton(
                                     label = "🛡️ মডারেটর",
                                     selected = currentRoute == AynaRoute.MODERATION,
                                     modifier = Modifier.weight(1f),
-                                    onClick = { currentRoute = AynaRoute.MODERATION }
+                                    onClick = { selectRouteManually(AynaRoute.MODERATION) }
                                 )
                             }
                         }
@@ -194,7 +204,7 @@ class MainActivity : ComponentActivity() {
                             AynaRoute.POST -> PostScreen(
                                 database = database,
                                 auth = auth,
-                                onPostPublished = { currentRoute = AynaRoute.HOME }
+                                onPostPublished = { selectRouteManually(AynaRoute.HOME) }
                             )
                             AynaRoute.MODERATION -> {
                                 if (isAdmin) {
