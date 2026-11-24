@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AYNA BOOK — Post Reports Queue</title>
+<style>
+  :root {
+    --bg: #050a18;
+    --navy-top: #1a3575;
+    --navy-bottom: #08122b;
+    --gold: #ffe64d;
+    --gold-bright: #fff6b3;
+    --gold-base: #8a6105;
+    --cyan: #38f2ff;
+    --white: #ffffff;
+    --muted: #dbe6ff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--white);
+    font-family: Arial, "Noto Sans Bengali", sans-serif;
+    font-size: 26px;
+    line-height: 1.45;
+    padding: 24px;
+  }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .box {
+    background: linear-gradient(155deg, var(--navy-top), var(--navy-bottom));
+    border: 4px solid var(--gold);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 0 18px rgba(255, 230, 77, 0.45), 0 8px 0 var(--gold-base);
+  }
+
+  h1 {
+    margin: 0 0 12px;
+    color: var(--gold-bright);
+    font-size: 38px;
+    font-weight: 900;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  input, select, button {
+    font-family: inherit;
+    border-radius: 8px;
+    border: 3px solid var(--gold);
+  }
+
+  input, select {
+    background: #050b1c;
+    color: var(--white);
+    padding: 12px 14px;
+    font-size: 22px;
+  }
+
+  .toolbar input {
+    flex: 1 1 280px;
+  }
+
+  button {
+    padding: 12px 18px;
+    background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
+    color: var(--bg);
+    border-color: var(--gold-bright);
+    font-size: 22px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #664604;
+  }
+
+  button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-dark {
+    background: linear-gradient(155deg, #1d3b7e, #08122b);
+    color: var(--gold-bright);
+    border-color: var(--gold);
+  }
+
+  .report-card {
+    background: #060e24;
+    border: 3px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 16px;
+  }
+
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: var(--gold-bright);
+    font-weight: 800;
+    font-size: 24px;
+  }
+
+  .badge {
+    color: var(--cyan);
+    font-size: 20px;
+  }
+
+  .meta {
+    color: var(--muted);
+    font-size: 21px;
+    margin-top: 6px;
+    word-break: break-word;
+  }
+
+  .review-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    color: var(--gold-bright);
+  }
+
+  .checkbox-label input {
+    width: 24px;
+    height: 24px;
+  }
+
+  .status-banner {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: #050b1c;
+    border: 2px solid var(--cyan);
+    color: var(--gold-bright);
+    font-size: 22px;
+    word-break: break-word;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <h1>🛡️ AYNA BOOK — Post Reports Queue</h1>
+    <div class="meta" id="authStatusText">Checking Firebase Auth session...</div>
+
+    <div class="toolbar">
+      <input id="apiBaseInput" type="text" placeholder="API Base URL (leave empty if same origin)">
+      <select id="statusFilterSelect">
+        <option value="all">All Reports</option>
+        <option value="pending">Pending Only</option>
+        <option value="reviewed">Reviewed Only</option>
+      </select>
+      <button id="refreshQueueBtn" type="button" class="btn-dark">🔄 Reload Queue</button>
+    </div>
+
+    <div id="queueStatusBanner" class="status-banner">Waiting for sign-in and postReports data...</div>
+  </div>
+
+  <div id="reportsListContainer"></div>
+</div>
+
+<script type="module">
+import { submitModerationReview } from "./ayna-report-review-client.js";
+
+const authStatusText = document.getElementById("authStatusText");
+const queueStatusBanner = document.getElementById("queueStatusBanner");
+const reportsListContainer = document.getElementById("reportsListContainer");
+const apiBaseInput = document.getElementById("apiBaseInput");
+const statusFilterSelect = document.getElementById("statusFilterSelect");
+const refreshBtn = document.getElementById("refreshQueueBtn");
+
+let cachedReports = [];
+let dbInstance = null;
+let dbMod = null;
+
+function setBanner(msg) {
+  queueStatusBanner.textContent = msg;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderReports() {
+  const filterMode = statusFilterSelect.value;
+  const visible = cachedReports.filter(item => {
+    const isReviewed = item.status === "reviewed";
+    if (filterMode === "pending") return !isReviewed;
+    if (filterMode === "reviewed") return isReviewed;
+    return true;
+  });
+
+  if (!visible.length) {
+    reportsListContainer.innerHTML = `
+      <div class="box">
+        <div class="meta">No post reports match the selected filter.</div>
+      </div>
+    `;
+    return;
+  }
+
+  reportsListContainer.innerHTML = visible.map((rep, idx) => {
+    const statusLabel = rep.status === "reviewed"
+      ? `Reviewed (${rep.decision || "done"})`
+      : "Pending Review";
+    const timeLabel = rep.createdAt
+      ? new Date(rep.createdAt).toLocaleString()
+      : "Unknown time";
+
+    return `
+      <div class="report-card" data-idx="${idx}">
+        <div class="report-header">
+          <span>Post: ${escapeHtml(rep.postId)}</span>
+          <span class="badge">${escapeHtml(statusLabel)}</span>
+        </div>
+        <div class="meta">Report ID: ${escapeHtml(rep.reportId)} • Reporter UID: ${escapeHtml(rep.reporterUid)}</div>
+        <div class="meta">Reason: ${escapeHtml(rep.reason)} • Reported: ${escapeHtml(timeLabel)}</div>
+        ${rep.note ? `<div class="meta">Previous Note: ${escapeHtml(rep.note)}</div>` : ""}
+
+        <div class="review-controls">
+          <select class="rep-decision">
+            <option value="warned" ${rep.decision === "warned" ? "selected" : ""}>warned</option>
+            <option value="dismissed" ${rep.decision === "dismissed" ? "selected" : ""}>dismissed</option>
+            <option value="removed" ${rep.decision === "removed" ? "selected" : ""}>removed</option>
+          </select>
+          <input class="rep-note" type="text" placeholder="Moderator note..." value="${escapeHtml(rep.note || "")}">
+          <label class="checkbox-label">
+            <input class="rep-notify-reporter" type="checkbox">
+            <span>Notify reporter</span>
+          </label>
+        </div>
+
+        <button type="button" class="rep-submit-btn" style="margin-top:14px;">
+          ✅ Review &amp; Notify via FCM
+        </button>
+      </div>
+    `;
+  }).join("");
+
+  reportsListContainer.querySelectorAll(".report-card").forEach(card => {
+    const idx = Number(card.getAttribute("data-idx"));
+    const rep = visible[idx];
+    const btn = card.querySelector(".rep-submit-btn");
+
+    btn.addEventListener("click", async () => {
+      const decision = card.querySelector(".rep-decision")?.value || "warned";
+      const note = card.querySelector(".rep-note")?.value || "";
+      const notifyReporter = Boolean(card.querySelector(".rep-notify-reporter")?.checked);
+
+      btn.disabled = true;
+      setBanner(`Submitting ${decision} decision for report ${rep.reportId}...`);
+
+      try {
+        const result = await submitModerationReview({
+          apiBaseUrl: apiBaseInput.value,
+          postId: rep.postId,
+          reportId: rep.reportId,
+          decision,
+          note,
+          notifyReporter
+        });
+
+        setBanner(
+          `Reviewed ${result.reportId} (${result.decision}) • Author FCM: ${result.notifications?.author?.sentCount ?? 0}`
+        );
+        await loadReportsQueue();
+      } catch (err) {
+        setBanner(`Review failed: ${err?.message || "Unknown error"}`);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+}
+
+async function loadReportsQueue() {
+  if (!dbInstance || !dbMod) return;
+  refreshBtn.disabled = true;
+  setBanner("Loading postReports from Firebase Realtime Database...");
+
+  try {
+    const snap = await dbMod.get(dbMod.ref(dbInstance, "postReports"));
+    const raw = snap.val() || {};
+    const flattened = [];
+
+    for (const [postId, entries] of Object.entries(raw)) {
+      if (!entries || typeof entries !== "object") continue;
+      for (const [reportId, detail] of Object.entries(entries)) {
+        flattened.push({
+          postId,
+          reportId,
+          reporterUid: detail?.reporterUid || "",
+          reason: detail?.reason || "",
+          createdAt: detail?.createdAt || 0,
+          status: detail?.status || "pending",
+          decision: detail?.decision || "",
+          note: detail?.note || ""
+        });
+      }
+    }
+
+    cachedReports = flattened.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    renderReports();
+    setBanner(`Loaded ${cachedReports.length} report(s).`);
+  } catch (err) {
+    setBanner(`Failed to load postReports: ${err?.message || "Permission denied"}`);
+  } finally {
+    refreshBtn.disabled = false;
+  }
+}
+
+async function initQueuePage() {
+  try {
+    const [initMod, jsFbMod, authMod, rtdbMod] = await Promise.all([
+      import("./firebase-init.js").catch(() => null),
+      import("./js/firebase.js").catch(() => null),
+      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"),
+      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js")
+    ]);
+
+    const auth = initMod?.auth || jsFbMod?.auth || authMod.getAuth();
+    dbInstance = initMod?.database || jsFbMod?.database || rtdbMod.getDatabase();
+    dbMod = rtdbMod;
+
+    authMod.onAuthStateChanged(auth, async user => {
+      if (!user) {
+        authStatusText.textContent = "Not signed in. Sign in with an admin account to view postReports.";
+        setBanner("Authentication required.");
+        reportsListContainer.innerHTML = "";
+        return;
+      }
+
+      authStatusText.textContent = `Signed in as ${user.email || user.uid} (${user.uid})`;
+      await loadReportsQueue();
+    });
+  } catch (err) {
+    authStatusText.textContent = "Firebase initialization error.";
+    setBanner(err?.message || "Could not initialize Firebase");
+  }
+}
+
+statusFilterSelect.addEventListener("change", renderReports);
+refreshBtn.addEventListener("click", loadReportsQueue);
+
+initQueuePage();
+</script>
+</body>
+</html>
