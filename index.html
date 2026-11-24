@@ -221,11 +221,12 @@ header {
 }
 
 .q-stat-value {
-  font-size:34px;
+  font-size:32px;
   font-weight:1000;
   color:var(--quantum-cyan);
   margin-top:6px;
   display:block;
+  overflow-wrap:anywhere;
 }
 
 .section-title {
@@ -814,11 +815,12 @@ footer {
   <div class="header-inner">
     <div class="logo">
       AYNA BOOK <span class="star-1s">★</span>
-      <span class="quantum-badge">⚛ QUANTUM CORE</span>
+      <span class="quantum-badge">⚛ QUANTUM AUTO-CORE</span>
     </div>
 
     <div class="header-actions">
       <button type="button" id="quantumBoostBtn">⚡ Quantum Boost</button>
+      <button type="button" id="autoUpdateNowBtn">🔄 Auto Sync</button>
       <a href="notifications.html">🔔</a>
       <a href="messenger.html">💬 Messenger</a>
     </div>
@@ -832,7 +834,7 @@ footer {
   <section class="hero">
     <h1>WELCOME TO AYNA BOOK QUANTUM</h1>
     <p>
-      আপনার বিশ্ব, আপনার বন্ধু, আপনার গল্প — কোয়ান্টাম গতির মাল্টিমিডিয়া সোশাল নেটওয়ার্কে সবার সঙ্গে যুক্ত থাকুন।
+      আপনার বিশ্ব, আপনার বন্ধু, আপনার গল্প — কোয়ান্টাম গতির মাল্টিমিডিয়া সোশাল নেটওয়ার্কে আজীবন অটো-আপডেটসহ যুক্ত থাকুন।
     </p>
   </section>
 
@@ -842,12 +844,12 @@ footer {
       <span class="q-stat-value" id="qSyncState">ENTANGLED • 99.8%</span>
     </div>
     <div class="q-stat">
-      <span class="q-stat-label">Media Upload Limit</span>
-      <span class="q-stat-value" id="qMediaNode">250MB VIDEO/FILE</span>
+      <span class="q-stat-label">Lifelong Auto-Update</span>
+      <span class="q-stat-value" id="qAutoSyncStatus">ACTIVE • LIVE</span>
     </div>
     <div class="q-stat">
       <span class="q-stat-label">Total Registry Items</span>
-      <span class="q-stat-value" id="qFileCount">175</span>
+      <span class="q-stat-value" id="qFileCount">180</span>
     </div>
   </section>
 
@@ -917,6 +919,12 @@ footer {
   <h2 class="section-title">✨ MORE AYNA BOOK FEATURES</h2>
 
   <section class="feature-grid-more">
+    <a class="feature-card" href="world-leaders/world-leaders.html">
+      <span class="feature-icon">🌐</span>
+      <span class="feature-name">বিশ্ব রাষ্ট্রনেতা</span>
+      <span class="feature-desc">নাম, মেয়াদ, ছবি ও পতাকা</span>
+    </a>
+
     <a class="feature-card" href="military-radar.html">
       <span class="feature-icon">🎯</span>
       <span class="feature-name">মিলিটারি রাডার</span>
@@ -1053,9 +1061,9 @@ footer {
     <div class="empty">পোস্ট লোড হচ্ছে...</div>
   </section>
 
-  <!-- ১৭৫টি ফাইল ও ফোল্ডার তালিকা -->
+  <!-- ফাইল ও ফোল্ডার তালিকা -->
   <section class="panel" id="fileRegistrySection">
-    <h2>📁 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (১৭৫টি)</h2>
+    <h2>📁 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">180</span>টি)</h2>
     <input
       type="search"
       id="fileSearchInput"
@@ -1068,7 +1076,7 @@ footer {
 </main>
 
 <footer>
-  © 2026 AYNA BOOK — Quantum Multimedia Social Platform
+  © 2026 AYNA BOOK — Quantum Multimedia Social Platform (Lifelong Auto-Update Enabled)
 </footer>
 
 <nav class="bottom-nav">
@@ -1086,12 +1094,18 @@ const LIMITS = {
   file: 250 * 1024 * 1024
 };
 
-const AYNA_175_ITEMS = [
+const AYNA_REGISTRY_ITEMS = [
   "js (রুট তালিকায় প্রথমবার দেখা যাচ্ছে)",
   "android-app",
   "aspect-ratio: 1",
   "assets",
   "functions",
+  "world-leaders",
+  "world-leaders/world-leaders.html",
+  "world-leaders/world-leaders.js",
+  "world-leaders/leaders.json",
+  "world-leaders/flags",
+  "world-leaders/photos",
   "index.html (রুট তালিকায় ফোল্ডার আইকনে দেখা যাচ্ছে)",
   "js (রুট তালিকায় দ্বিতীয়বার দেখা যাচ্ছে)",
   ".github (android-app ফোল্ডারের ভেতরে)",
@@ -1293,12 +1307,15 @@ let previewObjectUrl = null;
 
 const $ = id => document.getElementById(id);
 
+$("qFileCount").textContent = String(AYNA_REGISTRY_ITEMS.length);
+$("registryTotalLabel").textContent = String(AYNA_REGISTRY_ITEMS.length);
+
 function renderFileRegistry(query = "") {
   const grid = $("fileListGrid");
   const cleanQuery = query.trim().toLowerCase();
   grid.innerHTML = "";
 
-  AYNA_175_ITEMS.forEach((item, index) => {
+  AYNA_REGISTRY_ITEMS.forEach((item, index) => {
     if (cleanQuery && !item.toLowerCase().includes(cleanQuery)) return;
     const card = document.createElement("div");
     card.className = "file-item-card";
@@ -1332,7 +1349,7 @@ function notify(message) {
   clearTimeout(notify.timer);
   notify.timer = setTimeout(() => {
     box.style.display = "none";
-  }, 3000);
+  }, 3200);
 }
 
 function safePhoto(photo) {
@@ -1364,9 +1381,69 @@ function quantumSignature(seed = "") {
   return `⚛ Q-COHERENCE ${score.toFixed(1)}%`;
 }
 
+// আজীবন অটো আপডেট ইঞ্জিন
+const QuantumAutoUpdater = {
+  intervalMs: 5 * 60 * 1000,
+  timer: null,
+
+  async syncOnce(manual = false) {
+    const nowLabel = new Date().toLocaleTimeString();
+    try {
+      if ("serviceWorker" in navigator) {
+        const reg = await navigator.serviceWorker.getRegistration();
+        if (reg) await reg.update();
+      }
+
+      const [verRes, leadersRes] = await Promise.allSettled([
+        fetch(`./version.json?_=${Date.now()}`, { cache: "no-store" }),
+        fetch(`./world-leaders/leaders.json?_=${Date.now()}`, { cache: "no-store" })
+      ]);
+
+      let verInfo = "";
+      if (verRes.status === "fulfilled" && verRes.value.ok) {
+        const vData = await verRes.value.json().catch(() => null);
+        if (vData?.version) {
+          verInfo = `v${vData.version}`;
+          localStorage.setItem("ayna_quantum_version", JSON.stringify(vData));
+        }
+      }
+
+      if (leadersRes.status === "fulfilled" && leadersRes.value.ok) {
+        const lData = await leadersRes.value.json().catch(() => null);
+        if (Array.isArray(lData)) {
+          localStorage.setItem("ayna_world_leaders_cache", JSON.stringify(lData));
+        }
+      }
+
+      $("qAutoSyncStatus").textContent = `SYNCED • ${verInfo || nowLabel}`;
+      if (manual) {
+        notify(`অটো-আপডেট সিঙ্ক সম্পন্ন (${nowLabel})`);
+      }
+    } catch (_) {
+      $("qAutoSyncStatus").textContent = `STANDBY • ${nowLabel}`;
+      if (manual) {
+        notify("লোকাল কোয়ান্টাম ক্যাশে সক্রিয় রয়েছে");
+      }
+    }
+  },
+
+  start() {
+    this.syncOnce(false);
+    clearInterval(this.timer);
+    this.timer = setInterval(() => this.syncOnce(false), this.intervalMs);
+    window.addEventListener("online", () => this.syncOnce(false));
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        this.syncOnce(false);
+      }
+    });
+  }
+};
+
 window.AynaBook = {
-  version: "2026.quantum.175",
-  fileRegistry: AYNA_175_ITEMS,
+  version: "2026.quantum.autoupdate",
+  fileRegistry: AYNA_REGISTRY_ITEMS,
+  autoUpdater: QuantumAutoUpdater,
   notify,
   safePhoto,
   formatDate,
@@ -1374,7 +1451,7 @@ window.AynaBook = {
     currentUser,
     userProfile,
     postsCount: allPosts.length,
-    totalFiles: AYNA_175_ITEMS.length,
+    totalFiles: AYNA_REGISTRY_ITEMS.length,
     modules: {
       firebase: !!jsFirebaseMod,
       app: !!jsAppMod,
@@ -1392,6 +1469,8 @@ $("quantumBoostBtn").addEventListener("click", () => {
   $("qSyncState").textContent = next;
   notify("কোয়ান্টাম সিঙ্ক আপডেট হয়েছে: " + next);
 });
+
+$("autoUpdateNowBtn").addEventListener("click", () => QuantumAutoUpdater.syncOnce(true));
 
 document.querySelectorAll(".filter-btn").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -1559,6 +1638,22 @@ function clearSelectedMedia() {
   $("uploadProgressBar").style.width = "0%";
 }
 
+async function resolveFirebaseStorage() {
+  const { getStorage } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js");
+  const cfgMod = await loadOptionalScript("./firebase-config.js");
+  const bucket =
+    appInstance?.options?.storageBucket ||
+    cfgMod?.firebaseConfig?.storageBucket ||
+    cfgMod?.default?.storageBucket ||
+    "";
+
+  if (bucket) {
+    const gsUrl = bucket.startsWith("gs://") ? bucket : `gs://${bucket}`;
+    return appInstance ? getStorage(appInstance, gsUrl) : getStorage(undefined, gsUrl);
+  }
+  return appInstance ? getStorage(appInstance) : getStorage();
+}
+
 async function uploadMediaData(file, uid) {
   if (file.size <= 3 * 1024 * 1024) {
     return new Promise((resolve, reject) => {
@@ -1569,10 +1664,10 @@ async function uploadMediaData(file, uid) {
     });
   }
 
-  const { getStorage, ref: sRef, uploadBytesResumable, getDownloadURL } =
+  const { ref: sRef, uploadBytesResumable, getDownloadURL } =
     await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js");
 
-  const storage = appInstance ? getStorage(appInstance) : getStorage();
+  const storage = await resolveFirebaseStorage();
   const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
   const fileRef = sRef(storage, `ayna_posts/${uid}/${safeName}`);
 
@@ -1580,17 +1675,36 @@ async function uploadMediaData(file, uid) {
     const task = uploadBytesResumable(fileRef, file, {
       contentType: file.type || "application/octet-stream"
     });
+
     $("uploadProgressWrap").style.display = "block";
+    $("uploadProgressBar").style.width = "1%";
+    $("postStatus").textContent = `আপলোড শুরু হচ্ছে: 0% (0 MB / ${formatSize(file.size)})`;
+
+    let sawProgress = false;
+    const stallTimer = setTimeout(() => {
+      if (!sawProgress) {
+        task.cancel();
+        reject(new Error("STORAGE_STALL"));
+      }
+    }, 15000);
 
     task.on(
       "state_changed",
       snap => {
+        if (snap.bytesTransferred > 0) {
+          sawProgress = true;
+          clearTimeout(stallTimer);
+        }
         const pct = snap.totalBytes ? Math.round((snap.bytesTransferred / snap.totalBytes) * 100) : 0;
         $("uploadProgressBar").style.width = `${pct}%`;
         $("postStatus").textContent = `আপলোড হচ্ছে: ${pct}% (${formatSize(snap.bytesTransferred)} / ${formatSize(snap.totalBytes)})`;
       },
-      err => reject(err),
+      err => {
+        clearTimeout(stallTimer);
+        reject(err);
+      },
       async () => {
+        clearTimeout(stallTimer);
         const downloadUrl = await getDownloadURL(task.snapshot.ref);
         resolve(downloadUrl);
       }
@@ -1643,11 +1757,16 @@ async function publishPost(ref, push, set) {
     notify("আপনার পোস্ট প্রকাশ হয়েছে");
   } catch (error) {
     console.error("Post error:", error);
-    notify(
-      error.code === "PERMISSION_DENIED"
-        ? "Firebase Rules অনুমতি দেয়নি"
-        : "পোস্ট প্রকাশ করা যায়নি"
-    );
+    if (error?.message === "STORAGE_STALL") {
+      $("postStatus").textContent = "Firebase Storage সাড়া দেয়নি। Storage চালু আছে কি না এবং storageBucket সঠিক কি না যাচাই করুন।";
+      notify("Storage আপলোড টাইমআউট হয়েছে");
+    } else if (error?.code === "storage/unauthorized" || error?.code === "PERMISSION_DENIED") {
+      $("postStatus").textContent = "Firebase Storage বা Database Rules অনুমতি দেয়নি।";
+      notify("অনুমতি পাওয়া যায়নি (Rules চেক করুন)");
+    } else {
+      $("postStatus").textContent = "পোস্ট প্রকাশ করা যায়নি। নেটওয়ার্ক ও Firebase Storage পরীক্ষা করুন।";
+      notify("পোস্ট প্রকাশ করা যায়নি");
+    }
   } finally {
     button.disabled = false;
     button.textContent = "🚀 পোস্ট প্রকাশ করুন";
@@ -1948,6 +2067,7 @@ window.addEventListener("pagehide", () => {
   }
 });
 
+QuantumAutoUpdater.start();
 initApp();
 </script>
 
