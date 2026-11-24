@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#060d21">
+<title>AYNA BOOK — বিশ্ব বিমান ও রেল পরিবহণ</title>
+
+<style>
+:root {
+  --bg: #050a18;
+  --navy-top: #172e63;
+  --navy-bottom: #08122b;
+  --gold: #ffd700;
+  --gold-base: #755206;
+  --white: #ffffff;
+  --muted: #dce6fa;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: Arial, "Noto Sans Bengali", sans-serif;
+  font-size: 20px;
+  padding-bottom: 80px;
+}
+
+.gold-3d {
+  background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
+  border: 2.5px solid var(--gold);
+  border-radius: 6px;
+  box-shadow:
+    0 7px 0 var(--gold-base),
+    0 12px 22px rgba(0, 0, 0, 0.8),
+    inset 0 2px 3px rgba(255, 242, 166, 0.5);
+}
+
+header {
+  background: linear-gradient(180deg, #0f1f47 0%, #060d21 100%);
+  border-bottom: 2.5px solid var(--gold);
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  color: var(--gold);
+  font-size: 24px;
+  font-weight: 1000;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star-1s {
+  color: #ffffff;
+  font-size: 26px;
+  display: inline-block;
+  animation: starFlash1s 1s infinite alternate ease-in-out;
+}
+
+@keyframes starFlash1s {
+  0% { transform: scale(0.95); text-shadow: 0 0 6px #ffd700; }
+  100% { transform: scale(1.35); text-shadow: 0 0 14px #ffffff, 0 0 32px #ffd700; }
+}
+
+.back-btn {
+  text-decoration: none;
+  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
+  color: #050a18;
+  font-weight: 1000;
+  font-size: 17px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1.5px solid #fff2a6;
+  box-shadow: 0 4px 0 #664604;
+}
+
+.container {
+  max-width: 1050px;
+  margin: 18px auto;
+  padding: 0 14px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 1000;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.box-pad {
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.box-pad h2 {
+  color: var(--gold);
+  font-size: 23px;
+  margin-bottom: 12px;
+}
+
+.status-banner {
+  background: #050b1c;
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  padding: 12px;
+  color: var(--gold);
+  font-size: 17px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media(min-width: 650px) {
+  .grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+input, select, textarea {
+  width: 100%;
+  background: #050b1c;
+  color: var(--white);
+  border: 2px solid var(--gold);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 19px;
+  margin-bottom: 12px;
+}
+
+.btn-gold-3d {
+  width: 100%;
+  min-height: 56px;
+  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
+  color: #050a18;
+  font-size: 21px;
+  font-weight: 1000;
+  border: 2px solid #fff2a6;
+  border-radius: 6px;
+  box-shadow: 0 5px 0 #664604;
+  cursor: pointer;
+}
+
+.btn-gold-3d:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #664604;
+}
+
+.transport-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media(min-width: 750px) {
+  .transport-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.transport-card {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.transport-badge {
+  display: inline-block;
+  background: #050b1c;
+  color: var(--gold);
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.transport-name {
+  font-size: 23px;
+  font-weight: 1000;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.transport-price-box {
+  background: #050b1c;
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--gold);
+  font-size: 20px;
+  font-weight: 1000;
+  margin-bottom: 10px;
+}
+
+.contact-line {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.contact-line a {
+  color: #ffd700;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.transport-footer {
+  border-top: 1px solid rgba(255, 215, 0, 0.35);
+  padding-top: 10px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+#notice {
+  position: fixed;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0a1636;
+  color: #ffffff;
+  border: 2px solid var(--gold);
+  padding: 12px 18px;
+  border-radius: 6px;
+  z-index: 100;
+  display: none;
+  font-size: 18px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="brand">AYNA BOOK <span class="star-1s">★</span></a>
+  <a href="index.html" class="back-btn">🏠 হোম</a>
+</header>
+
+<div id="notice"></div>
+
+<main class="container">
+  <h1 class="page-title">🌍✈️🚆 বিশ্ব বিমান ও রেল পরিবহণ</h1>
+
+  <!-- ফিল্টার, দেশ/মুদ্রা ও দৈনিক অটো আপডেট -->
+  <section class="gold-3d box-pad">
+    <div id="worldTransportStatus" class="status-banner">
+      🔄 বিশ্ব বিমান ও রেল টিকেট মূল্যতালিকা লোড হচ্ছে...
+    </div>
+
+    <div class="grid-2">
+      <select id="worldTransportTypeFilter">
+        <option value="ALL">🌐 সব বিশ্ব পরিবহণ (বিমান ও রেল)</option>
+        <option value="বিশ্ব বিমান">✈️ বিশ্ব বিমান</option>
+        <option value="বিশ্ব রেল">🚆 বিশ্ব রেল</option>
+      </select>
+
+      <select id="worldTransportCurrency">
+        <option value="USD">🇺🇸 যুক্তরাষ্ট্র / বিশ্ব মানদণ্ড (USD $)</option>
+        <option value="BDT">🇧🇩 বাংলাদেশ (টাকা ৳)</option>
+        <option value="SAR">🇸🇦 সৌদি আরব (রিয়াল SAR)</option>
+        <option value="AED">🇦🇪 সংযুক্ত আরব আমিরাত (দিরহাম AED)</option>
+        <option value="GBP">🇬🇧 যুক্তরাজ্য (পাউন্ড £)</option>
+        <option value="INR">🇮🇳 ভারত (রুপি ₹)</option>
+      </select>
+    </div>
+
+    <div class="grid-2">
+      <input id="worldCountryFilter" type="text" placeholder="দেশ বা অঞ্চল (যেমন: সৌদি আরব, আমিরাত, যুক্তরাজ্য, ভারত, বাংলাদেশ)...">
+      <input id="worldTransportSearch" type="text" placeholder="এয়ারলাইন্স, ট্রেন, রুট, ফোন বা ইমেইল খুঁজুন...">
+    </div>
+
+    <button id="refreshWorldTransportBtn" type="button" class="btn-gold-3d">
+      🔄 আজকের বিশ্ব টিকেট মূল্যতালিকা অটো আপডেট করুন
+    </button>
+  </section>
+
+  <!-- নতুন বিশ্ব বিমান বা রেল পরিবহণ যুক্ত করার ফর্ম -->
+  <section class="gold-3d box-pad">
+    <h2>➕ নতুন বিশ্ব বিমান বা রেল পরিবহণের তথ্য যুক্ত করুন</h2>
+    <div class="grid-2">
+      <select id="newWorldTransportType">
+        <option value="বিশ্ব বিমান">✈️ বিশ্ব বিমান</option>
+        <option value="বিশ্ব রেল">🚆 বিশ্ব রেল</option>
+      </select>
+
+      <input id="newWorldCountry" type="text" placeholder="দেশ / অঞ্চল (যেমন: সৌদি আরব / ইউরোপ / ভারত / বাংলাদেশ)">
+    </div>
+
+    <div class="grid-2">
+      <input id="newWorldTransportName" type="text" placeholder="পরিবহণের নাম (যেমন: Saudia / Emirates / Eurostar / Indian Railways)">
+      <input id="newWorldPhone" type="text" placeholder="ফোন / হেল্পলাইন নম্বর...">
+    </div>
+
+    <div class="grid-2">
+      <input id="newWorldEmail" type="email" placeholder="জিমেইল / ইমেইল ঠিকানা...">
+      <input id="newWorldRoute" type="text" placeholder="রুট ও ক্লাস (যেমন: ঢাকা - জেদ্দা / লন্ডন - প্যারিস)">
+    </div>
+
+    <input id="newWorldPriceBdt" type="number" step="0.01" placeholder="আনুমানিক টিকেট মূল্য (BDT টাকায়, স্বয়ংক্রিয় মুদ্রা রূপান্তরসহ)...">
+    <textarea id="newWorldNote" rows="2" placeholder="ভাড়া পরিবর্তনশীলতা, বুকিং বা অতিরিক্ত নোট লিখুন..."></textarea>
+    <button id="addWorldTransportBtn" type="button" class="btn-gold-3d">
+      📌 বিশ্ব পরিবহণ তালিকায় যুক্ত করুন
+    </button>
+  </section>
+
+  <!-- বিশ্ব বিমান ও রেল তালিকা -->
+  <section id="worldTransportList" class="transport-grid">
+    <div class="gold-3d box-pad" style="grid-column:1/-1;text-align:center;">
+      বিশ্ব বিমান ও রেল পরিবহণের তথ্য লোড হচ্ছে...
+    </div>
+  </section>
+</main>
+
+<script type="module" src="./world-air-rail.js"></script>
+</body>
+</html>
