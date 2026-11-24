@@ -1,761 +1,181 @@
-"use strict";
+// ==================================================
+// AYNA BOOK - ARABIC CALENDAR & CLOCK SYNC (arabic-calendar.js)
+// ==================================================
 
-
-/* =========================================
-   AYNA BOOK
-   ARABIC / HIJRI CALENDAR
-   ========================================= */
-
-
-/* ---------- ELEMENTS ---------- */
-
-const daysEl =
-  document.getElementById("days");
-
-const hijriYearEl =
-  document.getElementById("hijriYear");
-
-const hijriMonthEl =
-  document.getElementById("hijriMonth");
-
-const monthArabicEl =
-  document.getElementById("monthArabic");
-
-const monthBanglaEl =
-  document.getElementById("monthBangla");
-
-const selectedHijriEl =
-  document.getElementById("selectedHijri");
-
-const selectedGregorianEl =
-  document.getElementById("selectedGregorian");
-
-const eventBox =
-  document.getElementById("eventBox");
-
-const prevBtn =
-  document.getElementById("prevBtn");
-
-const nextBtn =
-  document.getElementById("nextBtn");
-
-const todayBtn =
-  document.getElementById("todayBtn");
-
-
-/* ---------- MONTHS ---------- */
-
-const months = [
-
-  {
-    ar:"مُحَرَّم",
-    bn:"মুহররম"
-  },
-
-  {
-    ar:"صَفَر",
-    bn:"সফর"
-  },
-
-  {
-    ar:"رَبِيعُ الأَوَّل",
-    bn:"রবিউল আউয়াল"
-  },
-
-  {
-    ar:"رَبِيعُ الثَّانِي",
-    bn:"রবিউস সানি"
-  },
-
-  {
-    ar:"جُمَادَىٰ الأُولَى",
-    bn:"জুমাদিউল আউয়াল"
-  },
-
-  {
-    ar:"جُمَادَىٰ الثَّانِيَة",
-    bn:"জুমাদিউস সানি"
-  },
-
-  {
-    ar:"رَجَب",
-    bn:"রজব"
-  },
-
-  {
-    ar:"شَعْبَان",
-    bn:"শাবান"
-  },
-
-  {
-    ar:"رَمَضَان",
-    bn:"রমজান"
-  },
-
-  {
-    ar:"شَوَّال",
-    bn:"শাওয়াল"
-  },
-
-  {
-    ar:"ذُو القَعْدَة",
-    bn:"জিলকদ"
-  },
-
-  {
-    ar:"ذُو الحِجَّة",
-    bn:"জিলহজ"
+const AYNA_CALENDAR_CONFIG = {
+  storageKey: "ayna_sehri_iftar_sync",
+  defaultCountry: "BD",
+  defaultDistrict: "চট্টগ্রাম",
+  locations: {
+    BD: {
+      countryName: "বাংলাদেশ",
+      districts: {
+        "ঢাকা": { sehri: "04:58", iftar: "17:12" },
+        "চট্টগ্রাম": { sehri: "04:53", iftar: "17:07" },
+        "কক্সবাজার": { sehri: "04:52", iftar: "17:08" },
+        "সিলেট": { sehri: "04:50", iftar: "17:04" },
+        "রাজশাহী": { sehri: "05:05", iftar: "17:19" },
+        "খুলনা": { sehri: "05:02", iftar: "17:17" },
+        "বরিশাল": { sehri: "04:59", iftar: "17:14" },
+        "রংপুর": { sehri: "05:02", iftar: "17:14" },
+        "ময়মনসিংহ": { sehri: "04:58", iftar: "17:11" }
+      }
+    },
+    SA: {
+      countryName: "সৌদি আরব",
+      districts: {
+        "মক্কা": { sehri: "05:24", iftar: "17:38" },
+        "মদিনা": { sehri: "05:27", iftar: "17:36" },
+        "রিয়াদ": { sehri: "04:56", iftar: "17:02" },
+        "জেদ্দা": { sehri: "05:27", iftar: "17:41" }
+      }
+    },
+    AE: {
+      countryName: "সংযুক্ত আরব আমিরাত",
+      districts: {
+        "দুবাই": { sehri: "05:22", iftar: "17:32" },
+        "আবুধাবি": { sehri: "05:26", iftar: "17:36" },
+        "শারজাহ": { sehri: "05:21", iftar: "17:31" }
+      }
+    },
+    GB: {
+      countryName: "যুক্তরাজ্য",
+      districts: {
+        "লন্ডন": { sehri: "05:45", iftar: "16:02" },
+        "বার্মিংহাম": { sehri: "05:52", iftar: "16:06" }
+      }
+    },
+    US: {
+      countryName: "যুক্তরাষ্ট্র",
+      districts: {
+        "নিউইয়র্ক": { sehri: "05:32", iftar: "16:36" },
+        "হিউস্টন": { sehri: "05:35", iftar: "17:15" }
+      }
+    }
   }
+};
 
-];
+const $ = (id) => document.getElementById(id);
 
+function getHijriDateInfo(date = new Date()) {
+  try {
+    const hijriFormatter = new Intl.DateTimeFormat("bn-BD-u-ca-islamic-umalqura", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      weekday: "long"
+    });
+    const enHijriFormatter = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
 
-/* ---------- BANGLA NUMBERS ---------- */
-
-function bnNumber(value){
-
-  const digits =
-    "০১২৩৪৫৬৭৮৯";
-
-  return String(value).replace(
-    /\d/g,
-    n => digits[n]
-  );
-
+    return {
+      banglaText: hijriFormatter.format(date),
+      englishText: enHijriFormatter.format(date)
+    };
+  } catch (err) {
+    console.error("Hijri date format error:", err);
+    return {
+      banglaText: date.toLocaleDateString("bn-BD"),
+      englishText: date.toLocaleDateString("en-US")
+    };
+  }
 }
 
+function renderHijriHeader() {
+  const info = getHijriDateInfo(new Date());
+  const hijriDisplay = $("hijriDateDisplay");
+  if (hijriDisplay) {
+    hijriDisplay.textContent = info.banglaText;
+  }
 
-/* ---------- TODAY ---------- */
+  const hijriSub = $("hijriDateSub");
+  if (hijriSub) {
+    hijriSub.textContent = info.englishText;
+  }
+}
 
-const today =
-  new Date();
+function populateCalendarDistricts() {
+  const countryEl = $("calCountrySelect");
+  const districtEl = $("calDistrictSelect");
+  if (!countryEl || !districtEl) return;
 
+  const countryCode = countryEl.value;
+  const countryObj = AYNA_CALENDAR_CONFIG.locations[countryCode];
+  if (!countryObj) return;
 
-/* ---------- GET CURRENT HIJRI ---------- */
-
-function getCurrentHijri(){
-
-  const parts =
-    new Intl.DateTimeFormat(
-      "en-u-ca-islamic",
-      {
-        day:"numeric",
-        month:"numeric",
-        year:"numeric"
-      }
-    ).formatToParts(today);
-
-
-  let day = 1;
-  let month = 1;
-  let year = 1447;
-
-
-  parts.forEach(part => {
-
-    if(part.type === "day")
-      day = Number(part.value);
-
-    if(part.type === "month")
-      month = Number(part.value);
-
-    if(part.type === "year")
-      year = Number(part.value);
-
+  districtEl.innerHTML = "";
+  Object.keys(countryObj.districts).forEach((distName) => {
+    const option = document.createElement("option");
+    option.value = distName;
+    option.textContent = distName;
+    districtEl.appendChild(option);
   });
 
+  syncCalendarSelectionToClock();
+}
 
-  return {
-    day,
-    month,
-    year
+function syncCalendarSelectionToClock() {
+  const countryCode = $("calCountrySelect")?.value || AYNA_CALENDAR_CONFIG.defaultCountry;
+  const districtName = $("calDistrictSelect")?.value || AYNA_CALENDAR_CONFIG.defaultDistrict;
+  const leadHours = Number($("calIftarLeadHours")?.value || 1);
+
+  const countryObj = AYNA_CALENDAR_CONFIG.locations[countryCode];
+  const times = countryObj?.districts?.[districtName] || { sehri: "04:58", iftar: "17:12" };
+
+  const hijriInfo = getHijriDateInfo(new Date());
+
+  const payload = {
+    countryCode,
+    countryName: countryObj?.countryName || "",
+    districtName,
+    sehri: times.sehri,
+    iftar: times.iftar,
+    iftarLeadHours: leadHours,
+    hijriDate: hijriInfo.banglaText,
+    updatedAt: Date.now()
   };
 
-}
-
-
-/* ---------- STATE ---------- */
-
-const current =
-  getCurrentHijri();
-
-let currentYear =
-  current.year;
-
-let currentMonth =
-  current.month;
-
-let selected =
-  new Date();
-
-
-/* ---------- DAYS IN HIJRI MONTH ---------- */
-
-/*
-  Islamic calendar alternates
-  30 / 29 days.
-
-  This is a calculated perpetual
-  calendar. Actual moon sighting
-  can differ by location.
-*/
-
-function daysInHijriMonth(
-  year,
-  month
-){
-
-  if(month % 2 === 1)
-    return 30;
-
-  if(
-    month === 12 &&
-    isLeapHijriYear(year)
-  )
-    return 30;
-
-  return 29;
-
-}
-
-
-/* ---------- HIJRI LEAP YEAR ---------- */
-
-function isLeapHijriYear(year){
-
-  const position =
-    ((year * 11) + 14) % 30;
-
-  const leapYears = [
-    2,5,7,10,13,
-    16,18,21,24,
-    26,29
-  ];
-
-  return leapYears.includes(position);
-
-}
-
-
-/* ---------- HIJRI TO JULIAN ---------- */
-
-function hijriToJD(
-  year,
-  month,
-  day
-){
-
-  return (
-    day +
-    Math.ceil(
-      29.5 * (month - 1)
-    ) +
-    (year - 1) * 354 +
-    Math.floor(
-      (3 + 11 * year) / 30
-    ) +
-    1948439.5 -
-    1
-  );
-
-}
-
-
-/* ---------- JULIAN TO GREGORIAN ---------- */
-
-function jdToDate(jd){
-
-  const unix =
-    (jd - 2440587.5) *
-    86400000;
-
-  return new Date(unix);
-
-}
-
-
-/* ---------- CONVERT ---------- */
-
-function hijriToGregorian(
-  year,
-  month,
-  day
-){
-
-  const jd =
-    hijriToJD(
-      year,
-      month,
-      day
-    );
-
-  return jdToDate(jd);
-
-}
-
-
-/* ---------- GREGORIAN TEXT ---------- */
-
-function gregorianText(date){
-
-  return date.toLocaleDateString(
-    "bn-BD",
-    {
-      weekday:"long",
-      year:"numeric",
-      month:"long",
-      day:"numeric"
-    }
-  );
-
-}
-
-
-/* ---------- SPECIAL DAYS ---------- */
-
-function getSpecialDay(
-  month,
-  day
-){
-
-  if(month === 1 && day === 1)
-    return "🌙 ইসলামী নববর্ষ";
-
-  if(month === 1 && day === 10)
-    return "🕌 আশুরা";
-
-  if(month === 9 && day === 1)
-    return "🌙 রমজান শুরু";
-
-  if(month === 9 && day === 27)
-    return "✨ লাইলাতুল কদর";
-
-  if(month === 10 && day === 1)
-    return "🎉 ঈদুল ফিতর";
-
-  if(month === 12 && day === 9)
-    return "🕋 আরাফার দিন";
-
-  if(month === 12 && day === 10)
-    return "🕋 ঈদুল আজহা";
-
-  return null;
-
-}
-
-
-/* ---------- RENDER ---------- */
-
-function render(){
-
-  daysEl.innerHTML = "";
-
-
-  hijriYearEl.value =
-    currentYear;
-
-  hijriMonthEl.value =
-    currentMonth;
-
-
-  const month =
-    months[currentMonth - 1];
-
-
-  monthArabicEl.textContent =
-    month.ar;
-
-  monthBanglaEl.textContent =
-    month.bn;
-
-
-  const totalDays =
-    daysInHijriMonth(
-      currentYear,
-      currentMonth
-    );
-
-
-  /*
-    Find Gregorian weekday
-    for Hijri month first day.
-  */
-
-  const firstDate =
-    hijriToGregorian(
-      currentYear,
-      currentMonth,
-      1
-    );
-
-
-  const firstWeekday =
-    firstDate.getDay();
-
-
-  /* EMPTY */
-
-  for(
-    let i = 0;
-    i < firstWeekday;
-    i++
-  ){
-
-    const empty =
-      document.createElement("div");
-
-    empty.className =
-      "day empty";
-
-    daysEl.appendChild(empty);
-
+  try {
+    localStorage.setItem(AYNA_CALENDAR_CONFIG.storageKey, JSON.stringify(payload));
+  } catch (err) {
+    console.error("Storage sync error:", err);
   }
 
-
-  /* DAYS */
-
-  for(
-    let day = 1;
-    day <= totalDays;
-    day++
-  ){
-
-    const cell =
-      document.createElement("div");
-
-    cell.className =
-      "day";
-
-
-    const gregorian =
-      hijriToGregorian(
-        currentYear,
-        currentMonth,
-        day
-      );
-
-
-    /* HIJRI NUMBER */
-
-    const number =
-      document.createElement("div");
-
-    number.className =
-      "day-number";
-
-    number.textContent =
-      bnNumber(day);
-
-
-    /* GREGORIAN */
-
-    const greg =
-      document.createElement("div");
-
-    greg.className =
-      "gregorian";
-
-    greg.textContent =
-      gregorian.toLocaleDateString(
-        "bn-BD",
-        {
-          day:"numeric",
-          month:"short"
-        }
-      );
-
-
-    cell.appendChild(number);
-    cell.appendChild(greg);
-
-
-    /* SPECIAL */
-
-    const special =
-      getSpecialDay(
-        currentMonth,
-        day
-      );
-
-
-    if(special){
-
-      const dot =
-        document.createElement("span");
-
-      dot.className =
-        "special";
-
-      cell.appendChild(dot);
-
-    }
-
-
-    /* TODAY */
-
-    const currentH =
-      getCurrentHijri();
-
-
-    if(
-      currentH.year === currentYear &&
-      currentH.month === currentMonth &&
-      currentH.day === day
-    ){
-
-      cell.classList.add("today");
-
-    }
-
-
-    /* CLICK */
-
-    cell.addEventListener(
-      "click",
-      () => {
-
-        selected =
-          gregorian;
-
-        showSelected(
-          day,
-          gregorian,
-          special
-        );
-
-        document
-          .querySelectorAll(".day")
-          .forEach(
-            item =>
-              item.classList.remove(
-                "selected"
-              )
-          );
-
-        cell.classList.add(
-          "selected"
-        );
-
-      }
-    );
-
-
-    daysEl.appendChild(cell);
-
+  const previewBox = $("calTimePreview");
+  if (previewBox) {
+    previewBox.textContent =
+      `${payload.countryName} — ${payload.districtName} | সেহরি: ${payload.sehri} | ইফতার: ${payload.iftar}`;
   }
 
+  const goClockLink = $("goToClockBtn");
+  if (goClockLink) {
+    goClockLink.href =
+      `clock.html?country=${encodeURIComponent(countryCode)}&district=${encodeURIComponent(districtName)}&lead=${leadHours}`;
+  }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  renderHijriHeader();
 
-/* ---------- SELECTED ---------- */
+  const countryEl = $("calCountrySelect");
+  const districtEl = $("calDistrictSelect");
+  const leadEl = $("calIftarLeadHours");
 
-function showSelected(
-  day,
-  gregorian,
-  special
-){
-
-  const month =
-    months[currentMonth - 1];
-
-
-  selectedHijriEl.textContent =
-    bnNumber(day) +
-    " " +
-    month.bn +
-    " " +
-    bnNumber(currentYear) +
-    " হিজরি";
-
-
-  selectedGregorianEl.textContent =
-    gregorianText(gregorian);
-
-
-  eventBox.innerHTML = "";
-
-
-  if(special){
-
-    const box =
-      document.createElement("div");
-
-    box.className =
-      "event";
-
-    box.textContent =
-      special;
-
-    eventBox.appendChild(box);
-
+  if (countryEl) {
+    countryEl.value = AYNA_CALENDAR_CONFIG.defaultCountry;
+    countryEl.addEventListener("change", populateCalendarDistricts);
   }
 
-}
-
-
-/* ---------- INITIAL SELECTED ---------- */
-
-function showToday(){
-
-  const h =
-    getCurrentHijri();
-
-
-  const date =
-    hijriToGregorian(
-      h.year,
-      h.month,
-      h.day
-    );
-
-
-  currentYear =
-    h.year;
-
-  currentMonth =
-    h.month;
-
-  selected =
-    date;
-
-
-  const special =
-    getSpecialDay(
-      h.month,
-      h.day
-    );
-
-
-  showSelected(
-    h.day,
-    date,
-    special
-  );
-
-
-  render();
-
-}
-
-
-/* ---------- PREVIOUS ---------- */
-
-prevBtn.addEventListener(
-  "click",
-  () => {
-
-    currentMonth--;
-
-    if(currentMonth < 1){
-
-      currentMonth = 12;
-      currentYear--;
-
-    }
-
-    render();
-
+  if (districtEl) {
+    districtEl.addEventListener("change", syncCalendarSelectionToClock);
   }
-);
 
-
-/* ---------- NEXT ---------- */
-
-nextBtn.addEventListener(
-  "click",
-  () => {
-
-    currentMonth++;
-
-    if(currentMonth > 12){
-
-      currentMonth = 1;
-      currentYear++;
-
-    }
-
-    render();
-
+  if (leadEl) {
+    leadEl.addEventListener("change", syncCalendarSelectionToClock);
   }
-);
 
-
-/* ---------- YEAR ---------- */
-
-hijriYearEl.addEventListener(
-  "change",
-  () => {
-
-    let value =
-      parseInt(
-        hijriYearEl.value,
-        10
-      );
-
-
-    if(
-      isNaN(value) ||
-      value < 1
-    )
-      value = 1;
-
-
-    if(value > 9999)
-      value = 9999;
-
-
-    currentYear =
-      value;
-
-
-    render();
-
-  }
-);
-
-
-/* ---------- MONTH ---------- */
-
-hijriMonthEl.addEventListener(
-  "change",
-  () => {
-
-    let value =
-      parseInt(
-        hijriMonthEl.value,
-        10
-      );
-
-
-    if(
-      isNaN(value) ||
-      value < 1
-    )
-      value = 1;
-
-
-    if(value > 12)
-      value = 12;
-
-
-    currentMonth =
-      value;
-
-
-    render();
-
-  }
-);
-
-
-/* ---------- TODAY ---------- */
-
-todayBtn.addEventListener(
-  "click",
-  showToday
-);
-
-
-/* ---------- START ---------- */
-
-showToday();
+  populateCalendarDistricts();
+});
