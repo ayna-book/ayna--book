@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#060d21">
+<title>AYNA BOOK — বিশ্ব কৃষক</title>
+
+<style>
+:root {
+  --bg: #050a18;
+  --navy-top: #172e63;
+  --navy-bottom: #08122b;
+  --gold: #ffd700;
+  --gold-base: #755206;
+  --white: #ffffff;
+  --muted: #dce6fa;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: Arial, "Noto Sans Bengali", sans-serif;
+  font-size: 20px;
+  padding-bottom: 80px;
+}
+
+.gold-3d {
+  background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
+  border: 2.5px solid var(--gold);
+  border-radius: 6px;
+  box-shadow:
+    0 7px 0 var(--gold-base),
+    0 12px 22px rgba(0, 0, 0, 0.8),
+    inset 0 2px 3px rgba(255, 242, 166, 0.5);
+}
+
+header {
+  background: linear-gradient(180deg, #0f1f47 0%, #060d21 100%);
+  border-bottom: 2.5px solid var(--gold);
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  color: var(--gold);
+  font-size: 24px;
+  font-weight: 1000;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star-1s {
+  color: #ffffff;
+  font-size: 26px;
+  display: inline-block;
+  animation: starFlash1s 1s infinite alternate ease-in-out;
+}
+
+@keyframes starFlash1s {
+  0% { transform: scale(0.95); text-shadow: 0 0 6px #ffd700; }
+  100% { transform: scale(1.35); text-shadow: 0 0 14px #ffffff, 0 0 32px #ffd700; }
+}
+
+.back-btn {
+  text-decoration: none;
+  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
+  color: #050a18;
+  font-weight: 1000;
+  font-size: 17px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1.5px solid #fff2a6;
+  box-shadow: 0 4px 0 #664604;
+}
+
+.container {
+  max-width: 1050px;
+  margin: 18px auto;
+  padding: 0 14px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 1000;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.box-pad {
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.box-pad h2 {
+  color: var(--gold);
+  font-size: 23px;
+  margin-bottom: 12px;
+}
+
+.auto-status-box {
+  background: #050b1c;
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  padding: 12px;
+  color: var(--gold);
+  font-size: 17px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media(min-width: 650px) {
+  .grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+input, select, textarea {
+  width: 100%;
+  background: #050b1c;
+  color: var(--white);
+  border: 2px solid var(--gold);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 19px;
+  margin-bottom: 12px;
+}
+
+.btn-gold-3d {
+  width: 100%;
+  min-height: 56px;
+  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
+  color: #050a18;
+  font-size: 21px;
+  font-weight: 1000;
+  border: 2px solid #fff2a6;
+  border-radius: 6px;
+  box-shadow: 0 5px 0 #664604;
+  cursor: pointer;
+}
+
+.btn-gold-3d:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #664604;
+}
+
+.farmers-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media(min-width: 750px) {
+  .farmers-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.farmer-card {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.farmer-badge {
+  display: inline-block;
+  background: #050b1c;
+  color: var(--gold);
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.farmer-title {
+  font-size: 23px;
+  font-weight: 1000;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.farmer-crop {
+  font-size: 19px;
+  font-weight: bold;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.farmer-desc {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--muted);
+  white-space: pre-wrap;
+}
+
+.farmer-footer {
+  border-top: 1px solid rgba(255, 215, 0, 0.35);
+  padding-top: 10px;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+#notice {
+  position: fixed;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0a1636;
+  color: #ffffff;
+  border: 2px solid var(--gold);
+  padding: 12px 18px;
+  border-radius: 6px;
+  z-index: 100;
+  display: none;
+  font-size: 18px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="brand">AYNA BOOK <span class="star-1s">★</span></a>
+  <a href="index.html" class="back-btn">🏠 হোম</a>
+</header>
+
+<div id="notice"></div>
+
+<main class="container">
+  <h1 class="page-title">🌾 বিশ্ব কৃষক — কৃষি তথ্য, ফসল ও বাজার দর</h1>
+
+  <!-- অটো আপডেট স্ট্যাটাস, মুদ্রা ও ফিল্টার -->
+  <section class="gold-3d box-pad">
+    <div id="agriAutoStatus" class="auto-status-box">
+      🔄 কৃষি পণ্যের দৈনিক দর অটো-আপডেট লোড হচ্ছে...
+    </div>
+
+    <div class="grid-2">
+      <select id="agriCurrencySelect">
+        <option value="BDT">🇧🇩 বাংলাদেশ (টাকা ৳)</option>
+        <option value="SAR">🇸🇦 সৌদি আরব (রিয়াল SAR)</option>
+        <option value="AED">🇦🇪 সংযুক্ত আরব আমিরাত (দিরহাম AED)</option>
+        <option value="GBP">🇬🇧 যুক্তরাজ্য (পাউন্ড £)</option>
+        <option value="USD">🇺🇸 যুক্তরাষ্ট্র (ডলার USD)</option>
+        <option value="INR">🇮🇳 ভারত (রুপি ₹)</option>
+      </select>
+
+      <select id="farmerCategoryFilter">
+        <option value="ALL">🌱 সব ক্যাটাগরি</option>
+        <option value="ফসল উৎপাদন">ফসল উৎপাদন</option>
+        <option value="আধুনিক কৃষি প্রযুক্তি">আধুনিক কৃষি প্রযুক্তি</option>
+        <option value="সরাসরি কৃষি পণ্য">সরাসরি কৃষি পণ্য</option>
+        <option value="পশুপালন ও মৎস্য">পশুপালন ও মৎস্য</option>
+        <option value="আবহাওয়া ও পরামর্শ">আবহাওয়া ও পরামর্শ</option>
+      </select>
+    </div>
+
+    <div class="grid-2">
+      <input id="farmerLocationFilter" type="text" placeholder="দেশ বা এলাকা (যেমন: বাংলাদেশ, চট্টগ্রাম, ভারত)...">
+      <input id="farmerSearch" type="text" placeholder="ফসল, কৃষকের নাম বা কৃষি তথ্য খুঁজুন...">
+    </div>
+
+    <button id="refreshAgriPricesBtn" type="button" class="btn-gold-3d">
+      🔄 আজকের কৃষি দর অটো আপডেট করুন
+    </button>
+  </section>
+
+  <!-- নতুন কৃষি তথ্য বা ফসলের দর যুক্ত করার ফর্ম -->
+  <section class="gold-3d box-pad">
+    <h2>➕ নতুন কৃষি তথ্য বা ফসলের দর যুক্ত করুন</h2>
+    <div class="grid-2">
+      <select id="farmerCategory">
+        <option value="ফসল উৎপাদন">ফসল উৎপাদন</option>
+        <option value="আধুনিক কৃষি প্রযুক্তি">আধুনিক কৃষি প্রযুক্তি</option>
+        <option value="সরাসরি কৃষি পণ্য">সরাসরি কৃষি পণ্য</option>
+        <option value="পশুপালন ও মৎস্য">পশুপালন ও মৎস্য</option>
+        <option value="আবহাওয়া ও পরামর্শ">আবহাওয়া ও পরামর্শ</option>
+      </select>
+      <input id="farmerCountryArea" type="text" placeholder="দেশ ও এলাকা (যেমন: বাংলাদেশ — চট্টগ্রাম)">
+    </div>
+
+    <div class="grid-2">
+      <input id="farmerName" type="text" placeholder="কৃষক বা কৃষি বিশেষজ্ঞের নাম...">
+      <input id="farmerCrop" type="text" placeholder="প্রধান ফসল বা পণ্য (যেমন: ধান, আলু, পেঁয়াজ, মধু)">
+    </div>
+
+    <div class="grid-2">
+      <input id="farmerPriceBdt" type="number" step="0.01" placeholder="দাম (BDT টাকায়, ঐচ্ছিক)">
+      <input id="farmerUnit" type="text" placeholder="একক (যেমন: প্রতি কেজি / প্রতি মণ)">
+    </div>
+
+    <input id="farmerTitle" type="text" placeholder="শিরোনাম (যেমন: শীতকালীন সবজি ও ফসলের বাজার দর)...">
+    <textarea id="farmerDesc" rows="3" placeholder="বিস্তারিত তথ্য, ফলন বা যোগাযোগের বিবরণ লিখুন..."></textarea>
+    <button id="addFarmerPostBtn" type="button" class="btn-gold-3d">
+      🌾 বিশ্ব কৃষক তালিকায় প্রকাশ করুন
+    </button>
+  </section>
+
+  <!-- কৃষি পণ্য ও তথ্য তালিকা -->
+  <section id="farmersList" class="farmers-grid">
+    <div class="gold-3d box-pad" style="grid-column:1/-1;text-align:center;">
+      কৃষি তথ্য লোড হচ্ছে...
+    </div>
+  </section>
+</main>
+
+<script type="module" src="./world-farmers.js"></script>
+</body>
+</html>
