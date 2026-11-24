@@ -199,6 +199,7 @@ class MainActivity : ComponentActivity() {
                             AynaRoute.MODERATION -> {
                                 if (isAdmin) {
                                     ModerationScreen(
+                                        initialPostId = notificationTargetState.postId,
                                         database = database,
                                         auth = auth
                                     )
