@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AYNA BOOK — Bookmarks, Voice &amp; Safety Hub</title>
+<style>
+  :root {
+    --bg:#050a18;
+    --navy-top:#1a3575;
+    --navy-bottom:#08122b;
+    --gold:#ffe64d;
+    --gold-bright:#fff6b3;
+    --gold-base:#8a6105;
+    --cyan:#38f2ff;
+    --white:#ffffff;
+    --muted:#e6eeff;
+  }
+
+  * { box-sizing:border-box; }
+
+  body {
+    margin:0;
+    background:var(--bg);
+    color:var(--white);
+    font-family:Arial,"Noto Sans Bengali",sans-serif;
+    font-size:34px;
+    line-height:1.5;
+    padding-bottom:110px;
+  }
+
+  .wrap { max-width:1360px; margin:auto; padding:20px; }
+
+  .box {
+    background:linear-gradient(155deg,var(--navy-top),var(--navy-bottom));
+    border:4px solid var(--gold);
+    border-radius:10px;
+    padding:24px;
+    margin-bottom:24px;
+    box-shadow:0 0 18px rgba(255,230,77,.6), 0 8px 0 var(--gold-base);
+  }
+
+  h1, h2 {
+    margin:0 0 14px;
+    color:var(--gold-bright);
+    font-weight:1000;
+  }
+
+  h1 { font-size:46px; }
+  h2 { font-size:38px; }
+
+  .nav-row {
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:14px;
+  }
+
+  .nav-btn {
+    text-decoration:none;
+    color:var(--gold-bright);
+    background:#060e24;
+    border:3px solid var(--gold);
+    border-radius:8px;
+    padding:10px 18px;
+    font-size:28px;
+    font-weight:bold;
+  }
+
+  input, button {
+    font:inherit;
+    border-radius:8px;
+    border:3px solid var(--gold);
+  }
+
+  input {
+    width:100%;
+    background:#050b1c;
+    color:var(--white);
+    padding:14px 18px;
+    font-size:30px;
+    margin-top:12px;
+    outline:none;
+  }
+
+  button {
+    padding:14px 20px;
+    background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+    color:#050a18;
+    font-size:30px;
+    font-weight:1000;
+    border-color:var(--gold-bright);
+    box-shadow:0 5px 0 #664604;
+    cursor:pointer;
+    margin-top:12px;
+    margin-right:10px;
+  }
+
+  .btn-dark {
+    background:linear-gradient(155deg,#1d3b7e,#08122b);
+    color:var(--white);
+    border-color:var(--gold);
+  }
+
+  .card {
+    background:#060e24;
+    border:3px solid var(--gold);
+    border-radius:10px;
+    padding:18px;
+    margin-top:14px;
+  }
+
+  .meta {
+    font-size:26px;
+    color:var(--muted);
+    margin-top:8px;
+    overflow-wrap:anywhere;
+  }
+
+  #toastBanner {
+    display:none;
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:200;
+    background:#0a1636;
+    color:var(--gold-bright);
+    border:3.5px solid var(--gold-bright);
+    border-radius:8px;
+    padding:14px 24px;
+    font-size:30px;
+    font-weight:bold;
+    max-width:92%;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+<div id="toastBanner"></div>
+
+<div class="wrap">
+  <div class="box">
+    <h1>⚡ AYNA BOOK — BOOKMARKS, VOICE &amp; SAFETY</h1>
+    <div class="meta">পোস্ট সেভ/রিঅ্যাকশন/সার্চ, মাইক্রোফোন ভয়েস নোট এবং ব্লক/রিপোর্ট নিয়ন্ত্রণ।</div>
+    <div class="nav-row">
+      <a href="index.html" class="nav-btn">🏠 Home</a>
+      <a href="groups.html" class="nav-btn">👥 Groups</a>
+      <a href="profile.html" class="nav-btn">👤 Profile</a>
+    </div>
+  </div>
+
+  <!-- 1. Voice Note Recorder -->
+  <div class="box">
+    <h2>🎤 ভয়েস নোট রেকর্ডার</h2>
+    <div class="meta" id="voiceStatus">মাইক্রোফোন প্রস্তুত। রেকর্ড শুরু করতে বাটনে চাপ দিন।</div>
+    <button type="button" id="startVoiceBtn">🎙️ রেকর্ড শুরু</button>
+    <button type="button" id="stopVoiceBtn" class="btn-dark">⏹️ রেকর্ড শেষ ও প্রিভিউ</button>
+    <div id="voicePreviewWrap" style="margin-top:16px;"></div>
+  </div>
+
+  <!-- 2. Bookmarks & Search -->
+  <div class="box">
+    <h2>🔖 সেভ করা পোস্ট (Bookmarks) ও দ্রুত সার্চ</h2>
+    <input type="text" id="bookmarkPostIdInput" placeholder="সেভ বা আনসেভ করার জন্য Post ID দিন...">
+    <button type="button" id="toggleBookmarkBtn">⭐ বুকমার্ক টগল করুন</button>
+
+    <input type="search" id="extraSearchInput" placeholder="নমুনা পোস্ট বা সেভ তালিকায় খুঁজুন...">
+    <div id="bookmarksResultBox" style="margin-top:14px;"></div>
+  </div>
+
+  <!-- 3. Block User & Report Post -->
+  <div class="box">
+    <h2>🛡️ ইউজার ব্লক/মিউট ও পোস্ট রিপোর্ট</h2>
+    <input type="text" id="blockUidInput" placeholder="ব্লক বা আনব্লক করার জন্য User UID দিন...">
+    <button type="button" id="blockUserBtn">🚫 ইউজার ব্লক করুন</button>
+    <button type="button" id="unblockUserBtn" class="btn-dark">✅ আনব্লক করুন</button>
+    <div class="meta" id="blockedUsersDisplay">ব্লক করা ইউজার: কেউ নেই</div>
+
+    <input type="text" id="reportPostIdInput" placeholder="রিপোর্ট করার Post ID দিন...">
+    <input type="text" id="reportReasonInput" placeholder="রিপোর্টের কারণ লিখুন...">
+    <button type="button" id="submitReportBtn">🚩 রিপোর্ট পাঠান</button>
+  </div>
+</div>
+
+<script type="module">
+import {
+  getSavedPostIds,
+  toggleBookmarkPost,
+  filterPostsByText
+} from "./ayna-bookmarks-reactions.js";
+import { createAynaVoiceRecorder } from "./ayna-voice-recorder.js";
+import {
+  getBlockedUserIds,
+  blockUserLocally,
+  unblockUserLocally,
+  submitPostReport
+} from "./ayna-safety-moderation.js";
+
+let activeRecorder = null;
+
+function notify(msg) {
+  const el = document.getElementById("toastBanner");
+  if (!el) return;
+  el.textContent = msg;
+  el.style.display = "block";
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => {
+    el.style.display = "none";
+  }, 3000);
+}
+
+// Voice Recorder Controls
+document.getElementById("startVoiceBtn").addEventListener("click", async () => {
+  try {
+    activeRecorder = await createAynaVoiceRecorder();
+    activeRecorder.start();
+    document.getElementById("voiceStatus").textContent = "🔴 রেকর্ডিং চলছে... কথা বলুন।";
+    notify("ভয়েস রেকর্ডিং শুরু হয়েছে");
+  } catch (err) {
+    document.getElementById("voiceStatus").textContent = err?.message || "মাইক্রোফোন চালু করা যায়নি";
+    notify("মাইক্রোফোন অনুমতি দিন");
+  }
+});
+
+document.getElementById("stopVoiceBtn").addEventListener("click", async () => {
+  if (!activeRecorder) {
+    notify("আগে রেকর্ড শুরু করুন");
+    return;
+  }
+  try {
+    const file = await activeRecorder.stop();
+    activeRecorder = null;
+    const url = URL.createObjectURL(file);
+    document.getElementById("voiceStatus").textContent = `রেকর্ড সম্পন্ন: ${file.name}`;
+    document.getElementById("voicePreviewWrap").innerHTML = `
+      <audio controls src="${url}" style="width:100%;"></audio>
+    `;
+    notify("ভয়েস নোট তৈরি হয়েছে");
+  } catch (err) {
+    console.error(err);
+    notify("রেকর্ডিং শেষ করতে সমস্যা হয়েছে");
+  }
+});
+
+// Bookmarks Render & Search
+function renderBookmarksList() {
+  const ids = getSavedPostIds();
+  const q = document.getElementById("extraSearchInput").value || "";
+  const mockItems = ids.map(id => ({ id, authorName: "AYNA Bookmarked Post", text: `Saved Post ID: ${id}` }));
+  const filtered = filterPostsByText(mockItems, q);
+
+  const box = document.getElementById("bookmarksResultBox");
+  if (!filtered.length) {
+    box.innerHTML = '<div class="meta">কোনো সেভ করা পোস্ট পাওয়া যায়নি।</div>';
+    return;
+  }
+  box.innerHTML = filtered.map(item => `
+    <div class="card">
+      <div style="font-weight:bold;color:#fff6b3;">${item.text}</div>
+      <div class="meta">ID: ${item.id}</div>
+    </div>
+  `).join("");
+}
+
+document.getElementById("toggleBookmarkBtn").addEventListener("click", () => {
+  const id = document.getElementById("bookmarkPostIdInput").value.trim();
+  if (!id) {
+    notify("Post ID লিখুন");
+    return;
+  }
+  toggleBookmarkPost(id);
+  document.getElementById("bookmarkPostIdInput").value = "";
+  renderBookmarksList();
+  notify("বুকমার্ক আপডেট হয়েছে");
+});
+
+document.getElementById("extraSearchInput").addEventListener("input", renderBookmarksList);
+
+// Block & Report Controls
+function renderBlockedList() {
+  const list = getBlockedUserIds();
+  document.getElementById("blockedUsersDisplay").textContent = list.length
+    ? `ব্লক করা ইউজার: ${list.join(", ")}`
+    : "ব্লক করা ইউজার: কেউ নেই";
+}
+
+document.getElementById("blockUserBtn").addEventListener("click", () => {
+  const uid = document.getElementById("blockUidInput").value.trim();
+  if (!uid) {
+    notify("User UID লিখুন");
+    return;
+  }
+  blockUserLocally(uid);
+  document.getElementById("blockUidInput").value = "";
+  renderBlockedList();
+  notify("ইউজার ব্লক করা হয়েছে");
+});
+
+document.getElementById("unblockUserBtn").addEventListener("click", () => {
+  const uid = document.getElementById("blockUidInput").value.trim();
+  if (!uid) {
+    notify("User UID লিখুন");
+    return;
+  }
+  unblockUserLocally(uid);
+  document.getElementById("blockUidInput").value = "";
+  renderBlockedList();
+  notify("ইউজার আনব্লক করা হয়েছে");
+});
+
+document.getElementById("submitReportBtn").addEventListener("click", async () => {
+  const postId = document.getElementById("reportPostIdInput").value.trim();
+  const reason = document.getElementById("reportReasonInput").value.trim() || "অনুপযুক্ত কনটেন্ট";
+  if (!postId) {
+    notify("Post ID লিখুন");
+    return;
+  }
+  try {
+    const initMod = await import("./firebase-init.js").catch(() => null);
+    const jsFbMod = await import("./js/firebase.js").catch(() => null);
+    const { getAuth } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
+    const db = initMod?.database || jsFbMod?.database || null;
+    const auth = initMod?.auth || jsFbMod?.auth || getAuth();
+    const uid = auth?.currentUser?.uid || "guest_user";
+
+    await submitPostReport(db, uid, postId, reason);
+    document.getElementById("reportPostIdInput").value = "";
+    document.getElementById("reportReasonInput").value = "";
+    notify("রিপোর্ট সংরক্ষিত হয়েছে");
+  } catch (err) {
+    console.error(err);
+    notify("রিপোর্ট পাঠানো যায়নি");
+  }
+});
+
+renderBookmarksList();
+renderBlockedList();
+</script>
+</body>
+</html>
