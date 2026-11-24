@@ -343,6 +343,147 @@ header {
   color:var(--gold-bright);
 }
 
+.panel-head-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+
+.panel-head-row h2 {
+  margin:0;
+}
+
+.panel-link-btn {
+  text-decoration:none;
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  border:3px solid var(--gold-bright);
+  border-radius:8px;
+  padding:12px 20px;
+  font-size:28px;
+  font-weight:1000;
+  box-shadow:0 5px 0 #664604;
+}
+
+.hub-search-input,
+.hub-select {
+  width:100%;
+  background:#050b1c;
+  color:white;
+  border:3px solid var(--gold);
+  border-radius:8px;
+  padding:16px 20px;
+  font-size:32px;
+  outline:none;
+}
+
+.hub-controls-row {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:18px;
+}
+
+.hub-cards-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  margin-top:18px;
+}
+
+.hub-card {
+  background:#050b1c;
+  border:3px solid var(--gold);
+  border-radius:8px;
+  padding:20px;
+  font-size:30px;
+}
+
+.hub-card-tag {
+  display:inline-block;
+  background:var(--gold);
+  color:#050a18;
+  font-size:22px;
+  font-weight:1000;
+  padding:4px 12px;
+  border-radius:6px;
+  margin-bottom:10px;
+}
+
+.hub-card-title {
+  font-size:34px;
+  font-weight:1000;
+  color:var(--gold-bright);
+  margin-bottom:8px;
+}
+
+.hub-card-meta {
+  font-size:28px;
+  color:var(--muted);
+  margin-top:6px;
+  overflow-wrap:anywhere;
+}
+
+.yt-input-row {
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:14px;
+  margin-bottom:16px;
+}
+
+.yt-go-btn {
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  border:3px solid var(--gold-bright);
+  border-radius:8px;
+  padding:0 26px;
+  min-height:76px;
+  font-size:32px;
+  font-weight:1000;
+  box-shadow:0 5px 0 #664604;
+}
+
+.yt-preset-row {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+
+.yt-preset-btn {
+  background:#0a1636;
+  color:var(--gold-bright);
+  border:2.5px solid var(--gold);
+  border-radius:8px;
+  padding:12px 18px;
+  font-size:28px;
+  font-weight:bold;
+}
+
+.yt-player-frame {
+  width:100%;
+  height:540px;
+  border:3.5px solid var(--gold);
+  border-radius:8px;
+  background:#000;
+}
+
+.yt-ext-link {
+  display:inline-block;
+  margin-top:16px;
+  text-decoration:none;
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  color:var(--gold-bright);
+  border:3px solid var(--gold);
+  border-radius:8px;
+  padding:14px 22px;
+  font-size:30px;
+  font-weight:bold;
+}
+
 .clock-live-box {
   background:#050b1c;
   border:3px solid var(--gold);
@@ -816,7 +957,10 @@ footer {
   .feature-grid-8,
   .feature-grid-more,
   .post-tools,
-  .media-buttons {
+  .media-buttons,
+  .hub-controls-row,
+  .hub-cards-grid,
+  .yt-input-row {
     grid-template-columns:1fr;
   }
   .profile-bar img {
@@ -831,6 +975,9 @@ footer {
   }
   .clock-live-time {
     font-size:38px;
+  }
+  .yt-player-frame {
+    height:340px;
   }
 }
 </style>
@@ -880,19 +1027,19 @@ footer {
     </div>
   </section>
 
-  <!-- সময় বলার ঘড়ি প্যানেল -->
+  <!-- সময় বলার ঘড়ি প্যানেল (১ ঘণ্টা পর পর স্বয়ংক্রিয় ঘোষণা) -->
   <section class="panel" id="talkingClockSection">
     <h2>🕒 রিয়েল-টাইম কথা বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা</h2>
     <div class="clock-live-box">
       <span class="clock-live-time" id="quantumClockDisplay">লোড হচ্ছে...</span>
       <div class="clock-rules-text">
-        • প্রতি ১ ঘণ্টা পর পর রিয়েল-টাইম সময় ঘোষণা<br>
+        • প্রতি ১ ঘণ্টা পর পর স্বয়ংক্রিয়ভাবে রিয়েল-টাইম সময় ঘোষণা (পরবর্তী ঘণ্টা: <strong id="nextHourlyAnnouncement">--</strong>)<br>
         • সেহরির ১.৫ ঘণ্টা আগে ঘোষণা (ভিত্তি: 04:58 AM)<br>
         • ইফতারের ১ ঘণ্টা আগে থেকে প্রতি ৫ মিনিটে ঘোষণা (ভিত্তি: 05:12 PM)
       </div>
     </div>
     <div class="media-buttons">
-      <button type="button" id="toggleTalkClockBtn">🔊 সময় বলা: চালু</button>
+      <button type="button" id="toggleTalkClockBtn">🔊 ১ ঘণ্টা পর পর অটো সময়: চালু</button>
       <button type="button" id="speakNowClockBtn">🎙️ এখনই সময় বলুন</button>
     </div>
   </section>
@@ -1087,6 +1234,115 @@ footer {
       <span class="feature-icon">🖥️</span>
       <span class="feature-name">সুপারকম্পিউটার</span>
       <span class="feature-desc">উচ্চগতির তথ্য</span>
+    </a>
+  </section>
+
+  <!-- রাষ্ট্রনেতাদের নাম তালিকা -->
+  <section class="panel" id="worldLeadersSection">
+    <div class="panel-head-row">
+      <h2>🌍 রাষ্ট্রনেতাদের নাম তালিকা</h2>
+      <a href="world-leaders.html" class="panel-link-btn">সব রাষ্ট্রনেতা পেজ</a>
+    </div>
+    <input
+      type="search"
+      id="leaderSearchInput"
+      class="hub-search-input"
+      placeholder="রাষ্ট্রনেতা বা দেশের নাম দিয়ে খুঁজুন..."
+    >
+    <div class="hub-cards-grid" id="worldLeadersGrid"></div>
+  </section>
+
+  <!-- বিশ্ব আলেম গবেষণাগার -->
+  <section class="panel" id="ulemaResearchSection">
+    <div class="panel-head-row">
+      <h2>🕌 বিশ্ব আলেম গবেষণাগার</h2>
+      <a href="ulema-research.html" class="panel-link-btn">গবেষণাগার পেজ</a>
+    </div>
+    <input
+      type="search"
+      id="ulemaSearchInput"
+      class="hub-search-input"
+      placeholder="গবেষণার বিষয় বা বিভাগ খুঁজুন..."
+    >
+    <div class="hub-cards-grid" id="ulemaResearchGrid"></div>
+  </section>
+
+  <!-- মুদি বাজার ও বিশ্ব কৃষক -->
+  <section class="panel" id="groceryFarmersSection">
+    <div class="panel-head-row">
+      <h2>🛒 মুদি বাজার ও 🌾 বিশ্ব কৃষক</h2>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="world-grocery.html" class="panel-link-btn">মুদি বাজার</a>
+        <a href="world-farmers.html" class="panel-link-btn">বিশ্ব কৃষক</a>
+      </div>
+    </div>
+    <div class="hub-controls-row">
+      <select id="marketTypeSelect" class="hub-select">
+        <option value="all">সব পণ্য (মুদি বাজার + বিশ্ব কৃষক)</option>
+        <option value="grocery">শুধু মুদি বাজার</option>
+        <option value="farmer">শুধু বিশ্ব কৃষক</option>
+      </select>
+      <input
+        type="search"
+        id="marketItemSearchInput"
+        class="hub-search-input"
+        placeholder="চাল, ডাল, তেল, আলু, গম, মসলা খুঁজুন..."
+      >
+    </div>
+    <div class="hub-cards-grid" id="groceryFarmersGrid"></div>
+  </section>
+
+  <!-- বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন -->
+  <section class="panel" id="worldJobsSection">
+    <div class="panel-head-row">
+      <h2>💼 বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন</h2>
+      <a href="world-jobs.html" class="panel-link-btn">চাকুরী বাজার পেজ</a>
+    </div>
+    <input
+      type="search"
+      id="directJobSearchInput"
+      class="hub-search-input"
+      placeholder="পদবী, কোম্পানি বা লোকেশন দিয়ে চাকুরীর বিজ্ঞাপন খুঁজুন..."
+    >
+    <div class="hub-cards-grid" id="directJobsGrid"></div>
+  </section>
+
+  <!-- AYNA YOUTUBE HUB -->
+  <section class="panel" id="youtubeHubSection">
+    <h2>▶️ AYNA YOUTUBE HUB</h2>
+    <div class="yt-input-row">
+      <input
+        type="text"
+        id="ytSearchOrUrlInput"
+        class="hub-search-input"
+        style="margin:0;"
+        placeholder="YouTube ভিডিও লিংক/ID দিন অথবা টপিক লিখে সার্চ করুন..."
+      >
+      <button type="button" id="ytPlaySearchBtn" class="yt-go-btn">চালান / খুঁজুন</button>
+    </div>
+    <div class="yt-preset-row">
+      <button type="button" class="yt-preset-btn" data-yt="AYNA BOOK">AYNA BOOK</button>
+      <button type="button" class="yt-preset-btn" data-yt="Bangla news live">বাংলা নিউজ</button>
+      <button type="button" class="yt-preset-btn" data-yt="Islamic lecture Bangla">ইসলামি আলোচনা</button>
+      <button type="button" class="yt-preset-btn" data-yt="Global agriculture farming">বিশ্ব কৃষি</button>
+      <button type="button" class="yt-preset-btn" data-yt="Global job market career">বিশ্ব চাকুরী</button>
+    </div>
+    <iframe
+      id="ytEmbedFrame"
+      class="yt-player-frame"
+      src="https://www.youtube.com/embed?listType=search&list=Bangla+news+live"
+      title="AYNA YouTube Hub"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <a
+      id="ytDirectWatchLink"
+      class="yt-ext-link"
+      href="https://www.youtube.com/results?search_query=Bangla+news+live"
+      target="_blank"
+      rel="noopener"
+    >
+      ↗️ YouTube অ্যাপ বা ব্রাউজারে খুলুন
     </a>
   </section>
 
@@ -1454,6 +1710,213 @@ $("fileSearchInput").addEventListener("input", e => {
 
 renderFileRegistry();
 
+// রাষ্ট্রনেতাদের নাম তালিকা
+const WORLD_LEADERS_LIST = [
+  { country: "বাংলাদেশ", name: "তারেক রহমান", role: "প্রধানমন্ত্রী (মন্ত্রিপরিষদ বিভাগ ও সশস্ত্র বাহিনী বিভাগ)" },
+  { country: "বাংলাদেশ", name: "মির্জা ফখরুল ইসলাম আলমগীর", role: "রাষ্ট্রপতি" },
+  { country: "সৌদি আরব", name: "বাদশাহ সালমান / যুবরাজ মোহাম্মদ বিন সালমান", role: "বাদশাহ ও প্রধানমন্ত্রী" },
+  { country: "তুরস্ক", name: "রিসেপ তাইয়িপ এরদোয়ান", role: "প্রেসিডেন্ট" },
+  { country: "যুক্তরাষ্ট্র", name: "ডোনাল্ড ট্রাম্প", role: "প্রেসিডেন্ট" },
+  { country: "যুক্তরাজ্য", name: "কিয়ার স্টারমার / রাজা তৃতীয় চার্লস", role: "প্রধানমন্ত্রী ও রাজা" },
+  { country: "ভারত", name: "নরেন্দ্র মোদী / দ্রৌপদী মুর্মু", role: "প্রধানমন্ত্রী ও রাষ্ট্রপতি" },
+  { country: "চীন", name: "শি জিনপিং", role: "প্রেসিডেন্ট" },
+  { country: "কাতার", name: "শেখ তামিম বিন হামাদ আল থানি", role: "আমির" },
+  { country: "সংযুক্ত আরব আমিরাত", name: "শেখ মোহাম্মদ বিন জায়েদ আল নাহিয়ান", role: "প্রেসিডেন্ট" }
+];
+
+function renderWorldLeadersHub(filter = "") {
+  const grid = $("worldLeadersGrid");
+  if (!grid) return;
+  const q = filter.trim().toLowerCase();
+  const list = WORLD_LEADERS_LIST.filter(
+    item => item.country.toLowerCase().includes(q) || item.name.toLowerCase().includes(q) || item.role.toLowerCase().includes(q)
+  );
+  grid.innerHTML = list.length
+    ? list.map(item => `
+        <div class="hub-card">
+          <span class="hub-card-tag">${item.country}</span>
+          <div class="hub-card-title">${item.name}</div>
+          <div class="hub-card-meta">${item.role}</div>
+        </div>
+      `).join("")
+    : '<div class="empty">কোনো রাষ্ট্রনেতার তথ্য মেলেনি।</div>';
+}
+
+// বিশ্ব আলেম গবেষণাগার
+const ULEMA_RESEARCH_LIST = [
+  { dept: "ফিকহ ও শরয়ি গবেষণা", title: "আধুনিক ব্যাংকিং, ডিজিটাল লেনদেন ও শরয়ি নীতিমালা", note: "আন্তর্জাতিক আলেম গবেষণা ইউনিট" },
+  { dept: "জাকাত ও ওয়াকফ অর্থনীতি", title: "সামাজিক নিরাপত্তা ও দারিদ্র্য বিমোচনে ওয়াকফ মডেল", note: "ইসলামি অর্থনীতি গবেষণা সেল" },
+  { dept: "কুরআন ও সুন্নাহ আর্কাইভ", title: "তফসির, হাদিস ও সীরাত গবেষণা সংকলন", note: "শাস্ত্রীয় গবেষণা বিভাগ" },
+  { dept: "পরিবার ও সমাজ সংস্কার", title: "আধুনিক সমাজে নৈতিকতা, শিক্ষা ও সম্প্রীতি", note: "গবেষণা ও ফতোয়া পরামর্শ কেন্দ্র" }
+];
+
+function renderUlemaResearchHub(filter = "") {
+  const grid = $("ulemaResearchGrid");
+  if (!grid) return;
+  const q = filter.trim().toLowerCase();
+  const list = ULEMA_RESEARCH_LIST.filter(
+    item => item.dept.toLowerCase().includes(q) || item.title.toLowerCase().includes(q) || item.note.toLowerCase().includes(q)
+  );
+  grid.innerHTML = list.length
+    ? list.map(item => `
+        <div class="hub-card">
+          <span class="hub-card-tag">${item.dept}</span>
+          <div class="hub-card-title">${item.title}</div>
+          <div class="hub-card-meta">${item.note}</div>
+        </div>
+      `).join("")
+    : '<div class="empty">কোনো গবেষণা বিষয় মেলেনি।</div>';
+}
+
+// মুদি বাজার ও বিশ্ব কৃষক বাজার (বিস্তৃত তালিকা)
+const GROCERY_FARMER_ITEMS = [
+  { cat: "grocery", label: "মুদি বাজার", name: "নাজিরশাইল ও মিনিকেট চাল", unit: "কেজি", usd: 0.65 },
+  { cat: "grocery", label: "মুদি বাজার", name: "মসুর ডাল (দেশি ও আমদানি)", unit: "কেজি", usd: 1.10 },
+  { cat: "grocery", label: "মুদি বাজার", name: "আটা ও প্যাকেট ময়দা", unit: "কেজি", usd: 0.48 },
+  { cat: "grocery", label: "মুদি বাজার", name: "সয়াবিন ও সূর্যমুখী তেল", unit: "লিটার", usd: 1.45 },
+  { cat: "grocery", label: "মুদি বাজার", name: "চিনি ও গুড়", unit: "কেজি", usd: 1.05 },
+  { cat: "grocery", label: "মুদি বাজার", name: "পেঁয়াজ, রসুন ও আদা", unit: "কেজি", usd: 0.95 },
+  { cat: "grocery", label: "মুদি বাজার", name: "হলুদ, মরিচ ও জিরা মসলা", unit: "কেজি", usd: 3.40 },
+  { cat: "grocery", label: "মুদি বাজার", name: "চা পাতা, লবণ ও গুঁড়ো দুধ", unit: "কেজি", usd: 4.10 },
+  { cat: "farmer", label: "বিশ্ব কৃষক", name: "আলু (সরাসরি কৃষক উৎপাদন)", unit: "কেজি", usd: 0.35 },
+  { cat: "farmer", label: "বিশ্ব কৃষক", name: "গম ও ভুট্টা (বিশ্ব কৃষি)", unit: "কেজি", usd: 0.32 },
+  { cat: "farmer", label: "বিশ্ব কৃষক", name: "ধান ও গবাদিপশু খাদ্য", unit: "কেজি", usd: 0.42 },
+  { cat: "farmer", label: "বিশ্ব কৃষক", name: "তাজা মৌসুমি শাকসবজি ও ফল", unit: "কেজি", usd: 0.55 }
+];
+
+let currentUsdToBdt = 120;
+
+function renderGroceryFarmersHub() {
+  const grid = $("groceryFarmersGrid");
+  if (!grid) return;
+  const cat = $("marketTypeSelect")?.value || "all";
+  const q = ($("marketItemSearchInput")?.value || "").trim().toLowerCase();
+
+  const items = GROCERY_FARMER_ITEMS.filter(item => {
+    const matchCat = cat === "all" || item.cat === cat;
+    const matchQ = !q || item.name.toLowerCase().includes(q) || item.label.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+
+  grid.innerHTML = items.length
+    ? items.map(item => {
+        const bdt = (item.usd * currentUsdToBdt).toFixed(2);
+        return `
+          <div class="hub-card">
+            <span class="hub-card-tag">${item.label}</span>
+            <div class="hub-card-title">${item.name}</div>
+            <div class="hub-card-meta">আনুমানিক দর: <strong>৳${bdt}</strong> / ${item.unit} (≈ $${item.usd.toFixed(2)})</div>
+          </div>
+        `;
+      }).join("")
+    : '<div class="empty">কোনো পণ্য পাওয়া যায়নি।</div>';
+}
+
+// বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন
+const DIRECT_JOB_ADS = [
+  {
+    title: "সিনিয়র ফুল-স্ট্যাক ও মোবাইল ডেভেলপার",
+    company: "AYNA Tech Global",
+    location: "রিমোট / ঢাকা ও দুবাই",
+    salary: "$1,800 – $2,800 / মাস",
+    contact: "careers@aynabook.example.com"
+  },
+  {
+    title: "অ্যাগ্রো সাপ্লাই চেইন ও এক্সপোর্ট ম্যানেজার",
+    company: "Global Agro Trade Ltd.",
+    location: "চট্টগ্রাম / সৌদি আরব",
+    salary: "$1,200 – $1,900 / মাস",
+    contact: "hr@globalagro.example.com"
+  },
+  {
+    title: "ইসলামি ফাইন্যান্স ও গবেষণা বিশ্লেষক",
+    company: "Al-Mizan Research & Advisory",
+    location: "কুয়ালালামপুর / হাইব্রিড",
+    salary: "$1,500 – $2,200 / মাস",
+    contact: "research@almizan.example.com"
+  },
+  {
+    title: "ইন্টারন্যাশনাল কার্গো ও লজিস্টিকস কোঅর্ডিনেটর",
+    company: "SilkRoute Transport & Logistics",
+    location: "দোহা / সিঙ্গাপুর",
+    salary: "$1,400 – $2,100 / মাস",
+    contact: "jobs@silkroute.example.com"
+  }
+];
+
+function renderDirectJobsHub(filter = "") {
+  const grid = $("directJobsGrid");
+  if (!grid) return;
+  const q = filter.trim().toLowerCase();
+  const list = DIRECT_JOB_ADS.filter(
+    j =>
+      j.title.toLowerCase().includes(q) ||
+      j.company.toLowerCase().includes(q) ||
+      j.location.toLowerCase().includes(q)
+  );
+  grid.innerHTML = list.length
+    ? list.map(j => `
+        <div class="hub-card">
+          <span class="hub-card-tag">সরাসরি চাকুরীর বিজ্ঞাপন</span>
+          <div class="hub-card-title">${j.title}</div>
+          <div class="hub-card-meta"><strong>প্রতিষ্ঠান:</strong> ${j.company}</div>
+          <div class="hub-card-meta"><strong>লোকেশন:</strong> ${j.location}</div>
+          <div class="hub-card-meta"><strong>বেতন:</strong> ${j.salary}</div>
+          <div class="hub-card-meta"><strong>যোগাযোগ:</strong> ${j.contact}</div>
+        </div>
+      `).join("")
+    : '<div class="empty">কোনো চাকুরীর বিজ্ঞাপন মেলেনি।</div>';
+}
+
+// YouTube Hub
+function extractYouTubeId(val) {
+  const clean = (val || "").trim();
+  if (/^[a-zA-Z0-9_-]{11}$/.test(clean)) return clean;
+  const m = clean.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  return m && m[1] ? m[1] : null;
+}
+
+function applyYouTubeQuery(rawVal) {
+  const query = (rawVal || "").trim() || "Bangla news live";
+  const vid = extractYouTubeId(query);
+  const frame = $("ytEmbedFrame");
+  const extLink = $("ytDirectWatchLink");
+
+  if (vid) {
+    if (frame) frame.src = `https://www.youtube.com/embed/${vid}`;
+    if (extLink) extLink.href = `https://www.youtube.com/watch?v=${vid}`;
+    notify("YouTube ভিডিও চালু করা হয়েছে");
+  } else {
+    const encoded = encodeURIComponent(query);
+    if (frame) frame.src = `https://www.youtube.com/embed?listType=search&list=${encoded}`;
+    if (extLink) extLink.href = `https://www.youtube.com/results?search_query=${encoded}`;
+    notify(`YouTube-এ "${query}" খোঁজা হচ্ছে`);
+  }
+}
+
+$("leaderSearchInput")?.addEventListener("input", e => renderWorldLeadersHub(e.target.value));
+$("ulemaSearchInput")?.addEventListener("input", e => renderUlemaResearchHub(e.target.value));
+$("marketTypeSelect")?.addEventListener("change", renderGroceryFarmersHub);
+$("marketItemSearchInput")?.addEventListener("input", renderGroceryFarmersHub);
+$("directJobSearchInput")?.addEventListener("input", e => renderDirectJobsHub(e.target.value));
+
+$("ytPlaySearchBtn")?.addEventListener("click", () => applyYouTubeQuery($("ytSearchOrUrlInput")?.value));
+$("ytSearchOrUrlInput")?.addEventListener("keydown", e => {
+  if (e.key === "Enter") applyYouTubeQuery(e.target.value);
+});
+document.querySelectorAll(".yt-preset-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const q = btn.getAttribute("data-yt") || "";
+    if ($("ytSearchOrUrlInput")) $("ytSearchOrUrlInput").value = q;
+    applyYouTubeQuery(q);
+  });
+});
+
+renderWorldLeadersHub();
+renderUlemaResearchHub();
+renderGroceryFarmersHub();
+renderDirectJobsHub();
+
 function notify(message) {
   const box = $("notice");
   box.textContent = message;
@@ -1495,7 +1958,7 @@ function quantumSignature(seed = "") {
   return `⚛ Q-COHERENCE ${score.toFixed(1)}%`;
 }
 
-// সময় বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা
+// সময় বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা (১ ঘণ্টা পর পর অটো ঘোষণা)
 const QuantumTalkingClock = {
   enabled: true,
   sehriTime: { hour: 4, minute: 58 },
@@ -1516,12 +1979,29 @@ const QuantumTalkingClock = {
     });
   },
 
+  pickVoice() {
+    if (!("speechSynthesis" in window)) return null;
+    const voices = window.speechSynthesis.getVoices() || [];
+    return (
+      voices.find(v => /bn/i.test(v.lang)) ||
+      voices.find(v => /en/i.test(v.lang)) ||
+      voices[0] ||
+      null
+    );
+  },
+
   speak(text, force = false) {
     if ((!this.enabled && !force) || !("speechSynthesis" in window)) return;
     try {
       window.speechSynthesis.cancel();
       const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = "bn-BD";
+      const v = this.pickVoice();
+      if (v) {
+        utter.voice = v;
+        utter.lang = v.lang;
+      } else {
+        utter.lang = "bn-BD";
+      }
       utter.rate = 0.95;
       window.speechSynthesis.speak(utter);
     } catch (err) {
@@ -1540,9 +2020,20 @@ const QuantumTalkingClock = {
         hour12: true
       });
     }
+
+    const nextHour = new Date(now);
+    nextHour.setMinutes(0, 0, 0);
+    nextHour.setHours(now.getHours() + 1);
+    const nextHourEl = $("nextHourlyAnnouncement");
+    if (nextHourEl) {
+      nextHourEl.textContent = this.formatBanglaTime(nextHour);
+    }
+
     const btn = $("toggleTalkClockBtn");
     if (btn) {
-      btn.textContent = this.enabled ? "🔊 সময় বলা: চালু" : "🔇 সময় বলা: বন্ধ";
+      btn.textContent = this.enabled
+        ? "🔊 ১ ঘণ্টা পর পর অটো সময়: চালু"
+        : "🔇 ১ ঘণ্টা পর পর অটো সময়: বন্ধ";
     }
   },
 
@@ -1582,6 +2073,7 @@ const QuantumTalkingClock = {
       return;
     }
 
+    // প্রতি ১ ঘণ্টা পর পর (m === 0) স্বয়ংক্রিয় সময় ঘোষণা
     const hourKey = `${now.toDateString()}-${h}`;
     if (m === 0 && this.lastHourlySpoken !== hourKey) {
       this.lastHourlySpoken = hourKey;
@@ -1590,6 +2082,10 @@ const QuantumTalkingClock = {
   },
 
   start() {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
     this.tick();
     setInterval(() => this.tick(), 1000);
   }
@@ -1600,8 +2096,8 @@ $("toggleTalkClockBtn").addEventListener("click", () => {
   QuantumTalkingClock.updateDisplay();
   if (QuantumTalkingClock.enabled) {
     const nowText = QuantumTalkingClock.formatBanglaTime(new Date());
-    QuantumTalkingClock.speak(`সময় বলার ঘড়ি চালু হয়েছে। এখন সময় ${nowText}।`, true);
-    notify("সময় বলার ঘড়ি চালু হয়েছে");
+    QuantumTalkingClock.speak(`১ ঘণ্টা পর পর অটো সময় বলা চালু হয়েছে। এখন সময় ${nowText}।`, true);
+    notify("১ ঘণ্টা পর পর অটো সময় বলা চালু হয়েছে");
   } else {
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     notify("সময় বলার ঘড়ি বন্ধ করা হয়েছে");
@@ -1627,9 +2123,9 @@ const QuantumAutoUpdater = {
         if (reg) await reg.update();
       }
 
-      const [verRes, ratesRes] = await Promise.allSettled([
+      const [verRes, usdRes] = await Promise.allSettled([
         fetch(`./version.json?_=${Date.now()}`, { cache: "no-store" }),
-        fetch(`https://open.er-api.com/v6/latest/BDT`, { cache: "no-store" })
+        fetch(`https://open.er-api.com/v6/latest/USD`, { cache: "no-store" })
       ]);
 
       let verInfo = "";
@@ -1641,12 +2137,14 @@ const QuantumAutoUpdater = {
         }
       }
 
-      if (ratesRes.status === "fulfilled" && ratesRes.value.ok) {
-        const rData = await ratesRes.value.json().catch(() => null);
-        if (rData?.result === "success" && rData?.rates) {
+      if (usdRes.status === "fulfilled" && usdRes.value.ok) {
+        const uData = await usdRes.value.json().catch(() => null);
+        if (uData?.result === "success" && uData?.rates?.BDT) {
+          currentUsdToBdt = Number(uData.rates.BDT) || 120;
+          renderGroceryFarmersHub();
           localStorage.setItem(
             "ayna_global_fx_cache",
-            JSON.stringify({ rates: rData.rates, syncedAt: Date.now() })
+            JSON.stringify({ rates: uData.rates, syncedAt: Date.now() })
           );
         }
       }
