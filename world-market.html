@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#060d21">
+<title>AYNA BOOK — দেশ অনুযায়ী বিশ্ববাজার</title>
+
+<style>
+:root {
+  --bg:#050a18;
+  --navy-top:#172e63;
+  --navy-bottom:#08122b;
+  --gold:#ffd700;
+  --gold-base:#755206;
+  --white:#ffffff;
+  --muted:#dce6fa;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+html, body {
+  max-width:100%;
+  overflow-x:hidden;
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  font-size:20px;
+}
+
+button,input,select,textarea {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+.gold-3d {
+  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%);
+  border:2.5px solid var(--gold);
+  border-radius:6px;
+  box-shadow:
+    0 7px 0 var(--gold-base),
+    0 12px 22px rgba(0,0,0,.8),
+    inset 0 2px 3px rgba(255,242,166,.5);
+}
+
+header {
+  background:linear-gradient(180deg,#0f1f47 0%,#060d21 100%);
+  border-bottom:2.5px solid var(--gold);
+  padding:14px 16px;
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+
+.header-inner {
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.logo {
+  color:var(--gold);
+  font-size:26px;
+  font-weight:1000;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+.star-1s {
+  color:#ffffff;
+  font-size:28px;
+  display:inline-block;
+  animation:starFlash1s 1s infinite alternate ease-in-out;
+}
+
+@keyframes starFlash1s {
+  0% { transform:scale(0.95); text-shadow:0 0 6px #ffd700; }
+  100% { transform:scale(1.35); text-shadow:0 0 14px #ffffff, 0 0 32px #ffd700; }
+}
+
+.back-btn {
+  text-decoration:none;
+  background:linear-gradient(180deg,#ffd700 0%,#c99314 100%);
+  color:#050a18;
+  font-weight:1000;
+  font-size:18px;
+  padding:9px 15px;
+  border-radius:6px;
+  border:1.5px solid #fff2a6;
+  box-shadow:0 4px 0 #664604;
+}
+
+.container {
+  max-width:1100px;
+  margin:auto;
+  padding:16px 14px 90px;
+}
+
+.page-title {
+  font-size:28px;
+  font-weight:1000;
+  color:var(--gold);
+  margin:0 0 16px;
+}
+
+.filter-box {
+  padding:16px;
+  margin-bottom:20px;
+}
+
+.filter-box label {
+  display:block;
+  font-size:20px;
+  font-weight:bold;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.filter-box select,
+.form-box input,
+.form-box select,
+.form-box textarea {
+  width:100%;
+  background:#050b1c;
+  color:var(--white);
+  border:2px solid var(--gold);
+  border-radius:6px;
+  padding:12px 14px;
+  font-size:20px;
+  margin-bottom:12px;
+}
+
+.form-box {
+  padding:18px;
+  margin-bottom:22px;
+}
+
+.form-box h2 {
+  margin:0 0 14px;
+  color:var(--gold);
+  font-size:24px;
+  font-weight:1000;
+}
+
+.btn-gold-3d {
+  width:100%;
+  min-height:58px;
+  background:linear-gradient(180deg,#ffd700 0%,#c99314 100%);
+  color:#050a18;
+  font-size:22px;
+  font-weight:1000;
+  border:2px solid #fff2a6;
+  border-radius:6px;
+  box-shadow:0 5px 0 #664604;
+}
+
+.btn-gold-3d:active {
+  transform:translateY(4px);
+  box-shadow:0 2px 0 #664604;
+}
+
+.market-grid {
+  display:grid;
+  grid-template-columns:repeat(1,minmax(0,1fr));
+  gap:16px;
+}
+
+@media(min-width:700px) {
+  .market-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+.product-card {
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.country-badge {
+  display:inline-block;
+  background:#050b1c;
+  color:var(--gold);
+  border:1.5px solid var(--gold);
+  border-radius:6px;
+  padding:4px 10px;
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.product-img {
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  border:2px solid var(--gold);
+  border-radius:6px;
+  background:#050b1c;
+}
+
+.product-title {
+  font-size:24px;
+  font-weight:1000;
+  color:var(--white);
+  margin:6px 0;
+}
+
+.product-price {
+  font-size:22px;
+  font-weight:1000;
+  color:var(--gold);
+}
+
+.product-desc {
+  font-size:19px;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.product-seller {
+  font-size:17px;
+  color:var(--muted);
+  border-top:1px solid rgba(255,215,0,.35);
+  padding-top:10px;
+}
+
+.empty-msg {
+  text-align:center;
+  padding:28px;
+  font-size:21px;
+  color:var(--muted);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">AYNA BOOK <span class="star-1s">★</span></a>
+    <a class="back-btn" href="index.html">🏠 হোম</a>
+  </div>
+</header>
+
+<main class="container">
+  <h1 class="page-title">🌍 দেশ অনুযায়ী বিশ্ববাজার</h1>
+
+  <!-- দেশ ফিল্টার -->
+  <section class="gold-3d filter-box">
+    <label for="countryFilter">দেশ নির্বাচন করুন:</label>
+    <select id="countryFilter">
+      <option value="ALL">🌐 সব দেশ (All Countries)</option>
+      <option value="বাংলাদেশ (BD)">🇧🇩 বাংলাদেশ (BD)</option>
+      <option value="সৌদি আরব (SA)">🇸🇦 সৌদি আরব (SA)</option>
+      <option value="সংযুক্ত আরব আমিরাত (AE)">🇦🇪 সংযুক্ত আরব আমিরাত (AE)</option>
+      <option value="যুক্তরাজ্য (GB)">🇬🇧 যুক্তরাজ্য (GB)</option>
+      <option value="যুক্তরাষ্ট্র (US)">🇺🇸 যুক্তরাষ্ট্র (US)</option>
+      <option value="ভারত (IN)">🇮🇳 ভারত (IN)</option>
+      <option value="চীন (CN)">🇨🇳 চীন (CN)</option>
+      <option value="মালয়েশিয়া (MY)">🇲🇾 মালয়েশিয়া (MY)</option>
+    </select>
+  </section>
+
+  <!-- নতুন পণ্য/অফার যুক্ত করার ফর্ম -->
+  <section class="gold-3d form-box">
+    <h2>➕ আপনার দেশের পণ্য বা বাজারের তথ্য যুক্ত করুন</h2>
+    <select id="itemCountry">
+      <option value="বাংলাদেশ (BD)">🇧🇩 বাংলাদেশ (BD)</option>
+      <option value="সৌদি আরব (SA)">🇸🇦 সৌদি আরব (SA)</option>
+      <option value="সংযুক্ত আরব আমিরাত (AE)">🇦🇪 সংযুক্ত আরব আমিরাত (AE)</option>
+      <option value="যুক্তরাজ্য (GB)">🇬🇧 যুক্তরাজ্য (GB)</option>
+      <option value="যুক্তরাষ্ট্র (US)">🇺🇸 যুক্তরাষ্ট্র (US)</option>
+      <option value="ভারত (IN)">🇮🇳 ভারত (IN)</option>
+      <option value="চীন (CN)">🇨🇳 চীন (CN)</option>
+      <option value="মালয়েশিয়া (MY)">🇲🇾 মালয়েশিয়া (MY)</option>
+    </select>
+    <input id="itemTitle" type="text" placeholder="পণ্যের নাম বা শিরোনাম লিখুন...">
+    <input id="itemPrice" type="text" placeholder="দাম ও মুদ্রা (যেমন: ৳১,৫০০ বা $25 বা SAR 90)...">
+    <input id="itemImage" type="url" placeholder="পণ্যের ছবির লিংক (ঐচ্ছিক)...">
+    <textarea id="itemDesc" rows="3" placeholder="পণ্যের বিবরণ ও যোগাযোগের তথ্য..."></textarea>
+    <button id="addMarketItem" class="btn-gold-3d">🚀 বিশ্ববাজারে প্রকাশ করুন</button>
+  </section>
+
+  <!-- পণ্য তালিকা -->
+  <section id="marketList" class="market-grid">
+    <div class="gold-3d empty-msg">বিশ্ববাজার লোড হচ্ছে...</div>
+  </section>
+</main>
+
+<script type="module">
+import { auth, database } from "./firebase-init.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import { ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+const $ = id => document.getElementById(id);
+let currentUser = null;
+let allItems = [];
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+});
+
+$("addMarketItem").addEventListener("click", async () => {
+  if (!currentUser) {
+    alert("পণ্য যুক্ত করতে আগে লগইন করুন।");
+    return;
+  }
+
+  const country = $("itemCountry").value;
+  const title = $("itemTitle").value.trim();
+  const price = $("itemPrice").value.trim();
+  const image = $("itemImage").value.trim();
+  const desc = $("itemDesc").value.trim();
+
+  if (!title || !price) {
+    alert("পণ্যের নাম এবং দাম লিখুন।");
+    return;
+  }
+
+  const newRef = push(ref(database, "worldMarket"));
+  await set(newRef, {
+    country,
+    title,
+    price,
+    image,
+    desc,
+    sellerUid: currentUser.uid,
+    sellerName: currentUser.displayName || currentUser.email || "AYNA Seller",
+    createdAt: Date.now()
+  });
+
+  $("itemTitle").value = "";
+  $("itemPrice").value = "";
+  $("itemImage").value = "";
+  $("itemDesc").value = "";
+  alert("বিশ্ববাজারে আপনার তথ্য যুক্ত হয়েছে!");
+});
+
+$("countryFilter").addEventListener("change", renderItems);
+
+onValue(ref(database, "worldMarket"), snapshot => {
+  const data = snapshot.val() || {};
+  allItems = Object.entries(data)
+    .map(([id, item]) => ({ id, ...item }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  renderItems();
+});
+
+function renderItems() {
+  const selectedCountry = $("countryFilter").value;
+  const filtered = selectedCountry === "ALL"
+    ? allItems
+    : allItems.filter(item => item.country === selectedCountry);
+
+  const container = $("marketList");
+  container.innerHTML = "";
+
+  if (!filtered.length) {
+    container.innerHTML = '<div class="gold-3d empty-msg">এই দেশের কোনো পণ্য এখনও যুক্ত করা হয়নি।</div>';
+    return;
+  }
+
+  filtered.forEach(item => {
+    const card = document.createElement("article");
+    card.className = "gold-3d product-card";
+
+    card.innerHTML = `
+      <div>
+        <span class="country-badge">${item.country}</span>
+        ${item.image ? `<img class="product-img" src="${item.image}" alt="${item.title}">` : ""}
+        <h3 class="product-title">${item.title}</h3>
+        <div class="product-price">${item.price}</div>
+        <p class="product-desc">${item.desc || ""}</p>
+      </div>
+      <div class="product-seller">বিক্রেতা: ${item.sellerName || "AYNA User"}</div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
