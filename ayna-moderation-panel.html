@@ -42,10 +42,17 @@
   }
 
   h1 {
-    margin: 0 0 18px;
+    margin: 0 0 12px;
     color: var(--gold-bright);
     font-size: 40px;
     font-weight: 900;
+  }
+
+  .auth-note {
+    color: var(--cyan);
+    font-size: 20px;
+    margin-bottom: 14px;
+    word-break: break-word;
   }
 
   label {
@@ -115,6 +122,7 @@
 <div class="container">
   <div class="panel">
     <h1>🛡️ AYNA BOOK — Review Post Report</h1>
+    <div id="adminAuthStatus" class="auth-note">Checking sign-in and admin permissions...</div>
 
     <label for="apiBaseInput">Backend API Base URL (optional if same origin)</label>
     <input id="apiBaseInput" type="text" placeholder="http://localhost:3000">
@@ -140,19 +148,70 @@
       <span>Notify reporter via FCM</span>
     </label>
 
-    <button id="reviewSubmitBtn" type="button">🚀 Submit Moderation Review</button>
+    <button id="reviewSubmitBtn" type="button" disabled>🚀 Submit Moderation Review</button>
 
-    <div id="reviewStatusBox" class="status-box">Ready to submit review.</div>
+    <div id="reviewStatusBox" class="status-box">Waiting for admin verification...</div>
   </div>
 </div>
 
 <script type="module">
-import { submitModerationReview } from "./ayna-report-review-client.js";
+import {
+  isCurrentUserAdmin,
+  resolveAynaFirebase,
+  submitModerationReview
+} from "./ayna-report-review-client.js";
 
 const submitBtn = document.getElementById("reviewSubmitBtn");
 const statusBox = document.getElementById("reviewStatusBox");
+const adminAuthStatus = document.getElementById("adminAuthStatus");
+
+let isAdminVerified = false;
+
+async function syncAdminButtonState() {
+  try {
+    const { auth, authMod } = await resolveAynaFirebase();
+
+    const applyState = async user => {
+      if (!user) {
+        isAdminVerified = false;
+        submitBtn.disabled = true;
+        adminAuthStatus.textContent = "Not signed in • Review button disabled";
+        statusBox.textContent = "Sign in with an admin account to enable moderation review.";
+        return;
+      }
+
+      adminAuthStatus.textContent = `Signed in as ${user.email || user.uid} • Verifying admin role...`;
+      isAdminVerified = await isCurrentUserAdmin();
+
+      if (!isAdminVerified) {
+        submitBtn.disabled = true;
+        adminAuthStatus.textContent = `Signed in as ${user.email || user.uid} • Non-Admin`;
+        statusBox.textContent = "Review submit button disabled: account is not listed under admins/$uid.";
+        return;
+      }
+
+      submitBtn.disabled = false;
+      adminAuthStatus.textContent = `Signed in as ${user.email || user.uid} • Verified Admin`;
+      statusBox.textContent = "Admin verified. Ready to submit review.";
+    };
+
+    await applyState(auth?.currentUser || null);
+    authMod.onAuthStateChanged(auth, applyState);
+  } catch (err) {
+    isAdminVerified = false;
+    submitBtn.disabled = true;
+    adminAuthStatus.textContent = "Auth check unavailable";
+    statusBox.textContent = err?.message || "Unable to verify admin status.";
+  }
+}
 
 submitBtn.addEventListener("click", async () => {
+  if (!isAdminVerified) {
+    submitBtn.disabled = true;
+    statusBox.textContent = "Action blocked: only verified admins can submit reviews.";
+    return;
+  }
+
   submitBtn.disabled = true;
   statusBox.textContent = "Fetching Firebase ID token and submitting review...";
 
@@ -170,9 +229,11 @@ submitBtn.addEventListener("click", async () => {
   } catch (err) {
     statusBox.textContent = `Error: ${err?.message || "Unable to review report"}`;
   } finally {
-    submitBtn.disabled = false;
+    submitBtn.disabled = !isAdminVerified;
   }
 });
+
+syncAdminButtonState();
 </script>
 </body>
 </html>
