@@ -1,129 +1,218 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080808">
-  <title>AYNA BOOK — Radio Live</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#060d21">
+<title>AYNA BOOK — High-Speed AM/FM Live Radio</title>
+<style>
+  :root {
+    --bg: #050a18;
+    --panel: #0b1633;
+    --gold: #ffe64d;
+    --gold-bright: #fff6b3;
+    --gold-base: #8a6105;
+    --cyan: #38f2ff;
+    --text: #ffffff;
+    --muted: #dce6fa;
+  }
 
-  <style>
-    * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #080808;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, "Noto Sans Bengali", sans-serif;
+    font-size: 20px;
+    padding: 16px;
+  }
 
-    header {
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #b89535;
-    }
+  .radio-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    background: var(--panel);
+    border: 3px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 18px rgba(255, 230, 77, 0.5), 0 7px 0 var(--gold-base);
+  }
 
-    header h1 {
-      color: #d4af37;
-      margin: 0;
-    }
+  .radio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
 
-    .container {
-      width: 92%;
-      max-width: 600px;
-      margin: 30px auto;
-    }
+  .radio-title {
+    margin: 0;
+    font-size: 28px;
+    color: var(--gold-bright);
+  }
 
-    .player {
-      padding: 25px;
-      background: #171717;
-      border: 1px solid #b89535;
-      border-radius: 18px;
-      text-align: center;
-    }
+  .back-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid var(--gold);
+    padding: 8px 14px;
+    border-radius: 6px;
+  }
 
-    .radio-icon {
-      font-size: 75px;
-      margin: 20px;
-    }
+  .band-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
 
-    h2 { color: #d4af37; }
+  .band-btn {
+    padding: 10px 18px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+    background: #050b1c;
+    color: var(--text);
+    cursor: pointer;
+  }
 
-    select {
-      width: 100%;
-      padding: 15px;
-      background: #222;
-      color: white;
-      border: 1px solid #d4af37;
-      border-radius: 10px;
-      margin: 15px 0;
-    }
+  .band-btn.active {
+    background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
+    color: #050a18;
+  }
 
-    button {
-      padding: 14px 25px;
-      border: none;
-      border-radius: 30px;
-      background: #d4af37;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 5px;
-    }
+  .station-select,
+  .custom-url-input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 20px;
+    border-radius: 8px;
+    border: 2.5px solid var(--gold);
+    margin-bottom: 12px;
+  }
 
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
+  .station-select {
+    background: #ffffff;
+    color: #050a18;
+    font-weight: bold;
+  }
 
-    audio {
-      width: 100%;
-      margin-top: 20px;
-    }
+  .custom-url-input {
+    background: #050b1c;
+    color: #ffffff;
+  }
 
-    #status {
-      color: #d4af37;
-      min-height: 24px;
-    }
-  </style>
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .radio-btn {
+    padding: 12px 22px;
+    font-size: 19px;
+    font-weight: 900;
+    border-radius: 8px;
+    border: 2px solid var(--gold-bright);
+    background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
+    color: #050a18;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--gold-base);
+  }
+
+  .radio-btn:active {
+    transform: translateY(3px);
+  }
+
+  .volume-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 18px;
+  }
+
+  audio {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .live-meta {
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 8px;
+    background: #050b1c;
+    border: 2px solid var(--gold);
+  }
+
+  .live-badge {
+    display: inline-block;
+    color: var(--cyan);
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 6px;
+  }
+
+  .status-msg {
+    font-size: 20px;
+    color: var(--muted);
+    margin: 0;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
 </head>
-
 <body>
 
-<header>
-  <h1>AYNA BOOK</h1>
-  <p>GLOBAL RADIO LIVE</p>
-</header>
+<div class="radio-wrap">
+  <div class="radio-header">
+    <h1 class="radio-title">📻 AYNA BOOK AM/FM LIVE RADIO</h1>
+    <a class="back-link" href="index.html">← হোমে ফিরুন</a>
+  </div>
 
-<main class="container">
+  <div class="band-tabs" role="group" aria-label="Radio Band Filter">
+    <button type="button" class="band-btn active" data-band="ALL">ALL</button>
+    <button type="button" class="band-btn" data-band="FM">FM</button>
+    <button type="button" class="band-btn" data-band="AM">AM</button>
+  </div>
 
-  <section class="player">
+  <select id="stationSelect" class="station-select" aria-label="Select AM or FM Station">
+    <option value="">Select AM / FM Radio Station</option>
+  </select>
 
-    <div class="radio-icon">📻</div>
+  <input
+    type="url"
+    id="customRadioUrl"
+    class="custom-url-input"
+    placeholder="অথবা সরাসরি .mp3 / .aac / .m3u8 রেডিও স্ট্রিম লিংক দিন..."
+  >
 
-    <h2 id="stationName">AYNA Radio</h2>
+  <div class="controls">
+    <button type="button" class="radio-btn" id="playRadioBtn">▶ PLAY</button>
+    <button type="button" class="radio-btn" id="stopRadioBtn">■ STOP</button>
 
-    <p>Select Your Radio Station</p>
-
-    <select id="stationSelect">
-      <option value="">Select Station</option>
-    </select>
-
-    <div>
-      <button id="playButton">▶ PLAY</button>
-      <button id="stopButton">■ STOP</button>
+    <div class="volume-wrap">
+      <label for="volumeRange">🔊</label>
+      <input type="range" id="volumeRange" min="0" max="1" step="0.05" value="0.9">
     </div>
+  </div>
 
-    <p id="status">Ready to play</p>
+  <audio id="radioAudio" controls preload="none"></audio>
 
-    <audio id="radioPlayer" controls
-      preload="none"></audio>
+  <div class="live-meta">
+    <div class="live-badge" id="stationBandTag">HIGH-SPEED STREAM ENGINE</div>
+    <p class="status-msg" id="radioStatus">একটি FM বা AM রেডিও স্টেশন নির্বাচন করুন।</p>
+  </div>
+</div>
 
-  </section>
-
-</main>
-
-<script type="module" src="./radio.js"></script>
-
+<script src="radio.js"></script>
 </body>
 </html>
