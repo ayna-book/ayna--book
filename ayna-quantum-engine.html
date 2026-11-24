@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AYNA Quantum Engine — Master Control Hub</title>
+<style>
+  :root {
+    --bg:#050a18;
+    --navy-top:#1a3575;
+    --navy-bottom:#08122b;
+    --gold:#ffe64d;
+    --gold-bright:#fff6b3;
+    --gold-base:#8a6105;
+    --cyan:#38f2ff;
+    --white:#ffffff;
+    --muted:#e6eeff;
+  }
+
+  * { box-sizing:border-box; }
+
+  body {
+    margin:0;
+    background:var(--bg);
+    color:var(--white);
+    font-family:Arial,"Noto Sans Bengali",sans-serif;
+    font-size:34px;
+    line-height:1.5;
+    padding-bottom:100px;
+  }
+
+  .wrap { max-width:1360px; margin:auto; padding:20px; }
+
+  .box {
+    background:linear-gradient(155deg,var(--navy-top),var(--navy-bottom));
+    border:4px solid var(--gold);
+    border-radius:10px;
+    padding:24px;
+    margin-bottom:24px;
+    box-shadow:0 0 18px rgba(255,230,77,.6), 0 8px 0 var(--gold-base);
+  }
+
+  h1, h2 {
+    margin:0 0 14px;
+    color:var(--gold-bright);
+    font-weight:1000;
+  }
+
+  h1 { font-size:46px; }
+  h2 { font-size:38px; }
+
+  .grid-2 {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+  }
+
+  .stat-card {
+    background:#050b1c;
+    border:3px solid var(--gold);
+    border-radius:8px;
+    padding:18px;
+  }
+
+  .stat-label {
+    font-size:24px;
+    color:var(--muted);
+  }
+
+  .stat-val {
+    font-size:34px;
+    font-weight:1000;
+    color:var(--cyan);
+    margin-top:6px;
+  }
+
+  input, textarea, button, a.btn-link {
+    font:inherit;
+    border-radius:8px;
+    border:3px solid var(--gold);
+  }
+
+  input, textarea {
+    width:100%;
+    background:#050b1c;
+    color:var(--white);
+    padding:14px 18px;
+    font-size:30px;
+    margin-top:12px;
+  }
+
+  textarea { min-height:120px; }
+
+  button, a.btn-link {
+    display:inline-block;
+    text-decoration:none;
+    padding:14px 20px;
+    background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+    color:#050a18;
+    font-size:30px;
+    font-weight:1000;
+    border-color:var(--gold-bright);
+    box-shadow:0 5px 0 #664604;
+    cursor:pointer;
+    margin-top:12px;
+  }
+
+  .doc-item {
+    background:#060e24;
+    border:2.5px solid var(--gold);
+    border-radius:8px;
+    padding:14px 18px;
+    margin-top:12px;
+    font-size:28px;
+  }
+
+  @media(max-width:700px) {
+    .grid-2 { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <h1>⚛️ AYNA QUANTUM MASTER ENGINE</h1>
+    <div style="font-size:28px;color:var(--muted);">
+      সকল মডিউলের অটো-আপডেট স্ট্যাটাস, ১ ঘণ্টা পর পর সময় ঘোষণা ও ব্যক্তিগত সুরক্ষিত ডকুমেন্ট ভল্ট।
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;">
+      <a href="index.html" class="btn-link">🏠 Home</a>
+      <a href="world-leaders-auto.html" class="btn-link">🌍 রাষ্ট্রনেতা</a>
+      <a href="world-grocery-auto.html" class="btn-link">🛒 মুদি দোকান</a>
+      <a href="radar-weather-civil.html" class="btn-link">📡 রাডার ও আবহাওয়া</a>
+      <a href="world-bazaar-auto.html" class="btn-link">🏪 বিশ্ব বাজার</a>
+      <a href="groups.html" class="btn-link">👥 গ্রুপ হাব</a>
+    </div>
+  </div>
+
+  <!-- Live Telemetry -->
+  <div class="box">
+    <h2>📊 কোয়ান্টাম অটো-সিঙ্ক টেলিমেট্রি</h2>
+    <div class="grid-2">
+      <div class="stat-card">
+        <div class="stat-label">বর্তমান সময় ও পরবর্তী ঘণ্টা ঘোষণা</div>
+        <div class="stat-val" id="engClockText">লোড হচ্ছে...</div>
+        <div class="stat-label" id="engNextHourText">পরবর্তী ঘণ্টা: --</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">বিশ্বের রাষ্ট্রনেতা ও দেশ সিঙ্ক</div>
+        <div class="stat-val" id="engLeadersCount">অপেক্ষমান...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">বিশ্ব মুদি দোকান পণ্য ক্যাটালগ</div>
+        <div class="stat-val" id="engGroceryCount">অপেক্ষমান...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">লাইভ আবহাওয়া ও রাডার</div>
+        <div class="stat-val" id="engWeatherText">অপেক্ষমান...</div>
+      </div>
+    </div>
+    <button type="button" id="runFullSyncBtn">🔄 সব মডিউল এখনই সিঙ্ক করুন</button>
+    <button type="button" id="testSpeakBtn">🎙️ সময় ঘোষণা পরীক্ষা করুন</button>
+  </div>
+
+  <!-- Private Personal Documents Vault (AYNA BOOK) -->
+  <div class="box">
+    <h2>🔒 ব্যক্তিগত AYNA BOOK ডকুমেন্ট ভল্ট (সুরক্ষিত)</h2>
+    <div style="font-size:26px;color:var(--muted);">
+      আপনার ব্যক্তিগত নোট বা ডকুমেন্ট এখানে সংরক্ষিত থাকবে এবং পাবলিক ফিড বা ফাইল তালিকায় দেখানো হবে না।
+    </div>
+    <input type="text" id="privDocTitle" placeholder="ডকুমেন্টের শিরোনাম লিখুন...">
+    <textarea id="privDocNote" placeholder="আপনার ব্যক্তিগত নোট বা তথ্য লিখুন..."></textarea>
+    <button type="button" id="savePrivDocBtn">💾 ব্যক্তিগত ভল্টে সংরক্ষণ করুন</button>
+    <div id="privDocsList" style="margin-top:16px;"></div>
+  </div>
+</div>
+
+<script type="module">
+import {
+  AynaVault,
+  AynaHourlyClock,
+  fetchWorldLeadersAuto,
+  fetchThousandsGroceryAuto,
+  fetchWeatherAndRadar
+} from "./ayna-quantum-engine.js";
+
+AynaHourlyClock.start(state => {
+  document.getElementById("engClockText").textContent = state.liveText;
+  document.getElementById("engNextHourText").textContent = `পরবর্তী ঘণ্টা ঘোষণা: ${state.nextHourText}`;
+});
+
+document.getElementById("testSpeakBtn").addEventListener("click", () => {
+  AynaHourlyClock.speak(`এখন সময় ${AynaHourlyClock.formatTimeBn(new Date())}।`, true);
+});
+
+async function runFullQuantumSync() {
+  document.getElementById("engLeadersCount").textContent = "সিঙ্ক হচ্ছে...";
+  document.getElementById("engGroceryCount").textContent = "সিঙ্ক হচ্ছে...";
+  document.getElementById("engWeatherText").textContent = "সিঙ্ক হচ্ছে...";
+
+  const [leadersRes, groceryRes, weatherRes] = await Promise.allSettled([
+    fetchWorldLeadersAuto(),
+    fetchThousandsGroceryAuto([1, 2, 3, 4]),
+    fetchWeatherAndRadar()
+  ]);
+
+  if (leadersRes.status === "fulfilled") {
+    document.getElementById("engLeadersCount").textContent = `${leadersRes.value.length}টি দেশ সিঙ্ক সম্পন্ন`;
+  } else {
+    document.getElementById("engLeadersCount").textContent = "লোকাল ব্যাকআপ সক্রিয়";
+  }
+
+  if (groceryRes.status === "fulfilled") {
+    document.getElementById("engGroceryCount").textContent = `${groceryRes.value.length}+ পণ্য সিঙ্ক সম্পন্ন`;
+  } else {
+    document.getElementById("engGroceryCount").textContent = "লোকাল ক্যাটালগ সক্রিয়";
+  }
+
+  if (weatherRes.status === "fulfilled") {
+    const cur = weatherRes.value.current;
+    document.getElementById("engWeatherText").textContent = `${cur.temperature_2m ?? "--"}°C • বাতাস ${cur.wind_speed_10m ?? "--"} km/h`;
+  } else {
+    document.getElementById("engWeatherText").textContent = "রাডার স্ট্যান্ডবাই";
+  }
+}
+
+function renderPrivateVault() {
+  const docs = AynaVault.getPrivateDocs();
+  const listEl = document.getElementById("privDocsList");
+  if (!docs.length) {
+    listEl.innerHTML = '<div style="font-size:26px;color:#e6eeff;">এখনও কোনো ব্যক্তিগত ডকুমেন্ট যোগ করা হয়নি।</div>';
+    return;
+  }
+  listEl.innerHTML = docs.map(d => `
+    <div class="doc-item">
+      <strong style="color:#fff6b3;">${d.title}</strong>
+      <div style="margin-top:6px;">${d.note}</div>
+      <div style="font-size:22px;color:#38f2ff;margin-top:6px;">সংরক্ষিত: ${new Date(d.updatedAt).toLocaleString("bn-BD")}</div>
+    </div>
+  `).join("");
+}
+
+document.getElementById("savePrivDocBtn").addEventListener("click", () => {
+  const titleEl = document.getElementById("privDocTitle");
+  const noteEl = document.getElementById("privDocNote");
+  const title = titleEl.value.trim();
+  const note = noteEl.value.trim();
+  if (!title && !note) return;
+  AynaVault.savePrivateDoc({ title, note });
+  titleEl.value = "";
+  noteEl.value = "";
+  renderPrivateVault();
+});
+
+document.getElementById("runFullSyncBtn").addEventListener("click", runFullQuantumSync);
+
+renderPrivateVault();
+runFullQuantumSync();
+</script>
+</body>
+</html>
