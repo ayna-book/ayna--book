@@ -1,60 +1,2239 @@
-package com.aynabook.app
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#060d21">
+<title>AYNA BOOK — Quantum Multimedia Social</title>
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-
-@Composable
-fun HomeScreen(
-    onOpenUrl: (String) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "AYNA BOOK HOME",
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        WorldLeadersCard(onOpenWorldLeaders = onOpenUrl)
-    }
+<style>
+:root {
+  --bg:#050a18;
+  --navy-top:#1a3575;
+  --navy-bottom:#08122b;
+  --panel:#0b1633;
+  --panel2:#13254d;
+  --gold:#ffe64d;
+  --gold-bright:#fff6b3;
+  --gold-base:#8a6105;
+  --quantum-cyan:#38f2ff;
+  --quantum-violet:#a855f7;
+  --white:#ffffff;
+  --muted:#e6eeff;
+  --green:#16c784;
+  --border:#ffe64d;
 }
 
-@Composable
-fun WorldLeadersCard(
-    onOpenWorldLeaders: (String) -> Unit
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "🌐 বিশ্ব রাষ্ট্রনেতা",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = "নাম, মেয়াদকাল, ছবি ও পতাকা"
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Button(
-                onClick = {
-                    onOpenWorldLeaders("world-leaders/world-leaders.html")
-                }
-            ) {
-                Text(text = "খুলুন")
-            }
+* {
+  box-sizing:border-box;
+}
+
+html, body {
+  max-width:100%;
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+}
+
+body {
+  margin:0;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(56,242,255,.09), transparent 35%),
+    radial-gradient(circle at 85% 20%, rgba(255,230,77,.10), transparent 40%),
+    var(--bg);
+  color:var(--white);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  font-size:36px;
+  line-height:1.5;
+}
+
+button,input,textarea,select {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+.gold-3d-box,
+.hero,
+.profile-bar,
+.feature-card,
+.panel,
+.feed-post,
+.quantum-bar {
+  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%) !important;
+  border:4px solid var(--gold) !important;
+  border-radius:10px !important;
+  box-shadow:
+    0 0 18px rgba(255,230,77,.65),
+    0 9px 0 var(--gold-base),
+    0 16px 26px rgba(0,0,0,.85),
+    inset 0 2px 5px var(--gold-bright) !important;
+}
+
+.feature-card:active,
+.primary-button:active,
+.tool-button:active,
+.media-buttons button:active,
+.header-actions a:active,
+.header-actions button:active,
+.filter-btn:active {
+  transform:translateY(4px) !important;
+  box-shadow:
+    0 0 12px rgba(255,230,77,.55),
+    0 3px 0 var(--gold-base),
+    0 6px 12px rgba(0,0,0,.85),
+    inset 0 2px 4px var(--gold-bright) !important;
+}
+
+header {
+  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
+  border-bottom:4px solid var(--gold);
+  padding:20px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:0 0 20px rgba(255,230,77,.45), 0 6px 18px rgba(0,0,0,.9);
+}
+
+.header-inner {
+  max-width:1360px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.logo {
+  color:var(--gold-bright);
+  font-size:48px;
+  font-weight:1000;
+  letter-spacing:1px;
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  text-shadow:0 0 14px rgba(255,230,77,.85), 0 3px 8px rgba(0,0,0,.95);
+}
+
+.quantum-badge {
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:1.1px;
+  padding:6px 14px;
+  border-radius:6px;
+  color:var(--quantum-cyan);
+  background:rgba(5,10,24,.9);
+  border:2px solid var(--quantum-cyan);
+}
+
+.star-1s {
+  color:#ffffff;
+  font-size:48px;
+  display:inline-block;
+  animation:starFlash1s 1s infinite alternate ease-in-out;
+}
+
+@keyframes starFlash1s {
+  0% {
+    transform:scale(0.95) rotate(0deg);
+    color:#fff099;
+    text-shadow:0 0 8px #ffd700;
+  }
+  100% {
+    transform:scale(1.35) rotate(18deg);
+    color:#ffffff;
+    text-shadow:
+      0 0 14px #ffffff,
+      0 0 26px #ffffff,
+      0 0 42px #ffe64d,
+      0 0 60px #ff9900;
+  }
+}
+
+.header-actions {
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.header-actions a,
+.header-actions button {
+  text-decoration:none;
+  color:white;
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  border:3px solid var(--gold);
+  padding:14px 20px;
+  border-radius:8px;
+  font-weight:bold;
+  font-size:28px;
+  box-shadow:0 0 12px rgba(255,230,77,.45), 0 5px 0 var(--gold-base);
+}
+
+.container {
+  max-width:1360px;
+  margin:auto;
+  padding:20px;
+}
+
+.hero {
+  padding:36px 24px;
+  margin-bottom:28px;
+  text-align:center;
+}
+
+.hero h1 {
+  font-size:56px;
+  margin:0 0 14px;
+  color:var(--gold-bright);
+  font-weight:1000;
+  text-shadow:0 0 16px rgba(255,230,77,.65);
+}
+
+.hero p {
+  font-size:38px;
+  line-height:1.6;
+  margin:0;
+  color:var(--white);
+  font-weight:600;
+}
+
+.quantum-bar {
+  padding:22px;
+  margin-bottom:28px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:18px;
+}
+
+.q-stat {
+  background:rgba(5,11,28,.8);
+  border:2.5px solid var(--gold);
+  border-radius:8px;
+  padding:16px 20px;
+}
+
+.q-stat-label {
+  font-size:24px;
+  color:var(--muted);
+  display:block;
+}
+
+.q-stat-value {
+  font-size:32px;
+  font-weight:1000;
+  color:var(--quantum-cyan);
+  margin-top:6px;
+  display:block;
+  overflow-wrap:anywhere;
+}
+
+.section-title {
+  font-size:46px;
+  font-weight:1000;
+  margin:36px 0 22px;
+  color:var(--gold-bright);
+  text-shadow:0 0 14px rgba(255,230,77,.6), 0 3px 8px rgba(0,0,0,.9);
+}
+
+.profile-bar {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:24px;
+  padding:24px;
+  margin-bottom:28px;
+}
+
+.profile-bar img {
+  width:320px;
+  height:320px;
+  object-fit:cover;
+  object-position:top center;
+  border-radius:10px;
+  border:5px solid var(--gold-bright);
+  background:#0a1636;
+  box-shadow:0 0 24px rgba(255,230,77,.8), 0 7px 0 var(--gold-base);
+  flex-shrink:0;
+}
+
+.profile-info {
+  flex:1;
+  min-width:260px;
+}
+
+.profile-info strong {
+  font-size:48px;
+  font-weight:1000;
+  color:var(--white);
+  display:block;
+}
+
+.profile-info small {
+  display:block;
+  color:var(--muted);
+  font-size:32px;
+  margin-top:8px;
+  word-break:break-word;
+}
+
+.feature-grid-8 {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:22px;
+}
+
+.feature-grid-more {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:22px;
+  margin-top:24px;
+}
+
+.feature-card {
+  min-height:360px;
+  padding:28px 18px;
+  color:white;
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  transition:.15s;
+}
+
+.feature-icon {
+  font-size:86px;
+  margin-bottom:16px;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,.8));
+}
+
+.feature-name {
+  font-size:42px;
+  line-height:1.3;
+  font-weight:1000;
+  color:var(--white);
+  min-height:2.6em;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.feature-desc {
+  color:var(--muted);
+  font-size:30px;
+  font-weight:600;
+  margin-top:12px;
+  line-height:1.35;
+}
+
+.panel {
+  padding:26px;
+  margin:28px 0;
+}
+
+.panel h2 {
+  margin:0 0 20px;
+  font-size:44px;
+  font-weight:1000;
+  color:var(--gold-bright);
+}
+
+.clock-live-box {
+  background:#050b1c;
+  border:3px solid var(--gold);
+  border-radius:8px;
+  padding:20px;
+  margin-bottom:18px;
+  text-align:center;
+}
+
+.clock-live-time {
+  font-size:52px;
+  font-weight:1000;
+  color:var(--quantum-cyan);
+  display:block;
+}
+
+.clock-rules-text {
+  font-size:28px;
+  color:var(--muted);
+  margin-top:12px;
+  line-height:1.55;
+}
+
+.post-textarea {
+  width:100%;
+  min-height:200px;
+  resize:vertical;
+  background:#050b1c;
+  border:3.5px solid var(--gold);
+  color:white;
+  border-radius:8px;
+  padding:20px;
+  font-size:36px;
+  line-height:1.6;
+  outline:none;
+}
+
+.post-textarea:focus,
+input:focus {
+  border-color:#ffffff;
+}
+
+.post-tools {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  margin-top:20px;
+}
+
+.tool-button {
+  min-height:96px;
+  padding:16px;
+  border-radius:8px;
+  border:3px solid var(--gold);
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  color:white;
+  font-size:32px;
+  font-weight:bold;
+  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
+}
+
+.primary-button {
+  width:100%;
+  min-height:104px;
+  margin-top:20px;
+  border:3.5px solid var(--gold-bright);
+  border-radius:8px;
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  font-size:40px;
+  font-weight:1000;
+  box-shadow:0 0 18px rgba(255,230,77,.65), 0 7px 0 #664604;
+}
+
+.progress-wrap {
+  display:none;
+  margin-top:16px;
+  background:#050b1c;
+  border:3px solid var(--gold);
+  border-radius:8px;
+  height:34px;
+  overflow:hidden;
+}
+
+.progress-bar {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--quantum-cyan),var(--gold));
+  transition:width .2s ease;
+}
+
+.preview {
+  display:none;
+  margin-top:20px;
+  background:#050b1c;
+  border:3.5px solid var(--gold);
+  padding:18px;
+  border-radius:8px;
+  text-align:center;
+}
+
+.preview img {
+  max-width:100%;
+  max-height:640px;
+  object-fit:contain;
+  object-position:top center;
+  border-radius:8px;
+  border:3px solid var(--gold);
+}
+
+.preview video {
+  max-width:100%;
+  max-height:640px;
+  border-radius:8px;
+}
+
+.preview audio {
+  width:100%;
+}
+
+.preview-name {
+  font-size:28px;
+  color:var(--muted);
+  margin-top:12px;
+  overflow-wrap:anywhere;
+}
+
+.feed-filters {
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:22px;
+}
+
+.filter-btn {
+  background:#0a1636;
+  color:var(--white);
+  border:3px solid var(--gold);
+  border-radius:8px;
+  padding:14px 24px;
+  font-size:30px;
+  font-weight:bold;
+  box-shadow:0 0 10px rgba(255,230,77,.4), 0 5px 0 var(--gold-base);
+}
+
+.filter-btn.active {
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+}
+
+.feed-post {
+  padding:26px;
+  margin-bottom:26px;
+}
+
+.post-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+
+.post-author-wrap {
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.post-avatar {
+  width:150px;
+  height:150px;
+  border-radius:8px;
+  border:4px solid var(--gold-bright);
+  object-fit:cover;
+  object-position:top center;
+  background:#0a1636;
+  box-shadow:0 0 16px rgba(255,230,77,.65), 0 5px 0 var(--gold-base);
+  flex-shrink:0;
+}
+
+.post-author {
+  font-size:40px;
+  font-weight:1000;
+  color:var(--white);
+}
+
+.post-date {
+  font-size:28px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.q-pill {
+  font-size:22px;
+  font-weight:bold;
+  color:var(--quantum-cyan);
+  background:rgba(5,11,28,.9);
+  border:2px solid var(--quantum-cyan);
+  padding:8px 14px;
+  border-radius:6px;
+}
+
+.post-content {
+  font-size:40px;
+  line-height:1.6;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  margin:18px 0;
+  color:var(--white);
+}
+
+.post-media {
+  width:100%;
+  max-height:780px;
+  object-fit:contain;
+  object-position:top center;
+  background:#050a12;
+  border:3.5px solid var(--gold);
+  border-radius:8px;
+  margin-top:14px;
+}
+
+.post-media-audio {
+  width:100%;
+  margin-top:16px;
+}
+
+.file-attach-box {
+  margin-top:16px;
+  padding:18px;
+  border-radius:8px;
+  background:#050b1c;
+  border:2.5px solid var(--gold);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  font-size:30px;
+}
+
+.file-attach-box a {
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  text-decoration:none;
+  font-weight:1000;
+  padding:12px 20px;
+  border-radius:8px;
+  font-size:28px;
+}
+
+.post-actions {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  border-top:2.5px solid var(--gold);
+  padding-top:18px;
+  margin-top:18px;
+}
+
+.post-actions button {
+  background:#0a1636;
+  color:white;
+  border:2.5px solid var(--gold);
+  border-radius:8px;
+  min-height:80px;
+  padding:10px;
+  font-weight:bold;
+  font-size:30px;
+  box-shadow:0 0 10px rgba(255,230,77,.4), 0 5px 0 var(--gold-base);
+}
+
+.comments {
+  margin-top:18px;
+  border-top:2px solid rgba(255,230,77,.65);
+  padding-top:16px;
+}
+
+.comment-item {
+  background:#050b1c;
+  border:2px solid var(--gold);
+  padding:16px;
+  border-radius:8px;
+  margin:12px 0;
+  font-size:32px;
+  overflow-wrap:anywhere;
+}
+
+.comment-form {
+  display:flex;
+  gap:14px;
+  margin-top:16px;
+  flex-wrap:wrap;
+}
+
+.comment-form input {
+  flex:1;
+  min-width:240px;
+  background:#050b1c;
+  color:white;
+  border:3px solid var(--gold);
+  border-radius:8px;
+  padding:16px;
+  font-size:32px;
+}
+
+.comment-form button {
+  background:var(--gold);
+  color:#050a18;
+  border:2px solid var(--gold-bright);
+  border-radius:8px;
+  padding:0 28px;
+  min-height:72px;
+  font-weight:1000;
+  font-size:32px;
+  box-shadow:0 5px 0 #664604;
+}
+
+.media-box {
+  text-align:center;
+}
+
+.media-box video {
+  width:100%;
+  max-height:720px;
+  object-fit:cover;
+  object-position:top center;
+  background:#000;
+  border:3.5px solid var(--gold);
+  border-radius:8px;
+}
+
+.media-buttons {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+  margin-top:18px;
+}
+
+.media-buttons button {
+  min-height:92px;
+  border:3px solid var(--gold);
+  border-radius:8px;
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  color:white;
+  font-weight:bold;
+  font-size:34px;
+  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
+}
+
+.status {
+  font-size:30px;
+  color:var(--muted);
+  margin-top:14px;
+  overflow-wrap:anywhere;
+}
+
+.file-search-input {
+  width:100%;
+  background:#050b1c;
+  color:white;
+  border:3px solid var(--gold);
+  border-radius:8px;
+  padding:16px 20px;
+  font-size:32px;
+  margin-bottom:18px;
+  outline:none;
+}
+
+.file-list-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:12px;
+  max-height:680px;
+  overflow-y:auto;
+  padding:8px;
+  background:#050b1c;
+  border:2.5px solid var(--gold);
+  border-radius:8px;
+}
+
+.file-item-card {
+  background:#0b1633;
+  border:2px solid var(--gold);
+  border-radius:6px;
+  padding:12px 16px;
+  font-size:26px;
+  word-break:break-word;
+  color:var(--white);
+}
+
+.file-item-num {
+  color:var(--gold-bright);
+  font-weight:1000;
+  margin-right:8px;
+}
+
+.empty {
+  text-align:center;
+  color:var(--muted);
+  padding:42px 16px;
+  font-size:36px;
+}
+
+footer {
+  text-align:center;
+  padding:32px 16px 140px;
+  color:var(--muted);
+  font-size:30px;
+}
+
+.bottom-nav {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:60;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
+  border-top:4px solid var(--gold);
+  padding:12px 6px calc(12px + env(safe-area-inset-bottom));
+  box-shadow:0 0 20px rgba(255,230,77,.45), 0 -5px 18px rgba(0,0,0,.9);
+}
+
+.bottom-nav a {
+  color:white;
+  text-decoration:none;
+  text-align:center;
+  font-size:26px;
+  font-weight:bold;
+}
+
+.bottom-nav span {
+  display:block;
+  font-size:38px;
+  margin-bottom:4px;
+}
+
+#notice {
+  position:fixed;
+  top:110px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#0a1636;
+  color:white;
+  border:3.5px solid var(--gold-bright);
+  padding:20px 28px;
+  border-radius:8px;
+  box-shadow:0 0 20px rgba(255,230,77,.8), 0 7px 0 var(--gold-base);
+  z-index:100;
+  display:none;
+  max-width:92%;
+  font-size:34px;
+  text-align:center;
+}
+
+@media(max-width:1024px) {
+  .feature-grid-8,
+  .feature-grid-more {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .post-actions {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:600px) {
+  .feature-grid-8,
+  .feature-grid-more,
+  .post-tools,
+  .media-buttons {
+    grid-template-columns:1fr;
+  }
+  .profile-bar img {
+    width:240px;
+    height:240px;
+  }
+  .logo {
+    font-size:36px;
+  }
+  .hero h1 {
+    font-size:40px;
+  }
+  .clock-live-time {
+    font-size:38px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      AYNA BOOK <span class="star-1s">★</span>
+      <span class="quantum-badge">⚛ QUANTUM AUTO-CORE</span>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" id="quantumBoostBtn">⚡ Quantum Boost</button>
+      <button type="button" id="autoUpdateNowBtn">🔄 Auto Sync</button>
+      <a href="notifications.html">🔔</a>
+      <a href="messenger.html">💬 Messenger</a>
+    </div>
+  </div>
+</header>
+
+<div id="notice"></div>
+
+<main class="container">
+
+  <section class="hero">
+    <h1>WELCOME TO AYNA BOOK QUANTUM</h1>
+    <p>
+      আপনার বিশ্ব, আপনার বন্ধু, আপনার গল্প — কোয়ান্টাম গতির মাল্টিমিডিয়া সোশাল নেটওয়ার্কে আজীবন অটো-আপডেটসহ যুক্ত থাকুন।
+    </p>
+  </section>
+
+  <section class="quantum-bar" aria-label="Quantum Telemetry">
+    <div class="q-stat">
+      <span class="q-stat-label">Quantum Sync State</span>
+      <span class="q-stat-value" id="qSyncState">ENTANGLED • 99.8%</span>
+    </div>
+    <div class="q-stat">
+      <span class="q-stat-label">Lifelong Auto-Update</span>
+      <span class="q-stat-value" id="qAutoSyncStatus">ACTIVE • LIVE</span>
+    </div>
+    <div class="q-stat">
+      <span class="q-stat-label">Total Registry Items</span>
+      <span class="q-stat-value" id="qFileCount">180</span>
+    </div>
+  </section>
+
+  <!-- সময় বলার ঘড়ি প্যানেল -->
+  <section class="panel" id="talkingClockSection">
+    <h2>🕒 রিয়েল-টাইম কথা বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা</h2>
+    <div class="clock-live-box">
+      <span class="clock-live-time" id="quantumClockDisplay">লোড হচ্ছে...</span>
+      <div class="clock-rules-text">
+        • প্রতি ১ ঘণ্টা পর পর রিয়েল-টাইম সময় ঘোষণা<br>
+        • সেহরির ১.৫ ঘণ্টা আগে ঘোষণা (ভিত্তি: 04:58 AM)<br>
+        • ইফতারের ১ ঘণ্টা আগে থেকে প্রতি ৫ মিনিটে ঘোষণা (ভিত্তি: 05:12 PM)
+      </div>
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="toggleTalkClockBtn">🔊 সময় বলা: চালু</button>
+      <button type="button" id="speakNowClockBtn">🎙️ এখনই সময় বলুন</button>
+    </div>
+  </section>
+
+  <section class="profile-bar">
+    <img id="myPhoto" alt="Profile photo">
+    <div class="profile-info">
+      <strong id="myName">লোড হচ্ছে...</strong>
+      <small id="myEmail">আপনার AYNA BOOK অ্যাকাউন্ট</small>
+    </div>
+    <a href="profile.html" style="color:#fff6b3;text-decoration:none;font-weight:bold;font-size:34px;">
+      প্রোফাইল
+    </a>
+  </section>
+
+  <h2 class="section-title">🌍 AYNA BOOK MAIN FEATURES (২ সারি — ৮টি)</h2>
+
+  <section class="feature-grid-8">
+    <a class="feature-card" href="profile.html">
+      <span class="feature-icon">👤</span>
+      <span class="feature-name">আমার প্রোফাইল</span>
+      <span class="feature-desc">ব্যক্তিগত অ্যাকাউন্ট</span>
+    </a>
+
+    <a class="feature-card" href="messenger.html">
+      <span class="feature-icon">💬</span>
+      <span class="feature-name">AYNA Messenger</span>
+      <span class="feature-desc">মেসেজ, অডিও, ভিডিও ও ফাইল</span>
+    </a>
+
+    <a class="feature-card" href="notifications.html">
+      <span class="feature-icon">🔔</span>
+      <span class="feature-name">নোটিফিকেশন</span>
+      <span class="feature-desc">সব আপডেট</span>
+    </a>
+
+    <a class="feature-card" href="radio.html">
+      <span class="feature-icon">📻</span>
+      <span class="feature-name">বিশ্ব রেডিও</span>
+      <span class="feature-desc">রেডিও শুনুন</span>
+    </a>
+
+    <a class="feature-card" href="tv-live.html">
+      <span class="feature-icon">📺</span>
+      <span class="feature-name">বিশ্ব টেলিভিশন</span>
+      <span class="feature-desc">টিভি দেখুন</span>
+    </a>
+
+    <a class="feature-card" href="gps.html">
+      <span class="feature-icon">🛰️</span>
+      <span class="feature-name">GPS নেভিগেশন</span>
+      <span class="feature-desc">অবস্থান ও দিকনির্দেশ</span>
+    </a>
+
+    <a class="feature-card" href="compass.html">
+      <span class="feature-icon">🧭</span>
+      <span class="feature-name">ডিজিটাল কম্পাস</span>
+      <span class="feature-desc">দিক নির্ণয়</span>
+    </a>
+
+    <a class="feature-card" href="radar.html">
+      <span class="feature-icon">📡</span>
+      <span class="feature-name">রাডার সিস্টেম</span>
+      <span class="feature-desc">রাডার পেজ</span>
+    </a>
+  </section>
+
+  <h2 class="section-title">✨ MORE AYNA BOOK FEATURES</h2>
+
+  <section class="feature-grid-more">
+    <a class="feature-card" href="world-leaders/world-leaders.html">
+      <span class="feature-icon">🌐</span>
+      <span class="feature-name">বিশ্ব রাষ্ট্রনেতা</span>
+      <span class="feature-desc">নাম, মেয়াদ, ছবি ও পতাকা</span>
+    </a>
+
+    <a class="feature-card" href="military-radar.html">
+      <span class="feature-icon">🎯</span>
+      <span class="feature-name">মিলিটারি রাডার</span>
+      <span class="feature-desc">তথ্যভিত্তিক রাডার</span>
+    </a>
+
+    <a class="feature-card" href="clock.html">
+      <span class="feature-icon">🕒</span>
+      <span class="feature-name">বিশ্ব ঘড়ি</span>
+      <span class="feature-desc">সময় ও অ্যালার্ম</span>
+    </a>
+
+    <a class="feature-card" href="calendar.html">
+      <span class="feature-icon">📅</span>
+      <span class="feature-name">বিশ্ব ক্যালেন্ডার</span>
+      <span class="feature-desc">তারিখ ও দিন</span>
+    </a>
+
+    <a class="feature-card" href="arabic-calendar.html">
+      <span class="feature-icon">🌙</span>
+      <span class="feature-name">আরবি ক্যালেন্ডার</span>
+      <span class="feature-desc">হিজরি তারিখ</span>
+    </a>
+
+    <a class="feature-card" href="world-holidays.html">
+      <span class="feature-icon">🎉</span>
+      <span class="feature-name">বিশ্বের সরকারি ছুটি</span>
+      <span class="feature-desc">ছুটির তালিকা</span>
+    </a>
+
+    <a class="feature-card" href="us-alerts.html">
+      <span class="feature-icon">🚨</span>
+      <span class="feature-name">জরুরি এলার্ট</span>
+      <span class="feature-desc">এলার্ট তথ্য</span>
+    </a>
+
+    <a class="feature-card" href="prayer.html">
+      <span class="feature-icon">🕌</span>
+      <span class="feature-name">নামাজের সময়</span>
+      <span class="feature-desc">প্রার্থনার সময়সূচি</span>
+    </a>
+
+    <a class="feature-card" href="quantum.html">
+      <span class="feature-icon">⚛️</span>
+      <span class="feature-name">কোয়ান্টাম হাব</span>
+      <span class="feature-desc">কোয়ান্টাম সিস্টেম</span>
+    </a>
+
+    <a class="feature-card" href="supercomputer.html">
+      <span class="feature-icon">🖥️</span>
+      <span class="feature-name">সুপারকম্পিউটার</span>
+      <span class="feature-desc">উচ্চগতির তথ্য</span>
+    </a>
+  </section>
+
+  <!-- POST CREATOR -->
+  <section class="panel" id="createPost">
+    <h2>✍️ নতুন কোয়ান্টাম পোস্ট তৈরি করুন</h2>
+
+    <textarea
+      id="postText"
+      class="post-textarea"
+      placeholder="আপনার মনের কথা লিখুন..."
+    ></textarea>
+
+    <div class="post-tools">
+      <button type="button" class="tool-button" id="chooseImage">🖼️ ছবি (25MB)</button>
+      <button type="button" class="tool-button" id="chooseAudio">🎵 অডিও (100MB)</button>
+      <button type="button" class="tool-button" id="chooseVideo">🎬 বড় ভিডিও (250MB)</button>
+      <button type="button" class="tool-button" id="chooseFile">📎 ফাইল (250MB)</button>
+    </div>
+
+    <div style="margin-top:16px;">
+      <button type="button" class="tool-button" id="clearMedia" style="width:100%;">✖️ মিডিয়া / ফাইল বাদ দিন</button>
+    </div>
+
+    <input id="imageInput" type="file" accept="image/*" hidden>
+    <input id="audioInput" type="file" accept="audio/*" hidden>
+    <input id="videoInput" type="file" accept="video/*" hidden>
+    <input id="fileInput" type="file" accept="*/*" hidden>
+
+    <div class="progress-wrap" id="uploadProgressWrap">
+      <div class="progress-bar" id="uploadProgressBar"></div>
+    </div>
+
+    <div class="preview" id="mediaPreview">
+      <div id="previewContent"></div>
+      <div class="preview-name" id="previewName"></div>
+    </div>
+
+    <button type="button" class="primary-button" id="publishPost">
+      🚀 পোস্ট প্রকাশ করুন
+    </button>
+
+    <div class="status" id="postStatus">
+      ছবি (25MB), অডিও (100MB), বড় ভিডিও (250MB) বা ফাইল (250MB) যুক্ত করে পোস্ট করুন।
+    </div>
+  </section>
+
+  <!-- LIVE CAMERA -->
+  <section class="panel media-box" id="liveSection">
+    <h2>🔴 AYNA LIVE VIDEO</h2>
+
+    <video id="liveVideo" autoplay muted playsinline></video>
+
+    <div class="media-buttons">
+      <button type="button" id="startCamera">📹 ক্যামেরা চালু</button>
+      <button type="button" id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
+    </div>
+
+    <div class="status" id="cameraStatus">
+      ক্যামেরা এখন বন্ধ।
+    </div>
+
+    <p class="status">
+      এটি আপনার ডিভাইসে লাইভ ক্যামেরা প্রিভিউ।
+      অন্যদের কাছে সরাসরি সম্প্রচারের জন্য আলাদা লাইভ সার্ভার প্রয়োজন।
+    </p>
+  </section>
+
+  <!-- FEED -->
+  <h2 class="section-title">🌐 AYNA BOOK NEWS FEED</h2>
+
+  <div class="feed-filters" role="group" aria-label="Feed filter">
+    <button type="button" class="filter-btn active" data-filter="all">সব পোস্ট</button>
+    <button type="button" class="filter-btn" data-filter="text">📝 টেক্সট</button>
+    <button type="button" class="filter-btn" data-filter="image">🖼️ ছবি</button>
+    <button type="button" class="filter-btn" data-filter="audio">🎵 অডিও</button>
+    <button type="button" class="filter-btn" data-filter="video">🎬 ভিডিও</button>
+    <button type="button" class="filter-btn" data-filter="file">📎 ফাইল</button>
+  </div>
+
+  <section id="feed">
+    <div class="empty">পোস্ট লোড হচ্ছে...</div>
+  </section>
+
+  <!-- ফাইল ও ফোল্ডার তালিকা -->
+  <section class="panel" id="fileRegistrySection">
+    <h2>📁 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">180</span>টি)</h2>
+    <input
+      type="search"
+      id="fileSearchInput"
+      class="file-search-input"
+      placeholder="ফাইল বা ফোল্ডারের নাম লিখে খুঁজুন..."
+    >
+    <div id="fileListGrid" class="file-list-grid"></div>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 AYNA BOOK — Quantum Multimedia Social Platform (Lifelong Auto-Update & Talking Clock Enabled)
+</footer>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Home</a>
+  <a href="#createPost"><span>➕</span>Post</a>
+  <a href="messenger.html"><span>💬</span>Chat</a>
+  <a href="profile.html"><span>👤</span>Profile</a>
+</nav>
+
+<script type="module">
+const LIMITS = {
+  image: 25 * 1024 * 1024,
+  audio: 100 * 1024 * 1024,
+  video: 250 * 1024 * 1024,
+  file: 250 * 1024 * 1024
+};
+
+const AYNA_REGISTRY_ITEMS = [
+  "js (রুট তালিকায় প্রথমবার দেখা যাচ্ছে)",
+  "android-app",
+  "aspect-ratio: 1",
+  "assets",
+  "functions",
+  "world-leaders",
+  "world-leaders/world-leaders.html",
+  "world-leaders/world-leaders.js",
+  "world-leaders/leaders.json",
+  "world-leaders/flags",
+  "world-leaders/photos",
+  "index.html (রুট তালিকায় ফোল্ডার আইকনে দেখা যাচ্ছে)",
+  "js (রুট তালিকায় দ্বিতীয়বার দেখা যাচ্ছে)",
+  ".github (android-app ফোল্ডারের ভেতরে)",
+  "app (android-app ফোল্ডারের ভেতরে)",
+  "4account.html",
+  "access.html",
+  "account-security.html",
+  "admin-payment.html",
+  "android-hub.html",
+  "apple.html",
+  "arabic-calendar.html",
+  "audio-video-messaging.html",
+  "auth.html",
+  "auto-network.html",
+  "bangla-radio-tv.html",
+  "bd-directory.html",
+  "breaking-news.html",
+  "business-directory.html",
+  "button.html",
+  "calendar.html",
+  "camera.html",
+  "chat.html",
+  "clock.html",
+  "compass.html",
+  "countries.html",
+  "currency-exchange.html",
+  "dashboard.html",
+  "direction.html",
+  "ev-vehicles.html",
+  "forgot-password.html",
+  "github-firebase-config.html",
+  "global-alert.html",
+  "google-official-sites.html",
+  "gps.html",
+  "home.html",
+  "hourly-clock.html",
+  "index.html",
+  "location-alert.html",
+  "login-activity.html",
+  "login.html",
+  "medical-research.html",
+  "medicine-store.html",
+  "messages.htm",
+  "messages.html",
+  "messenger.html",
+  "military-radar.html",
+  "ownership.html",
+  "passwed.html",
+  "payment-pending.html",
+  "payment.html",
+  "prayer.html",
+  "privacy-settings.html",
+  "privacy.html",
+  "profile.html",
+  "public-profile.html",
+  "qr.html",
+  "quantum.html",
+  "radar-compass.html",
+  "radar.html",
+  "radio-tv.html",
+  "radio.html",
+  "register.html",
+  "security.html",
+  "signup.html",
+  "studio.html",
+  "supercomputer.html",
+  "tv-live.html",
+  "us-alerts.html",
+  "user-search.html",
+  "verify-email.html",
+  "world-doctors.html",
+  "world-holidays.html",
+  "world-leaders.html",
+  "world-locations.html",
+  "access.js",
+  "account-types.js",
+  "admin-payment.js",
+  "app.js",
+  "arabic-calendar.js",
+  "auth-guard.js",
+  "auth.js",
+  "calendar.js",
+  "chat.js",
+  "clock.js",
+  "comments.js",
+  "compass.js",
+  "connectivity.js",
+  "database.js",
+  "firebase-config.js",
+  "firebase-init.js",
+  "firebase.js",
+  "follow.js",
+  "forgot-password.js",
+  "functions.js",
+  "gps.js",
+  "index.js",
+  "likes.js",
+  "login-activity.js",
+  "login.js",
+  "messenger.js",
+  "military-radar.js",
+  "notifications-page.js",
+  "notifications.js",
+  "offline.js",
+  "payment-status.js",
+  "payment.js",
+  "posts.js",
+  "prayer.js",
+  "privacy-settings.js",
+  "privacy.js",
+  "profile.js",
+  "qr.js",
+  "quantum-security.js",
+  "radar.js",
+  "radio.js",
+  "register.js",
+  "security-dashboard.js",
+  "security.js",
+  "server.js.node.js",
+  "session-logout.js",
+  "session-security.js",
+  "set-admin-claim.js",
+  "signup.js",
+  "storage-test.js",
+  "storage.js",
+  "sw.js",
+  "translator.js",
+  "tv-live.js",
+  "update.js",
+  "us-alerts.js",
+  "verify-email.js",
+  "vite.config.js",
+  "world-holidays.js",
+  "AuthScreen.kt",
+  "HomeScreen.kt",
+  "MainActivity.kt",
+  "MessagingScreen.kt",
+  "PostScreen.kt",
+  "build.gradle.kts",
+  "gradle.properties",
+  "settings.gradle.kts",
+  ".gitignore",
+  "AYNA-BOOK-FILE-STRUCTURE.txt",
+  "AndroidManifest.xml",
+  "README.md",
+  "_config.yml",
+  "ayna-book-check.yml",
+  "ayna-ui-patch.css",
+  "build-apk.yml",
+  "colors.xml",
+  "dashboard.php",
+  "database.rules.json",
+  "deploy-pages.yml",
+  "firebase.json",
+  "firestore.rules",
+  "google-services.json",
+  "icon-192.png",
+  "icon-512.png",
+  "jekyll-gh-pages.yml",
+  "manifest.json",
+  "manifest.webmanifest",
+  "package.json",
+  "page-register",
+  "sha1.yml",
+  "storage.rules",
+  "strings.xml",
+  "styles.css",
+  "themes.xml",
+  "vercel.json",
+  "version.json"
+];
+
+async function loadOptionalScript(path) {
+  try {
+    return await import(path);
+  } catch (_) {
+    return null;
+  }
+}
+
+const jsFirebaseMod = await loadOptionalScript("./js/firebase.js");
+const jsAppMod = await loadOptionalScript("./js/app.js");
+const jsTranslatorMod = await loadOptionalScript("./js/translator.js");
+const initMod = await loadOptionalScript("./firebase-init.js");
+
+const appInstance = initMod?.app || jsFirebaseMod?.app || null;
+const auth = initMod?.auth || jsFirebaseMod?.auth || null;
+const database = initMod?.database || jsFirebaseMod?.database || null;
+const firebaseReady = !!(auth && database);
+
+let currentUser = null;
+let userProfile = {};
+let selectedFile = null;
+let selectedType = null;
+let cameraStream = null;
+let allPosts = [];
+let activeFilter = "all";
+let previewObjectUrl = null;
+
+const $ = id => document.getElementById(id);
+
+$("qFileCount").textContent = String(AYNA_REGISTRY_ITEMS.length);
+$("registryTotalLabel").textContent = String(AYNA_REGISTRY_ITEMS.length);
+
+function renderFileRegistry(query = "") {
+  const grid = $("fileListGrid");
+  const cleanQuery = query.trim().toLowerCase();
+  grid.innerHTML = "";
+
+  AYNA_REGISTRY_ITEMS.forEach((item, index) => {
+    if (cleanQuery && !item.toLowerCase().includes(cleanQuery)) return;
+    const card = document.createElement("div");
+    card.className = "file-item-card";
+
+    const num = document.createElement("span");
+    num.className = "file-item-num";
+    num.textContent = `${index + 1}.`;
+
+    const name = document.createElement("span");
+    name.textContent = item;
+
+    card.append(num, name);
+    grid.appendChild(card);
+  });
+
+  if (!grid.children.length) {
+    grid.innerHTML = '<div class="empty">কোনো ফাইল বা ফোল্ডার মেলেনি।</div>';
+  }
+}
+
+$("fileSearchInput").addEventListener("input", e => {
+  renderFileRegistry(e.target.value);
+});
+
+renderFileRegistry();
+
+function notify(message) {
+  const box = $("notice");
+  box.textContent = message;
+  box.style.display = "block";
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => {
+    box.style.display = "none";
+  }, 3200);
+}
+
+function safePhoto(photo) {
+  return typeof photo === "string" && photo
+    ? photo
+    : "data:image/svg+xml," + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320"><rect width="100%" height="100%" fill="#0a1636"/><circle cx="160" cy="110" r="58" fill="#ffe64d"/><path d="M45 320 Q62 205 160 205 Q258 205 275 320" fill="#ffe64d"/></svg>'
+      );
+}
+
+function formatDate(timestamp) {
+  if (!timestamp) return "";
+  return new Date(timestamp).toLocaleString();
+}
+
+function formatSize(bytes = 0) {
+  if (!bytes) return "";
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+function quantumSignature(seed = "") {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  const score = 95 + (Math.abs(hash) % 50) / 10;
+  return `⚛ Q-COHERENCE ${score.toFixed(1)}%`;
+}
+
+// সময় বলার ফিচার (রিয়েল-টাইম, ঘণ্টায় ১ বার, সেহরি ১.৫ ঘণ্টা আগে, ইফতার ১ ঘণ্টা আগে থেকে ৫ মিনিট পর পর)
+const QuantumTalkingClock = {
+  enabled: true,
+  sehriTime: { hour: 4, minute: 58 },
+  iftarTime: { hour: 17, minute: 12 },
+  lastHourlySpoken: "",
+  lastIftar5MinSpoken: "",
+  sehriPreAlertSpoken: false,
+
+  toMinutes(h, m) {
+    return h * 60 + m;
+  },
+
+  formatBanglaTime(date) {
+    return date.toLocaleTimeString("bn-BD", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    });
+  },
+
+  speak(text, force = false) {
+    if ((!this.enabled && !force) || !("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "bn-BD";
+      utter.rate = 0.95;
+      window.speechSynthesis.speak(utter);
+    } catch (err) {
+      console.error("TTS error:", err);
+    }
+  },
+
+  updateDisplay() {
+    const now = new Date();
+    const displayEl = $("quantumClockDisplay");
+    if (displayEl) {
+      displayEl.textContent = now.toLocaleTimeString("bn-BD", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+    }
+    const btn = $("toggleTalkClockBtn");
+    if (btn) {
+      btn.textContent = this.enabled ? "🔊 সময় বলা: চালু" : "🔇 সময় বলা: বন্ধ";
+    }
+  },
+
+  tick() {
+    this.updateDisplay();
+    if (!this.enabled) return;
+
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const nowMin = this.toMinutes(h, m);
+    const sehriMin = this.toMinutes(this.sehriTime.hour, this.sehriTime.minute);
+    const iftarMin = this.toMinutes(this.iftarTime.hour, this.iftarTime.minute);
+
+    const sehriAlertMin = sehriMin - 90;
+    if (nowMin === sehriAlertMin && !this.sehriPreAlertSpoken) {
+      this.sehriPreAlertSpoken = true;
+      this.speak(`সতর্কতা: সেহরির আর দেড় ঘণ্টা বাকি। এখন সময় ${this.formatBanglaTime(now)}।`);
+    }
+    if (nowMin !== sehriAlertMin) {
+      this.sehriPreAlertSpoken = false;
+    }
+
+    const iftarStart = iftarMin - 60;
+    if (nowMin >= iftarStart && nowMin <= iftarMin) {
+      const diff = nowMin - iftarStart;
+      const slotKey = `${now.toDateString()}-${h}:${m}`;
+      if (diff % 5 === 0 && this.lastIftar5MinSpoken !== slotKey) {
+        this.lastIftar5MinSpoken = slotKey;
+        const leftMin = iftarMin - nowMin;
+        this.speak(
+          leftMin === 0
+            ? `এখন ইফতারের সময়, ${this.formatBanglaTime(now)}।`
+            : `ইফতারের আর ${leftMin} মিনিট বাকি। এখন সময় ${this.formatBanglaTime(now)}।`
+        );
+      }
+      return;
+    }
+
+    const hourKey = `${now.toDateString()}-${h}`;
+    if (m === 0 && this.lastHourlySpoken !== hourKey) {
+      this.lastHourlySpoken = hourKey;
+      this.speak(`এখন সময় ${this.formatBanglaTime(now)}।`);
+    }
+  },
+
+  start() {
+    this.tick();
+    setInterval(() => this.tick(), 10000);
+  }
+};
+
+$("toggleTalkClockBtn").addEventListener("click", () => {
+  QuantumTalkingClock.enabled = !QuantumTalkingClock.enabled;
+  QuantumTalkingClock.updateDisplay();
+  if (QuantumTalkingClock.enabled) {
+    const nowText = QuantumTalkingClock.formatBanglaTime(new Date());
+    QuantumTalkingClock.speak(`সময় বলার ঘড়ি চালু হয়েছে। এখন সময় ${nowText}।`, true);
+    notify("সময় বলার ঘড়ি চালু হয়েছে");
+  } else {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    notify("সময় বলার ঘড়ি বন্ধ করা হয়েছে");
+  }
+});
+
+$("speakNowClockBtn").addEventListener("click", () => {
+  const nowText = QuantumTalkingClock.formatBanglaTime(new Date());
+  QuantumTalkingClock.speak(`এখন সময় ${nowText}।`, true);
+  notify(`এখন সময় ${nowText}`);
+});
+
+// আজীবন অটো আপডেট ইঞ্জিন
+const QuantumAutoUpdater = {
+  intervalMs: 5 * 60 * 1000,
+  timer: null,
+
+  async syncOnce(manual = false) {
+    const nowLabel = new Date().toLocaleTimeString();
+    try {
+      if ("serviceWorker" in navigator) {
+        const reg = await navigator.serviceWorker.getRegistration();
+        if (reg) await reg.update();
+      }
+
+      const [verRes, leadersRes] = await Promise.allSettled([
+        fetch(`./version.json?_=${Date.now()}`, { cache: "no-store" }),
+        fetch(`./world-leaders/leaders.json?_=${Date.now()}`, { cache: "no-store" })
+      ]);
+
+      let verInfo = "";
+      if (verRes.status === "fulfilled" && verRes.value.ok) {
+        const vData = await verRes.value.json().catch(() => null);
+        if (vData?.version) {
+          verInfo = `v${vData.version}`;
+          localStorage.setItem("ayna_quantum_version", JSON.stringify(vData));
         }
+      }
+
+      if (leadersRes.status === "fulfilled" && leadersRes.value.ok) {
+        const lData = await leadersRes.value.json().catch(() => null);
+        if (Array.isArray(lData)) {
+          localStorage.setItem("ayna_world_leaders_cache", JSON.stringify(lData));
+        }
+      }
+
+      $("qAutoSyncStatus").textContent = `SYNCED • ${verInfo || nowLabel}`;
+      if (manual) {
+        notify(`অটো-আপডেট সিঙ্ক সম্পন্ন (${nowLabel})`);
+      }
+    } catch (_) {
+      $("qAutoSyncStatus").textContent = `STANDBY • ${nowLabel}`;
+      if (manual) {
+        notify("লোকাল কোয়ান্টাম ক্যাশে সক্রিয় রয়েছে");
+      }
     }
+  },
+
+  start() {
+    this.syncOnce(false);
+    clearInterval(this.timer);
+    this.timer = setInterval(() => this.syncOnce(false), this.intervalMs);
+    window.addEventListener("online", () => this.syncOnce(false));
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        this.syncOnce(false);
+      }
+    });
+  }
+};
+
+window.AynaBook = {
+  version: "2026.quantum.autoupdate.clock",
+  fileRegistry: AYNA_REGISTRY_ITEMS,
+  talkingClock: QuantumTalkingClock,
+  autoUpdater: QuantumAutoUpdater,
+  notify,
+  safePhoto,
+  formatDate,
+  getState: () => ({
+    currentUser,
+    userProfile,
+    postsCount: allPosts.length,
+    totalFiles: AYNA_REGISTRY_ITEMS.length,
+    modules: {
+      firebase: !!jsFirebaseMod,
+      app: !!jsAppMod,
+      translator: !!jsTranslatorMod,
+      firebaseInit: !!initMod
+    }
+  })
+};
+
+$("myPhoto").src = safePhoto("");
+
+$("quantumBoostBtn").addEventListener("click", () => {
+  const levels = ["ENTANGLED • 99.9%", "SUPERPOSITION • 99.7%", "Q-RELAY LOCKED • 100%"];
+  const next = levels[Math.floor(Math.random() * levels.length)];
+  $("qSyncState").textContent = next;
+  notify("কোয়ান্টাম সিঙ্ক আপডেট হয়েছে: " + next);
+});
+
+$("autoUpdateNowBtn").addEventListener("click", () => QuantumAutoUpdater.syncOnce(true));
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter || "all";
+    renderFeed(allPosts);
+  });
+});
+
+async function initApp() {
+  if (!firebaseReady) {
+    $("myName").textContent = "AYNA Quantum Guest";
+    $("myEmail").textContent = "Firebase কনফিগারেশন সংযুক্ত করুন";
+    $("publishPost").disabled = true;
+    $("feed").innerHTML =
+      '<div class="empty">Firebase সংযোগ পাওয়া যায়নি। <code>firebase-init.js</code> বা <code>js/firebase.js</code> পরীক্ষা করুন।</div>';
+    return;
+  }
+
+  const { onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
+  const { ref, get, set, push, onValue } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
+
+  onAuthStateChanged(auth, async user => {
+    if (!user) {
+      $("myName").textContent = "লগইন করুন";
+      $("myEmail").textContent = "পোস্ট করতে লগইন প্রয়োজন";
+      $("publishPost").disabled = true;
+      notify("পোস্ট করতে আগে লগইন করুন");
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1500);
+      return;
+    }
+
+    currentUser = user;
+
+    try {
+      const snapshot = await get(ref(database, "users/" + user.uid));
+      userProfile = snapshot.val() || {};
+
+      $("myName").textContent =
+        userProfile.fullName || user.displayName || "AYNA User";
+      $("myEmail").textContent =
+        user.email || "AYNA BOOK Member";
+      $("myPhoto").src = safePhoto(userProfile.photoURL);
+      $("publishPost").disabled = false;
+
+      startFeed(ref, onValue);
+    } catch (error) {
+      console.error(error);
+      notify("প্রোফাইল লোড করা যায়নি");
+    }
+  });
+
+  $("publishPost").addEventListener("click", () => publishPost(ref, push, set));
 }
+
+function startFeed(ref, onValue) {
+  onValue(
+    ref(database, "posts"),
+    snapshot => {
+      const posts = snapshot.val() || {};
+      allPosts = Object.entries(posts)
+        .map(([id, post]) => ({ id, ...post }))
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+      renderFeed(allPosts);
+    },
+    error => {
+      console.error("Feed error:", error);
+      $("feed").innerHTML =
+        '<div class="empty">ফিড লোড হয়নি। Firebase Rules পরীক্ষা করুন।</div>';
+    }
+  );
+}
+
+$("chooseImage").addEventListener("click", () => $("imageInput").click());
+$("chooseAudio").addEventListener("click", () => $("audioInput").click());
+$("chooseVideo").addEventListener("click", () => $("videoInput").click());
+$("chooseFile").addEventListener("click", () => $("fileInput").click());
+
+$("imageInput").addEventListener("change", event => handleSelectedFile(event, "image"));
+$("audioInput").addEventListener("change", event => handleSelectedFile(event, "audio"));
+$("videoInput").addEventListener("change", event => handleSelectedFile(event, "video"));
+$("fileInput").addEventListener("change", event => handleSelectedFile(event, "file"));
+
+function handleSelectedFile(event, type) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const maxBytes = LIMITS[type] || LIMITS.file;
+  const maxMB = Math.round(maxBytes / (1024 * 1024));
+
+  if (file.size > maxBytes) {
+    notify(`এই ক্যাটাগরিতে সর্বোচ্চ ${maxMB}MB ফাইল দেওয়া যাবে`);
+    event.target.value = "";
+    return;
+  }
+
+  if (type !== "file" && !file.type.startsWith(type + "/")) {
+    notify("সঠিক ফাইল নির্বাচন করুন");
+    event.target.value = "";
+    return;
+  }
+
+  selectedFile = file;
+  selectedType = type;
+  showPreview(file, type);
+}
+
+function showPreview(file, type) {
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl);
+  }
+  previewObjectUrl = URL.createObjectURL(file);
+
+  const preview = $("mediaPreview");
+  const content = $("previewContent");
+  content.innerHTML = "";
+
+  if (type === "image") {
+    const img = document.createElement("img");
+    img.src = previewObjectUrl;
+    img.alt = "Selected image";
+    content.appendChild(img);
+  } else if (type === "video") {
+    const video = document.createElement("video");
+    video.src = previewObjectUrl;
+    video.controls = true;
+    video.playsInline = true;
+    content.appendChild(video);
+  } else if (type === "audio") {
+    const audio = document.createElement("audio");
+    audio.src = previewObjectUrl;
+    audio.controls = true;
+    content.appendChild(audio);
+  } else {
+    content.innerHTML = `<div style="font-size:32px;color:#ffe64d;">📎 ${file.name} (${formatSize(file.size)})</div>`;
+  }
+
+  $("previewName").textContent = `${file.name} • ${formatSize(file.size)}`;
+  preview.style.display = "block";
+}
+
+$("clearMedia").addEventListener("click", clearSelectedMedia);
+
+function clearSelectedMedia() {
+  selectedFile = null;
+  selectedType = null;
+
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl);
+    previewObjectUrl = null;
+  }
+
+  $("imageInput").value = "";
+  $("audioInput").value = "";
+  $("videoInput").value = "";
+  $("fileInput").value = "";
+  $("previewContent").innerHTML = "";
+  $("previewName").textContent = "";
+  $("mediaPreview").style.display = "none";
+  $("uploadProgressWrap").style.display = "none";
+  $("uploadProgressBar").style.width = "0%";
+}
+
+async function resolveFirebaseStorage() {
+  const { getStorage } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js");
+  const cfgMod = await loadOptionalScript("./firebase-config.js");
+  const bucket =
+    appInstance?.options?.storageBucket ||
+    cfgMod?.firebaseConfig?.storageBucket ||
+    cfgMod?.default?.storageBucket ||
+    "";
+
+  if (bucket) {
+    const gsUrl = bucket.startsWith("gs://") ? bucket : `gs://${bucket}`;
+    return appInstance ? getStorage(appInstance, gsUrl) : getStorage(undefined, gsUrl);
+  }
+  return appInstance ? getStorage(appInstance) : getStorage();
+}
+
+async function uploadMediaData(file, uid) {
+  if (file.size <= 3 * 1024 * 1024) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("ফাইল পড়া যায়নি"));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const { ref: sRef, uploadBytesResumable, getDownloadURL } =
+    await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js");
+
+  const storage = await resolveFirebaseStorage();
+  const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+  const fileRef = sRef(storage, `ayna_posts/${uid}/${safeName}`);
+
+  return new Promise((resolve, reject) => {
+    const task = uploadBytesResumable(fileRef, file, {
+      contentType: file.type || "application/octet-stream"
+    });
+
+    $("uploadProgressWrap").style.display = "block";
+    $("uploadProgressBar").style.width = "1%";
+    $("postStatus").textContent = `আপলোড শুরু হচ্ছে: 0% (0 MB / ${formatSize(file.size)})`;
+
+    let sawProgress = false;
+    const stallTimer = setTimeout(() => {
+      if (!sawProgress) {
+        task.cancel();
+        reject(new Error("STORAGE_STALL"));
+      }
+    }, 15000);
+
+    task.on(
+      "state_changed",
+      snap => {
+        if (snap.bytesTransferred > 0) {
+          sawProgress = true;
+          clearTimeout(stallTimer);
+        }
+        const pct = snap.totalBytes ? Math.round((snap.bytesTransferred / snap.totalBytes) * 100) : 0;
+        $("uploadProgressBar").style.width = `${pct}%`;
+        $("postStatus").textContent = `আপলোড হচ্ছে: ${pct}% (${formatSize(snap.bytesTransferred)} / ${formatSize(snap.totalBytes)})`;
+      },
+      err => {
+        clearTimeout(stallTimer);
+        reject(err);
+      },
+      async () => {
+        clearTimeout(stallTimer);
+        const downloadUrl = await getDownloadURL(task.snapshot.ref);
+        resolve(downloadUrl);
+      }
+    );
+  });
+}
+
+async function publishPost(ref, push, set) {
+  if (!currentUser) {
+    notify("আগে লগইন করুন");
+    return;
+  }
+
+  const text = $("postText").value.trim();
+  if (!text && !selectedFile) {
+    notify("লেখা অথবা মিডিয়া/ফাইল যোগ করুন");
+    return;
+  }
+
+  const button = $("publishPost");
+  button.disabled = true;
+  button.textContent = "প্রকাশ করা হচ্ছে...";
+
+  try {
+    let mediaData = "";
+    if (selectedFile) {
+      mediaData = await uploadMediaData(selectedFile, currentUser.uid);
+    }
+
+    const postRef = push(ref(database, "posts"));
+    const post = {
+      uid: currentUser.uid,
+      authorName: userProfile.fullName || currentUser.displayName || "AYNA User",
+      authorPhoto: userProfile.photoURL || "",
+      text,
+      type: selectedType || "text",
+      media: mediaData,
+      fileName: selectedFile?.name || "",
+      fileSize: selectedFile?.size || 0,
+      mimeType: selectedFile?.type || "",
+      createdAt: Date.now(),
+      likes: {},
+      comments: {}
+    };
+
+    await set(postRef, post);
+    $("postText").value = "";
+    clearSelectedMedia();
+    $("postStatus").textContent = "ছবি (25MB), অডিও (100MB), বড় ভিডিও (250MB) বা ফাইল (250MB) যুক্ত করে পোস্ট করুন।";
+    notify("আপনার পোস্ট প্রকাশ হয়েছে");
+  } catch (error) {
+    console.error("Post error:", error);
+    if (error?.message === "STORAGE_STALL") {
+      $("postStatus").textContent = "Firebase Storage সাড়া দেয়নি। Storage চালু আছে কি না এবং storageBucket সঠিক কি না যাচাই করুন।";
+      notify("Storage আপলোড টাইমআউট হয়েছে");
+    } else if (error?.code === "storage/unauthorized" || error?.code === "PERMISSION_DENIED") {
+      $("postStatus").textContent = "Firebase Storage বা Database Rules অনুমতি দেয়নি।";
+      notify("অনুমতি পাওয়া যায়নি (Rules চেক করুন)");
+    } else {
+      $("postStatus").textContent = "পোস্ট প্রকাশ করা যায়নি। নেটওয়ার্ক ও Firebase Storage পরীক্ষা করুন।";
+      notify("পোস্ট প্রকাশ করা যায়নি");
+    }
+  } finally {
+    button.disabled = false;
+    button.textContent = "🚀 পোস্ট প্রকাশ করুন";
+  }
+}
+
+function renderFeed(posts) {
+  const feed = $("feed");
+  feed.innerHTML = "";
+
+  const filtered = activeFilter === "all"
+    ? posts
+    : posts.filter(p => (p.type || "text") === activeFilter);
+
+  if (!filtered.length) {
+    feed.innerHTML =
+      '<div class="empty">এখনও কোনো পোস্ট নেই। প্রথম পোস্টটি আপনিই করুন!</div>';
+    return;
+  }
+
+  filtered.forEach(post => {
+    const card = document.createElement("article");
+    card.className = "feed-post";
+    card.id = `post-${post.id}`;
+
+    const header = document.createElement("div");
+    header.className = "post-header";
+
+    const authorWrap = document.createElement("div");
+    authorWrap.className = "post-author-wrap";
+
+    const avatar = document.createElement("img");
+    avatar.className = "post-avatar";
+    avatar.src = safePhoto(post.authorPhoto);
+    avatar.alt = "Profile";
+
+    const authorBox = document.createElement("div");
+    const author = document.createElement("div");
+    author.className = "post-author";
+    author.textContent = post.authorName || "AYNA User";
+
+    const date = document.createElement("div");
+    date.className = "post-date";
+    date.textContent = formatDate(post.createdAt);
+
+    authorBox.append(author, date);
+    authorWrap.append(avatar, authorBox);
+
+    const pill = document.createElement("span");
+    pill.className = "q-pill";
+    pill.textContent = quantumSignature(post.id || post.text || "");
+
+    header.append(authorWrap, pill);
+    card.appendChild(header);
+
+    if (post.text) {
+      const text = document.createElement("div");
+      text.className = "post-content";
+      text.textContent = post.text;
+      card.appendChild(text);
+    }
+
+    if (post.media && post.type === "image") {
+      const img = document.createElement("img");
+      img.className = "post-media";
+      img.src = post.media;
+      img.alt = "Post image";
+      img.loading = "lazy";
+      card.appendChild(img);
+    }
+
+    if (post.media && post.type === "video") {
+      const video = document.createElement("video");
+      video.className = "post-media";
+      video.src = post.media;
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = "metadata";
+      card.appendChild(video);
+    }
+
+    if (post.media && post.type === "audio") {
+      const audio = document.createElement("audio");
+      audio.className = "post-media-audio";
+      audio.src = post.media;
+      audio.controls = true;
+      card.appendChild(audio);
+    }
+
+    if (post.media && post.type === "file") {
+      const fileBox = document.createElement("div");
+      fileBox.className = "file-attach-box";
+      fileBox.innerHTML = `
+        <div>📎 <strong>${post.fileName || "Attached File"}</strong> ${post.fileSize ? `(${formatSize(post.fileSize)})` : ""}</div>
+        <a href="${post.media}" target="_blank" rel="noopener">ডাউনলোড</a>
+      `;
+      card.appendChild(fileBox);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "post-actions";
+
+    const likes = post.likes || {};
+    const likeCount = Object.keys(likes).length;
+    const liked = !!(currentUser && likes[currentUser.uid]);
+
+    const likeButton = document.createElement("button");
+    likeButton.type = "button";
+    likeButton.textContent = (liked ? "❤️ " : "🤍 ") + "লাইক " + likeCount;
+    likeButton.addEventListener("click", () => toggleLike(post.id, liked));
+
+    const commentButton = document.createElement("button");
+    commentButton.type = "button";
+    commentButton.textContent = "💬 কমেন্ট";
+    commentButton.addEventListener("click", () => {
+      card.querySelector(".comment-input")?.focus();
+    });
+
+    const shareButton = document.createElement("button");
+    shareButton.type = "button";
+    shareButton.textContent = "↗️ শেয়ার";
+    shareButton.addEventListener("click", () => sharePost(post));
+
+    const copyLinkButton = document.createElement("button");
+    copyLinkButton.type = "button";
+    copyLinkButton.textContent = "🔗 কপি লিংক";
+    copyLinkButton.addEventListener("click", () => copyPostLink(post));
+
+    actions.append(likeButton, commentButton, shareButton, copyLinkButton);
+    card.appendChild(actions);
+
+    renderComments(card, post);
+    feed.appendChild(card);
+  });
+}
+
+async function toggleLike(postId, liked) {
+  if (!firebaseReady || !currentUser) {
+    notify("লাইক দিতে লগইন করুন");
+    return;
+  }
+
+  const { ref, set } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
+  try {
+    const likeRef = ref(database, `posts/${postId}/likes/${currentUser.uid}`);
+    await set(likeRef, liked ? null : true);
+  } catch (error) {
+    console.error(error);
+    notify("লাইক কাজ করেনি। Rules পরীক্ষা করুন।");
+  }
+}
+
+function renderComments(card, post) {
+  const section = document.createElement("div");
+  section.className = "comments";
+
+  const comments = post.comments || {};
+  Object.values(comments).forEach(comment => {
+    const item = document.createElement("div");
+    item.className = "comment-item";
+
+    const name = document.createElement("strong");
+    name.textContent = (comment.name || "AYNA User") + ": ";
+
+    const text = document.createElement("span");
+    text.textContent = comment.text || "";
+
+    item.append(name, text);
+    section.appendChild(item);
+  });
+
+  const form = document.createElement("div");
+  form.className = "comment-form";
+
+  const input = document.createElement("input");
+  input.className = "comment-input";
+  input.placeholder = "কমেন্ট লিখুন...";
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = "পাঠান";
+
+  button.addEventListener("click", () => addComment(post.id, input));
+  input.addEventListener("keydown", event => {
+    if (event.key === "Enter") addComment(post.id, input);
+  });
+
+  form.append(input, button);
+  section.appendChild(form);
+  card.appendChild(section);
+}
+
+async function addComment(postId, input) {
+  if (!firebaseReady || !currentUser) {
+    notify("কমেন্ট করতে লগইন করুন");
+    return;
+  }
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  const { ref, push, set } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
+  try {
+    const commentRef = push(ref(database, `posts/${postId}/comments`));
+    await set(commentRef, {
+      uid: currentUser.uid,
+      name: userProfile.fullName || currentUser.displayName || "AYNA User",
+      text,
+      createdAt: Date.now()
+    });
+    input.value = "";
+  } catch (error) {
+    console.error(error);
+    notify("কমেন্ট পাঠানো যায়নি");
+  }
+}
+
+function getPostLink(post) {
+  return location.origin + location.pathname + "?post=" + encodeURIComponent(post.id);
+}
+
+async function copyPostLink(post) {
+  const url = getPostLink(post);
+  try {
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(url);
+      notify("পোস্টের লিংক কপি হয়েছে");
+    } else {
+      notify(url);
+    }
+  } catch (error) {
+    console.error(error);
+    notify("লিংক কপি করা যায়নি");
+  }
+}
+
+async function sharePost(post) {
+  const url = getPostLink(post);
+  const shareData = {
+    title: "AYNA BOOK",
+    text: post.text || "AYNA BOOK পোস্ট দেখুন",
+    url
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      await copyPostLink(post);
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      console.error(error);
+    }
+  }
+}
+
+$("startCamera").addEventListener("click", startCamera);
+$("stopCamera").addEventListener("click", stopCamera);
+
+async function startCamera() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    notify("ক্যামেরার জন্য HTTPS প্রয়োজন");
+    return;
+  }
+
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" },
+      audio: true
+    });
+    $("liveVideo").srcObject = cameraStream;
+    $("cameraStatus").textContent = "ক্যামেরা চালু হয়েছে। এটি শুধু আপনার ডিভাইসে দেখা যাচ্ছে।";
+    notify("ক্যামেরা চালু হয়েছে");
+  } catch (error) {
+    console.error(error);
+    $("cameraStatus").textContent = "ক্যামেরা চালু হয়নি। Permission পরীক্ষা করুন।";
+    notify("Camera Permission দিন");
+  }
+}
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop());
+    cameraStream = null;
+  }
+  $("liveVideo").srcObject = null;
+  $("cameraStatus").textContent = "ক্যামেরা বন্ধ।";
+  notify("ক্যামেরা বন্ধ হয়েছে");
+}
+
+window.addEventListener("pagehide", () => {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop());
+  }
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl);
+  }
+});
+
+QuantumTalkingClock.start();
+QuantumAutoUpdater.start();
+initApp();
+</script>
+
+</body>
+</html>
