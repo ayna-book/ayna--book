@@ -1,18 +1,19 @@
 // ==================================================
-// AYNA BOOK - ARABIC CALENDAR & CLOCK SYNC (arabic-calendar.js)
+// AYNA BOOK - ARABIC / HIJRI CALENDAR (arabic-calendar.js)
 // ==================================================
 
-const AYNA_CALENDAR_CONFIG = {
+const AYNA_HIJRI_CONFIG = {
   storageKey: "ayna_sehri_iftar_sync",
+  offsetStorageKey: "ayna_hijri_day_offset",
   defaultCountry: "BD",
   defaultDistrict: "চট্টগ্রাম",
   locations: {
     BD: {
       countryName: "বাংলাদেশ",
       districts: {
-        "ঢাকা": { sehri: "04:58", iftar: "17:12" },
         "চট্টগ্রাম": { sehri: "04:53", iftar: "17:07" },
         "কক্সবাজার": { sehri: "04:52", iftar: "17:08" },
+        "ঢাকা": { sehri: "04:58", iftar: "17:12" },
         "সিলেট": { sehri: "04:50", iftar: "17:04" },
         "রাজশাহী": { sehri: "05:05", iftar: "17:19" },
         "খুলনা": { sehri: "05:02", iftar: "17:17" },
@@ -42,58 +43,158 @@ const AYNA_CALENDAR_CONFIG = {
       countryName: "যুক্তরাজ্য",
       districts: {
         "লন্ডন": { sehri: "05:45", iftar: "16:02" },
-        "বার্মিংহাম": { sehri: "05:52", iftar: "16:06" }
+        "বার্মিংহাম": { sehri: "05:52", iftar: "16:06" },
+        "ম্যানচেস্টার": { sehri: "05:56", iftar: "16:04" }
       }
     },
     US: {
       countryName: "যুক্তরাষ্ট্র",
       districts: {
         "নিউইয়র্ক": { sehri: "05:32", iftar: "16:36" },
+        "লস অ্যাঞ্জেলেস": { sehri: "05:38", iftar: "16:50" },
         "হিউস্টন": { sehri: "05:35", iftar: "17:15" }
       }
     }
   }
 };
 
+const HIJRI_MONTHS_BN = [
+  "মুহাররম",
+  "সফর",
+  "রবিউল আউয়াল",
+  "রবিউস সানি",
+  "জমাদিউল আউয়াল",
+  "জমাদিউস সানি",
+  "রজব",
+  "শাবান",
+  "রমজান",
+  "শাওয়াল",
+  "জিলকদ",
+  "জিলহজ"
+];
+
 const $ = (id) => document.getElementById(id);
 
-function getHijriDateInfo(date = new Date()) {
+let hijriDayOffset = 0;
+
+function loadHijriOffset() {
   try {
-    const hijriFormatter = new Intl.DateTimeFormat("bn-BD-u-ca-islamic-umalqura", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      weekday: "long"
-    });
-    const enHijriFormatter = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", {
+    const saved = Number(localStorage.getItem(AYNA_HIJRI_CONFIG.offsetStorageKey) || "0");
+    if (!Number.isNaN(saved) && saved >= -3 && saved <= 3) {
+      hijriDayOffset = saved;
+    }
+  } catch (err) {
+    hijriDayOffset = 0;
+  }
+}
+
+function saveHijriOffset(val) {
+  hijriDayOffset = val;
+  try {
+    localStorage.setItem(AYNA_HIJRI_CONFIG.offsetStorageKey, String(val));
+  } catch (err) {
+    console.error("Offset save error:", err);
+  }
+}
+
+function getAdjustedDate(baseDate = new Date(), dayOffset = hijriDayOffset) {
+  const d = new Date(baseDate.getTime());
+  d.setDate(d.getDate() + Number(dayOffset || 0));
+  return d;
+}
+
+function getHijriParts(dateObj) {
+  try {
+    const dayFormatter = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric" });
+    const monthFormatter = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { month: "numeric" });
+    const yearFormatter = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { year: "numeric" });
+    const bnFullFormatter = new Intl.DateTimeFormat("bn-BD-u-ca-islamic-umalqura", {
+      weekday: "long",
       day: "numeric",
       month: "long",
       year: "numeric"
     });
 
+    const dayNum = parseInt(dayFormatter.format(dateObj), 10) || 1;
+    const monthNum = parseInt(monthFormatter.format(dateObj), 10) || 1;
+    const yearStr = yearFormatter.format(dateObj).replace(/\D/g, "") || "1448";
+    const yearNum = parseInt(yearStr, 10) || 1448;
+    const monthNameBn = HIJRI_MONTHS_BN[(monthNum - 1) % 12] || "আরবি মাস";
+
     return {
-      banglaText: hijriFormatter.format(date),
-      englishText: enHijriFormatter.format(date)
+      day: dayNum,
+      month: monthNum,
+      monthNameBn,
+      year: yearNum,
+      fullBn: bnFullFormatter.format(dateObj)
     };
   } catch (err) {
-    console.error("Hijri date format error:", err);
+    console.error("Hijri formatter error:", err);
     return {
-      banglaText: date.toLocaleDateString("bn-BD"),
-      englishText: date.toLocaleDateString("en-US")
+      day: 1,
+      month: 1,
+      monthNameBn: "মুহাররম",
+      year: 1448,
+      fullBn: dateObj.toLocaleDateString("bn-BD")
     };
   }
 }
 
+function toBanglaDigits(numOrStr) {
+  const bnMap = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+  return String(numOrStr).replace(/\d/g, (d) => bnMap[Number(d)]);
+}
+
 function renderHijriHeader() {
-  const info = getHijriDateInfo(new Date());
-  const hijriDisplay = $("hijriDateDisplay");
-  if (hijriDisplay) {
-    hijriDisplay.textContent = info.banglaText;
+  const adjustedNow = getAdjustedDate(new Date(), hijriDayOffset);
+  const parts = getHijriParts(adjustedNow);
+
+  if ($("hijriDateDisplay")) {
+    $("hijriDateDisplay").textContent = parts.fullBn;
   }
 
-  const hijriSub = $("hijriDateSub");
-  if (hijriSub) {
-    hijriSub.textContent = info.englishText;
+  if ($("hijriMonthYear")) {
+    $("hijriMonthYear").textContent =
+      `${parts.monthNameBn} ${toBanglaDigits(parts.year)} হিজরি`;
+  }
+
+  if ($("gregorianDateSub")) {
+    $("gregorianDateSub").textContent = new Date().toLocaleDateString("bn-BD", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  }
+
+  if ($("offsetValueDisplay")) {
+    const sign = hijriDayOffset > 0 ? `+${hijriDayOffset}` : `${hijriDayOffset}`;
+    $("offsetValueDisplay").textContent = `${toBanglaDigits(sign)} দিন`;
+  }
+
+  renderHijriMonthGrid(parts);
+}
+
+function renderHijriMonthGrid(currentParts) {
+  const grid = $("hijriCalendarGrid");
+  if (!grid) return;
+
+  grid.innerHTML = "";
+  const totalDaysInMonth = 30;
+
+  for (let day = 1; day <= totalDaysInMonth; day++) {
+    const cell = document.createElement("div");
+    cell.className = "hijri-day-card";
+    if (day === currentParts.day) {
+      cell.classList.add("is-today");
+    }
+
+    cell.innerHTML = `
+      <div class="hijri-day-num">${toBanglaDigits(day)}</div>
+      <div class="hijri-day-month">${currentParts.monthNameBn}</div>
+    `;
+
+    grid.appendChild(cell);
   }
 }
 
@@ -103,29 +204,28 @@ function populateCalendarDistricts() {
   if (!countryEl || !districtEl) return;
 
   const countryCode = countryEl.value;
-  const countryObj = AYNA_CALENDAR_CONFIG.locations[countryCode];
+  const countryObj = AYNA_HIJRI_CONFIG.locations[countryCode];
   if (!countryObj) return;
 
   districtEl.innerHTML = "";
   Object.keys(countryObj.districts).forEach((distName) => {
-    const option = document.createElement("option");
-    option.value = distName;
-    option.textContent = distName;
-    districtEl.appendChild(option);
+    const opt = document.createElement("option");
+    opt.value = distName;
+    opt.textContent = distName;
+    districtEl.appendChild(opt);
   });
 
   syncCalendarSelectionToClock();
 }
 
 function syncCalendarSelectionToClock() {
-  const countryCode = $("calCountrySelect")?.value || AYNA_CALENDAR_CONFIG.defaultCountry;
-  const districtName = $("calDistrictSelect")?.value || AYNA_CALENDAR_CONFIG.defaultDistrict;
+  const countryCode = $("calCountrySelect")?.value || AYNA_HIJRI_CONFIG.defaultCountry;
+  const districtName = $("calDistrictSelect")?.value || AYNA_HIJRI_CONFIG.defaultDistrict;
   const leadHours = Number($("calIftarLeadHours")?.value || 1);
 
-  const countryObj = AYNA_CALENDAR_CONFIG.locations[countryCode];
-  const times = countryObj?.districts?.[districtName] || { sehri: "04:58", iftar: "17:12" };
-
-  const hijriInfo = getHijriDateInfo(new Date());
+  const countryObj = AYNA_HIJRI_CONFIG.locations[countryCode];
+  const times = countryObj?.districts?.[districtName] || { sehri: "04:53", iftar: "17:07" };
+  const hijriParts = getHijriParts(getAdjustedDate(new Date(), hijriDayOffset));
 
   const payload = {
     countryCode,
@@ -134,19 +234,18 @@ function syncCalendarSelectionToClock() {
     sehri: times.sehri,
     iftar: times.iftar,
     iftarLeadHours: leadHours,
-    hijriDate: hijriInfo.banglaText,
+    hijriDate: hijriParts.fullBn,
     updatedAt: Date.now()
   };
 
   try {
-    localStorage.setItem(AYNA_CALENDAR_CONFIG.storageKey, JSON.stringify(payload));
+    localStorage.setItem(AYNA_HIJRI_CONFIG.storageKey, JSON.stringify(payload));
   } catch (err) {
     console.error("Storage sync error:", err);
   }
 
-  const previewBox = $("calTimePreview");
-  if (previewBox) {
-    previewBox.textContent =
+  if ($("calTimePreview")) {
+    $("calTimePreview").textContent =
       `${payload.countryName} — ${payload.districtName} | সেহরি: ${payload.sehri} | ইফতার: ${payload.iftar}`;
   }
 
@@ -158,6 +257,7 @@ function syncCalendarSelectionToClock() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  loadHijriOffset();
   renderHijriHeader();
 
   const countryEl = $("calCountrySelect");
@@ -165,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const leadEl = $("calIftarLeadHours");
 
   if (countryEl) {
-    countryEl.value = AYNA_CALENDAR_CONFIG.defaultCountry;
+    countryEl.value = AYNA_HIJRI_CONFIG.defaultCountry;
     countryEl.addEventListener("change", populateCalendarDistricts);
   }
 
@@ -176,6 +276,24 @@ document.addEventListener("DOMContentLoaded", () => {
   if (leadEl) {
     leadEl.addEventListener("change", syncCalendarSelectionToClock);
   }
+
+  $("prevHijriDayBtn")?.addEventListener("click", () => {
+    saveHijriOffset(hijriDayOffset - 1);
+    renderHijriHeader();
+    syncCalendarSelectionToClock();
+  });
+
+  $("nextHijriDayBtn")?.addEventListener("click", () => {
+    saveHijriOffset(hijriDayOffset + 1);
+    renderHijriHeader();
+    syncCalendarSelectionToClock();
+  });
+
+  $("resetHijriDayBtn")?.addEventListener("click", () => {
+    saveHijriOffset(0);
+    renderHijriHeader();
+    syncCalendarSelectionToClock();
+  });
 
   populateCalendarDistricts();
 });
