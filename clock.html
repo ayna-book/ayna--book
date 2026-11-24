@@ -1,211 +1,81 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+const TalkingSehriIftarClock = {
+  // আজকের ভিত্তি সময় (২৪-ঘণ্টা ফরম্যাটে, প্রয়োজনে সার্চ/ক্যালেন্ডার থেকে ডাইনামিক করুন)
+  sehriTime: { hour: 4, minute: 58 },   // ০৪:৫৮ AM
+  iftarTime: { hour: 17, minute: 12 }, // ০৫:১২ PM
 
-  <title>AYNA BOOK — Voice Clock</title>
+  lastHourlySpoken: "",
+  lastIftar5MinSpoken: "",
+  sehriPreAlertSpoken: false,
 
-  <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
+  speak(text) {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "bn-BD";
+    utter.rate = 0.95;
+    window.speechSynthesis.speak(utter);
+  },
+
+  toMinutes(h, m) {
+    return h * 60 + m;
+  },
+
+  formatBanglaTime(date) {
+    return date.toLocaleTimeString("bn-BD", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    });
+  },
+
+  tick() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const nowMin = this.toMinutes(h, m);
+    const sehriMin = this.toMinutes(this.sehriTime.hour, this.sehriTime.minute);
+    const iftarMin = this.toMinutes(this.iftarTime.hour, this.iftarTime.minute);
+
+    // ১. সেহরির ১.৫ ঘণ্টা (৯০ মিনিট) আগে সময় বলা
+    const sehriAlertMin = sehriMin - 90;
+    if (nowMin === sehriAlertMin && !this.sehriPreAlertSpoken) {
+      this.sehriPreAlertSpoken = true;
+      this.speak(`সতর্কতা: সেহরির আর দেড় ঘণ্টা বাকি। এখন সময় ${this.formatBanglaTime(now)}।`);
+    }
+    if (nowMin !== sehriAlertMin) {
+      this.sehriPreAlertSpoken = false;
     }
 
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-      background: #07111f;
-      color: white;
+    // ২. ইফতারের ১ ঘণ্টা (৬০ মিনিট) আগে থেকে ৫ মিনিট পর পর সময় বলা
+    const iftarWindowStart = iftarMin - 60;
+    if (nowMin >= iftarWindowStart && nowMin <= iftarMin) {
+      const diffFromStart = nowMin - iftarWindowStart;
+      const slotKey = `${now.toDateString()}-${h}:${m}`;
+      if (diffFromStart % 5 === 0 && this.lastIftar5MinSpoken !== slotKey) {
+        this.lastIftar5MinSpoken = slotKey;
+        const leftMin = iftarMin - nowMin;
+        this.speak(
+          leftMin === 0
+            ? `এখন ইফতারের সময়, ${this.formatBanglaTime(now)}।`
+            : `ইফতারের আর ${leftMin} মিনিট বাকি। এখন সময় ${this.formatBanglaTime(now)}।`
+        );
+      }
+      return; // ইফতারের শেষ ১ ঘণ্টায় ৫ মিনিট পর পর বললে একই মিনিটে ১ ঘণ্টার ডাবল ঘোষণা এড়াবে
     }
 
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    // ৩. সাধারণ অবস্থায় প্রতি ১ ঘণ্টা পর পর সময় বলা
+    const hourKey = `${now.toDateString()}-${h}`;
+    if (m === 0 && this.lastHourlySpoken !== hourKey) {
+      this.lastHourlySpoken = hourKey;
+      this.speak(`এখন সময় ${this.formatBanglaTime(now)}।`);
     }
+  },
 
-    .clock-page {
-      width: 100%;
-      height: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background:
-        radial-gradient(circle at center,
-          #17365c 0%,
-          #0c1e34 45%,
-          #050b14 100%);
-    }
+  start() {
+    this.tick();
+    setInterval(() => this.tick(), 10000); // প্রতি ১০ সেকেন্ডে নির্ভুল মিনিট চেক
+  }
+};
 
-    .brand {
-      position: absolute;
-      top: 25px;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-
-    .date {
-      margin-bottom: 18px;
-      font-size: 18px;
-      opacity: 0.9;
-      text-align: center;
-    }
-
-    .clock {
-      width: 100%;
-      text-align: center;
-      font-size: clamp(55px, 17vw, 110px);
-      font-weight: bold;
-      letter-spacing: 3px;
-      line-height: 1.1;
-      text-shadow: 0 0 25px rgba(255,255,255,0.25);
-    }
-
-    .ampm {
-      margin-top: 8px;
-      font-size: 22px;
-      font-weight: bold;
-      opacity: 0.8;
-    }
-
-    .status {
-      margin-top: 22px;
-      min-height: 25px;
-      font-size: 16px;
-      text-align: center;
-      opacity: 0.9;
-    }
-
-    .controls {
-      width: 100%;
-      max-width: 420px;
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    button {
-      width: 100%;
-      min-height: 58px;
-      border: none;
-      border-radius: 18px;
-      font-size: 18px;
-      font-weight: bold;
-      color: white;
-      background: #164b7a;
-      box-shadow: 0 7px 20px rgba(0,0,0,0.3);
-      cursor: pointer;
-    }
-
-    button:active {
-      transform: scale(0.97);
-    }
-
-    .voice-on {
-      background: #147a45;
-    }
-
-    .voice-off {
-      background: #6b2630;
-    }
-
-    .hour-on {
-      background: #155f91;
-    }
-
-    .hour-off {
-      background: #5b3131;
-    }
-
-    .back {
-      position: absolute;
-      top: 20px;
-      left: 18px;
-      width: 48px;
-      min-height: 48px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-      font-size: 24px;
-    }
-
-    .info {
-      margin-top: 22px;
-      text-align: center;
-      font-size: 13px;
-      opacity: 0.65;
-      line-height: 1.6;
-      max-width: 380px;
-    }
-  </style>
-</head>
-
-<body>
-
-  <main class="clock-page">
-
-    <button class="back" id="backBtn" aria-label="Back">
-      ←
-    </button>
-
-    <div class="brand">
-      AYNA BOOK
-    </div>
-
-    <div class="date" id="dateText">
-      সময় লোড হচ্ছে...
-    </div>
-
-    <div class="clock" id="clock">
-      00:00:00
-    </div>
-
-    <div class="ampm" id="ampm">
-      AM
-    </div>
-
-    <div class="status" id="status">
-      ভয়েস ঘড়ি প্রস্তুত
-    </div>
-
-    <div class="controls">
-
-      <button id="speakNowBtn">
-        🔊 এখন সময় বলুন
-      </button>
-
-      <button id="voiceToggleBtn" class="voice-on">
-        🔊 Voice: ON
-      </button>
-
-      <button id="hourToggleBtn" class="hour-on">
-        🕐 প্রতি ঘণ্টায় বলা: ON
-      </button>
-
-    </div>
-
-    <div class="info">
-      প্রতি ঘণ্টায় স্বয়ংক্রিয় ঘোষণা চালু রাখতে এই পেজটি খোলা রাখুন।
-      Android-এর উপলব্ধ Text-to-Speech voice অনুযায়ী কণ্ঠ পরিবর্তিত হতে পারে।
-    </div>
-
-  </main>
-
-  <script type="module" src="./clock.js"></script>
-
-</body>
-</html>
+// ব্রাউজারে অডিও অনুমতি সক্রিয় করতে প্রথম ক্লিকেই চালু করুন
+document.addEventListener("click", () => TalkingSehriIftarClock.start(), { once: true });
