@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#060d21">
-<title>AYNA BOOK</title>
+<title>AYNA BOOK — Quantum Multimedia Social</title>
 
 <style>
 :root {
@@ -14,7 +14,10 @@
   --panel:#0b1633;
   --panel2:#13254d;
   --gold:#ffd700;
+  --gold-bright:#fff2a6;
   --gold-base:#755206;
+  --quantum-cyan:#38f2ff;
+  --quantum-violet:#a855f7;
   --white:#ffffff;
   --muted:#dce6fa;
   --green:#16c784;
@@ -28,18 +31,22 @@
 html, body {
   max-width:100%;
   overflow-x:hidden;
+  scroll-behavior:smooth;
 }
 
 body {
   margin:0;
-  background:var(--bg);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(56,242,255,.08), transparent 35%),
+    radial-gradient(circle at 85% 20%, rgba(168,85,247,.09), transparent 38%),
+    var(--bg);
   color:var(--white);
   font-family:Arial,"Noto Sans Bengali",sans-serif;
   font-size:20px;
   line-height:1.5;
 }
 
-button,input,textarea {
+button,input,textarea,select {
   font:inherit;
 }
 
@@ -53,7 +60,8 @@ button {
 .profile-bar,
 .feature-card,
 .panel,
-.feed-post {
+.feed-post,
+.quantum-bar {
   background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%) !important;
   border:2.5px solid var(--gold) !important;
   border-radius:6px !important;
@@ -68,7 +76,8 @@ button {
 .tool-button:active,
 .media-buttons button:active,
 .header-actions a:active,
-.header-actions button:active {
+.header-actions button:active,
+.filter-btn:active {
   transform:translateY(4px) !important;
   box-shadow:
     0 2px 0 var(--gold-base),
@@ -107,6 +116,17 @@ header {
   text-shadow:0 2px 8px rgba(0,0,0,.9);
 }
 
+.quantum-badge {
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:1.1px;
+  padding:4px 9px;
+  border-radius:4px;
+  color:var(--quantum-cyan);
+  background:rgba(5,10,24,.85);
+  border:1.5px solid var(--quantum-cyan);
+}
+
 /* ১ সেকেন্ড পর পর উজ্জ্বল আলো ছড়ানো তারা */
 .star-1s {
   color:#ffffff;
@@ -135,6 +155,7 @@ header {
 .header-actions {
   display:flex;
   gap:10px;
+  flex-wrap:wrap;
 }
 
 .header-actions a,
@@ -177,6 +198,35 @@ header {
   font-weight:600;
 }
 
+.quantum-bar {
+  padding:16px;
+  margin-bottom:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:12px;
+}
+
+.q-stat {
+  background:rgba(5,11,28,.75);
+  border:1.5px solid rgba(255,215,0,.55);
+  border-radius:6px;
+  padding:12px 14px;
+}
+
+.q-stat-label {
+  font-size:15px;
+  color:var(--muted);
+  display:block;
+}
+
+.q-stat-value {
+  font-size:22px;
+  font-weight:1000;
+  color:var(--quantum-cyan);
+  margin-top:4px;
+  display:block;
+}
+
 .section-title {
   font-size:28px;
   font-weight:1000;
@@ -185,7 +235,7 @@ header {
   text-shadow:0 2px 6px rgba(0,0,0,.85);
 }
 
-/* ৩ গুণ বড় স্কয়ার সোনালী প্রোফাইল ছবি (55px * 3 = 165px) */
+/* ৩ গুণ বড় স্কয়ার সোনালী প্রোফাইল ছবি */
 .profile-bar {
   display:flex;
   align-items:center;
@@ -363,6 +413,29 @@ input:focus {
   overflow-wrap:anywhere;
 }
 
+.feed-filters {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+
+.filter-btn {
+  background:#0a1636;
+  color:var(--white);
+  border:2px solid var(--gold);
+  border-radius:6px;
+  padding:10px 16px;
+  font-size:18px;
+  font-weight:bold;
+  box-shadow:0 3px 0 var(--gold-base);
+}
+
+.filter-btn.active {
+  background:linear-gradient(180deg,#ffd700 0%,#c99314 100%);
+  color:#050a18;
+}
+
 .feed-post {
   padding:18px;
   margin-bottom:18px;
@@ -371,8 +444,16 @@ input:focus {
 .post-header {
   display:flex;
   align-items:center;
+  justify-content:space-between;
   gap:14px;
   margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+.post-author-wrap {
+  display:flex;
+  align-items:center;
+  gap:14px;
 }
 
 .post-avatar {
@@ -396,6 +477,16 @@ input:focus {
   font-size:17px;
   color:var(--muted);
   margin-top:4px;
+}
+
+.q-pill {
+  font-size:14px;
+  font-weight:bold;
+  color:var(--quantum-cyan);
+  background:rgba(5,11,28,.85);
+  border:1.5px solid var(--quantum-cyan);
+  padding:5px 10px;
+  border-radius:4px;
 }
 
 .post-content {
@@ -622,9 +713,13 @@ footer {
 
 <header>
   <div class="header-inner">
-    <div class="logo">AYNA BOOK <span class="star-1s">★</span></div>
+    <div class="logo">
+      AYNA BOOK <span class="star-1s">★</span>
+      <span class="quantum-badge">⚛ QUANTUM CORE</span>
+    </div>
 
     <div class="header-actions">
+      <button type="button" id="quantumBoostBtn">⚡ Quantum Boost</button>
       <a href="notifications.html">🔔</a>
       <a href="messenger.html">💬 Messenger</a>
     </div>
@@ -636,11 +731,25 @@ footer {
 <main class="container">
 
   <section class="hero">
-    <h1>WELCOME TO AYNA BOOK</h1>
+    <h1>WELCOME TO AYNA BOOK QUANTUM</h1>
     <p>
-      আপনার বিশ্ব, আপনার বন্ধু, আপনার গল্প।
-      সবার সঙ্গে যুক্ত থাকুন AYNA BOOK-এ।
+      আপনার বিশ্ব, আপনার বন্ধু, আপনার গল্প — কোয়ান্টাম গতির মাল্টিমিডিয়া সোশাল নেটওয়ার্কে সবার সঙ্গে যুক্ত থাকুন।
     </p>
+  </section>
+
+  <section class="quantum-bar" aria-label="Quantum Telemetry">
+    <div class="q-stat">
+      <span class="q-stat-label">Quantum Sync State</span>
+      <span class="q-stat-value" id="qSyncState">ENTANGLED • 99.8%</span>
+    </div>
+    <div class="q-stat">
+      <span class="q-stat-label">Media Stream Node</span>
+      <span class="q-stat-value" id="qMediaNode">Q-HD / AUDIO / VIDEO</span>
+    </div>
+    <div class="q-stat">
+      <span class="q-stat-label">Active Feed Packets</span>
+      <span class="q-stat-value" id="qPostCount">0</span>
+    </div>
   </section>
 
   <section class="profile-bar">
@@ -751,9 +860,8 @@ footer {
   </section>
 
   <!-- POST CREATOR -->
-
   <section class="panel" id="createPost">
-    <h2>✍️ নতুন পোস্ট তৈরি করুন</h2>
+    <h2>✍️ নতুন কোয়ান্টাম পোস্ট তৈরি করুন</h2>
 
     <textarea
       id="postText"
@@ -762,10 +870,10 @@ footer {
     ></textarea>
 
     <div class="post-tools">
-      <button class="tool-button" id="chooseImage">🖼️ ছবি</button>
-      <button class="tool-button" id="chooseAudio">🎵 অডিও</button>
-      <button class="tool-button" id="chooseVideo">🎬 ভিডিও</button>
-      <button class="tool-button" id="clearMedia">✖️ মিডিয়া বাদ দিন</button>
+      <button type="button" class="tool-button" id="chooseImage">🖼️ ছবি</button>
+      <button type="button" class="tool-button" id="chooseAudio">🎵 অডিও</button>
+      <button type="button" class="tool-button" id="chooseVideo">🎬 ভিডিও</button>
+      <button type="button" class="tool-button" id="clearMedia">✖️ মিডিয়া বাদ দিন</button>
     </div>
 
     <input id="imageInput" type="file" accept="image/*" hidden>
@@ -777,25 +885,24 @@ footer {
       <div class="preview-name" id="previewName"></div>
     </div>
 
-    <button class="primary-button" id="publishPost">
+    <button type="button" class="primary-button" id="publishPost">
       🚀 পোস্ট প্রকাশ করুন
     </button>
 
     <div class="status" id="postStatus">
-      লেখা অথবা একটি মিডিয়া নির্বাচন করে পোস্ট করুন।
+      লেখা অথবা একটি মিডিয়া (সর্বোচ্চ 2MB) নির্বাচন করে পোস্ট করুন।
     </div>
   </section>
 
   <!-- LIVE CAMERA -->
-
   <section class="panel media-box" id="liveSection">
     <h2>🔴 AYNA LIVE VIDEO</h2>
 
     <video id="liveVideo" autoplay muted playsinline></video>
 
     <div class="media-buttons">
-      <button id="startCamera">📹 ক্যামেরা চালু</button>
-      <button id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
+      <button type="button" id="startCamera">📹 ক্যামেরা চালু</button>
+      <button type="button" id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
     </div>
 
     <div class="status" id="cameraStatus">
@@ -809,8 +916,15 @@ footer {
   </section>
 
   <!-- FEED -->
-
   <h2 class="section-title">🌐 AYNA BOOK NEWS FEED</h2>
+
+  <div class="feed-filters" role="group" aria-label="Feed filter">
+    <button type="button" class="filter-btn active" data-filter="all">সব পোস্ট</button>
+    <button type="button" class="filter-btn" data-filter="text">📝 টেক্সট</button>
+    <button type="button" class="filter-btn" data-filter="image">🖼️ ছবি</button>
+    <button type="button" class="filter-btn" data-filter="audio">🎵 অডিও</button>
+    <button type="button" class="filter-btn" data-filter="video">🎬 ভিডিও</button>
+  </div>
 
   <section id="feed">
     <div class="empty">পোস্ট লোড হচ্ছে...</div>
@@ -819,7 +933,7 @@ footer {
 </main>
 
 <footer>
-  © 2026 AYNA BOOK — Global Social Platform
+  © 2026 AYNA BOOK — Quantum Multimedia Social Platform
 </footer>
 
 <nav class="bottom-nav">
@@ -830,30 +944,32 @@ footer {
 </nav>
 
 <script type="module">
-import { auth, database } from "./firebase-init.js";
+// আপনার js/ ফোল্ডারের ফাইলগুলোর সাথে নিরাপদ সংযোগ[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)
+async function loadOptionalScript(path) {
+  try {
+    return await import(path);
+  } catch (_) {
+    return null;
+  }
+}
 
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+const jsFirebaseMod = await loadOptionalScript("./js/firebase.js");
+const jsAppMod = await loadOptionalScript("./js/app.js");
+const jsTranslatorMod = await loadOptionalScript("./js/translator.js");
+const initMod = await loadOptionalScript("./firebase-init.js");
 
-import {
-  ref,
-  get,
-  set,
-  push,
-  update,
-  onValue
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
-
-// ==================================================
-// APP STATE
-// ==================================================
+const auth = initMod?.auth || jsFirebaseMod?.auth || null;
+const database = initMod?.database || jsFirebaseMod?.database || null;
+const firebaseReady = !!(auth && database);
 
 let currentUser = null;
 let userProfile = {};
 let selectedFile = null;
 let selectedType = null;
 let cameraStream = null;
+let allPosts = [];
+let activeFilter = "all";
+let previewObjectUrl = null;
 
 const $ = id => document.getElementById(id);
 
@@ -861,9 +977,7 @@ function notify(message) {
   const box = $("notice");
   box.textContent = message;
   box.style.display = "block";
-
   clearTimeout(notify.timer);
-
   notify.timer = setTimeout(() => {
     box.style.display = "none";
   }, 3000);
@@ -879,89 +993,142 @@ function safePhoto(photo) {
 
 function formatDate(timestamp) {
   if (!timestamp) return "";
-
   return new Date(timestamp).toLocaleString();
 }
 
+function quantumSignature(seed = "") {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  const score = 95 + (Math.abs(hash) % 50) / 10;
+  return `⚛ Q-COHERENCE ${score.toFixed(1)}%`;
+}
+
+// অন্যান্য পেজ ও স্ক্রিপ্টের জন্য গ্লোবাল ব্রিজ
+window.AynaBook = {
+  version: "2026.quantum.1",
+  notify,
+  safePhoto,
+  formatDate,
+  getState: () => ({
+    currentUser,
+    userProfile,
+    postsCount: allPosts.length,
+    modules: {
+      firebase: !!jsFirebaseMod,
+      app: !!jsAppMod,
+      translator: !!jsTranslatorMod,
+      firebaseInit: !!initMod
+    }
+  })
+};
+
+$("myPhoto").src = safePhoto("");
+
+$("quantumBoostBtn").addEventListener("click", () => {
+  const levels = ["ENTANGLED • 99.9%", "SUPERPOSITION • 99.7%", "Q-RELAY LOCKED • 100%"];
+  const next = levels[Math.floor(Math.random() * levels.length)];
+  $("qSyncState").textContent = next;
+  notify("কোয়ান্টাম সিঙ্ক আপডেট হয়েছে: " + next);
+});
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter || "all";
+    renderFeed(allPosts);
+  });
+});
+
 // ==================================================
-// AUTHENTICATION
+// AUTHENTICATION & FEED
 // ==================================================
 
-onAuthStateChanged(auth, async user => {
-  if (!user) {
-    $("myName").textContent = "লগইন করুন";
-    $("myEmail").textContent = "পোস্ট করতে লগইন প্রয়োজন";
+async function initApp() {
+  if (!firebaseReady) {
+    $("myName").textContent = "AYNA Quantum Guest";
+    $("myEmail").textContent = "Firebase কনফিগারেশন সংযুক্ত করুন";
     $("publishPost").disabled = true;
-
-    notify("পোস্ট করতে আগে লগইন করুন");
-    setTimeout(() => {
-      window.location.href = "login.html";
-    }, 1500);
-
+    $("feed").innerHTML =
+      '<div class="empty">Firebase সংযোগ পাওয়া যায়নি। <code>firebase-init.js</code> বা <code>js/firebase.js</code> পরীক্ষা করুন।</div>';
     return;
   }
 
-  currentUser = user;
+  const { onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
+  const { ref, get, set, push, onValue } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
 
-  try {
-    const snapshot = await get(
-      ref(database, "users/" + user.uid)
-    );
+  onAuthStateChanged(auth, async user => {
+    if (!user) {
+      $("myName").textContent = "লগইন করুন";
+      $("myEmail").textContent = "পোস্ট করতে লগইন প্রয়োজন";
+      $("publishPost").disabled = true;
+      notify("পোস্ট করতে আগে লগইন করুন");
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1500);
+      return;
+    }
 
-    userProfile = snapshot.val() || {};
+    currentUser = user;
 
-    $("myName").textContent =
-      userProfile.fullName ||
-      user.displayName ||
-      "AYNA User";
+    try {
+      const snapshot = await get(ref(database, "users/" + user.uid));
+      userProfile = snapshot.val() || {};
 
-    $("myEmail").textContent =
-      user.email || "AYNA BOOK Member";
+      $("myName").textContent =
+        userProfile.fullName || user.displayName || "AYNA User";
+      $("myEmail").textContent =
+        user.email || "AYNA BOOK Member";
+      $("myPhoto").src = safePhoto(userProfile.photoURL);
+      $("publishPost").disabled = false;
 
-    $("myPhoto").src =
-      safePhoto(userProfile.photoURL);
+      startFeed(ref, onValue);
+    } catch (error) {
+      console.error(error);
+      notify("প্রোফাইল লোড করা যায়নি");
+    }
+  });
 
-    $("publishPost").disabled = false;
+  $("publishPost").addEventListener("click", () => publishPost(ref, push, set));
+}
 
-    startFeed();
+function startFeed(ref, onValue) {
+  onValue(
+    ref(database, "posts"),
+    snapshot => {
+      const posts = snapshot.val() || {};
+      allPosts = Object.entries(posts)
+        .map(([id, post]) => ({ id, ...post }))
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-  } catch (error) {
-    console.error(error);
-    notify("প্রোফাইল লোড করা যায়নি");
-  }
-});
+      $("qPostCount").textContent = String(allPosts.length);
+      renderFeed(allPosts);
+    },
+    error => {
+      console.error("Feed error:", error);
+      $("feed").innerHTML =
+        '<div class="empty">ফিড লোড হয়নি। Firebase Rules পরীক্ষা করুন।</div>';
+    }
+  );
+}
 
 // ==================================================
 // MEDIA SELECTOR
 // ==================================================
 
-$("chooseImage").addEventListener("click", () => {
-  $("imageInput").click();
-});
+$("chooseImage").addEventListener("click", () => $("imageInput").click());
+$("chooseAudio").addEventListener("click", () => $("audioInput").click());
+$("chooseVideo").addEventListener("click", () => $("videoInput").click());
 
-$("chooseAudio").addEventListener("click", () => {
-  $("audioInput").click();
-});
-
-$("chooseVideo").addEventListener("click", () => {
-  $("videoInput").click();
-});
-
-$("imageInput").addEventListener("change", event => {
-  handleSelectedFile(event, "image");
-});
-
-$("audioInput").addEventListener("change", event => {
-  handleSelectedFile(event, "audio");
-});
-
-$("videoInput").addEventListener("change", event => {
-  handleSelectedFile(event, "video");
-});
+$("imageInput").addEventListener("change", event => handleSelectedFile(event, "image"));
+$("audioInput").addEventListener("change", event => handleSelectedFile(event, "audio"));
+$("videoInput").addEventListener("change", event => handleSelectedFile(event, "video"));
 
 function handleSelectedFile(event, type) {
   const file = event.target.files?.[0];
-
   if (!file) return;
 
   if (file.size > 2 * 1024 * 1024) {
@@ -978,28 +1145,29 @@ function handleSelectedFile(event, type) {
 
   selectedFile = file;
   selectedType = type;
-
   showPreview(file, type);
 }
 
 function showPreview(file, type) {
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl);
+  }
+  previewObjectUrl = URL.createObjectURL(file);
+
   const preview = $("mediaPreview");
   const content = $("previewContent");
-
   content.innerHTML = "";
-
-  const url = URL.createObjectURL(file);
 
   if (type === "image") {
     const img = document.createElement("img");
-    img.src = url;
+    img.src = previewObjectUrl;
     img.alt = "Selected image";
     content.appendChild(img);
   }
 
   if (type === "video") {
     const video = document.createElement("video");
-    video.src = url;
+    video.src = previewObjectUrl;
     video.controls = true;
     video.playsInline = true;
     content.appendChild(video);
@@ -1007,7 +1175,7 @@ function showPreview(file, type) {
 
   if (type === "audio") {
     const audio = document.createElement("audio");
-    audio.src = url;
+    audio.src = previewObjectUrl;
     audio.controls = true;
     content.appendChild(audio);
   }
@@ -1022,10 +1190,14 @@ function clearSelectedMedia() {
   selectedFile = null;
   selectedType = null;
 
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl);
+    previewObjectUrl = null;
+  }
+
   $("imageInput").value = "";
   $("audioInput").value = "";
   $("videoInput").value = "";
-
   $("previewContent").innerHTML = "";
   $("previewName").textContent = "";
   $("mediaPreview").style.display = "none";
@@ -1035,44 +1207,34 @@ function clearSelectedMedia() {
 // CREATE POST
 // ==================================================
 
-$("publishPost").addEventListener("click", publishPost);
-
-async function publishPost() {
+async function publishPost(ref, push, set) {
   if (!currentUser) {
     notify("আগে লগইন করুন");
     return;
   }
 
   const text = $("postText").value.trim();
-
   if (!text && !selectedFile) {
     notify("লেখা অথবা মিডিয়া যোগ করুন");
     return;
   }
 
   const button = $("publishPost");
-
   button.disabled = true;
   button.textContent = "প্রকাশ করা হচ্ছে...";
 
   try {
     let mediaData = "";
-
     if (selectedFile) {
       mediaData = await fileToDataURL(selectedFile);
     }
 
     const postRef = push(ref(database, "posts"));
-
     const post = {
       uid: currentUser.uid,
-      authorName:
-        userProfile.fullName ||
-        currentUser.displayName ||
-        "AYNA User",
-
+      authorName: userProfile.fullName || currentUser.displayName || "AYNA User",
       authorPhoto: userProfile.photoURL || "",
-      text: text,
+      text,
       type: selectedType || "text",
       media: mediaData,
       fileName: selectedFile?.name || "",
@@ -1083,21 +1245,16 @@ async function publishPost() {
     };
 
     await set(postRef, post);
-
     $("postText").value = "";
     clearSelectedMedia();
-
     notify("আপনার পোস্ট প্রকাশ হয়েছে");
-
   } catch (error) {
     console.error("Post error:", error);
-
     notify(
       error.code === "PERMISSION_DENIED"
         ? "Firebase Rules অনুমতি দেয়নি"
         : "পোস্ট প্রকাশ করা যায়নি"
     );
-
   } finally {
     button.disabled = false;
     button.textContent = "🚀 পোস্ট প্রকাশ করুন";
@@ -1107,40 +1264,10 @@ async function publishPost() {
 function fileToDataURL(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
     reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(
-      new Error("ফাইল পড়া যায়নি")
-    );
-
+    reader.onerror = () => reject(new Error("ফাইল পড়া যায়নি"));
     reader.readAsDataURL(file);
   });
-}
-
-// ==================================================
-// REALTIME FEED
-// ==================================================
-
-function startFeed() {
-  onValue(
-    ref(database, "posts"),
-
-    snapshot => {
-      const posts = snapshot.val() || {};
-
-      const list = Object.entries(posts)
-        .map(([id, post]) => ({ id, ...post }))
-        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-      renderFeed(list);
-    },
-
-    error => {
-      console.error("Feed error:", error);
-      $("feed").innerHTML =
-        '<div class="empty">ফিড লোড হয়নি। Firebase Rules পরীক্ষা করুন।</div>';
-    }
-  );
 }
 
 // ==================================================
@@ -1151,18 +1278,25 @@ function renderFeed(posts) {
   const feed = $("feed");
   feed.innerHTML = "";
 
-  if (!posts.length) {
+  const filtered = activeFilter === "all"
+    ? posts
+    : posts.filter(p => (p.type || "text") === activeFilter);
+
+  if (!filtered.length) {
     feed.innerHTML =
       '<div class="empty">এখনও কোনো পোস্ট নেই। প্রথম পোস্টটি আপনিই করুন!</div>';
     return;
   }
 
-  posts.forEach(post => {
+  filtered.forEach(post => {
     const card = document.createElement("article");
     card.className = "feed-post";
 
     const header = document.createElement("div");
     header.className = "post-header";
+
+    const authorWrap = document.createElement("div");
+    authorWrap.className = "post-author-wrap";
 
     const avatar = document.createElement("img");
     avatar.className = "post-avatar";
@@ -1170,7 +1304,6 @@ function renderFeed(posts) {
     avatar.alt = "Profile";
 
     const authorBox = document.createElement("div");
-
     const author = document.createElement("div");
     author.className = "post-author";
     author.textContent = post.authorName || "AYNA User";
@@ -1180,8 +1313,13 @@ function renderFeed(posts) {
     date.textContent = formatDate(post.createdAt);
 
     authorBox.append(author, date);
-    header.append(avatar, authorBox);
+    authorWrap.append(avatar, authorBox);
 
+    const pill = document.createElement("span");
+    pill.className = "q-pill";
+    pill.textContent = quantumSignature(post.id || post.text || "");
+
+    header.append(authorWrap, pill);
     card.appendChild(header);
 
     if (post.text) {
@@ -1223,78 +1361,58 @@ function renderFeed(posts) {
 
     const likes = post.likes || {};
     const likeCount = Object.keys(likes).length;
-    const liked = !!likes[currentUser?.uid];
+    const liked = !!(currentUser && likes[currentUser.uid]);
 
     const likeButton = document.createElement("button");
-    likeButton.textContent =
-      (liked ? "❤️ " : "🤍 ") + "লাইক " + likeCount;
-
-    likeButton.addEventListener("click", () => {
-      toggleLike(post.id, liked);
-    });
+    likeButton.type = "button";
+    likeButton.textContent = (liked ? "❤️ " : "🤍 ") + "লাইক " + likeCount;
+    likeButton.addEventListener("click", () => toggleLike(post.id, liked));
 
     const commentButton = document.createElement("button");
+    commentButton.type = "button";
     commentButton.textContent = "💬 কমেন্ট";
-
     commentButton.addEventListener("click", () => {
-      const input = card.querySelector(".comment-input");
-      input?.focus();
+      card.querySelector(".comment-input")?.focus();
     });
 
     const shareButton = document.createElement("button");
+    shareButton.type = "button";
     shareButton.textContent = "↗️ শেয়ার";
-
-    shareButton.addEventListener("click", () => {
-      sharePost(post);
-    });
+    shareButton.addEventListener("click", () => sharePost(post));
 
     actions.append(likeButton, commentButton, shareButton);
     card.appendChild(actions);
 
     renderComments(card, post);
-
     feed.appendChild(card);
   });
 }
 
 // ==================================================
-// LIKE
+// LIKE & COMMENTS & SHARE
 // ==================================================
 
 async function toggleLike(postId, liked) {
-  if (!currentUser) {
+  if (!firebaseReady || !currentUser) {
     notify("লাইক দিতে লগইন করুন");
     return;
   }
 
+  const { ref, set } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
   try {
-    const likeRef = ref(
-      database,
-      `posts/${postId}/likes/${currentUser.uid}`
-    );
-
-    if (liked) {
-      await set(likeRef, null);
-    } else {
-      await set(likeRef, true);
-    }
-
+    const likeRef = ref(database, `posts/${postId}/likes/${currentUser.uid}`);
+    await set(likeRef, liked ? null : true);
   } catch (error) {
     console.error(error);
     notify("লাইক কাজ করেনি। Rules পরীক্ষা করুন।");
   }
 }
 
-// ==================================================
-// COMMENTS
-// ==================================================
-
 function renderComments(card, post) {
   const section = document.createElement("div");
   section.className = "comments";
 
   const comments = post.comments || {};
-
   Object.values(comments).forEach(comment => {
     const item = document.createElement("div");
     item.className = "comment-item";
@@ -1317,62 +1435,46 @@ function renderComments(card, post) {
   input.placeholder = "কমেন্ট লিখুন...";
 
   const button = document.createElement("button");
+  button.type = "button";
   button.textContent = "পাঠান";
 
-  button.addEventListener("click", () => {
-    addComment(post.id, input);
-  });
-
+  button.addEventListener("click", () => addComment(post.id, input));
   input.addEventListener("keydown", event => {
-    if (event.key === "Enter") {
-      addComment(post.id, input);
-    }
+    if (event.key === "Enter") addComment(post.id, input);
   });
 
   form.append(input, button);
   section.appendChild(form);
-
   card.appendChild(section);
 }
 
 async function addComment(postId, input) {
-  if (!currentUser) {
+  if (!firebaseReady || !currentUser) {
     notify("কমেন্ট করতে লগইন করুন");
     return;
   }
 
   const text = input.value.trim();
-
   if (!text) return;
 
+  const { ref, push, set } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
   try {
-    const commentRef = push(
-      ref(database, `posts/${postId}/comments`)
-    );
-
+    const commentRef = push(ref(database, `posts/${postId}/comments`));
     await set(commentRef, {
       uid: currentUser.uid,
-      name: userProfile.fullName || "AYNA User",
+      name: userProfile.fullName || currentUser.displayName || "AYNA User",
       text,
       createdAt: Date.now()
     });
-
     input.value = "";
-
   } catch (error) {
     console.error(error);
     notify("কমেন্ট পাঠানো যায়নি");
   }
 }
 
-// ==================================================
-// SHARE
-// ==================================================
-
 async function sharePost(post) {
-  const url = location.origin + location.pathname +
-    "?post=" + encodeURIComponent(post.id);
-
+  const url = location.origin + location.pathname + "?post=" + encodeURIComponent(post.id);
   const shareData = {
     title: "AYNA BOOK",
     text: post.text || "AYNA BOOK পোস্ট দেখুন",
@@ -1396,7 +1498,7 @@ async function sharePost(post) {
 }
 
 // ==================================================
-// LIVE CAMERA PREVIEW
+// LIVE CAMERA PREVIEW & CLEANUP
 // ==================================================
 
 $("startCamera").addEventListener("click", startCamera);
@@ -1410,25 +1512,15 @@ async function startCamera() {
 
   try {
     cameraStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "user"
-      },
+      video: { facingMode: "user" },
       audio: true
     });
-
     $("liveVideo").srcObject = cameraStream;
-
-    $("cameraStatus").textContent =
-      "ক্যামেরা চালু হয়েছে। এটি শুধু আপনার ডিভাইসে দেখা যাচ্ছে।";
-
+    $("cameraStatus").textContent = "ক্যামেরা চালু হয়েছে। এটি শুধু আপনার ডিভাইসে দেখা যাচ্ছে।";
     notify("ক্যামেরা চালু হয়েছে");
-
   } catch (error) {
     console.error(error);
-
-    $("cameraStatus").textContent =
-      "ক্যামেরা চালু হয়নি। Permission পরীক্ষা করুন।";
-
+    $("cameraStatus").textContent = "ক্যামেরা চালু হয়নি। Permission পরীক্ষা করুন।";
     notify("Camera Permission দিন");
   }
 }
@@ -1438,27 +1530,21 @@ function stopCamera() {
     cameraStream.getTracks().forEach(track => track.stop());
     cameraStream = null;
   }
-
   $("liveVideo").srcObject = null;
-
   $("cameraStatus").textContent = "ক্যামেরা বন্ধ।";
-
   notify("ক্যামেরা বন্ধ হয়েছে");
 }
-
-// ==================================================
-// PAGE CLEANUP
-// ==================================================
 
 window.addEventListener("pagehide", () => {
   if (cameraStream) {
     cameraStream.getTracks().forEach(track => track.stop());
   }
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl);
+  }
 });
 
-// ==================================================
-// END AYNA BOOK INDEX
-// ==================================================
+initApp();
 </script>
 
 </body>
