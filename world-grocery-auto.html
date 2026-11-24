@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>বিশ্ব মুদি দোকান — হাজার হাজার পণ্য অটো-আপডেট</title>
+<style>
+  body { margin:0; background:#050a18; color:#fff; font-family:Arial,"Noto Sans Bengali",sans-serif; font-size:34px; }
+  .wrap { max-width:1360px; margin:auto; padding:20px; }
+  .box { background:linear-gradient(155deg,#1a3575,#08122b); border:4px solid #ffe64d; border-radius:10px; padding:24px; margin-bottom:22px; box-shadow:0 8px 0 #8a6105; }
+  h1 { margin:0 0 10px; font-size:48px; color:#fff6b3; }
+  input, button { font:inherit; border-radius:8px; border:3px solid #ffe64d; padding:14px 18px; }
+  input { width:100%; background:#050b1c; color:#fff; margin-top:10px; }
+  button { background:linear-gradient(180deg,#ffe64d,#c99314); color:#050a18; font-weight:1000; margin-top:12px; cursor:pointer; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+  .card { background:#060d22; border:3px solid #ffe64d; border-radius:10px; padding:16px; }
+  .meta { font-size:25px; color:#e6eeff; margin-top:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <h1>🛒 বিশ্ব মুদি দোকান (হাজার হাজার পণ্য অটো-আপডেট)</h1>
+    <div class="meta" id="groceryStatus">লাইভ মুদি পণ্য ক্যাটালগ লোড হচ্ছে...</div>
+    <input type="search" id="gSearch" placeholder="চাল, ডাল, তেল, বিস্কুট, কফি, মসলা বা যেকোনো পণ্য খুঁজুন...">
+    <button type="button" id="gRefresh">🔄 অটো-আপডেট রিফ্রেশ</button>
+    <a href="index.html" style="display:inline-block;margin-left:12px;color:#fff6b3;font-weight:bold;">← মূল পেজে ফিরুন</a>
+  </div>
+  <div class="grid" id="groceryGrid"></div>
+</div>
+
+<script>
+const BASE_GROCERY = [
+  "নাজিরশাইল চাল (১ কেজি)", "মিনিকেট চাল (১ কেজি)", "মসুর ডাল (১ কেজি)", "মুগ ডাল (১ কেজি)",
+  "সয়াবিন তেল (১ লিটার)", "সরিষার তেল (১ লিটার)", "আটা (২ কেজি)", "ময়দা (২ কেজি)",
+  "চিনি (১ কেজি)", "লবণ (১ কেজি)", "পেঁয়াজ (১ কেজি)", "রসুন (১ কেজি)",
+  "আদা (১ কেজি)", "হলুদ গুঁড়ো", "মরিচ গুঁড়ো", "জিরা গুঁড়ো", "চা পাতা", "গুঁড়ো দুধ"
+];
+
+let groceryList = [];
+
+function renderGrocery(q = "") {
+  const term = q.trim().toLowerCase();
+  const list = groceryList.filter(i => i.name.toLowerCase().includes(term) || i.brand.toLowerCase().includes(term));
+  document.getElementById("groceryGrid").innerHTML = list.map((item, idx) => `
+    <div class="card">
+      <div style="font-size:24px;color:#38f2ff;">#${idx + 1} • ${item.brand || "Global Grocery"}</div>
+      <div style="font-size:32px;font-weight:bold;color:#fff6b3;margin-top:6px;">${item.name}</div>
+      <div class="meta">${item.extra}</div>
+    </div>
+  `).join("");
+}
+
+async function loadGroceryCatalog() {
+  const status = document.getElementById("groceryStatus");
+  status.textContent = "হাজার হাজার পণ্য অটো-আপডেট সিঙ্ক হচ্ছে...";
+  const items = BASE_GROCERY.map((name, i) => ({
+    name,
+    brand: "AYNA Core Grocery",
+    extra: `দৈনিক বাজার তালিকা #${i + 1} • অটো-সিঙ্ক সক্রিয়`
+  }));
+
+  try {
+    const pages = [1, 2, 3, 4, 5];
+    const results = await Promise.allSettled(
+      pages.map(p => fetch(`https://world.openfoodfacts.org/api/v2/search?page_size=250&page=${p}&fields=product_name,brands,quantity`).then(r => r.json()))
+    );
+    results.forEach(r => {
+      if (r.status === "fulfilled" && Array.isArray(r.value?.products)) {
+        r.value.products.forEach(prod => {
+          const title = (prod?.product_name || "").trim();
+          if (title) {
+            items.push({
+              name: title,
+              brand: (prod?.brands || "Global Brand").split(",")[0].trim(),
+              extra: `পরিমাণ: ${prod?.quantity || "স্ট্যান্ডার্ড প্যাক"}`
+            });
+          }
+        });
+      }
+    });
+  } catch (_) {}
+
+  groceryList = items;
+  status.textContent = `মোট ${groceryList.length}টি পণ্য লোড হয়েছে • আপডেট: ${new Date().toLocaleTimeString("bn-BD")}`;
+  renderGrocery(document.getElementById("gSearch").value);
+}
+
+document.getElementById("gSearch").addEventListener("input", e => renderGrocery(e.target.value));
+document.getElementById("gRefresh").addEventListener("click", loadGroceryCatalog);
+loadGroceryCatalog();
+setInterval(loadGroceryCatalog, 15 * 60 * 1000);
+</script>
+</body>
+</html>
