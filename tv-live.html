@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — Real Live TV</title>
+<title>AYNA BOOK — Real Live TV (Bangladesh & World)</title>
 <style>
   :root {
     --bg: #050a18;
@@ -12,6 +12,7 @@
     --gold: #ffe64d;
     --gold-bright: #fff6b3;
     --gold-base: #8a6105;
+    --cyan: #38f2ff;
     --text: #ffffff;
     --muted: #dce6fa;
   }
@@ -30,13 +31,13 @@
   }
 
   .tv-wrap {
-    max-width: 960px;
+    max-width: 1020px;
     margin: 0 auto;
     background: var(--panel);
     border: 3px solid var(--gold);
     border-radius: 10px;
     padding: 18px;
-    box-shadow: 0 0 18px rgba(255, 230, 77, 0.45), 0 7px 0 var(--gold-base);
+    box-shadow: 0 0 18px rgba(255, 230, 77, 0.5), 0 7px 0 var(--gold-base);
   }
 
   .tv-header {
@@ -45,7 +46,7 @@
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
   .tv-title {
@@ -63,6 +64,29 @@
     border-radius: 6px;
   }
 
+  .mode-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .filter-btn {
+    padding: 10px 16px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+    background: #050b1c;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .filter-btn.active {
+    background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
+    color: #050a18;
+  }
+
   .player-box {
     position: relative;
     width: 100%;
@@ -74,19 +98,24 @@
 
   video {
     width: 100%;
-    max-height: 520px;
+    max-height: 540px;
     display: block;
     background: #141414;
   }
 
   .channel-select,
-  .custom-url-input {
+  .custom-url-input,
+  .quality-select {
     width: 100%;
-    margin-top: 16px;
+    margin-top: 14px;
     padding: 14px 16px;
     font-size: 20px;
     border-radius: 8px;
     border: 2.5px solid var(--gold);
+  }
+
+  .channel-select,
+  .quality-select {
     background: #ffffff;
     color: #050a18;
     font-weight: bold;
@@ -95,7 +124,18 @@
   .custom-url-input {
     background: #050b1c;
     color: #ffffff;
-    font-weight: normal;
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 12px;
+  }
+
+  @media (max-width: 700px) {
+    .row-2 {
+      grid-template-columns: 1fr;
+    }
   }
 
   .controls {
@@ -111,7 +151,7 @@
     font-weight: 900;
     border-radius: 8px;
     border: 2px solid var(--gold-bright);
-    background: linear-gradient(180deg, #e5b82e 0%, #9b720b 100%);
+    background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
     color: #050a18;
     cursor: pointer;
     box-shadow: 0 4px 0 var(--gold-base);
@@ -121,11 +161,25 @@
     transform: translateY(3px);
   }
 
-  .status-msg {
+  .status-box {
     margin-top: 16px;
-    font-size: 20px;
+    padding: 14px;
+    border-radius: 8px;
+    background: #050b1c;
+    border: 2px solid var(--gold);
+  }
+
+  .stream-tag {
+    color: var(--cyan);
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 6px;
+  }
+
+  .status-msg {
+    margin: 0;
+    font-size: 19px;
     color: var(--muted);
-    min-height: 28px;
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
@@ -138,19 +192,33 @@
     <a class="back-link" href="index.html">← হোমে ফিরুন</a>
   </div>
 
+  <div class="mode-bar" role="group" aria-label="Channel Region Filter">
+    <button type="button" class="filter-btn active" data-region="ALL">সব চ্যানেল (ALL)</button>
+    <button type="button" class="filter-btn" data-region="BD">🇧🇩 বাংলাদেশ</button>
+    <button type="button" class="filter-btn" data-region="WORLD">🌍 বিশ্ব চ্যানেল</button>
+  </div>
+
   <div class="player-box" id="playerBox">
     <video id="tvVideo" controls playsinline></video>
   </div>
 
-  <select id="channelSelect" class="channel-select" aria-label="Select TV Channel">
-    <option value="">Select TV Channel</option>
-  </select>
+  <div class="row-2">
+    <select id="channelSelect" class="channel-select" aria-label="Select TV Channel">
+      <option value="">Select TV Channel</option>
+    </select>
+
+    <select id="qualityMode" class="quality-select" aria-label="Stream Speed & Quality Mode">
+      <option value="high">⚡ High Speed (Max)</option>
+      <option value="8k">✨ 8K Ultra Profile</option>
+      <option value="auto">🔄 Auto ABR</option>
+    </select>
+  </div>
 
   <input
     type="url"
     id="customStreamUrl"
     class="custom-url-input"
-    placeholder="অথবা সরাসরি .m3u8 / .mp4 স্ট্রিম লিংক দিন..."
+    placeholder="যেকোনো লাইভ .m3u8 বা .mp4 স্ট্রিম লিংক এখানে দিন..."
   >
 
   <div class="controls">
@@ -159,7 +227,10 @@
     <button type="button" class="tv-btn" id="fullscreenBtn">⛶ FULL SCREEN</button>
   </div>
 
-  <div class="status-msg" id="tvStatus">Please select a valid TV channel.</div>
+  <div class="status-box">
+    <div class="stream-tag" id="streamTag">HIGH-SPEED LIVE ENGINE</div>
+    <p class="status-msg" id="tvStatus">Please select a valid TV channel.</p>
+  </div>
 </div>
 
 <script src="tv-live.js"></script>
