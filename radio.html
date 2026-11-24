@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — High-Speed AM/FM Live Radio</title>
+<title>AYNA BOOK — High-Speed Global AM/FM Radio</title>
 <style>
   :root {
     --bg: #050a18;
@@ -31,7 +31,7 @@
   }
 
   .radio-wrap {
-    max-width: 960px;
+    max-width: 1020px;
     margin: 0 auto;
     background: var(--panel);
     border: 3px solid var(--gold);
@@ -46,7 +46,7 @@
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
 
   .radio-title {
@@ -64,15 +64,15 @@
     border-radius: 6px;
   }
 
-  .band-tabs {
+  .filter-bar {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
     margin-bottom: 14px;
   }
 
-  .band-btn {
-    padding: 10px 18px;
+  .filter-btn {
+    padding: 10px 16px;
     font-size: 18px;
     font-weight: bold;
     border-radius: 8px;
@@ -82,30 +82,47 @@
     cursor: pointer;
   }
 
-  .band-btn.active {
+  .filter-btn.active {
     background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
     color: #050a18;
   }
 
+  .search-row {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 700px) {
+    .search-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .search-input,
+  .country-select,
   .station-select,
   .custom-url-input {
     width: 100%;
-    padding: 14px 16px;
-    font-size: 20px;
+    padding: 13px 16px;
+    font-size: 19px;
     border-radius: 8px;
     border: 2.5px solid var(--gold);
     margin-bottom: 12px;
   }
 
+  .search-input,
+  .custom-url-input {
+    background: #050b1c;
+    color: #ffffff;
+  }
+
+  .country-select,
   .station-select {
     background: #ffffff;
     color: #050a18;
     font-weight: bold;
-  }
-
-  .custom-url-input {
-    background: #050b1c;
-    color: #ffffff;
   }
 
   .controls {
@@ -113,12 +130,12 @@
     gap: 12px;
     flex-wrap: wrap;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 8px;
   }
 
   .radio-btn {
-    padding: 12px 22px;
-    font-size: 19px;
+    padding: 12px 20px;
+    font-size: 18px;
     font-weight: 900;
     border-radius: 8px;
     border: 2px solid var(--gold-bright);
@@ -163,9 +180,10 @@
   }
 
   .status-msg {
-    font-size: 20px;
+    font-size: 19px;
     color: var(--muted);
     margin: 0;
+    word-break: break-word;
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
@@ -178,14 +196,33 @@
     <a class="back-link" href="index.html">← হোমে ফিরুন</a>
   </div>
 
-  <div class="band-tabs" role="group" aria-label="Radio Band Filter">
-    <button type="button" class="band-btn active" data-band="ALL">ALL</button>
-    <button type="button" class="band-btn" data-band="FM">FM</button>
-    <button type="button" class="band-btn" data-band="AM">AM</button>
+  <div class="filter-bar" role="group" aria-label="Region & Band Filter">
+    <button type="button" class="filter-btn active" data-scope="BD">🇧🇩 বাংলাদেশ</button>
+    <button type="button" class="filter-btn" data-scope="WORLD">🌍 বিশ্ব রেডিও</button>
+    <button type="button" class="filter-btn" data-scope="FM">FM ফ্রিকোয়েন্সি</button>
+    <button type="button" class="filter-btn" data-scope="AM">AM ফ্রিকোয়েন্সি</button>
   </div>
 
-  <select id="stationSelect" class="station-select" aria-label="Select AM or FM Station">
-    <option value="">Select AM / FM Radio Station</option>
+  <div class="search-row">
+    <input
+      type="search"
+      id="stationSearch"
+      class="search-input"
+      placeholder="স্টেশন, ফ্রিকোয়েন্সি (যেমন 693 AM, 100.8 FM, BBC) লিখে খুঁজুন..."
+    >
+    <select id="countryFilter" class="country-select" aria-label="Select Country">
+      <option value="BD">Bangladesh (BD)</option>
+      <option value="">All World</option>
+      <option value="IN">India (IN)</option>
+      <option value="GB">UK (GB)</option>
+      <option value="US">USA (US)</option>
+      <option value="SA">Saudi Arabia (SA)</option>
+      <option value="AE">UAE (AE)</option>
+    </select>
+  </div>
+
+  <select id="stationSelect" class="station-select" aria-label="Select Radio Station">
+    <option value="">স্টেশন লোড হচ্ছে...</option>
   </select>
 
   <input
@@ -198,6 +235,8 @@
   <div class="controls">
     <button type="button" class="radio-btn" id="playRadioBtn">▶ PLAY</button>
     <button type="button" class="radio-btn" id="stopRadioBtn">■ STOP</button>
+    <button type="button" class="radio-btn" id="nextStationBtn">⏭ NEXT</button>
+    <button type="button" class="radio-btn" id="reloadListBtn">🔄 REFRESH LIST</button>
 
     <div class="volume-wrap">
       <label for="volumeRange">🔊</label>
@@ -208,8 +247,8 @@
   <audio id="radioAudio" controls preload="none"></audio>
 
   <div class="live-meta">
-    <div class="live-badge" id="stationBandTag">HIGH-SPEED STREAM ENGINE</div>
-    <p class="status-msg" id="radioStatus">একটি FM বা AM রেডিও স্টেশন নির্বাচন করুন।</p>
+    <div class="live-badge" id="stationBandTag">ALL.API.RADIO-BROWSER.INFO • HIGH-SPEED ENGINE</div>
+    <p class="status-msg" id="radioStatus">বাংলাদেশ ও বিশ্ব রেডিও স্টেশন লোড করা হচ্ছে...</p>
   </div>
 </div>
 
