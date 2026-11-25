@@ -187,7 +187,7 @@ header {
 }
 
 .field-group {
-  margin-bottom:18px;
+  margin-bottom:20px;
 }
 
 .field-label {
@@ -213,29 +213,74 @@ header {
   border-color:#ffffff;
 }
 
+.photo-box {
+  display:flex;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+  background:#050b1c;
+  border:3.5px solid var(--gold);
+  border-radius:8px;
+  padding:16px;
+}
+
+.photo-box img {
+  width:150px;
+  height:150px;
+  object-fit:cover;
+  object-position:top center;
+  border-radius:8px;
+  border:3.5px solid var(--gold-bright);
+  background:#0a1636;
+}
+
+.pass-row {
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px;
+  align-items:center;
+}
+
+.eye-button {
+  min-height:74px;
+  padding:0 20px;
+  border-radius:8px;
+  border:3px solid var(--gold);
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  color:var(--gold-bright);
+  font-size:26px;
+  font-weight:bold;
+  box-shadow:0 0 12px rgba(255,230,77,.45), 0 5px 0 var(--gold-base);
+}
+
+.action-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:12px;
+}
+
 .primary-button {
   width:100%;
   min-height:88px;
-  margin-top:10px;
   border:3.5px solid var(--gold-bright);
   border-radius:8px;
   background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
   color:#050a18;
-  font-size:32px;
+  font-size:30px;
   font-weight:1000;
   box-shadow:0 0 18px rgba(255,230,77,.65), 0 7px 0 #664604;
 }
 
 .tool-button {
   width:100%;
-  min-height:78px;
-  margin-top:12px;
+  min-height:88px;
   padding:14px;
   border-radius:8px;
   border:3px solid var(--gold);
   background:linear-gradient(155deg,#1d3b7e,#08122b);
   color:white;
-  font-size:27px;
+  font-size:28px;
   font-weight:bold;
   box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
 }
@@ -286,6 +331,10 @@ header {
 }
 
 @media(max-width:600px) {
+  .pass-row,
+  .action-grid {
+    grid-template-columns:1fr;
+  }
   .logo {
     font-size:34px;
   }
@@ -324,34 +373,56 @@ header {
     <h2>📝 নতুন অ্যাকাউন্ট তৈরি করুন</h2>
 
     <div class="field-group">
-      <label class="field-label" for="regName">পূর্ণ নাম</label>
-      <input type="text" id="regName" class="hub-input" placeholder="আপনার পূর্ণ নাম লিখুন">
+      <label class="field-label">১. প্রোফাইল ছবি</label>
+      <div class="photo-box">
+        <img id="regPhotoPreview" alt="Profile photo">
+        <div>
+          <button type="button" class="eye-button" id="choosePhotoBtn">🖼️ ছবি নির্বাচন করুন</button>
+          <div id="regPhotoLabel" style="font-size:24px;color:var(--muted);margin-top:8px;">ছবি ঐচ্ছিক — প্রোফাইল ফ্রেমে যুক্ত হবে</div>
+        </div>
+        <input type="file" id="regPhotoInput" accept="image/*" hidden>
+      </div>
     </div>
 
     <div class="field-group">
-      <label class="field-label" for="regEmail">ইমেইল ঠিকানা</label>
-      <input type="email" id="regEmail" class="hub-input" placeholder="আপনার ইমেইল লিখুন (যেমন: name@example.com)">
+      <label class="field-label" for="regEmail">২. জিমেইল ঠিকানা</label>
+      <input type="email" id="regEmail" class="hub-input" placeholder="আপনার জিমেইল লিখুন (যেমন: name@gmail.com)">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="regPhone">৩. ফোন নম্বর</label>
+      <input type="tel" id="regPhone" class="hub-input" placeholder="আপনার ফোন নম্বর লিখুন (যেমন: +8801XXXXXXXXX)">
     </div>
 
     <div class="field-group">
       <label class="field-label" for="regPassword">পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label>
-      <input type="password" id="regPassword" class="hub-input" placeholder="পাসওয়ার্ড লিখুন">
+      <div class="pass-row">
+        <input type="password" id="regPassword" class="hub-input" placeholder="পাসওয়ার্ড লিখুন">
+        <button type="button" class="eye-button" id="togglePasswordBtn">👁️ পাসওয়ার্ড দেখাও</button>
+      </div>
     </div>
 
     <div class="field-group">
-      <label class="field-label" for="regConfirmPassword">পাসওয়ার্ড নিশ্চিত করুন</label>
-      <input type="password" id="regConfirmPassword" class="hub-input" placeholder="পাসওয়ার্ড আবার লিখুন">
+      <label class="field-label" for="regConfirmPassword">রি-পাসওয়ার্ড (পাসওয়ার্ড নিশ্চিত করুন)</label>
+      <div class="pass-row">
+        <input type="password" id="regConfirmPassword" class="hub-input" placeholder="পাসওয়ার্ড আবার লিখুন">
+        <button type="button" class="eye-button" id="toggleConfirmPasswordBtn">👁️ রি-পাসওয়ার্ড দেখাও</button>
+      </div>
     </div>
 
-    <button type="button" id="registerSubmitBtn" class="primary-button">✅ অ্যাকাউন্ট রেজিস্ট্রেশন সম্পন্ন করুন</button>
-    <button type="button" id="repeatSignalBtn" class="tool-button">🔊 শেষ সিগন্যাল আবার শুনুন</button>
+    <div class="action-grid">
+      <button type="button" id="registerSubmitBtn" class="primary-button">✅ রেজিস্ট্রেশন বাটন</button>
+      <button type="button" id="loginPageBtn" class="tool-button">🔐 লগইন বাটন</button>
+    </div>
+
+    <button type="button" id="repeatSignalBtn" class="tool-button" style="margin-top:14px;">🔊 শেষ সিগন্যাল আবার শুনুন</button>
 
     <div class="signal-box" id="registerSignalBox">
-      প্রস্তুত: নাম, ইমেইল, পাসওয়ার্ড বা নিশ্চিত পাসওয়ার্ডে ভুল করলে কণ্ঠের মাধ্যমে ভুলের জায়গা বলে দেওয়া হবে।
+      প্রস্তুত: ১. ছবি, ২. জিমেইল, ৩. ফোন নম্বর, পাসওয়ার্ড বা রি-পাসওয়ার্ডে ভুল করলে কণ্ঠের মাধ্যমে ভুলের জায়গা বলে দেওয়া হবে।
     </div>
 
     <div class="link-row">
-      <a href="login.html">🔐 আগে থেকেই অ্যাকাউন্ট আছে? লগইন করুন</a>
+      <a href="login.html">🔐 আগে থেকেই অ্যাকাউন্ট আছে? লগইন পেজে যান</a>
       <a href="index.html">🏠 হোম পেজে ফিরুন</a>
     </div>
   </section>
@@ -361,6 +432,12 @@ header {
 const $ = id => document.getElementById(id);
 let lastSignalMessage = "প্রস্তুত";
 let clockEnabled = true;
+let photoDataUrl = "";
+
+const defaultFrameSvg = "data:image/svg+xml," + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="#0a1636"/><circle cx="80" cy="56" r="28" fill="#ffe64d"/><path d="M24 160 Q32 104 80 104 Q128 104 136 160" fill="#ffe64d"/></svg>'
+);
+$("regPhotoPreview").src = defaultFrameSvg;
 
 function notify(msg) {
   const el = $("notice");
@@ -438,6 +515,35 @@ $("toggleClockBtn")?.addEventListener("click", () => {
   if (clockEnabled) speakCurrentTime();
 });
 $("repeatSignalBtn")?.addEventListener("click", () => AynaVoiceSignal.speak(lastSignalMessage, true));
+$("loginPageBtn")?.addEventListener("click", () => { window.location.href = "login.html"; });
+
+function attachPasswordToggle(btnId, inputId, showText, hideText) {
+  $(btnId)?.addEventListener("click", () => {
+    const input = $(inputId);
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    $(btnId).textContent = show ? hideText : showText;
+  });
+}
+attachPasswordToggle("togglePasswordBtn", "regPassword", "👁️ পাসওয়ার্ড দেখাও", "🙈 পাসওয়ার্ড লুকাও");
+attachPasswordToggle("toggleConfirmPasswordBtn", "regConfirmPassword", "👁️ রি-পাসওয়ার্ড দেখাও", "🙈 রি-পাসওয়ার্ড লুকাও");
+
+$("choosePhotoBtn")?.addEventListener("click", () => $("regPhotoInput")?.click());
+$("regPhotoInput")?.addEventListener("change", ev => {
+  const file = ev.target.files?.[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    AynaVoiceSignal.error("১ নম্বর ছবির ঘরে ভুল হয়েছে। অনুগ্রহ করে সঠিক ছবি ফাইল নির্বাচন করুন।");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    photoDataUrl = String(reader.result || "");
+    $("regPhotoPreview").src = photoDataUrl || defaultFrameSvg;
+    $("regPhotoLabel").textContent = `নির্বাচিত ছবি: ${file.name}`;
+  };
+  reader.readAsDataURL(file);
+});
 
 async function loadOptionalScript(path) {
   try { return await import(path); } catch (_) { return null; }
@@ -456,24 +562,24 @@ let database = null;
 })();
 
 $("registerSubmitBtn")?.addEventListener("click", async () => {
-  const fullName = ($("regName")?.value || "").trim();
   const email = ($("regEmail")?.value || "").trim();
+  const phone = ($("regPhone")?.value || "").trim();
   const password = $("regPassword")?.value || "";
   const confirmPassword = $("regConfirmPassword")?.value || "";
 
-  if (!fullName || fullName.length < 2) {
-    AynaVoiceSignal.error("পূর্ণ নামের ঘরে ভুল হয়েছে। সঠিক নাম লিখুন।");
-    $("regName")?.focus();
-    return;
-  }
   if (!email) {
-    AynaVoiceSignal.error("ইমেইল ঠিকানার ঘরে ভুল হয়েছে। ইমেইল ঘরটি খালি রয়েছে।");
+    AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার ঘরে ভুল হয়েছে। জিমেইল ঘরটি খালি রয়েছে।");
     $("regEmail")?.focus();
     return;
   }
   if (!email.includes("@") || !email.includes(".")) {
-    AynaVoiceSignal.error("ইমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক ইমেইল ঠিকানা লিখুন।");
+    AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক জিমেইল ঠিকানা লিখুন।");
     $("regEmail")?.focus();
+    return;
+  }
+  if (!phone || phone.replace(/\D/g, "").length < 8) {
+    AynaVoiceSignal.error("৩ নম্বর ফোন নম্বরের ঘরে ভুল হয়েছে। সঠিক ফোন নম্বর লিখুন।");
+    $("regPhone")?.focus();
     return;
   }
   if (!password || password.length < 6) {
@@ -482,13 +588,24 @@ $("registerSubmitBtn")?.addEventListener("click", async () => {
     return;
   }
   if (password !== confirmPassword) {
-    AynaVoiceSignal.error("পাসওয়ার্ড নিশ্চিত করার ঘরে ভুল হয়েছে। উভয় পাসওয়ার্ড এক হতে হবে।");
+    AynaVoiceSignal.error("রি-পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড ও রি-পাসওয়ার্ড এক হতে হবে।");
     $("regConfirmPassword")?.focus();
     return;
   }
 
+  const aynaId = `2026-----${String(Math.floor(10000001 + Math.random() * 89999999))}`;
+  try {
+    localStorage.setItem("ayna_registered_account", JSON.stringify({
+      email,
+      phone,
+      photoURL: photoDataUrl,
+      aynaId,
+      createdAt: Date.now()
+    }));
+  } catch (_) {}
+
   if (!auth || !database) {
-    AynaVoiceSignal.error("ফায়ারবেস সংযোগ পাওয়া যায়নি। firebase-init.js পরীক্ষা করুন।");
+    AynaVoiceSignal.error("ফায়ারবেস সংযোগ পাওয়া যায়নি। firebase-init.js পরীক্ষা করুন, তবে লোকাল অ্যাকাউন্ট তথ্য সংরক্ষণ করা হয়েছে।");
     return;
   }
 
@@ -502,12 +619,12 @@ $("registerSubmitBtn")?.addEventListener("click", async () => {
 
     const cred = await createUserWithEmailAndPassword(auth, email, password);
     const uid = cred.user.uid;
-    const aynaId = `2026-----${String(Math.floor(10000001 + Math.random() * 89999999))}`;
 
     await set(ref(database, "users/" + uid), {
       uid,
-      fullName,
       email,
+      phone,
+      photoURL: photoDataUrl,
       aynaId,
       createdAt: Date.now()
     });
@@ -517,9 +634,9 @@ $("registerSubmitBtn")?.addEventListener("click", async () => {
   } catch (err) {
     const code = err?.code || "";
     if (code.includes("email-already-in-use")) {
-      AynaVoiceSignal.error("ইমেইল ঠিকানার ঘরে ভুল হয়েছে। এই ইমেইল দিয়ে আগেই অ্যাকাউন্ট খোলা আছে।");
+      AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার ঘরে ভুল হয়েছে। এই জিমেইল দিয়ে আগেই অ্যাকাউন্ট খোলা আছে।");
     } else if (code.includes("invalid-email")) {
-      AynaVoiceSignal.error("ইমেইল ঠিকানার বানানে ভুল হয়েছে।");
+      AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার বানানে ভুল হয়েছে।");
     } else if (code.includes("weak-password")) {
       AynaVoiceSignal.error("পাসওয়ার্ড খুব দুর্বল হয়েছে। অন্তত ৬ অক্ষরের পাসওয়ার্ড দিন।");
     } else {
@@ -529,7 +646,7 @@ $("registerSubmitBtn")?.addEventListener("click", async () => {
     const btn = $("registerSubmitBtn");
     if (btn) {
       btn.disabled = false;
-      btn.textContent = "✅ অ্যাকাউন্ট রেজিস্ট্রেশন সম্পন্ন করুন";
+      btn.textContent = "✅ রেজিস্ট্রেশন বাটন";
     }
   }
 });
