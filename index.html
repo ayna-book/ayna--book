@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#060d21">
 <title>AYNA BOOK — Ultra-Critical Quantum High-Speed Hub</title>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
 <style>
 :root {
@@ -62,7 +63,9 @@ button {
 .feature-card,
 .panel,
 .feed-post,
-.quantum-bar {
+.quantum-bar,
+.feed-filters,
+.file-registry-box {
   background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%) !important;
   border:4px solid var(--gold) !important;
   border-radius:10px !important;
@@ -251,16 +254,39 @@ header {
   margin-bottom:26px;
 }
 
+.profile-frame-wrap {
+  position:relative;
+  width:320px;
+  height:320px;
+  flex-shrink:0;
+}
+
 .profile-bar img {
-  width:300px;
-  height:300px;
+  width:100%;
+  height:100%;
   object-fit:cover;
   object-position:top center;
   border-radius:10px;
   border:5px solid var(--gold-bright);
   background:#0a1636;
   box-shadow:0 0 24px rgba(255,230,77,.8), 0 7px 0 var(--gold-base);
-  flex-shrink:0;
+}
+
+.profile-barcode-overlay {
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#ffffff;
+  border:3px solid var(--gold-bright);
+  border-radius:6px;
+  padding:4px 10px;
+}
+
+.profile-barcode-overlay svg {
+  height:36px;
+  width:auto;
+  display:block;
 }
 
 .profile-info {
@@ -281,6 +307,19 @@ header {
   font-size:30px;
   margin-top:6px;
   word-break:break-word;
+}
+
+.ayna-id-chip {
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 14px;
+  border-radius:8px;
+  border:2.5px solid var(--gold);
+  background:#050b1c;
+  color:var(--gold-bright);
+  font-family:monospace;
+  font-size:28px;
+  font-weight:1000;
 }
 
 .feature-grid-8 {
@@ -435,27 +474,63 @@ header {
 .ai-box-output {
   margin-top:14px;
   background:#050b1c;
-  border:2.5px solid var(--quantum-cyan);
+  border:3px solid var(--quantum-cyan);
   border-radius:8px;
-  padding:16px;
-  font-size:26px;
+  padding:18px;
+  font-size:28px;
   color:var(--gold-bright);
   white-space:pre-line;
   overflow-wrap:anywhere;
 }
 
+.mega-radar-compass-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:20px;
+  margin-top:16px;
+}
+
+.mega-sensor-box {
+  background:#050b1c;
+  border:3.5px solid var(--gold);
+  border-radius:10px;
+  padding:18px;
+  text-align:center;
+}
+
+.mega-sensor-title {
+  font-size:32px;
+  font-weight:1000;
+  color:var(--gold-bright);
+  margin-bottom:12px;
+}
+
+.mega-canvas {
+  width:100%;
+  max-width:420px;
+  height:420px;
+  display:block;
+  margin:0 auto 12px;
+  border-radius:50%;
+  border:4px solid var(--quantum-cyan);
+  box-shadow:0 0 22px rgba(56,242,255,.35);
+}
+
 .radar-layout {
   display:grid;
-  grid-template-columns:300px 1fr;
-  gap:18px;
+  grid-template-columns:430px 1fr;
+  gap:20px;
   align-items:center;
+  margin-top:18px;
 }
 
 .radar-canvas {
-  width:280px;
-  height:280px;
+  width:420px;
+  height:420px;
   display:block;
   margin:auto;
+  border-radius:50%;
+  border:4px solid var(--gold-bright);
 }
 
 .qr-box {
@@ -527,7 +602,7 @@ header {
 
 .yt-player-frame {
   width:100%;
-  height:500px;
+  height:520px;
   border:3.5px solid var(--gold);
   border-radius:8px;
   background:#000;
@@ -571,7 +646,7 @@ header {
 
 .post-textarea {
   width:100%;
-  min-height:180px;
+  min-height:200px;
   resize:vertical;
   background:#050b1c;
   border:3.5px solid var(--gold);
@@ -678,6 +753,7 @@ select:focus {
   display:flex;
   gap:12px;
   flex-wrap:wrap;
+  padding:18px;
   margin-bottom:20px;
 }
 
@@ -906,6 +982,11 @@ select:focus {
   overflow-wrap:anywhere;
 }
 
+.file-registry-box {
+  padding:24px;
+  margin:26px 0;
+}
+
 .file-search-input {
   width:100%;
   background:#050b1c;
@@ -1006,6 +1087,12 @@ footer {
   text-align:center;
 }
 
+@media(max-width:1180px) {
+  .mega-radar-compass-grid {
+    grid-template-columns:1fr;
+  }
+}
+
 @media(max-width:1024px) {
   .feature-grid-8,
   .feature-grid-more {
@@ -1014,6 +1101,11 @@ footer {
   .post-actions,
   .radar-layout {
     grid-template-columns:1fr;
+  }
+  .radar-canvas,
+  .mega-canvas {
+    width:320px;
+    height:320px;
   }
 }
 
@@ -1027,9 +1119,9 @@ footer {
   .yt-input-row {
     grid-template-columns:1fr;
   }
-  .profile-bar img {
-    width:220px;
-    height:220px;
+  .profile-frame-wrap {
+    width:240px;
+    height:240px;
   }
   .logo {
     font-size:34px;
@@ -1042,6 +1134,11 @@ footer {
   }
   .yt-player-frame {
     height:320px;
+  }
+  .radar-canvas,
+  .mega-canvas {
+    width:260px;
+    height:260px;
   }
 }
 </style>
@@ -1057,6 +1154,8 @@ footer {
     </div>
 
     <div class="header-actions">
+      <button type="button" id="headerSpeakClockBtn">🕒 সময় বলুন</button>
+      <button type="button" id="headerToggleClockBtn">🔊 ঘড়ি: চালু</button>
       <button type="button" id="quantumBoostBtn">⚡ High-Speed Profile</button>
       <button type="button" id="autoUpdateNowBtn">🔄 Auto Sync</button>
       <a href="notifications.html">🔔</a>
@@ -1072,7 +1171,7 @@ footer {
   <section class="hero">
     <h1>AYNA BOOK — ULTRA-CRITICAL HIGH-SPEED HUB</h1>
     <p>
-      আলট্রা-ক্রিটিক্যাল সিদ্ধান্ত ও এলার্ট শৃঙ্খলা, প্যারালাল টেলিম্যাট্রি সিঙ্ক, লোকাল কোল্ড-ব্যাকআপ স্ন্যাপশট, আগের চ্যাটের মডিউল এবং সব AI মডিউল একত্রে যুক্ত।
+      বিশ্ব ঘড়ি (প্রতি ১ ঘণ্টা পর পর ও এখনই সময় বলার বাটন + চালু/বন্ধ বাটন), রেডিও ও টেলিভিশনে AI, অডিও-ভিডিও-লাইভ-পোস্টে AI, এবং অ্যাকাউন্ট রেজিস্ট্রেশন ও লুকাপে ভুল করলে কণ্ঠের মাধ্যমে সিগন্যাল ও ভুলের জায়গা বলে দেওয়ার পূর্ণাঙ্গ ব্যবস্থা।
     </p>
   </section>
 
@@ -1091,28 +1190,76 @@ footer {
     </div>
   </section>
 
-  <!-- সময় বলার ঘড়ি প্যানেল (১ ঘণ্টা পর পর স্বয়ংক্রিয় ঘোষণা) -->
+  <!-- সময় বলার ঘড়ি প্যানেল (১ ঘণ্টা পর পর + এখনই সময় বলুন + চালু/বন্ধ বাটন) -->
   <section class="panel" id="talkingClockSection">
-    <h2>🕒 রিয়েল-টাইম কথা বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা</h2>
+    <h2>🕒 বিশ্ব ঘড়ি — সময় বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা</h2>
     <div class="clock-live-box">
       <span class="clock-live-time" id="quantumClockDisplay">লোড হচ্ছে...</span>
       <div class="clock-rules-text">
         • প্রতি ১ ঘণ্টা পর পর স্বয়ংক্রিয়ভাবে রিয়েল-টাইম সময় ঘোষণা (পরবর্তী ঘণ্টা: <strong id="nextHourlyAnnouncement">--</strong>)<br>
-        • সেহরির ১.৫ ঘণ্টা আগে ঘোষণা (ভিত্তি: 04:58 AM)<br>
-        • ইফতারের ১ ঘণ্টা আগে থেকে প্রতি ৫ মিনিটে ঘোষণা (ভিত্তি: 05:12 PM)
+        • সেহরির ১.৫ ঘণ্টা আগে ঘোষণা (ভিত্তি: 04:58 AM) • ইফতারের ১ ঘণ্টা আগে থেকে প্রতি ৫ মিনিটে ঘোষণা (ভিত্তি: 05:12 PM)
       </div>
     </div>
     <div class="media-buttons">
-      <button type="button" id="toggleTalkClockBtn">🔊 ১ ঘণ্টা পর পর অটো সময়: চালু</button>
       <button type="button" id="speakNowClockBtn">🎙️ এখনই সময় বলুন</button>
+      <button type="button" id="toggleTalkClockBtn">🔊 সময় বলা: চালু (খোলা)</button>
+      <button type="button" id="openTalkClockBtn">🟢 সময় বলার বাটন চালু (খোলা)</button>
+      <button type="button" id="closeTalkClockBtn">🔴 সময় বলার বাটন বন্ধ</button>
     </div>
   </section>
 
+  <!-- অ্যাকাউন্ট রেজিস্ট্রেশন ও অ্যাকাউন্ট লুকআপ (ভুল করলে AI কণ্ঠে সিগন্যাল ও ভুলের জায়গা বলবে) -->
+  <section class="panel" id="accountRegisterLookupSection">
+    <h2>🔐🎙️ অ্যাকাউন্ট রেজিস্ট্রেশন ও অ্যাকাউন্ট লুকআপ (ভয়েস ভুল সিগন্যাল AI)</h2>
+    <div class="hub-controls-row">
+      <input
+        type="text"
+        id="regFullNameInput"
+        class="hub-search-input"
+        placeholder="পূর্ণ নাম (যেমন: Mohamed Mahabub Alam)"
+      >
+      <input
+        type="email"
+        id="regEmailInput"
+        class="hub-search-input"
+        placeholder="ইমেইল ঠিকানা (যেমন: user@aynabook.app)"
+      >
+    </div>
+    <div class="hub-controls-row">
+      <input
+        type="password"
+        id="regPasswordInput"
+        class="hub-search-input"
+        placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)"
+      >
+      <input
+        type="text"
+        id="accountLookupQueryInput"
+        class="hub-search-input"
+        placeholder="অ্যাকাউন্ট লুকআপ: AYNA ID (2026-----10000001) বা ইমেইল"
+      >
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="validateRegisterVoiceBtn">📝 রেজিস্ট্রেশন যাচাই ও কণ্ঠ সিগন্যাল</button>
+      <button type="button" id="runAccountLookupVoiceBtn">🔍 অ্যাকাউন্ট লুকআপ ও কণ্ঠ সিগন্যাল</button>
+    </div>
+    <div class="ai-box-output" id="accountSignalOutput">
+      রেজিস্ট্রেশন বা অ্যাকাউন্ট লুকআপে ভুল হলে AI সিগন্যাল বাজবে এবং কণ্ঠের মাধ্যমে কোথায় ভুল হয়েছে তা বলে দেবে।
+    </div>
+  </section>
+
+  <!-- প্রোফাইল বক্স + বারকোড + AYNA ID -->
   <section class="profile-bar">
-    <img id="myPhoto" alt="Profile photo">
+    <div class="profile-frame-wrap">
+      <img id="myPhoto" alt="Profile photo">
+      <div class="profile-barcode-overlay">
+        <svg id="aynaProfileBarcode"></svg>
+      </div>
+    </div>
     <div class="profile-info">
       <strong id="myName">লোড হচ্ছে...</strong>
       <small id="myEmail">আপনার AYNA BOOK অ্যাকাউন্ট</small>
+      <span class="ayna-id-chip" id="myAynaId">2026-----10000001</span>
     </div>
     <a href="profile.html" style="color:#fff6b3;text-decoration:none;font-weight:bold;font-size:32px;">
       প্রোফাইল
@@ -1143,13 +1290,13 @@ footer {
     <a class="feature-card" href="radio.html">
       <span class="feature-icon">📻</span>
       <span class="feature-name">বিশ্ব রেডিও</span>
-      <span class="feature-desc">রেডিও শুনুন</span>
+      <span class="feature-desc">রেডিও ও AI সহকারী</span>
     </a>
 
     <a class="feature-card" href="tv-live.html">
       <span class="feature-icon">📺</span>
       <span class="feature-name">বিশ্ব টেলিভিশন</span>
-      <span class="feature-desc">টিভি দেখুন</span>
+      <span class="feature-desc">টিভি ও AI সহকারী</span>
     </a>
 
     <a class="feature-card" href="gps.html">
@@ -1169,6 +1316,32 @@ footer {
       <span class="feature-name">রাডার সিস্টেম</span>
       <span class="feature-desc">রাডার পেজ</span>
     </a>
+  </section>
+
+  <!-- বিশ্ব রেডিও ও টেলিভিশন AI বক্স -->
+  <section class="panel" id="radioTvAiSection">
+    <h2>📻📺 বিশ্ব রেডিও ও টেলিভিশন AI সহকারী</h2>
+    <div class="hub-controls-row">
+      <select id="radioTvChannelSelect" class="hub-select">
+        <option value="Bangladesh Betar / World Radio">রেডিও: বাংলাদেশ বেতার ও বিশ্ব রেডিও</option>
+        <option value="BBC / World News Radio">রেডিও: বিশ্ব সংবাদ ও তথ্য রেডিও</option>
+        <option value="BTV & Global News TV">টেলিভিশন: বিটিভি ও বিশ্ব সংবাদ টিভি</option>
+        <option value="Science & Documentary TV">টেলিভিশন: বিজ্ঞান ও ডকুমেন্টারি চ্যানেল</option>
+      </select>
+      <input
+        type="text"
+        id="radioTvPromptInput"
+        class="hub-search-input"
+        placeholder="রেডিও বা টিভি চ্যানেল/বিষয় সম্পর্কে AI প্রশ্ন করুন..."
+      >
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="runRadioTvAiBtn">🤖 রেডিও ও টিভি AI বিশ্লেষণ</button>
+      <button type="button" id="speakRadioTvAiBtn">🔊 রেডিও ও টিভি AI কণ্ঠে শুনুন</button>
+    </div>
+    <div class="ai-box-output" id="radioTvAiOutput">
+      বিশ্ব রেডিও ও টেলিভিশন AI প্রস্তুত — চ্যানেল নির্বাচন করে বিশ্লেষণ বা কণ্ঠ ব্রিফিং নিন।
+    </div>
   </section>
 
   <h2 class="section-title">✨ MORE AYNA BOOK FEATURES &amp; DIRECTORIES</h2>
@@ -1301,7 +1474,7 @@ footer {
     </a>
   </section>
 
-  <!-- আগের চ্যাটের মডিউল: তাপমাত্রা, আবহাওয়া, ভয়েস রেকর্ডার, বুকমার্ক ও QR হাব -->
+  <!-- আবহাওয়া, ভয়েস রেকর্ডার, বুকমার্ক ও QR হাব -->
   <section class="panel" id="legacyModulesSection">
     <h2>🌡️🎙️🔖 আবহাওয়া, ভয়েস রেকর্ডার, বুকমার্ক ও QR হাব</h2>
 
@@ -1388,7 +1561,7 @@ footer {
     <div class="ai-box-output" id="autoEvOutput">বিশ্ব অটো ও ইভি আপডেট লোড হচ্ছে...</div>
   </section>
 
-  <!-- ৩. মোবাইল ও কম্পিউটার AI প্রযুক্তি (Hybrid Router) -->
+  <!-- ৩. মোবাইল ও কম্পিউটার AI প্রযুক্তি -->
   <section class="panel" id="mobileComputerAiSection">
     <h2>📱💻 মোবাইল ও কম্পিউটার AI প্রযুক্তি (Hybrid Edge + Cloud)</h2>
     <div class="hub-controls-row">
@@ -1440,9 +1613,9 @@ footer {
     <div class="ai-box-output" id="tradeAiOutput">পণ্য নির্বাচন করে মূল্য ও যোগাযোগ AI বিশ্লেষণ চালান।</div>
   </section>
 
-  <!-- ৫. রাডার ও কম্পাস AI প্রযুক্তি -->
+  <!-- ৫. বড় বেসামরিক রাডার, আবহাওয়া রাডার ও AI কম্পাস প্যানেল -->
   <section class="panel" id="radarCompassSection">
-    <h2>🧭📡 রাডার ও কম্পাস AI প্রযুক্তি</h2>
+    <h2>📡🌦️🧭 বড় AI বেসামরিক রাডার, আবহাওয়া রাডার ও AI কম্পাস</h2>
     <div class="hub-controls-row">
       <select id="radarRangeSelect" class="hub-select">
         <option value="5">রাডার রেঞ্জ: ৫ কিমি</option>
@@ -1459,14 +1632,32 @@ footer {
         placeholder="কম্পাস দিক (০°–৩৬০°)"
       >
     </div>
+
+    <div class="mega-radar-compass-grid">
+      <div class="mega-sensor-box">
+        <div class="mega-sensor-title">✈️ AI বেসামরিক রাডার</div>
+        <canvas id="civilRadarCanvas" class="mega-canvas" width="420" height="420"></canvas>
+        <div class="hub-card-meta" id="civilRadarReadout">Civil AI Radar: আকাশপথ ও বেসামরিক ট্রাফিক স্ক্যান সক্রিয়</div>
+      </div>
+
+      <div class="mega-sensor-box">
+        <div class="mega-sensor-title">🌦️ AI আবহাওয়া রাডার</div>
+        <canvas id="weatherRadarCanvas" class="mega-canvas" width="420" height="420"></canvas>
+        <div class="hub-card-meta" id="weatherRadarReadout">Weather AI Radar: মেঘ, বৃষ্টি ও বায়ুপ্রবাহ পর্যবেক্ষণে</div>
+      </div>
+
+      <div class="mega-sensor-box">
+        <div class="mega-sensor-title">🧭 AI কম্পাস (বড়)</div>
+        <canvas id="radarCompassCanvas" class="mega-canvas" width="420" height="420"></canvas>
+        <div class="hub-card-meta" id="aiCompassReadout">AI Compass: ৪৫° উত্তর-পূর্ব (NE) দিক নির্ণয় সক্রিয়</div>
+      </div>
+    </div>
+
     <div class="radar-layout">
-      <canvas id="radarCompassCanvas" class="radar-canvas" width="280" height="280"></canvas>
-      <div>
-        <div class="ai-box-output" style="margin-top:0;" id="radarCompassOutput">কম্পাস ও রাডার সিগন্যাল প্রস্তুত।</div>
-        <div class="media-buttons">
-          <button type="button" id="startDeviceCompassBtn">🧭 লাইভ কম্পাস চালু</button>
-          <button type="button" id="runRadarAiBtn">📡 AI রাডার ব্রিফিং</button>
-        </div>
+      <div class="ai-box-output" style="margin-top:0;" id="radarCompassOutput">বেসামরিক রাডার, আবহাওয়া রাডার ও AI কম্পাস সিগন্যাল প্রস্তুত।</div>
+      <div class="media-buttons" style="margin-top:0;">
+        <button type="button" id="startDeviceCompassBtn">🧭 লাইভ AI কম্পাস চালু</button>
+        <button type="button" id="runRadarAiBtn">🤖 রাডার ও কম্পাস AI ব্রিফিং</button>
       </div>
     </div>
   </section>
@@ -1617,25 +1808,28 @@ footer {
     </a>
   </section>
 
-  <!-- POST CREATOR -->
+  <!-- POST CREATOR (অডিও, ভিডিও, লাইভ ভিডিও ও পোস্টে AI যুক্ত) -->
   <section class="panel" id="createPost">
-    <h2>✍️ নতুন কোয়ান্টাম পোস্ট তৈরি করুন</h2>
+    <h2>✍️🤖 নতুন পোস্ট তৈরি করুন (পোস্ট, অডিও, ভিডিও ও মিডিয়া AI)</h2>
 
     <textarea
       id="postText"
       class="post-textarea"
-      placeholder="আপনার মনের কথা লিখুন..."
+      placeholder="আপনার মনের কথা লিখুন... (AI লেখা সংশোধন, পোস্ট বিশ্লেষণ ও ভয়েস রিডআউট সক্রিয়)"
     ></textarea>
 
     <div class="post-tools">
+      <button type="button" class="tool-button" id="aiPolishPostBtn">✨ AI লেখা সংশোধন</button>
+      <button type="button" class="tool-button" id="aiAnalyzePostBtn">🤖 AI পোস্ট বিশ্লেষণ ও কণ্ঠ</button>
       <button type="button" class="tool-button" id="chooseImage">🖼️ ছবি (25MB)</button>
-      <button type="button" class="tool-button" id="chooseAudio">🎵 অডিও (100MB)</button>
-      <button type="button" class="tool-button" id="chooseVideo">🎬 বড় ভিডিও (250MB)</button>
+      <button type="button" class="tool-button" id="chooseAudio">🎵 অডিও (100MB) + AI</button>
+      <button type="button" class="tool-button" id="chooseVideo">🎬 বড় ভিডিও (250MB) + AI</button>
       <button type="button" class="tool-button" id="chooseFile">📎 ফাইল (250MB)</button>
+      <button type="button" class="tool-button" id="clearMedia">✖️ মিডিয়া / ফাইল বাদ দিন</button>
     </div>
 
-    <div style="margin-top:14px;">
-      <button type="button" class="tool-button" id="clearMedia" style="width:100%;">✖️ মিডিয়া / ফাইল বাদ দিন</button>
+    <div class="ai-box-output" id="postMediaAiOutput" style="margin-top:14px;">
+      পোস্ট, অডিও বা ভিডিও নির্বাচন করলে AI অটো-বিশ্লেষণ ও কণ্ঠ সারসংক্ষেপ এখানে দেখাবে।
     </div>
 
     <input id="imageInput" type="file" accept="image/*" hidden>
@@ -1661,19 +1855,23 @@ footer {
     </div>
   </section>
 
-  <!-- LIVE CAMERA -->
+  <!-- LIVE CAMERA + LIVE AI -->
   <section class="panel media-box" id="liveSection">
-    <h2>🔴 AYNA LIVE VIDEO</h2>
+    <h2>🔴🤖 AYNA LIVE VIDEO + LIVE AI</h2>
 
     <video id="liveVideo" autoplay muted playsinline></video>
 
     <div class="media-buttons">
       <button type="button" id="startCamera">📹 ক্যামেরা চালু</button>
       <button type="button" id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
+      <button type="button" id="runLiveAiBtn">🤖 লাইভ ভিডিও AI পর্যবেক্ষণ ও কণ্ঠ</button>
     </div>
 
     <div class="status" id="cameraStatus">
       ক্যামেরা এখন বন্ধ।
+    </div>
+    <div class="ai-box-output" id="liveAiOutput">
+      লাইভ ভিডিও AI প্রস্তুত — ক্যামেরা চালু করে লাইভ স্ট্যাটাস ও কণ্ঠ ব্রিফিং নিন।
     </div>
 
     <p class="status">
@@ -1682,7 +1880,7 @@ footer {
     </p>
   </section>
 
-  <!-- FEED -->
+  <!-- FEED FILTERS BOX -->
   <h2 class="section-title">🌐 AYNA BOOK NEWS FEED</h2>
 
   <div class="feed-filters" role="group" aria-label="Feed filter">
@@ -1698,8 +1896,8 @@ footer {
     <div class="empty">পোস্ট লোড হচ্ছে...</div>
   </section>
 
-  <!-- ফাইল ও ফোল্ডার তালিকা -->
-  <section class="panel" id="fileRegistrySection">
+  <!-- ফাইল ও ফোল্ডার তালিকা বক্স -->
+  <section class="file-registry-box" id="fileRegistrySection">
     <h2>📁 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">192</span>টি)</h2>
     <input
       type="search"
@@ -1946,6 +2144,128 @@ const AYNA_REGISTRY_ITEMS = [
 $("qFileCount").textContent = String(AYNA_REGISTRY_ITEMS.length);
 $("registryTotalLabel").textContent = String(AYNA_REGISTRY_ITEMS.length);
 
+function renderAynaBarcode(codeText = "2026-----10000001") {
+  if (typeof JsBarcode === "function" && $("aynaProfileBarcode")) {
+    try {
+      JsBarcode("#aynaProfileBarcode", codeText, {
+        format: "CODE128",
+        lineColor: "#000000",
+        width: 1.5,
+        height: 34,
+        displayValue: false,
+        margin: 0
+      });
+    } catch (_) {}
+  }
+}
+renderAynaBarcode("2026-----10000001");
+
+function notify(message) {
+  const box = $("notice");
+  box.textContent = message;
+  box.style.display = "block";
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => {
+    box.style.display = "none";
+  }, 3400);
+}
+
+// ভয়েস সিগন্যাল ও ভুল বলার ইঞ্জিন (অ্যাকাউন্ট রেজিস্ট্রেশন ও লুকাপে ভুল করলে কণ্ঠে বলবে)
+const AynaVoiceSignal = {
+  playErrorBeep() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(320, ctx.currentTime);
+      osc.frequency.setValueAtTime(210, ctx.currentTime + 0.14);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.34);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } catch (_) {}
+  },
+
+  speak(text, force = true) {
+    if (!force || !text || !("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(String(text).replace(/[*#]/g, "").slice(0, 280));
+      const voices = window.speechSynthesis.getVoices() || [];
+      const bnVoice = voices.find(v => /bn/i.test(v.lang));
+      utter.voice = bnVoice || voices[0] || null;
+      utter.lang = bnVoice?.lang || "bn-BD";
+      utter.rate = 0.96;
+      window.speechSynthesis.speak(utter);
+    } catch (_) {}
+  },
+
+  announceMistake(mistakeBn, targetElId = "accountSignalOutput") {
+    this.playErrorBeep();
+    notify("⚠️ ভুল সিগন্যাল: " + mistakeBn);
+    if (targetElId && $(targetElId)) {
+      $(targetElId).textContent = `⚠️ ভুল সিগন্যাল সক্রিয়:\n${mistakeBn}`;
+    }
+    this.speak(`ভুল হয়েছে। ${mistakeBn}`, true);
+  }
+};
+
+// রেজিস্ট্রেশন ও অ্যাকাউন্ট লুকআপ ভ্যালিডেশন + কণ্ঠ সিগন্যাল
+$("validateRegisterVoiceBtn")?.addEventListener("click", () => {
+  const name = ($("regFullNameInput")?.value || "").trim();
+  const email = ($("regEmailInput")?.value || "").trim();
+  const pass = $("regPasswordInput")?.value || "";
+
+  if (!name || name.length < 2) {
+    AynaVoiceSignal.announceMistake("পূর্ণ নাম ঘরে সঠিক নাম লিখুন। নাম খালি বা খুব ছোট রয়েছে।");
+    return;
+  }
+  if (!email || !email.includes("@") || !email.includes(".")) {
+    AynaVoiceSignal.announceMistake("ইমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক ইমেইল লিখুন।");
+    return;
+  }
+  if (pass.length < 6) {
+    AynaVoiceSignal.announceMistake("পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
+    return;
+  }
+
+  const okMsg = `✅ রেজিস্ট্রেশন তথ্য সঠিক আছে। নাম: ${name}, ইমেইল: ${email}।`;
+  $("accountSignalOutput").textContent = okMsg;
+  notify("রেজিস্ট্রেশন তথ্য সঠিক আছে");
+  AynaVoiceSignal.speak("রেজিস্ট্রেশন তথ্য সঠিক আছে। আপনি এগিয়ে যেতে পারেন।", true);
+});
+
+$("runAccountLookupVoiceBtn")?.addEventListener("click", () => {
+  const q = ($("accountLookupQueryInput")?.value || "").trim();
+  const knownId = $("myAynaId")?.textContent?.trim() || "2026-----10000001";
+  const knownEmail = ($("myEmail")?.textContent || "").trim();
+
+  if (!q) {
+    AynaVoiceSignal.announceMistake("অ্যাকাউন্ট লুকআপ ঘরটি খালি আছে। AYNA ID অথবা ইমেইল লিখুন।");
+    return;
+  }
+
+  const matched =
+    q === knownId ||
+    q === "2026-----10000001" ||
+    (knownEmail && q.toLowerCase() === knownEmail.toLowerCase());
+
+  if (!matched) {
+    AynaVoiceSignal.announceMistake(`অ্যাকাউন্ট লুকাপে "${q}" খুঁজে পাওয়া যায়নি। AYNA ID বা ইমেইল বানান যাচাই করুন।`);
+    return;
+  }
+
+  const foundMsg = `✅ অ্যাকাউন্ট লুকআপ সফল: AYNA ID ${knownId} পাওয়া গেছে।`;
+  $("accountSignalOutput").textContent = foundMsg;
+  notify("অ্যাকাউন্ট পাওয়া গেছে");
+  AynaVoiceSignal.speak(`অ্যাকাউন্ট পাওয়া গেছে। আইডি নম্বর ${knownId}।`, true);
+});
+
 // Ultra-Critical High-Speed Judgment & AI Client
 const UltraCriticalHub = {
   profileIndex: 0,
@@ -1970,17 +2290,22 @@ const UltraCriticalHub = {
     }
   },
 
-  speakBn(text, force = true) {
-    if (!force || !text || !("speechSynthesis" in window)) return;
-    try {
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(String(text).replace(/[*#]/g, "").slice(0, 260));
-      const voices = window.speechSynthesis.getVoices() || [];
-      const bnVoice = voices.find(v => /bn/i.test(v.lang));
-      utter.voice = bnVoice || voices[0] || null;
-      utter.lang = bnVoice?.lang || "bn-BD";
-      window.speechSynthesis.speak(utter);
-    } catch (_) {}
+  cleanTextAi(raw = "") {
+    let t = String(raw).trim().replace(/\s+/g, " ");
+    const fixes = {
+      "ফায়াব্যাস": "ফায়ারবেস",
+      "পোষ্ট": "পোস্ট",
+      "কফি": "কপি",
+      "কালাম": "কলাম",
+      "আপর": "অপর",
+      "এনাউন্স": "অ্যানাউন্স"
+    };
+    Object.keys(fixes).forEach(k => {
+      t = t.replaceAll(k, fixes[k]);
+    });
+    t = t.replace(/(^|[.!?]\s+)([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase());
+    t = t.replace(/\bi\b/g, "I");
+    return t;
   },
 
   judgeCriticality(countMetric = 150) {
@@ -2013,15 +2338,83 @@ const UltraCriticalHub = {
   }
 };
 
-function notify(message) {
-  const box = $("notice");
-  box.textContent = message;
-  box.style.display = "block";
-  clearTimeout(notify.timer);
-  notify.timer = setTimeout(() => {
-    box.style.display = "none";
-  }, 3200);
+$("aiPolishPostBtn")?.addEventListener("click", () => {
+  const polished = UltraCriticalHub.cleanTextAi($("postText").value);
+  $("postText").value = polished;
+  notify("AI লেখা ও ক্যাপিটাল সংশোধন সম্পন্ন হয়েছে");
+});
+
+// পোস্ট, অডিও ও ভিডিও AI
+let lastPostMediaAiText = "";
+$("aiAnalyzePostBtn")?.addEventListener("click", async () => {
+  const txt = UltraCriticalHub.cleanTextAi($("postText")?.value || "");
+  const mediaInfo = selectedFile
+    ? `সংযুক্ত ${selectedType}: ${selectedFile.name} (${formatSize(selectedFile.size)})`
+    : "কোনো মিডিয়া ফাইল সংযুক্ত নেই";
+
+  if (!txt && !selectedFile) {
+    AynaVoiceSignal.announceMistake("পোস্ট বা মিডিয়া বক্স খালি আছে। লেখা বা অডিও/ভিডিও/ছবি দিন।", "postMediaAiOutput");
+    return;
+  }
+
+  const fallbackBn =
+    `${mediaInfo}। পোস্ট সারসংক্ষেপ: ${txt ? txt.slice(0, 140) : "মিডিয়া পোস্ট প্রস্তুত"}। প্রকাশিত হলে কোয়ান্টাম ফিডে তাৎক্ষণিক সিঙ্ক হবে।`;
+  const reply = await UltraCriticalHub.askAi({
+    module: "post_media_ai",
+    action: "post_audio_video_ai",
+    text: `Text: ${txt || "None"}, Media: ${mediaInfo}`,
+    context: "Summarize the post and attached audio/video/image in 2 concise Bengali sentences without markdown or emojis.",
+    fallbackBn
+  });
+
+  lastPostMediaAiText = reply;
+  $("postMediaAiOutput").textContent = `🤖 পোস্ট ও মিডিয়া AI:\n${reply}`;
+  AynaVoiceSignal.speak(reply, true);
+});
+
+// লাইভ ভিডিও AI
+let lastLiveAiText = "";
+$("runLiveAiBtn")?.addEventListener("click", async () => {
+  const isLive = !!cameraStream;
+  const statusText = isLive
+    ? "ক্যামেরা লাইভ মোডে সক্রিয় রয়েছে এবং লোকাল প্রিভিউ স্ট্রিম চলছে।"
+    : "ক্যামেরা বর্তমানে বন্ধ আছে। লাইভ স্ট্রিম দেখতে ক্যামেরা চালু করুন।";
+  const reply = await UltraCriticalHub.askAi({
+    module: "live_video_ai",
+    action: "live_stream_ai_check",
+    text: statusText,
+    context: "Give a short 2-sentence Bengali live video AI status without markdown or emojis.",
+    fallbackBn: statusText
+  });
+  lastLiveAiText = reply;
+  $("liveAiOutput").textContent = `🤖 লাইভ ভিডিও AI:\n${reply}`;
+  AynaVoiceSignal.speak(reply, true);
+});
+
+// বিশ্ব রেডিও ও টেলিভিশন AI
+let lastRadioTvAiText = "";
+async function runRadioTvAi(speakNow = false) {
+  const ch = $("radioTvChannelSelect")?.value || "Bangladesh Betar / World Radio";
+  const prompt = ($("radioTvPromptInput")?.value || "চ্যানেল আপডেট ও সংবাদ বিশ্লেষণ").trim();
+  const fallbackBn =
+    `[${ch}] বিষয়: ${prompt}। বিশ্ব রেডিও ও টেলিভিশন AI চ্যানেল সিগন্যাল, সংবাদ সারসংক্ষেপ ও ভয়েস ব্রিফিং সক্রিয় রেখেছে।`;
+
+  const reply = await UltraCriticalHub.askAi({
+    module: "radio_tv_ai",
+    action: "radio_tv_assistant",
+    text: `Channel: ${ch}, Query: ${prompt}`,
+    context: "Provide a concise 2-sentence Bengali radio and television AI briefing without markdown or emojis.",
+    fallbackBn
+  });
+
+  lastRadioTvAiText = `${ch}:\n${reply}`;
+  $("radioTvAiOutput").textContent = lastRadioTvAiText;
+  UltraCriticalHub.saveSnapshot("radio_tv_ai", { text: lastRadioTvAiText });
+  if (speakNow) AynaVoiceSignal.speak(reply, true);
 }
+
+$("runRadioTvAiBtn")?.addEventListener("click", () => runRadioTvAi(false));
+$("speakRadioTvAiBtn")?.addEventListener("click", () => runRadioTvAi(true));
 
 function renderFileRegistry(query = "") {
   const grid = $("fileListGrid");
@@ -2057,7 +2450,7 @@ $("fileSearchInput").addEventListener("input", e => {
 });
 renderFileRegistry();
 
-// আগের চ্যাটের মডিউল: তাপমাত্রা ও আবহাওয়া
+// তাপমাত্রা ও আবহাওয়া
 const CITY_COORDS = {
   dhaka: { name: "Dhaka", lat: 23.8103, lon: 90.4125 },
   london: { name: "London", lat: 51.5072, lon: -0.1276 },
@@ -2065,6 +2458,8 @@ const CITY_COORDS = {
   makkah: { name: "Makkah", lat: 21.3891, lon: 39.8579 },
   newyork: { name: "New York", lat: 40.7128, lon: -74.006 }
 };
+
+let latestTempText = "২৮°C";
 
 async function updateWeatherModule() {
   const rawCity = ($("weatherCityInput")?.value || "Dhaka").trim();
@@ -2082,8 +2477,12 @@ async function updateWeatherModule() {
     const temp = typeof cur.temperature_2m === "number" ? `${cur.temperature_2m}°C` : "28°C";
     const hum = typeof cur.relative_humidity_2m === "number" ? `${cur.relative_humidity_2m}%` : "65%";
     const wind = typeof cur.wind_speed_10m === "number" ? `${cur.wind_speed_10m} km/h` : "12 km/h";
+    latestTempText = temp;
     const text = `${coord.name}: তাপমাত্রা ${temp} • আর্দ্রতা ${hum} • বাতাস ${wind}`;
     $("weatherOutput").textContent = text;
+    if ($("weatherRadarReadout")) {
+      $("weatherRadarReadout").textContent = `Weather AI Radar: ${coord.name} ${temp}, আর্দ্রতা ${hum}, বাতাস ${wind}`;
+    }
     UltraCriticalHub.saveSnapshot(`weather_${coord.name}`, { text });
     notify(`${coord.name} তাপমাত্রা: ${temp}`);
   } catch (_) {
@@ -2093,7 +2492,7 @@ async function updateWeatherModule() {
 }
 $("fetchWeatherBtn")?.addEventListener("click", updateWeatherModule);
 
-// আগের চ্যাটের মডিউল: ভয়েস রেকর্ডার
+// ভয়েস রেকর্ডার
 let voiceRecorder = null;
 let voiceChunks = [];
 $("startVoiceRecBtn")?.addEventListener("click", async () => {
@@ -2131,7 +2530,7 @@ $("stopVoiceRecBtn")?.addEventListener("click", () => {
   }
 });
 
-// আগের চ্যাটের মডিউল: বুকমার্ক ম্যানেজার
+// বুকমার্ক ম্যানেজার
 function renderBookmarks() {
   const list = UltraCriticalHub.loadSnapshot("bookmarks", []);
   const container = $("bookmarksList");
@@ -2174,7 +2573,7 @@ $("saveBookmarkBtn")?.addEventListener("click", () => {
   notify("বুকমার্ক সংরক্ষিত হয়েছে");
 });
 
-// আগের চ্যাটের মডিউল: QR কোড কার্ড জেনারেটর
+// QR কোড কার্ড জেনারেটর
 function drawAynaQrCode(text = window.location.href || "https://aynabook.app") {
   const canvas = $("aynaQrCanvas");
   if (!canvas) return;
@@ -2278,7 +2677,7 @@ const Alert150Module = {
       lastOutput: outputText
     });
     notify(`১৫০ এলার্ট #${this.totalFired} সক্রিয় (${judgment.severity})`);
-    if (speak) UltraCriticalHub.speakBn(aiReply, true);
+    if (speak) AynaVoiceSignal.speak(aiReply, true);
   }
 };
 
@@ -2323,7 +2722,7 @@ const AutoEvModule = {
     this.latestText = `আপডেট (${stamp}) • ${topic}:\n${reply}`;
     $("autoEvOutput").textContent = this.latestText;
     UltraCriticalHub.saveSnapshot("auto_ev", { text: this.latestText });
-    if (speak) UltraCriticalHub.speakBn(reply, true);
+    if (speak) AynaVoiceSignal.speak(reply, true);
   }
 };
 
@@ -2335,7 +2734,7 @@ $("toggleAutoEvBtn").addEventListener("click", () => {
 });
 $("refreshAutoEvBtn").addEventListener("click", () => AutoEvModule.update(true));
 $("speakAutoEvBtn").addEventListener("click", () => {
-  UltraCriticalHub.speakBn(AutoEvModule.latestText || $("autoEvOutput").textContent, true);
+  AynaVoiceSignal.speak(AutoEvModule.latestText || $("autoEvOutput").textContent, true);
 });
 
 // ৩. মোবাইল ও কম্পিউটার AI প্রযুক্তি
@@ -2447,7 +2846,7 @@ $("sendTradeToPostBtn")?.addEventListener("click", () => {
   notify("যোগাযোগ বার্তা পোস্ট বক্সে নেওয়া হয়েছে");
 });
 
-// ৫. রাডার ও কম্পাস AI প্রযুক্তি
+// ৫. বড় বেসামরিক রাডার, আবহাওয়া রাডার ও AI কম্পাস
 const RadarCompassModule = {
   azimuth: 45,
   rangeKm: 15,
@@ -2464,15 +2863,15 @@ const RadarCompassModule = {
     return "উত্তর-পশ্চিম (NW)";
   },
 
-  draw() {
-    const canvas = $("radarCompassCanvas");
+  drawCircularRadar(canvasId, sweepDeg, ringColor, dotColor, targets) {
+    const canvas = $(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     const w = canvas.width;
     const h = canvas.height;
     const cx = w / 2;
     const cy = h / 2;
-    const r = Math.min(cx, cy) - 10;
+    const r = Math.min(cx, cy) - 14;
 
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = "#050b1c";
@@ -2481,34 +2880,80 @@ const RadarCompassModule = {
     ctx.fill();
 
     ctx.strokeStyle = "#ffe64d";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
     ctx.stroke();
 
-    ctx.strokeStyle = "rgba(56, 242, 255, 0.45)";
-    ctx.lineWidth = 1.5;
-    [0.35, 0.7].forEach(ratio => {
+    ctx.strokeStyle = ringColor;
+    ctx.lineWidth = 2;
+    [0.25, 0.5, 0.75].forEach(ratio => {
       ctx.beginPath();
       ctx.arc(cx, cy, r * ratio, 0, Math.PI * 2);
       ctx.stroke();
     });
 
-    const rad = ((this.azimuth - 90) * Math.PI) / 180;
-    ctx.strokeStyle = "#fff6b3";
-    ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + Math.cos(rad) * r * 0.88, cy + Math.sin(rad) * r * 0.88);
+    ctx.moveTo(cx - r, cy);
+    ctx.lineTo(cx + r, cy);
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx, cy + r);
     ctx.stroke();
 
-    const sampleBearings = [28, 115, 220];
-    sampleBearings.forEach((b, idx) => {
-      const trad = ((b - 90) * Math.PI) / 180;
-      const distRatio = 0.28 + idx * 0.22;
-      ctx.fillStyle = "#38f2ff";
+    const rad = ((sweepDeg - 90) * Math.PI) / 180;
+    ctx.strokeStyle = "#fff6b3";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(rad) * r * 0.94, cy + Math.sin(rad) * r * 0.94);
+    ctx.stroke();
+
+    targets.forEach(t => {
+      const trad = ((t.deg - 90) * Math.PI) / 180;
+      const dist = r * t.distRatio;
+      ctx.fillStyle = dotColor;
       ctx.beginPath();
-      ctx.arc(cx + Math.cos(trad) * r * distRatio, cy + Math.sin(trad) * r * distRatio, 6, 0, Math.PI * 2);
+      ctx.arc(cx + Math.cos(trad) * dist, cy + Math.sin(trad) * dist, 9, 0, Math.PI * 2);
       ctx.fill();
     });
+  },
+
+  draw() {
+    this.drawCircularRadar(
+      "civilRadarCanvas",
+      this.azimuth,
+      "rgba(56, 242, 255, 0.55)",
+      "#38f2ff",
+      [
+        { deg: 32, distRatio: 0.42 },
+        { deg: 145, distRatio: 0.68 },
+        { deg: 265, distRatio: 0.34 }
+      ]
+    );
+    this.drawCircularRadar(
+      "weatherRadarCanvas",
+      (this.azimuth + 90) % 360,
+      "rgba(255, 230, 77, 0.45)",
+      "#ffe64d",
+      [
+        { deg: 60, distRatio: 0.52 },
+        { deg: 195, distRatio: 0.72 },
+        { deg: 310, distRatio: 0.38 }
+      ]
+    );
+    this.drawCircularRadar(
+      "radarCompassCanvas",
+      this.azimuth,
+      "rgba(22, 199, 132, 0.55)",
+      "#16c784",
+      [{ deg: this.azimuth, distRatio: 0.82 }]
+    );
+
+    const card = this.degToCardinalBn(this.azimuth);
+    if ($("civilRadarReadout")) {
+      $("civilRadarReadout").textContent = `Civil AI Radar: রেঞ্জ ${this.rangeKm} কিমি • ৩টি বেসামরিক সিগন্যাল সক্রিয়`;
+    }
+    if ($("aiCompassReadout")) {
+      $("aiCompassReadout").textContent = `AI Compass: ${Math.round(this.azimuth)}° ${card}`;
+    }
   },
 
   async runAiBriefing(speak = true) {
@@ -2517,17 +2962,17 @@ const RadarCompassModule = {
     this.draw();
     const card = this.degToCardinalBn(this.azimuth);
     const fallbackBn =
-      `কম্পাস দিক ${Math.round(this.azimuth)}° (${card}), রাডার রেঞ্জ ${this.rangeKm} কিমি। ৩টি রাডার সিগন্যাল পয়েন্ট রেঞ্জের ভেতরে পর্যবেক্ষণে আছে।`;
+      `AI কম্পাস দিক ${Math.round(this.azimuth)}° (${card}), বেসামরিক ও আবহাওয়া রাডার রেঞ্জ ${this.rangeKm} কিমি। সেন্সর নেটওয়ার্ক সক্রিয় ও স্থিতিশীল রয়েছে।`;
     const reply = await UltraCriticalHub.askAi({
       module: "radar_compass",
       action: "radar_compass_briefing",
-      text: `Azimuth: ${Math.round(this.azimuth)} deg (${card}), Range: ${this.rangeKm} km.`,
-      context: "Provide a concise 2-sentence Bengali compass and radar summary without markdown or emojis.",
+      text: `Azimuth: ${Math.round(this.azimuth)} deg (${card}), Range: ${this.rangeKm} km, Civil & Weather Radar active.`,
+      context: "Provide a concise 2-sentence Bengali civil radar, weather radar, and AI compass summary without markdown or emojis.",
       fallbackBn
     });
     $("radarCompassOutput").textContent = `${Math.round(this.azimuth)}° ${card} • ${this.rangeKm} কিমি:\n${reply}`;
     UltraCriticalHub.saveSnapshot("radar_compass", { azimuth: this.azimuth, rangeKm: this.rangeKm, text: $("radarCompassOutput").textContent });
-    if (speak) UltraCriticalHub.speakBn(reply, true);
+    if (speak) AynaVoiceSignal.speak(reply, true);
   }
 };
 
@@ -2544,7 +2989,7 @@ $("startDeviceCompassBtn")?.addEventListener("click", () => {
             RadarCompassModule.runAiBriefing(false);
           }
         }, true);
-        notify("লাইভ কম্পাস চালু হয়েছে");
+        notify("লাইভ AI কম্পাস চালু হয়েছে");
       }
     }).catch(() => notify("কম্পাস অনুমতি পাওয়া যায়নি"));
   } else {
@@ -2554,7 +2999,7 @@ $("startDeviceCompassBtn")?.addEventListener("click", () => {
         RadarCompassModule.runAiBriefing(false);
       }
     }, true);
-    notify("ডিভাইস কম্পাস লিসেনার সক্রিয় হয়েছে");
+    notify("ডিভাইস AI কম্পাস লিসেনার সক্রিয় হয়েছে");
   }
 });
 
@@ -2615,7 +3060,7 @@ $("analyzeWorldStatsAiBtn")?.addEventListener("click", async () => {
 
   $("worldStatsAiOutput").textContent = `${c.name} (${c.code}):\n${reply}`;
   UltraCriticalHub.saveSnapshot("world_stats", { text: $("worldStatsAiOutput").textContent });
-  UltraCriticalHub.speakBn(reply, true);
+  AynaVoiceSignal.speak(reply, true);
 });
 
 // ৭. নোবেলজয়ী ও বিশ্ববিখ্যাত মনীষীদের নাম ও পুরস্কার পাওয়ার বিষয় অটো-আপডেট
@@ -2673,7 +3118,7 @@ const NobelModule = {
     const out = `${item.name} (${item.year}) • ${item.award}:\n${reply}`;
     $("nobelAiOutput").textContent = out;
     UltraCriticalHub.saveSnapshot("nobel_laureates", { text: out });
-    if (speak) UltraCriticalHub.speakBn(`${item.name}। ${item.award}। ${reply}`, true);
+    if (speak) AynaVoiceSignal.speak(`${item.name}। ${item.award}। ${reply}`, true);
   },
 
   init() {
@@ -2943,7 +3388,7 @@ function quantumSignature(seed = "") {
   return `⚛ Q-COHERENCE ${score.toFixed(1)}%`;
 }
 
-// সময় বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা (১ ঘণ্টা পর পর অটো ঘোষণা)
+// সময় বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা (১ ঘণ্টা পর পর + এখনই সময় বলুন + চালু/বন্ধ বাটন)
 const QuantumTalkingClock = {
   enabled: true,
   sehriTime: { hour: 4, minute: 58 },
@@ -2964,15 +3409,14 @@ const QuantumTalkingClock = {
     });
   },
 
-  pickVoice() {
-    if (!("speechSynthesis" in window)) return null;
-    const voices = window.speechSynthesis.getVoices() || [];
-    return (
-      voices.find(v => /bn/i.test(v.lang)) ||
-      voices.find(v => /en/i.test(v.lang)) ||
-      voices[0] ||
-      null
-    );
+  getColdAndTempNote(hour) {
+    if (hour >= 22 || hour <= 5) {
+      return `তাপমাত্রা ${latestTempText}, রাত ও ভোরের ঠান্ডা বাতাস অনুভূত হচ্ছে।`;
+    }
+    if (hour >= 6 && hour <= 9) {
+      return `তাপমাত্রা ${latestTempText}, সকালের হালকা ঠান্ডা ভাব রয়েছে।`;
+    }
+    return `তাপমাত্রা ${latestTempText}।`;
   },
 
   speak(text, force = false) {
@@ -2980,18 +3424,46 @@ const QuantumTalkingClock = {
     try {
       window.speechSynthesis.cancel();
       const utter = new SpeechSynthesisUtterance(text);
-      const v = this.pickVoice();
+      const voices = window.speechSynthesis.getVoices() || [];
+      const v =
+        voices.find(item => /bn/i.test(item.lang)) ||
+        voices.find(item => /en/i.test(item.lang)) ||
+        voices[0] ||
+        null;
       if (v) {
         utter.voice = v;
         utter.lang = v.lang;
       } else {
         utter.lang = "bn-BD";
       }
-      utter.rate = 0.95;
+      utter.rate = 0.96;
       window.speechSynthesis.speak(utter);
     } catch (err) {
       console.error("TTS error:", err);
     }
+  },
+
+  setClockEnabled(nextState, announce = true) {
+    this.enabled = !!nextState;
+    this.updateDisplay();
+    if (this.enabled) {
+      notify("সময় বলার ঘড়ি চালু (খোলা) হয়েছে");
+      if (announce) {
+        const now = new Date();
+        this.speak(`সময় বলার ঘড়ি চালু হয়েছে। এখন সময় ${this.formatBanglaTime(now)}। ${this.getColdAndTempNote(now.getHours())}`, true);
+      }
+    } else {
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      notify("সময় বলার ঘড়ি বন্ধ করা হয়েছে");
+    }
+  },
+
+  speakNow() {
+    const now = new Date();
+    const nowText = this.formatBanglaTime(now);
+    const msg = `এখন সময় ${nowText}। ${this.getColdAndTempNote(now.getHours())}`;
+    this.speak(msg, true);
+    notify(`এখন সময় ${nowText}`);
   },
 
   updateDisplay() {
@@ -3017,8 +3489,13 @@ const QuantumTalkingClock = {
     const btn = $("toggleTalkClockBtn");
     if (btn) {
       btn.textContent = this.enabled
-        ? "🔊 ১ ঘণ্টা পর পর অটো সময়: চালু"
-        : "🔇 ১ ঘণ্টা পর পর অটো সময়: বন্ধ";
+        ? "🔊 সময় বলা: চালু (খোলা)"
+        : "🔇 সময় বলা: বন্ধ";
+    }
+    if ($("headerToggleClockBtn")) {
+      $("headerToggleClockBtn").textContent = this.enabled
+        ? "🔊 ঘড়ি: চালু"
+        : "🔇 ঘড়ি: বন্ধ";
     }
   },
 
@@ -3032,11 +3509,12 @@ const QuantumTalkingClock = {
     const nowMin = this.toMinutes(h, m);
     const sehriMin = this.toMinutes(this.sehriTime.hour, this.sehriTime.minute);
     const iftarMin = this.toMinutes(this.iftarTime.hour, this.iftarTime.minute);
+    const tempColdMsg = this.getColdAndTempNote(h);
 
     const sehriAlertMin = sehriMin - 90;
     if (nowMin === sehriAlertMin && !this.sehriPreAlertSpoken) {
       this.sehriPreAlertSpoken = true;
-      this.speak(`সতর্কতা: সেহরির আর দেড় ঘণ্টা বাকি। এখন সময় ${this.formatBanglaTime(now)}।`);
+      this.speak(`সতর্কতা: সেহরির আর দেড় ঘণ্টা বাকি। এখন সময় ${this.formatBanglaTime(now)}। ${tempColdMsg}`);
     }
     if (nowMin !== sehriAlertMin) {
       this.sehriPreAlertSpoken = false;
@@ -3051,8 +3529,8 @@ const QuantumTalkingClock = {
         const leftMin = iftarMin - nowMin;
         this.speak(
           leftMin === 0
-            ? `এখন ইফতারের সময়, ${this.formatBanglaTime(now)}।`
-            : `ইফতারের আর ${leftMin} মিনিট বাকি। এখন সময় ${this.formatBanglaTime(now)}।`
+            ? `এখন ইফতারের সময়, ${this.formatBanglaTime(now)}। ${tempColdMsg}`
+            : `ইফতারের আর ${leftMin} মিনিট বাকি। এখন সময় ${this.formatBanglaTime(now)}। ${tempColdMsg}`
         );
       }
       return;
@@ -3061,7 +3539,7 @@ const QuantumTalkingClock = {
     const hourKey = `${now.toDateString()}-${h}`;
     if (m === 0 && this.lastHourlySpoken !== hourKey) {
       this.lastHourlySpoken = hourKey;
-      this.speak(`এখন সময় ${this.formatBanglaTime(now)}।`);
+      this.speak(`এখন সময় ${this.formatBanglaTime(now)}। ${tempColdMsg}`);
     }
   },
 
@@ -3075,23 +3553,23 @@ const QuantumTalkingClock = {
   }
 };
 
-$("toggleTalkClockBtn").addEventListener("click", () => {
-  QuantumTalkingClock.enabled = !QuantumTalkingClock.enabled;
-  QuantumTalkingClock.updateDisplay();
-  if (QuantumTalkingClock.enabled) {
-    const nowText = QuantumTalkingClock.formatBanglaTime(new Date());
-    QuantumTalkingClock.speak(`১ ঘণ্টা পর পর অটো সময় বলা চালু হয়েছে। এখন সময় ${nowText}।`, true);
-    notify("১ ঘণ্টা পর পর অটো সময় বলা চালু হয়েছে");
-  } else {
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-    notify("সময় বলার ঘড়ি বন্ধ করা হয়েছে");
-  }
+$("toggleTalkClockBtn")?.addEventListener("click", () => {
+  QuantumTalkingClock.setClockEnabled(!QuantumTalkingClock.enabled, true);
 });
-
-$("speakNowClockBtn").addEventListener("click", () => {
-  const nowText = QuantumTalkingClock.formatBanglaTime(new Date());
-  QuantumTalkingClock.speak(`এখন সময় ${nowText}।`, true);
-  notify(`এখন সময় ${nowText}`);
+$("openTalkClockBtn")?.addEventListener("click", () => {
+  QuantumTalkingClock.setClockEnabled(true, true);
+});
+$("closeTalkClockBtn")?.addEventListener("click", () => {
+  QuantumTalkingClock.setClockEnabled(false, false);
+});
+$("speakNowClockBtn")?.addEventListener("click", () => {
+  QuantumTalkingClock.speakNow();
+});
+$("headerSpeakClockBtn")?.addEventListener("click", () => {
+  QuantumTalkingClock.speakNow();
+});
+$("headerToggleClockBtn")?.addEventListener("click", () => {
+  QuantumTalkingClock.setClockEnabled(!QuantumTalkingClock.enabled, true);
 });
 
 // আজীবন অটো আপডেট ইঞ্জিন
@@ -3186,6 +3664,7 @@ window.AynaBook = {
   version: "2026.ultracritical.quantum.allfeatures.legacy",
   fileRegistry: AYNA_REGISTRY_ITEMS,
   talkingClock: QuantumTalkingClock,
+  voiceSignal: AynaVoiceSignal,
   autoUpdater: QuantumAutoUpdater,
   notify,
   safePhoto,
@@ -3249,10 +3728,10 @@ async function initApp() {
       $("myName").textContent = "লগইন করুন";
       $("myEmail").textContent = "পোস্ট করতে লগইন প্রয়োজন";
       $("publishPost").disabled = true;
-      notify("পোস্ট করতে আগে লগইন করুন");
+      AynaVoiceSignal.announceMistake("অ্যাকাউন্ট লগইন করা নেই। লগইন পেজে পাঠানো হচ্ছে।");
       setTimeout(() => {
         window.location.href = "login.html";
-      }, 1500);
+      }, 1800);
       return;
     }
 
@@ -3266,13 +3745,16 @@ async function initApp() {
         userProfile.fullName || user.displayName || "AYNA User";
       $("myEmail").textContent =
         user.email || "AYNA BOOK Member";
+      const aid = userProfile.aynaId || "2026-----10000001";
+      $("myAynaId").textContent = aid;
+      renderAynaBarcode(aid);
       $("myPhoto").src = safePhoto(userProfile.photoURL);
       $("publishPost").disabled = false;
 
       startFeed(ref, onValue);
     } catch (error) {
       console.error(error);
-      notify("প্রোফাইল লোড করা যায়নি");
+      AynaVoiceSignal.announceMistake("অ্যাকাউন্ট প্রোফাইল লুকাপে ভুল হয়েছে বা সার্ভার সংযোগ পাওয়া যায়নি।");
     }
   });
 
@@ -3330,6 +3812,10 @@ function handleSelectedFile(event, type) {
   selectedFile = file;
   selectedType = type;
   showPreview(file, type);
+  if ($("postMediaAiOutput")) {
+    $("postMediaAiOutput").textContent =
+      `🤖 মিডিয়া AI প্রস্তুত: ${file.name} (${formatSize(file.size)}) সংযুক্ত হয়েছে। "AI পোস্ট বিশ্লেষণ ও কণ্ঠ" বাটনে ক্লিক করুন।`;
+  }
 }
 
 function showPreview(file, type) {
@@ -3464,13 +3950,13 @@ async function uploadMediaData(file, uid) {
 
 async function publishPost(ref, push, set) {
   if (!currentUser) {
-    notify("আগে লগইন করুন");
+    AynaVoiceSignal.announceMistake("পোস্ট প্রকাশ করতে আগে অ্যাকাউন্টে লগইন করুন।");
     return;
   }
 
-  const text = $("postText").value.trim();
+  const text = UltraCriticalHub.cleanTextAi($("postText").value);
   if (!text && !selectedFile) {
-    notify("লেখা অথবা মিডিয়া/ফাইল যোগ করুন");
+    AynaVoiceSignal.announceMistake("পোস্টের ঘরে লেখা অথবা অডিও, ভিডিও, ছবি বা ফাইল যুক্ত করুন।");
     return;
   }
 
@@ -3718,7 +4204,7 @@ async function addComment(postId, input) {
     return;
   }
 
-  const text = input.value.trim();
+  const text = UltraCriticalHub.cleanTextAi(input.value);
   if (!text) return;
 
   const { ref, push, set } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
@@ -3797,7 +4283,7 @@ async function startCamera() {
   } catch (error) {
     console.error(error);
     $("cameraStatus").textContent = "ক্যামেরা চালু হয়নি। Permission পরীক্ষা করুন।";
-    notify("Camera Permission দিন");
+    AynaVoiceSignal.announceMistake("ক্যামেরা চালু করা যায়নি। ব্রাউজারে ক্যামেরা অনুমতি দিন।", "liveAiOutput");
   }
 }
 
