@@ -1,0 +1,128 @@
+package com.aynabook.app.utility
+
+import android.content.Context
+import android.os.Build
+import com.aynabook.app.data.askAynaModuleAI
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.File
+
+enum class MobileAiMode {
+    HYBRID_FAST,
+    CLOUD_DEEP,
+    LOCAL_OFFLINE
+}
+
+data class AynaMobileAiResponse(
+    val sourceEngine: String,
+    val deviceSpec: String,
+    val outputBn: String,
+    val fromColdCache: Boolean = false
+)
+
+class AynaMobileAiEngine(context: Context) {
+    private val cacheFile = File(context.filesDir, "ayna_mobile_ai_cold.json")
+
+    private fun currentDeviceLabel(): String {
+        val model = Build.MODEL ?: "Android"
+        val sdk = Build.VERSION.SDK_INT
+        return "$model (API $sdk)"
+    }
+
+    private fun buildLocalQuickSummaryBn(inputText: String): String {
+        val cleaned = inputText.trim().replace(Regex("\\s+"), " ")
+        if (cleaned.isBlank()) return "মোবাইল লোকাল AI: কোনো ইনপুট টেক্সট পাওয়া যায়নি।"
+        val clipped = if (cleaned.length > 140) cleaned.take(140) + "..." else cleaned
+        return "মোবাইল লোকাল সারসংক্ষেপ: $clipped"
+    }
+
+    fun saveLastResult(response: AynaMobileAiResponse) {
+        val obj = JSONObject().apply {
+            put("savedAtEpochMs", System.currentTimeMillis())
+            put("sourceEngine", response.sourceEngine)
+            put("deviceSpec", response.deviceSpec)
+            put("outputBn", response.outputBn)
+        }
+        cacheFile.writeText(obj.toString(2), Charsets.UTF_8)
+    }
+
+    fun loadLastResult(): AynaMobileAiResponse? {
+        if (!cacheFile.exists()) return null
+        return try {
+            val obj = JSONObject(cacheFile.readText(Charsets.UTF_8))
+            AynaMobileAiResponse(
+                sourceEngine = obj.optString("sourceEngine", "Cold Cache"),
+                deviceSpec = obj.optString("deviceSpec", currentDeviceLabel()),
+                outputBn = obj.optString("outputBn", ""),
+                fromColdCache = true
+            )
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    suspend fun runMobileAi(
+        promptText: String,
+        module: String = "general",
+        mode: MobileAiMode = MobileAiMode.HYBRID_FAST,
+        apiBaseUrl: String = "http://10.0.2.2:3000",
+        auth: FirebaseAuth = FirebaseAuth.getInstance()
+    ): AynaMobileAiResponse = withContext(Dispatchers.IO) {
+        val deviceInfo = currentDeviceLabel()
+        val localSummary = buildLocalQuickSummaryBn(promptText)
+
+        if (mode == MobileAiMode.LOCAL_OFFLINE) {
+            val res = AynaMobileAiResponse(
+                sourceEngine = "Mobile Local AI",
+                deviceSpec = deviceInfo,
+                outputBn = localSummary,
+                fromColdCache = false
+            )
+            saveLastResult(res)
+            return@withContext res
+        }
+
+        if (mode == MobileAiMode.HYBRID_FAST && promptText.trim().length < 60) {
+            val res = AynaMobileAiResponse(
+                sourceEngine = "Mobile Fast Edge",
+                deviceSpec = deviceInfo,
+                outputBn = localSummary,
+                fromColdCache = false
+            )
+            saveLastResult(res)
+            return@withContext res
+        }
+
+        try {
+            val cloudReply = askAynaModuleAI(
+                module = module,
+                action = "mobile_ai_assist",
+                text = promptText,
+                context = "Reply concisely in clear Bengali without markdown or emojis.",
+                apiBaseUrl = apiBaseUrl,
+                auth = auth
+            ).trim().replace("*", "").replace("#", "")
+
+            val finalText = cloudReply.ifBlank { localSummary }
+            val res = AynaMobileAiResponse(
+                sourceEngine = "Cloud /api/ai/assist",
+                deviceSpec = deviceInfo,
+                outputBn = finalText,
+                fromColdCache = false
+            )
+            saveLastResult(res)
+            res
+        } catch (_: Exception) {
+            val cached = loadLastResult()
+            val fallbackText = cached?.outputBn?.takeIf { it.isNotBlank() } ?: localSummary
+            AynaMobileAiResponse(
+                sourceEngine = "Offline Cold Fallback",
+                deviceSpec = deviceInfo,
+                outputBn = fallbackText,
+                fromColdCache = true
+            )
+        }
+    }
+}
