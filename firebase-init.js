@@ -1,75 +1,39 @@
+// firebase-init.js — AYNA BOOK Firebase Initialization (with safe fallback)
 
-/* =====================================================
-   AYNA BOOK - FIREBASE INITIALIZATION
-   Firebase SDK Version: 13.4.0
-===================================================== */
+const firebaseConfig = {
+  apiKey: "YOUR_FIREBASE_API_KEY",
+  authDomain: "ayna-book.firebaseapp.com",
+  databaseURL: "https://ayna-book-default-rtdb.firebaseio.com",
+  projectId: "ayna-book",
+  storageBucket: "ayna-book.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
 
-import {
-  initializeApp,
-  getApps,
-  getApp
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+let app = null;
+let auth = null;
+let database = null;
 
-import {
-  getAuth
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+try {
+  const hasRealConfig =
+    firebaseConfig.apiKey &&
+    !firebaseConfig.apiKey.startsWith("YOUR_") &&
+    firebaseConfig.projectId;
 
-import {
-  getFirestore
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+  if (hasRealConfig) {
+    const [{ initializeApp }, { getAuth }, { getDatabase }] = await Promise.all([
+      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"),
+      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js")
+    ]);
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    database = getDatabase(app);
+  }
+} catch (_) {
+  app = null;
+  auth = null;
+  database = null;
+}
 
-import {
-  getDatabase
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
-
-import {
-  getStorage
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-storage.js";
-
-// =====================================================
-// 1. FIREBASE CONFIGURATION
-// =====================================================
-
-import { firebaseConfig } from "./firebase-config.js";
-
-// =====================================================
-// 2. INITIALIZE FIREBASE APP
-// =====================================================
-
-export const app = getApps().length
-  ? getApp()
-  : initializeApp(firebaseConfig);
-
-// =====================================================
-// 3. FIREBASE AUTHENTICATION
-// =====================================================
-
-export const auth = getAuth(app);
-
-// =====================================================
-// 4. FIRESTORE DATABASE
-// =====================================================
-
-export const db = getFirestore(app);
-
-// =====================================================
-// 5. REALTIME DATABASE
-// =====================================================
-
-export const database = getDatabase(app);
-
-// =====================================================
-// 6. FIREBASE STORAGE
-// =====================================================
-
-export const storage = getStorage(app);
-
-// =====================================================
-// 7. EXPORT ALL SERVICES
-// =====================================================
-
-export default app;
-
-// =====================================================
-// END FIREBASE INITIALIZATION
-// =====================================================
+export { app, auth, database };
