@@ -1,589 +1,177 @@
+// register.js — AYNA BOOK Registration Logic Module
 
-/* =========================================================
-   AYNA BOOK — COMPLETE REGISTER.JS
-   Firebase Authentication + Realtime Database
-   FREE VERSION — NO FIREBASE STORAGE
-   Firebase SDK: 13.4.0
-   ========================================================= */
+import { AynaVoiceSignal } from "./ayna-voice-signal.js";
+import { auth, database } from "./firebase-init.js";
 
-import {
-  auth,
-  database
-} from "./firebase-init.js";
+const $ = id => document.getElementById(id);
 
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  sendEmailVerification
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+const DEFAULT_FRAME_SVG =
+  "data:image/svg+xml," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="#0a1636"/><circle cx="80" cy="56" r="28" fill="#ffe64d"/><path d="M24 160 Q32 104 80 104 Q128 104 136 160" fill="#ffe64d"/></svg>'
+  );
 
-import {
-  ref as dbRef,
-  set
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+let photoDataUrl = "";
 
+export function initRegisterPage() {
+  if ($("regPhotoPreview") && !$("regPhotoPreview").src) {
+    $("regPhotoPreview").src = DEFAULT_FRAME_SVG;
+  }
 
-// =========================================================
-// 1. HTML ELEMENTS
-// =========================================================
+  // হেডার ও সিগন্যাল বাটন
+  $("speakClockBtn")?.addEventListener("click", () => AynaVoiceSignal.speakCurrentTime());
+  $("toggleClockBtn")?.addEventListener("click", () => AynaVoiceSignal.toggleClock("toggleClockBtn"));
+  $("repeatSignalBtn")?.addEventListener("click", () => AynaVoiceSignal.repeatLast());
+  $("loginPageBtn")?.addEventListener("click", () => {
+    window.location.href = "login.html";
+  });
 
-const form = document.getElementById("registerForm");
+  // পাসওয়ার্ড ও রি-পাসওয়ার্ড দেখাও / লুকাও বাটন
+  bindPasswordToggle("togglePasswordBtn", "regPassword", "👁️ পাসওয়ার্ড দেখাও", "🙈 পাসওয়ার্ড লুকাও");
+  bindPasswordToggle(
+    "toggleConfirmPasswordBtn",
+    "regConfirmPassword",
+    "👁️ রি-পাসওয়ার্ড দেখাও",
+    "🙈 রি-পাসওয়ার্ড লুকাও"
+  );
 
-const fullNameInput = document.getElementById("fullName");
-const emailInput = document.getElementById("email");
-const countryInput = document.getElementById("country");
-const phoneInput = document.getElementById("phone");
+  // ১ নম্বর ঘর: প্রোফাইল ছবি নির্বাচন ও প্রিভিউ
+  $("choosePhotoBtn")?.addEventListener("click", () => $("regPhotoInput")?.click());
+  $("regPhotoInput")?.addEventListener("change", ev => {
+    const file = ev.target.files?.[0];
+    if (!file) return;
 
-const photoInput = document.getElementById("photo");
+    if (!file.type.startsWith("image/")) {
+      AynaVoiceSignal.error("১ নম্বর ছবির ঘরে ভুল হয়েছে। অনুগ্রহ করে সঠিক ছবি ফাইল নির্বাচন করুন।");
+      return;
+    }
 
-const passwordInput = document.getElementById("password");
+    const reader = new FileReader();
+    reader.onload = () => {
+      photoDataUrl = String(reader.result || "");
+      if ($("regPhotoPreview")) $("regPhotoPreview").src = photoDataUrl || DEFAULT_FRAME_SVG;
+      if ($("regPhotoLabel")) $("regPhotoLabel").textContent = `নির্বাচিত ছবি: ${file.name}`;
+    };
+    reader.readAsDataURL(file);
+  });
 
-const confirmPasswordInput =
-  document.getElementById("confirmPassword");
+  // রেজিস্ট্রেশন বাটন সাবমিট
+  $("registerSubmitBtn")?.addEventListener("click", handleRegisterSubmit);
+}
 
-const termsInput = document.getElementById("terms");
+function bindPasswordToggle(btnId, inputId, showText, hideText) {
+  $(btnId)?.addEventListener("click", () => {
+    const input = $(inputId);
+    const btn = $(btnId);
+    if (!input || !btn) return;
+    const isHidden = input.type === "password";
+    input.type = isHidden ? "text" : "password";
+    btn.textContent = isHidden ? hideText : showText;
+  });
+}
 
-const submitButton = document.getElementById("submitBtn");
+async function handleRegisterSubmit() {
+  const email = ($("regEmail")?.value || "").trim();
+  const phone = ($("regPhone")?.value || "").trim();
+  const password = $("regPassword")?.value || "";
+  const confirmPassword = $("regConfirmPassword")?.value || "";
 
-const statusMessage = document.getElementById("statusMsg");
-
-
-// =========================================================
-// 2. MESSAGE
-// =========================================================
-
-function showMessage(message, type = "error") {
-
-  if (!statusMessage) {
-    alert(message);
+  if (!email) {
+    AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার ঘরে ভুল হয়েছে। জিমেইল ঘরটি খালি রয়েছে।");
+    $("regEmail")?.focus();
+    return;
+  }
+  if (!email.includes("@") || !email.includes(".")) {
+    AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক জিমেইল ঠিকানা লিখুন।");
+    $("regEmail")?.focus();
+    return;
+  }
+  if (!phone || phone.replace(/\D/g, "").length < 8) {
+    AynaVoiceSignal.error("৩ নম্বর ফোন নম্বরের ঘরে ভুল হয়েছে। সঠিক ফোন নম্বর লিখুন।");
+    $("regPhone")?.focus();
+    return;
+  }
+  if (!password || password.length < 6) {
+    AynaVoiceSignal.error("পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
+    $("regPassword")?.focus();
+    return;
+  }
+  if (password !== confirmPassword) {
+    AynaVoiceSignal.error("রি-পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড ও রি-পাসওয়ার্ড এক হতে হবে।");
+    $("regConfirmPassword")?.focus();
     return;
   }
 
-  statusMessage.textContent = message;
-  statusMessage.style.display = "block";
-  statusMessage.style.padding = "15px";
-  statusMessage.style.marginTop = "18px";
-  statusMessage.style.borderRadius = "10px";
+  const aynaId = `2026-----${String(Math.floor(10000001 + Math.random() * 89999999))}`;
+  const derivedName = email.split("@")[0] || "AYNA User";
 
-  if (type === "success") {
+  try {
+    localStorage.setItem(
+      "ayna_registered_account",
+      JSON.stringify({
+        fullName: derivedName,
+        email,
+        phone,
+        photoURL: photoDataUrl,
+        aynaId,
+        createdAt: Date.now()
+      })
+    );
+  } catch (_) {}
 
-    statusMessage.style.background = "#123d24";
-    statusMessage.style.color = "#8df5a9";
+  if (!auth || !database) {
+    AynaVoiceSignal.error(
+      "ফায়ারবেস সংযোগ পাওয়া যায়নি। firebase-init.js-এ সঠিক API Key বসান; লোকাল অ্যাকাউন্ট সংরক্ষিত হয়েছে।"
+    );
+    return;
+  }
 
-  } else {
+  const btn = $("registerSubmitBtn");
+  try {
+    const [{ createUserWithEmailAndPassword }, { ref, set }] = await Promise.all([
+      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"),
+      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js")
+    ]);
 
-    statusMessage.style.background = "#351515";
-    statusMessage.style.color = "#ff9999";
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "রেজিস্ট্রেশন হচ্ছে...";
+    }
 
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = cred.user.uid;
+
+    await set(ref(database, "users/" + uid), {
+      uid,
+      fullName: derivedName,
+      email,
+      phone,
+      photoURL: photoDataUrl,
+      aynaId,
+      createdAt: Date.now()
+    });
+
+    AynaVoiceSignal.success(`রেজিস্ট্রেশন সফল হয়েছে। আপনার AYNA ID ${aynaId}।`);
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
+  } catch (err) {
+    const code = err?.code || "";
+    if (code.includes("email-already-in-use")) {
+      AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার ঘরে ভুল হয়েছে। এই জিমেইল দিয়ে আগেই অ্যাকাউন্ট খোলা আছে।");
+    } else if (code.includes("invalid-email")) {
+      AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার বানানে ভুল হয়েছে।");
+    } else if (code.includes("weak-password")) {
+      AynaVoiceSignal.error("পাসওয়ার্ড খুব দুর্বল হয়েছে। অন্তত ৬ অক্ষরের পাসওয়ার্ড দিন।");
+    } else {
+      AynaVoiceSignal.error("রেজিস্ট্রেশন সম্পন্ন করা যায়নি। নেটওয়ার্ক বা ফায়ারবেস নিয়ম পরীক্ষা করুন।");
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "✅ রেজিস্ট্রেশন বাটন";
+    }
   }
 }
 
-
-// =========================================================
-// 3. LOADING
-// =========================================================
-
-function setLoading(loading) {
-
-  if (!submitButton) return;
-
-  submitButton.disabled = loading;
-
-  submitButton.textContent = loading
-    ? "PLEASE WAIT..."
-    : "CREATE ACCOUNT";
-
-}
-
-
-// =========================================================
-// 4. PASSWORD SHOW / HIDE
-// =========================================================
-
-function togglePassword(buttonId, inputId) {
-
-  const button = document.getElementById(buttonId);
-  const input = document.getElementById(inputId);
-
-  if (!button || !input) return;
-
-  button.addEventListener("click", () => {
-
-    const visible = input.type === "password";
-
-    input.type = visible ? "text" : "password";
-
-    button.textContent = visible ? "🙈" : "👁️";
-
-  });
-
-}
-
-togglePassword("togglePassword", "password");
-
-togglePassword(
-  "toggleConfirmPassword",
-  "confirmPassword"
-);
-
-
-// =========================================================
-// 5. IMAGE COMPRESSION
-// =========================================================
-
-async function compressPhoto(file) {
-
-  return new Promise((resolve, reject) => {
-
-    const image = new Image();
-
-    const objectURL = URL.createObjectURL(file);
-
-    image.onload = async () => {
-
-      try {
-
-        URL.revokeObjectURL(objectURL);
-
-        let width = image.width;
-        let height = image.height;
-
-        const MAX_SIZE = 512;
-
-        if (width > MAX_SIZE || height > MAX_SIZE) {
-
-          const scale = Math.min(
-            MAX_SIZE / width,
-            MAX_SIZE / height
-          );
-
-          width = Math.round(width * scale);
-          height = Math.round(height * scale);
-
-        }
-
-        const canvas = document.createElement("canvas");
-
-        canvas.width = width;
-        canvas.height = height;
-
-        const context = canvas.getContext("2d");
-
-        if (!context) {
-          throw new Error("Image compression is not supported.");
-        }
-
-        context.fillStyle = "#ffffff";
-
-        context.fillRect(0, 0, width, height);
-
-        context.drawImage(
-          image,
-          0,
-          0,
-          width,
-          height
-        );
-
-        let quality = 0.75;
-        let blob = null;
-
-        for (let i = 0; i < 6; i++) {
-
-          blob = await new Promise(resolveBlob => {
-
-            canvas.toBlob(
-              resolveBlob,
-              "image/jpeg",
-              quality
-            );
-
-          });
-
-          if (!blob) {
-            throw new Error("Image compression failed.");
-          }
-
-          if (blob.size <= 200 * 1024) {
-            break;
-          }
-
-          quality -= 0.08;
-
-        }
-
-        if (!blob || blob.size > 300 * 1024) {
-
-          throw new Error(
-            "Image is too large. Please select another photo."
-          );
-
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          resolve(reader.result);
-        };
-
-        reader.onerror = () => {
-          reject(new Error("Unable to read profile photo."));
-        };
-
-        reader.readAsDataURL(blob);
-
-      } catch (error) {
-
-        reject(error);
-
-      }
-
-    };
-
-    image.onerror = () => {
-
-      URL.revokeObjectURL(objectURL);
-
-      reject(new Error("Invalid profile photo."));
-
-    };
-
-    image.src = objectURL;
-
-  });
-
-}
-
-
-// =========================================================
-// 6. FIREBASE ERROR
-// =========================================================
-
-function getFriendlyError(error) {
-
-  switch (error.code) {
-
-    case "auth/email-already-in-use":
-      return "This email is already registered. Please login.";
-
-    case "auth/invalid-email":
-      return "Please enter a valid email.";
-
-    case "auth/weak-password":
-      return "Password must contain at least 6 characters.";
-
-    case "auth/network-request-failed":
-      return "Internet connection failed. Please try again.";
-
-    case "auth/too-many-requests":
-      return "Too many attempts. Try again later.";
-
-    case "PERMISSION_DENIED":
-    case "database/permission-denied":
-      return "Database permission denied. Check RTDB Rules.";
-
-    default:
-      return error.message || "Registration failed.";
-
-  }
-
-}
-
-
-// =========================================================
-// 7. REGISTRATION
-// =========================================================
-
-if (!form) {
-
-  console.error("AYNA BOOK: Registration form not found.");
-
-} else {
-
-  form.addEventListener("submit", async (event) => {
-
-    event.preventDefault();
-
-    let createdUser = null;
-
-    // -----------------------------------------------
-    // FORM VALUES
-    // -----------------------------------------------
-
-    const fullName = fullNameInput?.value.trim() || "";
-
-    const email =
-      emailInput?.value.trim().toLowerCase() || "";
-
-    const country = countryInput?.value.trim() || "";
-
-    const phone = phoneInput?.value.trim() || "";
-
-    const password = passwordInput?.value || "";
-
-    const confirmPassword =
-      confirmPasswordInput?.value || "";
-
-    const photo = photoInput?.files?.[0];
-
-
-    // -----------------------------------------------
-    // VALIDATION
-    // -----------------------------------------------
-
-    if (!fullName || !email || !country) {
-
-      showMessage("Please complete all required fields.");
-      return;
-
-    }
-
-    if (!photo) {
-
-      showMessage("Please select your profile photo.");
-      return;
-
-    }
-
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp"
-    ];
-
-    if (!allowedTypes.includes(photo.type)) {
-
-      showMessage("Only JPG, PNG or WEBP images are allowed.");
-      return;
-
-    }
-
-    if (photo.size > 5 * 1024 * 1024) {
-
-      showMessage("Photo must be 5 MB or smaller.");
-      return;
-
-    }
-
-    if (password.length < 6) {
-
-      showMessage("Password must contain at least 6 characters.");
-      return;
-
-    }
-
-    if (password !== confirmPassword) {
-
-      showMessage("Passwords do not match.");
-      return;
-
-    }
-
-    if (!termsInput?.checked) {
-
-      showMessage("Please accept Terms and Privacy Policy.");
-      return;
-
-    }
-
-
-    // -----------------------------------------------
-    // START
-    // -----------------------------------------------
-
-    setLoading(true);
-
-    if (statusMessage) {
-      statusMessage.style.display = "none";
-    }
-
-    try {
-
-      // ---------------------------------------------
-      // STEP 1: COMPRESS PHOTO
-      // ---------------------------------------------
-
-      showMessage(
-        "Preparing profile photo...",
-        "success"
-      );
-
-      const photoDataURL = await compressPhoto(photo);
-
-
-      // ---------------------------------------------
-      // STEP 2: CREATE AUTH ACCOUNT
-      // ---------------------------------------------
-
-      const userCredential =
-        await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-
-      const user = userCredential.user;
-
-      createdUser = user;
-
-
-      // ---------------------------------------------
-      // STEP 3: GENERATE AYNA ID
-      // ---------------------------------------------
-
-      const aynaId = "AYNA-" + user.uid;
-
-
-      // ---------------------------------------------
-      // STEP 4: UPDATE AUTH PROFILE
-      // ---------------------------------------------
-
-      await updateProfile(user, {
-
-        displayName: fullName
-
-      });
-
-
-      // ---------------------------------------------
-      // STEP 5: USER DATA
-      // ---------------------------------------------
-
-      const now = Date.now();
-
-      const userData = {
-
-        uid: user.uid,
-
-        aynaId: aynaId,
-
-        fullName: fullName,
-
-        email: email,
-
-        country: country,
-
-        phone: phone,
-
-        photoURL: photoDataURL,
-
-        photoMimeType: "image/jpeg",
-
-        emailVerified: user.emailVerified,
-
-        accountStatus: "active",
-
-        profileCompleted: true,
-
-        createdAt: now,
-
-        updatedAt: now
-
-      };
-
-
-      // ---------------------------------------------
-      // STEP 6: SAVE IN REALTIME DATABASE
-      // ---------------------------------------------
-
-      await set(
-        dbRef(database, "users/" + user.uid),
-        userData
-      );
-
-
-      // ---------------------------------------------
-      // STEP 7: SEND VERIFICATION EMAIL
-      // ---------------------------------------------
-
-      let verificationSent = true;
-
-      try {
-
-        await sendEmailVerification(user);
-
-      } catch (verificationError) {
-
-        verificationSent = false;
-
-        console.error(
-          "Verification email error:",
-          verificationError
-        );
-
-      }
-
-
-      // ---------------------------------------------
-      // STEP 8: SUCCESS
-      // ---------------------------------------------
-
-      submitButton.textContent = "ACCOUNT CREATED";
-
-      showMessage(
-
-        verificationSent
-
-          ? "AYNA BOOK account created successfully! Check your email for verification."
-
-          : "Account created successfully! Verification email could not be sent.",
-
-        "success"
-
-      );
-
-
-      // ---------------------------------------------
-      // STEP 9: LOGIN REDIRECT
-      // ---------------------------------------------
-
-      setTimeout(() => {
-
-        window.location.href = "./login.html";
-
-      }, 2500);
-
-
-    } catch (error) {
-
-      console.error(
-        "AYNA BOOK Registration Error:",
-        error
-      );
-
-      if (createdUser) {
-
-        showMessage(
-
-          "Your account was created, but profile saving failed. Do not register again. Please login and recover your profile. Error: " +
-          getFriendlyError(error)
-
-        );
-
-      } else {
-
-        showMessage(getFriendlyError(error));
-
-      }
-
-    } finally {
-
-      if (
-        submitButton &&
-        submitButton.textContent !== "ACCOUNT CREATED"
-      ) {
-
-        setLoading(false);
-
-      }
-
-    }
-
-  });
-
-}
-
-
-// =========================================================
-// AYNA BOOK — REGISTER.JS END
-// =========================================================
+initRegisterPage();
