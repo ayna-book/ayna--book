@@ -1,4 +1,4 @@
-// AYNA BOOK* • index.js — Full AI Radar, Weather, Civil Aviation, UHD Messenger, 90-Day Policy & Quantum Hub
+// AYNA BOOK* • index.js — Full AI Radar, Weather, Civil Aviation, UHD Sound, UHD Messenger, 90-Day Policy & Quantum Hub
 
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -22,6 +22,7 @@ import {
   uploadBytesResumable,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { AynaUhdMasterSound } from "./uhd-sound-engine.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -126,7 +127,8 @@ export const AYNA_REGISTRY_ITEMS = [
   "build-apk.yml", "colors.xml", "dashboard.php", "database.rules.json", "deploy-pages.yml",
   "firebase.json", "firestore.rules", "google-services.json", "icon-192.png", "icon-512.png",
   "jekyll-gh-pages.yml", "manifest.json", "manifest.webmanifest", "package.json", "page-register",
-  "sha1.yml", "storage.rules", "strings.xml", "styles.css", "themes.xml", "vercel.json", "version.json"
+  "sha1.yml", "storage.rules", "strings.xml", "styles.css", "themes.xml", "vercel.json", "version.json",
+  "uhd-sound-engine.js"
 ];
 
 const SPECIAL_CHANNELS_DATA = {
@@ -255,9 +257,8 @@ export const AynaSoundEngine = {
   },
   playTone(freq = 528, duration = 0.25, type = "sine") {
     try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
+      const ctx = AynaUhdMasterSound.ensureContext();
+      if (!ctx) return;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = type;
@@ -265,7 +266,7 @@ export const AynaSoundEngine = {
       gain.gain.setValueAtTime(this.presets[this.preset]?.gain || 0.15, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(AynaUhdMasterSound.compressor || ctx.destination);
       osc.start();
       osc.stop(ctx.currentTime + duration + 0.02);
     } catch (_) {}
@@ -347,7 +348,6 @@ export async function initAynaIndexHub() {
   if ($("qFileCount")) $("qFileCount").textContent = String(AYNA_REGISTRY_ITEMS.length);
   if ($("registryTotalLabel")) $("registryTotalLabel").textContent = String(AYNA_REGISTRY_ITEMS.length);
 
-  // 90-Day Account Holder Policy (Name, Gmail & Phone locked forever; Color & Identity changeable every 90 days)
   const POLICY_STORAGE_KEY = "ayna_holder_90day_policy_v1";
   function load90DayPolicy() {
     try {
@@ -409,7 +409,6 @@ export async function initAynaIndexHub() {
     AynaSoundEngine.announceMistake(blockedMsg, "account90DayStatusOutput");
   });
 
-  // Barcode & QR (Always active for account holder)
   function renderBarcode(code = OWNER_LOCKED_IDENTITY.aynaId) {
     if (typeof window.JsBarcode === "function" && $("aynaProfileBarcode")) {
       try {
@@ -460,7 +459,6 @@ export async function initAynaIndexHub() {
     if ($("qrCaptionText")) $("qrCaptionText").textContent = text;
   }
 
-  // Feature focus on phone screen
   document.querySelectorAll(".feature-card, .panel-link-btn").forEach((el) => {
     el.addEventListener("click", () => {
       document.querySelectorAll(".focused-feature-highlight").forEach((x) => x.classList.remove("focused-feature-highlight"));
@@ -470,7 +468,6 @@ export async function initAynaIndexHub() {
     });
   });
 
-  // Firebase init (Name, Gmail & Phone strictly remain locked to account holder)
   let auth = null, db = null, storage = null, currentUser = null;
   let currentUserProfile = {
     name: OWNER_LOCKED_IDENTITY.name,
@@ -519,12 +516,56 @@ export async function initAynaIndexHub() {
   } catch (_) {}
   syncProfileUi();
 
-  // Sound & Universal AI
+  // Sound Profile, World-Class UHD Sound Engine & Universal AI
+  function resolveUhdProfileFromPreset() {
+    const preset = $("audioPresetSelect")?.value || "STUDIO_MASTER";
+    if (preset === "CINEMA_THEATER") return "VIENNA_PHIL_UHD";
+    if (preset === "VOICE_BROADCAST") return "QUANTUM_MASTER_528";
+    return "ABBEY_HALL_UHD_48K";
+  }
+
   $("applyAudioPresetBtn")?.addEventListener("click", () => {
     const val = $("audioPresetSelect")?.value || "STUDIO_MASTER";
     AynaSoundEngine.applyPreset(val);
     notify(`সাউন্ড প্রোফাইল চালু: ${val}`);
     AynaSoundEngine.speak(`${val} সাউন্ড প্রোফাইল সক্রিয় হয়েছে।`, true);
+  });
+
+  let uhdWavUrl = "";
+  $("playWorldUhdSoundBtn")?.addEventListener("click", async () => {
+    const profileKey = resolveUhdProfileFromPreset();
+    const res = await AynaUhdMasterSound.playUhdSignature(profileKey);
+    const msg = res.ok
+      ? `🎼 চালু হয়েছে: ${res.title} • স্যাম্পল রেট: ${res.sampleRate} Hz (UHD)`
+      : `⚠️ ${res.message}`;
+    if ($("uhdSoundEngineStatus")) $("uhdSoundEngineStatus").textContent = msg;
+    notify(msg);
+  });
+
+  $("stopWorldUhdSoundBtn")?.addEventListener("click", () => {
+    AynaUhdMasterSound.stop();
+    const msg = "⏹ UHD সাউন্ড প্লেব্যাক বন্ধ করা হয়েছে।";
+    if ($("uhdSoundEngineStatus")) $("uhdSoundEngineStatus").textContent = msg;
+    notify(msg);
+  });
+
+  $("exportUhdWavBtn")?.addEventListener("click", () => {
+    const profileKey = resolveUhdProfileFromPreset();
+    const wavBlob = AynaUhdMasterSound.createUhdWavBlob(profileKey);
+    if (uhdWavUrl) URL.revokeObjectURL(uhdWavUrl);
+    uhdWavUrl = URL.createObjectURL(wavBlob);
+
+    if ($("uhdSoundPlayerWrap")) {
+      $("uhdSoundPlayerWrap").innerHTML = `
+        <audio controls autoplay src="${uhdWavUrl}" style="width:100%;margin-top:8px;"></audio>
+        <div class="hub-card-meta" style="margin-top:8px;">
+          <a href="${uhdWavUrl}" download="AYNA-BOOK-UHD-48kHz.wav" class="panel-link-btn" style="display:inline-block;">⬇ AYNA-BOOK-UHD-48kHz.wav ডাউনলোড</a>
+        </div>
+      `;
+    }
+    const msg = "💾 48kHz স্টুডিও UHD WAV সাউন্ড ফাইল তৈরি হয়ে প্লেয়ারে যুক্ত হয়েছে।";
+    if ($("uhdSoundEngineStatus")) $("uhdSoundEngineStatus").textContent = msg;
+    notify(msg);
   });
 
   async function runProfileAi(speakNow = false) {
@@ -538,7 +579,7 @@ export async function initAynaIndexHub() {
 
   $("runUniversalAiBtn")?.addEventListener("click", async () => {
     const q = ($("universalAiInput")?.value || "AYNA BOOK* সিস্টেম ও সব মডিউলের সারসংক্ষেপ").trim();
-    const fb = `সার্বজনীন AI [${q}]: রাডার, আবহাওয়া রাডার, বেসামরিক বিমান রাডার, মেসেঞ্জার UHD কল ও সব ফিচার AI অটো-সিঙ্কে সক্রিয়।`;
+    const fb = `সার্বজনীন AI [${q}]: রাডার, আবহাওয়া রাডার, বেসামরিক বিমান রাডার, 48kHz UHD সাউন্ড, মেসেঞ্জার UHD কল ও সব ফিচার AI অটো-সিঙ্কে সক্রিয়।`;
     const ans = await UniversalAiHub.ask({ module: "universal", prompt: q, fallbackBn: fb });
     if ($("universalAiOutput")) $("universalAiOutput").textContent = ans;
     AynaSoundEngine.speak(ans, true);
@@ -1059,7 +1100,6 @@ export async function initAynaIndexHub() {
     AynaSoundEngine.speak(ans, true);
   });
 
-  // Trade, World Stats, Nobel, Leaders, Ulema, Market & Jobs + AI
   if ($("tradeCommoditySelect")) {
     $("tradeCommoditySelect").innerHTML = TRADE_ITEMS.map((t, i) => `<option value="${i}">${t.name} ($${t.priceUsd}/${t.unit})</option>`).join("");
   }
@@ -1239,7 +1279,6 @@ export async function initAynaIndexHub() {
   $("speakJobsAiBtn")?.addEventListener("click", () => AynaSoundEngine.speak($("jobsAiOutput")?.textContent || "", true));
   renderJobs("");
 
-  // Radio/TV AI & YouTube Hub + AI
   async function runRadioTvAi(speakNow = false) {
     const ch = $("radioTvChannelSelect")?.value || "Bangladesh Betar / World Radio";
     const q = ($("radioTvPromptInput")?.value || "চ্যানেল আপডেট ও সংবাদ বিশ্লেষণ").trim();
@@ -1283,7 +1322,6 @@ export async function initAynaIndexHub() {
     AynaSoundEngine.speak(ans, true);
   });
 
-  // File Registry + AI
   function renderFileRegistry(queryStr = "") {
     const grid = $("fileListGrid");
     if (!grid) return;
@@ -1314,7 +1352,6 @@ export async function initAynaIndexHub() {
   $("speakRegistryAiBtn")?.addEventListener("click", () => AynaSoundEngine.speak($("registryAiOutput")?.textContent || "", true));
   renderFileRegistry("");
 
-  // Post Creator, Media & Feed + Post AI + ... Dot Menu (Edit / Delete)
   let selectedFile = null, selectedType = "text";
   function resetMediaSelection() {
     selectedFile = null;
@@ -1634,7 +1671,6 @@ export async function initAynaIndexHub() {
     mergeAndRenderFeed([]);
   }
 
-  // Live Camera & Live AI
   let cameraStream = null;
   $("startCamera")?.addEventListener("click", async () => {
     try {
@@ -1665,7 +1701,6 @@ export async function initAynaIndexHub() {
     AynaSoundEngine.speak(ans, true);
   });
 
-  // Quantum Mode & Auto-Sync All Features
   let qIdx = 0;
   const qModes = ["FULL-AI • ULTRA-CRITICAL", "DETERMINISTIC-GATE • 150-RULE", "COLD-FALLBACK-READY • SYNC"];
   $("quantumBoostBtn")?.addEventListener("click", () => {
