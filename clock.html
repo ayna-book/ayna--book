@@ -4,666 +4,186 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — বিশ্ব ঘড়ি</title>
-
+<title>AYNA BOOK — বিশ্ব ঘড়ি ও AI সিগন্যাল</title>
 <style>
 :root {
-  --bg: #050a18;
-  --navy-top: #172e63;
-  --navy-bottom: #08122b;
-  --gold: #ffd700;
-  --gold-base: #755206;
-  --white: #ffffff;
-  --muted: #dce6fa;
-  --open-bg: #14532d;
-  --close-bg: #7f1d1d;
+  --bg:#050a18;
+  --navy-top:#1a3575;
+  --navy-bottom:#08122b;
+  --gold:#ffe64d;
+  --gold-bright:#fff6b3;
+  --gold-base:#8a6105;
+  --quantum-cyan:#38f2ff;
+  --white:#ffffff;
+  --muted:#e6eeff;
 }
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+* { box-sizing:border-box; }
 body {
-  background: var(--bg);
-  color: var(--white);
-  font-family: Arial, "Noto Sans Bengali", sans-serif;
-  font-size: 19px;
-  padding-bottom: 60px;
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  font-size:34px;
+  line-height:1.5;
 }
-
+button,input { font:inherit; cursor:pointer; }
 header {
-  background: linear-gradient(180deg, #0f1f47 0%, #060d21 100%);
-  border-bottom: 2.5px solid var(--gold);
-  padding: 14px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 50;
+  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
+  border-bottom:4px solid var(--gold);
+  padding:20px;
+  position:sticky;
+  top:0;
+  z-index:50;
 }
-
-.brand {
-  color: var(--gold);
-  font-size: 24px;
-  font-weight: 1000;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.header-inner {
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
 }
-
-.star-1s {
-  color: #ffffff;
-  font-size: 26px;
-  display: inline-block;
-  animation: starFlash1s 1s infinite alternate ease-in-out;
+.logo { color:var(--gold-bright); font-size:42px; font-weight:1000; text-decoration:none; }
+.nav-btns { display:flex; gap:10px; flex-wrap:wrap; }
+.nav-btns a, .nav-btns button {
+  text-decoration:none;
+  color:#fff;
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  border:3px solid var(--gold);
+  border-radius:8px;
+  padding:10px 16px;
+  font-size:24px;
+  font-weight:bold;
 }
-
-@keyframes starFlash1s {
-  0% { transform: scale(0.95); text-shadow: 0 0 6px #ffd700; }
-  100% { transform: scale(1.35); text-shadow: 0 0 14px #ffffff, 0 0 32px #ffd700; }
+.container { max-width:1100px; margin:auto; padding:22px; }
+.panel {
+  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%);
+  border:4px solid var(--gold);
+  border-radius:10px;
+  padding:26px;
+  margin-bottom:24px;
+  box-shadow:0 0 18px rgba(255,230,77,.65), 0 9px 0 var(--gold-base);
 }
-
-.back-btn {
-  text-decoration: none;
-  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
-  color: #050a18;
-  font-weight: 1000;
-  font-size: 17px;
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1.5px solid #fff2a6;
-  box-shadow: 0 4px 0 #664604;
+.clock-time {
+  font-size:52px;
+  font-weight:1000;
+  color:var(--quantum-cyan);
+  text-align:center;
+  display:block;
+  margin:14px 0;
 }
-
-.container {
-  max-width: 820px;
-  margin: 18px auto;
-  padding: 0 14px;
+.btn-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:16px;
 }
-
-.card-3d {
-  background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
-  border: 2.5px solid var(--gold);
-  border-radius: 6px;
-  padding: 20px 16px;
-  margin-bottom: 18px;
-  box-shadow:
-    0 7px 0 var(--gold-base),
-    0 12px 22px rgba(0, 0, 0, 0.8),
-    inset 0 2px 3px rgba(255, 242, 166, 0.5);
+.action-btn {
+  min-height:80px;
+  border-radius:8px;
+  border:3px solid var(--gold);
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  color:#fff;
+  font-size:27px;
+  font-weight:bold;
 }
-
-.card-3d h1,
-.card-3d h2 {
-  color: var(--gold);
-  margin-bottom: 12px;
-  text-align: center;
+.primary-btn {
+  width:100%;
+  min-height:86px;
+  margin-top:14px;
+  border-radius:8px;
+  border:3.5px solid var(--gold-bright);
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  font-size:30px;
+  font-weight:1000;
 }
-
-.live-time-display {
-  font-size: 36px;
-  font-weight: 1000;
-  color: var(--white);
-  background: #050b1c;
-  border: 2px solid var(--gold);
-  border-radius: 6px;
-  padding: 16px;
-  margin: 12px 0;
-  text-align: center;
-  letter-spacing: 1px;
+.ai-out {
+  margin-top:16px;
+  background:#050b1c;
+  border:3px solid var(--quantum-cyan);
+  border-radius:8px;
+  padding:18px;
+  font-size:28px;
+  color:var(--gold-bright);
+  white-space:pre-line;
 }
-
-.info-text {
-  color: var(--muted);
-  font-size: 17px;
-  line-height: 1.55;
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-@media(min-width: 600px) {
-  .grid-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.field-group label {
-  display: block;
-  color: var(--gold);
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.field-group select,
-.field-group input {
-  width: 100%;
-  background: #050b1c;
-  color: var(--white);
-  border: 2px solid var(--gold);
-  border-radius: 6px;
-  padding: 10px 12px;
-  font-size: 17px;
-}
-
-.schedule-summary {
-  background: #050b1c;
-  border: 1.5px solid var(--gold);
-  border-radius: 6px;
-  padding: 12px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--gold);
-  margin-top: 8px;
-}
-
-.toggle-row {
-  background: #050b1c;
-  border: 1.5px solid rgba(255, 215, 0, 0.65);
-  border-radius: 6px;
-  padding: 12px;
-  margin-bottom: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.toggle-label-box {
-  flex: 1;
-  min-width: 200px;
-}
-
-.toggle-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--white);
-}
-
-.toggle-state {
-  font-size: 14px;
-  color: var(--gold);
-  margin-top: 2px;
-}
-
-.btn-group {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-open,
-.btn-close,
-.btn-gold {
-  border-radius: 6px;
-  padding: 9px 14px;
-  font-size: 16px;
-  font-weight: 1000;
-  cursor: pointer;
-  border: 1.5px solid var(--gold);
-}
-
-.btn-open {
-  background: var(--open-bg);
-  color: #ffffff;
-}
-
-.btn-open.active {
-  background: #22c55e;
-  color: #050a18;
-  border-color: #ffffff;
-}
-
-.btn-close {
-  background: var(--close-bg);
-  color: #ffffff;
-}
-
-.btn-close.active {
-  background: #ef4444;
-  color: #ffffff;
-  border-color: #ffffff;
-}
-
-.btn-gold {
-  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
-  color: #050a18;
-  border-color: #fff2a6;
-  box-shadow: 0 4px 0 #664604;
-  width: 100%;
-  min-height: 52px;
-  font-size: 18px;
-}
-
-.btn-gold:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #664604;
-}
+@media(max-width:600px) { .btn-grid { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
-
 <header>
-  <a href="index.html" class="brand">AYNA BOOK <span class="star-1s">★</span></a>
-  <a href="index.html" class="back-btn">🏠 হোম</a>
+  <div class="header-inner">
+    <a class="logo" href="index.html">AYNA BOOK ★</a>
+    <div class="nav-btns">
+      <button type="button" id="topSpeakBtn">🕒 সময় বলুন</button>
+      <button type="button" id="topToggleBtn">🔊 ঘড়ি: চালু</button>
+      <a href="index.html">🏠 হোম</a>
+      <a href="radio-tv.html">📻 রেডিও-টিভি</a>
+    </div>
+  </div>
 </header>
 
 <main class="container">
-  <!-- লাইভ ঘড়ি ও ভয়েস স্ট্যাটাস -->
-  <section class="card-3d">
-    <h1>🕒 বিশ্ব ঘড়ি, সেহরি ও ইফতার অ্যালার্ট</h1>
-    <div id="liveClockDisplay" class="live-time-display">লোড হচ্ছে...</div>
-    <p id="voiceStatus" class="info-text">
-      স্ক্রিনে বা বাটনে চাপ দিলে বাংলা ভয়েস অ্যালার্ট সক্রিয় হবে।
-    </p>
-    <button id="testVoiceBtn" class="btn-gold">🔊 এখনকার সময় শুনুন</button>
-  </section>
-
-  <!-- দেশ ও জেলাওয়ারী সময় নির্ধারণ -->
-  <section class="card-3d">
-    <h2>🌍 দেশ ও জেলাওয়ারী সময়</h2>
-    <div class="grid-2">
-      <div class="field-group">
-        <label for="countrySelect">দেশ নির্বাচন করুন</label>
-        <select id="countrySelect">
-          <option value="BD">🇧🇩 বাংলাদেশ</option>
-          <option value="SA">🇸🇦 সৌদি আরব</option>
-          <option value="AE">🇦🇪 সংযুক্ত আরব আমিরাত</option>
-          <option value="GB">🇬🇧 যুক্তরাজ্য</option>
-          <option value="US">🇺🇸 যুক্তরাষ্ট্র</option>
-        </select>
-      </div>
-
-      <div class="field-group">
-        <label for="districtSelect">জেলা / শহর নির্বাচন করুন</label>
-        <select id="districtSelect"></select>
-      </div>
+  <section class="panel">
+    <h2>🕒 বিশ্ব ঘড়ি — প্রতি ১ ঘণ্টা পর পর ও এখনই সময় ঘোষণা</h2>
+    <span class="clock-time" id="liveClock">লোড হচ্ছে...</span>
+    <div class="btn-grid">
+      <button type="button" class="action-btn" id="speakNowBtn">🎙️ এখনই সময় বলুন</button>
+      <button type="button" class="action-btn" id="toggleClockBtn">🔊 সময় বলা: চালু</button>
+      <button type="button" class="action-btn" id="openClockBtn">🟢 ঘড়ি চালু (খোলা)</button>
+      <button type="button" class="action-btn" id="closeClockBtn">🔴 ঘড়ি বন্ধ</button>
     </div>
-
-    <div class="grid-2">
-      <div class="field-group">
-        <label for="sehriInput">সেহরির সময় (২৪-ঘণ্টা)</label>
-        <input type="time" id="sehriInput" value="04:58">
-      </div>
-
-      <div class="field-group">
-        <label for="iftarInput">ইফতারের সময় (২৪-ঘণ্টা)</label>
-        <input type="time" id="iftarInput" value="17:12">
-      </div>
-    </div>
-
-    <div class="field-group">
-      <label for="iftarLeadHours">ইফতারের কত ঘণ্টা আগে থেকে ৫ মিনিট পর পর সময় বলবে?</label>
-      <select id="iftarLeadHours">
-        <option value="1" selected>১ ঘণ্টা (৬০ মিনিট) আগে থেকে</option>
-        <option value="2">২ ঘণ্টা (১২০ মিনিট) আগে থেকে</option>
-      </select>
-    </div>
-
-    <div id="scheduleSummary" class="schedule-summary">
-      নির্বাচিত এলাকা: বাংলাদেশ — ঢাকা
-    </div>
-  </section>
-
-  <!-- সব অপশনে বন্ধ ও ওপেন বাটন -->
-  <section class="card-3d">
-    <h2>🎛️ ভয়েস ও অ্যালার্ট নিয়ন্ত্রণ (ওপেন / বন্ধ)</h2>
-
-    <div class="toggle-row">
-      <div class="toggle-label-box">
-        <div class="toggle-title">১. ইফতারের ১/২ ঘণ্টা আগে থেকে ৫ মিনিট পর পর সময় বলা</div>
-        <div id="iftarStateText" class="toggle-state">অবস্থা: ওপেন (চালু)</div>
-      </div>
-      <div class="btn-group">
-        <button type="button" id="iftarOpenBtn" class="btn-open active">ওপেন</button>
-        <button type="button" id="iftarCloseBtn" class="btn-close">বন্ধ</button>
-      </div>
-    </div>
-
-    <div class="toggle-row">
-      <div class="toggle-label-box">
-        <div class="toggle-title">২. সেহরির ১.৫ ঘণ্টা (৯০ মিনিট) আগে সতর্কবার্তা</div>
-        <div id="sehriStateText" class="toggle-state">অবস্থা: ওপেন (চালু)</div>
-      </div>
-      <div class="btn-group">
-        <button type="button" id="sehriOpenBtn" class="btn-open active">ওপেন</button>
-        <button type="button" id="sehriCloseBtn" class="btn-close">বন্ধ</button>
-      </div>
-    </div>
-
-    <div class="toggle-row">
-      <div class="toggle-label-box">
-        <div class="toggle-title">৩. সাধারণ অবস্থায় প্রতি ১ ঘণ্টা পর পর সময় বলা</div>
-        <div id="hourlyStateText" class="toggle-state">অবস্থা: ওপেন (চালু)</div>
-      </div>
-      <div class="btn-group">
-        <button type="button" id="hourlyOpenBtn" class="btn-open active">ওপেন</button>
-        <button type="button" id="hourlyCloseBtn" class="btn-close">বন্ধ</button>
-      </div>
-    </div>
-
-    <div class="toggle-row">
-      <div class="toggle-label-box">
-        <div class="toggle-title">৪. সম্পূর্ণ ভয়েস সিস্টেম</div>
-        <div id="masterStateText" class="toggle-state">অবস্থা: ওপেন (চালু)</div>
-      </div>
-      <div class="btn-group">
-        <button type="button" id="masterOpenBtn" class="btn-open active">ওপেন</button>
-        <button type="button" id="masterCloseBtn" class="btn-close">বন্ধ</button>
-      </div>
+    <div class="ai-out" id="clockAiBox">
+      প্রতি ১ ঘণ্টা পর পর স্বয়ংক্রিয়ভাবে সময় বলবে। যেকোনো সময় "এখনই সময় বলুন" চাপুন।
     </div>
   </section>
 </main>
 
-<script>
-const LOCATION_TIMES = {
-  BD: {
-    countryName: "বাংলাদেশ",
-    districts: {
-      "ঢাকা": { sehri: "04:58", iftar: "17:12" },
-      "চট্টগ্রাম": { sehri: "04:53", iftar: "17:07" },
-      "কক্সবাজার": { sehri: "04:52", iftar: "17:08" },
-      "সিলেট": { sehri: "04:50", iftar: "17:04" },
-      "রাজশাহী": { sehri: "05:05", iftar: "17:19" },
-      "খুলনা": { sehri: "05:02", iftar: "17:17" },
-      "বরিশাল": { sehri: "04:59", iftar: "17:14" },
-      "রংপুর": { sehri: "05:02", iftar: "17:14" },
-      "ময়মনসিংহ": { sehri: "04:58", iftar: "17:11" }
-    }
-  },
-  SA: {
-    countryName: "সৌদি আরব",
-    districts: {
-      "মক্কা": { sehri: "05:24", iftar: "17:38" },
-      "মদিনা": { sehri: "05:27", iftar: "17:36" },
-      "রিয়াদ": { sehri: "04:56", iftar: "17:02" },
-      "জেদ্দা": { sehri: "05:27", iftar: "17:41" }
-    }
-  },
-  AE: {
-    countryName: "সংযুক্ত আরব আমিরাত",
-    districts: {
-      "দুবাই": { sehri: "05:22", iftar: "17:32" },
-      "আবুধাবি": { sehri: "05:26", iftar: "17:36" },
-      "শারজাহ": { sehri: "05:21", iftar: "17:31" }
-    }
-  },
-  GB: {
-    countryName: "যুক্তরাজ্য",
-    districts: {
-      "লন্ডন": { sehri: "05:45", iftar: "16:02" },
-      "বার্মিংহাম": { sehri: "05:52", iftar: "16:06" },
-      "ম্যানচেস্টার": { sehri: "05:56", iftar: "16:04" }
-    }
-  },
-  US: {
-    countryName: "যুক্তরাষ্ট্র",
-    districts: {
-      "নিউইয়র্ক": { sehri: "05:32", iftar: "16:36" },
-      "লস অ্যাঞ্জেলেস": { sehri: "05:38", iftar: "16:50" },
-      "হিউস্টন": { sehri: "05:35", iftar: "17:15" }
-    }
-  }
-};
+<script type="module">
+import { AynaAiSignal } from "./ayna-ai-signal.js";
+const $ = id => document.getElementById(id);
 
-const TalkingSehriIftarClock = {
-  // আজকের ভিত্তি সময় (২৪-ঘণ্টা ফরম্যাটে, প্রয়োজনে আরবি ক্যালেন্ডার থেকে ডাইনামিক করুন)
-  sehriTime: { hour: 4, minute: 58 }, // ০৪:৫৮ AM
-  iftarTime: { hour: 17, minute: 12 }, // ০৫:১২ PM
+function syncButtons() {
+  const label = AynaAiSignal.clockEnabled ? "🔊 সময় বলা: চালু" : "🔇 সময় বলা: বন্ধ";
+  if ($("toggleClockBtn")) $("toggleClockBtn").textContent = label;
+  if ($("topToggleBtn")) $("topToggleBtn").textContent = AynaAiSignal.clockEnabled ? "🔊 ঘড়ি: চালু" : "🔇 ঘড়ি: বন্ধ";
+}
 
-  iftarLeadHours: 1, // ১ বা ২ ঘণ্টা
-  enabled: {
-    master: true,
-    iftar: true,
-    sehri: true,
-    hourly: true
-  },
-
-  lastHourlySpoken: "",
-  lastIftar5MinSpoken: "",
-  sehriPreAlertSpoken: false,
-
-  setTimeFromString(target, timeStr) {
-    const [hStr, mStr] = (timeStr || "00:00").split(":");
-    const h = parseInt(hStr, 10);
-    const m = parseInt(mStr, 10);
-    if (!Number.isNaN(h) && !Number.isNaN(m)) {
-      this[target] = { hour: h, minute: m };
-    }
-  },
-
-  speak(text) {
-    if (!this.enabled.master) return;
-    if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "bn-BD";
-    utter.rate = 0.95;
-    window.speechSynthesis.speak(utter);
-  },
-
-  toMinutes(h, m) {
-    return h * 60 + m;
-  },
-
-  formatBanglaTime(date) {
-    return date.toLocaleTimeString("bn-BD", {
+AynaAiSignal.startHourlyClock(now => {
+  if ($("liveClock")) {
+    $("liveClock").textContent = now.toLocaleTimeString("bn-BD", {
       hour: "2-digit",
       minute: "2-digit",
+      second: "2-digit",
       hour12: true
     });
-  },
-
-  tick() {
-    const now = new Date();
-    const h = now.getHours();
-    const m = now.getMinutes();
-
-    const clockEl = document.getElementById("liveClockDisplay");
-    if (clockEl) {
-      clockEl.textContent = now.toLocaleTimeString("bn-BD", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true
-      });
-    }
-
-    if (!this.enabled.master) return;
-
-    const nowMin = this.toMinutes(h, m);
-    const sehriMin = this.toMinutes(this.sehriTime.hour, this.sehriTime.minute);
-    const iftarMin = this.toMinutes(this.iftarTime.hour, this.iftarTime.minute);
-
-    // ১. সেহরির ১.৫ ঘণ্টা (৯০ মিনিট) আগে সময় বলা
-    if (this.enabled.sehri) {
-      const sehriAlertMin = sehriMin - 90;
-      if (nowMin === sehriAlertMin && !this.sehriPreAlertSpoken) {
-        this.sehriPreAlertSpoken = true;
-        this.speak(
-          `সতর্কতা: সেহরির আর দেড় ঘণ্টা বাকি। এখন সময় ${this.formatBanglaTime(now)}।`
-        );
-      } else if (nowMin !== sehriAlertMin) {
-        this.sehriPreAlertSpoken = false;
-      }
-    }
-
-    // ২. ইফতারের ১ বা ২ ঘণ্টা আগে থেকে ৫ মিনিট পর পর সময় বলা
-    if (this.enabled.iftar) {
-      const leadMinutes = (Number(this.iftarLeadHours) === 2 ? 2 : 1) * 60;
-      const iftarWindowStart = iftarMin - leadMinutes;
-      if (nowMin >= iftarWindowStart && nowMin <= iftarMin) {
-        const diffFromStart = nowMin - iftarWindowStart;
-        const slotKey = `${now.toDateString()}-${h}:${m}`;
-        if (diffFromStart % 5 === 0 && this.lastIftar5MinSpoken !== slotKey) {
-          this.lastIftar5MinSpoken = slotKey;
-          const leftMin = iftarMin - nowMin;
-          this.speak(
-            leftMin === 0
-              ? `এখন ইফতারের সময়, ${this.formatBanglaTime(now)}।`
-              : `ইফতারের আর ${leftMin} মিনিট বাকি। এখন সময় ${this.formatBanglaTime(now)}।`
-          );
-        }
-        return;
-      }
-    }
-
-    // ৩. সাধারণ অবস্থায় প্রতি ১ ঘণ্টা পর পর সময় বলা
-    if (this.enabled.hourly) {
-      const hourKey = `${now.toDateString()}-${h}`;
-      if (m === 0 && this.lastHourlySpoken !== hourKey) {
-        this.lastHourlySpoken = hourKey;
-        this.speak(`এখন সময় ${this.formatBanglaTime(now)}।`);
-      }
-    }
-  },
-
-  start() {
-    this.tick();
-    if (!this._timer) {
-      this._timer = setInterval(() => this.tick(), 1000); // প্রতি ১ সেকেন্ডে ঘড়ি ও মিনিট আপডেট
-    }
-    const statusEl = document.getElementById("voiceStatus");
-    if (statusEl) {
-      statusEl.textContent = this.enabled.master
-        ? "বাংলা ভয়েস অ্যালার্ট সক্রিয় হয়েছে।"
-        : "ভয়েস সিস্টেম বর্তমানে বন্ধ আছে।";
-    }
   }
-};
-
-function populateDistricts() {
-  const countryCode = document.getElementById("countrySelect").value;
-  const districtSelect = document.getElementById("districtSelect");
-  const countryData = LOCATION_TIMES[countryCode];
-
-  districtSelect.innerHTML = "";
-  Object.keys(countryData.districts).forEach((dist) => {
-    const opt = document.createElement("option");
-    opt.value = dist;
-    opt.textContent = dist;
-    districtSelect.appendChild(opt);
-  });
-
-  applySelectedDistrictTime();
-}
-
-function applySelectedDistrictTime() {
-  const countryCode = document.getElementById("countrySelect").value;
-  const distName = document.getElementById("districtSelect").value;
-  const countryData = LOCATION_TIMES[countryCode];
-  const times = countryData.districts[distName];
-
-  if (times) {
-    document.getElementById("sehriInput").value = times.sehri;
-    document.getElementById("iftarInput").value = times.iftar;
-    TalkingSehriIftarClock.setTimeFromString("sehriTime", times.sehri);
-    TalkingSehriIftarClock.setTimeFromString("iftarTime", times.iftar);
-  }
-
-  updateSummary();
-}
-
-function updateSummary() {
-  const countryCode = document.getElementById("countrySelect").value;
-  const countryName = LOCATION_TIMES[countryCode]?.countryName || "";
-  const distName = document.getElementById("districtSelect").value;
-  const sehriVal = document.getElementById("sehriInput").value;
-  const iftarVal = document.getElementById("iftarInput").value;
-  const leadHrs = document.getElementById("iftarLeadHours").value;
-
-  document.getElementById("scheduleSummary").textContent =
-    `${countryName} — ${distName} | সেহরি: ${sehriVal} | ইফতার: ${iftarVal} | ইফতারের ${leadHrs} ঘণ্টা আগে থেকে ৫ মিনিট পর পর`;
-}
-
-function setupTogglePair(key, openBtnId, closeBtnId, textId) {
-  const openBtn = document.getElementById(openBtnId);
-  const closeBtn = document.getElementById(closeBtnId);
-  const stateText = document.getElementById(textId);
-
-  function refreshUI() {
-    const isOn = TalkingSehriIftarClock.enabled[key];
-    openBtn.classList.toggle("active", isOn);
-    closeBtn.classList.toggle("active", !isOn);
-    stateText.textContent = isOn ? "অবস্থা: ওপেন (চালু)" : "অবস্থা: বন্ধ";
-  }
-
-  openBtn.addEventListener("click", () => {
-    TalkingSehriIftarClock.enabled[key] = true;
-    if (key === "master") {
-      window.speechSynthesis?.resume?.();
-    }
-    refreshUI();
-  });
-
-  closeBtn.addEventListener("click", () => {
-    TalkingSehriIftarClock.enabled[key] = false;
-    if (key === "master") {
-      window.speechSynthesis?.cancel?.();
-    }
-    refreshUI();
-  });
-
-  refreshUI();
-}
-
-document.getElementById("countrySelect").addEventListener("change", populateDistricts);
-document.getElementById("districtSelect").addEventListener("change", applySelectedDistrictTime);
-
-document.getElementById("sehriInput").addEventListener("change", (e) => {
-  TalkingSehriIftarClock.setTimeFromString("sehriTime", e.target.value);
-  updateSummary();
+  syncButtons();
 });
 
-document.getElementById("iftarInput").addEventListener("change", (e) => {
-  TalkingSehriIftarClock.setTimeFromString("iftarTime", e.target.value);
-  updateSummary();
+$("speakNowBtn")?.addEventListener("click", () => {
+  AynaAiSignal.speakNow();
+  $("clockAiBox").textContent = `🤖 AI সিগন্যাল: এখন সময় ${AynaAiSignal.formatBanglaTime(new Date())} ঘোষণা করা হয়েছে।`;
 });
-
-document.getElementById("iftarLeadHours").addEventListener("change", (e) => {
-  TalkingSehriIftarClock.iftarLeadHours = Number(e.target.value);
-  TalkingSehriIftarClock.lastIftar5MinSpoken = "";
-  updateSummary();
+$("topSpeakBtn")?.addEventListener("click", () => AynaAiSignal.speakNow());
+$("toggleClockBtn")?.addEventListener("click", () => {
+  AynaAiSignal.setClockEnabled(!AynaAiSignal.clockEnabled, true);
+  syncButtons();
 });
-
-setupTogglePair("iftar", "iftarOpenBtn", "iftarCloseBtn", "iftarStateText");
-setupTogglePair("sehri", "sehriOpenBtn", "sehriCloseBtn", "sehriStateText");
-setupTogglePair("hourly", "hourlyOpenBtn", "hourlyCloseBtn", "hourlyStateText");
-setupTogglePair("master", "masterOpenBtn", "masterCloseBtn", "masterStateText");
-
-document.getElementById("testVoiceBtn")?.addEventListener("click", () => {
-  TalkingSehriIftarClock.start();
-  const now = new Date();
-  TalkingSehriIftarClock.speak(
-    `এখন সময় ${TalkingSehriIftarClock.formatBanglaTime(now)}।`
-  );
+$("topToggleBtn")?.addEventListener("click", () => {
+  AynaAiSignal.setClockEnabled(!AynaAiSignal.clockEnabled, true);
+  syncButtons();
 });
-
-// ব্রাউজারে অডিও অনুমতি সক্রিয় করতে প্রথম ক্লিকেই চালু হবে
-document.addEventListener(
-  "click",
-  () => {
-    TalkingSehriIftarClock.start();
-  },
-  { once: true }
-);
-
-populateDistricts();
-// পৃষ্ঠা খুললেই ঘড়ি দৃশ্যমান করতে শুরু হবে
-TalkingSehriIftarClock.tick();
+$("openClockBtn")?.addEventListener("click", () => {
+  AynaAiSignal.setClockEnabled(true, true);
+  syncButtons();
+});
+$("closeClockBtn")?.addEventListener("click", () => {
+  AynaAiSignal.setClockEnabled(false, false);
+  syncButtons();
+});
 </script>
-
 </body>
 </html>
