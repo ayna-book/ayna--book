@@ -80,7 +80,6 @@ export const AynaUhdMasterSound = {
     const prof = this.profiles[this.currentProfile];
     const now = ctx.currentTime;
 
-    // Stereo Chorus / Hall Delay Bus
     const delay = ctx.createDelay(1.0);
     delay.delayTime.setValueAtTime(0.028, now);
     const feedback = ctx.createGain();
@@ -132,7 +131,6 @@ export const AynaUhdMasterSound = {
     };
   },
 
-  // 48kHz 16-bit PCM UHD WAV Blob তৈরি করে (অডিও ট্যাগ বা ডাউনলোডের জন্য)
   createUhdWavBlob(profileKey = this.currentProfile) {
     const prof = this.profiles[profileKey] || this.profiles.ABBEY_HALL_UHD_48K;
     const duration = Math.min(prof.durationSec, 4.5);
@@ -180,7 +178,7 @@ export const AynaUhdMasterSound = {
     writeStr(8, "WAVE");
     writeStr(12, "fmt ");
     view.setUint32(16, 16, true);
-    view.setUint16(20, 1, true); // PCM
+    view.setUint16(20, 1, true);
     view.setUint16(22, numChannels, true);
     view.setUint32(24, UHD_SAMPLE_RATE, true);
     view.setUint32(28, byteRate, true);
