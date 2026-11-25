@@ -1,25 +1,270 @@
-<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071b49"><title>AYNA BOOK Radio & TV</title><style>
-*{box-sizing:border-box}body{margin:0;background:#071b49;color:#fff;font-family:Arial,sans-serif}header{text-align:center;padding:18px;background:#102b60;border-bottom:2px solid #ffd700}h1{color:#fff;font-size:30px}.wrap{max-width:1100px;margin:auto;padding:16px}h2{color:#fff;font-size:27px;margin-top:26px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card,.player{background:#142d5d;border:2px solid #49649a;border-radius:14px;padding:17px}.card h3{color:#fff;font-size:21px}.card p,.notice{font-size:17px;line-height:1.6}.card a,.btn{display:inline-block;background:#ffd700;color:#071b49;padding:12px 15px;border-radius:9px;text-decoration:none;font-weight:bold}.player{border-color:#ffd700;margin:12px 0}.player audio,.player video{width:100%;margin-top:12px}.search,input{width:100%;padding:15px;border-radius:10px;border:2px solid #ffd700;font-size:18px;margin:10px 0}.notice{padding:14px;background:#142d5d;border:1px solid #ffd700;border-radius:12px}
-</style></head><body><header><h1>👁 AYNA BOOK</h1><p>🌍 WORLD RADIO & TELEVISION</p><p>বাংলাদেশ ও সারাবিশ্বের সম্প্রচার</p></header><main class="wrap">
-<a href="index.html" style="color:#ffd700;font-size:18px">← AYNA BOOK হোম</a>
-<h2>📻 লাইভ রেডিও</h2><div class="player"><b>🇧🇩 বাংলাদেশ বেতার অনলাইন স্ট্রিম</b><audio controls preload="none" src="https://stream.zeno.fm/8sn7cac604zuv"></audio><p><a class="btn" href="https://betar.gov.bd/" target="_blank" rel="noopener">বাংলাদেশ বেতার অফিসিয়াল সাইট</a></p></div>
-<h2>📺 বিশ্ব টেলিভিশন</h2><input class="search" id="search" placeholder="দেশ বা চ্যানেল খুঁজুন...">
-<div class="notice">চ্যানেলের অফিসিয়াল লাইভ পেজ খুলুন। অনেক সম্প্রচারক অন্য ওয়েবসাইটে ভিডিও এম্বেড করতে দেন না; তাই সব চ্যানেল এই পেজের ভেতরে চালানো সম্ভব নয়।</div>
-<h2>🇧🇩 বাংলাদেশ</h2><div class="grid">
-<div class="card"><h3>BTV</h3><p>বাংলাদেশ টেলিভিশন</p><a href="https://www.btv.gov.bd/" target="_blank" rel="noopener">BTV খুলুন</a></div>
-<div class="card"><h3>Bangladesh Betar</h3><p>জাতীয় রেডিও সম্প্রচার</p><a href="https://betar.gov.bd/" target="_blank" rel="noopener">রেডিও সাইট</a></div>
-<div class="card"><h3>Jamuna TV</h3><p>সংবাদ সম্প্রচার</p><a href="https://www.youtube.com/@JamunaTVbd" target="_blank" rel="noopener">অফিসিয়াল চ্যানেল</a></div></div>
-<h2>🌏 এশিয়া</h2><div class="grid">
-<div class="card"><h3>NHK World</h3><p>জাপান</p><a href="https://www3.nhk.or.jp/nhkworld/" target="_blank" rel="noopener">Watch</a></div>
-<div class="card"><h3>CGTN</h3><p>চীন</p><a href="https://www.cgtn.com/" target="_blank" rel="noopener">Watch</a></div>
-<div class="card"><h3>DD News</h3><p>ভারত</p><a href="https://www.youtube.com/@DDNewsOfficial" target="_blank" rel="noopener">Official channel</a></div></div>
-<h2>🌍 ইউরোপ ও বিশ্ব</h2><div class="grid">
-<div class="card"><h3>Al Jazeera English Live</h3><p>আন্তর্জাতিক সংবাদ</p><a href="https://www.aljazeera.com/video/live/" target="_blank" rel="noopener">লাইভ দেখুন</a></div>
-<div class="card"><h3>DW News</h3><p>জার্মানি</p><a href="https://www.dw.com/en/live-tv/s-100825" target="_blank" rel="noopener">লাইভ দেখুন</a></div>
-<div class="card"><h3>France 24</h3><p>ফ্রান্স</p><a href="https://www.france24.com/en/live" target="_blank" rel="noopener">লাইভ দেখুন</a></div>
-<div class="card"><h3>NASA TV</h3><p>মহাকাশ ও বিজ্ঞান</p><a href="https://www.nasa.gov/nasatv/" target="_blank" rel="noopener">NASA TV</a></div></div>
-<h2>নিজস্ব বৈধ স্ট্রিম URL</h2><div class="player"><p>সরাসরি HTTPS MP3/AAC অডিও বা MP4 ভিডিও URL দিন।</p><input id="streamUrl" type="url" placeholder="https://..."><button class="btn" id="play">স্ট্রিম চালান</button><audio id="audio" controls hidden></audio><video id="video" controls playsinline hidden></video><p id="status"></p></div>
-</main><script>
-document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.grid .card').forEach(c=>c.style.display=c.innerText.toLowerCase().includes(q)?'block':'none');});
-document.getElementById('play').onclick=()=>{const u=document.getElementById('streamUrl').value.trim(),s=document.getElementById('status');if(!u.startsWith('https://')){s.textContent='HTTPS URL দিন।';return;}const v=/\\.(mp4|webm)(\\?|$)/i.test(u),a=document.getElementById('audio'),b=document.getElementById('video');a.pause();b.pause();a.hidden=v;b.hidden=!v;const p=v?b:a;p.src=u;p.load();p.play().then(()=>s.textContent='স্ট্রিম চালু হয়েছে।').catch(()=>s.textContent='URL-টি সরাসরি MP3/AAC বা MP4 হতে হবে; DRM বা HLS সব ব্রাউজারে চলে না।');};
-</script></body></html>
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK Radio & TV</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#071b49;color:#fff;font-family:Arial,"Noto Sans Bengali",sans-serif}
+header{text-align:center;padding:18px;background:#102b60;border-bottom:2px solid #ffd700}
+h1{color:#fff;font-size:30px;margin:0 0 8px}
+.top-controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.top-controls button,.top-controls a{background:#142d5d;color:#ffd700;border:2px solid #ffd700;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;cursor:pointer}
+.wrap{max-width:1100px;margin:auto;padding:16px}
+h2{color:#fff;font-size:27px;margin-top:26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card,.player,.ai-panel{background:#142d5d;border:2px solid #49649a;border-radius:14px;padding:17px}
+.card h3{color:#fff;font-size:21px;margin:0 0 8px}
+.card p,.notice{font-size:17px;line-height:1.6}
+.card a,.btn{display:inline-block;background:#ffd700;color:#071b49;padding:12px 15px;border-radius:9px;text-decoration:none;font-weight:bold;border:none;cursor:pointer;font-size:16px}
+.btn-sec{background:#0b1d42;color:#ffd700;border:2px solid #ffd700;padding:11px 14px;border-radius:9px;font-weight:bold;cursor:pointer;font-size:16px}
+.player,.ai-panel{border-color:#ffd700;margin:12px 0}
+.player audio,.player video{width:100%;margin-top:12px}
+.search,input,select{width:100%;padding:15px;border-radius:10px;border:2px solid #ffd700;font-size:18px;margin:10px 0;background:#091a3d;color:#fff}
+.notice{padding:14px;background:#142d5d;border:1px solid #ffd700;border-radius:12px}
+.ai-out{background:#07142e;border:1.5px solid #38f2ff;border-radius:10px;padding:14px;margin-top:12px;font-size:18px;line-height:1.6;color:#fff6b3;white-space:pre-line}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+#aiSignalToast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#0b1d42;color:#fff;border:2px solid #ffd700;padding:12px 20px;border-radius:10px;z-index:100;display:none;max-width:90%;font-size:17px;font-weight:bold;text-align:center}
+</style>
+</head>
+<body>
+
+<div id="aiSignalToast"></div>
+
+<header>
+  <h1>👁 AYNA BOOK</h1>
+  <p>🌍 WORLD RADIO & TELEVISION</p>
+  <p>বাংলাদেশ ও সারাবিশ্বের সম্প্রচার + AI সিগন্যাল</p>
+  <div class="top-controls">
+    <button type="button" id="speakClockBtn">🕒 সময় বলুন</button>
+    <button type="button" id="toggleClockBtn">🔊 ঘড়ি: চালু</button>
+    <a href="index.html">← AYNA BOOK হোম</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <a href="index.html" style="color:#ffd700;font-size:18px">← AYNA BOOK হোম</a>
+
+  <h2>🤖 রেডিও ও টেলিভিশন AI সিগন্যাল</h2>
+  <div class="ai-panel">
+    <select id="aiChannelSelect">
+      <option value="বাংলাদেশ বেতার ও BTV">বাংলাদেশ বেতার ও BTV</option>
+      <option value="Jamuna TV ও সংবাদ সম্প্রচার">Jamuna TV ও সংবাদ সম্প্রচার</option>
+      <option value="NHK World, CGTN ও DD News">NHK World, CGTN ও DD News</option>
+      <option value="Al Jazeera, DW, France 24 ও NASA TV">Al Jazeera, DW, France 24 ও NASA TV</option>
+    </select>
+    <input id="aiTopicInput" type="text" placeholder="চ্যানেল বা সম্প্রচার বিষয় লিখুন...">
+    <div class="btn-row">
+      <button type="button" class="btn" id="runAiSignalBtn">🤖 AI সিগন্যাল পাঠান</button>
+      <button type="button" class="btn-sec" id="speakAiSignalBtn">🔊 কণ্ঠে শুনুন</button>
+    </div>
+    <div class="ai-out" id="aiSignalBox">রেডিও বা টেলিভিশন চ্যানেল নির্বাচন করে AI সিগন্যাল চালান। ভুল বা খালি ইনপুটে কণ্ঠে সিগন্যাল বাজবে।</div>
+  </div>
+
+  <h2>📻 লাইভ রেডিও</h2>
+  <div class="player">
+    <b>🇧🇩 বাংলাদেশ বেতার অনলাইন স্ট্রিম</b>
+    <audio controls preload="none" src="https://stream.zeno.fm/8sn7cac604zuv"></audio>
+    <p><a class="btn" href="https://betar.gov.bd/" target="_blank" rel="noopener">বাংলাদেশ বেতার অফিসিয়াল সাইট</a></p>
+  </div>
+
+  <h2>📺 বিশ্ব টেলিভিশন</h2>
+  <input class="search" id="search" placeholder="দেশ বা চ্যানেল খুঁজুন...">
+  <div class="notice">চ্যানেলের অফিসিয়াল লাইভ পেজ খুলুন। অনেক সম্প্রচারক অন্য ওয়েবসাইটে ভিডিও এম্বেড করতে দেন না; তাই সব চ্যানেল এই পেজের ভেতরে চালানো সম্ভব নয়।</div>
+
+  <h2>🇧🇩 বাংলাদেশ</h2>
+  <div class="grid">
+    <div class="card"><h3>BTV</h3><p>বাংলাদেশ টেলিভিশন</p><a href="https://www.btv.gov.bd/" target="_blank" rel="noopener">BTV খুলুন</a></div>
+    <div class="card"><h3>Bangladesh Betar</h3><p>জাতীয় রেডিও সম্প্রচার</p><a href="https://betar.gov.bd/" target="_blank" rel="noopener">রেডিও সাইট</a></div>
+    <div class="card"><h3>Jamuna TV</h3><p>সংবাদ সম্প্রচার</p><a href="https://www.youtube.com/@JamunaTVbd" target="_blank" rel="noopener">অফিসিয়াল চ্যানেল</a></div>
+  </div>
+
+  <h2>🌏 এশিয়া</h2>
+  <div class="grid">
+    <div class="card"><h3>NHK World</h3><p>জাপান</p><a href="https://www3.nhk.or.jp/nhkworld/" target="_blank" rel="noopener">Watch</a></div>
+    <div class="card"><h3>CGTN</h3><p>চীন</p><a href="https://www.cgtn.com/" target="_blank" rel="noopener">Watch</a></div>
+    <div class="card"><h3>DD News</h3><p>ভারত</p><a href="https://www.youtube.com/@DDNewsOfficial" target="_blank" rel="noopener">Official channel</a></div>
+  </div>
+
+  <h2>🌍 ইউরোপ ও বিশ্ব</h2>
+  <div class="grid">
+    <div class="card"><h3>Al Jazeera English Live</h3><p>আন্তর্জাতিক সংবাদ</p><a href="https://www.aljazeera.com/video/live/" target="_blank" rel="noopener">লাইভ দেখুন</a></div>
+    <div class="card"><h3>DW News</h3><p>জার্মানি</p><a href="https://www.dw.com/en/live-tv/s-100825" target="_blank" rel="noopener">লাইভ দেখুন</a></div>
+    <div class="card"><h3>France 24</h3><p>ফ্রান্স</p><a href="https://www.france24.com/en/live" target="_blank" rel="noopener">লাইভ দেখুন</a></div>
+    <div class="card"><h3>NASA TV</h3><p>মহাকাশ ও বিজ্ঞান</p><a href="https://www.nasa.gov/nasatv/" target="_blank" rel="noopener">NASA TV</a></div>
+  </div>
+
+  <h2>নিজস্ব বৈধ স্ট্রিম URL</h2>
+  <div class="player">
+    <p>সরাসরি HTTPS MP3/AAC অডিও বা MP4 ভিডিও URL দিন।</p>
+    <input id="streamUrl" type="url" placeholder="https://...">
+    <button class="btn" id="play">স্ট্রিম চালান</button>
+    <audio id="audio" controls hidden></audio>
+    <video id="video" controls playsinline hidden></video>
+    <p id="status"></p>
+  </div>
+</main>
+
+<script>
+const AynaAiSignal = {
+  clockEnabled: true,
+  lastHourlyKey: "",
+  lastText: "",
+
+  toast(msg) {
+    const el = document.getElementById("aiSignalToast");
+    if (!el) return;
+    el.textContent = msg;
+    el.style.display = "block";
+    clearTimeout(this._t);
+    this._t = setTimeout(() => { el.style.display = "none"; }, 3200);
+  },
+
+  tone(kind = "alert") {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = kind === "error" ? "sawtooth" : "triangle";
+      osc.frequency.setValueAtTime(kind === "error" ? 320 : 660, ctx.currentTime);
+      osc.frequency.setValueAtTime(kind === "error" ? 210 : 880, ctx.currentTime + 0.14);
+      gain.gain.setValueAtTime(0.14, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.34);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } catch (_) {}
+  },
+
+  speak(text, force = true) {
+    if ((!force && !this.clockEnabled) || !text || !("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(String(text));
+      const voices = window.speechSynthesis.getVoices() || [];
+      const bn = voices.find(v => /bn/i.test(v.lang));
+      u.voice = bn || voices[0] || null;
+      u.lang = bn?.lang || "bn-BD";
+      u.rate = 0.96;
+      window.speechSynthesis.speak(u);
+    } catch (_) {}
+  },
+
+  error(mistakeBn, boxId = "aiSignalBox") {
+    this.tone("error");
+    this.toast("⚠️ " + mistakeBn);
+    const box = document.getElementById(boxId);
+    if (box) box.textContent = "⚠️ AI ভুল সিগন্যাল:\n" + mistakeBn;
+    this.speak("ভুল হয়েছে। " + mistakeBn, true);
+  },
+
+  alert(infoBn, speakNow = true, boxId = "aiSignalBox") {
+    this.lastText = infoBn;
+    this.tone("alert");
+    this.toast("🤖 " + infoBn);
+    const box = document.getElementById(boxId);
+    if (box) box.textContent = "🤖 AI সিগন্যাল:\n" + infoBn;
+    if (speakNow) this.speak(infoBn, true);
+  },
+
+  speakNow() {
+    const nowText = new Date().toLocaleTimeString("bn-BD", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    });
+    this.alert(`এখন সময় ${nowText}।`, true);
+  },
+
+  startHourly() {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+    const tick = () => {
+      if (!this.clockEnabled) return;
+      const now = new Date();
+      const key = `${now.toDateString()}-${now.getHours()}`;
+      if (now.getMinutes() === 0 && this.lastHourlyKey !== key) {
+        this.lastHourlyKey = key;
+        this.speakNow();
+      }
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+};
+
+document.getElementById("speakClockBtn").onclick = () => AynaAiSignal.speakNow();
+document.getElementById("toggleClockBtn").onclick = function () {
+  AynaAiSignal.clockEnabled = !AynaAiSignal.clockEnabled;
+  this.textContent = AynaAiSignal.clockEnabled ? "🔊 ঘড়ি: চালু" : "🔇 ঘড়ি: বন্ধ";
+  AynaAiSignal.toast(AynaAiSignal.clockEnabled ? "সময় বলার ঘড়ি চালু" : "সময় বলার ঘড়ি বন্ধ");
+  if (AynaAiSignal.clockEnabled) AynaAiSignal.speakNow();
+};
+
+function buildRadioTvSignal() {
+  const ch = document.getElementById("aiChannelSelect").value;
+  const topic = document.getElementById("aiTopicInput").value.trim();
+  if (!topic) {
+    AynaAiSignal.error("চ্যানেল বা বিষয়ের ঘরটি খালি রয়েছে। কোনো বিষয় লিখুন।");
+    return null;
+  }
+  return `${ch} — "${topic}" বিষয়ে AI সিগন্যাল সক্রিয়। সম্প্রচার তথ্য ও লাইভ সংযোগ যাচাই প্রস্তুত।`;
+}
+
+document.getElementById("runAiSignalBtn").onclick = () => {
+  const msg = buildRadioTvSignal();
+  if (msg) AynaAiSignal.alert(msg, false);
+};
+
+document.getElementById("speakAiSignalBtn").onclick = () => {
+  const msg = AynaAiSignal.lastText || buildRadioTvSignal();
+  if (msg) AynaAiSignal.alert(msg, true);
+};
+
+document.getElementById("search").addEventListener("input", e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll(".grid .card").forEach(c => {
+    c.style.display = c.innerText.toLowerCase().includes(q) ? "block" : "none";
+  });
+});
+
+document.getElementById("play").onclick = () => {
+  const u = document.getElementById("streamUrl").value.trim();
+  const s = document.getElementById("status");
+  if (!u.startsWith("https://")) {
+    s.textContent = "HTTPS URL দিন।";
+    AynaAiSignal.error("স্ট্রিম URL-এ ভুল হয়েছে। অবশ্যই https:// দিয়ে শুরু হতে হবে।");
+    return;
+  }
+  const v = /\.(mp4|webm)(\?|$)/i.test(u);
+  const a = document.getElementById("audio");
+  const b = document.getElementById("video");
+  a.pause();
+  b.pause();
+  a.hidden = v;
+  b.hidden = !v;
+  const p = v ? b : a;
+  p.src = u;
+  p.load();
+  p.play()
+    .then(() => {
+      s.textContent = "স্ট্রিম চালু হয়েছে।";
+      AynaAiSignal.alert("নিজস্ব স্ট্রিম চালু হয়েছে।", false);
+    })
+    .catch(() => {
+      s.textContent = "URL-টি সরাসরি MP3/AAC বা MP4 হতে হবে; DRM বা HLS সব ব্রাউজারে চলে না।";
+      AynaAiSignal.error("স্ট্রিম চালু করা যায়নি। সরাসরি MP3, AAC বা MP4 লিংক ব্যবহার করুন।");
+    });
+};
+
+AynaAiSignal.startHourly();
+</script>
+</body>
+</html>
