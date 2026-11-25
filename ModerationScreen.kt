@@ -157,9 +157,12 @@ fun ModerationScreen(
     var reports by remember { mutableStateOf<List<ModerationReportQueueItem>>(emptyList()) }
     var statusBanner by remember { mutableStateOf("রিপোর্ট কিউ লোড হচ্ছে...") }
     var activeReviewKey by remember { mutableStateOf<String?>(null) }
+    var activeTriageKey by remember { mutableStateOf<String?>(null) }
+    var isBatchTriaging by remember { mutableStateOf(false) }
 
     val selectedDecisions = remember { mutableStateMapOf<String, String>() }
     val reviewNotes = remember { mutableStateMapOf<String, String>() }
+    val triageResults = remember { mutableStateMapOf<String, AynaAiTriageResult>() }
 
     LaunchedEffect(initialPostId) {
         val cleaned = initialPostId?.trim().orEmpty()
@@ -219,7 +222,9 @@ fun ModerationScreen(
                     }
                 }
 
-                statusBanner = "মোট রিপোর্ট: ${parsedItems.size}টি"
+                if (!isBatchTriaging) {
+                    statusBanner = "মোট রিপোর্ট: ${parsedItems.size}টি"
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -244,6 +249,28 @@ fun ModerationScreen(
                 item.reason.lowercase().contains(needle)
             matchesStatus && matchesQuery
         }
+    }
+
+    val visiblePendingReports = remember(filteredReports) {
+        filteredReports.filter { it.status == "pending" }
+    }
+
+    suspend fun applyTriageForItem(item: ModerationReportQueueItem): AynaAiTriageResult {
+        val itemKey = "${item.postId}/${item.reportId}"
+        val triage = runReportAiTriage(
+            postId = item.postId,
+            reportId = item.reportId,
+            apiBaseUrl = baseUrlInput,
+            auth = auth
+        )
+        triageResults[itemKey] = triage
+        if (triage.suggestedDecision in ModerationDecisions) {
+            selectedDecisions[itemKey] = triage.suggestedDecision
+        }
+        if ((reviewNotes[itemKey] ?: "").isBlank() && triage.moderatorNote.isNotBlank()) {
+            reviewNotes[itemKey] = triage.moderatorNote
+        }
+        return triage
     }
 
     Column(
@@ -333,6 +360,59 @@ fun ModerationScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            enabled = !isBatchTriaging && activeReviewKey == null && activeTriageKey == null && visiblePendingReports.isNotEmpty(),
+            onClick = {
+                coroutineScope.launch {
+                    val queueToProcess = visiblePendingReports.toList()
+                    isBatchTriaging = true
+                    var completedCount = 0
+                    var failedCount = 0
+
+                    try {
+                        for ((index, pendingItem) in queueToProcess.withIndex()) {
+                            val key = "${pendingItem.postId}/${pendingItem.reportId}"
+                            activeTriageKey = key
+                            statusBanner =
+                                "ব্যাচ AI ট্রায়াজ (${index + 1}/${queueToProcess.size}): ${pendingItem.reportId}..."
+                            try {
+                                applyTriageForItem(pendingItem)
+                                completedCount++
+                            } catch (_: Exception) {
+                                failedCount++
+                            }
+                        }
+                    } finally {
+                        activeTriageKey = null
+                        isBatchTriaging = false
+                    }
+
+                    statusBanner =
+                        "ব্যাচ AI ট্রায়াজ সম্পন্ন: সফল $completedCount/${queueToProcess.size}, ব্যর্থ $failedCount"
+                }
+            },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = ModCardBg,
+                contentColor = ModCyanAccent
+            ),
+            border = BorderStroke(2.dp, ModCyanAccent),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = if (isBatchTriaging) {
+                    "⚡ ব্যাচ AI ট্রায়াজ চলছে..."
+                } else {
+                    "⚡ দৃশ্যমান Pending রিপোর্ট AI ট্রায়াজ (${visiblePendingReports.size})"
+                },
+                fontSize = 15.sp,
+                fontWeight = FontWeight.ExtraBold,
+                maxLines = 1
+            )
+        }
+
         Spacer(modifier = Modifier.height(10.dp))
 
         LazyColumn(
@@ -344,8 +424,8 @@ fun ModerationScreen(
                 val currentDecision = selectedDecisions[itemKey] ?: "warned"
                 val currentNote = reviewNotes[itemKey].orEmpty()
                 val isSubmitting = activeReviewKey == itemKey
-                var aiTriageResult by remember(itemKey) { mutableStateOf<AynaAiTriageResult?>(null) }
-                var isTriaging by remember(itemKey) { mutableStateOf(false) }
+                val aiTriageResult = triageResults[itemKey]
+                val isTriaging = activeTriageKey == itemKey
 
                 Card(
                     shape = RoundedCornerShape(12.dp),
@@ -408,30 +488,19 @@ fun ModerationScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Button(
-                            enabled = !isTriaging && activeReviewKey == null,
+                            enabled = !isBatchTriaging && activeTriageKey == null && activeReviewKey == null,
                             onClick = {
                                 coroutineScope.launch {
-                                    isTriaging = true
+                                    activeTriageKey = itemKey
                                     statusBanner = "AI ঝুঁকি বিশ্লেষণ চলছে (${item.reportId})..."
                                     try {
-                                        val triage = runReportAiTriage(
-                                            postId = item.postId,
-                                            reportId = item.reportId,
-                                            apiBaseUrl = baseUrlInput,
-                                            auth = auth
-                                        )
-                                        aiTriageResult = triage
-                                        if (triage.suggestedDecision in ModerationDecisions) {
-                                            selectedDecisions[itemKey] = triage.suggestedDecision
-                                        }
-                                        if (currentNote.isBlank() && triage.moderatorNote.isNotBlank()) {
-                                            reviewNotes[itemKey] = triage.moderatorNote
-                                        }
-                                        statusBanner = "AI Risk: ${triage.riskScore}/100 • Suggested: ${triage.suggestedDecision}"
+                                        val triage = applyTriageForItem(item)
+                                        statusBanner =
+                                            "AI Risk: ${triage.riskScore}/100 • Suggested: ${triage.suggestedDecision}"
                                     } catch (e: Exception) {
                                         statusBanner = "AI ট্রায়াজ ব্যর্থ: ${e.message ?: "ত্রুটি"}"
                                     } finally {
-                                        isTriaging = false
+                                        activeTriageKey = null
                                     }
                                 }
                             },
@@ -463,7 +532,7 @@ fun ModerationScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Button(
-                            enabled = activeReviewKey == null,
+                            enabled = !isBatchTriaging && activeReviewKey == null && activeTriageKey == null,
                             onClick = {
                                 coroutineScope.launch {
                                     activeReviewKey = itemKey
