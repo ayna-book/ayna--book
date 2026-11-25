@@ -1,0 +1,32 @@
+val context = LocalContext.current
+val auth = remember { FirebaseAuth.getInstance() }
+val scope = rememberCoroutineScope()
+var clockStatus by remember { mutableStateOf("ঘড়ি প্রস্তুত") }
+val speakingClock = remember {
+    AynaAiSpeakingClock(context = context) { status -> clockStatus = status }
+}
+
+DisposableEffect(Unit) {
+    onDispose { speakingClock.shutdown() }
+}
+
+Column {
+    Text(text = "⏰ কথা বলার ঘড়ি", color = Color(0xFFFFF6B3), fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+    Text(text = clockStatus, color = Color(0xFF38F2FF), fontSize = 16.sp)
+    Spacer(modifier = Modifier.height(8.dp))
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Button(onClick = { speakingClock.speakLocalTimeNow() }) {
+            Text("🔊 এখন সময় বলুন")
+        }
+        Button(onClick = {
+            scope.launch {
+                speakingClock.speakWithAiBriefing(
+                    locationLabel = "Balukhali Bazar, Chittagong Division, Bangladesh",
+                    auth = auth
+                )
+            }
+        }) {
+            Text("🤖 AI সহ সময়")
+        }
+    }
+}
