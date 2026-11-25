@@ -31,6 +31,12 @@ private val ModCyan = Color(0xFF38F2FF)
 
 private val ModerationDecisions = listOf("warned", "dismissed", "removed")
 
+private enum class ReportStatusFilter(val label: String) {
+    ALL("সব"),
+    PENDING("Pending"),
+    REVIEWED("Reviewed")
+}
+
 data class AynaPostReportItem(
     val postId: String = "",
     val reportId: String = "",
@@ -58,6 +64,7 @@ fun ModerationScreen(
     var baseUrlInput by remember { mutableStateOf(apiBaseUrl) }
     var reports by remember { mutableStateOf<List<AynaPostReportItem>>(emptyList()) }
     var filterByInitialPost by remember { mutableStateOf(cleanInitialPostId.isNotEmpty()) }
+    var statusFilter by remember { mutableStateOf(ReportStatusFilter.ALL) }
     var statusBanner by remember { mutableStateOf("অ্যাডমিন যাচাই করা হচ্ছে...") }
     var activeReviewKey by remember { mutableStateOf<String?>(null) }
 
@@ -161,11 +168,20 @@ fun ModerationScreen(
         }
     }
 
-    val visibleReports = remember(reports, filterByInitialPost, cleanInitialPostId) {
-        if (filterByInitialPost && cleanInitialPostId.isNotEmpty()) {
-            reports.filter { it.postId == cleanInitialPostId }
-        } else {
-            reports
+    val visibleReports = remember(reports, filterByInitialPost, cleanInitialPostId, statusFilter) {
+        reports.filter { item ->
+            val matchesPost = if (filterByInitialPost && cleanInitialPostId.isNotEmpty()) {
+                item.postId == cleanInitialPostId
+            } else {
+                true
+            }
+            val isReviewed = item.status.equals("reviewed", ignoreCase = true)
+            val matchesStatus = when (statusFilter) {
+                ReportStatusFilter.ALL -> true
+                ReportStatusFilter.PENDING -> !isReviewed
+                ReportStatusFilter.REVIEWED -> isReviewed
+            }
+            matchesPost && matchesStatus
         }
     }
 
@@ -192,6 +208,42 @@ fun ModerationScreen(
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            ReportStatusFilter.entries.forEach { chip ->
+                val selected = statusFilter == chip
+                FilterChip(
+                    selected = selected,
+                    onClick = { statusFilter = chip },
+                    label = {
+                        Text(
+                            text = chip.label,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            maxLines = 1
+                        )
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = ModCardBg,
+                        labelColor = ModGoldBright,
+                        selectedContainerColor = ModGoldBorder,
+                        selectedLabelColor = ModNavyBg
+                    ),
+                    border = FilterChipDefaults.filterChipBorder(
+                        enabled = true,
+                        selected = selected,
+                        borderColor = ModGoldBorder,
+                        selectedBorderColor = ModGoldBorder
+                    ),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
 
         if (cleanInitialPostId.isNotEmpty()) {
             Spacer(modifier = Modifier.height(10.dp))
@@ -285,9 +337,9 @@ fun ModerationScreen(
             ) {
                 Text(
                     text = if (filterByInitialPost && cleanInitialPostId.isNotEmpty()) {
-                        "Post ID ($cleanInitialPostId)-এর জন্য কোনো রিপোর্ট পাওয়া যায়নি।"
+                        "Post ID ($cleanInitialPostId) ও ${statusFilter.label} ফিল্টারের জন্য কোনো রিপোর্ট পাওয়া যায়নি।"
                     } else {
-                        "বর্তমানে কোনো পোস্ট রিপোর্ট নেই।"
+                        "${statusFilter.label} ফিল্টারের জন্য কোনো পোস্ট রিপোর্ট নেই।"
                     },
                     color = Color.White,
                     fontSize = 18.sp,
