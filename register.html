@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — নতুন অ্যাকাউন্ট রেজিস্ট্রেশন</title>
+<title>AYNA BOOK — অ্যাকাউন্ট লগইন ও লুকআপ</title>
 
 <style>
 :root {
@@ -213,27 +213,6 @@ header {
   border-color:#ffffff;
 }
 
-.photo-box {
-  display:flex;
-  align-items:center;
-  gap:18px;
-  flex-wrap:wrap;
-  background:#050b1c;
-  border:3.5px solid var(--gold);
-  border-radius:8px;
-  padding:16px;
-}
-
-.photo-box img {
-  width:150px;
-  height:150px;
-  object-fit:cover;
-  object-position:top center;
-  border-radius:8px;
-  border:3.5px solid var(--gold-bright);
-  background:#0a1636;
-}
-
 .pass-row {
   display:grid;
   grid-template-columns:1fr auto;
@@ -272,15 +251,22 @@ header {
   box-shadow:0 0 18px rgba(255,230,77,.65), 0 7px 0 #664604;
 }
 
+.action-row {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:14px;
+}
+
 .tool-button {
   width:100%;
-  min-height:88px;
+  min-height:78px;
   padding:14px;
   border-radius:8px;
   border:3px solid var(--gold);
   background:linear-gradient(155deg,#1d3b7e,#08122b);
   color:white;
-  font-size:28px;
+  font-size:27px;
   font-weight:bold;
   box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
 }
@@ -332,7 +318,8 @@ header {
 
 @media(max-width:600px) {
   .pass-row,
-  .action-grid {
+  .action-grid,
+  .action-row {
     grid-template-columns:1fr;
   }
   .logo {
@@ -356,7 +343,7 @@ header {
       <button type="button" id="speakClockBtn">🕒 সময় বলুন</button>
       <button type="button" id="toggleClockBtn">🔊 ঘড়ি: চালু</button>
       <a href="index.html">🏠 হোম</a>
-      <a href="login.html">🔐 লগইন</a>
+      <a href="register.html">📝 রেজিস্ট্রেশন</a>
     </div>
   </div>
 </header>
@@ -365,204 +352,53 @@ header {
 
 <main class="container">
   <section class="hero">
-    <h1>AYNA BOOK — নতুন অ্যাকাউন্ট রেজিস্ট্রেশন</h1>
-    <p>কোনো ঘরে ভুল করলে AI সিগন্যাল বাজবে এবং কণ্ঠের মাধ্যমে ঠিক কোন ঘরে ভুল হয়েছে তা বলে দেবে।</p>
+    <h1>AYNA BOOK — অ্যাকাউন্ট লগইন</h1>
+    <p>লগইন বা অ্যাকাউন্ট লুকআপে ভুল করলে AI সিগন্যাল বাজবে এবং কণ্ঠের মাধ্যমে কোথায় ভুল হয়েছে তা বলে দেবে।</p>
   </section>
 
   <section class="panel">
-    <h2>📝 নতুন অ্যাকাউন্ট তৈরি করুন</h2>
+    <h2>🔐 অ্যাকাউন্টে লগইন করুন</h2>
 
     <div class="field-group">
-      <label class="field-label">১. প্রোফাইল ছবি</label>
-      <div class="photo-box">
-        <img id="regPhotoPreview" alt="Profile photo">
-        <div>
-          <button type="button" class="eye-button" id="choosePhotoBtn">🖼️ ছবি নির্বাচন করুন</button>
-          <div id="regPhotoLabel" style="font-size:24px;color:var(--muted);margin-top:8px;">ছবি ঐচ্ছিক — প্রোফাইল ফ্রেমে যুক্ত হবে</div>
-        </div>
-        <input type="file" id="regPhotoInput" accept="image/*" hidden>
-      </div>
+      <label class="field-label" for="loginEmail">জিমেইল ঠিকানা</label>
+      <input type="email" id="loginEmail" class="hub-input" placeholder="আপনার জিমেইল লিখুন (যেমন: name@gmail.com)">
     </div>
 
     <div class="field-group">
-      <label class="field-label" for="regEmail">২. জিমেইল ঠিকানা</label>
-      <input type="email" id="regEmail" class="hub-input" placeholder="আপনার জিমেইল লিখুন (যেমন: name@gmail.com)">
-    </div>
-
-    <div class="field-group">
-      <label class="field-label" for="regPhone">৩. ফোন নম্বর</label>
-      <input type="tel" id="regPhone" class="hub-input" placeholder="আপনার ফোন নম্বর লিখুন (যেমন: +8801XXXXXXXXX)">
-    </div>
-
-    <div class="field-group">
-      <label class="field-label" for="regPassword">পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label>
+      <label class="field-label" for="loginPassword">লগইন পাসওয়ার্ড</label>
       <div class="pass-row">
-        <input type="password" id="regPassword" class="hub-input" placeholder="পাসওয়ার্ড লিখুন">
-        <button type="button" class="eye-button" id="togglePasswordBtn">👁️ পাসওয়ার্ড দেখাও</button>
-      </div>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label" for="regConfirmPassword">রি-পাসওয়ার্ড (পাসওয়ার্ড নিশ্চিত করুন)</label>
-      <div class="pass-row">
-        <input type="password" id="regConfirmPassword" class="hub-input" placeholder="পাসওয়ার্ড আবার লিখুন">
-        <button type="button" class="eye-button" id="toggleConfirmPasswordBtn">👁️ রি-পাসওয়ার্ড দেখাও</button>
+        <input type="password" id="loginPassword" class="hub-input" placeholder="লগইন পাসওয়ার্ড লিখুন">
+        <button type="button" class="eye-button" id="toggleLoginPassBtn">👁️ পাসওয়ার্ড দেখাও</button>
       </div>
     </div>
 
     <div class="action-grid">
-      <button type="button" id="registerSubmitBtn" class="primary-button">✅ রেজিস্ট্রেশন বাটন</button>
-      <button type="button" id="loginPageBtn" class="tool-button">🔐 লগইন বাটন</button>
+      <button type="button" id="loginSubmitBtn" class="primary-button">🚀 লগইন বাটন</button>
+      <button type="button" id="registerPageBtn" class="tool-button">📝 রেজিস্ট্রেশন বাটন</button>
     </div>
 
-    <button type="button" id="repeatSignalBtn" class="tool-button" style="margin-top:14px;">🔊 শেষ সিগন্যাল আবার শুনুন</button>
+    <div class="field-group" style="margin-top:24px;">
+      <label class="field-label" for="lookupAccountInput">অ্যাকাউন্ট লুকআপ (AYNA ID বা জিমেইল)</label>
+      <input type="text" id="lookupAccountInput" class="hub-input" placeholder="যেমন: 2026-----10000001 অথবা জিমেইল">
+    </div>
 
-    <div class="signal-box" id="registerSignalBox">
-      প্রস্তুত: ১. ছবি, ২. জিমেইল, ৩. ফোন নম্বর, পাসওয়ার্ড বা রি-পাসওয়ার্ডে ভুল করলে কণ্ঠের মাধ্যমে ভুলের জায়গা বলে দেওয়া হবে।
+    <div class="action-row">
+      <button type="button" id="lookupAccountBtn" class="tool-button">🔍 অ্যাকাউন্ট লুকআপ ও কণ্ঠ সিগন্যাল</button>
+      <button type="button" id="repeatSignalBtn" class="tool-button">🔊 শেষ সিগন্যাল আবার শুনুন</button>
+    </div>
+
+    <div class="signal-box" id="loginSignalBox">
+      প্রস্তুত: জিমেইল বা লগইন পাসওয়ার্ডে ভুল হলে অথবা অ্যাকাউন্ট লুকআপে না পেলে কণ্ঠের মাধ্যমে ভুলের জায়গা বলে দেওয়া হবে।
     </div>
 
     <div class="link-row">
-      <a href="login.html">🔐 আগে থেকেই অ্যাকাউন্ট আছে? লগইন পেজে যান</a>
-      <a href="index.html">🏠 হোম পেজে ফিরুন</a>
+      <a href="register.html">➕ নতুন অ্যাকাউন্ট রেজিস্ট্রেশন</a>
+      <a href="forgot-password.html">🔑 পাসওয়ার্ড ভুলে গেছেন?</a>
     </div>
   </section>
 </main>
 
-<script type="module">
-import { AynaVoiceSignal } from "./ayna-voice-signal.js";
-import { auth, database } from "./firebase-init.js";
-
-const $ = id => document.getElementById(id);
-let photoDataUrl = "";
-
-const defaultFrameSvg = "data:image/svg+xml," + encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="#0a1636"/><circle cx="80" cy="56" r="28" fill="#ffe64d"/><path d="M24 160 Q32 104 80 104 Q128 104 136 160" fill="#ffe64d"/></svg>'
-);
-$("regPhotoPreview").src = defaultFrameSvg;
-
-$("speakClockBtn")?.addEventListener("click", () => AynaVoiceSignal.speakCurrentTime());
-$("toggleClockBtn")?.addEventListener("click", () => AynaVoiceSignal.toggleClock("toggleClockBtn"));
-$("repeatSignalBtn")?.addEventListener("click", () => AynaVoiceSignal.repeatLast());
-$("loginPageBtn")?.addEventListener("click", () => { window.location.href = "login.html"; });
-
-function attachPasswordToggle(btnId, inputId, showText, hideText) {
-  $(btnId)?.addEventListener("click", () => {
-    const input = $(inputId);
-    const show = input.type === "password";
-    input.type = show ? "text" : "password";
-    $(btnId).textContent = show ? hideText : showText;
-  });
-}
-attachPasswordToggle("togglePasswordBtn", "regPassword", "👁️ পাসওয়ার্ড দেখাও", "🙈 পাসওয়ার্ড লুকাও");
-attachPasswordToggle("toggleConfirmPasswordBtn", "regConfirmPassword", "👁️ রি-পাসওয়ার্ড দেখাও", "🙈 রি-পাসওয়ার্ড লুকাও");
-
-$("choosePhotoBtn")?.addEventListener("click", () => $("regPhotoInput")?.click());
-$("regPhotoInput")?.addEventListener("change", ev => {
-  const file = ev.target.files?.[0];
-  if (!file) return;
-  if (!file.type.startsWith("image/")) {
-    AynaVoiceSignal.error("১ নম্বর ছবির ঘরে ভুল হয়েছে। অনুগ্রহ করে সঠিক ছবি ফাইল নির্বাচন করুন।");
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = () => {
-    photoDataUrl = String(reader.result || "");
-    $("regPhotoPreview").src = photoDataUrl || defaultFrameSvg;
-    $("regPhotoLabel").textContent = `নির্বাচিত ছবি: ${file.name}`;
-  };
-  reader.readAsDataURL(file);
-});
-
-$("registerSubmitBtn")?.addEventListener("click", async () => {
-  const email = ($("regEmail")?.value || "").trim();
-  const phone = ($("regPhone")?.value || "").trim();
-  const password = $("regPassword")?.value || "";
-  const confirmPassword = $("regConfirmPassword")?.value || "";
-
-  if (!email) {
-    AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার ঘরে ভুল হয়েছে। জিমেইল ঘরটি খালি রয়েছে।");
-    $("regEmail")?.focus();
-    return;
-  }
-  if (!email.includes("@") || !email.includes(".")) {
-    AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক জিমেইল ঠিকানা লিখুন।");
-    $("regEmail")?.focus();
-    return;
-  }
-  if (!phone || phone.replace(/\D/g, "").length < 8) {
-    AynaVoiceSignal.error("৩ নম্বর ফোন নম্বরের ঘরে ভুল হয়েছে। সঠিক ফোন নম্বর লিখুন।");
-    $("regPhone")?.focus();
-    return;
-  }
-  if (!password || password.length < 6) {
-    AynaVoiceSignal.error("পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
-    $("regPassword")?.focus();
-    return;
-  }
-  if (password !== confirmPassword) {
-    AynaVoiceSignal.error("রি-পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড ও রি-পাসওয়ার্ড এক হতে হবে।");
-    $("regConfirmPassword")?.focus();
-    return;
-  }
-
-  const aynaId = `2026-----${String(Math.floor(10000001 + Math.random() * 89999999))}`;
-  try {
-    localStorage.setItem("ayna_registered_account", JSON.stringify({
-      email,
-      phone,
-      photoURL: photoDataUrl,
-      aynaId,
-      createdAt: Date.now()
-    }));
-  } catch (_) {}
-
-  if (!auth || !database) {
-    AynaVoiceSignal.error("ফায়ারবেস সংযোগ পাওয়া যায়নি। firebase-init.js-এ সঠিক API Key বসান; লোকাল অ্যাকাউন্ট সংরক্ষিত হয়েছে।");
-    return;
-  }
-
-  try {
-    const { createUserWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
-    const { ref, set } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
-
-    const btn = $("registerSubmitBtn");
-    btn.disabled = true;
-    btn.textContent = "রেজিস্ট্রেশন হচ্ছে...";
-
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    const uid = cred.user.uid;
-
-    await set(ref(database, "users/" + uid), {
-      uid,
-      email,
-      phone,
-      photoURL: photoDataUrl,
-      aynaId,
-      createdAt: Date.now()
-    });
-
-    AynaVoiceSignal.success(`রেজিস্ট্রেশন সফল হয়েছে। আপনার AYNA ID ${aynaId}।`);
-    setTimeout(() => { window.location.href = "index.html"; }, 1500);
-  } catch (err) {
-    const code = err?.code || "";
-    if (code.includes("email-already-in-use")) {
-      AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার ঘরে ভুল হয়েছে। এই জিমেইল দিয়ে আগেই অ্যাকাউন্ট খোলা আছে।");
-    } else if (code.includes("invalid-email")) {
-      AynaVoiceSignal.error("২ নম্বর জিমেইল ঠিকানার বানানে ভুল হয়েছে।");
-    } else if (code.includes("weak-password")) {
-      AynaVoiceSignal.error("পাসওয়ার্ড খুব দুর্বল হয়েছে। অন্তত ৬ অক্ষরের পাসওয়ার্ড দিন।");
-    } else {
-      AynaVoiceSignal.error("রেজিস্ট্রেশন সম্পন্ন করা যায়নি। নেটওয়ার্ক বা ফায়ারবেস নিয়ম পরীক্ষা করুন।");
-    }
-  } finally {
-    const btn = $("registerSubmitBtn");
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = "✅ রেজিস্ট্রেশন বাটন";
-    }
-  }
-});
-</script>
+<script type="module" src="./login.js"></script>
 
 </body>
 </html>
