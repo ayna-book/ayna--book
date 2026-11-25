@@ -1,1720 +1,1705 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-  <title>AYNA BOOK* • Full AI Radar, Weather, Civil Aviation & Quantum Hub</title>
-  <meta name="theme-color" content="#050a18" />
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png" />
-  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-  <style>
-    :root {
-      --bg: #050a18;
-      --navy-top: #1a3575;
-      --navy-bottom: #08122b;
-      --gold: #ffe64d;
-      --gold-bright: #fff6b3;
-      --gold-base: #8a6105;
-      --quantum-cyan: #38f2ff;
-      --white: #ffffff;
-      --muted: #e6eeff;
-      --green: #16c784;
-      --amber: #f59e0b;
-      --danger: #ff4d6d;
-      --ui-scale: 1;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      max-width: 100%;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      padding-bottom: 160px;
-      background:
-        radial-gradient(circle at 15% 10%, rgba(56, 242, 255, 0.12), transparent 36%),
-        radial-gradient(circle at 85% 20%, rgba(255, 230, 77, 0.13), transparent 42%),
-        var(--bg);
-      color: var(--white);
-      font-family: Arial, "Noto Sans Bengali", system-ui, sans-serif;
-      font-size: calc(clamp(30px, 5vw, 46px) * var(--ui-scale));
-      line-height: 1.5;
-    }
-
-    button,
-    input,
-    textarea,
-    select,
-    a {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .gold-3d-box,
-    .hero,
-    .profile-bar,
-    .feature-card,
-    .panel,
-    .feed-post,
-    .quantum-bar,
-    .feed-filters,
-    .file-registry-box,
-    .hub-card,
-    .clock-box,
-    .radar-item,
-    .qr-panel-box {
-      background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%) !important;
-      border: 4px solid var(--gold) !important;
-      border-radius: 14px !important;
-      box-shadow:
-        0 0 20px rgba(255, 230, 77, 0.65),
-        0 9px 0 var(--gold-base),
-        0 16px 26px rgba(0, 0, 0, 0.85),
-        inset 0 2px 6px var(--gold-bright) !important;
-    }
-
-    .feature-card:active,
-    .primary-button:active,
-    .tool-button:active,
-    .media-buttons button:active,
-    .header-actions a:active,
-    .header-actions button:active,
-    .filter-btn:active,
-    .yt-go-btn:active,
-    .yt-preset-btn:active,
-    .panel-link-btn:active,
-    button:active {
-      transform: translateY(4px) !important;
-    }
-
-    header {
-      background: linear-gradient(180deg, #122659 0%, #060d21 100%);
-      border-bottom: 4px solid var(--gold);
-      padding: 20px;
-      position: sticky;
-      top: 0;
-      z-index: 80;
-      box-shadow: 0 0 22px rgba(255, 230, 77, 0.45), 0 6px 18px rgba(0, 0, 0, 0.9);
-    }
-
-    .header-inner {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .logo {
-      color: var(--gold-bright);
-      font-size: clamp(40px, 6.5vw, 66px);
-      font-weight: 1000;
-      letter-spacing: 1px;
-      display: inline-flex;
-      align-items: center;
-      gap: 14px;
-      text-decoration: none;
-      text-shadow: 0 0 14px rgba(255, 230, 77, 0.85), 0 3px 8px rgba(0, 0, 0, 0.95);
-    }
-
-    .k-star-wrap {
-      position: relative;
-      display: inline-block;
-    }
-
-    .star-12px-1m {
-      position: absolute;
-      top: -6px;
-      right: -12px;
-      font-size: 12px;
-      line-height: 1;
-      color: #ffffff;
-      opacity: 0.2;
-      animation: starFlashEveryMinute 60s infinite linear;
-      pointer-events: none;
-    }
-
-    @keyframes starFlashEveryMinute {
-      0%, 95% {
-        opacity: 0.18;
-        transform: scale(0.95);
-        text-shadow: none;
-      }
-      96%, 100% {
-        opacity: 1;
-        transform: scale(1.3);
-        text-shadow: 0 0 8px #ffffff, 0 0 14px #ffffff;
-      }
-    }
-
-    .quantum-badge {
-      font-size: clamp(22px, 3.2vw, 30px);
-      font-weight: 900;
-      padding: 8px 16px;
-      border-radius: 10px;
-      color: var(--quantum-cyan);
-      background: rgba(5, 10, 24, 0.92);
-      border: 3px solid var(--quantum-cyan);
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .header-actions a,
-    .header-actions button {
-      text-decoration: none;
-      color: #ffffff;
-      background: linear-gradient(155deg, #1d3b7e, #08122b);
-      border: 3.5px solid var(--gold);
-      padding: 14px 22px;
-      border-radius: 10px;
-      font-weight: 900;
-      font-size: clamp(26px, 4vw, 36px);
-      box-shadow: 0 0 12px rgba(255, 230, 77, 0.45), 0 5px 0 var(--gold-base);
-    }
-
-    .btn-gold {
-      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%) !important;
-      color: #050a18 !important;
-      border-color: var(--gold-bright) !important;
-      font-weight: 1000 !important;
-    }
-
-    .ticker-bar {
-      background: #081229;
-      border-top: 2px solid var(--gold);
-      overflow: hidden;
-      white-space: nowrap;
-      padding: 12px 0;
-      margin-top: 12px;
-    }
-
-    .ticker-track {
-      display: inline-block;
-      padding-left: 100%;
-      animation: slowTicker 55s linear infinite;
-      color: var(--gold-bright);
-      font-size: clamp(26px, 4vw, 38px);
-      font-weight: 800;
-    }
-
-    @keyframes slowTicker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
-
-    #notice {
-      position: fixed;
-      top: 120px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #0a1636;
-      color: var(--gold-bright);
-      border: 4px solid var(--gold-bright);
-      padding: 20px 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 24px rgba(255, 230, 77, 0.85), 0 7px 0 var(--gold-base);
-      z-index: 120;
-      display: none;
-      max-width: 94%;
-      font-size: clamp(28px, 4.5vw, 40px);
-      font-weight: 900;
-      text-align: center;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 24px 18px 0;
-    }
-
-    .hero {
-      padding: 36px 24px;
-      margin-bottom: 28px;
-      text-align: center;
-    }
-
-    .stylish-owner-name {
-      font-size: clamp(42px, 6.8vw, 72px);
-      font-weight: 1000;
-      letter-spacing: 1.5px;
-      color: var(--gold-bright);
-      text-shadow: 0 0 18px rgba(255, 230, 77, 0.75), 0 4px 12px rgba(0, 0, 0, 0.95);
-      margin: 0 0 16px;
-    }
-
-    .hero p {
-      font-size: clamp(30px, 4.8vw, 44px);
-      line-height: 1.55;
-      margin: 0;
-      color: var(--white);
-      font-weight: 700;
-    }
-
-    .quantum-bar {
-      padding: 22px;
-      margin-bottom: 28px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 18px;
-    }
-
-    .q-stat {
-      background: rgba(5, 11, 28, 0.9);
-      border: 3px solid var(--gold);
-      border-radius: 10px;
-      padding: 18px;
-    }
-
-    .q-stat-label {
-      font-size: clamp(24px, 3.6vw, 32px);
-      color: var(--muted);
-      display: block;
-    }
-
-    .q-stat-value {
-      font-size: clamp(30px, 4.6vw, 42px);
-      font-weight: 1000;
-      color: var(--quantum-cyan);
-      margin-top: 8px;
-      display: block;
-      overflow-wrap: anywhere;
-    }
-
-    .section-title {
-      font-size: clamp(36px, 5.8vw, 56px);
-      font-weight: 1000;
-      margin: 38px 0 22px;
-      color: var(--gold-bright);
-    }
-
-    .profile-bar {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 28px;
-      padding: 26px;
-      margin-bottom: 28px;
-    }
-
-    .profile-square-box {
-      width: min(100%, 420px);
-      aspect-ratio: 1 / 1;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #050a18;
-      border: 5px solid var(--gold-bright);
-      border-radius: 14px;
-      padding: 8px;
-      box-shadow: 0 0 24px rgba(255, 230, 77, 0.8), 0 7px 0 var(--gold-base);
-    }
-
-    .profile-square-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
-      border-radius: 10px;
-      display: block;
-    }
-
-    .profile-info {
-      flex: 1;
-      min-width: 280px;
-    }
-
-    .profile-info strong {
-      font-size: clamp(38px, 6vw, 56px);
-      font-weight: 1000;
-      color: var(--white);
-      display: block;
-    }
-
-    .profile-info small {
-      display: block;
-      color: var(--muted);
-      font-size: clamp(28px, 4.4vw, 38px);
-      margin-top: 8px;
-      word-break: break-word;
-    }
-
-    .ayna-id-chip {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 10px 18px;
-      border-radius: 10px;
-      border: 3px solid var(--gold);
-      background: #050b1c;
-      color: var(--gold-bright);
-      font-family: monospace;
-      font-size: clamp(28px, 4.5vw, 40px);
-      font-weight: 1000;
-    }
-
-    .barcode-box {
-      background: #ffffff;
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: 3px solid var(--gold);
-      display: inline-flex;
-      margin-top: 14px;
-    }
-
-    .qr-panel-box {
-      padding: 24px;
-      margin-bottom: 28px;
-      text-align: center;
-    }
-
-    .qr-heading-tag {
-      display: inline-block;
-      background: var(--gold);
-      color: #050a18;
-      font-size: clamp(32px, 5vw, 46px);
-      font-weight: 1000;
-      padding: 8px 22px;
-      border-radius: 10px;
-      margin-bottom: 16px;
-    }
-
-    .qr-card-inner {
-      display: inline-block;
-      background: #ffffff;
-      color: #050a18;
-      padding: 18px;
-      border-radius: 14px;
-      border: 4px solid var(--gold-bright);
-    }
-
-    .feature-grid-8 {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 22px;
-    }
-
-    .feature-grid-more {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 22px;
-      margin-top: 22px;
-    }
-
-    .feature-card {
-      min-height: 360px;
-      padding: 26px 18px;
-      color: var(--white);
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      transition: transform 0.14s ease;
-    }
-
-    .feature-icon {
-      font-size: clamp(72px, 11vw, 108px);
-      margin-bottom: 14px;
-    }
-
-    .feature-name {
-      font-size: clamp(32px, 5vw, 46px);
-      line-height: 1.25;
-      font-weight: 1000;
-      color: var(--white);
-    }
-
-    .feature-desc {
-      color: var(--muted);
-      font-size: clamp(26px, 4vw, 34px);
-      font-weight: 700;
-      margin-top: 10px;
-    }
-
-    .panel {
-      padding: 26px;
-      margin: 28px 0;
-    }
-
-    .panel h2 {
-      margin: 0 0 20px;
-      font-size: clamp(34px, 5.5vw, 50px);
-      font-weight: 1000;
-      color: var(--gold-bright);
-    }
-
-    .panel-head-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .panel-link-btn {
-      text-decoration: none;
-      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
-      color: #050a18;
-      border: 3.5px solid var(--gold-bright);
-      border-radius: 10px;
-      padding: 12px 22px;
-      font-size: clamp(26px, 4vw, 36px);
-      font-weight: 1000;
-      box-shadow: 0 5px 0 #664604;
-    }
-
-    .hub-controls-row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .hub-cards-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .hub-search-input,
-    .hub-select,
-    input,
-    textarea,
-    select {
-      width: 100%;
-      background: #050b1c;
-      color: var(--white);
-      border: 3.5px solid var(--gold);
-      border-radius: 10px;
-      padding: 16px 20px;
-      font-size: clamp(28px, 4.5vw, 38px);
-      outline: none;
-    }
-
-    textarea {
-      min-height: 220px;
-      resize: vertical;
-    }
-
-    .hub-card {
-      padding: 20px;
-      font-size: clamp(28px, 4.5vw, 38px);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .hub-card-tag {
-      align-self: flex-start;
-      background: var(--gold);
-      color: #050a18;
-      font-size: clamp(22px, 3.5vw, 30px);
-      font-weight: 1000;
-      padding: 6px 14px;
-      border-radius: 8px;
-    }
-
-    .hub-card-title {
-      font-size: clamp(30px, 4.8vw, 42px);
-      font-weight: 1000;
-      color: var(--gold-bright);
-    }
-
-    .hub-card-meta {
-      font-size: clamp(26px, 4vw, 36px);
-      color: var(--muted);
-      overflow-wrap: anywhere;
-    }
-
-    .ai-box-output {
-      margin-top: 16px;
-      background: #050b1c;
-      border: 3.5px solid var(--quantum-cyan);
-      border-radius: 10px;
-      padding: 20px;
-      font-size: clamp(28px, 4.5vw, 38px);
-      color: var(--gold-bright);
-      white-space: pre-line;
-      overflow-wrap: anywhere;
-    }
-
-    .media-buttons,
-    .post-tools {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .tool-button,
-    .media-buttons button,
-    button {
-      min-height: 86px;
-      padding: 14px 18px;
-      border-radius: 10px;
-      border: 3.5px solid var(--gold);
-      background: linear-gradient(155deg, #1d3b7e, #08122b);
-      color: var(--white);
-      font-size: clamp(28px, 4.4vw, 38px);
-      font-weight: 900;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 0 12px rgba(255, 230, 77, 0.45), 0 6px 0 var(--gold-base);
-    }
-
-    .primary-button {
-      width: 100%;
-      min-height: 98px;
-      margin-top: 18px;
-      border: 4px solid var(--gold-bright);
-      border-radius: 10px;
-      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
-      color: #050a18;
-      font-size: clamp(30px, 4.8vw, 42px);
-      font-weight: 1000;
-      box-shadow: 0 0 18px rgba(255, 230, 77, 0.65), 0 7px 0 #664604;
-    }
-
-    .clock-live-box {
-      background: #050b1c;
-      border: 3.5px solid var(--gold);
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 18px;
-      text-align: center;
-    }
-
-    .clock-live-time {
-      font-size: clamp(40px, 6.5vw, 62px);
-      font-weight: 1000;
-      color: var(--quantum-cyan);
-      display: block;
-    }
-
-    .clock-rules-text {
-      font-size: clamp(26px, 4vw, 34px);
-      color: var(--muted);
-      margin-top: 12px;
-    }
-
-    .mega-radar-compass-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
-      margin-top: 18px;
-    }
-
-    .mega-sensor-box {
-      background: #050b1c;
-      border: 3.5px solid var(--gold);
-      border-radius: 12px;
-      padding: 18px;
-      text-align: center;
-    }
-
-    .mega-sensor-title {
-      font-size: clamp(28px, 4.5vw, 38px);
-      font-weight: 1000;
-      color: var(--gold-bright);
-      margin-bottom: 12px;
-    }
-
-    .mega-canvas {
-      width: 100%;
-      max-width: 360px;
-      height: 360px;
-      display: block;
-      margin: 0 auto 12px;
-      border-radius: 50%;
-      border: 4px solid var(--quantum-cyan);
-    }
-
-    .progress-wrap {
-      display: none;
-      margin-top: 14px;
-      background: #050b1c;
-      border: 3px solid var(--gold);
-      border-radius: 8px;
-      height: 34px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--quantum-cyan), var(--gold));
-      transition: width 0.2s ease;
-    }
-
-    .preview {
-      display: none;
-      margin-top: 18px;
-      background: #050b1c;
-      border: 3.5px solid var(--gold);
-      padding: 18px;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    .preview img,
-    .post-media {
-      width: 100%;
-      max-height: 760px;
-      object-fit: contain;
-      object-position: top center;
-      background: #050a12;
-      border: 3.5px solid var(--gold);
-      border-radius: 10px;
-      margin-top: 12px;
-    }
-
-    .preview video,
-    .post-media-video,
-    .media-box video {
-      width: 100%;
-      max-height: 720px;
-      object-fit: contain;
-      object-position: top center;
-      background: #000000;
-      border: 3.5px solid var(--gold);
-      border-radius: 10px;
-    }
-
-    .post-media-audio {
-      width: 100%;
-      margin-top: 14px;
-    }
-
-    .feed-filters {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      padding: 20px;
-      margin-bottom: 22px;
-    }
-
-    .filter-btn {
-      background: #0a1636;
-      color: var(--white);
-      border: 3px solid var(--gold);
-      border-radius: 10px;
-      padding: 14px 22px;
-      font-size: clamp(28px, 4.4vw, 38px);
-      font-weight: 900;
-    }
-
-    .filter-btn.active {
-      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
-      color: #050a18;
-    }
-
-    .feed-post {
-      padding: 26px;
-      margin-bottom: 26px;
-    }
-
-    .post-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-
-    .post-author-wrap {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .post-avatar {
-      width: 160px;
-      height: 160px;
-      border-radius: 10px;
-      border: 4px solid var(--gold-bright);
-      object-fit: cover;
-      object-position: top center;
-      background: #0a1636;
-      flex-shrink: 0;
-    }
-
-    .post-author {
-      font-size: clamp(32px, 5vw, 46px);
-      font-weight: 1000;
-    }
-
-    .post-date {
-      font-size: clamp(24px, 3.8vw, 32px);
-      color: var(--muted);
-    }
-
-    .post-header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .q-pill {
-      font-size: clamp(22px, 3.5vw, 30px);
-      font-weight: 900;
-      color: var(--quantum-cyan);
-      background: rgba(5, 11, 28, 0.9);
-      border: 2.5px solid var(--quantum-cyan);
-      padding: 8px 14px;
-      border-radius: 8px;
-    }
-
-    .post-dot-menu-btn {
-      min-height: 64px;
-      padding: 8px 16px;
-      font-size: clamp(28px, 4.4vw, 36px);
-      border-radius: 10px;
-    }
-
-    .post-manage-drawer {
-      margin-top: 14px;
-      padding: 16px;
-      background: #050b1c;
-      border: 3px solid var(--quantum-cyan);
-      border-radius: 10px;
-    }
-
-    .post-content {
-      font-size: clamp(32px, 5vw, 46px);
-      line-height: 1.55;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      margin: 16px 0;
-    }
-
-    .file-attach-box {
-      margin-top: 14px;
-      padding: 18px;
-      border-radius: 10px;
-      background: #050b1c;
-      border: 3px solid var(--gold);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      font-size: clamp(26px, 4vw, 36px);
-    }
-
-    .file-attach-box a {
-      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
-      color: #050a18;
-      text-decoration: none;
-      font-weight: 1000;
-      padding: 12px 20px;
-      border-radius: 8px;
-    }
-
-    .post-actions {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      border-top: 3px solid var(--gold);
-      padding-top: 18px;
-      margin-top: 18px;
-    }
-
-    .post-actions button {
-      min-height: 82px;
-      font-size: clamp(24px, 3.8vw, 32px);
-    }
-
-    .comments {
-      margin-top: 16px;
-      border-top: 2.5px solid rgba(255, 230, 77, 0.65);
-      padding-top: 14px;
-    }
-
-    .comment-item {
-      background: #050b1c;
-      border: 2.5px solid var(--gold);
-      padding: 14px 18px;
-      border-radius: 8px;
-      margin: 10px 0;
-      font-size: clamp(26px, 4vw, 34px);
-      overflow-wrap: anywhere;
-    }
-
-    .comment-form {
-      display: flex;
-      gap: 14px;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-
-    .comment-form input {
-      flex: 1;
-      min-width: 240px;
-    }
-
-    .file-registry-box {
-      padding: 26px;
-      margin: 28px 0;
-    }
-
-    .file-list-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 14px;
-      max-height: 700px;
-      overflow-y: auto;
-      padding: 12px;
-      background: #050b1c;
-      border: 3px solid var(--gold);
-      border-radius: 10px;
-    }
-
-    .file-item-card {
-      background: #0b1633;
-      border: 2.5px solid var(--gold);
-      border-radius: 8px;
-      padding: 14px 16px;
-      font-size: clamp(24px, 3.8vw, 32px);
-      word-break: break-word;
-    }
-
-    .file-item-num {
-      color: var(--gold-bright);
-      font-weight: 1000;
-      margin-right: 8px;
-    }
-
-    .bookmark-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      background: #050b1c;
-      border: 3px solid var(--gold);
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin-top: 12px;
-      font-size: clamp(26px, 4vw, 34px);
-    }
-
-    .status,
-    .empty {
-      font-size: clamp(26px, 4.2vw, 36px);
-      color: var(--muted);
-      margin-top: 12px;
-      overflow-wrap: anywhere;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 36px 16px;
-    }
-
-    .yt-input-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .yt-preset-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .yt-player-frame {
-      width: 100%;
-      height: 540px;
-      border: 4px solid var(--gold);
-      border-radius: 10px;
-      background: #000000;
-    }
-
-    .yt-ext-link {
-      display: inline-block;
-      margin-top: 14px;
-      text-decoration: none;
-      background: linear-gradient(155deg, #1d3b7e, #08122b);
-      color: var(--gold-bright);
-      border: 3.5px solid var(--gold);
-      border-radius: 10px;
-      padding: 14px 22px;
-      font-size: clamp(28px, 4.4vw, 38px);
-      font-weight: 900;
-    }
-
-    .focused-feature-highlight {
-      outline: 5px solid var(--quantum-cyan) !important;
-      box-shadow: 0 0 34px rgba(56, 242, 255, 0.85), 0 9px 0 var(--gold-base) !important;
-    }
-
-    .messenger-call-bar {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin: 16px 0;
-    }
-
-    .messenger-uhd-btn {
-      min-height: 92px;
-      font-weight: 1000 !important;
-      border-width: 4px !important;
-    }
-
-    footer {
-      text-align: center;
-      padding: 34px 18px 160px;
-      color: var(--muted);
-      font-size: clamp(28px, 4.4vw, 38px);
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 90;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      background: linear-gradient(180deg, #122659 0%, #060d21 100%);
-      border-top: 4px solid var(--gold);
-      padding: 12px 8px calc(12px + env(safe-area-inset-bottom));
-      box-shadow: 0 0 22px rgba(255, 230, 77, 0.5), 0 -5px 18px rgba(0, 0, 0, 0.9);
-    }
-
-    .bottom-nav a {
-      color: var(--white);
-      text-decoration: none;
-      text-align: center;
-      font-size: clamp(24px, 3.8vw, 32px);
-      font-weight: 900;
-    }
-
-    .bottom-nav span {
-      display: block;
-      font-size: clamp(34px, 5.5vw, 46px);
-      margin-bottom: 2px;
-    }
-
-    @media (max-width: 1180px) {
-      .mega-radar-compass-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 1024px) {
-      .feature-grid-8,
-      .feature-grid-more {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .post-actions {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 680px) {
-      .feature-grid-8,
-      .feature-grid-more,
-      .post-tools,
-      .media-buttons,
-      .hub-controls-row,
-      .hub-cards-grid,
-      .yt-input-row,
-      .post-actions,
-      .messenger-call-bar {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="header-inner">
-      <a href="#top" id="top" class="logo">
-        <span class="k-star-wrap">AYNA BOOK*<i class="star-12px-1m" aria-hidden="true">★</i></span>
-        <span class="quantum-badge">⚛ FULL AI RADAR &amp; QUANTUM HUB</span>
-      </a>
-
-      <div class="header-actions">
-        <button type="button" id="headerSpeakClockBtn">🕒 সময় বলুন</button>
-        <button type="button" id="headerToggleClockBtn">🔊 ঘড়ি: চালু</button>
-        <button type="button" id="quantumBoostBtn">⚡ বিচার প্রোফাইল</button>
-        <button type="button" id="autoUpdateNowBtn" class="btn-gold">🔄 সব AI অটো-সিঙ্ক</button>
-        <a href="notifications.html">🔔</a>
-        <a href="messenger.html">💬 Messenger</a>
-      </div>
-    </div>
-
-    <div class="ticker-bar">
-      <div class="ticker-track">
-        ⚛ AYNA BOOK* Full AI Hub • রাডার AI • আবহাওয়া রাডার AI • বেসামরিক বিমান পরিবহণ রাডার AI • বিশ্ব ঘড়ি AI • ডিসকভারি ও জিওগ্রাফি চ্যানেল • বাচ্চাদের খেলাধুলা • বাজার, কৃষক, চাকুরী, বাণিজ্য, রাষ্ট্রনেতা, নোবেল ও আলেম গবেষণা AI সক্রিয় •••
-      </div>
-    </div>
-  </header>
-
-  <div id="notice"></div>
-
-  <main class="container">
-    <section class="hero">
-      <h1 class="stylish-owner-name" id="stylishTopOwnerName">Mohammad Mahabub Alam</h1>
-      <p>
-        রাডার, আবহাওয়া রাডার ও বেসামরিক বিমান পরিবহণ রাডারসহ প্রতিটি ফিচারে AI যুক্ত, অটো-আপডেট সক্রিয়, এবং যেকোনো ফিচার চাপ দিলে ফোন স্কিনে দেখানোর পূর্ণাঙ্গ ব্যবস্থা।
-      </p>
-    </section>
-
-    <section class="quantum-bar" aria-label="Telemetry">
-      <div class="q-stat">
-        <span class="q-stat-label">Execution &amp; AI Mode</span>
-        <span class="q-stat-value" id="qSyncState">FULL-AI • ULTRA-CRITICAL</span>
-      </div>
-      <div class="q-stat">
-        <span class="q-stat-label">All-Feature Auto-Update</span>
-        <span class="q-stat-value" id="qAutoSyncStatus">ACTIVE • LIVE</span>
-      </div>
-      <div class="q-stat">
-        <span class="q-stat-label">Total Registry Items</span>
-        <span class="q-stat-value"><span id="qFileCount">192</span> (<span id="registryTotalLabel">192</span>)</span>
-      </div>
-    </section>
-
-    <section class="profile-bar" id="profileBarSection">
-      <div class="profile-square-box">
-        <img id="myPhoto" src="./assets/profile-photo.jpg" alt="Mohammad Mahabub Alam Profile Photo">
-      </div>
-      <div class="profile-info">
-        <strong id="myName">Mohammad Mahabub Alam</strong>
-        <small id="myEmail">mahbub.uk.cox@gmail.com</small>
-        <small id="myPhone">+8801700000000</small>
-        <span class="ayna-id-chip" id="myAynaId">2026-----10000001</span>
-        <div>
-          <div class="barcode-box">
-            <svg id="aynaProfileBarcode"></svg>
-          </div>
-        </div>
-        <div class="media-buttons">
-          <button type="button" id="runProfileAiBtn" class="btn-gold">🤖 প্রোফাইল AI বিশ্লেষণ</button>
-          <button type="button" id="speakProfileAiBtn">🔊 প্রোফাইল AI কণ্ঠ</button>
-        </div>
-        <div class="ai-box-output" id="profileAiOutput">প্রোফাইল AI প্রস্তুত রয়েছে।</div>
-      </div>
-      <a href="profile.html" class="panel-link-btn">প্রোফাইল</a>
-    </section>
-
-    <section class="panel" id="accountOwnerSettingsSection">
-      <h2>🛡️ একাউন্ট হোল্ডার সেটিং: আজীবন অপরিবর্তনীয় তথ্য ও ৯০ দিনের পরিবর্তন নীতি</h2>
-      <div class="hub-controls-row">
-        <input type="text" id="immutableNameInput" class="hub-search-input" value="Mohammad Mahabub Alam" readonly />
-        <input type="email" id="immutableEmailInput" class="hub-search-input" value="mahbub.uk.cox@gmail.com" readonly />
-      </div>
-      <div class="hub-controls-row">
-        <input type="text" id="immutablePhoneInput" class="hub-search-input" value="+8801700000000" readonly />
-        <input type="text" id="ninetyDayStatusInput" class="hub-search-input" value="৯০ দিন পর পর পরিচিতি ও থিম পরিবর্তন নীতি সক্রিয়" readonly />
-      </div>
-      <div class="hub-controls-row">
-        <input type="text" id="mutableIdentityInput" class="hub-search-input" placeholder="পরিচিতি / বায়ো / স্ট্যাটাস (৯০ দিন পর পর পরিবর্তনযোগ্য)..." />
-        <select id="screenThemeColorSelect" class="hub-select">
-          <option value="ROYAL_GOLD_NAVY">স্ক্রিন রং: রয়্যাল নেভি ও গোল্ড (ডিফল্ট)</option>
-          <option value="QUANTUM_EMERALD">স্ক্রিন রং: কোয়ান্টাম এমেরাল্ড</option>
-          <option value="SOLAR_CRIMSON">স্ক্রিন রং: সোলার ক্রিমনস</option>
-          <option value="ARCTIC_CYAN">স্ক্রিন রং: আর্কটিক সায়ান</option>
-        </select>
-      </div>
-      <div class="media-buttons">
-        <button type="button" id="save90DayAccountSettingsBtn" class="btn-gold">💾 ৯০ দিনের পরিচিতি ও রং সংরক্ষণ</button>
-        <button type="button" id="requestImmutableChangeBtn">🔒 নাম, জিমেইল বা ফোন পরিবর্তনের অনুরোধ (বাধাপ্রাপ্ত)</button>
-      </div>
-      <div class="ai-box-output" id="account90DayStatusOutput">
-        নাম, জিমেইল ও ফোন নম্বর আজীবন অপরিবর্তনীয় থাকবে। রং ও অন্যান্য পরিচিতি প্রতি ৯০ দিনে একবার পরিবর্তন করা যাবে।
-      </div>
-    </section>
-
-    <section class="qr-panel-box" id="qrBoxSection">
-      <div class="qr-heading-tag">[QR]</div>
-      <div class="qr-card-inner">
-        <canvas id="aynaQrCanvas" width="220" height="220"></canvas>
-        <div id="qrCaptionText" style="font-size:24px;font-weight:900;margin-top:8px;max-width:260px;word-break:break-all;">https://aynabook.app/u/2026-----10000001</div>
-      </div>
-    </section>
-
-    <section class="panel" id="universalAiSection">
-      <h2>🎧🤖 সাউন্ড প্রোফাইল, UHD স্টুডিও সাউন্ড ও সার্বজনীন AI</h2>
-      <div class="hub-controls-row">
-        <select id="audioPresetSelect" class="hub-select">
-          <option value="STUDIO_MASTER">STUDIO_MASTER (Abbey Hall UHD 48kHz)</option>
-          <option value="CINEMA_THEATER">CINEMA_THEATER (Vienna Symphony UHD 48kHz)</option>
-          <option value="VOICE_BROADCAST">VOICE_BROADCAST (Quantum Master 528 UHD 48kHz)</option>
-        </select>
-        <button type="button" id="applyAudioPresetBtn" class="tool-button">🔊 সাউন্ড প্রোফাইল চালু</button>
-      </div>
-
-      <div class="media-buttons">
-        <button type="button" id="playWorldUhdSoundBtn" class="btn-gold">🎼 বিশ্বমানের UHD সাউন্ড চালান (48kHz)</button>
-        <button type="button" id="stopWorldUhdSoundBtn">⏹ UHD সাউন্ড বন্ধ করুন</button>
-        <button type="button" id="exportUhdWavBtn">💾 48kHz UHD WAV ফাইল লোড/ডাউনলোড</button>
-      </div>
-      <div id="uhdSoundPlayerWrap" style="margin-top:14px;"></div>
-      <div class="ai-box-output" id="uhdSoundEngineStatus">বিশ্ববিখ্যাত স্টুডিও UHD সাউন্ড ইঞ্জিন (48kHz) প্রস্তুত রয়েছে।</div>
-
-      <div class="hub-controls-row" style="margin-top:18px;">
-        <input type="text" id="universalAiInput" class="hub-search-input" placeholder="সার্বজনীন AI প্রশ্ন বা বিষয় লিখুন..." />
-        <button type="button" id="runUniversalAiBtn" class="tool-button btn-gold">🤖 সার্বজনীন AI চালান</button>
-      </div>
-      <div class="ai-box-output" id="universalAiOutput">সার্বজনীন AI ও স্টুডিও সাউন্ড প্রসেসর প্রস্তুত রয়েছে।</div>
-    </section>
-
-    <section class="panel" id="radarAviationWeatherSection">
-      <h2>📡🌦️✈️ রাডার AI, আবহাওয়া রাডার AI ও বেসামরিক বিমান পরিবহণ রাডার AI</h2>
-      <div class="hub-controls-row">
-        <select id="radarRangeSelect" class="hub-select">
-          <option value="25">রাডার রেঞ্জ: ২৫ কিমি</option>
-          <option value="100" selected>রাডার রেঞ্জ: ১০০ কিমি</option>
-          <option value="250">রাডার রেঞ্জ: ২৫০ কিমি</option>
-          <option value="500">রাডার রেঞ্জ: ৫০০ কিমি (এভিয়েশন ও আবহাওয়া)</option>
-        </select>
-        <input type="number" id="compassAzimuthInput" class="hub-search-input" value="45" min="0" max="360" />
-      </div>
-
-      <div class="mega-radar-compass-grid">
-        <div class="mega-sensor-box">
-          <div class="mega-sensor-title">📡 রাডার (Radar + AI)</div>
-          <canvas id="generalRadarCanvas" class="mega-canvas" width="360" height="360"></canvas>
-          <div class="hub-card-meta" id="generalRadarReadout">General AI Radar</div>
-          <div class="media-buttons">
-            <button type="button" id="runGeneralRadarAiBtn" class="btn-gold">🤖 রাডার AI</button>
-            <button type="button" id="speakGeneralRadarAiBtn">🔊 কণ্ঠ</button>
-          </div>
-          <div class="ai-box-output" id="radarAiOutput">রাডার AI লোড হচ্ছে...</div>
-        </div>
-
-        <div class="mega-sensor-box">
-          <div class="mega-sensor-title">🌦️ আবহাওয়া রাডার (Weather Radar + AI)</div>
-          <canvas id="weatherRadarCanvas" class="mega-canvas" width="360" height="360"></canvas>
-          <div class="hub-card-meta" id="weatherRadarReadout">Weather AI Radar</div>
-          <div class="media-buttons">
-            <button type="button" id="runWeatherRadarAiBtn" class="btn-gold">🤖 আবহাওয়া রাডার AI</button>
-            <button type="button" id="speakWeatherRadarAiBtn">🔊 কণ্ঠ</button>
-          </div>
-          <div class="ai-box-output" id="weatherRadarAiOutput">আবহাওয়া রাডার AI লোড হচ্ছে...</div>
-        </div>
-
-        <div class="mega-sensor-box">
-          <div class="mega-sensor-title">✈️ বেসামরিক বিমান পরিবহণ রাডার (Civil Aviation + AI)</div>
-          <canvas id="aviationRadarCanvas" class="mega-canvas" width="360" height="360"></canvas>
-          <div class="hub-card-meta" id="aviationRadarReadout">Civil Aviation AI Radar</div>
-          <div class="media-buttons">
-            <button type="button" id="runAviationRadarAiBtn" class="btn-gold">🤖 বিমান রাডার AI</button>
-            <button type="button" id="speakAviationRadarAiBtn">🔊 কণ্ঠ</button>
-          </div>
-          <div class="ai-box-output" id="aviationRadarAiOutput">বেসামরিক বিমান পরিবহণ রাডার AI লোড হচ্ছে...</div>
-        </div>
-      </div>
-
-      <div class="media-buttons">
-        <button type="button" id="startDeviceCompassBtn">🧭 লাইভ কম্পাস চালু</button>
-        <button type="button" id="runAllRadarsAiBtn" class="btn-gold">🤖 তিন রাডারের সম্মিলিত AI ব্রিফিং</button>
-      </div>
-      <div class="ai-box-output" id="radarCompassOutput">রাডার, আবহাওয়া রাডার ও বেসামরিক বিমান রাডার AI প্রস্তুত।</div>
-    </section>
-
-    <section class="panel" id="talkingClockSection">
-      <h2>🕒🤖 বিশ্ব ঘড়ি — সময় বলার ঘড়ি ও ঘড়ি AI</h2>
-      <div class="clock-live-box">
-        <span class="clock-live-time" id="quantumClockDisplay">লোড হচ্ছে...</span>
-        <div class="clock-rules-text">
-          • প্রতি ১ ঘণ্টা পর পর স্বয়ংক্রিয়ভাবে রিয়েল-টাইম সময় ঘোষণা (পরবর্তী ঘণ্টা: <strong id="nextHourlyAnnouncement">--</strong>)<br>
-          • সেহরির ১.৫ ঘণ্টা আগে ঘোষণা (ভিত্তি: 04:58 AM) • ইফতারের ১ ঘণ্টা আগে থেকে প্রতি ৫ মিনিটে ঘোষণা (ভিত্তি: 05:12 PM)
-        </div>
-      </div>
-      <div class="media-buttons">
-        <button type="button" id="speakNowClockBtn" class="btn-gold">🎙️ এখনই সময় বলুন</button>
-        <button type="button" id="toggleTalkClockBtn">🔊 সময় বলা: চালু (খোলা)</button>
-        <button type="button" id="openTalkClockBtn">🟢 সময় বলার বাটন চালু</button>
-        <button type="button" id="closeTalkClockBtn">🔴 সময় বলার বাটন বন্ধ</button>
-        <button type="button" id="runClockAiBtn" class="btn-gold">🤖 ঘড়ি ও সময়সূচি AI</button>
-        <button type="button" id="speakClockAiBtn">🔊 ঘড়ি AI কণ্ঠ</button>
-      </div>
-      <div class="ai-box-output" id="clockAiOutput">ঘড়ি AI প্রস্তুত রয়েছে।</div>
-    </section>
-
-    <section class="panel" id="accountRegisterLookupSection">
-      <h2>🔐🎙️ অ্যাকাউন্ট রেজিস্ট্রেশন ও লুকআপ (ভয়েস ভুল সিগন্যাল AI)</h2>
-      <div class="hub-controls-row">
-        <input type="text" id="regFullNameInput" class="hub-search-input" placeholder="পূর্ণ নাম (যেমন: Mohamed Mahabub Alam)" />
-        <input type="email" id="regEmailInput" class="hub-search-input" placeholder="ইমেইল ঠিকানা (যেমন: user@aynabook.app)" />
-      </div>
-      <div class="hub-controls-row">
-        <input type="password" id="regPasswordInput" class="hub-search-input" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" />
-        <input type="text" id="accountLookupQueryInput" class="hub-search-input" placeholder="অ্যাকাউন্ট লুকআপ: AYNA ID (2026-----10000001) বা ইমেইল" />
-      </div>
-      <div class="media-buttons">
-        <button type="button" id="validateRegisterVoiceBtn">📝 রেজিস্ট্রেশন যাচাই ও কণ্ঠ সিগন্যাল</button>
-        <button type="button" id="runAccountLookupVoiceBtn" class="btn-gold">🔍 অ্যাকাউন্ট লুকআপ ও কণ্ঠ সিগন্যাল</button>
-      </div>
-      <div class="ai-box-output" id="accountSignalOutput">
-        রেজিস্ট্রেশন বা অ্যাকাউন্ট লুকআপে ভুল হলে AI সিগন্যাল বাজবে এবং কণ্ঠের মাধ্যমে কোথায় ভুল হয়েছে তা বলে দেবে।
-      </div>
-    </section>
-
-    <h2 class="section-title">🌍 AYNA BOOK MAIN FEATURES (২ সারি — ৮টি)</h2>
-
-    <section class="feature-grid-8">
-      <a class="feature-card" href="profile.html">
-        <span class="feature-icon">👤</span>
-        <span class="feature-name">আমার প্রোফাইল</span>
-        <span class="feature-desc">ব্যক্তিগত অ্যাকাউন্ট</span>
-      </a>
-      <a class="feature-card" href="messenger.html">
-        <span class="feature-icon">💬</span>
-        <span class="feature-name">AYNA Messenger</span>
-        <span class="feature-desc">মেসেজ, অডিও, ভিডিও ও UHD কল</span>
-      </a>
-      <a class="feature-card" href="notifications.html">
-        <span class="feature-icon">🔔</span>
-        <span class="feature-name">নোটিফিকেশন</span>
-        <span class="feature-desc">সব আপডেট</span>
-      </a>
-      <a class="feature-card" href="radio.html">
-        <span class="feature-icon">📻</span>
-        <span class="feature-name">বিশ্ব রেডিও</span>
-        <span class="feature-desc">রেডিও ও AI সহকারী</span>
-      </a>
-      <a class="feature-card" href="tv-live.html">
-        <span class="feature-icon">📺</span>
-        <span class="feature-name">বিশ্ব টেলিভিশন</span>
-        <span class="feature-desc">টিভি ও AI সহকারী</span>
-      </a>
-      <a class="feature-card" href="gps.html">
-        <span class="feature-icon">🛰️</span>
-        <span class="feature-name">GPS নেভিগেশন</span>
-        <span class="feature-desc">অবস্থান ও দিকনির্দেশ</span>
-      </a>
-      <a class="feature-card" href="compass.html">
-        <span class="feature-icon">🧭</span>
-        <span class="feature-name">ডিজিটাল কম্পাস</span>
-        <span class="feature-desc">দিক নির্ণয়</span>
-      </a>
-      <a class="feature-card" href="radar.html">
-        <span class="feature-icon">📡</span>
-        <span class="feature-name">রাডার সিস্টেম</span>
-        <span class="feature-desc">রাডার পেজ</span>
-      </a>
-    </section>
-
-    <section class="panel" id="aynaMessengerUhdSection">
-      <h2>💬📞 AYNA MESSENGER — UHD অডিও ও ভিডিও কল, টেক্সট সাইজ, রং ও AI</h2>
-      <div class="hub-controls-row">
-        <input type="text" id="messengerRecipientInput" class="hub-search-input" value="AYNA Direct Contact" placeholder="প্রাপক বা চ্যানেলের নাম..." />
-        <input type="text" id="messengerDraftInput" class="hub-search-input" placeholder="মেসেজ লিখুন..." />
-      </div>
-      <div class="messenger-call-bar">
-        <button type="button" id="startUhdAudioCallBtn" class="btn-gold messenger-uhd-btn">🎙️ UHD অডিও কল শুরু</button>
-        <button type="button" id="startUhdVideoCallBtn" class="btn-gold messenger-uhd-btn">📹 UHD ভিডিও কল শুরু</button>
-      </div>
-      <div class="media-buttons">
-        <button type="button" id="fontSizeUpBtn">🔍+ লেখা বড় করুন</button>
-        <button type="button" id="fontSizeDownBtn">🔍- লেখা ছোট করুন</button>
-        <button type="button" id="cycleMessengerColorBtn">🎨 স্ক্রিন রং পরিবর্তন</button>
-        <button type="button" id="runMessengerAiBtn" class="btn-gold">🤖 মেসেঞ্জার ও কল AI অটো-আপডেট</button>
-      </div>
-      <div class="ai-box-output" id="messengerCallAiOutput">
-        UHD অডিও ও ভিডিও কল (48kHz / 4K-UHD সিগন্যাল কন্ডিশনিং), লেখা বড়/ছোট, স্ক্রিন রং ও AI অটো-আপডেট প্রস্তুত।
-      </div>
-    </section>
-
-    <section class="panel" id="radioTvAiSection">
-      <h2>📻📺 বিশ্ব রেডিও ও টেলিভিশন AI সহকারী</h2>
-      <div class="hub-controls-row">
-        <select id="radioTvChannelSelect" class="hub-select">
-          <option value="Bangladesh Betar / World Radio">রেডিও: বাংলাদেশ বেতার ও বিশ্ব রেডিও</option>
-          <option value="BBC / World News Radio">রেডিও: বিশ্ব সংবাদ ও তথ্য রেডিও</option>
-          <option value="BTV & Global News TV">টেলিভিশন: বিটিভি ও বিশ্ব সংবাদ টিভি</option>
-          <option value="Science & Documentary TV">টেলিভিশন: বিজ্ঞান ও ডকুমেন্টারি চ্যানেল</option>
-        </select>
-        <input type="text" id="radioTvPromptInput" class="hub-search-input" placeholder="রেডিও বা টিভি চ্যানেল/বিষয় সম্পর্কে AI প্রশ্ন করুন..." />
-      </div>
-      <div class="media-buttons">
-        <button type="button" id="runRadioTvAiBtn" class="btn-gold">🤖 রেডিও ও টিভি AI বিশ্লেষণ</button>
-        <button type="button" id="speakRadioTvAiBtn">🔊 রেডিও ও টিভি AI কণ্ঠে শুনুন</button>
-      </div>
-      <div class="ai-box-output" id="radioTvAiOutput">
-        বিশ্ব রেডিও ও টেলিভিশন AI প্রস্তুত — চ্যানেল নির্বাচন করে বিশ্লেষণ বা কণ্ঠ ব্রিফিং নিন।
-      </div>
-    </section>
-
-    <h2 class="section-title">✨ MORE AYNA BOOK FEATURES, CHANNELS &amp; DIRECTORIES</h2>
-
-    <section class="feature-grid-more">
-      <a class="feature-card" href="world-leaders.html"><span class="feature-icon">🌐</span><span class="feature-name">বিশ্বনেতা</span><span class="feature-desc">আন্তর্জাতিক নেতৃত্ব ও তথ্য</span></a>
-      <a class="feature-card" href="world-grocery.html"><span class="feature-icon">🛒</span><span class="feature-name">বিশ্ব মুদির দোকান</span><span class="feature-desc">দৈনিক মূল্য অটো আপডেট</span></a>
-      <a class="feature-card" href="world-farmers.html"><span class="feature-icon">🌾</span><span class="feature-name">বিশ্ব কৃষক</span><span class="feature-desc">কৃষি তথ্য, ফসল ও বাজার দর</span></a>
-      <a class="feature-card" href="poultry-farmers.html"><span class="feature-icon">🐔</span><span class="feature-name">পোলোট্রি কৃষক ও ব্যবসায়ী</span><span class="feature-desc">মুরগি, ডিম, ফিড ও বাজার দর</span></a>
-      <a class="feature-card" href="price-list.html"><span class="feature-icon">📊</span><span class="feature-name">দৈনিক মূল্যতালিকা</span><span class="feature-desc">মুদি, কৃষি ও পোলোট্রি অটো-সিঙ্ক</span></a>
-      <a class="feature-card" href="world-market.html"><span class="feature-icon">🌍</span><span class="feature-name">দৈনিক বিশ্ব বাজার</span><span class="feature-desc">আন্তর্জাতিক ও দেশীয় বাজার দর</span></a>
-      <a class="feature-card" href="world-officials.html"><span class="feature-icon">🏛️</span><span class="feature-name">এমপি, মন্ত্রী ও কর্মকর্তা</span><span class="feature-desc">বিশ্ব প্রশাসন ও জনপ্রতিনিধি</span></a>
-      <a class="feature-card" href="air-rail-transport.html"><span class="feature-icon">✈️</span><span class="feature-name">বিমান ও রেল পরিবহণ</span><span class="feature-desc">ফোন, জিমেইল ও টিকেট মূল্যতালিকা</span></a>
-      <a class="feature-card" href="world-air-rail.html"><span class="feature-icon">🚆</span><span class="feature-name">বিশ্ব বিমান ও রেল</span><span class="feature-desc">আন্তর্জাতিক পরিবহণ ও টিকেট দর</span></a>
-      <a class="feature-card" href="world-garments.html"><span class="feature-icon">👕</span><span class="feature-name">বিশ্ব গার্মেন্টস</span><span class="feature-desc">মালিক, শ্রমিক ও পোশাক শিল্প</span></a>
-      <a class="feature-card" href="world-jobs.html"><span class="feature-icon">💼</span><span class="feature-name">চাকুরী বাজার</span><span class="feature-desc">সরকারি, বেসরকারি ও আন্তর্জাতিক</span></a>
-      <a class="feature-card" href="world-ngo-rights.html"><span class="feature-icon">🕊️</span><span class="feature-name">UN, NGO ও মানবাধিকার</span><span class="feature-desc">নাম, ফোন ও জিমেইল ডিরেক্টরি</span></a>
-      <a class="feature-card" href="military-radar.html"><span class="feature-icon">🎯</span><span class="feature-name">মিলিটারি রাডার</span><span class="feature-desc">তথ্যভিত্তিক রাডার</span></a>
-      <a class="feature-card" href="clock.html"><span class="feature-icon">🕒</span><span class="feature-name">বিশ্ব ঘড়ি</span><span class="feature-desc">সময় ও অ্যালার্ম</span></a>
-      <a class="feature-card" href="calendar.html"><span class="feature-icon">📅</span><span class="feature-name">বিশ্ব ক্যালেন্ডার</span><span class="feature-desc">তারিখ ও দিন</span></a>
-      <a class="feature-card" href="arabic-calendar.html"><span class="feature-icon">🌙</span><span class="feature-name">আরবি ক্যালেন্ডার</span><span class="feature-desc">হিজরি তারিখ</span></a>
-      <a class="feature-card" href="world-holidays.html"><span class="feature-icon">🎉</span><span class="feature-name">বিশ্বের সরকারি ছুটি</span><span class="feature-desc">ছুটির তালিকা</span></a>
-      <a class="feature-card" href="us-alerts.html"><span class="feature-icon">🚨</span><span class="feature-name">জরুরি এলার্ট</span><span class="feature-desc">এলার্ট তথ্য</span></a>
-      <a class="feature-card" href="prayer.html"><span class="feature-icon">🕌</span><span class="feature-name">নামাজের সময়</span><span class="feature-desc">প্রার্থনার সময়সূচি</span></a>
-      <a class="feature-card" href="quantum.html"><span class="feature-icon">⚛️</span><span class="feature-name">কোয়ান্টাম হাব</span><span class="feature-desc">কোয়ান্টাম সিস্টেম</span></a>
-      <a class="feature-card" href="supercomputer.html"><span class="feature-icon">🖥️</span><span class="feature-name">সুপারকম্পিউটার</span><span class="feature-desc">উচ্চগতির তথ্য</span></a>
-      <a class="feature-card" href="#discoveryGeographyKidsSection"><span class="feature-icon">🔭</span><span class="feature-name">ডিসকভারি চ্যানেল</span><span class="feature-desc">বিজ্ঞান, প্রকৃতি ও অনুসন্ধান</span></a>
-      <a class="feature-card" href="#discoveryGeographyKidsSection"><span class="feature-icon">🗺️</span><span class="feature-name">জিওগ্রাফি চ্যানেল</span><span class="feature-desc">ভূগোল, মহাদেশ ও জলবায়ু</span></a>
-      <a class="feature-card" href="#discoveryGeographyKidsSection"><span class="feature-icon">⚽</span><span class="feature-name">বাচ্চাদের খেলাধুলা</span><span class="feature-desc">শিক্ষামূলক ও নিরাপদ ক্রীড়া</span></a>
-    </section>
-
-    <section class="panel" id="discoveryGeographyKidsSection">
-      <h2>🔭🗺️⚽ ডিসকভারি চ্যানেল, জিওগ্রাফি চ্যানেল ও বাচ্চাদের খেলাধুলা (AI অটো-আপডেট)</h2>
-      <div class="hub-controls-row">
-        <select id="specialChannelSelect" class="hub-select">
-          <option value="discovery">ডিসকভারি চ্যানেল (বিজ্ঞান, মহাকাশ ও অনুসন্ধান)</option>
-          <option value="geography">জিওগ্রাফি চ্যানেল (মহাদেশ, নদী, মানচিত্র ও পরিবেশ)</option>
-          <option value="kids_sports">বাচ্চাদের খেলাধুলা (দৌড়, সাঁতার, ফুটবল, অ্যাথলেটিক্স ও নিরাপত্তা)</option>
-        </select>
-        <input type="search" id="specialChannelSearchInput" class="hub-search-input" placeholder="ডিসকভারি, জিওগ্রাফি বা বাচ্চাদের খেলাধুলা খুঁজুন..." />
-      </div>
-      <div class="hub-cards-grid" id="specialChannelCardsGrid"></div>
-      <div class="media-buttons">
-        <button type="button" id="runSpecialChannelAiBtn" class="btn-gold">🤖 চ্যানেল ও খেলাধুলা AI আপডেট</button>
-        <button type="button" id="speakSpecialChannelAiBtn">🔊 AI কণ্ঠে শুনুন</button>
-      </div>
-      <div class="ai-box-output" id="specialChannelAiOutput">ডিসকভারি, জিওগ্রাফি ও বাচ্চাদের খেলাধুলা AI অটো-আপডেট সক্রিয় রয়েছে।</div>
-    </section>
-
-    <section class="panel" id="legacyModulesSection">
-      <h2>🌡️🎙️🔖🤖 আবহাওয়া, ভয়েস রেকর্ডার ও বুকমার্ক AI</h2>
-      <div class="hub-controls-row">
-        <input type="text" id="weatherCityInput" class="hub-search-input" value="Dhaka" placeholder="শহরের নাম (যেমন: Dhaka, London, Tokyo)..." />
-        <button type="button" id="fetchWeatherBtn" class="tool-button btn-gold">🌡️ তাপমাত্রা ও আবহাওয়া AI</button>
-      </div>
-      <div class="ai-box-output" id="weatherOutput">ঢাকা ও বৈশ্বিক আবহাওয়া টেলিম্যাট্রি প্রস্তুত।</div>
-
-      <div class="media-buttons">
-        <button type="button" id="startVoiceRecBtn">🎙️ ভয়েস রেকর্ডিং শুরু</button>
-        <button type="button" id="stopVoiceRecBtn">⏹ ভয়েস রেকর্ডিং বন্ধ</button>
-        <button type="button" id="runVoiceAiBtn" class="btn-gold">🤖 ভয়েস রেকর্ডার AI</button>
-        <button type="button" id="speakVoiceAiBtn">🔊 ভয়েস AI কণ্ঠ</button>
-      </div>
-      <div id="voiceRecAudioWrap"></div>
-      <div class="ai-box-output" id="voiceAiOutput">ভয়েস রেকর্ডার AI প্রস্তুত।</div>
-
-      <div class="hub-controls-row" style="margin-top:20px;">
-        <input type="text" id="bookmarkTitleInput" class="hub-search-input" placeholder="বুকমার্ক শিরোনাম বা লিংক/নোট..." />
-        <button type="button" id="saveBookmarkBtn" class="tool-button btn-gold">🔖 বুকমার্ক সংরক্ষণ</button>
-      </div>
-      <div id="bookmarksList"></div>
-      <div class="media-buttons">
-        <button type="button" id="runBookmarkAiBtn" class="btn-gold">🤖 বুকমার্ক AI বিশ্লেষণ</button>
-        <button type="button" id="speakBookmarkAiBtn">🔊 বুকমার্ক AI কণ্ঠ</button>
-      </div>
-      <div class="ai-box-output" id="bookmarkAiOutput">বুকমার্ক AI প্রস্তুত।</div>
-    </section>
-
-    <section class="panel" id="alert150Section">
-      <h2>🚨 AI ১৫০ এলার্ট প্রযুক্তি ও ক্রিটিক্যাল বিচার</h2>
-      <div class="hub-controls-row">
-        <input type="text" id="alert150ReasonInput" class="hub-search-input" value="মডারেশন ও সিস্টেম ক্রিটিক্যাল থ্রেশহোল্ড" placeholder="১৫০ এলার্টের কারণ বা বিষয় লিখুন..." />
-        <input type="number" id="alert150CountInput" class="hub-search-input" value="150" min="0" max="100000" />
-      </div>
-      <div class="media-buttons">
-        <button type="button" id="toggleRealAlert150Btn">🔴 ১৫০ রিয়েল এলার্ট অফ/অন: চালু</button>
-        <button type="button" id="toggle150TimerBtn">⏱ 150s অটো কাউন্টডাউন: বন্ধ</button>
-        <button type="button" id="fire150AlertBtn" class="btn-gold">🚨 এখনই ১৫০ এলার্ট ও AI বিচার</button>
-      </div>
-      <div class="status" id="alert150Status">কাউন্টডাউন: 150s / 150s • মোট ১৫০-এলার্ট: 0টি</div>
-      <div class="ai-box-output" id="alert150Output">১৫০ এলার্ট প্রস্তুত — থ্রেশহোল্ড বিচার ও ভয়েস সতর্কতা সক্রিয়।</div>
-    </section>
-
-    <section class="panel" id="autoEvSection">
-      <h2>🚗⚡ বিশ্ব অটোমোবাইল ও ইভি AI অটো-আপডেট</h2>
-      <div class="hub-controls-row">
-        <select id="autoEvTopicSelect" class="hub-select">
-          <option value="Global EV & Hybrid">গ্লোবাল ইভি ও হাইব্রিড বাজার</option>
-          <option value="Battery & Fast Charging">ব্যাটারি প্রযুক্তি ও ফাস্ট চার্জিং</option>
-          <option value="AI & Autonomous Auto">স্মার্ট অটো ও এআই ড্রাইভিং</option>
-        </select>
-        <button type="button" id="toggleAutoEvBtn" class="tool-button">⏱ অটো-আপডেট: চালু</button>
-      </div>
-      <div class="media-buttons">
-        <button type="button" id="refreshAutoEvBtn" class="btn-gold">🔄 এখনই অটো ও ইভি আপডেট</button>
-        <button type="button" id="speakAutoEvBtn">🔊 অটো ও ইভি আপডেট শুনুন</button>
-      </div>
-      <div class="ai-box-output" id="autoEvOutput">বিশ্ব অটো ও ইভি আপডেট লোড হচ্ছে...</div>
-    </section>
-
-    <section class="panel" id="mobileComputerAiSection">
-      <h2>📱💻 মোবাইল ও কম্পিউটার AI প্রযুক্তি</h2>
-      <div class="hub-controls-row">
-        <select id="deviceAiModeSelect" class="hub-select">
-          <option value="HYBRID_FAST">হাইব্রিড (দ্রুত লোকাল/ক্লাউড বিচার)</option>
-          <option value="CLOUD_DEEP">ক্লাউড AI (/api/ai/assist)</option>
-          <option value="LOCAL_OFFLINE">লোকাল/অফলাইন কোল্ড ইঞ্জিন</option>
-        </select>
-        <input type="text" id="deviceAiPromptInput" class="hub-search-input" placeholder="মোবাইল বা কম্পিউটার AI প্রশ্ন/নির্দেশ লিখুন..." />
-      </div>
-      <button type="button" id="runDeviceAiBtn" class="primary-button">🚀 মোবাইল ও কম্পিউটার AI রেসপন্স পান</button>
-      <div class="ai-box-output" id="deviceAiOutput">ডিভাইস টেলিম্যাট্রি ও AI রাউটার প্রস্তুত।</div>
-    </section>
-
-    <section class="panel" id="tradeAiSection">
-      <h2>🌐📦 বিশ্ব আমদানি-রপ্তানি পণ্য মূল্য তালিকা ও যোগাযোগ AI</h2>
-      <div class="hub-controls-row">
-        <select id="tradeCommoditySelect" class="hub-select"></select>
-        <input type="number" id="tradeQtyInput" class="hub-search-input" value="10" min="0.1" step="0.1" />
-      </div>
-      <input type="text" id="tradeCounterpartyInput" class="hub-search-input" value="আন্তর্জাতিক সাপ্লায়ার ও শিপমেন্ট ডেস্ক" placeholder="যোগাযোগের পক্ষ / ক্রেতা বা বিক্রেতা" />
-      <div class="hub-cards-grid" id="tradePriceListGrid"></div>
-      <div class="media-buttons">
-        <button type="button" id="analyzeTradeAiBtn" class="btn-gold">🤖 মূল্য বিশ্লেষণ ও যোগাযোগ খসড়া</button>
-        <button type="button" id="sendTradeToPostBtn">✍️ যোগাযোগ বার্তা পোস্ট বক্সে নিন</button>
-      </div>
-      <div class="ai-box-output" id="tradeAiOutput">পণ্য নির্বাচন করে মূল্য ও যোগাযোগ AI বিশ্লেষণ চালান।</div>
-    </section>
-
-    <section class="panel" id="worldStatsSection">
-      <h2>🌍📊 বিশ্ব রাষ্ট্র: আয়াতন, জনসংখ্যা ও অর্থনৈতিক প্রবৃদ্ধিহার AI</h2>
-      <div class="hub-controls-row">
-        <input type="search" id="worldStatsSearchInput" class="hub-search-input" placeholder="দেশ বা অঞ্চল খুঁজুন (বাংলাদেশ, ভারত, যুক্তরাষ্ট্র...)" />
-        <select id="worldStatsCountrySelect" class="hub-select"></select>
-      </div>
-      <div class="hub-cards-grid" id="worldStatsCardsGrid"></div>
-      <button type="button" id="analyzeWorldStatsAiBtn" class="primary-button">🤖 নির্বাচিত রাষ্ট্রের AI বিশ্লেষণ ও ভয়েস</button>
-      <div class="ai-box-output" id="worldStatsAiOutput">একটি রাষ্ট্র নির্বাচন করে আয়াতন, জনসংখ্যা ও অর্থনৈতিক প্রবৃদ্ধিহার বিশ্লেষণ করুন।</div>
-    </section>
-
-    <section class="panel" id="nobelLaureatesSection">
-      <h2>🏅🌍 নোবেলজয়ী ও বিশ্ব মনীষী AI অটো-আপডেট</h2>
-      <div class="hub-controls-row">
-        <input type="search" id="nobelSearchInput" class="hub-search-input" placeholder="মনীষী, সাল বা পুরস্কার খুঁজুন..." />
-        <select id="nobelSelect" class="hub-select"></select>
-      </div>
-      <div class="media-buttons">
-        <button type="button" id="toggleAutoNobelBtn">⏱ মনীষী অটো-আপডেট: চালু</button>
-        <button type="button" id="refreshNobelAiBtn" class="btn-gold">🤖 এখনই AI সারসংক্ষেপ ও ভয়েস</button>
-      </div>
-      <div class="hub-cards-grid" id="nobelCardsGrid"></div>
-      <div class="ai-box-output" id="nobelAiOutput">নোবেলজয়ী ও বিশ্ব মনীষীদের তথ্য প্রস্তুত।</div>
-    </section>
-
-    <section class="panel" id="worldLeadersSection">
-      <div class="panel-head-row">
-        <h2>🌍 রাষ্ট্রনেতাদের নাম তালিকা ও AI</h2>
-        <a href="world-leaders.html" class="panel-link-btn">সব রাষ্ট্রনেতা পেজ</a>
-      </div>
-      <input type="search" id="leaderSearchInput" class="hub-search-input" placeholder="রাষ্ট্রনেতা বা দেশের নাম দিয়ে খুঁজুন..." />
-      <div class="hub-cards-grid" id="worldLeadersGrid"></div>
-      <div class="media-buttons">
-        <button type="button" id="runLeadersAiBtn" class="btn-gold">🤖 রাষ্ট্রনেতা AI বিশ্লেষণ</button>
-        <button type="button" id="speakLeadersAiBtn">🔊 রাষ্ট্রনেতা AI কণ্ঠে শুনুন</button>
-      </div>
-      <div class="ai-box-output" id="worldLeadersAiOutput">রাষ্ট্রনেতা AI প্রস্তুত।</div>
-    </section>
-
-    <section class="panel" id="ulemaResearchSection">
-      <div class="panel-head-row">
-        <h2>🕌 বিশ্ব আলেম গবেষণাগার ও AI</h2>
-        <a href="ulema-research.html" class="panel-link-btn">গবেষণাগার পেজ</a>
-      </div>
-      <input type="search" id="ulemaSearchInput" class="hub-search-input" placeholder="গবেষণার বিষয় বা বিভাগ খুঁজুন..." />
-      <div class="hub-cards-grid" id="ulemaResearchGrid"></div>
-      <div class="media-buttons">
-        <button type="button" id="runUlemaAiBtn" class="btn-gold">🤖 আলেম গবেষণা AI বিশ্লেষণ</button>
-        <button type="button" id="speakUlemaAiBtn">🔊 আলেম গবেষণা AI কণ্ঠে শুনুন</button>
-      </div>
-      <div class="ai-box-output" id="ulemaAiOutput">আলেম গবেষণাগার AI প্রস্তুত।</div>
-    </section>
-
-    <section class="panel" id="groceryFarmersSection">
-      <div class="panel-head-row">
-        <h2>🛒 মুদি বাজার ও 🌾 বিশ্ব কৃষক + AI</h2>
-        <div class="media-buttons" style="margin:0;">
-          <a href="world-grocery.html" class="panel-link-btn">মুদি বাজার</a>
-          <a href="world-farmers.html" class="panel-link-btn">বিশ্ব কৃষক</a>
-        </div>
-      </div>
-      <div class="hub-controls-row">
-        <select id="marketTypeSelect" class="hub-select">
-          <option value="all">সব পণ্য (মুদি বাজার + বিশ্ব কৃষক)</option>
-          <option value="grocery">শুধু মুদি বাজার</option>
-          <option value="farmer">শুধু বিশ্ব কৃষক</option>
-        </select>
-        <input type="search" id="marketItemSearchInput" class="hub-search-input" placeholder="চাল, ডাল, তেল, আলু, গম, মসলা খুঁজুন..." />
-      </div>
-      <div class="hub-cards-grid" id="groceryFarmersGrid"></div>
-      <div class="media-buttons">
-        <button type="button" id="runMarketAiBtn" class="btn-gold">🤖 বাজার ও কৃষি AI বিশ্লেষণ</button>
-        <button type="button" id="speakMarketAiBtn">🔊 বাজার ও কৃষি AI কণ্ঠে শুনুন</button>
-      </div>
-      <div class="ai-box-output" id="marketAiOutput">বাজার ও কৃষি AI প্রস্তুত।</div>
-    </section>
-
-    <section class="panel" id="worldJobsSection">
-      <div class="panel-head-row">
-        <h2>💼 বিশ্ব চাকুরীর বাজার ও AI</h2>
-        <a href="world-jobs.html" class="panel-link-btn">চাকুরী বাজার পেজ</a>
-      </div>
-      <input type="search" id="directJobSearchInput" class="hub-search-input" placeholder="পদবী, কোম্পানি বা লোকেশন দিয়ে চাকুরীর বিজ্ঞাপন খুঁজুন..." />
-      <div class="hub-cards-grid" id="directJobsGrid"></div>
-      <div class="media-buttons">
-        <button type="button" id="runJobsAiBtn" class="btn-gold">🤖 চাকুরী বাজার AI বিশ্লেষণ</button>
-        <button type="button" id="speakJobsAiBtn">🔊 চাকুরী বাজার AI কণ্ঠে শুনুন</button>
-      </div>
-      <div class="ai-box-output" id="jobsAiOutput">চাকুরী বাজার AI প্রস্তুত।</div>
-    </section>
-
-    <section class="panel" id="youtubeHubSection">
-      <h2>▶️🤖 AYNA YOUTUBE HUB + AI</h2>
-      <div class="yt-input-row">
-        <input type="text" id="ytSearchOrUrlInput" class="hub-search-input" placeholder="YouTube ভিডিও লিংক/ID দিন অথবা টপিক লিখে সার্চ করুন..." />
-        <button type="button" id="ytPlaySearchBtn" class="btn-gold">চালান / খুঁজুন</button>
-      </div>
-      <div class="yt-preset-row">
-        <button type="button" class="yt-preset-btn" data-yt="AYNA BOOK">AYNA BOOK</button>
-        <button type="button" class="yt-preset-btn" data-yt="Bangla news live">বাংলা নিউজ</button>
-        <button type="button" class="yt-preset-btn" data-yt="Islamic lecture Bangla">ইসলামি আলোচনা</button>
-        <button type="button" class="yt-preset-btn" data-yt="Global agriculture farming">বিশ্ব কৃষি</button>
-        <button type="button" class="yt-preset-btn" data-yt="Global job market career">বিশ্ব চাকুরী</button>
-        <button type="button" id="runYtAiBtn" class="btn-gold">🤖 YouTube AI</button>
-      </div>
-      <iframe
-        id="ytEmbedFrame"
-        class="yt-player-frame"
-        src="https://www.youtube.com/embed?listType=search&list=Bangla+news+live"
-        title="AYNA YouTube Hub"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-      <a id="ytDirectWatchLink" class="yt-ext-link" href="https://www.youtube.com/results?search_query=Bangla+news+live" target="_blank" rel="noopener">
-        ↗️ YouTube অ্যাপ বা ব্রাউজারে খুলুন
-      </a>
-      <div class="ai-box-output" id="ytAiOutput">YouTube AI সারসংক্ষেপ এখানে দেখা যাবে।</div>
-    </section>
-
-    <section class="panel" id="createPost">
-      <h2>✍️🤖 নতুন পোস্ট তৈরি করুন (পোস্ট, অডিও, ভিডিও ও মিডিয়া AI)</h2>
-      <textarea id="postText" placeholder="আপনার মনের কথা লিখুন... (AI লেখা সংশোধন, পোস্ট বিশ্লেষণ ও ভয়েস রিডআউট সক্রিয়)"></textarea>
-
-      <div class="post-tools">
-        <button type="button" class="tool-button" id="aiPolishPostBtn">✨ AI লেখা সংশোধন</button>
-        <button type="button" class="tool-button" id="aiAnalyzePostBtn">🤖 AI পোস্ট বিশ্লেষণ ও কণ্ঠ</button>
-        <button type="button" class="tool-button" id="chooseImage">🖼️ ছবি (25MB)</button>
-        <button type="button" class="tool-button" id="chooseAudio">🎵 অডিও (100MB) + AI</button>
-        <button type="button" class="tool-button" id="chooseVideo">🎬 বড় ভিডিও (250MB) + AI</button>
-        <button type="button" class="tool-button" id="chooseFile">📎 ফাইল (250MB)</button>
-        <button type="button" class="tool-button" id="clearMedia">✖️ মিডিয়া / ফাইল বাদ দিন</button>
-      </div>
-
-      <div class="ai-box-output" id="postMediaAiOutput">
-        পোস্ট, অডিও বা ভিডিও নির্বাচন করলে AI অটো-বিশ্লেষণ ও কণ্ঠ সারসংক্ষেপ এখানে দেখাবে।
-      </div>
-
-      <input id="imageInput" type="file" accept="image/*" hidden />
-      <input id="audioInput" type="file" accept="audio/*" hidden />
-      <input id="videoInput" type="file" accept="video/*" hidden />
-      <input id="fileInput" type="file" accept="*/*" hidden />
-
-      <div class="progress-wrap" id="uploadProgressWrap">
-        <div class="progress-bar" id="uploadProgressBar"></div>
-      </div>
-
-      <div class="preview" id="mediaPreview">
-        <div id="previewContent"></div>
-        <div class="status" id="previewName"></div>
-      </div>
-
-      <button type="button" class="primary-button" id="publishPost">🚀 পোস্ট প্রকাশ করুন</button>
-
-      <div class="status" id="postStatus">
-        ছবি (25MB), অডিও (100MB), বড় ভিডিও (250MB) বা ফাইল (250MB) যুক্ত করে পোস্ট করুন।
-      </div>
-    </section>
-
-    <section class="panel media-box" id="liveSection">
-      <h2>🔴🤖 AYNA LIVE VIDEO + LIVE AI</h2>
-      <video id="liveVideo" autoplay muted playsinline></video>
-      <div class="media-buttons">
-        <button type="button" id="startCamera">📹 ক্যামেরা চালু</button>
-        <button type="button" id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
-        <button type="button" id="runLiveAiBtn" class="btn-gold">🤖 লাইভ ভিডিও AI পর্যবেক্ষণ ও কণ্ঠ</button>
-      </div>
-      <div class="status" id="cameraStatus">ক্যামেরা এখন বন্ধ।</div>
-      <div class="ai-box-output" id="liveAiOutput">
-        লাইভ ভিডিও AI প্রস্তুত — ক্যামেরা চালু করে লাইভ স্ট্যাটাস ও কণ্ঠ ব্রিফিং নিন।
-      </div>
-    </section>
-
-    <h2 class="section-title">🌐 AYNA BOOK NEWS FEED</h2>
-    <div class="feed-filters" role="group" aria-label="Feed filter">
-      <button type="button" class="filter-btn active" data-filter="all">সব পোস্ট</button>
-      <button type="button" class="filter-btn" data-filter="text">📝 টেক্সট</button>
-      <button type="button" class="filter-btn" data-filter="image">🖼️ ছবি</button>
-      <button type="button" class="filter-btn" data-filter="audio">🎵 অডিও</button>
-      <button type="button" class="filter-btn" data-filter="video">🎬 ভিডিও</button>
-      <button type="button" class="filter-btn" data-filter="file">📎 ফাইল</button>
-    </div>
-
-    <section id="feed">
-      <div class="empty">পোস্ট লোড হচ্ছে...</div>
-    </section>
-
-    <section class="file-registry-box" id="fileRegistrySection">
-      <h2>📁🤖 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">192</span>টি) + AI</h2>
-      <input type="search" id="fileSearchInput" class="hub-search-input" placeholder="ফাইল বা ফোল্ডারের নাম লিখে খুঁজুন..." />
-      <div id="fileListGrid" class="file-list-grid"></div>
-      <div class="media-buttons">
-        <button type="button" id="runRegistryAiBtn" class="btn-gold">🤖 রেজিস্ট্রি AI বিশ্লেষণ</button>
-        <button type="button" id="speakRegistryAiBtn">🔊 রেজিস্ট্রি AI কণ্ঠে শুনুন</button>
-      </div>
-      <div class="ai-box-output" id="registryAiOutput">রেজিস্ট্রি AI সারসংক্ষেপ প্রস্তুত।</div>
-    </section>
-  </main>
-
-  <footer>
-    © 2026 AYNA BOOK* — Full AI Radar, Aviation, Weather &amp; Quantum Social Hub
-  </footer>
-
-  <nav class="bottom-nav">
-    <a href="index.html"><span>🏠</span>Home</a>
-    <a href="#createPost"><span>➕</span>Post</a>
-    <a href="messenger.html"><span>💬</span>Chat</a>
-    <a href="profile.html"><span>👤</span>Profile</a>
-  </nav>
-
-  <script type="module" src="./index.js"></script>
-</body>
-</html>
+<!DOCTYPE html>  <html lang="bn">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />  
+  <title>AYNA BOOK* • Full AI Radar, Weather, Civil Aviation & Quantum Hub</title>  
+  <meta name="theme-color" content="#050a18" />  
+  <link rel="manifest" href="./manifest.webmanifest" />  
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />  
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png" />  
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>  
+  <style>  
+    :root {  
+      --bg: #050a18;  
+      --navy-top: #1a3575;  
+      --navy-bottom: #08122b;  
+      --gold: #ffe64d;  
+      --gold-bright: #fff6b3;  
+      --gold-base: #8a6105;  
+      --quantum-cyan: #38f2ff;  
+      --white: #ffffff;  
+      --muted: #e6eeff;  
+      --green: #16c784;  
+      --amber: #f59e0b;  
+      --danger: #ff4d6d;  
+      --ui-scale: 1;  
+    }  * {  
+  box-sizing: border-box;  
+}  
+
+html,  
+body {  
+  max-width: 100%;  
+  overflow-x: hidden;  
+  scroll-behavior: smooth;  
+}  
+
+body {  
+  margin: 0;  
+  padding-bottom: 160px;  
+  background:  
+    radial-gradient(circle at 15% 10%, rgba(56, 242, 255, 0.12), transparent 36%),  
+    radial-gradient(circle at 85% 20%, rgba(255, 230, 77, 0.13), transparent 42%),  
+    var(--bg);  
+  color: var(--white);  
+  font-family: Arial, "Noto Sans Bengali", system-ui, sans-serif;  
+  font-size: calc(clamp(30px, 5vw, 46px) * var(--ui-scale));  
+  line-height: 1.5;  
+}  
+
+button,  
+input,  
+textarea,  
+select,  
+a {  
+  font: inherit;  
+}  
+
+button {  
+  cursor: pointer;  
+}  
+
+.gold-3d-box,  
+.hero,  
+.profile-bar,  
+.feature-card,  
+.panel,  
+.feed-post,  
+.quantum-bar,  
+.feed-filters,  
+.file-registry-box,  
+.hub-card,  
+.clock-box,  
+.radar-item,  
+.qr-panel-box {  
+  background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%) !important;  
+  border: 4px solid var(--gold) !important;  
+  border-radius: 14px !important;  
+  box-shadow:  
+    0 0 20px rgba(255, 230, 77, 0.65),  
+    0 9px 0 var(--gold-base),  
+    0 16px 26px rgba(0, 0, 0, 0.85),  
+    inset 0 2px 6px var(--gold-bright) !important;  
+}  
+
+.feature-card:active,  
+.primary-button:active,  
+.tool-button:active,  
+.media-buttons button:active,  
+.header-actions a:active,  
+.header-actions button:active,  
+.filter-btn:active,  
+.yt-go-btn:active,  
+.yt-preset-btn:active,  
+.panel-link-btn:active,  
+button:active {  
+  transform: translateY(4px) !important;  
+}  
+
+header {  
+  background: linear-gradient(180deg, #122659 0%, #060d21 100%);  
+  border-bottom: 4px solid var(--gold);  
+  padding: 20px;  
+  position: sticky;  
+  top: 0;  
+  z-index: 80;  
+  box-shadow: 0 0 22px rgba(255, 230, 77, 0.45), 0 6px 18px rgba(0, 0, 0, 0.9);  
+}  
+
+.header-inner {  
+  max-width: 1400px;  
+  margin: 0 auto;  
+  display: flex;  
+  align-items: center;  
+  justify-content: space-between;  
+  gap: 16px;  
+  flex-wrap: wrap;  
+}  
+
+.logo {  
+  color: var(--gold-bright);  
+  font-size: clamp(40px, 6.5vw, 66px);  
+  font-weight: 1000;  
+  letter-spacing: 1px;  
+  display: inline-flex;  
+  align-items: center;  
+  gap: 14px;  
+  text-decoration: none;  
+  text-shadow: 0 0 14px rgba(255, 230, 77, 0.85), 0 3px 8px rgba(0, 0, 0, 0.95);  
+}  
+
+.k-star-wrap {  
+  position: relative;  
+  display: inline-block;  
+}  
+
+.star-12px-1m {  
+  position: absolute;  
+  top: -6px;  
+  right: -12px;  
+  font-size: 12px;  
+  line-height: 1;  
+  color: #ffffff;  
+  opacity: 0.2;  
+  animation: starFlashEveryMinute 60s infinite linear;  
+  pointer-events: none;  
+}  
+
+@keyframes starFlashEveryMinute {  
+  0%, 95% {  
+    opacity: 0.18;  
+    transform: scale(0.95);  
+    text-shadow: none;  
+  }  
+  96%, 100% {  
+    opacity: 1;  
+    transform: scale(1.3);  
+    text-shadow: 0 0 8px #ffffff, 0 0 14px #ffffff;  
+  }  
+}  
+
+.quantum-badge {  
+  font-size: clamp(22px, 3.2vw, 30px);  
+  font-weight: 900;  
+  padding: 8px 16px;  
+  border-radius: 10px;  
+  color: var(--quantum-cyan);  
+  background: rgba(5, 10, 24, 0.92);  
+  border: 3px solid var(--quantum-cyan);  
+}  
+
+.header-actions {  
+  display: flex;  
+  gap: 14px;  
+  flex-wrap: wrap;  
+  align-items: center;  
+}  
+
+.header-actions a,  
+.header-actions button {  
+  text-decoration: none;  
+  color: #ffffff;  
+  background: linear-gradient(155deg, #1d3b7e, #08122b);  
+  border: 3.5px solid var(--gold);  
+  padding: 14px 22px;  
+  border-radius: 10px;  
+  font-weight: 900;  
+  font-size: clamp(26px, 4vw, 36px);  
+  box-shadow: 0 0 12px rgba(255, 230, 77, 0.45), 0 5px 0 var(--gold-base);  
+}  
+
+.btn-gold {  
+  background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%) !important;  
+  color: #050a18 !important;  
+  border-color: var(--gold-bright) !important;  
+  font-weight: 1000 !important;  
+}  
+
+.ticker-bar {  
+  background: #081229;  
+  border-top: 2px solid var(--gold);  
+  overflow: hidden;  
+  white-space: nowrap;  
+  padding: 12px 0;  
+  margin-top: 12px;  
+}  
+
+.ticker-track {  
+  display: inline-block;  
+  padding-left: 100%;  
+  animation: slowTicker 55s linear infinite;  
+  color: var(--gold-bright);  
+  font-size: clamp(26px, 4vw, 38px);  
+  font-weight: 800;  
+}  
+
+@keyframes slowTicker {  
+  0% { transform: translateX(0); }  
+  100% { transform: translateX(-100%); }  
+}  
+
+#notice {  
+  position: fixed;  
+  top: 120px;  
+  left: 50%;  
+  transform: translateX(-50%);  
+  background: #0a1636;  
+  color: var(--gold-bright);  
+  border: 4px solid var(--gold-bright);  
+  padding: 20px 30px;  
+  border-radius: 12px;  
+  box-shadow: 0 0 24px rgba(255, 230, 77, 0.85), 0 7px 0 var(--gold-base);  
+  z-index: 120;  
+  display: none;  
+  max-width: 94%;  
+  font-size: clamp(28px, 4.5vw, 40px);  
+  font-weight: 900;  
+  text-align: center;  
+}  
+
+.container {  
+  max-width: 1400px;  
+  margin: 0 auto;  
+  padding: 24px 18px 0;  
+}  
+
+.hero {  
+  padding: 36px 24px;  
+  margin-bottom: 28px;  
+  text-align: center;  
+}  
+
+.stylish-owner-name {  
+  font-size: clamp(42px, 6.8vw, 72px);  
+  font-weight: 1000;  
+  letter-spacing: 1.5px;  
+  color: var(--gold-bright);  
+  text-shadow: 0 0 18px rgba(255, 230, 77, 0.75), 0 4px 12px rgba(0, 0, 0, 0.95);  
+  margin: 0 0 16px;  
+}  
+
+.hero p {  
+  font-size: clamp(30px, 4.8vw, 44px);  
+  line-height: 1.55;  
+  margin: 0;  
+  color: var(--white);  
+  font-weight: 700;  
+}  
+
+.quantum-bar {  
+  padding: 22px;  
+  margin-bottom: 28px;  
+  display: grid;  
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));  
+  gap: 18px;  
+}  
+
+.q-stat {  
+  background: rgba(5, 11, 28, 0.9);  
+  border: 3px solid var(--gold);  
+  border-radius: 10px;  
+  padding: 18px;  
+}  
+
+.q-stat-label {  
+  font-size: clamp(24px, 3.6vw, 32px);  
+  color: var(--muted);  
+  display: block;  
+}  
+
+.q-stat-value {  
+  font-size: clamp(30px, 4.6vw, 42px);  
+  font-weight: 1000;  
+  color: var(--quantum-cyan);  
+  margin-top: 8px;  
+  display: block;  
+  overflow-wrap: anywhere;  
+}  
+
+.section-title {  
+  font-size: clamp(36px, 5.8vw, 56px);  
+  font-weight: 1000;  
+  margin: 38px 0 22px;  
+  color: var(--gold-bright);  
+}  
+
+.profile-bar {  
+  display: flex;  
+  align-items: center;  
+  flex-wrap: wrap;  
+  gap: 28px;  
+  padding: 26px;  
+  margin-bottom: 28px;  
+}  
+
+.profile-square-box {  
+  width: min(100%, 420px);  
+  aspect-ratio: 1 / 1;  
+  flex-shrink: 0;  
+  display: flex;  
+  align-items: center;  
+  justify-content: center;  
+  background: #050a18;  
+  border: 5px solid var(--gold-bright);  
+  border-radius: 14px;  
+  padding: 8px;  
+  box-shadow: 0 0 24px rgba(255, 230, 77, 0.8), 0 7px 0 var(--gold-base);  
+}  
+
+.profile-square-box img {  
+  width: 100%;  
+  height: 100%;  
+  object-fit: cover;  
+  object-position: top center;  
+  border-radius: 10px;  
+  display: block;  
+}  
+
+.profile-info {  
+  flex: 1;  
+  min-width: 280px;  
+}  
+
+.profile-info strong {  
+  font-size: clamp(38px, 6vw, 56px);  
+  font-weight: 1000;  
+  color: var(--white);  
+  display: block;  
+}  
+
+.profile-info small {  
+  display: block;  
+  color: var(--muted);  
+  font-size: clamp(28px, 4.4vw, 38px);  
+  margin-top: 8px;  
+  word-break: break-word;  
+}  
+
+.ayna-id-chip {  
+  display: inline-block;  
+  margin-top: 14px;  
+  padding: 10px 18px;  
+  border-radius: 10px;  
+  border: 3px solid var(--gold);  
+  background: #050b1c;  
+  color: var(--gold-bright);  
+  font-family: monospace;  
+  font-size: clamp(28px, 4.5vw, 40px);  
+  font-weight: 1000;  
+}  
+
+.barcode-box {  
+  background: #ffffff;  
+  padding: 10px 16px;  
+  border-radius: 10px;  
+  border: 3px solid var(--gold);  
+  display: inline-flex;  
+  margin-top: 14px;  
+}  
+
+.qr-panel-box {  
+  padding: 24px;  
+  margin-bottom: 28px;  
+  text-align: center;  
+}  
+
+.qr-heading-tag {  
+  display: inline-block;  
+  background: var(--gold);  
+  color: #050a18;  
+  font-size: clamp(32px, 5vw, 46px);  
+  font-weight: 1000;  
+  padding: 8px 22px;  
+  border-radius: 10px;  
+  margin-bottom: 16px;  
+}  
+
+.qr-card-inner {  
+  display: inline-block;  
+  background: #ffffff;  
+  color: #050a18;  
+  padding: 18px;  
+  border-radius: 14px;  
+  border: 4px solid var(--gold-bright);  
+}  
+
+.feature-grid-8 {  
+  display: grid;  
+  grid-template-columns: repeat(4, minmax(0, 1fr));  
+  gap: 22px;  
+}  
+
+.feature-grid-more {  
+  display: grid;  
+  grid-template-columns: repeat(3, minmax(0, 1fr));  
+  gap: 22px;  
+  margin-top: 22px;  
+}  
+
+.feature-card {  
+  min-height: 360px;  
+  padding: 26px 18px;  
+  color: var(--white);  
+  text-decoration: none;  
+  display: flex;  
+  flex-direction: column;  
+  justify-content: center;  
+  align-items: center;  
+  text-align: center;  
+  transition: transform 0.14s ease;  
+}  
+
+.feature-icon {  
+  font-size: clamp(72px, 11vw, 108px);  
+  margin-bottom: 14px;  
+}  
+
+.feature-name {  
+  font-size: clamp(32px, 5vw, 46px);  
+  line-height: 1.25;  
+  font-weight: 1000;  
+  color: var(--white);  
+}  
+
+.feature-desc {  
+  color: var(--muted);  
+  font-size: clamp(26px, 4vw, 34px);  
+  font-weight: 700;  
+  margin-top: 10px;  
+}  
+
+.panel {  
+  padding: 26px;  
+  margin: 28px 0;  
+}  
+
+.panel h2 {  
+  margin: 0 0 20px;  
+  font-size: clamp(34px, 5.5vw, 50px);  
+  font-weight: 1000;  
+  color: var(--gold-bright);  
+}  
+
+.panel-head-row {  
+  display: flex;  
+  align-items: center;  
+  justify-content: space-between;  
+  gap: 16px;  
+  flex-wrap: wrap;  
+  margin-bottom: 18px;  
+}  
+
+.panel-link-btn {  
+  text-decoration: none;  
+  background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);  
+  color: #050a18;  
+  border: 3.5px solid var(--gold-bright);  
+  border-radius: 10px;  
+  padding: 12px 22px;  
+  font-size: clamp(26px, 4vw, 36px);  
+  font-weight: 1000;  
+  box-shadow: 0 5px 0 #664604;  
+}  
+
+.hub-controls-row {  
+  display: grid;  
+  grid-template-columns: repeat(2, minmax(0, 1fr));  
+  gap: 18px;  
+  margin-bottom: 18px;  
+}  
+
+.hub-cards-grid {  
+  display: grid;  
+  grid-template-columns: repeat(2, minmax(0, 1fr));  
+  gap: 18px;  
+  margin-top: 18px;  
+}  
+
+.hub-search-input,  
+.hub-select,  
+input,  
+textarea,  
+select {  
+  width: 100%;  
+  background: #050b1c;  
+  color: var(--white);  
+  border: 3.5px solid var(--gold);  
+  border-radius: 10px;  
+  padding: 16px 20px;  
+  font-size: clamp(28px, 4.5vw, 38px);  
+  outline: none;  
+}  
+
+textarea {  
+  min-height: 220px;  
+  resize: vertical;  
+}  
+
+.hub-card {  
+  padding: 20px;  
+  font-size: clamp(28px, 4.5vw, 38px);  
+  display: flex;  
+  flex-direction: column;  
+  gap: 10px;  
+}  
+
+.hub-card-tag {  
+  align-self: flex-start;  
+  background: var(--gold);  
+  color: #050a18;  
+  font-size: clamp(22px, 3.5vw, 30px);  
+  font-weight: 1000;  
+  padding: 6px 14px;  
+  border-radius: 8px;  
+}  
+
+.hub-card-title {  
+  font-size: clamp(30px, 4.8vw, 42px);  
+  font-weight: 1000;  
+  color: var(--gold-bright);  
+}  
+
+.hub-card-meta {  
+  font-size: clamp(26px, 4vw, 36px);  
+  color: var(--muted);  
+  overflow-wrap: anywhere;  
+}  
+
+.ai-box-output {  
+  margin-top: 16px;  
+  background: #050b1c;  
+  border: 3.5px solid var(--quantum-cyan);  
+  border-radius: 10px;  
+  padding: 20px;  
+  font-size: clamp(28px, 4.5vw, 38px);  
+  color: var(--gold-bright);  
+  white-space: pre-line;  
+  overflow-wrap: anywhere;  
+}  
+
+.media-buttons,  
+.post-tools {  
+  display: grid;  
+  grid-template-columns: repeat(2, minmax(0, 1fr));  
+  gap: 16px;  
+  margin-top: 16px;  
+}  
+
+.tool-button,  
+.media-buttons button,  
+button {  
+  min-height: 86px;  
+  padding: 14px 18px;  
+  border-radius: 10px;  
+  border: 3.5px solid var(--gold);  
+  background: linear-gradient(155deg, #1d3b7e, #08122b);  
+  color: var(--white);  
+  font-size: clamp(28px, 4.4vw, 38px);  
+  font-weight: 900;  
+  display: inline-flex;  
+  align-items: center;  
+  justify-content: center;  
+  gap: 8px;  
+  box-shadow: 0 0 12px rgba(255, 230, 77, 0.45), 0 6px 0 var(--gold-base);  
+}  
+
+.primary-button {  
+  width: 100%;  
+  min-height: 98px;  
+  margin-top: 18px;  
+  border: 4px solid var(--gold-bright);  
+  border-radius: 10px;  
+  background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);  
+  color: #050a18;  
+  font-size: clamp(30px, 4.8vw, 42px);  
+  font-weight: 1000;  
+  box-shadow: 0 0 18px rgba(255, 230, 77, 0.65), 0 7px 0 #664604;  
+}  
+
+.clock-live-box {  
+  background: #050b1c;  
+  border: 3.5px solid var(--gold);  
+  border-radius: 10px;  
+  padding: 20px;  
+  margin-bottom: 18px;  
+  text-align: center;  
+}  
+
+.clock-live-time {  
+  font-size: clamp(40px, 6.5vw, 62px);  
+  font-weight: 1000;  
+  color: var(--quantum-cyan);  
+  display: block;  
+}  
+
+.clock-rules-text {  
+  font-size: clamp(26px, 4vw, 34px);  
+  color: var(--muted);  
+  margin-top: 12px;  
+}  
+
+.mega-radar-compass-grid {  
+  display: grid;  
+  grid-template-columns: repeat(3, minmax(0, 1fr));  
+  gap: 20px;  
+  margin-top: 18px;  
+}  
+
+.mega-sensor-box {  
+  background: #050b1c;  
+  border: 3.5px solid var(--gold);  
+  border-radius: 12px;  
+  padding: 18px;  
+  text-align: center;  
+}  
+
+.mega-sensor-title {  
+  font-size: clamp(28px, 4.5vw, 38px);  
+  font-weight: 1000;  
+  color: var(--gold-bright);  
+  margin-bottom: 12px;  
+}  
+
+.mega-canvas {  
+  width: 100%;  
+  max-width: 360px;  
+  height: 360px;  
+  display: block;  
+  margin: 0 auto 12px;  
+  border-radius: 50%;  
+  border: 4px solid var(--quantum-cyan);  
+}  
+
+.progress-wrap {  
+  display: none;  
+  margin-top: 14px;  
+  background: #050b1c;  
+  border: 3px solid var(--gold);  
+  border-radius: 8px;  
+  height: 34px;  
+  overflow: hidden;  
+}  
+
+.progress-bar {  
+  height: 100%;  
+  width: 0%;  
+  background: linear-gradient(90deg, var(--quantum-cyan), var(--gold));  
+  transition: width 0.2s ease;  
+}  
+
+.preview {  
+  display: none;  
+  margin-top: 18px;  
+  background: #050b1c;  
+  border: 3.5px solid var(--gold);  
+  padding: 18px;  
+  border-radius: 10px;  
+  text-align: center;  
+}  
+
+.preview img,  
+.post-media {  
+  width: 100%;  
+  max-height: 760px;  
+  object-fit: contain;  
+  object-position: top center;  
+  background: #050a12;  
+  border: 3.5px solid var(--gold);  
+  border-radius: 10px;  
+  margin-top: 12px;  
+}  
+
+.preview video,  
+.post-media-video,  
+.media-box video {  
+  width: 100%;  
+  max-height: 720px;  
+  object-fit: contain;  
+  object-position: top center;  
+  background: #000000;  
+  border: 3.5px solid var(--gold);  
+  border-radius: 10px;  
+}  
+
+.post-media-audio {  
+  width: 100%;  
+  margin-top: 14px;  
+}  
+
+.feed-filters {  
+  display: flex;  
+  gap: 14px;  
+  flex-wrap: wrap;  
+  padding: 20px;  
+  margin-bottom: 22px;  
+}  
+
+.filter-btn {  
+  background: #0a1636;  
+  color: var(--white);  
+  border: 3px solid var(--gold);  
+  border-radius: 10px;  
+  padding: 14px 22px;  
+  font-size: clamp(28px, 4.4vw, 38px);  
+  font-weight: 900;  
+}  
+
+.filter-btn.active {  
+  background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);  
+  color: #050a18;  
+}  
+
+.feed-post {  
+  padding: 26px;  
+  margin-bottom: 26px;  
+}  
+
+.post-header {  
+  display: flex;  
+  align-items: center;  
+  justify-content: space-between;  
+  gap: 16px;  
+  margin-bottom: 16px;  
+  flex-wrap: wrap;  
+}  
+
+.post-author-wrap {  
+  display: flex;  
+  align-items: center;  
+  gap: 18px;  
+}  
+
+.post-avatar {  
+  width: 160px;  
+  height: 160px;  
+  border-radius: 10px;  
+  border: 4px solid var(--gold-bright);  
+  object-fit: cover;  
+  object-position: top center;  
+  background: #0a1636;  
+  flex-shrink: 0;  
+}  
+
+.post-author {  
+  font-size: clamp(32px, 5vw, 46px);  
+  font-weight: 1000;  
+}  
+
+.post-date {  
+  font-size: clamp(24px, 3.8vw, 32px);  
+  color: var(--muted);  
+}  
+
+.post-header-right {  
+  display: flex;  
+  align-items: center;  
+  gap: 12px;  
+}  
+
+.q-pill {  
+  font-size: clamp(22px, 3.5vw, 30px);  
+  font-weight: 900;  
+  color: var(--quantum-cyan);  
+  background: rgba(5, 11, 28, 0.9);  
+  border: 2.5px solid var(--quantum-cyan);  
+  padding: 8px 14px;  
+  border-radius: 8px;  
+}  
+
+.post-dot-menu-btn {  
+  min-height: 64px;  
+  padding: 8px 16px;  
+  font-size: clamp(28px, 4.4vw, 36px);  
+  border-radius: 10px;  
+}  
+
+.post-manage-drawer {  
+  margin-top: 14px;  
+  padding: 16px;  
+  background: #050b1c;  
+  border: 3px solid var(--quantum-cyan);  
+  border-radius: 10px;  
+}  
+
+.post-content {  
+  font-size: clamp(32px, 5vw, 46px);  
+  line-height: 1.55;  
+  white-space: pre-wrap;  
+  overflow-wrap: anywhere;  
+  margin: 16px 0;  
+}  
+
+.file-attach-box {  
+  margin-top: 14px;  
+  padding: 18px;  
+  border-radius: 10px;  
+  background: #050b1c;  
+  border: 3px solid var(--gold);  
+  display: flex;  
+  justify-content: space-between;  
+  align-items: center;  
+  gap: 14px;  
+  flex-wrap: wrap;  
+  font-size: clamp(26px, 4vw, 36px);  
+}  
+
+.file-attach-box a {  
+  background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);  
+  color: #050a18;  
+  text-decoration: none;  
+  font-weight: 1000;  
+  padding: 12px 20px;  
+  border-radius: 8px;  
+}  
+
+.post-actions {  
+  display: grid;  
+  grid-template-columns: repeat(4, minmax(0, 1fr));  
+  gap: 14px;  
+  border-top: 3px solid var(--gold);  
+  padding-top: 18px;  
+  margin-top: 18px;  
+}  
+
+.post-actions button {  
+  min-height: 82px;  
+  font-size: clamp(24px, 3.8vw, 32px);  
+}  
+
+.comments {  
+  margin-top: 16px;  
+  border-top: 2.5px solid rgba(255, 230, 77, 0.65);  
+  padding-top: 14px;  
+}  
+
+.comment-item {  
+  background: #050b1c;  
+  border: 2.5px solid var(--gold);  
+  padding: 14px 18px;  
+  border-radius: 8px;  
+  margin: 10px 0;  
+  font-size: clamp(26px, 4vw, 34px);  
+  overflow-wrap: anywhere;  
+}  
+
+.comment-form {  
+  display: flex;  
+  gap: 14px;  
+  margin-top: 14px;  
+  flex-wrap: wrap;  
+}  
+
+.comment-form input {  
+  flex: 1;  
+  min-width: 240px;  
+}  
+
+.file-registry-box {  
+  padding: 26px;  
+  margin: 28px 0;  
+}  
+
+.file-list-grid {  
+  display: grid;  
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));  
+  gap: 14px;  
+  max-height: 700px;  
+  overflow-y: auto;  
+  padding: 12px;  
+  background: #050b1c;  
+  border: 3px solid var(--gold);  
+  border-radius: 10px;  
+}  
+
+.file-item-card {  
+  background: #0b1633;  
+  border: 2.5px solid var(--gold);  
+  border-radius: 8px;  
+  padding: 14px 16px;  
+  font-size: clamp(24px, 3.8vw, 32px);  
+  word-break: break-word;  
+}  
+
+.file-item-num {  
+  color: var(--gold-bright);  
+  font-weight: 1000;  
+  margin-right: 8px;  
+}  
+
+.bookmark-row {  
+  display: flex;  
+  justify-content: space-between;  
+  align-items: center;  
+  gap: 14px;  
+  flex-wrap: wrap;  
+  background: #050b1c;  
+  border: 3px solid var(--gold);  
+  border-radius: 8px;  
+  padding: 14px 18px;  
+  margin-top: 12px;  
+  font-size: clamp(26px, 4vw, 34px);  
+}  
+
+.status,  
+.empty {  
+  font-size: clamp(26px, 4.2vw, 36px);  
+  color: var(--muted);  
+  margin-top: 12px;  
+  overflow-wrap: anywhere;  
+}  
+
+.empty {  
+  text-align: center;  
+  padding: 36px 16px;  
+}  
+
+.yt-input-row {  
+  display: grid;  
+  grid-template-columns: 1fr auto;  
+  gap: 14px;  
+  margin-bottom: 14px;  
+}  
+
+.yt-preset-row {  
+  display: flex;  
+  gap: 12px;  
+  flex-wrap: wrap;  
+  margin-bottom: 16px;  
+}  
+
+.yt-player-frame {  
+  width: 100%;  
+  height: 540px;  
+  border: 4px solid var(--gold);  
+  border-radius: 10px;  
+  background: #000000;  
+}  
+
+.yt-ext-link {  
+  display: inline-block;  
+  margin-top: 14px;  
+  text-decoration: none;  
+  background: linear-gradient(155deg, #1d3b7e, #08122b);  
+  color: var(--gold-bright);  
+  border: 3.5px solid var(--gold);  
+  border-radius: 10px;  
+  padding: 14px 22px;  
+  font-size: clamp(28px, 4.4vw, 38px);  
+  font-weight: 900;  
+}  
+
+.focused-feature-highlight {  
+  outline: 5px solid var(--quantum-cyan) !important;  
+  box-shadow: 0 0 34px rgba(56, 242, 255, 0.85), 0 9px 0 var(--gold-base) !important;  
+}  
+
+.messenger-call-bar {  
+  display: grid;  
+  grid-template-columns: repeat(2, minmax(0, 1fr));  
+  gap: 16px;  
+  margin: 16px 0;  
+}  
+
+.messenger-uhd-btn {  
+  min-height: 92px;  
+  font-weight: 1000 !important;  
+  border-width: 4px !important;  
+}  
+
+footer {  
+  text-align: center;  
+  padding: 34px 18px 160px;  
+  color: var(--muted);  
+  font-size: clamp(28px, 4.4vw, 38px);  
+}  
+
+.bottom-nav {  
+  position: fixed;  
+  bottom: 0;  
+  left: 0;  
+  right: 0;  
+  z-index: 90;  
+  display: grid;  
+  grid-template-columns: repeat(4, 1fr);  
+  background: linear-gradient(180deg, #122659 0%, #060d21 100%);  
+  border-top: 4px solid var(--gold);  
+  padding: 12px 8px calc(12px + env(safe-area-inset-bottom));  
+  box-shadow: 0 0 22px rgba(255, 230, 77, 0.5), 0 -5px 18px rgba(0, 0, 0, 0.9);  
+}  
+
+.bottom-nav a {  
+  color: var(--white);  
+  text-decoration: none;  
+  text-align: center;  
+  font-size: clamp(24px, 3.8vw, 32px);  
+  font-weight: 900;  
+}  
+
+.bottom-nav span {  
+  display: block;  
+  font-size: clamp(34px, 5.5vw, 46px);  
+  margin-bottom: 2px;  
+}  
+
+@media (max-width: 1180px) {  
+  .mega-radar-compass-grid {  
+    grid-template-columns: 1fr;  
+  }  
+}  
+
+@media (max-width: 1024px) {  
+  .feature-grid-8,  
+  .feature-grid-more {  
+    grid-template-columns: repeat(2, minmax(0, 1fr));  
+  }  
+  .post-actions {  
+    grid-template-columns: repeat(2, minmax(0, 1fr));  
+  }  
+}  
+
+@media (max-width: 680px) {  
+  .feature-grid-8,  
+  .feature-grid-more,  
+  .post-tools,  
+  .media-buttons,  
+  .hub-controls-row,  
+  .hub-cards-grid,  
+  .yt-input-row,  
+  .post-actions,  
+  .messenger-call-bar {  
+    grid-template-columns: 1fr;  
+  }  
+}
+
+  </style>  
+</head>  
+<body>  
+  <header>  
+    <div class="header-inner">  
+      <a href="#top" id="top" class="logo">  
+        <span class="k-star-wrap">AYNA BOOK*<i class="star-12px-1m" aria-hidden="true">★</i></span>  
+        <span class="quantum-badge">⚛ FULL AI RADAR &amp; QUANTUM HUB</span>  
+      </a>  <div class="header-actions">  
+    <button type="button" id="headerSpeakClockBtn">🕒 সময় বলুন</button>  
+    <button type="button" id="headerToggleClockBtn">🔊 ঘড়ি: চালু</button>  
+    <button type="button" id="quantumBoostBtn">⚡ বিচার প্রোফাইল</button>  
+    <button type="button" id="autoUpdateNowBtn" class="btn-gold">🔄 সব AI অটো-সিঙ্ক</button>  
+    <a href="notifications.html">🔔</a>  
+    <a href="messenger.html">💬 Messenger</a>  
+  </div>  
+</div>  
+
+<div class="ticker-bar">  
+  <div class="ticker-track">  
+    ⚛ AYNA BOOK* Full AI Hub • রাডার AI • আবহাওয়া রাডার AI • বেসামরিক বিমান পরিবহণ রাডার AI • বিশ্ব ঘড়ি AI • ডিসকভারি ও জিওগ্রাফি চ্যানেল • বাচ্চাদের খেলাধুলা • বাজার, কৃষক, চাকুরী, বাণিজ্য, রাষ্ট্রনেতা, নোবেল ও আলেম গবেষণা AI সক্রিয় •••  
+  </div>  
+</div>
+
+  </header>    <div id="notice"></div>    <main class="container">  
+    <section class="hero">  
+      <h1 class="stylish-owner-name" id="stylishTopOwnerName">Mohammad Mahabub Alam</h1>  
+      <p>  
+        রাডার, আবহাওয়া রাডার ও বেসামরিক বিমান পরিবহণ রাডারসহ প্রতিটি ফিচারে AI যুক্ত, অটো-আপডেট সক্রিয়, এবং যেকোনো ফিচার চাপ দিলে ফোন স্কিনে দেখানোর পূর্ণাঙ্গ ব্যবস্থা।  
+      </p>  
+    </section>  <section class="quantum-bar" aria-label="Telemetry">  
+  <div class="q-stat">  
+    <span class="q-stat-label">Execution &amp; AI Mode</span>  
+    <span class="q-stat-value" id="qSyncState">FULL-AI • ULTRA-CRITICAL</span>  
+  </div>  
+  <div class="q-stat">  
+    <span class="q-stat-label">All-Feature Auto-Update</span>  
+    <span class="q-stat-value" id="qAutoSyncStatus">ACTIVE • LIVE</span>  
+  </div>  
+  <div class="q-stat">  
+    <span class="q-stat-label">Total Registry Items</span>  
+    <span class="q-stat-value"><span id="qFileCount">192</span> (<span id="registryTotalLabel">192</span>)</span>  
+  </div>  
+</section>  
+
+<section class="profile-bar" id="profileBarSection">  
+  <div class="profile-square-box">  
+    <img id="myPhoto" src="./assets/profile-photo.jpg" alt="Mohammad Mahabub Alam Profile Photo">  
+  </div>  
+  <div class="profile-info">  
+    <strong id="myName">Mohammad Mahabub Alam</strong>  
+    <small id="myEmail">mahbub.uk.cox@gmail.com</small>  
+    <small id="myPhone">+8801700000000</small>  
+    <span class="ayna-id-chip" id="myAynaId">2026-----10000001</span>  
+    <div>  
+      <div class="barcode-box">  
+        <svg id="aynaProfileBarcode"></svg>  
+      </div>  
+    </div>  
+    <div class="media-buttons">  
+      <button type="button" id="runProfileAiBtn" class="btn-gold">🤖 প্রোফাইল AI বিশ্লেষণ</button>  
+      <button type="button" id="speakProfileAiBtn">🔊 প্রোফাইল AI কণ্ঠ</button>  
+    </div>  
+    <div class="ai-box-output" id="profileAiOutput">প্রোফাইল AI প্রস্তুত রয়েছে।</div>  
+  </div>  
+  <a href="profile.html" class="panel-link-btn">প্রোফাইল</a>  
+</section>  
+
+<section class="panel" id="accountOwnerSettingsSection">  
+  <h2>🛡️ একাউন্ট হোল্ডার সেটিং: আজীবন অপরিবর্তনীয় তথ্য ও ৯০ দিনের পরিবর্তন নীতি</h2>  
+  <div class="hub-controls-row">  
+    <input type="text" id="immutableNameInput" class="hub-search-input" value="Mohammad Mahabub Alam" readonly />  
+    <input type="email" id="immutableEmailInput" class="hub-search-input" value="mahbub.uk.cox@gmail.com" readonly />  
+  </div>  
+  <div class="hub-controls-row">  
+    <input type="text" id="immutablePhoneInput" class="hub-search-input" value="+8801700000000" readonly />  
+    <input type="text" id="ninetyDayStatusInput" class="hub-search-input" value="৯০ দিন পর পর পরিচিতি ও থিম পরিবর্তন নীতি সক্রিয়" readonly />  
+  </div>  
+  <div class="hub-controls-row">  
+    <input type="text" id="mutableIdentityInput" class="hub-search-input" placeholder="পরিচিতি / বায়ো / স্ট্যাটাস (৯০ দিন পর পর পরিবর্তনযোগ্য)..." />  
+    <select id="screenThemeColorSelect" class="hub-select">  
+      <option value="ROYAL_GOLD_NAVY">স্ক্রিন রং: রয়্যাল নেভি ও গোল্ড (ডিফল্ট)</option>  
+      <option value="QUANTUM_EMERALD">স্ক্রিন রং: কোয়ান্টাম এমেরাল্ড</option>  
+      <option value="SOLAR_CRIMSON">স্ক্রিন রং: সোলার ক্রিমনস</option>  
+      <option value="ARCTIC_CYAN">স্ক্রিন রং: আর্কটিক সায়ান</option>  
+    </select>  
+  </div>  
+  <div class="media-buttons">  
+    <button type="button" id="save90DayAccountSettingsBtn" class="btn-gold">💾 ৯০ দিনের পরিচিতি ও রং সংরক্ষণ</button>  
+    <button type="button" id="requestImmutableChangeBtn">🔒 নাম, জিমেইল বা ফোন পরিবর্তনের অনুরোধ (বাধাপ্রাপ্ত)</button>  
+  </div>  
+  <div class="ai-box-output" id="account90DayStatusOutput">  
+    নাম, জিমেইল ও ফোন নম্বর আজীবন অপরিবর্তনীয় থাকবে। রং ও অন্যান্য পরিচিতি প্রতি ৯০ দিনে একবার পরিবর্তন করা যাবে।  
+  </div>  
+</section>  
+
+<section class="qr-panel-box" id="qrBoxSection">  
+  <div class="qr-heading-tag">[QR]</div>  
+  <div class="qr-card-inner">  
+    <canvas id="aynaQrCanvas" width="220" height="220"></canvas>  
+    <div id="qrCaptionText" style="font-size:24px;font-weight:900;margin-top:8px;max-width:260px;word-break:break-all;">https://aynabook.app/u/2026-----10000001</div>  
+  </div>  
+</section>  
+
+<section class="panel" id="universalAiSection">  
+  <h2>🎧🤖 সাউন্ড প্রোফাইল, UHD স্টুডিও সাউন্ড ও সার্বজনীন AI</h2>  
+  <div class="hub-controls-row">  
+    <select id="audioPresetSelect" class="hub-select">  
+      <option value="STUDIO_MASTER">STUDIO_MASTER (Abbey Hall UHD 48kHz)</option>  
+      <option value="CINEMA_THEATER">CINEMA_THEATER (Vienna Symphony UHD 48kHz)</option>  
+      <option value="VOICE_BROADCAST">VOICE_BROADCAST (Quantum Master 528 UHD 48kHz)</option>  
+    </select>  
+    <button type="button" id="applyAudioPresetBtn" class="tool-button">🔊 সাউন্ড প্রোফাইল চালু</button>  
+  </div>  
+
+  <div class="media-buttons">  
+    <button type="button" id="playWorldUhdSoundBtn" class="btn-gold">🎼 বিশ্বমানের UHD সাউন্ড চালান (48kHz)</button>  
+    <button type="button" id="stopWorldUhdSoundBtn">⏹ UHD সাউন্ড বন্ধ করুন</button>  
+    <button type="button" id="exportUhdWavBtn">💾 48kHz UHD WAV ফাইল লোড/ডাউনলোড</button>  
+  </div>  
+  <div id="uhdSoundPlayerWrap" style="margin-top:14px;"></div>  
+  <div class="ai-box-output" id="uhdSoundEngineStatus">বিশ্ববিখ্যাত স্টুডিও UHD সাউন্ড ইঞ্জিন (48kHz) প্রস্তুত রয়েছে।</div>  
+
+  <div class="hub-controls-row" style="margin-top:18px;">  
+    <input type="text" id="universalAiInput" class="hub-search-input" placeholder="সার্বজনীন AI প্রশ্ন বা বিষয় লিখুন..." />  
+    <button type="button" id="runUniversalAiBtn" class="tool-button btn-gold">🤖 সার্বজনীন AI চালান</button>  
+  </div>  
+  <div class="ai-box-output" id="universalAiOutput">সার্বজনীন AI ও স্টুডিও সাউন্ড প্রসেসর প্রস্তুত রয়েছে।</div>  
+</section>  
+
+<section class="panel" id="radarAviationWeatherSection">  
+  <h2>📡🌦️✈️ রাডার AI, আবহাওয়া রাডার AI ও বেসামরিক বিমান পরিবহণ রাডার AI</h2>  
+  <div class="hub-controls-row">  
+    <select id="radarRangeSelect" class="hub-select">  
+      <option value="25">রাডার রেঞ্জ: ২৫ কিমি</option>  
+      <option value="100" selected>রাডার রেঞ্জ: ১০০ কিমি</option>  
+      <option value="250">রাডার রেঞ্জ: ২৫০ কিমি</option>  
+      <option value="500">রাডার রেঞ্জ: ৫০০ কিমি (এভিয়েশন ও আবহাওয়া)</option>  
+    </select>  
+    <input type="number" id="compassAzimuthInput" class="hub-search-input" value="45" min="0" max="360" />  
+  </div>  
+
+  <div class="mega-radar-compass-grid">  
+    <div class="mega-sensor-box">  
+      <div class="mega-sensor-title">📡 রাডার (Radar + AI)</div>  
+      <canvas id="generalRadarCanvas" class="mega-canvas" width="360" height="360"></canvas>  
+      <div class="hub-card-meta" id="generalRadarReadout">General AI Radar</div>  
+      <div class="media-buttons">  
+        <button type="button" id="runGeneralRadarAiBtn" class="btn-gold">🤖 রাডার AI</button>  
+        <button type="button" id="speakGeneralRadarAiBtn">🔊 কণ্ঠ</button>  
+      </div>  
+      <div class="ai-box-output" id="radarAiOutput">রাডার AI লোড হচ্ছে...</div>  
+    </div>  
+
+    <div class="mega-sensor-box">  
+      <div class="mega-sensor-title">🌦️ আবহাওয়া রাডার (Weather Radar + AI)</div>  
+      <canvas id="weatherRadarCanvas" class="mega-canvas" width="360" height="360"></canvas>  
+      <div class="hub-card-meta" id="weatherRadarReadout">Weather AI Radar</div>  
+      <div class="media-buttons">  
+        <button type="button" id="runWeatherRadarAiBtn" class="btn-gold">🤖 আবহাওয়া রাডার AI</button>  
+        <button type="button" id="speakWeatherRadarAiBtn">🔊 কণ্ঠ</button>  
+      </div>  
+      <div class="ai-box-output" id="weatherRadarAiOutput">আবহাওয়া রাডার AI লোড হচ্ছে...</div>  
+    </div>  
+
+    <div class="mega-sensor-box">  
+      <div class="mega-sensor-title">✈️ বেসামরিক বিমান পরিবহণ রাডার (Civil Aviation + AI)</div>  
+      <canvas id="aviationRadarCanvas" class="mega-canvas" width="360" height="360"></canvas>  
+      <div class="hub-card-meta" id="aviationRadarReadout">Civil Aviation AI Radar</div>  
+      <div class="media-buttons">  
+        <button type="button" id="runAviationRadarAiBtn" class="btn-gold">🤖 বিমান রাডার AI</button>  
+        <button type="button" id="speakAviationRadarAiBtn">🔊 কণ্ঠ</button>  
+      </div>  
+      <div class="ai-box-output" id="aviationRadarAiOutput">বেসামরিক বিমান পরিবহণ রাডার AI লোড হচ্ছে...</div>  
+    </div>  
+  </div>  
+
+  <div class="media-buttons">  
+    <button type="button" id="startDeviceCompassBtn">🧭 লাইভ কম্পাস চালু</button>  
+    <button type="button" id="runAllRadarsAiBtn" class="btn-gold">🤖 তিন রাডারের সম্মিলিত AI ব্রিফিং</button>  
+  </div>  
+  <div class="ai-box-output" id="radarCompassOutput">রাডার, আবহাওয়া রাডার ও বেসামরিক বিমান রাডার AI প্রস্তুত।</div>  
+</section>  
+
+<section class="panel" id="talkingClockSection">  
+  <h2>🕒🤖 বিশ্ব ঘড়ি — সময় বলার ঘড়ি ও ঘড়ি AI</h2>  
+  <div class="clock-live-box">  
+    <span class="clock-live-time" id="quantumClockDisplay">লোড হচ্ছে...</span>  
+    <div class="clock-rules-text">  
+      • প্রতি ১ ঘণ্টা পর পর স্বয়ংক্রিয়ভাবে রিয়েল-টাইম সময় ঘোষণা (পরবর্তী ঘণ্টা: <strong id="nextHourlyAnnouncement">--</strong>)<br>  
+      • সেহরির ১.৫ ঘণ্টা আগে ঘোষণা (ভিত্তি: 04:58 AM) • ইফতারের ১ ঘণ্টা আগে থেকে প্রতি ৫ মিনিটে ঘোষণা (ভিত্তি: 05:12 PM)  
+    </div>  
+  </div>  
+  <div class="media-buttons">  
+    <button type="button" id="speakNowClockBtn" class="btn-gold">🎙️ এখনই সময় বলুন</button>  
+    <button type="button" id="toggleTalkClockBtn">🔊 সময় বলা: চালু (খোলা)</button>  
+    <button type="button" id="openTalkClockBtn">🟢 সময় বলার বাটন চালু</button>  
+    <button type="button" id="closeTalkClockBtn">🔴 সময় বলার বাটন বন্ধ</button>  
+    <button type="button" id="runClockAiBtn" class="btn-gold">🤖 ঘড়ি ও সময়সূচি AI</button>  
+    <button type="button" id="speakClockAiBtn">🔊 ঘড়ি AI কণ্ঠ</button>  
+  </div>  
+  <div class="ai-box-output" id="clockAiOutput">ঘড়ি AI প্রস্তুত রয়েছে।</div>  
+</section>  
+
+<section class="panel" id="accountRegisterLookupSection">  
+  <h2>🔐🎙️ অ্যাকাউন্ট রেজিস্ট্রেশন ও লুকআপ (ভয়েস ভুল সিগন্যাল AI)</h2>  
+  <div class="hub-controls-row">  
+    <input type="text" id="regFullNameInput" class="hub-search-input" placeholder="পূর্ণ নাম (যেমন: Mohamed Mahabub Alam)" />  
+    <input type="email" id="regEmailInput" class="hub-search-input" placeholder="ইমেইল ঠিকানা (যেমন: user@aynabook.app)" />  
+  </div>  
+  <div class="hub-controls-row">  
+    <input type="password" id="regPasswordInput" class="hub-search-input" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" />  
+    <input type="text" id="accountLookupQueryInput" class="hub-search-input" placeholder="অ্যাকাউন্ট লুকআপ: AYNA ID (2026-----10000001) বা ইমেইল" />  
+  </div>  
+  <div class="media-buttons">  
+    <button type="button" id="validateRegisterVoiceBtn">📝 রেজিস্ট্রেশন যাচাই ও কণ্ঠ সিগন্যাল</button>  
+    <button type="button" id="runAccountLookupVoiceBtn" class="btn-gold">🔍 অ্যাকাউন্ট লুকআপ ও কণ্ঠ সিগন্যাল</button>  
+  </div>  
+  <div class="ai-box-output" id="accountSignalOutput">  
+    রেজিস্ট্রেশন বা অ্যাকাউন্ট লুকআপে ভুল হলে AI সিগন্যাল বাজবে এবং কণ্ঠের মাধ্যমে কোথায় ভুল হয়েছে তা বলে দেবে।  
+  </div>  
+</section>  
+
+<h2 class="section-title">🌍 AYNA BOOK MAIN FEATURES (২ সারি — ৮টি)</h2>  
+
+<section class="feature-grid-8">  
+  <a class="feature-card" href="profile.html">  
+    <span class="feature-icon">👤</span>  
+    <span class="feature-name">আমার প্রোফাইল</span>  
+    <span class="feature-desc">ব্যক্তিগত অ্যাকাউন্ট</span>  
+  </a>  
+  <a class="feature-card" href="messenger.html">  
+    <span class="feature-icon">💬</span>  
+    <span class="feature-name">AYNA Messenger</span>  
+    <span class="feature-desc">মেসেজ, অডিও, ভিডিও ও UHD কল</span>  
+  </a>  
+  <a class="feature-card" href="notifications.html">  
+    <span class="feature-icon">🔔</span>  
+    <span class="feature-name">নোটিফিকেশন</span>  
+    <span class="feature-desc">সব আপডেট</span>  
+  </a>  
+  <a class="feature-card" href="radio.html">  
+    <span class="feature-icon">📻</span>  
+    <span class="feature-name">বিশ্ব রেডিও</span>  
+    <span class="feature-desc">রেডিও ও AI সহকারী</span>  
+  </a>  
+  <a class="feature-card" href="tv-live.html">  
+    <span class="feature-icon">📺</span>  
+    <span class="feature-name">বিশ্ব টেলিভিশন</span>  
+    <span class="feature-desc">টিভি ও AI সহকারী</span>  
+  </a>  
+  <a class="feature-card" href="gps.html">  
+    <span class="feature-icon">🛰️</span>  
+    <span class="feature-name">GPS নেভিগেশন</span>  
+    <span class="feature-desc">অবস্থান ও দিকনির্দেশ</span>  
+  </a>  
+  <a class="feature-card" href="compass.html">  
+    <span class="feature-icon">🧭</span>  
+    <span class="feature-name">ডিজিটাল কম্পাস</span>  
+    <span class="feature-desc">দিক নির্ণয়</span>  
+  </a>  
+  <a class="feature-card" href="radar.html">  
+    <span class="feature-icon">📡</span>  
+    <span class="feature-name">রাডার সিস্টেম</span>  
+    <span class="feature-desc">রাডার পেজ</span>  
+  </a>  
+</section>  
+
+<section class="panel" id="aynaMessengerUhdSection">  
+  <h2>💬📞 AYNA MESSENGER — UHD অডিও ও ভিডিও কল, টেক্সট সাইজ, রং ও AI</h2>  
+  <div class="hub-controls-row">  
+    <input type="text" id="messengerRecipientInput" class="hub-search-input" value="AYNA Direct Contact" placeholder="প্রাপক বা চ্যানেলের নাম..." />  
+    <input type="text" id="messengerDraftInput" class="hub-search-input" placeholder="মেসেজ লিখুন..." />  
+  </div>  
+  <div class="messenger-call-bar">  
+    <button type="button" id="startUhdAudioCallBtn" class="btn-gold messenger-uhd-btn">🎙️ UHD অডিও কল শুরু</button>  
+    <button type="button" id="startUhdVideoCallBtn" class="btn-gold messenger-uhd-btn">📹 UHD ভিডিও কল শুরু</button>  
+  </div>  
+  <div class="media-buttons">  
+    <button type="button" id="fontSizeUpBtn">🔍+ লেখা বড় করুন</button>  
+    <button type="button" id="fontSizeDownBtn">🔍- লেখা ছোট করুন</button>  
+    <button type="button" id="cycleMessengerColorBtn">🎨 স্ক্রিন রং পরিবর্তন</button>  
+    <button type="button" id="runMessengerAiBtn" class="btn-gold">🤖 মেসেঞ্জার ও কল AI অটো-আপডেট</button>  
+  </div>  
+  <div class="ai-box-output" id="messengerCallAiOutput">  
+    UHD অডিও ও ভিডিও কল (48kHz / 4K-UHD সিগন্যাল কন্ডিশনিং), লেখা বড়/ছোট, স্ক্রিন রং ও AI অটো-আপডেট প্রস্তুত।  
+  </div>  
+</section>  
+
+<section class="panel" id="radioTvAiSection">  
+  <h2>📻📺 বিশ্ব রেডিও ও টেলিভিশন AI সহকারী</h2>  
+  <div class="hub-controls-row">  
+    <select id="radioTvChannelSelect" class="hub-select">  
+      <option value="Bangladesh Betar / World Radio">রেডিও: বাংলাদেশ বেতার ও বিশ্ব রেডিও</option>  
+      <option value="BBC / World News Radio">রেডিও: বিশ্ব সংবাদ ও তথ্য রেডিও</option>  
+      <option value="BTV & Global News TV">টেলিভিশন: বিটিভি ও বিশ্ব সংবাদ টিভি</option>  
+      <option value="Science & Documentary TV">টেলিভিশন: বিজ্ঞান ও ডকুমেন্টারি চ্যানেল</option>  
+    </select>  
+    <input type="text" id="radioTvPromptInput" class="hub-search-input" placeholder="রেডিও বা টিভি চ্যানেল/বিষয় সম্পর্কে AI প্রশ্ন করুন..." />  
+  </div>  
+  <div class="media-buttons">  
+    <button type="button" id="runRadioTvAiBtn" class="btn-gold">🤖 রেডিও ও টিভি AI বিশ্লেষণ</button>  
+    <button type="button" id="speakRadioTvAiBtn">🔊 রেডিও ও টিভি AI কণ্ঠে শুনুন</button>  
+  </div>  
+  <div class="ai-box-output" id="radioTvAiOutput">  
+    বিশ্ব রেডিও ও টেলিভিশন AI প্রস্তুত — চ্যানেল নির্বাচন করে বিশ্লেষণ বা কণ্ঠ ব্রিফিং নিন।  
+  </div>  
+</section>  
+
+<h2 class="section-title">✨ MORE AYNA BOOK FEATURES, CHANNELS &amp; DIRECTORIES</h2>  
+
+<section class="feature-grid-more">  
+  <a class="feature-card" href="world-leaders.html"><span class="feature-icon">🌐</span><span class="feature-name">বিশ্বনেতা</span><span class="feature-desc">আন্তর্জাতিক নেতৃত্ব ও তথ্য</span></a>  
+  <a class="feature-card" href="world-grocery.html"><span class="feature-icon">🛒</span><span class="feature-name">বিশ্ব মুদির দোকান</span><span class="feature-desc">দৈনিক মূল্য অটো আপডেট</span></a>  
+  <a class="feature-card" href="world-farmers.html"><span class="feature-icon">🌾</span><span class="feature-name">বিশ্ব কৃষক</span><span class="feature-desc">কৃষি তথ্য, ফসল ও বাজার দর</span></a>  
+  <a class="feature-card" href="poultry-farmers.html"><span class="feature-icon">🐔</span><span class="feature-name">পোলোট্রি কৃষক ও ব্যবসায়ী</span><span class="feature-desc">মুরগি, ডিম, ফিড ও বাজার দর</span></a>  
+  <a class="feature-card" href="price-list.html"><span class="feature-icon">📊</span><span class="feature-name">দৈনিক মূল্যতালিকা</span><span class="feature-desc">মুদি, কৃষি ও পোলোট্রি অটো-সিঙ্ক</span></a>  
+  <a class="feature-card" href="world-market.html"><span class="feature-icon">🌍</span><span class="feature-name">দৈনিক বিশ্ব বাজার</span><span class="feature-desc">আন্তর্জাতিক ও দেশীয় বাজার দর</span></a>  
+  <a class="feature-card" href="world-officials.html"><span class="feature-icon">🏛️</span><span class="feature-name">এমপি, মন্ত্রী ও কর্মকর্তা</span><span class="feature-desc">বিশ্ব প্রশাসন ও জনপ্রতিনিধি</span></a>  
+  <a class="feature-card" href="air-rail-transport.html"><span class="feature-icon">✈️</span><span class="feature-name">বিমান ও রেল পরিবহণ</span><span class="feature-desc">ফোন, জিমেইল ও টিকেট মূল্যতালিকা</span></a>  
+  <a class="feature-card" href="world-air-rail.html"><span class="feature-icon">🚆</span><span class="feature-name">বিশ্ব বিমান ও রেল</span><span class="feature-desc">আন্তর্জাতিক পরিবহণ ও টিকেট দর</span></a>  
+  <a class="feature-card" href="world-garments.html"><span class="feature-icon">👕</span><span class="feature-name">বিশ্ব গার্মেন্টস</span><span class="feature-desc">মালিক, শ্রমিক ও পোশাক শিল্প</span></a>  
+  <a class="feature-card" href="world-jobs.html"><span class="feature-icon">💼</span><span class="feature-name">চাকুরী বাজার</span><span class="feature-desc">সরকারি, বেসরকারি ও আন্তর্জাতিক</span></a>  
+  <a class="feature-card" href="world-ngo-rights.html"><span class="feature-icon">🕊️</span><span class="feature-name">UN, NGO ও মানবাধিকার</span><span class="feature-desc">নাম, ফোন ও জিমেইল ডিরেক্টরি</span></a>  
+  <a class="feature-card" href="military-radar.html"><span class="feature-icon">🎯</span><span class="feature-name">মিলিটারি রাডার</span><span class="feature-desc">তথ্যভিত্তিক রাডার</span></a>  
+  <a class="feature-card" href="clock.html"><span class="feature-icon">🕒</span><span class="feature-name">বিশ্ব ঘড়ি</span><span class="feature-desc">সময় ও অ্যালার্ম</span></a>  
+  <a class="feature-card" href="calendar.html"><span class="feature-icon">📅</span><span class="feature-name">বিশ্ব ক্যালেন্ডার</span><span class="feature-desc">তারিখ ও দিন</span></a>  
+  <a class="feature-card" href="arabic-calendar.html"><span class="feature-icon">🌙</span><span class="feature-name">আরবি ক্যালেন্ডার</span><span class="feature-desc">হিজরি তারিখ</span></a>  
+  <a class="feature-card" href="world-holidays.html"><span class="feature-icon">🎉</span><span class="feature-name">বিশ্বের সরকারি ছুটি</span><span class="feature-desc">ছুটির তালিকা</span></a>  
+  <a class="feature-card" href="us-alerts.html"><span class="feature-icon">🚨</span><span class="feature-name">জরুরি এলার্ট</span><span class="feature-desc">এলার্ট তথ্য</span></a>  
+  <a class="feature-card" href="prayer.html"><span class="feature-icon">🕌</span><span class="feature-name">নামাজের সময়</span><span class="feature-desc">প্রার্থনার সময়সূচি</span></a>  
+  <a class="feature-card" href="quantum.html"><span class="feature-icon">⚛️</span><span class="feature-name">কোয়ান্টাম হাব</span><span class="feature-desc">কোয়ান্টাম সিস্টেম</span></a>  
+  <a class="feature-card" href="supercomputer.html"><span class="feature-icon">🖥️</span><span class="feature-name">সুপারকম্পিউটার</span><span class="feature-desc">উচ্চগতির তথ্য</span></a>  
+  <a class="feature-card" href="#discoveryGeographyKidsSection"><span class="feature-icon">🔭</span><span class="feature-name">ডিসকভারি চ্যানেল</span><span class="feature-desc">বিজ্ঞান, প্রকৃতি ও অনুসন্ধান</span></a>  
+  <a class="feature-card" href="#discoveryGeographyKidsSection"><span class="feature-icon">🗺️</span><span class="feature-name">জিওগ্রাফি চ্যানেল</span><span class="feature-desc">ভূগোল, মহাদেশ ও জলবায়ু</span></a>  
+  <a class="feature-card" href="#discoveryGeographyKidsSection"><span class="feature-icon">⚽</span><span class="feature-name">বাচ্চাদের খেলাধুলা</span><span class="feature-desc">শিক্ষামূলক ও নিরাপদ ক্রীড়া</span></a>  
+</section>  
+
+<section class="panel" id="discoveryGeographyKidsSection">  
+  <h2>🔭🗺️⚽ ডিসকভারি চ্যানেল, জিওগ্রাফি চ্যানেল ও বাচ্চাদের খেলাধুলা (AI অটো-আপডেট)</h2>  
+  <div class="hub-controls-row">  
+    <select id="specialChannelSelect" class="hub-select">  
+      <option value="discovery">ডিসকভারি চ্যানেল (বিজ্ঞান, মহাকাশ ও অনুসন্ধান)</option>  
+      <option value="geography">জিওগ্রাফি চ্যানেল (মহাদেশ, নদী, মানচিত্র ও পরিবেশ)</option>  
+      <option value="kids_sports">বাচ্চাদের খেলাধুলা (দৌড়, সাঁতার, ফুটবল, অ্যাথলেটিক্স ও নিরাপত্তা)</option>  
+    </select>  
+    <input type="search" id="specialChannelSearchInput" class="hub-search-input" placeholder="ডিসকভারি, জিওগ্রাফি বা বাচ্চাদের খেলাধুলা খুঁজুন..." />  
+  </div>  
+  <div class="hub-cards-grid" id="specialChannelCardsGrid"></div>  
+  <div class="media-buttons">  
+    <button type="button" id="runSpecialChannelAiBtn" class="btn-gold">🤖 চ্যানেল ও খেলাধুলা AI আপডেট</button>  
+    <button type="button" id="speakSpecialChannelAiBtn">🔊 AI কণ্ঠে শুনুন</button>  
+  </div>  
+  <div class="ai-box-output" id="specialChannelAiOutput">ডিসকভারি, জিওগ্রাফি ও বাচ্চাদের খেলাধুলা AI অটো-আপডেট সক্রিয় রয়েছে।</div>  
+</section>  
+
+<section class="panel" id="legacyModulesSection">  
+  <h2>🌡️🎙️🔖🤖 আবহাওয়া, ভয়েস রেকর্ডার ও বুকমার্ক AI</h2>  
+  <div class="hub-controls-row">  
+    <input type="text" id="weatherCityInput" class="hub-search-input" value="Dhaka" placeholder="শহরের নাম (যেমন: Dhaka, London, Tokyo)..." />  
+    <button type="button" id="fetchWeatherBtn" class="tool-button btn-gold">🌡️ তাপমাত্রা ও আবহাওয়া AI</button>  
+  </div>  
+  <div class="ai-box-output" id="weatherOutput">ঢাকা ও বৈশ্বিক আবহাওয়া টেলিম্যাট্রি প্রস্তুত।</div>  
+
+  <div class="media-buttons">  
+    <button type="button" id="startVoiceRecBtn">🎙️ ভয়েস রেকর্ডিং শুরু</button>  
+    <button type="button" id="stopVoiceRecBtn">⏹ ভয়েস রেকর্ডিং বন্ধ</button>  
+    <button type="button" id="runVoiceAiBtn" class="btn-gold">🤖 ভয়েস রেকর্ডার AI</button>  
+    <button type="button" id="speakVoiceAiBtn">🔊 ভয়েস AI কণ্ঠ</button>  
+  </div>  
+  <div id="voiceRecAudioWrap"></div>  
+  <div class="ai-box-output" id="voiceAiOutput">ভয়েস রেকর্ডার AI প্রস্তুত।</div>  
+
+  <div class="hub-controls-row" style="margin-top:20px;">  
+    <input type="text" id="bookmarkTitleInput" class="hub-search-input" placeholder="বুকমার্ক শিরোনাম বা লিংক/নোট..." />  
+    <button type="button" id="saveBookmarkBtn" class="tool-button btn-gold">🔖 বুকমার্ক সংরক্ষণ</button>  
+  </div>  
+  <div id="bookmarksList"></div>  
+  <div class="media-buttons">  
+    <button type="button" id="runBookmarkAiBtn" class="btn-gold">🤖 বুকমার্ক AI বিশ্লেষণ</button>  
+    <button type="button" id="speakBookmarkAiBtn">🔊 বুকমার্ক AI কণ্ঠ</button>  
+  </div>  
+  <div class="ai-box-output" id="bookmarkAiOutput">বুকমার্ক AI প্রস্তুত।</div>  
+</section>  
+
+<section class="panel" id="alert150Section">  
+  <h2>🚨 AI ১৫০ এলার্ট প্রযুক্তি ও ক্রিটিক্যাল বিচার</h2>  
+  <div class="hub-controls-row">  
+    <input type="text" id="alert150ReasonInput" class="hub-search-input" value="মডারেশন ও সিস্টেম ক্রিটিক্যাল থ্রেশহোল্ড" placeholder="১৫০ এলার্টের কারণ বা বিষয় লিখুন..." />  
+    <input type="number" id="alert150CountInput" class="hub-search-input" value="150" min="0" max="100000" />  
+  </div>  
+  <div class="media-buttons">  
+    <button type="button" id="toggleRealAlert150Btn">🔴 ১৫০ রিয়েল এলার্ট অফ/অন: চালু</button>  
+    <button type="button" id="toggle150TimerBtn">⏱ 150s অটো কাউন্টডাউন: বন্ধ</button>  
+    <button type="button" id="fire150AlertBtn" class="btn-gold">🚨 এখনই ১৫০ এলার্ট ও AI বিচার</button>  
+  </div>  
+  <div class="status" id="alert150Status">কাউন্টডাউন: 150s / 150s • মোট ১৫০-এলার্ট: 0টি</div>  
+  <div class="ai-box-output" id="alert150Output">১৫০ এলার্ট প্রস্তুত — থ্রেশহোল্ড বিচার ও ভয়েস সতর্কতা সক্রিয়।</div>  
+</section>  
+
+<section class="panel" id="autoEvSection">  
+  <h2>🚗⚡ বিশ্ব অটোমোবাইল ও ইভি AI অটো-আপডেট</h2>  
+  <div class="hub-controls-row">  
+    <select id="autoEvTopicSelect" class="hub-select">  
+      <option value="Global EV & Hybrid">গ্লোবাল ইভি ও হাইব্রিড বাজার</option>  
+      <option value="Battery & Fast Charging">ব্যাটারি প্রযুক্তি ও ফাস্ট চার্জিং</option>  
+      <option value="AI & Autonomous Auto">স্মার্ট অটো ও এআই ড্রাইভিং</option>  
+    </select>  
+    <button type="button" id="toggleAutoEvBtn" class="tool-button">⏱ অটো-আপডেট: চালু</button>  
+  </div>  
+  <div class="media-buttons">  
+    <button type="button" id="refreshAutoEvBtn" class="btn-gold">🔄 এখনই অটো ও ইভি আপডেট</button>  
+    <button type="button" id="speakAutoEvBtn">🔊 অটো ও ইভি আপডেট শুনুন</button>  
+  </div>  
+  <div class="ai-box-output" id="autoEvOutput">বিশ্ব অটো ও ইভি আপডেট লোড হচ্ছে...</div>  
+</section>  
+
+<section class="panel" id="mobileComputerAiSection">  
+  <h2>📱💻 মোবাইল ও কম্পিউটার AI প্রযুক্তি</h2>  
+  <div class="hub-controls-row">  
+    <select id="deviceAiModeSelect" class="hub-select">  
+      <option value="HYBRID_FAST">হাইব্রিড (দ্রুত লোকাল/ক্লাউড বিচার)</option>  
+      <option value="CLOUD_DEEP">ক্লাউড AI (/api/ai/assist)</option>  
+      <option value="LOCAL_OFFLINE">লোকাল/অফলাইন কোল্ড ইঞ্জিন</option>  
+    </select>  
+    <input type="text" id="deviceAiPromptInput" class="hub-search-input" placeholder="মোবাইল বা কম্পিউটার AI প্রশ্ন/নির্দেশ লিখুন..." />  
+  </div>  
+  <button type="button" id="runDeviceAiBtn" class="primary-button">🚀 মোবাইল ও কম্পিউটার AI রেসপন্স পান</button>  
+  <div class="ai-box-output" id="deviceAiOutput">ডিভাইস টেলিম্যাট্রি ও AI রাউটার প্রস্তুত।</div>  
+</section>  
+
+<section class="panel" id="tradeAiSection">  
+  <h2>🌐📦 বিশ্ব আমদানি-রপ্তানি পণ্য মূল্য তালিকা ও যোগাযোগ AI</h2>  
+  <div class="hub-controls-row">  
+    <select id="tradeCommoditySelect" class="hub-select"></select>  
+    <input type="number" id="tradeQtyInput" class="hub-search-input" value="10" min="0.1" step="0.1" />  
+  </div>  
+  <input type="text" id="tradeCounterpartyInput" class="hub-search-input" value="আন্তর্জাতিক সাপ্লায়ার ও শিপমেন্ট ডেস্ক" placeholder="যোগাযোগের পক্ষ / ক্রেতা বা বিক্রেতা" />  
+  <div class="hub-cards-grid" id="tradePriceListGrid"></div>  
+  <div class="media-buttons">  
+    <button type="button" id="analyzeTradeAiBtn" class="btn-gold">🤖 মূল্য বিশ্লেষণ ও যোগাযোগ খসড়া</button>  
+    <button type="button" id="sendTradeToPostBtn">✍️ যোগাযোগ বার্তা পোস্ট বক্সে নিন</button>  
+  </div>  
+  <div class="ai-box-output" id="tradeAiOutput">পণ্য নির্বাচন করে মূল্য ও যোগাযোগ AI বিশ্লেষণ চালান।</div>  
+</section>  
+
+<section class="panel" id="worldStatsSection">  
+  <h2>🌍📊 বিশ্ব রাষ্ট্র: আয়াতন, জনসংখ্যা ও অর্থনৈতিক প্রবৃদ্ধিহার AI</h2>  
+  <div class="hub-controls-row">  
+    <input type="search" id="worldStatsSearchInput" class="hub-search-input" placeholder="দেশ বা অঞ্চল খুঁজুন (বাংলাদেশ, ভারত, যুক্তরাষ্ট্র...)" />  
+    <select id="worldStatsCountrySelect" class="hub-select"></select>  
+  </div>  
+  <div class="hub-cards-grid" id="worldStatsCardsGrid"></div>  
+  <button type="button" id="analyzeWorldStatsAiBtn" class="primary-button">🤖 নির্বাচিত রাষ্ট্রের AI বিশ্লেষণ ও ভয়েস</button>  
+  <div class="ai-box-output" id="worldStatsAiOutput">একটি রাষ্ট্র নির্বাচন করে আয়াতন, জনসংখ্যা ও অর্থনৈতিক প্রবৃদ্ধিহার বিশ্লেষণ করুন।</div>  
+</section>  
+
+<section class="panel" id="nobelLaureatesSection">  
+  <h2>🏅🌍 নোবেলজয়ী ও বিশ্ব মনীষী AI অটো-আপডেট</h2>  
+  <div class="hub-controls-row">  
+    <input type="search" id="nobelSearchInput" class="hub-search-input" placeholder="মনীষী, সাল বা পুরস্কার খুঁজুন..." />  
+    <select id="nobelSelect" class="hub-select"></select>  
+  </div>  
+  <div class="media-buttons">  
+    <button type="button" id="toggleAutoNobelBtn">⏱ মনীষী অটো-আপডেট: চালু</button>  
+    <button type="button" id="refreshNobelAiBtn" class="btn-gold">🤖 এখনই AI সারসংক্ষেপ ও ভয়েস</button>  
+  </div>  
+  <div class="hub-cards-grid" id="nobelCardsGrid"></div>  
+  <div class="ai-box-output" id="nobelAiOutput">নোবেলজয়ী ও বিশ্ব মনীষীদের তথ্য প্রস্তুত।</div>  
+</section>  
+
+<section class="panel" id="worldLeadersSection">  
+  <div class="panel-head-row">  
+    <h2>🌍 রাষ্ট্রনেতাদের নাম তালিকা ও AI</h2>  
+    <a href="world-leaders.html" class="panel-link-btn">সব রাষ্ট্রনেতা পেজ</a>  
+  </div>  
+  <input type="search" id="leaderSearchInput" class="hub-search-input" placeholder="রাষ্ট্রনেতা বা দেশের নাম দিয়ে খুঁজুন..." />  
+  <div class="hub-cards-grid" id="worldLeadersGrid"></div>  
+  <div class="media-buttons">  
+    <button type="button" id="runLeadersAiBtn" class="btn-gold">🤖 রাষ্ট্রনেতা AI বিশ্লেষণ</button>  
+    <button type="button" id="speakLeadersAiBtn">🔊 রাষ্ট্রনেতা AI কণ্ঠে শুনুন</button>  
+  </div>  
+  <div class="ai-box-output" id="worldLeadersAiOutput">রাষ্ট্রনেতা AI প্রস্তুত।</div>  
+</section>  
+
+<section class="panel" id="ulemaResearchSection">  
+  <div class="panel-head-row">  
+    <h2>🕌 বিশ্ব আলেম গবেষণাগার ও AI</h2>  
+    <a href="ulema-research.html" class="panel-link-btn">গবেষণাগার পেজ</a>  
+  </div>  
+  <input type="search" id="ulemaSearchInput" class="hub-search-input" placeholder="গবেষণার বিষয় বা বিভাগ খুঁজুন..." />  
+  <div class="hub-cards-grid" id="ulemaResearchGrid"></div>  
+  <div class="media-buttons">  
+    <button type="button" id="runUlemaAiBtn" class="btn-gold">🤖 আলেম গবেষণা AI বিশ্লেষণ</button>  
+    <button type="button" id="speakUlemaAiBtn">🔊 আলেম গবেষণা AI কণ্ঠে শুনুন</button>  
+  </div>  
+  <div class="ai-box-output" id="ulemaAiOutput">আলেম গবেষণাগার AI প্রস্তুত।</div>  
+</section>  
+
+<section class="panel" id="groceryFarmersSection">  
+  <div class="panel-head-row">  
+    <h2>🛒 মুদি বাজার ও 🌾 বিশ্ব কৃষক + AI</h2>  
+    <div class="media-buttons" style="margin:0;">  
+      <a href="world-grocery.html" class="panel-link-btn">মুদি বাজার</a>  
+      <a href="world-farmers.html" class="panel-link-btn">বিশ্ব কৃষক</a>  
+    </div>  
+  </div>  
+  <div class="hub-controls-row">  
+    <select id="marketTypeSelect" class="hub-select">  
+      <option value="all">সব পণ্য (মুদি বাজার + বিশ্ব কৃষক)</option>  
+      <option value="grocery">শুধু মুদি বাজার</option>  
+      <option value="farmer">শুধু বিশ্ব কৃষক</option>  
+    </select>  
+    <input type="search" id="marketItemSearchInput" class="hub-search-input" placeholder="চাল, ডাল, তেল, আলু, গম, মসলা খুঁজুন..." />  
+  </div>  
+  <div class="hub-cards-grid" id="groceryFarmersGrid"></div>  
+  <div class="media-buttons">  
+    <button type="button" id="runMarketAiBtn" class="btn-gold">🤖 বাজার ও কৃষি AI বিশ্লেষণ</button>  
+    <button type="button" id="speakMarketAiBtn">🔊 বাজার ও কৃষি AI কণ্ঠে শুনুন</button>  
+  </div>  
+  <div class="ai-box-output" id="marketAiOutput">বাজার ও কৃষি AI প্রস্তুত।</div>  
+</section>  
+
+<section class="panel" id="worldJobsSection">  
+  <div class="panel-head-row">  
+    <h2>💼 বিশ্ব চাকুরীর বাজার ও AI</h2>  
+    <a href="world-jobs.html" class="panel-link-btn">চাকুরী বাজার পেজ</a>  
+  </div>  
+  <input type="search" id="directJobSearchInput" class="hub-search-input" placeholder="পদবী, কোম্পানি বা লোকেশন দিয়ে চাকুরীর বিজ্ঞাপন খুঁজুন..." />  
+  <div class="hub-cards-grid" id="directJobsGrid"></div>  
+  <div class="media-buttons">  
+    <button type="button" id="runJobsAiBtn" class="btn-gold">🤖 চাকুরী বাজার AI বিশ্লেষণ</button>  
+    <button type="button" id="speakJobsAiBtn">🔊 চাকুরী বাজার AI কণ্ঠে শুনুন</button>  
+  </div>  
+  <div class="ai-box-output" id="jobsAiOutput">চাকুরী বাজার AI প্রস্তুত।</div>  
+</section>  
+
+<section class="panel" id="youtubeHubSection">  
+  <h2>▶️🤖 AYNA YOUTUBE HUB + AI</h2>  
+  <div class="yt-input-row">  
+    <input type="text" id="ytSearchOrUrlInput" class="hub-search-input" placeholder="YouTube ভিডিও লিংক/ID দিন অথবা টপিক লিখে সার্চ করুন..." />  
+    <button type="button" id="ytPlaySearchBtn" class="btn-gold">চালান / খুঁজুন</button>  
+  </div>  
+  <div class="yt-preset-row">  
+    <button type="button" class="yt-preset-btn" data-yt="AYNA BOOK">AYNA BOOK</button>  
+    <button type="button" class="yt-preset-btn" data-yt="Bangla news live">বাংলা নিউজ</button>  
+    <button type="button" class="yt-preset-btn" data-yt="Islamic lecture Bangla">ইসলামি আলোচনা</button>  
+    <button type="button" class="yt-preset-btn" data-yt="Global agriculture farming">বিশ্ব কৃষি</button>  
+    <button type="button" class="yt-preset-btn" data-yt="Global job market career">বিশ্ব চাকুরী</button>  
+    <button type="button" id="runYtAiBtn" class="btn-gold">🤖 YouTube AI</button>  
+  </div>  
+  <iframe  
+    id="ytEmbedFrame"  
+    class="yt-player-frame"  
+    src="https://www.youtube.com/embed?listType=search&list=Bangla+news+live"  
+    title="AYNA YouTube Hub"  
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"  
+    allowfullscreen  
+  ></iframe>  
+  <a id="ytDirectWatchLink" class="yt-ext-link" href="https://www.youtube.com/results?search_query=Bangla+news+live" target="_blank" rel="noopener">  
+    ↗️ YouTube অ্যাপ বা ব্রাউজারে খুলুন  
+  </a>  
+  <div class="ai-box-output" id="ytAiOutput">YouTube AI সারসংক্ষেপ এখানে দেখা যাবে।</div>  
+</section>  
+
+<section class="panel" id="createPost">  
+  <h2>✍️🤖 নতুন পোস্ট তৈরি করুন (পোস্ট, অডিও, ভিডিও ও মিডিয়া AI)</h2>  
+  <textarea id="postText" placeholder="আপনার মনের কথা লিখুন... (AI লেখা সংশোধন, পোস্ট বিশ্লেষণ ও ভয়েস রিডআউট সক্রিয়)"></textarea>  
+
+  <div class="post-tools">  
+    <button type="button" class="tool-button" id="aiPolishPostBtn">✨ AI লেখা সংশোধন</button>  
+    <button type="button" class="tool-button" id="aiAnalyzePostBtn">🤖 AI পোস্ট বিশ্লেষণ ও কণ্ঠ</button>  
+    <button type="button" class="tool-button" id="chooseImage">🖼️ ছবি (25MB)</button>  
+    <button type="button" class="tool-button" id="chooseAudio">🎵 অডিও (100MB) + AI</button>  
+    <button type="button" class="tool-button" id="chooseVideo">🎬 বড় ভিডিও (250MB) + AI</button>  
+    <button type="button" class="tool-button" id="chooseFile">📎 ফাইল (250MB)</button>  
+    <button type="button" class="tool-button" id="clearMedia">✖️ মিডিয়া / ফাইল বাদ দিন</button>  
+  </div>  
+
+  <div class="ai-box-output" id="postMediaAiOutput">  
+    পোস্ট, অডিও বা ভিডিও নির্বাচন করলে AI অটো-বিশ্লেষণ ও কণ্ঠ সারসংক্ষেপ এখানে দেখাবে।  
+  </div>  
+
+  <input id="imageInput" type="file" accept="image/*" hidden />  
+  <input id="audioInput" type="file" accept="audio/*" hidden />  
+  <input id="videoInput" type="file" accept="video/*" hidden />  
+  <input id="fileInput" type="file" accept="*/*" hidden />  
+
+  <div class="progress-wrap" id="uploadProgressWrap">  
+    <div class="progress-bar" id="uploadProgressBar"></div>  
+  </div>  
+
+  <div class="preview" id="mediaPreview">  
+    <div id="previewContent"></div>  
+    <div class="status" id="previewName"></div>  
+  </div>  
+
+  <button type="button" class="primary-button" id="publishPost">🚀 পোস্ট প্রকাশ করুন</button>  
+
+  <div class="status" id="postStatus">  
+    ছবি (25MB), অডিও (100MB), বড় ভিডিও (250MB) বা ফাইল (250MB) যুক্ত করে পোস্ট করুন।  
+  </div>  
+</section>  
+
+<section class="panel media-box" id="liveSection">  
+  <h2>🔴🤖 AYNA LIVE VIDEO + LIVE AI</h2>  
+  <video id="liveVideo" autoplay muted playsinline></video>  
+  <div class="media-buttons">  
+    <button type="button" id="startCamera">📹 ক্যামেরা চালু</button>  
+    <button type="button" id="stopCamera">⏹ ক্যামেরা বন্ধ</button>  
+    <button type="button" id="runLiveAiBtn" class="btn-gold">🤖 লাইভ ভিডিও AI পর্যবেক্ষণ ও কণ্ঠ</button>  
+  </div>  
+  <div class="status" id="cameraStatus">ক্যামেরা এখন বন্ধ।</div>  
+  <div class="ai-box-output" id="liveAiOutput">  
+    লাইভ ভিডিও AI প্রস্তুত — ক্যামেরা চালু করে লাইভ স্ট্যাটাস ও কণ্ঠ ব্রিফিং নিন।  
+  </div>  
+</section>  
+
+<h2 class="section-title">🌐 AYNA BOOK NEWS FEED</h2>  
+<div class="feed-filters" role="group" aria-label="Feed filter">  
+  <button type="button" class="filter-btn active" data-filter="all">সব পোস্ট</button>  
+  <button type="button" class="filter-btn" data-filter="text">📝 টেক্সট</button>  
+  <button type="button" class="filter-btn" data-filter="image">🖼️ ছবি</button>  
+  <button type="button" class="filter-btn" data-filter="audio">🎵 অডিও</button>  
+  <button type="button" class="filter-btn" data-filter="video">🎬 ভিডিও</button>  
+  <button type="button" class="filter-btn" data-filter="file">📎 ফাইল</button>  
+</div>  
+
+<section id="feed">  
+  <div class="empty">পোস্ট লোড হচ্ছে...</div>  
+</section>  
+
+<section class="file-registry-box" id="fileRegistrySection">  
+  <h2>📁🤖 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">192</span>টি) + AI</h2>  
+  <input type="search" id="fileSearchInput" class="hub-search-input" placeholder="ফাইল বা ফোল্ডারের নাম লিখে খুঁজুন..." />  
+  <div id="fileListGrid" class="file-list-grid"></div>  
+  <div class="media-buttons">  
+    <button type="button" id="runRegistryAiBtn" class="btn-gold">🤖 রেজিস্ট্রি AI বিশ্লেষণ</button>  
+    <button type="button" id="speakRegistryAiBtn">🔊 রেজিস্ট্রি AI কণ্ঠে শুনুন</button>  
+  </div>  
+  <div class="ai-box-output" id="registryAiOutput">রেজিস্ট্রি AI সারসংক্ষেপ প্রস্তুত।</div>  
+</section>
+
+  </main>    <footer>  
+    © 2026 AYNA BOOK* — Full AI Radar, Aviation, Weather &amp; Quantum Social Hub  
+  </footer>    <nav class="bottom-nav">  
+    <a href="index.html"><span>🏠</span>Home</a>  
+    <a href="#createPost"><span>➕</span>Post</a>  
+    <a href="messenger.html"><span>💬</span>Chat</a>  
+    <a href="profile.html"><span>👤</span>Profile</a>  
+  </nav>    <script type="module" src="./index.js"></script>  </body>  
+</htm>
