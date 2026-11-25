@@ -1,0 +1,39 @@
+val scope = rememberCoroutineScope()
+var insight by remember { mutableStateOf<AynaTemperatureAiInsight?>(null) }
+var loadingTemp by remember { mutableStateOf(false) }
+
+Column {
+    Button(
+        enabled = !loadingTemp,
+        onClick = {
+            scope.launch {
+                loadingTemp = true
+                try {
+                    insight = analyzeTemperatureWithAI(
+                        latitude = 21.2246,
+                        longitude = 92.2636,
+                        locationName = "বালুখালী বাজার, চট্টগ্রাম বিভাগ"
+                    )
+                } finally {
+                    loadingTemp = false
+                }
+            }
+        }
+    ) {
+        Text(if (loadingTemp) "🌡️ তাপমাত্রা বুঝছে..." else "🌡️ AI দিয়ে তাপমাত্রা বুঝুন")
+    }
+
+    insight?.let { data ->
+        Text(
+            text = "তাপমাত্রা: ${data.snapshot.temperatureC}°C • অনুভূত: ${data.snapshot.apparentTempC}°C • আর্দ্রতা: ${data.snapshot.humidityPercent}%",
+            color = Color(0xFFFFF6B3),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = data.aiSummaryBn,
+            color = Color(0xFF38F2FF),
+            fontSize = 17.sp
+        )
+    }
+}
