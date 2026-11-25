@@ -1,30 +1,20 @@
-
-/* =========================================================
-   AYNA BOOK
-   FIREBASE CONFIGURATION
-   Firebase SDK: 13.4.0
-   File: firebase-config.js
-   ========================================================= */
+// firebase-config.js — AYNA BOOK Central Firebase Configuration
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
 export const firebaseConfig = {
-
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-
+  apiKey: "YOUR_AYNA_BOOK_WEB_API_KEY",
   authDomain: "ayna-book.firebaseapp.com",
-
-  databaseURL:
-    "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-
+  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "ayna-book",
-
-  storageBucket: "ayna-book.firebasestorage.app",
-
+  storageBucket: "ayna-book.appspot.com",
   messagingSenderId: "805601138500",
-
-  appId: "1:805601138500:web:47acdc90cb0cb521626911",
-
-  measurementId: "G-RKHHSKNB4B"
-
+  appId: "YOUR_AYNA_BOOK_WEB_APP_ID"
 };
 
-console.log("AYNA BOOK Firebase Configuration Loaded.");
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getDatabase(app);
+export const storage = getStorage(app);
