@@ -1,0 +1,84 @@
+import { askAynaModuleAI } from "./ayna-ai-client.js";
+
+const REPORTS_COLD_KEY = "ayna_cold_reports_v1";
+const MESSAGES_COLD_KEY = "ayna_cold_messages_v1";
+
+export function saveColdReports(reports = []) {
+  const payload = { savedAt: Date.now(), reports };
+  localStorage.setItem(REPORTS_COLD_KEY, JSON.stringify(payload));
+  return payload;
+}
+
+export function loadColdReports() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(REPORTS_COLD_KEY) || "null");
+    return Array.isArray(raw?.reports) ? raw.reports : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+export function saveColdMessages(messages = []) {
+  const payload = { savedAt: Date.now(), messages };
+  localStorage.setItem(MESSAGES_COLD_KEY, JSON.stringify(payload));
+  return payload;
+}
+
+export function loadColdMessages() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(MESSAGES_COLD_KEY) || "null");
+    return Array.isArray(raw?.messages) ? raw.messages : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+export async function analyzeColdBackupWithAI({ apiBaseUrl = "" } = {}) {
+  const reports = loadColdReports();
+  const messages = loadColdMessages();
+
+  const reportText = reports
+    .slice(0, 15)
+    .map(r => `Post:${r.postId} | Status:${r.status} | Reason:${r.reason}`)
+    .join("\n");
+
+  const chatText = messages
+    .slice(-20)
+    .map(m => `${m.senderName || "User"}: ${m.text || ""}`)
+    .join("\n");
+
+  const fallback =
+    `কোল্ড ব্যাকআপ সারসংক্ষেপ: রিপোর্ট ${reports.length}টি, চ্যাট মেসেজ ${messages.length}টি সংরক্ষিত আছে।`;
+
+  try {
+    const reply = await askAynaModuleAI({
+      module: "general",
+      action: "cold_backup_briefing",
+      text: `Backed-up Reports (${reports.length}):\n${reportText || "None"}\n\nBacked-up Messages (${messages.length}):\n${chatText || "None"}`,
+      context: "Provide a concise Bengali summary of backed-up moderation reports and chat highlights.",
+      apiBaseUrl
+    });
+    return String(reply || "").trim() || fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
+export function exportFullColdBundleJson(filename = "ayna-cold-bundle.json") {
+  const bundle = {
+    exportedAt: new Date().toISOString(),
+    reports: loadColdReports(),
+    messages: loadColdMessages()
+  };
+  const blob = new Blob([JSON.stringify(bundle, null, 2)], {
+    type: "application/json;charset=utf-8"
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
