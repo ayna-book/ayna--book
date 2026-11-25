@@ -210,5 +210,4 @@ async function handleLoginSubmit() {
     }
   }
 }
-
 initLoginPage();
