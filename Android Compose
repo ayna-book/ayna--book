@@ -1,0 +1,264 @@
+package com.aynabook.app.ui.components
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.aynabook.app.utility.AynaRadarCompassAiEngine
+import com.aynabook.app.utility.AynaRadarCompassState
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
+import kotlin.math.cos
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.sin
+
+private val RadarDarkBg = Color(0xFF050A18)
+private val RadarCardBg = Color(0xFF0A1636)
+private val RadarGoldBright = Color(0xFFFFF6B3)
+private val RadarGoldBorder = Color(0xFFFFE64D)
+private val RadarCyan = Color(0xFF38F2FF)
+
+private val RadarRangeOptions = listOf(5, 15, 50)
+
+@Composable
+fun AynaRadarCompassCard(
+    latitude: Double = 23.8103,
+    longitude: Double = 90.4125,
+    locationLabelBn: String = "ঢাকা, ঢাকা বিভাগ",
+    apiBaseUrl: String = "http://10.0.2.2:3000",
+    auth: FirebaseAuth = FirebaseAuth.getInstance(),
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var radarState by remember {
+        mutableStateOf(
+            AynaRadarCompassState(
+                latitude = latitude,
+                longitude = longitude,
+                locationLabelBn = locationLabelBn
+            )
+        )
+    }
+    var isAnalyzing by remember { mutableStateOf(false) }
+
+    val engine = remember {
+        AynaRadarCompassAiEngine(context = context) { updated ->
+            radarState = updated
+        }
+    }
+
+    DisposableEffect(Unit) {
+        engine.setManualHeadingAndRange(
+            azimuthDeg = radarState.azimuthDeg,
+            radarRangeKm = radarState.radarRangeKm,
+            latitude = latitude,
+            longitude = longitude,
+            locationLabelBn = locationLabelBn
+        )
+        engine.startCompassSensors()
+        onDispose { engine.shutdown() }
+    }
+
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = RadarCardBg),
+        border = BorderStroke(3.dp, RadarGoldBorder),
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(18.dp)) {
+            Text(
+                text = "🧭📡 রাডার ও কম্পাস AI",
+                color = RadarGoldBright,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = radarState.statusMessage,
+                color = RadarCyan,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Canvas(modifier = Modifier.size(126.dp)) {
+                    val center = Offset(size.width / 2f, size.height / 2f)
+                    val maxRadius = min(size.width, size.height) / 2f - 4f
+
+                    drawCircle(color = RadarDarkBg, radius = maxRadius, center = center)
+                    drawCircle(color = RadarGoldBorder, radius = maxRadius, center = center, style = Stroke(width = 3f))
+                    drawCircle(color = RadarCyan.copy(alpha = 0.5f), radius = maxRadius * 0.66f, center = center, style = Stroke(width = 1.5f))
+                    drawCircle(color = RadarCyan.copy(alpha = 0.35f), radius = maxRadius * 0.33f, center = center, style = Stroke(width = 1.5f))
+
+                    val headingRad = Math.toRadians((radarState.azimuthDeg - 90f).toDouble())
+                    val pointerEnd = Offset(
+                        x = center.x + (maxRadius * 0.85f * cos(headingRad)).toFloat(),
+                        y = center.y + (maxRadius * 0.85f * sin(headingRad)).toFloat()
+                    )
+                    drawLine(
+                        color = RadarGoldBright,
+                        start = center,
+                        end = pointerEnd,
+                        strokeWidth = 4f
+                    )
+
+                    val maxDist = radarState.radarRangeKm.coerceAtLeast(1).toFloat()
+                    radarState.targets.forEach { target ->
+                        if (target.distanceKm <= maxDist) {
+                            val relRad = Math.toRadians((target.bearingDeg - 90f).toDouble())
+                            val distRatio = (target.distanceKm / maxDist).coerceIn(0.15f, 0.92f)
+                            val dotRadius = maxRadius * distRatio
+                            val dotPos = Offset(
+                                x = center.x + (dotRadius * cos(relRad)).toFloat(),
+                                y = center.y + (dotRadius * sin(relRad)).toFloat()
+                            )
+                            drawCircle(color = RadarCyan, radius = 6f, center = dotPos)
+                        }
+                    }
+                }
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "${radarState.azimuthDeg.roundToInt()}°",
+                        color = RadarGoldBright,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = radarState.cardinalBn,
+                        color = RadarCyan,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "রাডার রেঞ্জ: ${radarState.radarRangeKm} কিমি",
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
+                    Text(
+                        text = radarState.locationLabelBn,
+                        color = Color(0xFFD6E2FF),
+                        fontSize = 13.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                RadarRangeOptions.forEach { rangeKm ->
+                    val selected = radarState.radarRangeKm == rangeKm
+                    FilterChip(
+                        selected = selected,
+                        onClick = {
+                            engine.setManualHeadingAndRange(
+                                azimuthDeg = radarState.azimuthDeg,
+                                radarRangeKm = rangeKm,
+                                latitude = latitude,
+                                longitude = longitude,
+                                locationLabelBn = locationLabelBn
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "$rangeKm কিমি",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1
+                            )
+                        },
+                        colors = FilterChipDefaults.filterChipColors(
+                            containerColor = RadarDarkBg,
+                            labelColor = RadarGoldBright,
+                            selectedContainerColor = RadarGoldBorder,
+                            selectedLabelColor = RadarDarkBg
+                        )
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Button(
+                enabled = !isAnalyzing,
+                onClick = {
+                    scope.launch {
+                        isAnalyzing = true
+                        try {
+                            engine.analyzeRadarAndCompassWithAi(
+                                apiBaseUrl = apiBaseUrl,
+                                auth = auth,
+                                speakBriefing = true
+                            )
+                        } finally {
+                            isAnalyzing = false
+                        }
+                    }
+                },
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = RadarGoldBorder,
+                    contentColor = RadarDarkBg
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = if (isAnalyzing) "AI বিশ্লেষণ চলছে..." else "📡 AI রাডার ও কম্পাস ব্রিফিং",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+
+            if (radarState.aiBriefingBn.isNotBlank()) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = radarState.aiBriefingBn,
+                    color = RadarGoldBright,
+                    fontSize = 16.sp
+                )
+            }
+        }
+    }
+}
