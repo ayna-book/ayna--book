@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — অ্যাকাউন্ট লগইন ও লুকআপ</title>
+<title>AYNA BOOK — অ্যাকাউন্ট লগইন ও AI সহকারী</title>
 
 <style>
 :root {
@@ -41,7 +41,7 @@ body {
   line-height:1.5;
 }
 
-button,input {
+button,input,textarea {
   font:inherit;
 }
 
@@ -198,7 +198,8 @@ header {
   margin-bottom:8px;
 }
 
-.hub-input {
+.hub-input,
+.hub-textarea {
   width:100%;
   background:#050b1c;
   color:white;
@@ -209,7 +210,13 @@ header {
   outline:none;
 }
 
-.hub-input:focus {
+.hub-textarea {
+  min-height:120px;
+  resize:vertical;
+}
+
+.hub-input:focus,
+.hub-textarea:focus {
   border-color:#ffffff;
 }
 
@@ -352,7 +359,7 @@ header {
 
 <main class="container">
   <section class="hero">
-    <h1>AYNA BOOK — অ্যাকাউন্ট লগইন</h1>
+    <h1>AYNA BOOK — অ্যাকাউন্ট লগইন ও AI</h1>
     <p>লগইন বা অ্যাকাউন্ট লুকআপে ভুল করলে AI সিগন্যাল বাজবে এবং কণ্ঠের মাধ্যমে কোথায় ভুল হয়েছে তা বলে দেবে।</p>
   </section>
 
@@ -393,12 +400,212 @@ header {
 
     <div class="link-row">
       <a href="register.html">➕ নতুন অ্যাকাউন্ট রেজিস্ট্রেশন</a>
-      <a href="index.html">🏠 হোম পেজে ফিরুন</a>
+      <a href="forgot-password.html">🔑 পাসওয়ার্ড ভুলে গেছেন?</a>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>🤖 AYNA লগইন AI সহকারী</h2>
+
+    <div class="field-group">
+      <label class="field-label" for="loginAiPrompt">AI প্রশ্ন বা লেখা সংশোধন</label>
+      <textarea id="loginAiPrompt" class="hub-textarea" placeholder="লগইন, পাসওয়ার্ড, AYNA ID বা যেকোনো বিষয় লিখুন..."></textarea>
+    </div>
+
+    <div class="action-row">
+      <button type="button" id="loginAiCleanBtn" class="tool-button">✨ AI লেখা সংশোধন</button>
+      <button type="button" id="loginAiRunBtn" class="primary-button">🤖 AI বিশ্লেষণ ও উত্তর</button>
+    </div>
+
+    <button type="button" id="loginAiSpeakBtn" class="tool-button" style="width:100%;margin-top:14px;">🔊 AI উত্তর কণ্ঠে শুনুন</button>
+
+    <div class="signal-box" id="loginAiOutputBox">
+      AI সহকারী প্রস্তুত: যেকোনো প্রশ্ন লিখুন বা বানান/স্পেস ঠিক করতে "AI লেখা সংশোধন" চাপুন।
     </div>
   </section>
 </main>
 
-<script type="module" src="./login.js"></script>
+<script type="module">
+import { AynaVoiceSignal } from "./ayna-voice-signal.js";
+import { AynaAiHub } from "./ayna-ai-hub.js";
+import { auth, database } from "./firebase-init.js";
+
+const $ = id => document.getElementById(id);
+
+$("speakClockBtn")?.addEventListener("click", () => AynaVoiceSignal.speakCurrentTime());
+$("toggleClockBtn")?.addEventListener("click", () => AynaVoiceSignal.toggleClock("toggleClockBtn"));
+$("repeatSignalBtn")?.addEventListener("click", () => AynaVoiceSignal.repeatLast());
+$("registerPageBtn")?.addEventListener("click", () => { window.location.href = "register.html"; });
+
+$("toggleLoginPassBtn")?.addEventListener("click", () => {
+  const input = $("loginPassword");
+  const btn = $("toggleLoginPassBtn");
+  if (!input || !btn) return;
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  btn.textContent = show ? "🙈 পাসওয়ার্ড লুকাও" : "👁️ পাসওয়ার্ড দেখাও";
+});
+
+$("lookupAccountBtn")?.addEventListener("click", async () => {
+  const query = AynaAiHub.smartCleanText($("lookupAccountInput")?.value || "");
+  if (!query) {
+    AynaVoiceSignal.error(
+      "অ্যাকাউন্ট লুকআপের ঘরে ভুল হয়েছে। AYNA ID অথবা জিমেইল ঠিকানা লিখুন।",
+      "loginSignalBox"
+    );
+    $("lookupAccountInput")?.focus();
+    return;
+  }
+
+  if (query === "2026-----10000001") {
+    AynaVoiceSignal.success(
+      "অ্যাকাউন্ট লুকআপ সফল হয়েছে। AYNA ID 2026-----10000001 পাওয়া গেছে।",
+      "loginSignalBox"
+    );
+    return;
+  }
+
+  try {
+    const localAcc = JSON.parse(localStorage.getItem("ayna_registered_account") || "null");
+    if (
+      localAcc &&
+      ((localAcc.aynaId && String(localAcc.aynaId).trim() === query) ||
+        (localAcc.email && String(localAcc.email).trim().toLowerCase() === query.toLowerCase()))
+    ) {
+      AynaVoiceSignal.success(
+        `অ্যাকাউন্ট পাওয়া গেছে। জিমেইল ${localAcc.email} এবং আইডি ${localAcc.aynaId || "2026-----10000001"}।`,
+        "loginSignalBox"
+      );
+      return;
+    }
+  } catch (_) {}
+
+  if (database) {
+    try {
+      const { ref, get, child } = await import(
+        "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js"
+      );
+      const snap = await get(child(ref(database), "users"));
+      if (snap.exists()) {
+        const users = Object.values(snap.val() || {});
+        const found = users.find(
+          u =>
+            (u.aynaId && String(u.aynaId).trim() === query) ||
+            (u.email && String(u.email).trim().toLowerCase() === query.toLowerCase())
+        );
+        if (found) {
+          AynaVoiceSignal.success(
+            `অ্যাকাউন্ট পাওয়া গেছে। সদস্য ${found.fullName || found.email || "AYNA সদস্য"}।`,
+            "loginSignalBox"
+          );
+          return;
+        }
+      }
+    } catch (_) {}
+  }
+
+  AynaVoiceSignal.error(
+    `অ্যাকাউন্ট লুকাপে "${query}" খুঁজে পাওয়া যায়নি। AYNA ID বা জিমেইল ঠিক আছে কি না যাচাই করুন।`,
+    "loginSignalBox"
+  );
+});
+
+$("loginSubmitBtn")?.addEventListener("click", async () => {
+  const email = AynaAiHub.smartCleanText($("loginEmail")?.value || "");
+  const password = $("loginPassword")?.value || "";
+
+  const ok = AynaAiHub.validateFields(
+    [
+      {
+        check: () => Boolean(email),
+        errorBn: "জিমেইল ঠিকানার ঘরে ভুল হয়েছে। জিমেইল ঘরটি খালি রয়েছে।",
+        focusEl: $("loginEmail")
+      },
+      {
+        check: () => email.includes("@") && email.includes("."),
+        errorBn: "জিমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক জিমেইল ফরম্যাট লিখুন।",
+        focusEl: $("loginEmail")
+      },
+      {
+        check: () => Boolean(password),
+        errorBn: "লগইন পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড ঘরটি খালি রয়েছে।",
+        focusEl: $("loginPassword")
+      },
+      {
+        check: () => password.length >= 6,
+        errorBn: "লগইন পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।",
+        focusEl: $("loginPassword")
+      }
+    ],
+    "loginSignalBox"
+  );
+
+  if (!ok) return;
+
+  if (!auth) {
+    try {
+      const localAcc = JSON.parse(localStorage.getItem("ayna_registered_account") || "null");
+      if (localAcc && String(localAcc.email || "").toLowerCase() === email.toLowerCase()) {
+        AynaVoiceSignal.success("লোকাল অ্যাকাউন্ট লগইন সফল হয়েছে। হোম পেজে যাওয়া হচ্ছে।", "loginSignalBox");
+        setTimeout(() => { window.location.href = "index.html"; }, 1200);
+        return;
+      }
+    } catch (_) {}
+
+    AynaVoiceSignal.error(
+      "ফায়ারবেস সংযোগ পাওয়া যায়নি। firebase-init.js যাচাই করুন বা আগে রেজিস্ট্রেশন সম্পন্ন করুন।",
+      "loginSignalBox"
+    );
+    return;
+  }
+
+  const btn = $("loginSubmitBtn");
+  try {
+    const { signInWithEmailAndPassword } = await import(
+      "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"
+    );
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "লগইন হচ্ছে...";
+    }
+
+    await signInWithEmailAndPassword(auth, email, password);
+    AynaVoiceSignal.success("লগইন সফল হয়েছে। AYNA BOOK হোমে যাওয়া হচ্ছে।", "loginSignalBox");
+    setTimeout(() => { window.location.href = "index.html"; }, 1200);
+  } catch (err) {
+    const code = err?.code || "";
+    if (code.includes("user-not-found") || code.includes("invalid-credential")) {
+      AynaVoiceSignal.error(
+        "জিমেইল বা লগইন পাসওয়ার্ডে ভুল হয়েছে। অ্যাকাউন্ট খুঁজে পাওয়া যায়নি বা তথ্য মিলছে না।",
+        "loginSignalBox"
+      );
+      $("loginPassword")?.focus();
+    } else if (code.includes("wrong-password")) {
+      AynaVoiceSignal.error("লগইন পাসওয়ার্ডে ভুল হয়েছে। সঠিক পাসওয়ার্ড আবার লিখুন।", "loginSignalBox");
+      $("loginPassword")?.focus();
+    } else if (code.includes("invalid-email")) {
+      AynaVoiceSignal.error("জিমেইল ঠিকানার বানানে ভুল হয়েছে।", "loginSignalBox");
+      $("loginEmail")?.focus();
+    } else {
+      AynaVoiceSignal.error("লগইন সম্পন্ন করা যায়নি। নেটওয়ার্ক বা ফায়ারবেস সংযোগ পরীক্ষা করুন।", "loginSignalBox");
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "🚀 লগইন বাটন";
+    }
+  }
+});
+
+AynaAiHub.attachAll({
+  aiInputId: "loginAiPrompt",
+  aiOutputId: "loginAiOutputBox",
+  aiRunBtnId: "loginAiRunBtn",
+  aiSpeakBtnId: "loginAiSpeakBtn",
+  aiCleanBtnId: "loginAiCleanBtn",
+  contextName: "AYNA লগইন AI"
+});
+</script>
 
 </body>
 </html>
