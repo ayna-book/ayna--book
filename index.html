@@ -136,27 +136,29 @@ header {
   border:2px solid var(--quantum-cyan);
 }
 
+/* নির্ধারিত স্থানে প্রতি ১ সেকেন্ড পর পর সাদা আলো ছড়ানো তারা */
 .star-1s {
   color:#ffffff;
-  font-size:46px;
+  font-size:48px;
   display:inline-block;
-  animation:starFlash1s 1s infinite alternate ease-in-out;
+  animation:starWhitePulse1s 1s infinite ease-in-out;
 }
 
-@keyframes starFlash1s {
-  0% {
-    transform:scale(0.95) rotate(0deg);
-    color:#fff099;
-    text-shadow:0 0 8px #ffd700;
-  }
-  100% {
-    transform:scale(1.35) rotate(18deg);
+@keyframes starWhitePulse1s {
+  0%, 100% {
+    transform:scale(1) rotate(0deg);
     color:#ffffff;
     text-shadow:
-      0 0 14px #ffffff,
-      0 0 26px #ffffff,
-      0 0 42px #ffe64d,
-      0 0 60px #ff9900;
+      0 0 16px #ffffff,
+      0 0 34px #ffffff,
+      0 0 56px rgba(255,255,255,.95),
+      0 0 78px rgba(56,242,255,.65);
+  }
+  50% {
+    transform:scale(0.92) rotate(-8deg);
+    color:#eef6ff;
+    text-shadow:
+      0 0 4px rgba(255,255,255,.45);
   }
 }
 
@@ -1171,7 +1173,7 @@ footer {
   <section class="hero">
     <h1>AYNA BOOK — ULTRA-CRITICAL HIGH-SPEED HUB</h1>
     <p>
-      বিশ্ব ঘড়ি (প্রতি ১ ঘণ্টা পর পর ও এখনই সময় বলার বাটন + চালু/বন্ধ বাটন), রেডিও ও টেলিভিশনে AI, অডিও-ভিডিও-লাইভ-পোস্টে AI, এবং অ্যাকাউন্ট রেজিস্ট্রেশন ও লুকাপে ভুল করলে কণ্ঠের মাধ্যমে সিগন্যাল ও ভুলের জায়গা বলে দেওয়ার পূর্ণাঙ্গ ব্যবস্থা।
+      বিশ্ব ঘড়ি (প্রতি ১ ঘণ্টা পর পর ও এখনই সময় বলার বাটন + চালু/বন্ধ বাটন), রেডিও ও টেলিভিশনে AI, অডিও-ভিডিও-লাইভ-পোস্টে AI, বিশ্বমানের সাউন্ড কোয়ালিটি এবং অ্যাকাউন্ট রেজিস্ট্রেশন ও লুকাপে ভুল করলে কণ্ঠের মাধ্যমে সিগন্যাল ও ভুলের জায়গা বলে দেওয়ার পূর্ণাঙ্গ ব্যবস্থা।
     </p>
   </section>
 
@@ -1185,8 +1187,37 @@ footer {
       <span class="q-stat-value" id="qAutoSyncStatus">ACTIVE • LIVE</span>
     </div>
     <div class="q-stat">
+      <span class="q-stat-label">World-Class Audio &amp; AI</span>
+      <span class="q-stat-value" id="qAudioAiStatus">STUDIO-DSP • AI-MESH</span>
+    </div>
+    <div class="q-stat">
       <span class="q-stat-label">Total Registry Items</span>
       <span class="q-stat-value" id="qFileCount">192</span>
+    </div>
+  </section>
+
+  <!-- বিশ্বমানের সাউন্ড কোয়ালিটি ও সার্বজনীন AI কন্ট্রোল প্যানেল -->
+  <section class="panel" id="worldAudioUniversalAiSection">
+    <h2>🎧🤖 বিশ্বমানের সাউন্ড কোয়ালিটি ও সার্বজনীন AI কমান্ড</h2>
+    <div class="hub-controls-row">
+      <select id="audioPresetSelect" class="hub-select">
+        <option value="STUDIO_MASTER">সাউন্ড প্রোফাইল: Studio Master Clarity (Warm Low + Crisp Presence)</option>
+        <option value="CINEMA_THEATER">সাউন্ড প্রোফাইল: Cinema Spatial Surround</option>
+        <option value="VOICE_BROADCAST">সাউন্ড প্রোফাইল: Broadcast Voice &amp; Alert Precision</option>
+      </select>
+      <input
+        type="text"
+        id="universalAiInput"
+        class="hub-search-input"
+        placeholder="যেকোনো ফিচার (ঘড়ি, রেডিও, টিভি, রাডার, বাণিজ্য, পোস্ট, দেশ, মনীষী) নিয়ে AI প্রশ্ন করুন..."
+      >
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="applyAudioPresetBtn">🎶 সাউন্ড টেস্ট ও প্রোফাইল চালু</button>
+      <button type="button" id="runUniversalAiBtn">🤖 সার্বজনীন AI উত্তর ও কণ্ঠ</button>
+    </div>
+    <div class="ai-box-output" id="universalAiOutput">
+      বিশ্বমানের সাউন্ড প্রসেসর (Biquad EQ + Dynamics Limiter) ও সার্বজনীন AI প্রস্তুত।
     </div>
   </section>
 
@@ -1272,19 +1303,19 @@ footer {
     <a class="feature-card" href="profile.html">
       <span class="feature-icon">👤</span>
       <span class="feature-name">আমার প্রোফাইল</span>
-      <span class="feature-desc">ব্যক্তিগত অ্যাকাউন্ট</span>
+      <span class="feature-desc">ব্যক্তিগত অ্যাকাউন্ট ও AI</span>
     </a>
 
     <a class="feature-card" href="messenger.html">
       <span class="feature-icon">💬</span>
       <span class="feature-name">AYNA Messenger</span>
-      <span class="feature-desc">মেসেজ, অডিও, ভিডিও ও ফাইল</span>
+      <span class="feature-desc">মেসেজ, অডিও, ভিডিও ও AI</span>
     </a>
 
     <a class="feature-card" href="notifications.html">
       <span class="feature-icon">🔔</span>
       <span class="feature-name">নোটিফিকেশন</span>
-      <span class="feature-desc">সব আপডেট</span>
+      <span class="feature-desc">সব আপডেট ও AI এলার্ট</span>
     </a>
 
     <a class="feature-card" href="radio.html">
@@ -1302,19 +1333,19 @@ footer {
     <a class="feature-card" href="gps.html">
       <span class="feature-icon">🛰️</span>
       <span class="feature-name">GPS নেভিগেশন</span>
-      <span class="feature-desc">অবস্থান ও দিকনির্দেশ</span>
+      <span class="feature-desc">অবস্থান, দিক ও AI</span>
     </a>
 
     <a class="feature-card" href="compass.html">
       <span class="feature-icon">🧭</span>
       <span class="feature-name">ডিজিটাল কম্পাস</span>
-      <span class="feature-desc">দিক নির্ণয়</span>
+      <span class="feature-desc">দিক নির্ণয় ও AI</span>
     </a>
 
     <a class="feature-card" href="radar.html">
       <span class="feature-icon">📡</span>
       <span class="feature-name">রাডার সিস্টেম</span>
-      <span class="feature-desc">রাডার পেজ</span>
+      <span class="feature-desc">রাডার পেজ ও AI</span>
     </a>
   </section>
 
@@ -1350,133 +1381,133 @@ footer {
     <a class="feature-card" href="world-leaders.html">
       <span class="feature-icon">🌐</span>
       <span class="feature-name">বিশ্বনেতা</span>
-      <span class="feature-desc">আন্তর্জাতিক নেতৃত্ব ও তথ্য</span>
+      <span class="feature-desc">আন্তর্জাতিক নেতৃত্ব, তথ্য ও AI</span>
     </a>
 
     <a class="feature-card" href="world-grocery.html">
       <span class="feature-icon">🛒</span>
       <span class="feature-name">বিশ্ব মুদির দোকান</span>
-      <span class="feature-desc">দৈনিক মূল্য অটো আপডেট</span>
+      <span class="feature-desc">দৈনিক মূল্য অটো আপডেট ও AI</span>
     </a>
 
     <a class="feature-card" href="world-farmers.html">
       <span class="feature-icon">🌾</span>
       <span class="feature-name">বিশ্ব কৃষক</span>
-      <span class="feature-desc">কৃষি তথ্য, ফসল ও বাজার দর</span>
+      <span class="feature-desc">কৃষি তথ্য, ফসল ও AI বাজার</span>
     </a>
 
     <a class="feature-card" href="poultry-farmers.html">
       <span class="feature-icon">🐔</span>
       <span class="feature-name">পোলোট্রি কৃষক ও ব্যবসায়ী</span>
-      <span class="feature-desc">মুরগি, ডিম, ফিড ও বাজার দর</span>
+      <span class="feature-desc">মুরগি, ডিম, ফিড ও AI দর</span>
     </a>
 
     <a class="feature-card" href="price-list.html">
       <span class="feature-icon">📊</span>
       <span class="feature-name">দৈনিক মূল্যতালিকা</span>
-      <span class="feature-desc">মুদি, কৃষি ও পোলোট্রি অটো-সিঙ্ক</span>
+      <span class="feature-desc">মুদি, কৃষি ও পোলোট্রি AI সিঙ্ক</span>
     </a>
 
     <a class="feature-card" href="world-market.html">
       <span class="feature-icon">🌍</span>
       <span class="feature-name">দৈনিক বিশ্ব বাজার</span>
-      <span class="feature-desc">আন্তর্জাতিক ও দেশীয় বাজার দর</span>
+      <span class="feature-desc">আন্তর্জাতিক বাজার দর ও AI</span>
     </a>
 
     <a class="feature-card" href="world-officials.html">
       <span class="feature-icon">🏛️</span>
       <span class="feature-name">এমপি, মন্ত্রী ও কর্মকর্তা</span>
-      <span class="feature-desc">বিশ্ব প্রশাসন ও জনপ্রতিনিধি</span>
+      <span class="feature-desc">বিশ্ব প্রশাসন ও AI তথ্য</span>
     </a>
 
     <a class="feature-card" href="air-rail-transport.html">
       <span class="feature-icon">✈️</span>
       <span class="feature-name">বিমান ও রেল পরিবহণ</span>
-      <span class="feature-desc">ফোন, জিমেইল ও টিকেট মূল্যতালিকা</span>
+      <span class="feature-desc">ফোন, জিমেইল, টিকেট ও AI</span>
     </a>
 
     <a class="feature-card" href="world-air-rail.html">
       <span class="feature-icon">🚆</span>
       <span class="feature-name">বিশ্ব বিমান ও রেল</span>
-      <span class="feature-desc">আন্তর্জাতিক পরিবহণ ও টিকেট দর</span>
+      <span class="feature-desc">আন্তর্জাতিক পরিবহণ ও AI</span>
     </a>
 
     <a class="feature-card" href="world-garments.html">
       <span class="feature-icon">👕</span>
       <span class="feature-name">বিশ্ব গার্মেন্টস</span>
-      <span class="feature-desc">মালিক, শ্রমিক ও পোশাক শিল্প</span>
+      <span class="feature-desc">মালিক, শ্রমিক, শিল্প ও AI</span>
     </a>
 
     <a class="feature-card" href="world-jobs.html">
       <span class="feature-icon">💼</span>
       <span class="feature-name">চাকুরী বাজার</span>
-      <span class="feature-desc">সরকারি, বেসরকারি ও আন্তর্জাতিক</span>
+      <span class="feature-desc">সরকারি, বেসরকারি ও AI গাইড</span>
     </a>
 
     <a class="feature-card" href="world-ngo-rights.html">
       <span class="feature-icon">🕊️</span>
       <span class="feature-name">UN, NGO ও মানবাধিকার</span>
-      <span class="feature-desc">নাম, ফোন ও জিমেইল ডিরেক্টরি</span>
+      <span class="feature-desc">নাম, ফোন, জিমেইল ও AI</span>
     </a>
 
     <a class="feature-card" href="military-radar.html">
       <span class="feature-icon">🎯</span>
       <span class="feature-name">মিলিটারি রাডার</span>
-      <span class="feature-desc">তথ্যভিত্তিক রাডার</span>
+      <span class="feature-desc">তথ্যভিত্তিক রাডার ও AI</span>
     </a>
 
     <a class="feature-card" href="clock.html">
       <span class="feature-icon">🕒</span>
       <span class="feature-name">বিশ্ব ঘড়ি</span>
-      <span class="feature-desc">সময় ও অ্যালার্ম</span>
+      <span class="feature-desc">সময়, অ্যালার্ম ও ভয়েস AI</span>
     </a>
 
     <a class="feature-card" href="calendar.html">
       <span class="feature-icon">📅</span>
       <span class="feature-name">বিশ্ব ক্যালেন্ডার</span>
-      <span class="feature-desc">তারিখ ও দিন</span>
+      <span class="feature-desc">তারিখ, দিন ও AI</span>
     </a>
 
     <a class="feature-card" href="arabic-calendar.html">
       <span class="feature-icon">🌙</span>
       <span class="feature-name">আরবি ক্যালেন্ডার</span>
-      <span class="feature-desc">হিজরি তারিখ</span>
+      <span class="feature-desc">হিজরি তারিখ ও AI</span>
     </a>
 
     <a class="feature-card" href="world-holidays.html">
       <span class="feature-icon">🎉</span>
       <span class="feature-name">বিশ্বের সরকারি ছুটি</span>
-      <span class="feature-desc">ছুটির তালিকা</span>
+      <span class="feature-desc">ছুটির তালিকা ও AI</span>
     </a>
 
     <a class="feature-card" href="us-alerts.html">
       <span class="feature-icon">🚨</span>
       <span class="feature-name">জরুরি এলার্ট</span>
-      <span class="feature-desc">এলার্ট তথ্য</span>
+      <span class="feature-desc">এলার্ট তথ্য ও AI বিচার</span>
     </a>
 
     <a class="feature-card" href="prayer.html">
       <span class="feature-icon">🕌</span>
       <span class="feature-name">নামাজের সময়</span>
-      <span class="feature-desc">প্রার্থনার সময়সূচি</span>
+      <span class="feature-desc">প্রার্থনার সময়সূচি ও AI</span>
     </a>
 
     <a class="feature-card" href="quantum.html">
       <span class="feature-icon">⚛️</span>
       <span class="feature-name">কোয়ান্টাম হাব</span>
-      <span class="feature-desc">কোয়ান্টাম সিস্টেম</span>
+      <span class="feature-desc">কোয়ান্টাম সিস্টেম ও AI</span>
     </a>
 
     <a class="feature-card" href="supercomputer.html">
       <span class="feature-icon">🖥️</span>
       <span class="feature-name">সুপারকম্পিউটার</span>
-      <span class="feature-desc">উচ্চগতির তথ্য</span>
+      <span class="feature-desc">উচ্চগতির তথ্য ও AI</span>
     </a>
   </section>
 
   <!-- আবহাওয়া, ভয়েস রেকর্ডার, বুকমার্ক ও QR হাব -->
   <section class="panel" id="legacyModulesSection">
-    <h2>🌡️🎙️🔖 আবহাওয়া, ভয়েস রেকর্ডার, বুকমার্ক ও QR হাব</h2>
+    <h2>🌡️🎙️🔖 আবহাওয়া, ভয়েস রেকর্ডার, বুকমার্ক ও QR হাব + AI</h2>
 
     <div class="hub-controls-row">
       <input
@@ -1486,12 +1517,12 @@ footer {
         value="Dhaka"
         placeholder="শহরের নাম (যেমন: Dhaka, London, Tokyo)..."
       >
-      <button type="button" id="fetchWeatherBtn" class="tool-button" style="margin:0;min-height:66px;">🌡️ তাপমাত্রা ও আবহাওয়া দেখুন</button>
+      <button type="button" id="fetchWeatherBtn" class="tool-button" style="margin:0;min-height:66px;">🌡️ তাপমাত্রা, আবহাওয়া ও AI</button>
     </div>
     <div class="ai-box-output" id="weatherOutput">ঢাকা ও বৈশ্বিক আবহাওয়া টেলিম্যাট্রি প্রস্তুত।</div>
 
     <div class="media-buttons">
-      <button type="button" id="startVoiceRecBtn">🎙️ ভয়েস রেকর্ডিং শুরু</button>
+      <button type="button" id="startVoiceRecBtn">🎙️ ভয়েস রেকর্ডিং শুরু (Studio Audio)</button>
       <button type="button" id="stopVoiceRecBtn">⏹ ভয়েস রেকর্ডিং বন্ধ</button>
     </div>
     <div id="voiceRecAudioWrap" style="margin-top:12px;"></div>
@@ -1503,7 +1534,7 @@ footer {
         class="hub-search-input"
         placeholder="বুকমার্ক শিরোনাম বা লিংক/নোট..."
       >
-      <button type="button" id="saveBookmarkBtn" class="tool-button" style="margin:0;min-height:66px;">🔖 বুকমার্ক সংরক্ষণ</button>
+      <button type="button" id="saveBookmarkBtn" class="tool-button" style="margin:0;min-height:66px;">🔖 বুকমার্ক সংরক্ষণ + AI</button>
     </div>
     <div id="bookmarksList"></div>
 
@@ -1664,7 +1695,7 @@ footer {
 
   <!-- ৬. বিশ্ব রাষ্ট্রসমূহের আয়াতন, জনসংখ্যা ও অর্থনৈতিক প্রবৃদ্ধিহার AI -->
   <section class="panel" id="worldStatsSection">
-    <h2>🌍📊 বিশ্ব রাষ্ট্র: আয়াতন, জনসংখ্যা ও অর্থনৈতিক প্রবৃদ্ধিহার</h2>
+    <h2>🌍📊 বিশ্ব রাষ্ট্র: আয়াতন, জনসংখ্যা ও অর্থনৈতিক প্রবৃদ্ধিহার + AI</h2>
     <div class="hub-controls-row">
       <input
         type="search"
@@ -1699,10 +1730,10 @@ footer {
     <div class="ai-box-output" id="nobelAiOutput">নোবেলজয়ী ও বিশ্ব মনীষীদের তথ্য প্রস্তুত।</div>
   </section>
 
-  <!-- রাষ্ট্রনেতাদের নাম তালিকা -->
+  <!-- রাষ্ট্রনেতাদের নাম তালিকা + AI -->
   <section class="panel" id="worldLeadersSection">
     <div class="panel-head-row">
-      <h2>🌍 রাষ্ট্রনেতাদের নাম তালিকা</h2>
+      <h2>🌍 রাষ্ট্রনেতাদের নাম তালিকা + AI</h2>
       <a href="world-leaders.html" class="panel-link-btn">সব রাষ্ট্রনেতা পেজ</a>
     </div>
     <input
@@ -1712,12 +1743,17 @@ footer {
       placeholder="রাষ্ট্রনেতা বা দেশের নাম দিয়ে খুঁজুন..."
     >
     <div class="hub-cards-grid" id="worldLeadersGrid"></div>
+    <div class="media-buttons">
+      <button type="button" id="runLeadersAiBtn">🤖 রাষ্ট্রনেতা AI ব্রিফিং</button>
+      <button type="button" id="speakLeadersAiBtn">🔊 রাষ্ট্রনেতা AI কণ্ঠে শুনুন</button>
+    </div>
+    <div class="ai-box-output" id="worldLeadersAiOutput">রাষ্ট্রনেতা তালিকা ও আন্তর্জাতিক নেতৃত্ব AI প্রস্তুত।</div>
   </section>
 
-  <!-- বিশ্ব আলেম গবেষণাগার -->
+  <!-- বিশ্ব আলেম গবেষণাগার + AI -->
   <section class="panel" id="ulemaResearchSection">
     <div class="panel-head-row">
-      <h2>🕌 বিশ্ব আলেম গবেষণাগার</h2>
+      <h2>🕌 বিশ্ব আলেম গবেষণাগার + AI</h2>
       <a href="ulema-research.html" class="panel-link-btn">গবেষণাগার পেজ</a>
     </div>
     <input
@@ -1727,12 +1763,17 @@ footer {
       placeholder="গবেষণার বিষয় বা বিভাগ খুঁজুন..."
     >
     <div class="hub-cards-grid" id="ulemaResearchGrid"></div>
+    <div class="media-buttons">
+      <button type="button" id="runUlemaAiBtn">🤖 আলেম গবেষণা AI সারসংক্ষেপ</button>
+      <button type="button" id="speakUlemaAiBtn">🔊 গবেষণা AI কণ্ঠে শুনুন</button>
+    </div>
+    <div class="ai-box-output" id="ulemaAiOutput">বিশ্ব আলেম গবেষণাগার AI বিশ্লেষণ প্রস্তুত।</div>
   </section>
 
-  <!-- মুদি বাজার ও বিশ্ব কৃষক -->
+  <!-- মুদি বাজার ও বিশ্ব কৃষক + AI -->
   <section class="panel" id="groceryFarmersSection">
     <div class="panel-head-row">
-      <h2>🛒 মুদি বাজার ও 🌾 বিশ্ব কৃষক</h2>
+      <h2>🛒 মুদি বাজার ও 🌾 বিশ্ব কৃষক + AI</h2>
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
         <a href="world-grocery.html" class="panel-link-btn">মুদি বাজার</a>
         <a href="world-farmers.html" class="panel-link-btn">বিশ্ব কৃষক</a>
@@ -1752,12 +1793,17 @@ footer {
       >
     </div>
     <div class="hub-cards-grid" id="groceryFarmersGrid"></div>
+    <div class="media-buttons">
+      <button type="button" id="runMarketAiBtn">🤖 বাজার ও কৃষি AI বিশ্লেষণ</button>
+      <button type="button" id="speakMarketAiBtn">🔊 বাজার AI কণ্ঠে শুনুন</button>
+    </div>
+    <div class="ai-box-output" id="marketAiOutput">মুদি ও কৃষি বাজারের মূল্য AI পর্যালোচনা প্রস্তুত।</div>
   </section>
 
-  <!-- বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন -->
+  <!-- বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন + AI -->
   <section class="panel" id="worldJobsSection">
     <div class="panel-head-row">
-      <h2>💼 বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন</h2>
+      <h2>💼 বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন + AI</h2>
       <a href="world-jobs.html" class="panel-link-btn">চাকুরী বাজার পেজ</a>
     </div>
     <input
@@ -1767,11 +1813,16 @@ footer {
       placeholder="পদবী, কোম্পানি বা লোকেশন দিয়ে চাকুরীর বিজ্ঞাপন খুঁজুন..."
     >
     <div class="hub-cards-grid" id="directJobsGrid"></div>
+    <div class="media-buttons">
+      <button type="button" id="runJobsAiBtn">🤖 চাকুরীর বাজার AI পরামর্শ</button>
+      <button type="button" id="speakJobsAiBtn">🔊 চাকুরী AI কণ্ঠে শুনুন</button>
+    </div>
+    <div class="ai-box-output" id="jobsAiOutput">বিশ্ব চাকুরীর বিজ্ঞাপন ও ক্যারিয়ার AI প্রস্তুত।</div>
   </section>
 
-  <!-- AYNA YOUTUBE HUB -->
+  <!-- AYNA YOUTUBE HUB + AI -->
   <section class="panel" id="youtubeHubSection">
-    <h2>▶️ AYNA YOUTUBE HUB</h2>
+    <h2>▶️🤖 AYNA YOUTUBE HUB + AI</h2>
     <div class="yt-input-row">
       <input
         type="text"
@@ -1797,15 +1848,20 @@ footer {
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen
     ></iframe>
-    <a
-      id="ytDirectWatchLink"
-      class="yt-ext-link"
-      href="https://www.youtube.com/results?search_query=Bangla+news+live"
-      target="_blank"
-      rel="noopener"
-    >
-      ↗️ YouTube অ্যাপ বা ব্রাউজারে খুলুন
-    </a>
+    <div class="media-buttons">
+      <button type="button" id="runYtAiBtn">🤖 YouTube টপিক AI সারসংক্ষেপ</button>
+      <a
+        id="ytDirectWatchLink"
+        class="yt-ext-link"
+        style="margin-top:0;display:flex;align-items:center;justify-content:center;"
+        href="https://www.youtube.com/results?search_query=Bangla+news+live"
+        target="_blank"
+        rel="noopener"
+      >
+        ↗️ YouTube অ্যাপ বা ব্রাউজারে খুলুন
+      </a>
+    </div>
+    <div class="ai-box-output" id="ytAiOutput">YouTube হাব AI প্রস্তুত — নির্বাচিত ভিডিও বা টপিকের সারসংক্ষেপ দেখুন।</div>
   </section>
 
   <!-- POST CREATOR (অডিও, ভিডিও, লাইভ ভিডিও ও পোস্টে AI যুক্ত) -->
@@ -1896,9 +1952,9 @@ footer {
     <div class="empty">পোস্ট লোড হচ্ছে...</div>
   </section>
 
-  <!-- ফাইল ও ফোল্ডার তালিকা বক্স -->
+  <!-- ফাইল ও ফোল্ডার তালিকা বক্স + AI -->
   <section class="file-registry-box" id="fileRegistrySection">
-    <h2>📁 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">192</span>টি)</h2>
+    <h2>📁 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">192</span>টি) + AI</h2>
     <input
       type="search"
       id="fileSearchInput"
@@ -1906,6 +1962,11 @@ footer {
       placeholder="ফাইল বা ফোল্ডারের নাম লিখে খুঁজুন..."
     >
     <div id="fileListGrid" class="file-list-grid"></div>
+    <div class="media-buttons">
+      <button type="button" id="runRegistryAiBtn">🤖 ফাইল রেজিস্ট্রি AI বিশ্লেষণ</button>
+      <button type="button" id="speakRegistryAiBtn">🔊 রেজিস্ট্রি AI কণ্ঠে শুনুন</button>
+    </div>
+    <div class="ai-box-output" id="registryAiOutput">ফাইল ও ফোল্ডার রেজিস্ট্রি AI প্রস্তুত।</div>
   </section>
 
 </main>
@@ -2170,37 +2231,140 @@ function notify(message) {
   }, 3400);
 }
 
-// ভয়েস সিগন্যাল ও ভুল বলার ইঞ্জিন (অ্যাকাউন্ট রেজিস্ট্রেশন ও লুকাপে ভুল করলে কণ্ঠে বলবে)
+// বিশ্বমানের সাউন্ড কোয়ালিটি প্রসেসর (Web Audio API DSP + EQ + Limiter)
+const AynaWorldClassAudio = {
+  ctx: null,
+  masterGain: null,
+  lowShelf: null,
+  presencePeak: null,
+  airShelf: null,
+  limiter: null,
+  preset: "STUDIO_MASTER",
+
+  ensureContext() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return null;
+      this.ctx = new AudioCtx();
+
+      this.lowShelf = this.ctx.createBiquadFilter();
+      this.lowShelf.type = "lowshelf";
+      this.lowShelf.frequency.value = 140;
+
+      this.presencePeak = this.ctx.createBiquadFilter();
+      this.presencePeak.type = "peaking";
+      this.presencePeak.frequency.value = 2800;
+      this.presencePeak.Q.value = 1.1;
+
+      this.airShelf = this.ctx.createBiquadFilter();
+      this.airShelf.type = "highshelf";
+      this.airShelf.frequency.value = 8500;
+
+      this.limiter = this.ctx.createDynamicsCompressor();
+      this.limiter.threshold.value = -3.0;
+      this.limiter.knee.value = 12.0;
+      this.limiter.ratio.value = 8.0;
+      this.limiter.attack.value = 0.004;
+      this.limiter.release.value = 0.12;
+
+      this.masterGain = this.ctx.createGain();
+      this.masterGain.gain.value = 0.85;
+
+      this.lowShelf.connect(this.presencePeak);
+      this.presencePeak.connect(this.airShelf);
+      this.airShelf.connect(this.limiter);
+      this.limiter.connect(this.masterGain);
+      this.masterGain.connect(this.ctx.destination);
+
+      this.applyPreset(this.preset, false);
+    }
+    if (this.ctx.state === "suspended") {
+      this.ctx.resume().catch(() => {});
+    }
+    return this.ctx;
+  },
+
+  applyPreset(presetName = "STUDIO_MASTER", playChime = false) {
+    this.preset = presetName;
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    if (presetName === "CINEMA_THEATER") {
+      this.lowShelf.gain.setTargetAtTime(6.5, now, 0.03);
+      this.presencePeak.gain.setTargetAtTime(2.5, now, 0.03);
+      this.airShelf.gain.setTargetAtTime(5.0, now, 0.03);
+    } else if (presetName === "VOICE_BROADCAST") {
+      this.lowShelf.gain.setTargetAtTime(1.5, now, 0.03);
+      this.presencePeak.gain.setTargetAtTime(6.0, now, 0.03);
+      this.airShelf.gain.setTargetAtTime(4.0, now, 0.03);
+    } else {
+      this.lowShelf.gain.setTargetAtTime(4.2, now, 0.03);
+      this.presencePeak.gain.setTargetAtTime(3.8, now, 0.03);
+      this.airShelf.gain.setTargetAtTime(4.8, now, 0.03);
+    }
+
+    if (playChime) {
+      this.playStudioChime();
+    }
+  },
+
+  playStudioChime() {
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const notes = [523.25, 659.25, 783.99, 1046.5];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+      env.gain.setValueAtTime(0.0001, now + idx * 0.08);
+      env.gain.linearRampToValueAtTime(0.14, now + idx * 0.08 + 0.02);
+      env.gain.exponentialRampToValueAtTime(0.0008, now + idx * 0.08 + 0.36);
+      osc.connect(env);
+      env.connect(this.lowShelf);
+      osc.start(now + idx * 0.08);
+      osc.stop(now + idx * 0.08 + 0.38);
+    });
+  },
+
+  playErrorSignal() {
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const env = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(330, now);
+    osc.frequency.setValueAtTime(220, now + 0.14);
+    env.gain.setValueAtTime(0.18, now);
+    env.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
+    osc.connect(env);
+    env.connect(this.lowShelf);
+    osc.start(now);
+    osc.stop(now + 0.38);
+  }
+};
+
+// ভয়েস সিগন্যাল ও ভুল বলার ইঞ্জিন
 const AynaVoiceSignal = {
   playErrorBeep() {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(320, ctx.currentTime);
-      osc.frequency.setValueAtTime(210, ctx.currentTime + 0.14);
-      gain.gain.setValueAtTime(0.15, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.34);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.35);
-    } catch (_) {}
+    AynaWorldClassAudio.playErrorSignal();
   },
 
   speak(text, force = true) {
     if (!force || !text || !("speechSynthesis" in window)) return;
     try {
+      AynaWorldClassAudio.ensureContext();
       window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(String(text).replace(/[*#]/g, "").slice(0, 280));
+      const utter = new SpeechSynthesisUtterance(String(text).replace(/[*#]/g, "").slice(0, 320));
       const voices = window.speechSynthesis.getVoices() || [];
       const bnVoice = voices.find(v => /bn/i.test(v.lang));
       utter.voice = bnVoice || voices[0] || null;
       utter.lang = bnVoice?.lang || "bn-BD";
       utter.rate = 0.96;
+      utter.pitch = 1.02;
       window.speechSynthesis.speak(utter);
     } catch (_) {}
   },
@@ -2214,57 +2378,6 @@ const AynaVoiceSignal = {
     this.speak(`ভুল হয়েছে। ${mistakeBn}`, true);
   }
 };
-
-// রেজিস্ট্রেশন ও অ্যাকাউন্ট লুকআপ ভ্যালিডেশন + কণ্ঠ সিগন্যাল
-$("validateRegisterVoiceBtn")?.addEventListener("click", () => {
-  const name = ($("regFullNameInput")?.value || "").trim();
-  const email = ($("regEmailInput")?.value || "").trim();
-  const pass = $("regPasswordInput")?.value || "";
-
-  if (!name || name.length < 2) {
-    AynaVoiceSignal.announceMistake("পূর্ণ নাম ঘরে সঠিক নাম লিখুন। নাম খালি বা খুব ছোট রয়েছে।");
-    return;
-  }
-  if (!email || !email.includes("@") || !email.includes(".")) {
-    AynaVoiceSignal.announceMistake("ইমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক ইমেইল লিখুন।");
-    return;
-  }
-  if (pass.length < 6) {
-    AynaVoiceSignal.announceMistake("পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
-    return;
-  }
-
-  const okMsg = `✅ রেজিস্ট্রেশন তথ্য সঠিক আছে। নাম: ${name}, ইমেইল: ${email}।`;
-  $("accountSignalOutput").textContent = okMsg;
-  notify("রেজিস্ট্রেশন তথ্য সঠিক আছে");
-  AynaVoiceSignal.speak("রেজিস্ট্রেশন তথ্য সঠিক আছে। আপনি এগিয়ে যেতে পারেন।", true);
-});
-
-$("runAccountLookupVoiceBtn")?.addEventListener("click", () => {
-  const q = ($("accountLookupQueryInput")?.value || "").trim();
-  const knownId = $("myAynaId")?.textContent?.trim() || "2026-----10000001";
-  const knownEmail = ($("myEmail")?.textContent || "").trim();
-
-  if (!q) {
-    AynaVoiceSignal.announceMistake("অ্যাকাউন্ট লুকআপ ঘরটি খালি আছে। AYNA ID অথবা ইমেইল লিখুন।");
-    return;
-  }
-
-  const matched =
-    q === knownId ||
-    q === "2026-----10000001" ||
-    (knownEmail && q.toLowerCase() === knownEmail.toLowerCase());
-
-  if (!matched) {
-    AynaVoiceSignal.announceMistake(`অ্যাকাউন্ট লুকাপে "${q}" খুঁজে পাওয়া যায়নি। AYNA ID বা ইমেইল বানান যাচাই করুন।`);
-    return;
-  }
-
-  const foundMsg = `✅ অ্যাকাউন্ট লুকআপ সফল: AYNA ID ${knownId} পাওয়া গেছে।`;
-  $("accountSignalOutput").textContent = foundMsg;
-  notify("অ্যাকাউন্ট পাওয়া গেছে");
-  AynaVoiceSignal.speak(`অ্যাকাউন্ট পাওয়া গেছে। আইডি নম্বর ${knownId}।`, true);
-});
 
 // Ultra-Critical High-Speed Judgment & AI Client
 const UltraCriticalHub = {
@@ -2337,6 +2450,80 @@ const UltraCriticalHub = {
     }
   }
 };
+
+// বিশ্বমানের সাউন্ড প্রোফাইল ও সার্বজনীন AI বাটন
+$("applyAudioPresetBtn")?.addEventListener("click", () => {
+  const preset = $("audioPresetSelect")?.value || "STUDIO_MASTER";
+  AynaWorldClassAudio.applyPreset(preset, true);
+  notify(`সাউন্ড প্রোফাইল সক্রিয়: ${preset}`);
+  $("universalAiOutput").textContent = `🎧 সাউন্ড প্রোফাইল (${preset}) চালু হয়েছে এবং স্টুডিও অডিও টেস্ট বাজানো হয়েছে।`;
+});
+
+$("runUniversalAiBtn")?.addEventListener("click", async () => {
+  const q = ($("universalAiInput")?.value || "AYNA BOOK সব ফিচার ও লাইভ স্ট্যাটাসের সারসংক্ষেপ").trim();
+  const fallbackBn =
+    `AI সারসংক্ষেপ (${q}): বিশ্ব ঘড়ি, রেডিও ও টিভি AI, বেসামরিক-আবহাওয়া রাডার ও কম্পাস, বিশ্ব রাষ্ট্র ও নোবেল ডিরেক্টরি, বাণিজ্য ও পোস্ট-মিডিয়া AI একসাথে সিঙ্ক অবস্থায় সক্রিয় রয়েছে।`;
+  const reply = await UltraCriticalHub.askAi({
+    module: "universal_ai",
+    action: "feature_hub_ai",
+    text: q,
+    context: "Answer concisely in 2 Bengali sentences covering the requested AYNA BOOK feature without markdown or emojis.",
+    fallbackBn
+  });
+  $("universalAiOutput").textContent = `🤖 সার্বজনীন AI:\n${reply}`;
+  AynaVoiceSignal.speak(reply, true);
+});
+
+// রেজিস্ট্রেশন ও অ্যাকাউন্ট লুকআপ ভ্যালিডেশন + কণ্ঠ সিগন্যাল
+$("validateRegisterVoiceBtn")?.addEventListener("click", () => {
+  const name = ($("regFullNameInput")?.value || "").trim();
+  const email = ($("regEmailInput")?.value || "").trim();
+  const pass = $("regPasswordInput")?.value || "";
+
+  if (!name || name.length < 2) {
+    AynaVoiceSignal.announceMistake("পূর্ণ নাম ঘরে সঠিক নাম লিখুন। নাম খালি বা খুব ছোট রয়েছে।");
+    return;
+  }
+  if (!email || !email.includes("@") || !email.includes(".")) {
+    AynaVoiceSignal.announceMistake("ইমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক ইমেইল লিখুন।");
+    return;
+  }
+  if (pass.length < 6) {
+    AynaVoiceSignal.announceMistake("পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
+    return;
+  }
+
+  const okMsg = `✅ রেজিস্ট্রেশন তথ্য সঠিক আছে। নাম: ${name}, ইমেইল: ${email}।`;
+  $("accountSignalOutput").textContent = okMsg;
+  notify("রেজিস্ট্রেশন তথ্য সঠিক আছে");
+  AynaVoiceSignal.speak("রেজিস্ট্রেশন তথ্য সঠিক আছে। আপনি এগিয়ে যেতে পারেন।", true);
+});
+
+$("runAccountLookupVoiceBtn")?.addEventListener("click", () => {
+  const q = ($("accountLookupQueryInput")?.value || "").trim();
+  const knownId = $("myAynaId")?.textContent?.trim() || "2026-----10000001";
+  const knownEmail = ($("myEmail")?.textContent || "").trim();
+
+  if (!q) {
+    AynaVoiceSignal.announceMistake("অ্যাকাউন্ট লুকআপ ঘরটি খালি আছে। AYNA ID অথবা ইমেইল লিখুন।");
+    return;
+  }
+
+  const matched =
+    q === knownId ||
+    q === "2026-----10000001" ||
+    (knownEmail && q.toLowerCase() === knownEmail.toLowerCase());
+
+  if (!matched) {
+    AynaVoiceSignal.announceMistake(`অ্যাকাউন্ট লুকাপে "${q}" খুঁজে পাওয়া যায়নি। AYNA ID বা ইমেইল বানান যাচাই করুন।`);
+    return;
+  }
+
+  const foundMsg = `✅ অ্যাকাউন্ট লুকআপ সফল: AYNA ID ${knownId} পাওয়া গেছে।`;
+  $("accountSignalOutput").textContent = foundMsg;
+  notify("অ্যাকাউন্ট পাওয়া গেছে");
+  AynaVoiceSignal.speak(`অ্যাকাউন্ট পাওয়া গেছে। আইডি নম্বর ${knownId}।`, true);
+});
 
 $("aiPolishPostBtn")?.addEventListener("click", () => {
   const polished = UltraCriticalHub.cleanTextAi($("postText").value);
@@ -2450,7 +2637,26 @@ $("fileSearchInput").addEventListener("input", e => {
 });
 renderFileRegistry();
 
-// তাপমাত্রা ও আবহাওয়া
+async function runRegistryAi(speakNow = false) {
+  const q = ($("fileSearchInput")?.value || "").trim();
+  const fallbackBn = q
+    ? `রেজিস্ট্রিতে "${q}" সংক্রান্ত ফাইল ও মডিউল অনুসন্ধান সক্রিয় রয়েছে। মোট ${AYNA_REGISTRY_ITEMS.length}টি আইটেম যাচাইযোগ্য।`
+    : `AYNA BOOK রেজিস্ট্রিতে মোট ${AYNA_REGISTRY_ITEMS.length}টি ফাইল, মডিউল ও কনফিগারেশন আইটেম সংরক্ষিত আছে।`;
+  const reply = await UltraCriticalHub.askAi({
+    module: "file_registry_ai",
+    action: "registry_summary",
+    text: `Total items: ${AYNA_REGISTRY_ITEMS.length}, Query: ${q || "all"}`,
+    context: "Provide a concise 2-sentence Bengali registry summary without markdown or emojis.",
+    fallbackBn
+  });
+  $("registryAiOutput").textContent = `🤖 ফাইল রেজিস্ট্রি AI:\n${reply}`;
+  if (speakNow) AynaVoiceSignal.speak(reply, true);
+}
+
+$("runRegistryAiBtn")?.addEventListener("click", () => runRegistryAi(false));
+$("speakRegistryAiBtn")?.addEventListener("click", () => runRegistryAi(true));
+
+// তাপমাত্রা ও আবহাওয়া + AI
 const CITY_COORDS = {
   dhaka: { name: "Dhaka", lat: 23.8103, lon: 90.4125 },
   london: { name: "London", lat: 51.5072, lon: -0.1276 },
@@ -2478,7 +2684,7 @@ async function updateWeatherModule() {
     const hum = typeof cur.relative_humidity_2m === "number" ? `${cur.relative_humidity_2m}%` : "65%";
     const wind = typeof cur.wind_speed_10m === "number" ? `${cur.wind_speed_10m} km/h` : "12 km/h";
     latestTempText = temp;
-    const text = `${coord.name}: তাপমাত্রা ${temp} • আর্দ্রতা ${hum} • বাতাস ${wind}`;
+    const text = `${coord.name}: তাপমাত্রা ${temp} • আর্দ্রতা ${hum} • বাতাস ${wind} • AI আবহাওয়া সিঙ্ক সক্রিয়`;
     $("weatherOutput").textContent = text;
     if ($("weatherRadarReadout")) {
       $("weatherRadarReadout").textContent = `Weather AI Radar: ${coord.name} ${temp}, আর্দ্রতা ${hum}, বাতাস ${wind}`;
@@ -2492,7 +2698,7 @@ async function updateWeatherModule() {
 }
 $("fetchWeatherBtn")?.addEventListener("click", updateWeatherModule);
 
-// ভয়েস রেকর্ডার
+// ভয়েস রেকর্ডার (Studio Audio Graph যুক্ত)
 let voiceRecorder = null;
 let voiceChunks = [];
 $("startVoiceRecBtn")?.addEventListener("click", async () => {
@@ -2501,7 +2707,13 @@ $("startVoiceRecBtn")?.addEventListener("click", async () => {
     return;
   }
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true
+      }
+    });
     voiceChunks = [];
     voiceRecorder = new MediaRecorder(stream);
     voiceRecorder.ondataavailable = ev => {
@@ -2515,6 +2727,7 @@ $("startVoiceRecBtn")?.addEventListener("click", async () => {
       if (wrap) {
         wrap.innerHTML = `<audio controls src="${audioUrl}" style="width:100%;margin-top:8px;"></audio>`;
       }
+      AynaWorldClassAudio.playStudioChime();
       notify("ভয়েস রেকর্ডিং প্রস্তুত");
     };
     voiceRecorder.start();
@@ -2530,7 +2743,7 @@ $("stopVoiceRecBtn")?.addEventListener("click", () => {
   }
 });
 
-// বুকমার্ক ম্যানেজার
+// বুকমার্ক ম্যানেজার + AI
 function renderBookmarks() {
   const list = UltraCriticalHub.loadSnapshot("bookmarks", []);
   const container = $("bookmarksList");
@@ -3143,7 +3356,7 @@ $("toggleAutoNobelBtn")?.addEventListener("click", () => {
 });
 $("refreshNobelAiBtn")?.addEventListener("click", () => NobelModule.updateSelected(true));
 
-// রাষ্ট্রনেতাদের নাম তালিকা
+// রাষ্ট্রনেতাদের নাম তালিকা + AI
 const WORLD_LEADERS_LIST = [
   { country: "বাংলাদেশ", name: "তারেক রহমান", role: "প্রধানমন্ত্রী (মন্ত্রিপরিষদ বিভাগ ও সশস্ত্র বাহিনী বিভাগ)" },
   { country: "বাংলাদেশ", name: "মির্জা ফখরুল ইসলাম আলমগীর", role: "রাষ্ট্রপতি" },
@@ -3175,7 +3388,23 @@ function renderWorldLeadersHub(filter = "") {
     : '<div class="empty">কোনো রাষ্ট্রনেতার তথ্য মেলেনি।</div>';
 }
 
-// বিশ্ব আলেম গবেষণাগার
+async function runLeadersAi(speakNow = false) {
+  const q = ($("leaderSearchInput")?.value || "আন্তর্জাতিক নেতৃত্ব").trim();
+  const fallbackBn = `রাষ্ট্রনেতা AI (${q}): বৈশ্বিক কূটনীতি, আঞ্চলিক নিরাপত্তা ও অর্থনৈতিক সহযোগিতায় নির্বাচিত নেতৃবৃন্দের তথ্য তালিকাভুক্ত রয়েছে।`;
+  const reply = await UltraCriticalHub.askAi({
+    module: "world_leaders_ai",
+    action: "leaders_briefing",
+    text: q,
+    context: "Provide a concise 2-sentence Bengali summary about world leaders and diplomacy without markdown or emojis.",
+    fallbackBn
+  });
+  $("worldLeadersAiOutput").textContent = `🤖 রাষ্ট্রনেতা AI:\n${reply}`;
+  if (speakNow) AynaVoiceSignal.speak(reply, true);
+}
+$("runLeadersAiBtn")?.addEventListener("click", () => runLeadersAi(false));
+$("speakLeadersAiBtn")?.addEventListener("click", () => runLeadersAi(true));
+
+// বিশ্ব আলেম গবেষণাগার + AI
 const ULEMA_RESEARCH_LIST = [
   { dept: "ফিকহ ও শরয়ি গবেষণা", title: "আধুনিক ব্যাংকিং, ডিজিটাল লেনদেন ও শরয়ি নীতিমালা", note: "আন্তর্জাতিক আলেম গবেষণা ইউনিট" },
   { dept: "জাকাত ও ওয়াকফ অর্থনীতি", title: "সামাজিক নিরাপত্তা ও দারিদ্র্য বিমোচনে ওয়াকফ মডেল", note: "ইসলামি অর্থনীতি গবেষণা সেল" },
@@ -3201,7 +3430,23 @@ function renderUlemaResearchHub(filter = "") {
     : '<div class="empty">কোনো গবেষণা বিষয় মেলেনি।</div>';
 }
 
-// মুদি বাজার ও বিশ্ব কৃষক বাজার
+async function runUlemaAi(speakNow = false) {
+  const q = ($("ulemaSearchInput")?.value || "ফিকহ, জাকাত ও কুরআন গবেষণা").trim();
+  const fallbackBn = `আলেম গবেষণাগার AI (${q}): শরয়ি নীতিমালা, ওয়াকফ অর্থনীতি ও নৈতিক সমাজ গঠনে গবেষণা সংকলনগুলো সক্রিয় রয়েছে।`;
+  const reply = await UltraCriticalHub.askAi({
+    module: "ulema_research_ai",
+    action: "research_summary",
+    text: q,
+    context: "Provide a concise 2-sentence Bengali summary of Islamic scholarly research without markdown or emojis.",
+    fallbackBn
+  });
+  $("ulemaAiOutput").textContent = `🤖 আলেম গবেষণা AI:\n${reply}`;
+  if (speakNow) AynaVoiceSignal.speak(reply, true);
+}
+$("runUlemaAiBtn")?.addEventListener("click", () => runUlemaAi(false));
+$("speakUlemaAiBtn")?.addEventListener("click", () => runUlemaAi(true));
+
+// মুদি বাজার ও বিশ্ব কৃষক বাজার + AI
 const GROCERY_FARMER_ITEMS = [
   { cat: "grocery", label: "মুদি বাজার", name: "নাজিরশাইল ও মিনিকেট চাল", unit: "কেজি", usd: 0.65 },
   { cat: "grocery", label: "মুদি বাজার", name: "মসুর ডাল (দেশি ও আমদানি)", unit: "কেজি", usd: 1.10 },
@@ -3243,7 +3488,23 @@ function renderGroceryFarmersHub() {
     : '<div class="empty">কোনো পণ্য পাওয়া যায়নি।</div>';
 }
 
-// বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন
+async function runMarketAi(speakNow = false) {
+  const q = ($("marketItemSearchInput")?.value || "চাল, ডাল, তেল ও কৃষি পণ্য").trim();
+  const fallbackBn = `বাজার ও কৃষি AI (${q}): বর্তমান ডলার রূপান্তর হার ৳${currentUsdToBdt.toFixed(2)} অনুযায়ী নিত্যপণ্য ও কৃষিপণ্যের দর আপডেট করা হয়েছে।`;
+  const reply = await UltraCriticalHub.askAi({
+    module: "market_ai",
+    action: "grocery_farmer_ai",
+    text: `Query: ${q}, USD->BDT: ${currentUsdToBdt}`,
+    context: "Provide a concise 2-sentence Bengali grocery and agriculture price analysis without markdown or emojis.",
+    fallbackBn
+  });
+  $("marketAiOutput").textContent = `🤖 বাজার ও কৃষি AI:\n${reply}`;
+  if (speakNow) AynaVoiceSignal.speak(reply, true);
+}
+$("runMarketAiBtn")?.addEventListener("click", () => runMarketAi(false));
+$("speakMarketAiBtn")?.addEventListener("click", () => runMarketAi(true));
+
+// বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন + AI
 const DIRECT_JOB_ADS = [
   {
     title: "সিনিয়র ফুল-স্ট্যাক ও মোবাইল ডেভেলপার",
@@ -3299,7 +3560,23 @@ function renderDirectJobsHub(filter = "") {
     : '<div class="empty">কোনো চাকুরীর বিজ্ঞাপন মেলেনি।</div>';
 }
 
-// YouTube Hub
+async function runJobsAi(speakNow = false) {
+  const q = ($("directJobSearchInput")?.value || "সফটওয়্যার, অ্যাগ্রো ও লজিস্টিকস").trim();
+  const fallbackBn = `চাকুরী AI (${q}): দক্ষতা, রিমোট ও আন্তর্জাতিক পদের চাহিদা অনুযায়ী সংশ্লিষ্ট প্রতিষ্ঠানে সরাসরি আবেদনপত্র ও পোর্টফোলিও প্রস্তুত রাখুন।`;
+  const reply = await UltraCriticalHub.askAi({
+    module: "jobs_ai",
+    action: "job_market_advice",
+    text: q,
+    context: "Provide a concise 2-sentence Bengali job market guidance without markdown or emojis.",
+    fallbackBn
+  });
+  $("jobsAiOutput").textContent = `🤖 চাকুরী AI:\n${reply}`;
+  if (speakNow) AynaVoiceSignal.speak(reply, true);
+}
+$("runJobsAiBtn")?.addEventListener("click", () => runJobsAi(false));
+$("speakJobsAiBtn")?.addEventListener("click", () => runJobsAi(true));
+
+// YouTube Hub + AI
 function extractYouTubeId(val) {
   const clean = (val || "").trim();
   if (/^[a-zA-Z0-9_-]{11}$/.test(clean)) return clean;
@@ -3324,6 +3601,20 @@ function applyYouTubeQuery(rawVal) {
     notify(`YouTube-এ "${query}" খোঁজা হচ্ছে`);
   }
 }
+
+$("runYtAiBtn")?.addEventListener("click", async () => {
+  const q = ($("ytSearchOrUrlInput")?.value || "Bangla news live").trim();
+  const fallbackBn = `YouTube AI (${q}): "${q}" বিষয়ক লাইভ সম্প্রচার, আলোচনা ও ভিডিও ফিড প্লেয়ারে লোড করা হয়েছে।`;
+  const reply = await UltraCriticalHub.askAi({
+    module: "youtube_ai",
+    action: "youtube_topic_summary",
+    text: q,
+    context: "Provide a concise 2-sentence Bengali summary for the YouTube search or video topic without markdown or emojis.",
+    fallbackBn
+  });
+  $("ytAiOutput").textContent = `🤖 YouTube AI:\n${reply}`;
+  AynaVoiceSignal.speak(reply, true);
+});
 
 $("leaderSearchInput")?.addEventListener("input", e => renderWorldLeadersHub(e.target.value));
 $("ulemaSearchInput")?.addEventListener("input", e => renderUlemaResearchHub(e.target.value));
@@ -3422,6 +3713,7 @@ const QuantumTalkingClock = {
   speak(text, force = false) {
     if ((!this.enabled && !force) || !("speechSynthesis" in window)) return;
     try {
+      AynaWorldClassAudio.ensureContext();
       window.speechSynthesis.cancel();
       const utter = new SpeechSynthesisUtterance(text);
       const voices = window.speechSynthesis.getVoices() || [];
@@ -3661,10 +3953,11 @@ async function loadOptionalScript(path) {
 }
 
 window.AynaBook = {
-  version: "2026.ultracritical.quantum.allfeatures.legacy",
+  version: "2026.ultracritical.quantum.allfeatures.studioaudio.universalai",
   fileRegistry: AYNA_REGISTRY_ITEMS,
   talkingClock: QuantumTalkingClock,
   voiceSignal: AynaVoiceSignal,
+  audioEngine: AynaWorldClassAudio,
   autoUpdater: QuantumAutoUpdater,
   notify,
   safePhoto,
