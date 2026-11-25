@@ -1,385 +1,239 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="theme-color"
-    content="#090a0f"
-  >
-
-  <meta
-    name="description"
-    content="Create your AYNA BOOK account."
-  >
-
-  <title>AYNA BOOK — Create Account</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AYNA BOOK - Sign Up</title>
   <style>
+    :root {
+      --gold: #d4af37;
+      --gold-light: #f5d76e;
+      --bg-dark: #07090f;
+      --card-bg: #111521;
+      --input-bg: #0b0e17;
+      --border-dim: #262e42;
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
+    }
+
     * {
       box-sizing: border-box;
-    }
-
-    html,
-    body {
       margin: 0;
       padding: 0;
-      min-height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    body {
-      background: #090a0f;
-      color: #f5f5f5;
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-    }
-
-    .page {
+    html, body {
       width: 100%;
-      min-height: 100vh;
+      min-height: 100dvh;
+      background: radial-gradient(circle at top, #171d30 0%, var(--bg-dark) 100%);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      min-height: 100dvh;
       display: flex;
+      align-items: center;
       justify-content: center;
-      padding: 28px 16px;
+      padding: 16px;
     }
 
-    .card {
+    .auth-container {
       width: 100%;
-      max-width: 520px;
-      height: max-content;
-      background: #0f1118;
-      border: 1px solid #d4af37;
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--gold);
       border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 0 30px rgba(212, 175, 55, 0.08);
+      padding: 28px 22px;
+      box-shadow: 0 0 28px rgba(212, 175, 55, 0.22);
     }
 
-    .brand {
+    .brand-header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
-    .brand h1 {
-      margin: 0;
-      color: #d4af37;
-      font-size: 30px;
+    .brand-header h1 {
+      color: var(--gold);
+      font-size: 28px;
+      font-weight: 800;
       letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
-    .brand p {
-      margin: 8px 0 0;
-      color: #aaa;
-      font-size: 14px;
+    .brand-header p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 6px;
     }
 
     .form-group {
-      margin-bottom: 17px;
+      margin-bottom: 15px;
     }
 
-    label {
+    .form-group label {
       display: block;
-      margin-bottom: 7px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
+      color: var(--gold-light);
+      margin-bottom: 6px;
     }
 
-    input {
+    .form-group input {
       width: 100%;
-      min-height: 46px;
-      padding: 11px 13px;
-      border: 1px solid #383b45;
-      border-radius: 9px;
-      background: #090a0f;
-      color: #fff;
-      outline: none;
+      padding: 13px 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--border-dim);
+      border-radius: 8px;
+      color: #ffffff;
       font-size: 15px;
+      outline: none;
+      transition: 0.25s;
     }
 
-    input:focus {
-      border-color: #d4af37;
+    .form-group input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
     }
 
-    input[type="file"] {
-      padding: 9px;
-    }
-
-    small {
-      display: block;
-      margin-top: 7px;
-      color: #999;
-      line-height: 1.5;
-    }
-
-    .photo-box {
-      display: none;
-      margin-top: 12px;
-      text-align: center;
-    }
-
-    .photo-box img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 2px solid #d4af37;
-      background: #090a0f;
-    }
-
-    .status {
-      min-height: 22px;
-      margin: 12px 0;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .error {
-      color: #ff6b6b;
-    }
-
-    .success {
-      color: #d4af37;
-    }
-
-    .submit {
+    .btn-gold {
       width: 100%;
-      min-height: 48px;
-      border: 1px solid #d4af37;
-      border-radius: 9px;
-      background: #d4af37;
-      color: #090a0f;
+      padding: 14px;
+      background: linear-gradient(135deg, #e0b838, #b88918);
+      color: #090b10;
+      font-weight: 800;
       font-size: 16px;
-      font-weight: 700;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
+      margin-top: 8px;
+      transition: 0.25s;
     }
 
-    .submit:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    .bottom {
-      margin-top: 20px;
+    .status-msg {
+      margin-top: 14px;
+      font-size: 13px;
       text-align: center;
-      color: #999;
+      min-height: 20px;
+      line-height: 1.4;
+    }
+
+    .links {
+      margin-top: 18px;
+      text-align: center;
       font-size: 14px;
+      color: var(--text-muted);
     }
 
-    .bottom a {
-      color: #d4af37;
+    .links a {
+      color: var(--gold);
       text-decoration: none;
-    }
-
-    .password-note {
-      color: #888;
-      font-size: 12px;
-      margin-top: 6px;
+      font-weight: 700;
     }
   </style>
 </head>
-
 <body>
-
-<main class="page">
-
-  <section class="card">
-
-    <header class="brand">
-      <h1>AYNA BOOK</h1>
-      <p>Create your account</p>
-    </header>
-
-    <form id="signupForm" novalidate>
-
-      <!-- =================================================
-           NAME
-      ================================================== -->
-
-      <div class="form-group">
-
-        <label for="fullName">
-          Full Name
-        </label>
-
-        <input
-          id="fullName"
-          name="fullName"
-          type="text"
-          autocomplete="name"
-          maxlength="100"
-          required
-        >
-
+  <div class="page-wrapper">
+    <div class="auth-container">
+      <div class="brand-header">
+        <h1>AYNA BOOK</h1>
+        <p>Create your Global Digital Identity</p>
       </div>
 
-
-      <!-- =================================================
-           GMAIL
-      ================================================== -->
-
-      <div class="form-group">
-
-        <label for="email">
-          Gmail
-        </label>
-
-        <input
-          id="email"
-          name="email"
-          type="email"
-          inputmode="email"
-          autocomplete="email"
-          placeholder="example@gmail.com"
-          required
-        >
-
-      </div>
-
-
-      <!-- =================================================
-           PHONE
-      ================================================== -->
-
-      <div class="form-group">
-
-        <label for="phone">
-          Phone Number
-        </label>
-
-        <input
-          id="phone"
-          name="phone"
-          type="tel"
-          autocomplete="tel"
-          placeholder="+8801XXXXXXXXX"
-          required
-        >
-
-      </div>
-
-
-      <!-- =================================================
-           PASSWORD
-      ================================================== -->
-
-      <div class="form-group">
-
-        <label for="password">
-          Password
-        </label>
-
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autocomplete="new-password"
-          minlength="6"
-          maxlength="128"
-          required
-        >
-
-        <div class="password-note">
-          Password অবশ্যই 6–128 characters হতে হবে।
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="Enter your full name" required />
         </div>
 
-      </div>
-
-
-      <!-- =================================================
-           PROFILE PHOTO
-      ================================================== -->
-
-      <div class="form-group">
-
-        <label for="photo">
-          Profile Photo
-          <span style="color:#d4af37;">*</span>
-        </label>
-
-        <input
-          id="photo"
-          name="photo"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          required
-        >
-
-        <small>
-          JPG, PNG অথবা WebP • সর্বোচ্চ 5 MB
-        </small>
-
-        <div
-          id="photoPreviewBox"
-          class="photo-box"
-        >
-
-          <img
-            id="photoPreview"
-            src=""
-            alt="Profile photo preview"
-          >
-
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="example@email.com" required />
         </div>
 
-        <div
-          id="photoStatus"
-          class="status"
-          role="status"
-          aria-live="polite"
-        ></div>
+        <div class="form-group">
+          <label for="country">Phone / Country</label>
+          <input type="text" id="country" placeholder="e.g. Bangladesh" required />
+        </div>
 
+        <div class="form-group">
+          <label for="password">Password (Min 6 characters)</label>
+          <input type="password" id="password" placeholder="••••••••" minlength="6" required />
+        </div>
+
+        <button type="submit" class="btn-gold" id="submitBtn">Create AYNA Account</button>
+        <div class="status-msg" id="statusMsg"></div>
+      </form>
+
+      <div class="links">
+        Already have an account? <a href="index.html">Log In</a>
       </div>
-
-
-      <!-- =================================================
-           GLOBAL STATUS
-      ================================================== -->
-
-      <div
-        id="status"
-        class="status"
-        role="alert"
-        aria-live="polite"
-      ></div>
-
-
-      <!-- =================================================
-           CREATE ACCOUNT
-      ================================================== -->
-
-      <button
-        id="signupButton"
-        class="submit"
-        type="submit"
-      >
-        Create Account
-      </button>
-
-    </form>
-
-
-    <div class="bottom">
-      Already have an account?
-      <a href="./login.html">
-        Sign In
-      </a>
     </div>
+  </div>
 
-  </section>
+  <script type="module">
+    import { firebaseConfig } from "./firebase-config.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-</main>
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
 
+    const signupForm = document.getElementById("signupForm");
+    const statusMsg = document.getElementById("statusMsg");
+    const submitBtn = document.getElementById("submitBtn");
 
-<!-- =====================================================
-     SIGNUP CONTROLLER
-===================================================== -->
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-<script type="module" src="./signup.js"></script>
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const country = document.getElementById("country").value.trim();
+      const password = document.getElementById("password").value;
 
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating Account...";
+      statusMsg.style.color = "#f5d76e";
+      statusMsg.textContent = "Generating your AYNA ID...";
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await updateProfile(user, { displayName: fullName });
+        await sendEmailVerification(user).catch(() => {});
+
+        const randomSuffix = Math.floor(10000001 + Math.random() * 89999998);
+        const aynaId = `2026-----${randomSuffix}`;
+
+        await set(ref(db, `users/${user.uid}`), {
+          uid: user.uid,
+          aynaId: aynaId,
+          fullName: fullName,
+          email: user.email,
+          country: country,
+          photoURL: "https://via.placeholder.com/400/101522/ffd700?text=AYNA+USER",
+          tier: "standard",
+          privacy: "public",
+          createdAt: Date.now()
+        });
+
+        statusMsg.style.color = "#4ade80";
+        statusMsg.textContent = `Success! Your AYNA ID: ${aynaId}. Redirecting...`;
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1200);
+      } catch (error) {
+        statusMsg.style.color = "#f87171";
+        statusMsg.textContent = error.message;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create AYNA Account";
+      }
+    });
+  </script>
 </body>
 </html>
