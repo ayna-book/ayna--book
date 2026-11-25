@@ -1,0 +1,80 @@
+import { askAynaModuleAI } from "./ayna-ai-client.js";
+
+const ALERT_150_STORAGE_KEY = "ayna_150_alerts_cold_v1";
+
+export function load150AlertsCold() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(ALERT_150_STORAGE_KEY) || "null");
+    return Array.isArray(raw?.alerts) ? raw.alerts : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+export function save150AlertsCold(alerts = []) {
+  const payload = { savedAt: Date.now(), alerts: alerts.slice(0, 30) };
+  try {
+    localStorage.setItem(ALERT_150_STORAGE_KEY, JSON.stringify(payload));
+  } catch (_) {}
+  return payload;
+}
+
+export function speak150AlertBn(text) {
+  if (!("speechSynthesis" in window) || !text) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(String(text));
+  const bnVoice = window.speechSynthesis.getVoices().find(v => (v.lang || "").toLowerCase().startsWith("bn"));
+  if (bnVoice) {
+    utter.voice = bnVoice;
+    utter.lang = bnVoice.lang;
+  }
+  window.speechSynthesis.speak(utter);
+}
+
+export async function triggerAi150AlertWeb({
+  reason = "১৫০ এলার্ট চেকপয়েন্ট",
+  countMetric = 150,
+  locationName = "বালুখালী বাজার, চট্টগ্রাম বিভাগ",
+  apiBaseUrl = "",
+  speak = true
+} = {}) {
+  const history = load150AlertsCold();
+  const alertNumber = history.length + 1;
+  const nowStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+  const titleBn = `১৫০ এলার্ট #${alertNumber} — ${reason} (${nowStr})`;
+  const fallbackAdvice =
+    `${locationName}-এ ১৫০ এলার্ট সক্রিয় হয়েছে। কাউন্ট: ${countMetric}। জরুরি আপডেট যাচাই করুন।`;
+
+  let aiAdviceBn = fallbackAdvice;
+  try {
+    const reply = await askAynaModuleAI({
+      module: "general",
+      action: "ayna_150_alert",
+      text: `Alert #150 at ${nowStr}. Location: ${locationName}. Reason: ${reason}. Metric: ${countMetric}.`,
+      context: "Provide a concise 1-2 sentence Bengali alert briefing without markdown or emojis.",
+      apiBaseUrl
+    });
+    const clean = String(reply || "").replace(/[*#]/g, "").trim().slice(0, 220);
+    if (clean) aiAdviceBn = clean;
+  } catch (_) {
+    aiAdviceBn = fallbackAdvice;
+  }
+
+  const item = {
+    id: `alert150_${Date.now()}`,
+    titleBn,
+    aiAdviceBn,
+    countMetric,
+    triggerSeconds: 150,
+    createdAt: new Date().toISOString()
+  };
+
+  const nextHistory = [item, ...history];
+  save150AlertsCold(nextHistory);
+
+  if (speak) {
+    speak150AlertBn(`সতর্কতা, ১৫০ এলার্ট। ${aiAdviceBn}`);
+  }
+
+  return { item, history: nextHistory };
+}
