@@ -1,0 +1,110 @@
+import { askAynaModuleAI } from "./ayna-ai-client.js";
+
+const DESKTOP_AI_COLD_KEY = "ayna_desktop_ai_cold_v1";
+
+export function detectComputerEnvironment() {
+  const nav = typeof navigator !== "undefined" ? navigator : {};
+  return {
+    platform: nav.userAgentData?.platform || nav.platform || "Computer",
+    cores: nav.hardwareConcurrency || 4,
+    memoryGb: nav.deviceMemory || "N/A",
+    language: nav.language || "bn-BD",
+    online: typeof nav.onLine === "boolean" ? nav.onLine : true
+  };
+}
+
+export function saveDesktopAiHistory(records = []) {
+  const payload = { savedAt: Date.now(), records: records.slice(0, 30) };
+  try {
+    localStorage.setItem(DESKTOP_AI_COLD_KEY, JSON.stringify(payload));
+  } catch (_) {}
+  return payload;
+}
+
+export function loadDesktopAiHistory() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(DESKTOP_AI_COLD_KEY) || "null");
+    return Array.isArray(raw?.records) ? raw.records : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+export async function runComputerAiTask({
+  promptText,
+  module = "general",
+  apiBaseUrl = "",
+  speakResult = false
+} = {}) {
+  const env = detectComputerEnvironment();
+  const cleanInput = String(promptText || "").trim();
+  const localFallback =
+    `কম্পিউটার লোকাল ফলব্যাক (${env.platform}, ${env.cores} cores): ${cleanInput.slice(0, 160) || "ইনপুট খালি"}`;
+
+  let outputBn = localFallback;
+  let engineUsed = "Computer Local Fallback";
+
+  try {
+    const reply = await askAynaModuleAI({
+      module,
+      action: "computer_ai_assist",
+      text: `[Env: ${env.platform}, Cores: ${env.cores}] ${cleanInput}`,
+      context: "Provide a clear, structured, concise response in Bengali.",
+      apiBaseUrl
+    });
+    const cleaned = String(reply || "").trim();
+    if (cleaned) {
+      outputBn = cleaned;
+      engineUsed = "Cloud /api/ai/assist";
+    }
+  } catch (_) {
+    const prev = loadDesktopAiHistory();
+    if (prev[0]?.outputBn) {
+      outputBn = prev[0].outputBn;
+      engineUsed = "Desktop Cold Cache";
+    }
+  }
+
+  const record = {
+    id: `desk_ai_${Date.now()}`,
+    module,
+    engineUsed,
+    env,
+    promptText: cleanInput,
+    outputBn,
+    createdAt: new Date().toISOString()
+  };
+
+  const nextHistory = [record, ...loadDesktopAiHistory()];
+  saveDesktopAiHistory(nextHistory);
+
+  if (speakResult && typeof window !== "undefined" && "speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(outputBn.replace(/[*#]/g, "").slice(0, 300));
+    const bnVoice = window.speechSynthesis.getVoices().find(v => (v.lang || "").toLowerCase().startsWith("bn"));
+    if (bnVoice) {
+      utter.voice = bnVoice;
+      utter.lang = bnVoice.lang;
+    }
+    window.speechSynthesis.speak(utter);
+  }
+
+  return { record, history: nextHistory };
+}
+
+export function exportDesktopAiColdJson(filename = "ayna-desktop-ai-cold.json") {
+  const data = {
+    exportedAt: new Date().toISOString(),
+    environment: detectComputerEnvironment(),
+    history: loadDesktopAiHistory()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
