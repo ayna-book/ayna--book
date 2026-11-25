@@ -3,165 +3,734 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AYNA BOOK - Profile</title>
+<meta name="theme-color" content="#060d21">
+<title>AYNA BOOK — আমার প্রোফাইল</title>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+:root {
+  --bg:#050a18;
+  --navy-top:#1a3575;
+  --navy-bottom:#08122b;
+  --gold:#ffe64d;
+  --gold-bright:#fff6b3;
+  --gold-base:#8a6105;
+  --quantum-cyan:#38f2ff;
+  --white:#ffffff;
+  --muted:#e6eeff;
+}
 
-  body {
-    background-color: #060b19;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #ffffff;
-    padding: 16px;
-  }
+* {
+  box-sizing:border-box;
+}
 
-  /* টপ হেডার */
-  .top-header {
-    background: linear-gradient(180deg, #0d1a3d 0%, #070e24 100%);
-    border: 2px solid #ffd700;
-    border-radius: 4px;
-    padding: 12px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 5px 0 #7a580c, 0 8px 18px rgba(0, 0, 0, 0.75);
-    margin-bottom: 20px;
-  }
+html, body {
+  max-width:100%;
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+}
 
-  .brand-title {
-    font-size: 22px;
-    font-weight: 900;
-    color: #ffd700;
-    letter-spacing: 1px;
-  }
+body {
+  margin:0;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(56,242,255,.09), transparent 35%),
+    radial-gradient(circle at 85% 20%, rgba(255,230,77,.10), transparent 40%),
+    var(--bg);
+  color:var(--white);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  font-size:34px;
+  line-height:1.5;
+}
 
-  .star-pulse-1s {
-    color: #ffffff;
-    font-size: 24px;
-    display: inline-block;
-    animation: starGlow1s 1s infinite alternate ease-in-out;
-  }
+button,input,textarea {
+  font:inherit;
+}
 
-  @keyframes starGlow1s {
-    0% {
-      transform: scale(0.95);
-      color: #ffe680;
-      text-shadow: 0 0 4px #ffd700;
-    }
-    100% {
-      transform: scale(1.32);
-      color: #ffffff;
-      text-shadow: 0 0 10px #ffffff, 0 0 22px #ffd700, 0 0 36px #ffae00;
-    }
-  }
+button {
+  cursor:pointer;
+}
 
-  .back-btn-3d {
-    background: linear-gradient(180deg, #ffd700, #c9961a);
-    color: #060b19;
-    text-decoration: none;
-    font-weight: 800;
-    font-size: 14px;
-    padding: 7px 14px;
-    border-radius: 4px;
-    box-shadow: 0 3px 0 #6e4f08;
-  }
+.gold-3d-box,
+.hero,
+.panel,
+.profile-card {
+  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%) !important;
+  border:4px solid var(--gold) !important;
+  border-radius:10px !important;
+  box-shadow:
+    0 0 18px rgba(255,230,77,.65),
+    0 9px 0 var(--gold-base),
+    0 16px 26px rgba(0,0,0,.85),
+    inset 0 2px 5px var(--gold-bright) !important;
+}
 
-  /* বড় সোনালী স্কয়ার প্রোফাইল কার্ড */
-  .profile-card-3d {
-    max-width: 600px;
-    margin: 0 auto 20px;
-    background: linear-gradient(160deg, #132757 0%, #071026 100%);
-    border: 2px solid #ffd700;
-    border-radius: 4px;
-    padding: 22px 16px;
-    text-align: center;
-    box-shadow: 0 6px 0 #7a580c, 0 12px 22px rgba(0, 0, 0, 0.8);
-  }
+.primary-button:active,
+.tool-button:active,
+.header-actions a:active,
+.header-actions button:active {
+  transform:translateY(4px) !important;
+  box-shadow:
+    0 0 12px rgba(255,230,77,.55),
+    0 3px 0 var(--gold-base),
+    0 6px 12px rgba(0,0,0,.85),
+    inset 0 2px 4px var(--gold-bright) !important;
+}
 
-  .large-square-avatar {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border: 3px solid #ffd700;
-    border-radius: 4px;
-    box-shadow: 0 5px 0 #8a6614, 0 0 18px rgba(255, 215, 0, 0.5);
-    margin: 0 auto 14px;
-    display: block;
-    background-color: #0b1636;
-  }
+header {
+  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
+  border-bottom:4px solid var(--gold);
+  padding:20px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:0 0 20px rgba(255,230,77,.45), 0 6px 18px rgba(0,0,0,.9);
+}
 
-  .user-name {
-    font-size: 22px;
-    font-weight: 900;
-    color: #ffffff;
-    margin-bottom: 6px;
-  }
+.header-inner {
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
 
-  .ayna-id-badge {
-    display: inline-block;
-    background-color: #060d21;
-    border: 1.5px solid #ffd700;
-    border-radius: 4px;
-    color: #ffd700;
-    font-size: 15px;
-    font-weight: 800;
-    padding: 6px 14px;
-    letter-spacing: 1px;
-    margin-bottom: 14px;
-  }
+.logo {
+  color:var(--gold-bright);
+  font-size:44px;
+  font-weight:1000;
+  letter-spacing:1px;
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  text-shadow:0 0 14px rgba(255,230,77,.85), 0 3px 8px rgba(0,0,0,.95);
+}
 
-  /* সেন্টার্ড বারকোড বক্স */
-  .barcode-box-3d {
-    background-color: #ffffff;
-    color: #060b19;
-    border: 2px solid #ffd700;
-    border-radius: 4px;
-    padding: 10px 14px;
-    max-width: 280px;
-    margin: 0 auto;
-    box-shadow: 0 4px 0 #7a580c;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: 900;
-    font-size: 15px;
-    letter-spacing: 2px;
-  }
+.star-1s {
+  color:#ffffff;
+  font-size:44px;
+  display:inline-block;
+  animation:starFlash1s 1s infinite alternate ease-in-out;
+}
 
-  .barcode-bars {
-    height: 36px;
-    background: repeating-linear-gradient(
-      90deg,
-      #060b19 0px,
-      #060b19 3px,
-      transparent 3px,
-      transparent 5px,
-      #060b19 5px,
-      #060b19 7px,
-      transparent 7px,
-      transparent 11px
-    );
-    margin-bottom: 6px;
+@keyframes starFlash1s {
+  0% {
+    transform:scale(0.95) rotate(0deg);
+    color:#fff099;
+    text-shadow:0 0 8px #ffd700;
   }
+  100% {
+    transform:scale(1.35) rotate(18deg);
+    color:#ffffff;
+    text-shadow:
+      0 0 14px #ffffff,
+      0 0 26px #ffffff,
+      0 0 42px #ffe64d,
+      0 0 60px #ff9900;
+  }
+}
+
+.header-actions {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.header-actions a,
+.header-actions button {
+  text-decoration:none;
+  color:white;
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  border:3px solid var(--gold);
+  padding:12px 18px;
+  border-radius:8px;
+  font-weight:bold;
+  font-size:25px;
+  box-shadow:0 0 12px rgba(255,230,77,.45), 0 5px 0 var(--gold-base);
+}
+
+.container {
+  max-width:1200px;
+  margin:auto;
+  padding:22px;
+}
+
+.hero {
+  padding:28px 22px;
+  margin-bottom:24px;
+  text-align:center;
+}
+
+.hero h1 {
+  font-size:48px;
+  margin:0 0 10px;
+  color:var(--gold-bright);
+  font-weight:1000;
+}
+
+.hero p {
+  font-size:30px;
+  margin:0;
+  color:var(--white);
+}
+
+.profile-card {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:24px;
+  padding:26px;
+  margin-bottom:24px;
+}
+
+.profile-frame-wrap {
+  position:relative;
+  width:320px;
+  height:320px;
+  flex-shrink:0;
+}
+
+.profile-frame-wrap img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:top center;
+  border-radius:10px;
+  border:5px solid var(--gold-bright);
+  background:#0a1636;
+  box-shadow:0 0 24px rgba(255,230,77,.8), 0 7px 0 var(--gold-base);
+}
+
+.profile-barcode-overlay {
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#ffffff;
+  border:3px solid var(--gold-bright);
+  border-radius:6px;
+  padding:4px 10px;
+}
+
+.profile-barcode-overlay svg {
+  height:36px;
+  width:auto;
+  display:block;
+}
+
+.profile-details {
+  flex:1;
+  min-width:260px;
+}
+
+.profile-details h2 {
+  margin:0 0 8px;
+  font-size:42px;
+  font-weight:1000;
+  color:var(--white);
+}
+
+.profile-details p {
+  margin:6px 0;
+  font-size:29px;
+  color:var(--muted);
+  word-break:break-word;
+}
+
+.ayna-id-chip {
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 14px;
+  border-radius:8px;
+  border:2.5px solid var(--gold);
+  background:#050b1c;
+  color:var(--gold-bright);
+  font-family:monospace;
+  font-size:28px;
+  font-weight:1000;
+}
+
+.panel {
+  padding:26px;
+  margin-bottom:24px;
+}
+
+.panel h2 {
+  margin:0 0 18px;
+  font-size:38px;
+  font-weight:1000;
+  color:var(--gold-bright);
+}
+
+.field-group {
+  margin-bottom:18px;
+}
+
+.field-label {
+  display:block;
+  font-size:28px;
+  font-weight:bold;
+  color:var(--gold-bright);
+  margin-bottom:8px;
+}
+
+.hub-input,
+.hub-textarea {
+  width:100%;
+  background:#050b1c;
+  color:white;
+  border:3.5px solid var(--gold);
+  border-radius:8px;
+  padding:16px 20px;
+  font-size:30px;
+  outline:none;
+}
+
+.hub-textarea {
+  min-height:140px;
+  resize:vertical;
+}
+
+.hub-input:focus,
+.hub-textarea:focus {
+  border-color:#ffffff;
+}
+
+.action-row {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:14px;
+}
+
+.tool-button {
+  min-height:78px;
+  padding:14px;
+  border-radius:8px;
+  border:3px solid var(--gold);
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  color:white;
+  font-size:27px;
+  font-weight:bold;
+  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
+}
+
+.primary-button {
+  width:100%;
+  min-height:88px;
+  margin-top:12px;
+  border:3.5px solid var(--gold-bright);
+  border-radius:8px;
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  font-size:32px;
+  font-weight:1000;
+  box-shadow:0 0 18px rgba(255,230,77,.65), 0 7px 0 #664604;
+}
+
+.signal-box {
+  margin-top:18px;
+  background:#050b1c;
+  border:3px solid var(--quantum-cyan);
+  border-radius:8px;
+  padding:18px;
+  font-size:28px;
+  color:var(--gold-bright);
+  white-space:pre-line;
+  overflow-wrap:anywhere;
+}
+
+footer {
+  text-align:center;
+  padding:32px 16px 130px;
+  color:var(--muted);
+  font-size:28px;
+}
+
+.bottom-nav {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:60;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
+  border-top:4px solid var(--gold);
+  padding:10px 6px calc(10px + env(safe-area-inset-bottom));
+  box-shadow:0 0 20px rgba(255,230,77,.45), 0 -5px 18px rgba(0,0,0,.9);
+}
+
+.bottom-nav a {
+  color:white;
+  text-decoration:none;
+  text-align:center;
+  font-size:24px;
+  font-weight:bold;
+}
+
+.bottom-nav span {
+  display:block;
+  font-size:34px;
+  margin-bottom:2px;
+}
+
+#notice {
+  position:fixed;
+  top:104px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#0a1636;
+  color:white;
+  border:3.5px solid var(--gold-bright);
+  padding:16px 24px;
+  border-radius:8px;
+  box-shadow:0 0 20px rgba(255,230,77,.8), 0 7px 0 var(--gold-base);
+  z-index:100;
+  display:none;
+  max-width:92%;
+  font-size:28px;
+  text-align:center;
+}
+
+@media(max-width:600px) {
+  .action-row {
+    grid-template-columns:1fr;
+  }
+  .profile-frame-wrap {
+    width:240px;
+    height:240px;
+  }
+  .logo {
+    font-size:34px;
+  }
+  .hero h1 {
+    font-size:36px;
+  }
+}
 </style>
 </head>
+
 <body>
 
-  <header class="top-header">
-    <div class="brand-title">AYNA BOOK <span class="star-pulse-1s">★</span></div>
-    <a href="index.html" class="back-btn-3d">হোম</a>
-  </header>
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      AYNA BOOK <span class="star-1s">★</span>
+    </a>
+    <div class="header-actions">
+      <button type="button" id="speakClockBtn">🕒 সময় বলুন</button>
+      <button type="button" id="toggleClockBtn">🔊 ঘড়ি: চালু</button>
+      <a href="index.html">🏠 হোম</a>
+      <a href="messenger.html">💬 Messenger</a>
+    </div>
+  </div>
+</header>
 
-  <section class="profile-card-3d">
-    <img src="profile.jpg" alt="Mohammed Mahabub Alam" class="large-square-avatar">
-    <h1 class="user-name">Mohammed Mahabub Alam</h1>
-    <div class="ayna-id-badge">AYNA ID: 2026-----10000001</div>
-    <div class="barcode-box-3d">
-      <div class="barcode-bars"></div>
-      <div>202610000001</div>
+<div id="notice"></div>
+
+<main class="container">
+  <section class="hero">
+    <h1>AYNA BOOK — আমার প্রোফাইল</h1>
+    <p>আপনার প্রোফাইল তথ্য, AYNA ID, বারকোড ও বায়ো আপডেট করুন। ভুল করলে কণ্ঠের মাধ্যমে ভুলের জায়গা বলে দেওয়া হবে।</p>
+  </section>
+
+  <section class="profile-card">
+    <div class="profile-frame-wrap">
+      <img id="profilePhotoImg" alt="Profile photo">
+      <div class="profile-barcode-overlay">
+        <svg id="profileBarcodeSvg"></svg>
+      </div>
+    </div>
+    <div class="profile-details">
+      <h2 id="displayFullName">Mohamed Mahabub Alam</h2>
+      <p id="displayEmail">AYNA BOOK Member</p>
+      <p id="displayBio">কোয়ান্টাম ও সুপারকম্পিউটার মাল্টিমিডিয়া হাব সদস্য।</p>
+      <span class="ayna-id-chip" id="displayAynaId">2026-----10000001</span>
     </div>
   </section>
+
+  <section class="panel">
+    <h2>✏️ প্রোফাইল তথ্য সম্পাদনা</h2>
+
+    <div class="field-group">
+      <label class="field-label" for="editFullName">পূর্ণ নাম</label>
+      <input type="text" id="editFullName" class="hub-input" placeholder="পূর্ণ নাম লিখুন">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="editAynaId">AYNA ID</label>
+      <input type="text" id="editAynaId" class="hub-input" placeholder="2026-----10000001">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="editBio">প্রোফাইল বায়ো / পরিচিতি</label>
+      <textarea id="editBio" class="hub-textarea" placeholder="আপনার সম্পর্কে সংক্ষেপে লিখুন..."></textarea>
+    </div>
+
+    <div class="action-row">
+      <button type="button" id="chooseProfilePhotoBtn" class="tool-button">🖼️ প্রোফাইল ছবি পরিবর্তন</button>
+      <button type="button" id="speakProfileBtn" class="tool-button">🔊 প্রোফাইল তথ্য কণ্ঠে শুনুন</button>
+    </div>
+    <input type="file" id="profilePhotoInput" accept="image/*" hidden>
+
+    <button type="button" id="saveProfileBtn" class="primary-button">💾 প্রোফাইল সংরক্ষণ করুন</button>
+
+    <div class="signal-box" id="profileSignalBox">
+      প্রোফাইল সিস্টেম প্রস্তুত। নাম বা AYNA ID-তে ভুল করলে কণ্ঠের মাধ্যমে বলে দেওয়া হবে।
+    </div>
+  </section>
+</main>
+
+<footer>
+  © 2026 AYNA BOOK — Profile Hub
+</footer>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span>Home</a>
+  <a href="index.html#createPost"><span>➕</span>Post</a>
+  <a href="messenger.html"><span>💬</span>Chat</a>
+  <a href="profile.html"><span>👤</span>Profile</a>
+</nav>
+
+<script type="module">
+const $ = id => document.getElementById(id);
+let clockEnabled = true;
+let currentPhotoData = "";
+let currentUserObj = null;
+let dbInstance = null;
+
+function notify(msg) {
+  const el = $("notice");
+  el.textContent = msg;
+  el.style.display = "block";
+  clearTimeout(notify.t);
+  notify.t = setTimeout(() => { el.style.display = "none"; }, 3400);
+}
+
+const AynaVoiceSignal = {
+  playErrorBeep() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(320, ctx.currentTime);
+      osc.frequency.setValueAtTime(210, ctx.currentTime + 0.14);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.34);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } catch (_) {}
+  },
+
+  speak(text, force = true) {
+    if (!force || !text || !("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(String(text));
+      const voices = window.speechSynthesis.getVoices() || [];
+      const bn = voices.find(v => /bn/i.test(v.lang));
+      u.voice = bn || voices[0] || null;
+      u.lang = bn?.lang || "bn-BD";
+      u.rate = 0.96;
+      window.speechSynthesis.speak(u);
+    } catch (_) {}
+  },
+
+  error(mistakeBn) {
+    this.playErrorBeep();
+    notify("⚠️ " + mistakeBn);
+    $("profileSignalBox").textContent = `⚠️ ভুল সিগন্যাল:\n${mistakeBn}`;
+    this.speak(`ভুল হয়েছে। ${mistakeBn}`, true);
+  },
+
+  success(okBn) {
+    notify("✅ " + okBn);
+    $("profileSignalBox").textContent = `✅ ${okBn}`;
+    this.speak(okBn, true);
+  }
+};
+
+function safePhoto(photo) {
+  return typeof photo === "string" && photo
+    ? photo
+    : "data:image/svg+xml," + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320"><rect width="100%" height="100%" fill="#0a1636"/><circle cx="160" cy="110" r="58" fill="#ffe64d"/><path d="M45 320 Q62 205 160 205 Q258 205 275 320" fill="#ffe64d"/></svg>'
+      );
+}
+
+function renderBarcode(codeText = "2026-----10000001") {
+  if (typeof JsBarcode === "function" && $("profileBarcodeSvg")) {
+    try {
+      JsBarcode("#profileBarcodeSvg", codeText, {
+        format: "CODE128",
+        lineColor: "#000000",
+        width: 1.5,
+        height: 34,
+        displayValue: false,
+        margin: 0
+      });
+    } catch (_) {}
+  }
+}
+
+function speakCurrentTime() {
+  const nowStr = new Date().toLocaleTimeString("bn-BD", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true
+  });
+  notify("এখন সময় " + nowStr);
+  AynaVoiceSignal.speak(`এখন সময় ${nowStr}।`, true);
+}
+
+$("speakClockBtn")?.addEventListener("click", speakCurrentTime);
+$("toggleClockBtn")?.addEventListener("click", () => {
+  clockEnabled = !clockEnabled;
+  $("toggleClockBtn").textContent = clockEnabled ? "🔊 ঘড়ি: চালু" : "🔇 ঘড়ি: বন্ধ";
+  notify(clockEnabled ? "সময় বলার ঘড়ি চালু হয়েছে" : "সময় বলার ঘড়ি বন্ধ হয়েছে");
+  if (clockEnabled) speakCurrentTime();
+});
+
+$("profilePhotoImg").src = safePhoto("");
+renderBarcode("2026-----10000001");
+
+$("chooseProfilePhotoBtn")?.addEventListener("click", () => $("profilePhotoInput")?.click());
+$("profilePhotoInput")?.addEventListener("change", ev => {
+  const file = ev.target.files?.[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    AynaVoiceSignal.error("ছবির ফাইলে ভুল হয়েছে। অনুগ্রহ করে সঠিক ছবি নির্বাচন করুন।");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    currentPhotoData = String(reader.result || "");
+    $("profilePhotoImg").src = safePhoto(currentPhotoData);
+    notify("প্রোফাইল ছবি আপডেট করা হয়েছে");
+  };
+  reader.readAsDataURL(file);
+});
+
+$("speakProfileBtn")?.addEventListener("click", () => {
+  const name = $("displayFullName")?.textContent || "AYNA সদস্য";
+  const aid = $("displayAynaId")?.textContent || "2026-----10000001";
+  const bio = $("displayBio")?.textContent || "";
+  AynaVoiceSignal.speak(`প্রোফাইল নাম ${name}। আইডি নম্বর ${aid}। ${bio}`, true);
+});
+
+$("saveProfileBtn")?.addEventListener("click", async () => {
+  const fullName = ($("editFullName")?.value || "").trim();
+  const aynaId = ($("editAynaId")?.value || "").trim() || "2026-----10000001";
+  const bio = ($("editBio")?.value || "").trim();
+
+  if (!fullName || fullName.length < 2) {
+    AynaVoiceSignal.error("পূর্ণ নামের ঘরে ভুল হয়েছে। অন্তত ২ অক্ষরের নাম লিখুন।");
+    $("editFullName")?.focus();
+    return;
+  }
+  if (aynaId.length < 8) {
+    AynaVoiceSignal.error("AYNA ID ঘরে ভুল হয়েছে। সঠিক AYNA ID লিখুন।");
+    $("editAynaId")?.focus();
+    return;
+  }
+
+  $("displayFullName").textContent = fullName;
+  $("displayAynaId").textContent = aynaId;
+  if (bio) $("displayBio").textContent = bio;
+  renderBarcode(aynaId);
+
+  try {
+    localStorage.setItem("ayna_profile_local", JSON.stringify({
+      fullName,
+      aynaId,
+      bio,
+      photoURL: currentPhotoData
+    }));
+  } catch (_) {}
+
+  if (currentUserObj && dbInstance) {
+    try {
+      const { ref, update } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
+      await update(ref(dbInstance, "users/" + currentUserObj.uid), {
+        fullName,
+        aynaId,
+        bio,
+        ...(currentPhotoData ? { photoURL: currentPhotoData } : {})
+      });
+    } catch (_) {}
+  }
+
+  AynaVoiceSignal.success(`প্রোফাইল তথ্য সংরক্ষণ করা হয়েছে। নাম ${fullName}।`);
+});
+
+(async () => {
+  try {
+    const localSaved = JSON.parse(localStorage.getItem("ayna_profile_local") || "null");
+    if (localSaved) {
+      if (localSaved.fullName) {
+        $("displayFullName").textContent = localSaved.fullName;
+        $("editFullName").value = localSaved.fullName;
+      }
+      if (localSaved.aynaId) {
+        $("displayAynaId").textContent = localSaved.aynaId;
+        $("editAynaId").value = localSaved.aynaId;
+        renderBarcode(localSaved.aynaId);
+      }
+      if (localSaved.bio) {
+        $("displayBio").textContent = localSaved.bio;
+        $("editBio").value = localSaved.bio;
+      }
+      if (localSaved.photoURL) {
+        currentPhotoData = localSaved.photoURL;
+        $("profilePhotoImg").src = safePhoto(currentPhotoData);
+      }
+    }
+  } catch (_) {}
+
+  try {
+    const [jsMod, initMod] = await Promise.all([
+      import("./js/firebase.js").catch(() => null),
+      import("./firebase-init.js").catch(() => null)
+    ]);
+    const auth = initMod?.auth || jsMod?.auth || null;
+    dbInstance = initMod?.database || jsMod?.database || null;
+    if (auth && dbInstance) {
+      const { onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js");
+      const { ref, get } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
+      onAuthStateChanged(auth, async user => {
+        if (!user) return;
+        currentUserObj = user;
+        $("displayEmail").textContent = user.email || "AYNA BOOK Member";
+        const snap = await get(ref(dbInstance, "users/" + user.uid));
+        const val = snap.val() || {};
+        const name = val.fullName || user.displayName || "AYNA User";
+        const aid = val.aynaId || "2026-----10000001";
+        $("displayFullName").textContent = name;
+        $("editFullName").value = name;
+        $("displayAynaId").textContent = aid;
+        $("editAynaId").value = aid;
+        if (val.bio) {
+          $("displayBio").textContent = val.bio;
+          $("editBio").value = val.bio;
+        }
+        if (val.photoURL) {
+          currentPhotoData = val.photoURL;
+          $("profilePhotoImg").src = safePhoto(val.photoURL);
+        }
+        renderBarcode(aid);
+      });
+    }
+  } catch (_) {}
+})();
+</script>
 
 </body>
 </html>
