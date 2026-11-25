@@ -72,7 +72,7 @@
   }
 
   .toolbar input {
-    flex: 1 1 280px;
+    flex: 1 1 260px;
   }
 
   button {
@@ -167,7 +167,8 @@
 
     <div class="toolbar">
       <input id="apiBaseInput" type="text" placeholder="API Base URL (leave empty if same origin)">
-      <select id="statusFilterSelect">
+      <input id="reportSearchInput" type="search" placeholder="Search Post ID, Report ID, or reason..." disabled>
+      <select id="statusFilterSelect" disabled>
         <option value="all">All Reports</option>
         <option value="pending">Pending Only</option>
         <option value="reviewed">Reviewed Only</option>
@@ -191,6 +192,7 @@ const authStatusText = document.getElementById("authStatusText");
 const queueStatusBanner = document.getElementById("queueStatusBanner");
 const reportsListContainer = document.getElementById("reportsListContainer");
 const apiBaseInput = document.getElementById("apiBaseInput");
+const reportSearchInput = document.getElementById("reportSearchInput");
 const statusFilterSelect = document.getElementById("statusFilterSelect");
 const refreshBtn = document.getElementById("refreshQueueBtn");
 
@@ -211,6 +213,12 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;");
 }
 
+function setFilterControlsEnabled(enabled) {
+  reportSearchInput.disabled = !enabled;
+  statusFilterSelect.disabled = !enabled;
+  refreshBtn.disabled = !enabled;
+}
+
 function renderReports() {
   if (!isAdminVerified) {
     reportsListContainer.innerHTML = `
@@ -222,17 +230,25 @@ function renderReports() {
   }
 
   const filterMode = statusFilterSelect.value;
+  const searchNeedle = String(reportSearchInput.value || "").trim().toLowerCase();
+
   const visible = cachedReports.filter(item => {
     const isReviewed = item.status === "reviewed";
-    if (filterMode === "pending") return !isReviewed;
-    if (filterMode === "reviewed") return isReviewed;
-    return true;
+    if (filterMode === "pending" && isReviewed) return false;
+    if (filterMode === "reviewed" && !isReviewed) return false;
+
+    if (!searchNeedle) return true;
+    return (
+      String(item.postId || "").toLowerCase().includes(searchNeedle) ||
+      String(item.reportId || "").toLowerCase().includes(searchNeedle) ||
+      String(item.reason || "").toLowerCase().includes(searchNeedle)
+    );
   });
 
   if (!visible.length) {
     reportsListContainer.innerHTML = `
       <div class="box">
-        <div class="meta">No post reports match the selected filter.</div>
+        <div class="meta">No post reports match the selected status or search filter.</div>
       </div>
     `;
     return;
@@ -321,14 +337,14 @@ function renderReports() {
 
 async function loadReportsQueue() {
   if (!isAdminVerified) {
-    refreshBtn.disabled = true;
+    setFilterControlsEnabled(false);
     renderReports();
     setBanner("Access denied: signed-in account is not listed under admins/$uid.");
     return;
   }
 
   if (!dbInstance || !dbMod) return;
-  refreshBtn.disabled = true;
+  setFilterControlsEnabled(false);
   setBanner("Loading postReports from Firebase Realtime Database...");
 
   try {
@@ -358,7 +374,7 @@ async function loadReportsQueue() {
   } catch (err) {
     setBanner(`Failed to load postReports: ${err?.message || "Permission denied"}`);
   } finally {
-    refreshBtn.disabled = !isAdminVerified;
+    setFilterControlsEnabled(isAdminVerified);
   }
 }
 
@@ -379,7 +395,7 @@ async function initQueuePage() {
       if (!user) {
         isAdminVerified = false;
         cachedReports = [];
-        refreshBtn.disabled = true;
+        setFilterControlsEnabled(false);
         authStatusText.textContent = "Not signed in. Sign in with an admin account to review postReports.";
         setBanner("Authentication required. Review actions are disabled.");
         renderReports();
@@ -391,25 +407,25 @@ async function initQueuePage() {
 
       if (!isAdminVerified) {
         cachedReports = [];
-        refreshBtn.disabled = true;
+        setFilterControlsEnabled(false);
         authStatusText.textContent = `Signed in as ${user.email || user.uid} (${user.uid}) • Role: Non-Admin`;
         renderReports();
         setBanner("Review actions disabled: your UID is not listed as true under admins/$uid.");
         return;
       }
 
-      refreshBtn.disabled = false;
       authStatusText.textContent = `Signed in as ${user.email || user.uid} (${user.uid}) • Role: Admin`;
       await loadReportsQueue();
     });
   } catch (err) {
     isAdminVerified = false;
-    refreshBtn.disabled = true;
+    setFilterControlsEnabled(false);
     authStatusText.textContent = "Firebase initialization error.";
     setBanner(err?.message || "Could not initialize Firebase");
   }
 }
 
+reportSearchInput.addEventListener("input", renderReports);
 statusFilterSelect.addEventListener("change", renderReports);
 refreshBtn.addEventListener("click", loadReportsQueue);
 
