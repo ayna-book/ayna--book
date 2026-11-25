@@ -1,0 +1,203 @@
+package com.aynabook.app.utility
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import com.aynabook.app.data.askAynaModuleAI
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+data class AynaUnifiedClockTempState(
+    val timeTextBn: String = "",
+    val locationName: String = "বালুখালী বাজার, চট্টগ্রাম বিভাগ",
+    val temperatureC: Double = 0.0,
+    val apparentTempC: Double = 0.0,
+    val humidityPercent: Int = 0,
+    val aiInsightBn: String = "",
+    val spokenScriptBn: String = "",
+    val fromColdBackup: Boolean = false,
+    val statusMessage: String = "প্রস্তুত"
+)
+
+class AynaUnifiedAiClockTemp(
+    context: Context,
+    private val onStateUpdate: (AynaUnifiedClockTempState) -> Unit = {}
+) {
+    private val coldFile: File = File(context.filesDir, "ayna_unified_cold.json")
+    private var ttsReady = false
+    private var queuedSpeech: String? = null
+    private var latestState = AynaUnifiedClockTempState()
+
+    private val tts: TextToSpeech = TextToSpeech(context.applicationContext) { status ->
+        if (status == TextToSpeech.SUCCESS) {
+            val langResult = this.tts.setLanguage(Locale("bn", "BD"))
+            if (langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                this.tts.language = Locale.getDefault()
+                emitState(latestState.copy(statusMessage = "বাংলা ভয়েস প্যাক নেই, ডিফল্ট ভয়েস সক্রিয়।"))
+            } else {
+                emitState(latestState.copy(statusMessage = "AI কথা বলার ঘড়ি ও তাপমাত্রা সক্রিয়।"))
+            }
+            ttsReady = true
+            queuedSpeech?.let { pending ->
+                queuedSpeech = null
+                speakNow(pending)
+            }
+        } else {
+            emitState(latestState.copy(statusMessage = "TTS চালু করা যায়নি (কোড: $status)"))
+        }
+    }
+
+    private fun emitState(next: AynaUnifiedClockTempState) {
+        latestState = next
+        onStateUpdate(next)
+    }
+
+    fun formatCurrentTimeBn(): String {
+        val formatted = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
+        return "এখন সময় $formatted"
+    }
+
+    fun speakText(text: String) {
+        val clean = text.trim()
+        if (clean.isEmpty()) return
+        if (!ttsReady) {
+            queuedSpeech = clean
+            emitState(latestState.copy(statusMessage = "ভয়েস ইঞ্জিন চালু হচ্ছে..."))
+            return
+        }
+        speakNow(clean)
+    }
+
+    private fun speakNow(text: String) {
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "ayna_unified_${System.currentTimeMillis()}")
+        emitState(latestState.copy(statusMessage = "বলছে: $text"))
+    }
+
+    fun saveColdSnapshot(state: AynaUnifiedClockTempState) {
+        val obj = JSONObject().apply {
+            put("savedAtEpochMs", System.currentTimeMillis())
+            put("timeTextBn", state.timeTextBn)
+            put("locationName", state.locationName)
+            put("temperatureC", state.temperatureC)
+            put("apparentTempC", state.apparentTempC)
+            put("humidityPercent", state.humidityPercent)
+            put("aiInsightBn", state.aiInsightBn)
+            put("spokenScriptBn", state.spokenScriptBn)
+        }
+        coldFile.writeText(obj.toString(2), Charsets.UTF_8)
+    }
+
+    fun loadColdSnapshot(): AynaUnifiedClockTempState? {
+        if (!coldFile.exists()) return null
+        return try {
+            val obj = JSONObject(coldFile.readText(Charsets.UTF_8))
+            AynaUnifiedClockTempState(
+                timeTextBn = obj.optString("timeTextBn", formatCurrentTimeBn()),
+                locationName = obj.optString("locationName", "বালুখালী বাজার, চট্টগ্রাম বিভাগ"),
+                temperatureC = obj.optDouble("temperatureC", 27.0),
+                apparentTempC = obj.optDouble("apparentTempC", 28.0),
+                humidityPercent = obj.optInt("humidityPercent", 72),
+                aiInsightBn = obj.optString("aiInsightBn", ""),
+                spokenScriptBn = obj.optString("spokenScriptBn", ""),
+                fromColdBackup = true,
+                statusMessage = "কোল্ড ব্যাকআপ থেকে লোড হয়েছে"
+            )
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    suspend fun runAiClockAndTemperature(
+        latitude: Double = 21.2246,
+        longitude: Double = 92.2636,
+        locationName: String = "বালুখালী বাজার, চট্টগ্রাম বিভাগ",
+        apiBaseUrl: String = "http://10.0.2.2:3000",
+        auth: FirebaseAuth = FirebaseAuth.getInstance()
+    ): AynaUnifiedClockTempState {
+        val nowTimeBn = formatCurrentTimeBn()
+        emitState(
+            latestState.copy(
+                timeTextBn = nowTimeBn,
+                locationName = locationName,
+                statusMessage = "সময় ও তাপমাত্রা বিশ্লেষণ করছে..."
+            )
+        )
+
+        val weatherTuple = withContext(Dispatchers.IO) {
+            val url =
+                "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude" +
+                    "&current=temperature_2m,apparent_temperature,relative_humidity_2m&timezone=auto"
+            val conn = (URL(url).openConnection() as HttpURLConnection).apply {
+                requestMethod = "GET"
+                connectTimeout = 15_000
+                readTimeout = 15_000
+            }
+            try {
+                val raw = conn.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                val cur = JSONObject(raw).optJSONObject("current") ?: JSONObject()
+                Triple(
+                    cur.optDouble("temperature_2m", Double.NaN),
+                    cur.optDouble("apparent_temperature", Double.NaN),
+                    cur.optInt("relative_humidity_2m", -1)
+                )
+            } catch (_: Exception) {
+                Triple(Double.NaN, Double.NaN, -1)
+            } finally {
+                conn.disconnect()
+            }
+        }
+
+        val cached = loadColdSnapshot()
+        val tempC = if (!weatherTuple.first.isNaN()) weatherTuple.first else (cached?.temperatureC ?: 27.0)
+        val feelsC = if (!weatherTuple.second.isNaN()) weatherTuple.second else (cached?.apparentTempC ?: 28.0)
+        val humidity = if (weatherTuple.third >= 0) weatherTuple.third else (cached?.humidityPercent ?: 72)
+        val isFallbackData = weatherTuple.first.isNaN()
+
+        val ruleSummary =
+            "$locationName-এ তাপমাত্রা $tempC°C (অনুভূত $feelsC°C) এবং আর্দ্রতা $humidity%।"
+
+        val aiInsight = try {
+            val reply = askAynaModuleAI(
+                module = "weather",
+                action = "unified_clock_temperature_ai",
+                text = "Time: $nowTimeBn. Location: $locationName. Temp: ${tempC}C. Feels like: ${feelsC}C. Humidity: $humidity%.",
+                context = "Give a concise 2-sentence Bengali speaking-clock weather insight and comfort tip without markdown or emojis.",
+                apiBaseUrl = apiBaseUrl,
+                auth = auth
+            ).trim().replace("*", "").replace("#", "")
+            reply.ifBlank { ruleSummary }.take(220)
+        } catch (_: Exception) {
+            cached?.aiInsightBn?.takeIf { it.isNotBlank() } ?: ruleSummary
+        }
+
+        val spokenScript = "$nowTimeBn। $aiInsight"
+        val finalState = AynaUnifiedClockTempState(
+            timeTextBn = nowTimeBn,
+            locationName = locationName,
+            temperatureC = tempC,
+            apparentTempC = feelsC,
+            humidityPercent = humidity,
+            aiInsightBn = aiInsight,
+            spokenScriptBn = spokenScript,
+            fromColdBackup = isFallbackData,
+            statusMessage = if (isFallbackData) "অফলাইন/কোল্ড ডেটা থেকে বলা হচ্ছে" else "AI বিশ্লেষণ সম্পন্ন"
+        )
+
+        saveColdSnapshot(finalState)
+        emitState(finalState)
+        speakText(spokenScript)
+        return finalState
+    }
+
+    fun shutdown() {
+        tts.stop()
+        tts.shutdown()
+    }
+}
