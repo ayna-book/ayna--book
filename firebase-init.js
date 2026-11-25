@@ -1,39 +1,32 @@
-// firebase-init.js — AYNA BOOK Firebase Initialization (with safe fallback)
+// firebase-init.js — AYNA BOOK Firebase Initialization
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-analytics.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_FIREBASE_API_KEY",
+  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
   authDomain: "ayna-book.firebaseapp.com",
-  databaseURL: "https://ayna-book-default-rtdb.firebaseio.com",
+  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "ayna-book",
-  storageBucket: "ayna-book.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  storageBucket: "ayna-book.firebasestorage.app",
+  messagingSenderId: "805601138500",
+  appId: "1:805601138500:web:47acdc90cb0cb521626911",
+  measurementId: "G-RKHHSKNB4B"
 };
 
-let app = null;
-let auth = null;
-let database = null;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
 
-try {
-  const hasRealConfig =
-    firebaseConfig.apiKey &&
-    !firebaseConfig.apiKey.startsWith("YOUR_") &&
-    firebaseConfig.projectId;
-
-  if (hasRealConfig) {
-    const [{ initializeApp }, { getAuth }, { getDatabase }] = await Promise.all([
-      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js"),
-      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"),
-      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js")
-    ]);
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    database = getDatabase(app);
+let analytics = null;
+if (typeof window !== "undefined") {
+  try {
+    analytics = getAnalytics(app);
+  } catch (_) {
+    analytics = null;
   }
-} catch (_) {
-  app = null;
-  auth = null;
-  database = null;
 }
 
-export { app, auth, database };
+export { app, auth, database, analytics };
