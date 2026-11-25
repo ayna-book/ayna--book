@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <title>AYNA BOOK* • UHD Sound Engine (48kHz Studio)</title>
+  <meta name="theme-color" content="#050a18" />
+  <style>
+    :root {
+      --bg: #050a18;
+      --navy-top: #1a3575;
+      --navy-bottom: #08122b;
+      --gold: #ffe64d;
+      --gold-bright: #fff6b3;
+      --gold-base: #8a6105;
+      --quantum-cyan: #38f2ff;
+      --white: #ffffff;
+      --muted: #e6eeff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding-bottom: 140px;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(56, 242, 255, 0.12), transparent 36%),
+        radial-gradient(circle at 85% 20%, rgba(255, 230, 77, 0.13), transparent 42%),
+        var(--bg);
+      color: var(--white);
+      font-family: Arial, "Noto Sans Bengali", system-ui, sans-serif;
+      font-size: clamp(28px, 4.6vw, 42px);
+      line-height: 1.5;
+    }
+
+    button,
+    select,
+    a {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    header {
+      background: linear-gradient(180deg, #122659 0%, #060d21 100%);
+      border-bottom: 4px solid var(--gold);
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      box-shadow: 0 0 22px rgba(255, 230, 77, 0.45), 0 6px 18px rgba(0, 0, 0, 0.9);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      color: var(--gold-bright);
+      font-size: clamp(36px, 6vw, 58px);
+      font-weight: 1000;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-shadow: 0 0 14px rgba(255, 230, 77, 0.85), 0 3px 8px rgba(0, 0, 0, 0.95);
+    }
+
+    .k-star-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .star-12px-1m {
+      position: absolute;
+      top: -6px;
+      right: -12px;
+      font-size: 12px;
+      line-height: 1;
+      color: #ffffff;
+      opacity: 0.2;
+      animation: starFlashEveryMinute 60s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes starFlashEveryMinute {
+      0%, 95% {
+        opacity: 0.18;
+        transform: scale(0.95);
+        text-shadow: none;
+      }
+      96%, 100% {
+        opacity: 1;
+        transform: scale(1.3);
+        text-shadow: 0 0 8px #ffffff, 0 0 14px #ffffff;
+      }
+    }
+
+    .nav-btn {
+      text-decoration: none;
+      color: #ffffff;
+      background: linear-gradient(155deg, #1d3b7e, #08122b);
+      border: 3.5px solid var(--gold);
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 900;
+      font-size: clamp(24px, 3.8vw, 34px);
+      box-shadow: 0 0 12px rgba(255, 230, 77, 0.45), 0 5px 0 var(--gold-base);
+    }
+
+    #notice {
+      position: fixed;
+      top: 115px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0a1636;
+      color: var(--gold-bright);
+      border: 4px solid var(--gold-bright);
+      padding: 18px 28px;
+      border-radius: 12px;
+      box-shadow: 0 0 24px rgba(255, 230, 77, 0.85), 0 7px 0 var(--gold-base);
+      z-index: 120;
+      display: none;
+      max-width: 94%;
+      font-size: clamp(26px, 4.2vw, 38px);
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 18px 0;
+    }
+
+    .panel {
+      background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
+      border: 4px solid var(--gold);
+      border-radius: 14px;
+      padding: 26px;
+      margin-bottom: 26px;
+      box-shadow:
+        0 0 20px rgba(255, 230, 77, 0.65),
+        0 9px 0 var(--gold-base),
+        0 16px 26px rgba(0, 0, 0, 0.85),
+        inset 0 2px 6px var(--gold-bright);
+    }
+
+    .panel h1,
+    .panel h2 {
+      margin: 0 0 16px;
+      color: var(--gold-bright);
+      font-weight: 1000;
+      font-size: clamp(32px, 5.2vw, 48px);
+    }
+
+    .panel p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: clamp(26px, 4.2vw, 36px);
+    }
+
+    .controls-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    select {
+      width: 100%;
+      background: #050b1c;
+      color: var(--white);
+      border: 3.5px solid var(--gold);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: clamp(26px, 4.2vw, 36px);
+      outline: none;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    button,
+    .panel-link-btn {
+      min-height: 84px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      border: 3.5px solid var(--gold);
+      background: linear-gradient(155deg, #1d3b7e, #08122b);
+      color: var(--white);
+      font-size: clamp(26px, 4.2vw, 36px);
+      font-weight: 900;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 0 12px rgba(255, 230, 77, 0.45), 0 6px 0 var(--gold-base);
+    }
+
+    button:active,
+    .panel-link-btn:active {
+      transform: translateY(4px);
+    }
+
+    .btn-gold {
+      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%) !important;
+      color: #050a18 !important;
+      border-color: var(--gold-bright) !important;
+      font-weight: 1000 !important;
+    }
+
+    .ai-box-output {
+      margin-top: 18px;
+      background: #050b1c;
+      border: 3.5px solid var(--quantum-cyan);
+      border-radius: 10px;
+      padding: 20px;
+      font-size: clamp(26px, 4.2vw, 36px);
+      color: var(--gold-bright);
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .profile-card {
+      background: #050b1c;
+      border: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .profile-card strong {
+      display: block;
+      color: var(--quantum-cyan);
+      font-size: clamp(28px, 4.4vw, 38px);
+      margin-bottom: 8px;
+    }
+
+    .profile-card span {
+      display: block;
+      color: var(--muted);
+      font-size: clamp(24px, 3.8vw, 32px);
+    }
+
+    @media (max-width: 680px) {
+      .controls-row,
+      .btn-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a href="./index.html" class="logo">
+        <span class="k-star-wrap">AYNA BOO<span class="k-star-wrap">K*<i class="star-12px-1m" aria-hidden="true">★</i></span></span>
+      </a>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="./index.html" class="nav-btn">🏠 হোম (index.html)</a>
+        <a href="./messenger.html" class="nav-btn">💬 Messenger</a>
+      </div>
+    </div>
+  </header>
+
+  <div id="notice"></div>
+
+  <main class="container">
+    <section class="panel">
+      <h1>🎼 UHD Sound Engine (48kHz Studio)</h1>
+      <p>
+        স্টুডিও স্যাম্পল রেট <strong>48,000 Hz (UHD)</strong>-এ হারমোনিক সাউন্ড চালানো, বন্ধ করা এবং সরাসরি <strong>.wav</strong> ফাইল তৈরি করে প্লে বা ডাউনলোড করার পেজ।
+      </p>
+
+      <div class="controls-row">
+        <select id="audioPresetSelect" aria-label="UHD Sound Profile">
+          <option value="STUDIO_MASTER">STUDIO_MASTER (Abbey Hall UHD 48kHz)</option>
+          <option value="CINEMA_THEATER">CINEMA_THEATER (Vienna Symphony UHD 48kHz)</option>
+          <option value="VOICE_BROADCAST">VOICE_BROADCAST (Quantum 528Hz UHD 48kHz)</option>
+        </select>
+        <button type="button" id="applyAudioPresetBtn">🔊 সাউন্ড প্রোফাইল চালু</button>
+      </div>
+
+      <div class="btn-grid">
+        <button type="button" id="playWorldUhdSoundBtn" class="btn-gold">🎼 বিশ্বমানের UHD সাউন্ড চালান (48kHz)</button>
+        <button type="button" id="stopWorldUhdSoundBtn">⏹ UHD সাউন্ড বন্ধ করুন</button>
+        <button type="button" id="exportUhdWavBtn" class="btn-gold">💾 48kHz UHD WAV ফাইল লোড/ডাউনলোড</button>
+        <button type="button" id="speakUhdInfoBtn">🎙️ কণ্ঠে তথ্য শুনুন</button>
+      </div>
+
+      <div id="uhdSoundPlayerWrap" style="margin-top:14px;"></div>
+
+      <div class="ai-box-output" id="uhdSoundEngineStatus">
+        বিশ্ববিখ্যাত স্টুডিও UHD সাউন্ড ইঞ্জিন (48kHz) প্রস্তুত রয়েছে।
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>🎛️ উপলব্ধ 48kHz UHD সাউন্ড প্রোফাইলসমূহ</h2>
+      <div class="profile-list">
+        <div class="profile-card">
+          <strong>Abbey Studio Concert UHD</strong>
+          <span>স্যাম্পল রেট: 48,000 Hz • স্টিরিও হারমোনিক কনসার্ট ব্যালেন্স</span>
+        </div>
+        <div class="profile-card">
+          <strong>Vienna Symphony Warm UHD</strong>
+          <span>স্যাম্পল রেট: 48,000 Hz • উষ্ণ সিম্ফনি রেজোন্যান্স</span>
+        </div>
+        <div class="profile-card">
+          <strong>Quantum Harmonic Master UHD</strong>
+          <span>স্যাম্পল রেট: 48,000 Hz • 528Hz হারমোনিক মাস্টারিং</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./index.js"></script>
+  <script type="module">
+    import { AynaUhdMasterSound } from "./uhd-sound-engine.js";
+
+    const byId = (id) => document.getElementById(id);
+    const showNotice = (msg) => {
+      const n = byId("notice");
+      if (!n) return;
+      n.textContent = msg;
+      n.style.display = "block";
+      clearTimeout(showNotice._t);
+      showNotice._t = setTimeout(() => {
+        n.style.display = "none";
+      }, 3400);
+    };
+
+    byId("applyAudioPresetBtn")?.addEventListener("click", () => {
+      const preset = byId("audioPresetSelect")?.value || "STUDIO_MASTER";
+      const profileKey =
+        preset === "CINEMA_THEATER"
+          ? "VIENNA_PHIL_UHD"
+          : preset === "VOICE_BROADCAST"
+            ? "QUANTUM_MASTER_528"
+            : "ABBEY_HALL_UHD_48K";
+      const label = AynaUhdMasterSound.profiles[profileKey]?.title || preset;
+      if (byId("uhdSoundEngineStatus")) {
+        byId("uhdSoundEngineStatus").textContent = `🔊 নির্বাচিত সাউন্ড প্রোফাইল: ${label}`;
+      }
+      showNotice(`প্রোফাইল সক্রিয়: ${label}`);
+    });
+
+    byId("speakUhdInfoBtn")?.addEventListener("click", () => {
+      const statusText = byId("uhdSoundEngineStatus")?.textContent || "48kHz UHD সাউন্ড ইঞ্জিন প্রস্তুত রয়েছে।";
+      if ("speechSynthesis" in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(statusText.slice(0, 260));
+          const voices = window.speechSynthesis.getVoices() || [];
+          const bnVoice = voices.find((v) => /bn/i.test(v.lang));
+          utter.voice = bnVoice || voices[0] || null;
+          utter.lang = bnVoice?.lang || "bn-BD";
+          window.speechSynthesis.speak(utter);
+        } catch (_) {}
+      }
+      showNotice("🎙️ কণ্ঠ ঘোষণা চালু হয়েছে");
+    });
+  </script>
+</body>
+</html>
