@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-  <title>AYNA BOOK • Full AI Radar, Weather, Civil Aviation & Quantum Hub</title>
+  <title>AYNA BOOK* • Full AI Radar, Weather, Civil Aviation & Quantum Hub</title>
   <meta name="theme-color" content="#050a18" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
@@ -23,6 +23,7 @@
       --green: #16c784;
       --amber: #f59e0b;
       --danger: #ff4d6d;
+      --ui-scale: 1;
     }
 
     * {
@@ -38,14 +39,14 @@
 
     body {
       margin: 0;
-      padding-bottom: 150px;
+      padding-bottom: 160px;
       background:
         radial-gradient(circle at 15% 10%, rgba(56, 242, 255, 0.12), transparent 36%),
         radial-gradient(circle at 85% 20%, rgba(255, 230, 77, 0.13), transparent 42%),
         var(--bg);
       color: var(--white);
       font-family: Arial, "Noto Sans Bengali", system-ui, sans-serif;
-      font-size: clamp(32px, 5.2vw, 48px);
+      font-size: calc(clamp(30px, 5vw, 46px) * var(--ui-scale));
       line-height: 1.5;
     }
 
@@ -120,7 +121,7 @@
 
     .logo {
       color: var(--gold-bright);
-      font-size: clamp(38px, 6vw, 62px);
+      font-size: clamp(40px, 6.5vw, 66px);
       font-weight: 1000;
       letter-spacing: 1px;
       display: inline-flex;
@@ -128,6 +129,36 @@
       gap: 14px;
       text-decoration: none;
       text-shadow: 0 0 14px rgba(255, 230, 77, 0.85), 0 3px 8px rgba(0, 0, 0, 0.95);
+    }
+
+    .k-star-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .star-12px-1m {
+      position: absolute;
+      top: -6px;
+      right: -12px;
+      font-size: 12px;
+      line-height: 1;
+      color: #ffffff;
+      opacity: 0.2;
+      animation: starFlashEveryMinute 60s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes starFlashEveryMinute {
+      0%, 95% {
+        opacity: 0.18;
+        transform: scale(0.95);
+        text-shadow: none;
+      }
+      96%, 100% {
+        opacity: 1;
+        transform: scale(1.3);
+        text-shadow: 0 0 8px #ffffff, 0 0 14px #ffffff;
+      }
     }
 
     .quantum-badge {
@@ -138,17 +169,6 @@
       color: var(--quantum-cyan);
       background: rgba(5, 10, 24, 0.92);
       border: 3px solid var(--quantum-cyan);
-    }
-
-    .star-1s {
-      color: #ffffff;
-      display: inline-block;
-      animation: starFlash1s 1s infinite alternate ease-in-out;
-    }
-
-    @keyframes starFlash1s {
-      0% { transform: scale(0.95) rotate(0deg); color: #fff099; }
-      100% { transform: scale(1.3) rotate(18deg); color: #ffffff; text-shadow: 0 0 20px #ffffff, 0 0 38px #ffe64d; }
     }
 
     .header-actions {
@@ -232,11 +252,13 @@
       text-align: center;
     }
 
-    .hero h1 {
-      font-size: clamp(40px, 6.5vw, 68px);
-      margin: 0 0 14px;
-      color: var(--gold-bright);
+    .stylish-owner-name {
+      font-size: clamp(42px, 6.8vw, 72px);
       font-weight: 1000;
+      letter-spacing: 1.5px;
+      color: var(--gold-bright);
+      text-shadow: 0 0 18px rgba(255, 230, 77, 0.75), 0 4px 12px rgba(0, 0, 0, 0.95);
+      margin: 0 0 16px;
     }
 
     .hero p {
@@ -293,9 +315,9 @@
       margin-bottom: 28px;
     }
 
-    .profile-frame-wrap {
-      width: min(100%, 460px);
-      min-height: 440px;
+    .profile-square-box {
+      width: min(100%, 420px);
+      aspect-ratio: 1 / 1;
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -303,14 +325,14 @@
       background: #050a18;
       border: 5px solid var(--gold-bright);
       border-radius: 14px;
-      padding: 10px;
+      padding: 8px;
       box-shadow: 0 0 24px rgba(255, 230, 77, 0.8), 0 7px 0 var(--gold-base);
     }
 
-    .profile-frame-wrap img {
+    .profile-square-box img {
       width: 100%;
-      max-height: 480px;
-      object-fit: contain;
+      height: 100%;
+      object-fit: cover;
       object-position: top center;
       border-radius: 10px;
       display: block;
@@ -735,7 +757,7 @@
       height: 160px;
       border-radius: 10px;
       border: 4px solid var(--gold-bright);
-      object-fit: contain;
+      object-fit: cover;
       object-position: top center;
       background: #0a1636;
       flex-shrink: 0;
@@ -751,6 +773,12 @@
       color: var(--muted);
     }
 
+    .post-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .q-pill {
       font-size: clamp(22px, 3.5vw, 30px);
       font-weight: 900;
@@ -759,6 +787,21 @@
       border: 2.5px solid var(--quantum-cyan);
       padding: 8px 14px;
       border-radius: 8px;
+    }
+
+    .post-dot-menu-btn {
+      min-height: 64px;
+      padding: 8px 16px;
+      font-size: clamp(28px, 4.4vw, 36px);
+      border-radius: 10px;
+    }
+
+    .post-manage-drawer {
+      margin-top: 14px;
+      padding: 16px;
+      background: #050b1c;
+      border: 3px solid var(--quantum-cyan);
+      border-radius: 10px;
     }
 
     .post-content {
@@ -803,7 +846,7 @@
 
     .post-actions button {
       min-height: 82px;
-      font-size: clamp(26px, 4vw, 34px);
+      font-size: clamp(24px, 3.8vw, 32px);
     }
 
     .comments {
@@ -933,6 +976,19 @@
       box-shadow: 0 0 34px rgba(56, 242, 255, 0.85), 0 9px 0 var(--gold-base) !important;
     }
 
+    .messenger-call-bar {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .messenger-uhd-btn {
+      min-height: 92px;
+      font-weight: 1000 !important;
+      border-width: 4px !important;
+    }
+
     footer {
       text-align: center;
       padding: 34px 18px 160px;
@@ -992,7 +1048,8 @@
       .hub-controls-row,
       .hub-cards-grid,
       .yt-input-row,
-      .post-actions {
+      .post-actions,
+      .messenger-call-bar {
         grid-template-columns: 1fr;
       }
     }
@@ -1002,7 +1059,7 @@
   <header>
     <div class="header-inner">
       <a href="#top" id="top" class="logo">
-        AYNA BOOK <span class="star-1s">★</span>
+        <span class="k-star-wrap">AYNA BOOK*<i class="star-12px-1m" aria-hidden="true">★</i></span>
         <span class="quantum-badge">⚛ FULL AI RADAR &amp; QUANTUM HUB</span>
       </a>
 
@@ -1018,7 +1075,7 @@
 
     <div class="ticker-bar">
       <div class="ticker-track">
-        ⚛ AYNA BOOK Full AI Hub • রাডার AI • আবহাওয়া রাডার AI • বেসামরিক বিমান পরিবহণ রাডার AI • বিশ্ব ঘড়ি AI • রেডিও/টিভি AI • বাজার, কৃষক, চাকুরী, বাণিজ্য, রাষ্ট্রনেতা, নোবেল ও আলেম গবেষণা AI সক্রিয় •••
+        ⚛ AYNA BOOK* Full AI Hub • রাডার AI • আবহাওয়া রাডার AI • বেসামরিক বিমান পরিবহণ রাডার AI • বিশ্ব ঘড়ি AI • ডিসকভারি ও জিওগ্রাফি চ্যানেল • বাচ্চাদের খেলাধুলা • বাজার, কৃষক, চাকুরী, বাণিজ্য, রাষ্ট্রনেতা, নোবেল ও আলেম গবেষণা AI সক্রিয় •••
       </div>
     </div>
   </header>
@@ -1027,7 +1084,7 @@
 
   <main class="container">
     <section class="hero">
-      <h1>AYNA BOOK — FULL AI RADAR, WEATHER, AVIATION &amp; QUANTUM HUB</h1>
+      <h1 class="stylish-owner-name" id="stylishTopOwnerName">Mohammad Mahabub Alam</h1>
       <p>
         রাডার, আবহাওয়া রাডার ও বেসামরিক বিমান পরিবহণ রাডারসহ প্রতিটি ফিচারে AI যুক্ত, অটো-আপডেট সক্রিয়, এবং যেকোনো ফিচার চাপ দিলে ফোন স্কিনে দেখানোর পূর্ণাঙ্গ ব্যবস্থা।
       </p>
@@ -1049,12 +1106,13 @@
     </section>
 
     <section class="profile-bar" id="profileBarSection">
-      <div class="profile-frame-wrap">
-        <img id="myPhoto" src="./icon-512.png" alt="AYNA Profile photo">
+      <div class="profile-square-box">
+        <img id="myPhoto" src="./assets/profile-photo.jpg" alt="Mohammad Mahabub Alam Profile Photo">
       </div>
       <div class="profile-info">
-        <strong id="myName">লোড হচ্ছে...</strong>
-        <small id="myEmail">আপনার AYNA BOOK অ্যাকাউন্ট</small>
+        <strong id="myName">Mohammad Mahabub Alam</strong>
+        <small id="myEmail">mahbub.uk.cox@gmail.com</small>
+        <small id="myPhone">+8801700000000</small>
         <span class="ayna-id-chip" id="myAynaId">2026-----10000001</span>
         <div>
           <div class="barcode-box">
@@ -1070,11 +1128,39 @@
       <a href="profile.html" class="panel-link-btn">প্রোফাইল</a>
     </section>
 
+    <section class="panel" id="accountOwnerSettingsSection">
+      <h2>🛡️ একাউন্ট হোল্ডার সেটিং: আজীবন অপরিবর্তনীয় তথ্য ও ৯০ দিনের পরিবর্তন নীতি</h2>
+      <div class="hub-controls-row">
+        <input type="text" id="immutableNameInput" class="hub-search-input" value="Mohammad Mahabub Alam" readonly />
+        <input type="email" id="immutableEmailInput" class="hub-search-input" value="mahbub.uk.cox@gmail.com" readonly />
+      </div>
+      <div class="hub-controls-row">
+        <input type="text" id="immutablePhoneInput" class="hub-search-input" value="+8801700000000" readonly />
+        <input type="text" id="ninetyDayStatusInput" class="hub-search-input" value="৯০ দিন পর পর পরিচিতি ও থিম পরিবর্তন নীতি সক্রিয়" readonly />
+      </div>
+      <div class="hub-controls-row">
+        <input type="text" id="mutableIdentityInput" class="hub-search-input" placeholder="পরিচিতি / বায়ো / স্ট্যাটাস (৯০ দিন পর পর পরিবর্তনযোগ্য)..." />
+        <select id="screenThemeColorSelect" class="hub-select">
+          <option value="ROYAL_GOLD_NAVY">স্ক্রিন রং: রয়্যাল নেভি ও গোল্ড (ডিফল্ট)</option>
+          <option value="QUANTUM_EMERALD">স্ক্রিন রং: কোয়ান্টাম এমেরাল্ড</option>
+          <option value="SOLAR_CRIMSON">স্ক্রিন রং: সোলার ক্রিমনস</option>
+          <option value="ARCTIC_CYAN">স্ক্রিন রং: আর্কটিক সায়ান</option>
+        </select>
+      </div>
+      <div class="media-buttons">
+        <button type="button" id="save90DayAccountSettingsBtn" class="btn-gold">💾 ৯০ দিনের পরিচিতি ও রং সংরক্ষণ</button>
+        <button type="button" id="requestImmutableChangeBtn">🔒 নাম, জিমেইল বা ফোন পরিবর্তনের অনুরোধ (বাধাপ্রাপ্ত)</button>
+      </div>
+      <div class="ai-box-output" id="account90DayStatusOutput">
+        নাম, জিমেইল ও ফোন নম্বর আজীবন অপরিবর্তনীয় থাকবে। রং ও অন্যান্য পরিচিতি প্রতি ৯০ দিনে একবার পরিবর্তন করা যাবে।
+      </div>
+    </section>
+
     <section class="qr-panel-box" id="qrBoxSection">
       <div class="qr-heading-tag">[QR]</div>
       <div class="qr-card-inner">
         <canvas id="aynaQrCanvas" width="220" height="220"></canvas>
-        <div id="qrCaptionText" style="font-size:24px;font-weight:900;margin-top:8px;max-width:260px;word-break:break-all;">https://aynabook.app</div>
+        <div id="qrCaptionText" style="font-size:24px;font-weight:900;margin-top:8px;max-width:260px;word-break:break-all;">https://aynabook.app/u/2026-----10000001</div>
       </div>
     </section>
 
@@ -1199,7 +1285,7 @@
       <a class="feature-card" href="messenger.html">
         <span class="feature-icon">💬</span>
         <span class="feature-name">AYNA Messenger</span>
-        <span class="feature-desc">মেসেজ, অডিও, ভিডিও ও ফাইল</span>
+        <span class="feature-desc">মেসেজ, অডিও, ভিডিও ও UHD কল</span>
       </a>
       <a class="feature-card" href="notifications.html">
         <span class="feature-icon">🔔</span>
@@ -1233,6 +1319,27 @@
       </a>
     </section>
 
+    <section class="panel" id="aynaMessengerUhdSection">
+      <h2>💬📞 AYNA MESSENGER — UHD অডিও ও ভিডিও কল, টেক্সট সাইজ, রং ও AI</h2>
+      <div class="hub-controls-row">
+        <input type="text" id="messengerRecipientInput" class="hub-search-input" value="AYNA Direct Contact" placeholder="প্রাপক বা চ্যানেলের নাম..." />
+        <input type="text" id="messengerDraftInput" class="hub-search-input" placeholder="মেসেজ লিখুন..." />
+      </div>
+      <div class="messenger-call-bar">
+        <button type="button" id="startUhdAudioCallBtn" class="btn-gold messenger-uhd-btn">🎙️ UHD অডিও কল শুরু</button>
+        <button type="button" id="startUhdVideoCallBtn" class="btn-gold messenger-uhd-btn">📹 UHD ভিডিও কল শুরু</button>
+      </div>
+      <div class="media-buttons">
+        <button type="button" id="fontSizeUpBtn">🔍+ লেখা বড় করুন</button>
+        <button type="button" id="fontSizeDownBtn">🔍- লেখা ছোট করুন</button>
+        <button type="button" id="cycleMessengerColorBtn">🎨 স্ক্রিন রং পরিবর্তন</button>
+        <button type="button" id="runMessengerAiBtn" class="btn-gold">🤖 মেসেঞ্জার ও কল AI অটো-আপডেট</button>
+      </div>
+      <div class="ai-box-output" id="messengerCallAiOutput">
+        UHD অডিও ও ভিডিও কল (48kHz / 4K-UHD সিগন্যাল কন্ডিশনিং), লেখা বড়/ছোট, স্ক্রিন রং ও AI অটো-আপডেট প্রস্তুত।
+      </div>
+    </section>
+
     <section class="panel" id="radioTvAiSection">
       <h2>📻📺 বিশ্ব রেডিও ও টেলিভিশন AI সহকারী</h2>
       <div class="hub-controls-row">
@@ -1253,7 +1360,7 @@
       </div>
     </section>
 
-    <h2 class="section-title">✨ MORE AYNA BOOK FEATURES &amp; DIRECTORIES</h2>
+    <h2 class="section-title">✨ MORE AYNA BOOK FEATURES, CHANNELS &amp; DIRECTORIES</h2>
 
     <section class="feature-grid-more">
       <a class="feature-card" href="world-leaders.html"><span class="feature-icon">🌐</span><span class="feature-name">বিশ্বনেতা</span><span class="feature-desc">আন্তর্জাতিক নেতৃত্ব ও তথ্য</span></a>
@@ -1277,6 +1384,27 @@
       <a class="feature-card" href="prayer.html"><span class="feature-icon">🕌</span><span class="feature-name">নামাজের সময়</span><span class="feature-desc">প্রার্থনার সময়সূচি</span></a>
       <a class="feature-card" href="quantum.html"><span class="feature-icon">⚛️</span><span class="feature-name">কোয়ান্টাম হাব</span><span class="feature-desc">কোয়ান্টাম সিস্টেম</span></a>
       <a class="feature-card" href="supercomputer.html"><span class="feature-icon">🖥️</span><span class="feature-name">সুপারকম্পিউটার</span><span class="feature-desc">উচ্চগতির তথ্য</span></a>
+      <a class="feature-card" href="#discoveryGeographyKidsSection"><span class="feature-icon">🔭</span><span class="feature-name">ডিসকভারি চ্যানেল</span><span class="feature-desc">বিজ্ঞান, প্রকৃতি ও অনুসন্ধান</span></a>
+      <a class="feature-card" href="#discoveryGeographyKidsSection"><span class="feature-icon">🗺️</span><span class="feature-name">জিওগ্রাফি চ্যানেল</span><span class="feature-desc">ভূগোল, মহাদেশ ও জলবায়ু</span></a>
+      <a class="feature-card" href="#discoveryGeographyKidsSection"><span class="feature-icon">⚽</span><span class="feature-name">বাচ্চাদের খেলাধুলা</span><span class="feature-desc">শিক্ষামূলক ও নিরাপদ ক্রীড়া</span></a>
+    </section>
+
+    <section class="panel" id="discoveryGeographyKidsSection">
+      <h2>🔭🗺️⚽ ডিসকভারি চ্যানেল, জিওগ্রাফি চ্যানেল ও বাচ্চাদের খেলাধুলা (AI অটো-আপডেট)</h2>
+      <div class="hub-controls-row">
+        <select id="specialChannelSelect" class="hub-select">
+          <option value="discovery">ডিসকভারি চ্যানেল (বিজ্ঞান, মহাকাশ ও অনুসন্ধান)</option>
+          <option value="geography">জিওগ্রাফি চ্যানেল (মহাদেশ, নদী, মানচিত্র ও পরিবেশ)</option>
+          <option value="kids_sports">বাচ্চাদের খেলাধুলা (দৌড়, সাঁতার, ফুটবল, অ্যাথলেটিক্স ও নিরাপত্তা)</option>
+        </select>
+        <input type="search" id="specialChannelSearchInput" class="hub-search-input" placeholder="ডিসকভারি, জিওগ্রাফি বা বাচ্চাদের খেলাধুলা খুঁজুন..." />
+      </div>
+      <div class="hub-cards-grid" id="specialChannelCardsGrid"></div>
+      <div class="media-buttons">
+        <button type="button" id="runSpecialChannelAiBtn" class="btn-gold">🤖 চ্যানেল ও খেলাধুলা AI আপডেট</button>
+        <button type="button" id="speakSpecialChannelAiBtn">🔊 AI কণ্ঠে শুনুন</button>
+      </div>
+      <div class="ai-box-output" id="specialChannelAiOutput">ডিসকভারি, জিওগ্রাফি ও বাচ্চাদের খেলাধুলা AI অটো-আপডেট সক্রিয় রয়েছে।</div>
     </section>
 
     <section class="panel" id="legacyModulesSection">
@@ -1315,6 +1443,7 @@
         <input type="number" id="alert150CountInput" class="hub-search-input" value="150" min="0" max="100000" />
       </div>
       <div class="media-buttons">
+        <button type="button" id="toggleRealAlert150Btn">🔴 ১৫০ রিয়েল এলার্ট অফ/অন: চালু</button>
         <button type="button" id="toggle150TimerBtn">⏱ 150s অটো কাউন্টডাউন: বন্ধ</button>
         <button type="button" id="fire150AlertBtn" class="btn-gold">🚨 এখনই ১৫০ এলার্ট ও AI বিচার</button>
       </div>
@@ -1567,7 +1696,7 @@
   </main>
 
   <footer>
-    © 2026 AYNA BOOK — Full AI Radar, Aviation, Weather &amp; Quantum Social Hub
+    © 2026 AYNA BOOK* — Full AI Radar, Aviation, Weather &amp; Quantum Social Hub
   </footer>
 
   <nav class="bottom-nav">
