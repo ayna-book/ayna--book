@@ -1,0 +1,41 @@
+const COLD_BACKUP_STORAGE_KEY = "ayna_book_cold_backup_v1";
+
+export function saveColdSnapshot(snapshot) {
+  const payload = {
+    savedAt: Date.now(),
+    ...snapshot
+  };
+  try {
+    localStorage.setItem(COLD_BACKUP_STORAGE_KEY, JSON.stringify(payload));
+  } catch (_) {
+    // স্টোরেজ সীমা অতিক্রম করলে নিরাপদে উপেক্ষা করা হয়
+  }
+  return payload;
+}
+
+export function loadColdSnapshot() {
+  try {
+    const raw = localStorage.getItem(COLD_BACKUP_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+export function downloadColdBackupFile(filename = "ayna-cold-backup.json") {
+  const current = loadColdSnapshot() || {
+    savedAt: Date.now(),
+    note: "No snapshot saved yet"
+  };
+  const blob = new Blob([JSON.stringify(current, null, 2)], {
+    type: "application/json;charset=utf-8"
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
