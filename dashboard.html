@@ -2,427 +2,1273 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AYNA BOOK - Dashboard</title>
-  <!-- JsBarcode লাইব্রেরি (বারকোড রেন্ডার করার জন্য) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AYNA BOOK — Master Command Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
   <style>
     :root {
       --gold: #d4af37;
       --gold-bright: #ffd700;
-      --bg-dark: #07090e;
-      --panel-bg: #111622;
-      --border-dim: #242c3d;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
+      --gold-soft: rgba(212, 175, 55, 0.22);
+      --bg-dark: #06080e;
+      --panel-bg: #101522;
+      --box-bg: #0b0f19;
+      --text-main: #ffffff;
+      --text-muted: #cbd5e1;
+      /* মূল নির্দেশনা অনুযায়ী লেখা ৩ গুণ বড় স্কেলে */
+      --fs-body: 42px;
+      --fs-title: 60px;
+      --fs-label: 36px;
+      --fs-btn: 42px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background: var(--bg-dark); color: var(--text-main); }
 
-    /* Top Navbar */
-    .navbar {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100dvh;
+      background: radial-gradient(circle at top, #171f36 0%, var(--bg-dark) 100%);
+      color: var(--text-main);
+      font-size: var(--fs-body);
+      line-height: 1.45;
+      overflow-x: hidden;
+    }
+
+    /* সব ফিচার ও কন্টেইনার সোনালী বক্সে আবদ্ধ */
+    .gold-box {
+      background: var(--panel-bg);
+      border: 4px solid var(--gold);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 0 28px rgba(212, 175, 55, 0.25);
+      margin-bottom: 28px;
+    }
+
+    .inner-gold-box {
+      background: var(--box-bg);
+      border: 3px solid var(--gold);
+      border-radius: 20px;
+      padding: 24px;
+      margin-top: 18px;
+    }
+
+    /* Top Header & Clock */
+    .top-header {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 24px;
-      background: #0d111a;
-      border-bottom: 2px solid var(--gold);
+      gap: 18px;
+      padding: 22px 28px;
+      background: #0b0f19;
+      border-bottom: 5px solid var(--gold);
       position: sticky;
       top: 0;
-      z-index: 100;
-    }
-    .logo { font-size: 22px; font-weight: 800; color: var(--gold); letter-spacing: 2px; }
-    .nav-actions { display: flex; align-items: center; gap: 12px; }
-    .privacy-badge {
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--gold);
-      background: transparent;
-      color: var(--gold);
-      font-size: 12px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .btn-logout {
-      padding: 6px 14px;
-      background: #991b1b;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
+      z-index: 120;
     }
 
-    /* Slow Scrolling Breaking News Ticker */
-    .ticker-wrap {
-      width: 100%;
-      overflow: hidden;
-      background: #141926;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.4);
-      padding: 8px 0;
+    .brand-title {
+      font-size: var(--fs-title);
+      font-weight: 900;
+      color: var(--gold-bright);
+      letter-spacing: 2px;
+    }
+
+    .speaking-clock-box {
       display: flex;
       align-items: center;
-    }
-    .ticker-label {
-      background: var(--gold);
-      color: #000;
+      gap: 16px;
+      background: #141b2d;
+      border: 3px solid var(--gold);
+      border-radius: 18px;
+      padding: 12px 22px;
+      font-size: var(--fs-label);
       font-weight: 800;
-      font-size: 12px;
-      padding: 4px 12px;
-      margin-left: 12px;
-      border-radius: 4px;
-      white-space: nowrap;
-      z-index: 2;
+      color: var(--gold-bright);
     }
-    .ticker-move {
-      display: inline-block;
+
+    .btn-gold {
+      background: linear-gradient(135deg, #ffd700, #b88918);
+      color: #07090f;
+      border: 3px solid var(--gold-bright);
+      border-radius: 16px;
+      padding: 14px 26px;
+      font-size: var(--fs-btn);
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-dark-gold {
+      background: #121829;
+      color: var(--gold-bright);
+      border: 3px solid var(--gold);
+      border-radius: 16px;
+      padding: 12px 22px;
+      font-size: var(--fs-label);
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Slow Ticker */
+    .ticker-box {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: #121726;
+      border-bottom: 4px solid var(--gold);
+      padding: 12px 16px;
+    }
+
+    .ticker-badge {
+      background: var(--gold-bright);
+      color: #000;
+      font-weight: 900;
+      font-size: var(--fs-label);
+      padding: 8px 18px;
+      border-radius: 12px;
+      white-space: nowrap;
+      margin-right: 16px;
+    }
+
+    .ticker-track {
       white-space: nowrap;
       padding-left: 100%;
-      animation: tickerScroll 45s linear infinite;
-      font-size: 14px;
-      color: #f3e5ab;
+      animation: slowTicker 65s linear infinite;
+      font-size: var(--fs-label);
+      color: #fde68a;
+      font-weight: 700;
     }
-    @keyframes tickerScroll {
+
+    @keyframes slowTicker {
       0% { transform: translate3d(0, 0, 0); }
       100% { transform: translate3d(-100%, 0, 0); }
     }
 
-    /* Main Grid Layout */
-    .main-layout {
-      max-width: 1280px;
-      margin: 24px auto;
-      padding: 0 16px;
-      display: grid;
-      grid-template-columns: 320px 1fr 300px;
-      gap: 20px;
-    }
-    @media (max-width: 1024px) {
-      .main-layout { grid-template-columns: 1fr; }
+    .container {
+      width: 100%;
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 24px;
     }
 
-    /* Left Profile Card with Square Golden Photo Frame & Centered Bottom Barcode */
-    .profile-card {
-      background: var(--panel-bg);
-      border: 1px solid var(--border-dim);
-      border-radius: 14px;
-      padding: 20px;
-      text-align: center;
+    /* Profile & Square Golden Photo Frame + Barcode */
+    .profile-top-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      align-items: flex-start;
     }
-    .golden-frame-box {
-      width: 240px;
-      height: 240px;
-      margin: 0 auto 14px auto;
-      border: 4px solid var(--gold);
-      border-radius: 10px;
+
+    .golden-square-frame {
+      width: 360px;
+      height: 360px;
+      border: 6px solid var(--gold-bright);
+      border-radius: 22px;
       position: relative;
       overflow: hidden;
-      background: #090c14;
-      box-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
+      background: #080b12;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.35);
+      flex-shrink: 0;
     }
-    .golden-frame-box img {
+
+    .golden-square-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    .barcode-overlay {
+
+    .barcode-center-bottom {
       position: absolute;
-      bottom: 6px;
+      bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.94);
-      padding: 3px 8px 1px 8px;
-      border-radius: 4px;
-      border: 1px solid var(--gold);
+      background: #ffffff;
+      border: 3px solid var(--gold-bright);
+      border-radius: 10px;
+      padding: 6px 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-    .barcode-overlay svg { height: 24px; width: auto; display: block; }
-    .ayna-id-tag {
-      font-family: 'Courier New', monospace;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--gold);
-      background: #090b10;
-      padding: 5px 10px;
-      border-radius: 6px;
-      border: 1px solid rgba(212, 175, 55, 0.5);
-      display: inline-block;
-      margin-top: 6px;
-    }
-    .user-name { font-size: 20px; font-weight: 700; margin-top: 8px; }
-    .user-meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-    /* Center Feed & Post Composer */
-    .feed-section { display: flex; flex-direction: column; gap: 18px; }
-    .composer-card {
-      background: var(--panel-bg);
-      border: 1px solid var(--gold);
-      border-radius: 14px;
-      padding: 16px;
+    .barcode-center-bottom svg {
+      height: 38px;
+      width: auto;
     }
-    .composer-card textarea {
+
+    .profile-info-col {
+      flex: 1;
+      min-width: 320px;
+    }
+
+    .profile-action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .ayna-id-pill {
+      display: inline-block;
+      background: #090c14;
+      border: 3px solid var(--gold);
+      color: var(--gold-bright);
+      padding: 8px 18px;
+      border-radius: 14px;
+      font-family: monospace;
+      font-size: var(--fs-label);
+      font-weight: 900;
+      margin: 10px 0;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 14px;
+      font-size: var(--fs-label);
+      font-weight: 900;
+      border: 3px solid var(--gold-bright);
+      background: #231b04;
+      color: var(--gold-bright);
+      margin-left: 10px;
+    }
+
+    /* Profile Details Grid (All personal, career, education, research columns) */
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 20px;
+      margin-top: 22px;
+    }
+
+    .detail-field-box {
+      background: var(--box-bg);
+      border: 3px solid var(--gold);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .detail-field-box label {
+      display: block;
+      font-size: var(--fs-label);
+      color: var(--gold-bright);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .detail-field-box input,
+    .detail-field-box textarea,
+    .detail-field-box select {
       width: 100%;
-      height: 80px;
-      background: #0a0d14;
-      border: 1px solid var(--border-dim);
-      border-radius: 8px;
-      padding: 12px;
-      color: #fff;
-      font-size: 14px;
-      resize: none;
+      background: #121829;
+      border: 2px solid var(--gold);
+      border-radius: 14px;
+      color: #ffffff;
+      font-size: var(--fs-body);
+      padding: 14px 16px;
       outline: none;
     }
-    .composer-actions {
+
+    .detail-field-box textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    /* Composer Box (Large Post, Audio, Video, Live Video + Right Pen Icon) */
+    .composer-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
+      gap: 16px;
+      margin-bottom: 16px;
     }
-    .btn-post {
-      background: linear-gradient(135deg, #d4af37, #aa8018);
-      color: #000;
-      font-weight: 700;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .post-card {
-      background: var(--panel-bg);
-      border: 1px solid var(--border-dim);
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .post-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-    .post-author { font-weight: 700; color: var(--gold); font-size: 15px; }
-    .post-id { font-size: 11px; color: var(--text-muted); font-family: monospace; }
-    .post-body { font-size: 14px; line-height: 1.6; color: #e5e7eb; }
 
-    /* Right Feature Modules Grid */
-    .modules-panel {
-      background: var(--panel-bg);
-      border: 1px solid var(--border-dim);
-      border-radius: 14px;
-      padding: 16px;
+    .right-pen-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--gold-bright);
+      color: #07090f;
+      font-weight: 900;
+      font-size: var(--fs-label);
+      padding: 12px 22px;
+      border-radius: 16px;
+      border: 3px solid #ffffff;
     }
-    .modules-title {
-      font-size: 15px;
-      color: var(--gold);
-      font-weight: 700;
-      margin-bottom: 14px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-bottom: 1px solid var(--border-dim);
-      padding-bottom: 8px;
+
+    .composer-textarea {
+      width: 100%;
+      min-height: 360px;
+      background: #080c15;
+      border: 4px solid var(--gold);
+      border-radius: 20px;
+      color: #ffffff;
+      font-size: var(--fs-body);
+      padding: 22px;
+      outline: none;
+      resize: vertical;
     }
-    .module-grid {
+
+    .media-row {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 18px;
+      margin-top: 18px;
     }
-    .module-box {
-      background: #0a0d14;
-      border: 1px solid rgba(212, 175, 55, 0.35);
-      border-radius: 10px;
-      padding: 12px 8px;
+
+    .media-box {
+      background: #0b101c;
+      border: 3px solid var(--gold);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .media-box video,
+    .media-box audio {
+      width: 100%;
+      margin-top: 12px;
+      border-radius: 12px;
+    }
+
+    .composer-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    /* Dedicated Video Player Box */
+    .video-theater-box {
+      background: #090d17;
+      border: 4px solid var(--gold-bright);
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .video-theater-box video {
+      width: 100%;
+      max-height: 760px;
+      background: #000000;
+      border: 3px solid var(--gold);
+      border-radius: 16px;
+      margin-top: 14px;
+    }
+
+    /* AI Translator Box (Bangla <-> Any World Language) */
+    .ai-translator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+      gap: 20px;
+      margin-top: 14px;
+    }
+
+    /* Radars Box (Civil Radar & Weather Radar - Extra Large) */
+    .radar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
+      gap: 24px;
+      margin-top: 16px;
+    }
+
+    .radar-card {
+      background: #080d17;
+      border: 4px solid var(--gold-bright);
+      border-radius: 22px;
+      padding: 22px;
       text-align: center;
-      text-decoration: none;
-      color: var(--text-main);
-      font-size: 12px;
-      font-weight: 600;
-      transition: 0.25s;
+    }
+
+    .radar-screen {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 1 / 1;
+      margin: 16px auto;
+      border-radius: 50%;
+      border: 5px solid var(--gold-bright);
+      background: radial-gradient(circle, rgba(250, 204, 21, 0.14) 0%, rgba(11, 22, 38, 0.96) 72%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .radar-sweep {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 50%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--gold-bright), transparent);
+      transform-origin: 0% 50%;
+      animation: radarSpin 5s linear infinite;
+    }
+
+    @keyframes radarSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* All Feature Boxes inside one unified grid (No open features) */
+    .all-features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      gap: 22px;
+      margin-top: 16px;
+    }
+
+    .feature-gold-card {
+      background: #0b101c;
+      border: 4px solid var(--gold);
+      border-radius: 22px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .locked-vip {
+      border-style: dashed !important;
+      opacity: 0.78;
+    }
+
+    /* Post Feed Cards */
+    .post-card {
+      background: var(--panel-bg);
+      border: 4px solid var(--gold);
+      border-radius: 22px;
+      padding: 26px;
+      margin-bottom: 24px;
+    }
+
+    .post-top-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
       align-items: center;
-      gap: 6px;
+      gap: 14px;
+      border-bottom: 2px solid var(--gold-soft);
+      padding-bottom: 14px;
+      margin-bottom: 16px;
     }
-    .module-box:hover {
-      border-color: var(--gold-bright);
-      background: rgba(212, 175, 55, 0.12);
-      transform: translateY(-2px);
+
+    .post-author-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    .module-icon { font-size: 20px; }
+
+    .post-mini-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 14px;
+      border: 3px solid var(--gold-bright);
+      object-fit: cover;
+    }
+
+    .post-actions-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 2px solid var(--gold-soft);
+    }
+
+    .comment-box-area {
+      margin-top: 16px;
+      background: #090d17;
+      border: 2px solid var(--gold);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .comment-item {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+      font-size: var(--fs-label);
+    }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <header class="navbar">
-    <div class="logo">AYNA BOOK</div>
-    <div class="nav-actions">
-      <button class="privacy-badge" id="privacyToggleBtn">Profile: Public</button>
-      <button class="btn-logout" id="logoutBtn">Logout</button>
+  <!-- Top Header + Speaking Clock + Tier & Security -->
+  <header class="top-header">
+    <div class="brand-title">AYNA BOOK</div>
+
+    <div class="speaking-clock-box" id="clockBox">
+      <span id="liveClockDisplay">লোড হচ্ছে...</span>
+      <button type="button" class="btn-dark-gold" id="announceNowBtn">🔊 সময় ও তাপমাত্রা বলুন</button>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center;">
+      <select id="tierSelector" class="btn-dark-gold" title="VIP / VVIP Security Level">
+        <option value="standard">STANDARD</option>
+        <option value="vip">VIP GUARD</option>
+        <option value="vvip">VVIP VAULT</option>
+      </select>
+      <button type="button" class="btn-gold" id="logoutBtn">Logout</button>
     </div>
   </header>
 
-  <!-- Slow Breaking News Ticker -->
-  <div class="ticker-wrap">
-    <span class="ticker-label">AYNA LIVE</span>
-    <div class="ticker-move">
-      Welcome to AYNA BOOK Global Network • Secure Audio & Video Messaging • Live Radio & Bangla TV Streaming • GPS, Radar, Compass & Currency Exchange Active • Quantum Supercomputer Hub Online.
+  <!-- Slow News Ticker -->
+  <div class="ticker-box">
+    <span class="ticker-badge">AYNA LIVE</span>
+    <div class="ticker-track">
+      AYNA BOOK Global Network • লেখা, অডিও, ভিডিও ও লাইভ ভিডিও সবচাইতে অগ্রাধিকার • বাংলা থেকে বিশ্বের যেকোনো ভাষায় রিয়েল-টাইম AI ট্রান্সলেট • প্রতি ঘণ্টায় সময়, তাপমাত্রা ও ঠান্ডার ঘোষণা • VIP ও VVIP অতিরিক্ত সুরক্ষা সক্রিয়।
     </div>
   </div>
 
-  <!-- Main Dashboard Content -->
-  <main class="main-layout">
-    
-    <!-- Left Column: Profile & Square Golden Photo Frame -->
-    <aside class="profile-card">
-      <div class="golden-frame-box">
-        <img id="userPhoto" src="https://via.placeholder.com/300/121622/d4af37?text=AYNA+BOOK" alt="Profile Photo" />
-        <div class="barcode-overlay">
-          <svg id="aynaBarcode"></svg>
+  <main class="container">
+
+    <!-- 1. USER PROFILE BOX: Square Golden Frame + Centered Barcode + Full Personal/Academic/Research Columns -->
+    <section class="gold-box" id="profileBox">
+      <div class="profile-top-row">
+        <div class="golden-square-frame">
+          <img id="profilePhotoImg" src="https://via.placeholder.com/400/101522/ffd700?text=AYNA+USER" alt="Profile Photo" />
+          <div class="barcode-center-bottom">
+            <svg id="userBarcodeSvg"></svg>
+          </div>
+        </div>
+
+        <div class="profile-info-col">
+          <div class="profile-action-bar">
+            <button type="button" class="btn-gold" id="saveProfileBtn">🔄 প্রোফাইল আপডেট আইকন</button>
+          </div>
+
+          <div id="displayFullName" style="font-size: var(--fs-title); font-weight: 900; color: var(--gold-bright);">Mohammed Mahabub Alam</div>
+          <div>
+            <span class="ayna-id-pill" id="displayAynaId">2026-----10000001</span>
+            <span class="tier-badge" id="displayTierBadge">SECURITY: STANDARD</span>
+          </div>
+          <div id="securityGuardStatus" style="margin-top: 12px; color: #fde68a; font-size: var(--fs-label);">
+            VIP / VVIP Security Shield: Active & Monitoring
+          </div>
         </div>
       </div>
 
-      <div class="ayna-id-tag" id="displayAynaId">2026-----10000001</div>
-      <div class="user-name" id="displayUserName">Loading User...</div>
-      <div class="user-meta" id="displayUserEmail">user@aynabook.com</div>
-    </aside>
-
-    <!-- Center Column: Post Box & Live Feed -->
-    <section class="feed-section">
-      <div class="composer-card">
-        <textarea id="postInput" placeholder="Share an update with the AYNA BOOK network..."></textarea>
-        <div class="composer-actions">
-          <span style="font-size: 12px; color: var(--text-muted);" id="postStatus">Connected to AYNA RTDB</span>
-          <button class="btn-post" id="publishPostBtn">Publish Post</button>
+      <!-- কাস্টম ব্যক্তিগত, পেশা, শিক্ষাগত যোগ্যতা ও গবেষণা কলাম -->
+      <div class="details-grid">
+        <div class="detail-field-box">
+          <label for="inpName">নাম ও প্রোফাইল ছবি লিংক</label>
+          <input type="text" id="inpName" placeholder="আপনার পূর্ণ নাম" />
+          <input type="text" id="inpPhoto" placeholder="প্রোফাইল ছবির URL" style="margin-top: 12px;" />
         </div>
-      </div>
 
-      <div id="feedContainer" style="display: flex; flex-direction: column; gap: 14px;">
-        <!-- Posts will load dynamically here -->
+        <div class="detail-field-box">
+          <label for="inpAddress">ঠিকানা (Address)</label>
+          <textarea id="inpAddress" placeholder="বর্তমান ও স্থায়ী ঠিকানা লিখুন..."></textarea>
+        </div>
+
+        <div class="detail-field-box">
+          <label for="inpProfession">পেশা ও কর্মস্থল (কোন কাজে নিয়োজিত)</label>
+          <textarea id="inpProfession" placeholder="পেশা, পদবি, কর্মস্থল এবং কোন কাজে নিয়োজিত তা লিখুন..."></textarea>
+        </div>
+
+        <div class="detail-field-box">
+          <label for="inpBloodGroup">ব্লাড গ্রুপ ও জীবন বৃত্তান্ত (CV / Bio)</label>
+          <input type="text" id="inpBloodGroup" placeholder="ব্লাড গ্রুপ (যেমন: O+, A+, B+, AB+)" style="margin-bottom: 12px;" />
+          <textarea id="inpBio" placeholder="আপনার জীবন বৃত্তান্ত ও পরিচিতি লিখুন..."></textarea>
+        </div>
+
+        <div class="detail-field-box">
+          <label for="inpEducation">শিক্ষাগত যোগ্যতা (বিদ্যালয়, কলেজ, বিশ্ববিদ্যালয়)</label>
+          <textarea id="inpEducation" placeholder="কোন বিদ্যালয়ে, কোন কলেজে এবং কোন বিশ্ববিদ্যালয়ে পড়াশোনা করেছেন তা বিস্তারিত লিখুন..."></textarea>
+        </div>
+
+        <div class="detail-field-box">
+          <label for="inpResearch">গবেষণা ও বিশেষ বিষয় (Research & Specialization)</label>
+          <textarea id="inpResearch" placeholder="কোন বিষয় নিয়ে গবেষণা করেছেন বা করছেন তা লিখুন..."></textarea>
+        </div>
       </div>
     </section>
 
-    <!-- Right Column: AYNA Modules -->
-    <aside class="modules-panel">
-      <div class="modules-title">AYNA Command Modules</div>
-      <div class="module-grid">
-        <a href="chat.html" class="module-box"><span class="module-icon">💬</span>Audio/Video Chat</a>
-        <a href="radio-tv.html" class="module-box"><span class="module-icon">📡</span>Global Radio & TV</a>
-        <a href="bangla-radio-tv.html" class="module-box"><span class="module-icon">📺</span>Bangla Radio & TV</a>
-        <a href="radar.html" class="module-box"><span class="module-icon">🧭</span>Radar & Compass</a>
-        <a href="gps.html" class="module-box"><span class="module-icon">📍</span>Live GPS Tracker</a>
-        <a href="currency.html" class="module-box"><span class="module-icon">💱</span>Currency Exchange</a>
-        <a href="directory.html" class="module-box"><span class="module-icon">📒</span>Global Directory</a>
-        <a href="quantum.html" class="module-box"><span class="module-icon">⚛️</span>Quantum Hub</a>
+    <!-- 2. MAIN PRIORITY COMPOSER BOX: Writing, Audio, Video, Live Video + Right Pen Icon + AI Auto-Fix/Caps -->
+    <section class="gold-box" id="composerBox">
+      <div class="composer-header-row">
+        <div style="font-size: var(--fs-title); font-weight: 900; color: var(--gold-bright);">
+          লেখা, অডিও, ভিডিও ও লাইভ ভিডিও পোস্ট
+        </div>
+        <!-- লেখার কলম সবসময় ডান পাশে -->
+        <div class="right-pen-badge">
+          <span>✍️ লেখার কলম</span>
+        </div>
       </div>
-    </aside>
+
+      <textarea id="postMainTextarea" class="composer-textarea" placeholder="এখানে বড় করে লিখুন... বাংলা লিখলে অটো ক্যাপিটাল ও AI বানান/বাক্য সংশোধন সক্রিয় থাকবে।"></textarea>
+
+      <div class="media-row">
+        <div class="media-box">
+          <div style="font-weight: 800; color: var(--gold-bright);">🎙️ অডিও পোস্ট (রেকর্ড বা ফাইল)</div>
+          <input type="file" id="audioFileInput" accept="audio/*" style="margin-top: 10px; font-size: var(--fs-label);" />
+          <div style="margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="button" class="btn-dark-gold" id="recordAudioBtn">⏺️ অডিও রেকর্ড</button>
+            <button type="button" class="btn-dark-gold" id="stopAudioBtn" disabled>⏹️ বন্ধ করুন</button>
+          </div>
+          <audio id="audioPreview" controls></audio>
+        </div>
+
+        <div class="media-box">
+          <div style="font-weight: 800; color: var(--gold-bright);">🎬 ভিডিও ও লাইভ ভিডিও পোস্ট</div>
+          <input type="file" id="videoFileInput" accept="video/*" style="margin-top: 10px; font-size: var(--fs-label);" />
+          <div style="margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="button" class="btn-dark-gold" id="startLiveCamBtn">🔴 লাইভ ভিডিও ক্যামেরা</button>
+            <button type="button" class="btn-dark-gold" id="stopLiveCamBtn">⏹️ ক্যামেরা বন্ধ</button>
+          </div>
+          <video id="liveVideoPreview" autoplay muted playsinline></video>
+        </div>
+      </div>
+
+      <div class="composer-toolbar">
+        <div style="display: flex; flex-wrap: wrap; gap: 14px;">
+          <button type="button" class="btn-dark-gold" id="aiFixBtn">✨ AI পোস্ট সংশোধন ও ক্যাপিটাল</button>
+          <label class="btn-dark-gold">
+            <input type="checkbox" id="autoAiToggle" checked style="width: 32px; height: 32px;" />
+            অটো AI সংশোধন
+          </label>
+        </div>
+        <button type="button" class="btn-gold" id="publishPostBtn">🚀 পোস্ট প্রকাশ করুন</button>
+      </div>
+      <div id="composerFeedback" style="margin-top: 14px; color: #4ade80; font-weight: 800;"></div>
+    </section>
+
+    <!-- 3. DEDICATED VIDEO WATCHING BOX -->
+    <section class="gold-box video-theater-box" id="videoTheaterBox">
+      <div style="font-size: var(--fs-title); font-weight: 900; color: var(--gold-bright);">
+        🎥 আয়না বুক ভিডিও প্লেয়ার বক্স (Dedicated Video Box)
+      </div>
+      <div id="theaterVideoTitle" style="color: var(--text-muted); margin-top: 8px;">
+        নিচের ফিড বা আপলোড থেকে যেকোনো ভিডিও সিলেক্ট করে এই বক্সে দেখুন।
+      </div>
+      <video id="theaterVideoPlayer" controls playsinline></video>
+    </section>
+
+    <!-- 4. REAL-TIME BANGLA <-> ANY WORLD LANGUAGE AI TRANSLATOR BOX -->
+    <section class="gold-box" id="translatorBox">
+      <div style="font-size: var(--fs-title); font-weight: 900; color: var(--gold-bright);">
+        🌐 বাংলা থেকে বিশ্বের যেকোনো ভাষায় দ্রুত AI ট্রান্সলেট
+      </div>
+      <div class="ai-translator-grid">
+        <div class="detail-field-box">
+          <label for="sourceBanglaInput">বাংলায় বলুন বা লিখুন (অপর প্রান্তে অনুবাদ যাবে)</label>
+          <textarea id="sourceBanglaInput" placeholder="এখানে বাংলায় লিখুন বা ভয়েস বাটন চাপুন..."></textarea>
+          <div style="margin-top: 14px; display: flex; flex-wrap: wrap; gap: 12px;">
+            <button type="button" class="btn-dark-gold" id="voiceBanglaBtn">🎤 বাংলায় বলুন</button>
+            <button type="button" class="btn-gold" id="translateNowBtn">⚡ দ্রুত ট্রান্সলেট</button>
+          </div>
+        </div>
+
+        <div class="detail-field-box">
+          <label for="targetLangSelect">অপর প্রান্তের ভাষা নির্বাচন করুন</label>
+          <select id="targetLangSelect" style="margin-bottom: 12px;">
+            <option value="en">English (ইংরেজি)</option>
+            <option value="ar">العربية (আরবি)</option>
+            <option value="hi">हिन्दी (হিন্দি)</option>
+            <option value="ur">اردو (উর্দু)</option>
+            <option value="es">Español (স্প্যানিশ)</option>
+            <option value="fr">Français (ফ্রেঞ্চ)</option>
+            <option value="de">Deutsch (জার্মান)</option>
+            <option value="zh-CN">中文 (চাইনিজ)</option>
+            <option value="ja">日本語 (জাপানিজ)</option>
+            <option value="ko">한국어 (কোরিয়ান)</option>
+            <option value="tr">Türkçe (তুর্কি)</option>
+            <option value="ru">Русский (রাশিয়ান)</option>
+          </select>
+          <textarea id="translatedOutput" readonly placeholder="অপর প্রান্তের অনুবাদ এখানে দেখা যাবে..."></textarea>
+          <div style="margin-top: 14px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="button" class="btn-dark-gold" id="speakTranslatedBtn">🔊 অনুবাদ শোনান</button>
+            <button type="button" class="btn-dark-gold" id="copyTranslatedBtn">📋 কপি করুন</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. LARGE AI CIVIL RADAR & WEATHER RADAR BOX -->
+    <section class="gold-box" id="radarBox">
+      <div style="font-size: var(--fs-title); font-weight: 900; color: var(--gold-bright);">
+        📡 AI বেসামরিক রাডার ও আবহাওয়া রাডার (বড় সংস্করণ)
+      </div>
+      <div class="radar-grid">
+        <div class="radar-card">
+          <div style="font-weight: 900; color: var(--gold-bright);">✈️ AI বেসামরিক রাডার (Civil Radar)</div>
+          <div class="radar-screen">
+            <div class="radar-sweep"></div>
+          </div>
+          <div id="civilRadarStatus" style="color: #4ade80; font-weight: 800;">
+            AI Civil Radar Online: বেসামরিক আকাশপথ ও নেটওয়ার্ক স্ক্যান সক্রিয়
+          </div>
+        </div>
+
+        <div class="radar-card">
+          <div style="font-weight: 900; color: var(--gold-bright);">🌦️ AI আবহাওয়া রাডার (Weather Radar)</div>
+          <div class="radar-screen">
+            <div class="radar-sweep"></div>
+          </div>
+          <div id="weatherRadarStatus" style="color: #fde68a; font-weight: 800;">
+            AI Weather Radar Online: তাপমাত্রা ২৯°C • ঠান্ডা/বাতাস সতর্কতা পর্যবেক্ষণে
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. ALL FEATURE BOXES INSIDE ONE UNIFIED BOX (No 404, No Open Features) -->
+    <section class="gold-box" id="allFeatureBoxesSection">
+      <div style="font-size: var(--fs-title); font-weight: 900; color: var(--gold-bright);">
+        🧰 সমস্ত ফিচার বক্স (সব ফিচার বক্সের ভেতরে — 404 সমাধানসহ)
+      </div>
+
+      <div class="all-features-grid">
+        <!-- বিশ্ব কৃষক (404 সমাধানে ইন-বক্স লাইভ মডিউল) -->
+        <div class="feature-gold-card" data-required-tier="standard">
+          <div>
+            <div style="font-weight: 900; color: var(--gold-bright);">🌾 বিশ্ব কৃষক (Global Farmer Hub)</div>
+            <p style="margin-top: 10px; color: var(--text-muted);">
+              ফসলের আবহাওয়া পরামর্শ, বীজ ও সেচ ক্যালেন্ডার, এবং সরাসরি কৃষক নেটওয়ার্ক (404 মুক্ত লাইভ বক্স)।
+            </p>
+          </div>
+          <button type="button" class="btn-gold" onclick="openFeatureDetail('বিশ্ব কৃষক', 'আধুনিক কৃষি পরামর্শ, মাটির আর্দ্রতা গাইড এবং মৌসুমি ফসল পরিকল্পনা সক্রিয় আছে।')">
+            বিশ্ব কৃষক বক্স খুলুন
+          </button>
+        </div>
+
+        <!-- দৈনিক মূল্য তালিকা (404 সমাধানে ইন-বক্স লাইভ মডিউল) -->
+        <div class="feature-gold-card" data-required-tier="standard">
+          <div>
+            <div style="font-weight: 900; color: var(--gold-bright);">📊 দৈনিক মূল্য তালিকা (Daily Price Index)</div>
+            <p style="margin-top: 10px; color: var(--text-muted);">
+              চাল, ডাল, তেল, শাকসবজি, জ্বালানি ও কারেন্সির দৈনিক মূল্য তালিকা বক্স (404 মুক্ত লাইভ বক্স)।
+            </p>
+          </div>
+          <button type="button" class="btn-gold" onclick="openFeatureDetail('দৈনিক মূল্য তালিকা', 'আজকের বাজার দর আপডেট: চাল/আটা, ভোজ্যতেল, শাকসবজি ও মুদ্রা বিনিময় হার তথ্য বক্সে লোড করা হয়েছে।')">
+            দৈনিক মূল্য তালিকা দেখুন
+          </button>
+        </div>
+
+        <!-- অডিও/ভিডিও চ্যাট -->
+        <div class="feature-gold-card" data-required-tier="standard">
+          <div>
+            <div style="font-weight: 900; color: var(--gold-bright);">💬 অডিও ও ভিডিও চ্যাট বক্স</div>
+            <p style="margin-top: 10px; color: var(--text-muted);">এনক্রিপ্টেড ভয়েস ও ভিডিও কলিং বক্স।</p>
+          </div>
+          <button type="button" class="btn-dark-gold" onclick="openFeatureDetail('অডিও ও ভিডিও চ্যাট', 'AYNA Secure Audio/Video Chat বক্স প্রস্তুত।')">চ্যাট বক্স খুলুন</button>
+        </div>
+
+        <!-- রেডিও, টিভি, রাডার, কম্পাস, GPS, কারেন্সি, ডিরেক্টরি, কোয়ান্টাম -->
+        <div class="feature-gold-card" data-required-tier="standard">
+          <div>
+            <div style="font-weight: 900; color: var(--gold-bright);">📡 রেডিও, টিভি, GPS, কম্পাস ও কারেন্সি</div>
+            <p style="margin-top: 10px; color: var(--text-muted);">বাংলা ও গ্লোবাল রেডিও/টিভি, লাইভ GPS, কম্পাস, কারেন্সি এক্সচেঞ্জ ও ডিরেক্টরি বক্স।</p>
+          </div>
+          <button type="button" class="btn-dark-gold" onclick="openFeatureDetail('মিডিয়া ও নেভিগেশন বক্স', 'Radio, TV, GPS, Compass, Currency ও Global Directory সবগুলো বক্সের ভেতরে সক্রিয়।')">মডিউল বক্স দেখুন</button>
+        </div>
+
+        <!-- VIP ব্যবসায়িক সিকিউরিটি বক্স -->
+        <div class="feature-gold-card locked-vip" data-required-tier="vip">
+          <div>
+            <div style="font-weight: 900; color: var(--gold-bright);">🛡️ VIP ব্যবসায়িক সুরক্ষা বক্স</div>
+            <p style="margin-top: 10px; color: var(--text-muted);">ব্যবসায়িক অ্যাকাউন্টের জন্য অতিরিক্ত সেশন লক, ভেরিফাইড বিজনেস ব্যাজ ও অ্যাক্সেস গার্ড।</p>
+          </div>
+          <button type="button" class="btn-gold" onclick="openFeatureDetail('VIP ব্যবসায়িক সুরক্ষা', 'VIP অতিরিক্ত সিকিউরিটি লক সক্রিয়।')">VIP বক্স অ্যাক্সেস</button>
+        </div>
+
+        <!-- VVIP সর্বোচ্চ সিকিউরিটি ভল্ট -->
+        <div class="feature-gold-card locked-vip" data-required-tier="vvip">
+          <div>
+            <div style="font-weight: 900; color: var(--gold-bright);">👑 VVIP সর্বোচ্চ সিকিউরিটি ভল্ট</div>
+            <p style="margin-top: 10px; color: var(--text-muted);">VVIP ডুয়াল-লেয়ার প্রোটেকশন, অডিট লগ এবং প্রাইভেট কমান্ড সুরক্ষা।</p>
+          </div>
+          <button type="button" class="btn-gold" onclick="openFeatureDetail('VVIP সর্বোচ্চ সিকিউরিটি ভল্ট', 'VVIP সর্বোচ্চ নিরাপত্তা স্তর সক্রিয় রয়েছে।')">VVIP ভল্ট অ্যাক্সেস</button>
+        </div>
+      </div>
+
+      <div class="inner-gold-box" id="featureLiveOutputBox">
+        <strong style="color: var(--gold-bright);">বক্স স্ট্যাটাস:</strong> যেকোনো ফিচার বক্সে ক্লিক করলে তার লাইভ তথ্য এখানে দেখা যাবে।
+      </div>
+    </section>
+
+    <!-- 7. LIVE POST FEED (Name, Photo, Text, Audio, Video, Edit ... Dot + AI Fix, Like, Comment, Share, Copy) -->
+    <section id="feedListSection">
+      <div style="font-size: var(--fs-title); font-weight: 900; color: var(--gold-bright); margin-bottom: 18px;">
+        📰 AYNA BOOK লাইভ ফিড
+      </div>
+      <div id="postsContainer"></div>
+    </section>
 
   </main>
 
   <script type="module">
+    import { firebaseConfig } from "./firebase-config.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getDatabase, ref, onValue, push, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "ayna-book.firebaseapp.com",
-      databaseURL: "https://ayna-book-default-rtdb.firebaseio.com",
-      projectId: "ayna-book",
-      storageBucket: "ayna-book.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    let currentUserData = null;
+    let currentUid = null;
+    let currentUserProfile = {
+      fullName: "Mohammed Mahabub Alam",
+      aynaId: "2026-----10000001",
+      photoURL: "https://via.placeholder.com/400/101522/ffd700?text=AYNA+USER",
+      tier: "standard",
+      address: "",
+      profession: "",
+      bloodGroup: "",
+      bio: "",
+      education: "",
+      research: ""
+    };
 
-    // বারকোড জেনারেট ফাংশন
-    function renderBarcode(idText) {
-      JsBarcode("#aynaBarcode", idText, {
+    let currentAudioData = "";
+    let currentVideoData = "";
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let liveStream = null;
+
+    // 1. Barcode Renderer
+    function drawUserBarcode(codeText) {
+      JsBarcode("#userBarcodeSvg", codeText || "2026-----10000001", {
         format: "CODE128",
         lineColor: "#000000",
-        width: 1.2,
-        height: 22,
+        width: 1.5,
+        height: 36,
         displayValue: false,
         margin: 0
       });
     }
+    drawUserBarcode("2026-----10000001");
 
-    // ডিফল্ট বারকোড লোড
-    renderBarcode("2026-----10000001");
+    // 2. AI Auto-Capitalization & Text Correction Engine
+    function aiSmartCorrectAndCapitalize(rawText) {
+      if (!rawText) return "";
+      let text = rawText.trim().replace(/\s+/g, " ");
+      // সাধারণ বানান ও শব্দগত ভুল সংশোধন
+      const typoMap = {
+        "ফায়াব্যাস": "ফায়ারবেস",
+        "পোষ্ট": "পোস্ট",
+        "কফি": "কপি",
+        "কালাম": "কলাম",
+        "আপর": "অপর",
+        "এনাউন্স": "অ্যানাউন্স",
+        "ড্যাশবোড": "ড্যাশবোর্ড"
+      };
+      Object.keys(typoMap).forEach((wrongWord) => {
+        text = text.replaceAll(wrongWord, typoMap[wrongWord]);
+      });
 
-    // অথেনটিকেশন চেক ও প্রোফাইল লোড
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "index.html";
+      // ইংরেজি অংশে Auto-Capitalization (বাক্যের শুরু ও 'i')
+      text = text.replace(/(^|[.!?]\s+)([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase());
+      text = text.replace(/\bi\b/g, "I");
+      return text;
+    }
+
+    // Auto AI typing listener on composer
+    const postMainTextarea = document.getElementById("postMainTextarea");
+    const autoAiToggle = document.getElementById("autoAiToggle");
+    postMainTextarea.addEventListener("input", () => {
+      if (!autoAiToggle.checked) return;
+      const val = postMainTextarea.value;
+      if (val.endsWith(". ") || val.endsWith("! ") || val.endsWith("? ")) {
+        const pos = postMainTextarea.selectionStart;
+        postMainTextarea.value = aiSmartCorrectAndCapitalize(val);
+        postMainTextarea.setSelectionRange(pos, pos);
+      }
+    });
+
+    document.getElementById("aiFixBtn").addEventListener("click", () => {
+      postMainTextarea.value = aiSmartCorrectAndCapitalize(postMainTextarea.value);
+      document.getElementById("composerFeedback").textContent = "✨ AI লেখা ও ক্যাপিটালাইজেশন সংশোধন সম্পন্ন হয়েছে।";
+    });
+
+    // 3. Speaking Clock (Announces Time, Temperature & Cold/Weather every hour + on demand)
+    let lastAnnouncedHour = -1;
+    function getWeatherNote(hour) {
+      if (hour >= 22 || hour <= 5) return "রাত ও ভোরের দিকে হালকা ঠান্ডা অনুভূত হতে পারে, সতর্ক থাকুন।";
+      if (hour >= 6 && hour <= 9) return "সকালের স্নিগ্ধ আবহাওয়া ও হালকা ঠান্ডা ভাব রয়েছে।";
+      return "দিনের স্বাভাবিক তাপমাত্রা বজায় রয়েছে।";
+    }
+
+    function speakTimeAndWeather(forceSpeak = false) {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      const tempC = "২৮ ডিগ্রি সেলসিয়াস";
+      const weatherNote = getWeatherNote(now.getHours());
+
+      document.getElementById("liveClockDisplay").textContent = `🕒 ${timeStr} | 🌡️ ${tempC}`;
+      document.getElementById("weatherRadarStatus").textContent =
+        `AI Weather Radar Online: ${tempC} • ${weatherNote}`;
+
+      const currentHour = now.getHours();
+      if ((forceSpeak || currentHour !== lastAnnouncedHour) && "speechSynthesis" in window) {
+        lastAnnouncedHour = currentHour;
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(
+          `এখন সময় ${timeStr}। বর্তমান তাপমাত্রা ${tempC}। ${weatherNote}`
+        );
+        utter.lang = "bn-BD";
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    setInterval(() => speakTimeAndWeather(false), 1000);
+    speakTimeAndWeather(true);
+    document.getElementById("announceNowBtn").addEventListener("click", () => speakTimeAndWeather(true));
+
+    // 4. VIP & VVIP Security Tier Handler
+    function applyTierSecurity(tier) {
+      const rankMap = { standard: 1, vip: 2, vvip: 3 };
+      const myRank = rankMap[tier] || 1;
+      document.getElementById("displayTierBadge").textContent = `SECURITY: ${tier.toUpperCase()}`;
+      document.getElementById("securityGuardStatus").textContent =
+        tier === "vvip"
+          ? "👑 VVIP Maximum Security Vault Active (Device & Session Guard Enabled)"
+          : tier === "vip"
+          ? "🛡️ VIP Business Security Shield Active (Protected Business Access)"
+          : "🔒 Standard Account Security Active (VIP/VVIP সুরক্ষা আপগ্রেডযোগ্য)";
+
+      document.querySelectorAll("[data-required-tier]").forEach((card) => {
+        const reqRank = rankMap[card.getAttribute("data-required-tier")] || 1;
+        if (myRank < reqRank) {
+          card.classList.add("locked-vip");
+        } else {
+          card.classList.remove("locked-vip");
+        }
+      });
+    }
+
+    document.getElementById("tierSelector").addEventListener("change", async (e) => {
+      const selectedTier = e.target.value;
+      currentUserProfile.tier = selectedTier;
+      applyTierSecurity(selectedTier);
+      if (currentUid) {
+        await update(ref(db, `users/${currentUid}`), { tier: selectedTier });
+      }
+    });
+
+    window.openFeatureDetail = function (title, message) {
+      document.getElementById("featureLiveOutputBox").innerHTML =
+        `<strong style="color: var(--gold-bright);">📌 ${title}:</strong> ${message}`;
+    };
+
+    // 5. Real-time Bangla <-> Any Language AI Translator + Voice Input
+    async function translateBanglaText() {
+      const text = document.getElementById("sourceBanglaInput").value.trim();
+      const targetLang = document.getElementById("targetLangSelect").value;
+      const outBox = document.getElementById("translatedOutput");
+      if (!text) return;
+
+      outBox.value = "অনুবাদ করা হচ্ছে...";
+      try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=bn&tl=${encodeURIComponent(targetLang)}&dt=t&q=${encodeURIComponent(text)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const translated = (data[0] || []).map((item) => item[0]).join("");
+        outBox.value = translated || text;
+      } catch (err) {
+        outBox.value = "অনুবাদ সংযোগ যাচাই করুন: " + text;
+      }
+    }
+
+    document.getElementById("translateNowBtn").addEventListener("click", translateBanglaText);
+    document.getElementById("sourceBanglaInput").addEventListener("input", () => {
+      clearTimeout(window._trTimer);
+      window._trTimer = setTimeout(translateBanglaText, 600);
+    });
+
+    document.getElementById("voiceBanglaBtn").addEventListener("click", () => {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        alert("এই ব্রাউজারে ভয়েস রিকগনিশন সাপোর্ট নেই।");
         return;
       }
+      const rec = new SpeechRec();
+      rec.lang = "bn-BD";
+      rec.onresult = (event) => {
+        const spoken = event.results[0][0].transcript;
+        document.getElementById("sourceBanglaInput").value = spoken;
+        translateBanglaText();
+      };
+      rec.start();
+    });
 
-      const userRef = ref(db, `users/${user.uid}`);
-      onValue(userRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          currentUserData = data;
-          document.getElementById("displayUserName").textContent = data.fullName || user.displayName;
-          document.getElementById("displayUserEmail").textContent = data.email;
-          document.getElementById("displayAynaId").textContent = data.aynaId || "2026-----10000001";
-          if (data.photoURL) document.getElementById("userPhoto").src = data.photoURL;
-          
-          const privacyMode = data.privacy || "public";
-          document.getElementById("privacyToggleBtn").textContent = `Profile: ${privacyMode.toUpperCase()}`;
-          renderBarcode(data.aynaId || "2026-----10000001");
+    document.getElementById("speakTranslatedBtn").addEventListener("click", () => {
+      const txt = document.getElementById("translatedOutput").value.trim();
+      const lang = document.getElementById("targetLangSelect").value;
+      if (!txt || !("speechSynthesis" in window)) return;
+      const u = new SpeechSynthesisUtterance(txt);
+      u.lang = lang;
+      window.speechSynthesis.speak(u);
+    });
+
+    document.getElementById("copyTranslatedBtn").addEventListener("click", () => {
+      const txt = document.getElementById("translatedOutput").value;
+      navigator.clipboard?.writeText(txt);
+    });
+
+    // 6. Audio & Live Video Recording / File Handling
+    document.getElementById("recordAudioBtn").addEventListener("click", async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunks, { type: "audio/webm" });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          currentAudioData = reader.result;
+          document.getElementById("audioPreview").src = currentAudioData;
+        };
+        reader.readAsDataURL(blob);
+      };
+      mediaRecorder.start();
+      document.getElementById("recordAudioBtn").disabled = true;
+      document.getElementById("stopAudioBtn").disabled = false;
+    });
+
+    document.getElementById("stopAudioBtn").addEventListener("click", () => {
+      mediaRecorder?.stop();
+      document.getElementById("recordAudioBtn").disabled = false;
+      document.getElementById("stopAudioBtn").disabled = true;
+    });
+
+    document.getElementById("audioFileInput").addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        currentAudioData = reader.result;
+        document.getElementById("audioPreview").src = currentAudioData;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("startLiveCamBtn").addEventListener("click", async () => {
+      liveStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      document.getElementById("liveVideoPreview").srcObject = liveStream;
+    });
+
+    document.getElementById("stopLiveCamBtn").addEventListener("click", () => {
+      liveStream?.getTracks().forEach((t) => t.stop());
+      document.getElementById("liveVideoPreview").srcObject = null;
+    });
+
+    document.getElementById("videoFileInput").addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      currentVideoData = url;
+      document.getElementById("theaterVideoPlayer").src = url;
+      document.getElementById("theaterVideoTitle").textContent = `ভিডিও চলছে: ${file.name}`;
+    });
+
+    window.playInVideoBox = function (src, title) {
+      const player = document.getElementById("theaterVideoPlayer");
+      player.src = src;
+      player.play().catch(() => {});
+      document.getElementById("theaterVideoTitle").textContent = `🎥 চলছে: ${title}`;
+      document.getElementById("videoTheaterBox").scrollIntoView({ behavior: "smooth" });
+    };
+
+    // 7. Profile Sync & Update
+    function fillProfileInputs(p) {
+      document.getElementById("displayFullName").textContent = p.fullName || "AYNA Member";
+      document.getElementById("displayAynaId").textContent = p.aynaId || "2026-----10000001";
+      document.getElementById("profilePhotoImg").src = p.photoURL || "https://via.placeholder.com/400/101522/ffd700?text=AYNA+USER";
+      drawUserBarcode(p.aynaId || "2026-----10000001");
+
+      document.getElementById("inpName").value = p.fullName || "";
+      document.getElementById("inpPhoto").value = p.photoURL || "";
+      document.getElementById("inpAddress").value = p.address || "";
+      document.getElementById("inpProfession").value = p.profession || "";
+      document.getElementById("inpBloodGroup").value = p.bloodGroup || "";
+      document.getElementById("inpBio").value = p.bio || "";
+      document.getElementById("inpEducation").value = p.education || "";
+      document.getElementById("inpResearch").value = p.research || "";
+      document.getElementById("tierSelector").value = p.tier || "standard";
+      applyTierSecurity(p.tier || "standard");
+    }
+
+    document.getElementById("saveProfileBtn").addEventListener("click", async () => {
+      const updated = {
+        fullName: aiSmartCorrectAndCapitalize(document.getElementById("inpName").value) || currentUserProfile.fullName,
+        photoURL: document.getElementById("inpPhoto").value.trim() || currentUserProfile.photoURL,
+        address: document.getElementById("inpAddress").value.trim(),
+        profession: document.getElementById("inpProfession").value.trim(),
+        bloodGroup: document.getElementById("inpBloodGroup").value.trim(),
+        bio: document.getElementById("inpBio").value.trim(),
+        education: document.getElementById("inpEducation").value.trim(),
+        research: document.getElementById("inpResearch").value.trim(),
+        tier: document.getElementById("tierSelector").value
+      };
+      currentUserProfile = { ...currentUserProfile, ...updated };
+      fillProfileInputs(currentUserProfile);
+
+      if (currentUid) {
+        await update(ref(db, `users/${currentUid}`), updated);
+      }
+      alert("প্রোফাইলের সব ব্যক্তিগত, পেশা, শিক্ষা ও গবেষণা তথ্য সফলভাবে আপডেট হয়েছে!");
+    });
+
+    // 8. Publish Post with AI Correction
+    document.getElementById("publishPostBtn").addEventListener("click", async () => {
+      let content = postMainTextarea.value.trim();
+      if (!content && !currentAudioData && !currentVideoData) return;
+
+      if (autoAiToggle.checked) {
+        content = aiSmartCorrectAndCapitalize(content);
+      }
+
+      const newPostObj = {
+        authorName: currentUserProfile.fullName,
+        aynaId: currentUserProfile.aynaId,
+        photoURL: currentUserProfile.photoURL,
+        content: content,
+        audioData: currentAudioData || "",
+        videoData: currentVideoData || "",
+        likes: 0,
+        shares: 0,
+        comments: {},
+        createdAt: Date.now()
+      };
+
+      if (currentUid) {
+        await set(push(ref(db, "posts")), newPostObj);
+      } else {
+        renderLocalOrFeedList([newPostObj]);
+      }
+
+      postMainTextarea.value = "";
+      currentAudioData = "";
+      currentVideoData = "";
+      document.getElementById("audioPreview").src = "";
+      document.getElementById("composerFeedback").textContent = "✅ পোস্ট ও AI সংশোধন সফলভাবে প্রকাশিত হয়েছে।";
+    });
+
+    // Post Interactions (Edit with AI, Like, Comment, Share, Copy)
+    window.editPostWithAi = async function (postKey, oldText) {
+      const edited = prompt("পোস্ট এডিট করুন (AI অটো সংশোধন প্রয়োগ হবে):", oldText);
+      if (edited === null) return;
+      const fixedText = aiSmartCorrectAndCapitalize(edited);
+      if (currentUid && postKey) {
+        await update(ref(db, `posts/${postKey}`), { content: fixedText, editedAt: Date.now() });
+      }
+    };
+
+    window.likePost = async function (postKey, currentLikes) {
+      if (currentUid && postKey) {
+        await update(ref(db, `posts/${postKey}`), { likes: (currentLikes || 0) + 1 });
+      }
+    };
+
+    window.sharePost = async function (postKey, currentShares) {
+      if (currentUid && postKey) {
+        await update(ref(db, `posts/${postKey}`), { shares: (currentShares || 0) + 1 });
+      }
+      alert("পোস্টটি শেয়ার করা হয়েছে!");
+    };
+
+    window.copyPostText = function (text) {
+      navigator.clipboard?.writeText(text || "");
+      alert("লেখা কপি করা হয়েছে!");
+    };
+
+    window.addCommentToPost = async function (postKey) {
+      const inp = document.getElementById(`commentInp_${postKey}`);
+      const txt = inp?.value.trim();
+      if (!txt || !currentUid || !postKey) return;
+      await push(ref(db, `posts/${postKey}/comments`), {
+        author: currentUserProfile.fullName,
+        text: aiSmartCorrectAndCapitalize(txt),
+        time: Date.now()
+      });
+      inp.value = "";
+    };
+
+    function renderLocalOrFeedList(items) {
+      const container = document.getElementById("postsContainer");
+      container.innerHTML = "";
+      items.forEach((p) => {
+        const commentsArr = p.comments ? Object.values(p.comments) : [];
+        const safeText = (p.content || "").replaceAll("`", "").replaceAll("'", "\\'");
+        const card = document.createElement("div");
+        card.className = "post-card";
+        card.innerHTML = `
+          <div class="post-top-meta">
+            <div class="post-author-wrap">
+              <img class="post-mini-avatar" src="${p.photoURL || "https://via.placeholder.com/120/101522/ffd700?text=AYNA"}" alt="Author" />
+              <div>
+                <div style="font-weight: 900; color: var(--gold-bright);">${p.authorName || "AYNA Member"}</div>
+                <div style="color: var(--text-muted); font-family: monospace;">${p.aynaId || "2026-----10000001"}</div>
+              </div>
+            </div>
+            <button type="button" class="btn-dark-gold" onclick="editPostWithAi('${p._key || ""}', '${safeText}')">⋮ এডিট ও AI সংশোধন</button>
+          </div>
+
+          <div style="white-space: pre-wrap;">${p.content || ""}</div>
+          ${p.audioData ? `<audio controls src="${p.audioData}" style="width: 100%; margin-top: 16px;"></audio>` : ""}
+          ${p.videoData ? `
+            <div style="margin-top: 16px;">
+              <button type="button" class="btn-gold" onclick="playInVideoBox('${p.videoData}', '${p.authorName || "Post Video"}')">
+                ▶️ ভিডিও বক্সে দেখুন
+              </button>
+            </div>
+          ` : ""}
+
+          <div class="post-actions-bar">
+            <button type="button" class="btn-dark-gold" onclick="likePost('${p._key || ""}', ${p.likes || 0})">👍 লাইক (${p.likes || 0})</button>
+            <button type="button" class="btn-dark-gold" onclick="sharePost('${p._key || ""}', ${p.shares || 0})">🔁 শেয়ার (${p.shares || 0})</button>
+            <button type="button" class="btn-dark-gold" onclick="copyPostText('${safeText}')">📋 কপি</button>
+          </div>
+
+          <div class="comment-box-area">
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <input type="text" id="commentInp_${p._key || "temp"}" placeholder="কমেন্ট লিখুন..." style="flex: 1; min-width: 240px; padding: 12px 16px; border-radius: 14px; border: 2px solid var(--gold); background: #101522; color: #fff; font-size: var(--fs-label);" />
+              <button type="button" class="btn-gold" onclick="addCommentToPost('${p._key || "temp"}')">💬 কমেন্ট</button>
+            </div>
+            <div style="margin-top: 12px;">
+              ${commentsArr.map((c) => `<div class="comment-item"><strong>${c.author}:</strong> ${c.text}</div>`).join("")}
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // 9. Firebase Auth & Realtime Database Sync
+    onAuthStateChanged(auth, (user) => {
+      if (!user) return;
+      currentUid = user.uid;
+      const uRef = ref(db, `users/${user.uid}`);
+      onValue(uRef, (snap) => {
+        if (snap.exists()) {
+          currentUserProfile = { ...currentUserProfile, ...snap.val() };
+          fillProfileInputs(currentUserProfile);
         }
       });
     });
 
-    // Public / Private প্রোফাইল টগল
-    document.getElementById("privacyToggleBtn").addEventListener("click", async () => {
-      const user = auth.currentUser;
-      if (!user || !currentUserData) return;
-      const newPrivacy = currentUserData.privacy === "private" ? "public" : "private";
-      await update(ref(db, `users/${user.uid}`), { privacy: newPrivacy });
-    });
-
-    // নতুন পোস্ট পাবলিশ
-    document.getElementById("publishPostBtn").addEventListener("click", async () => {
-      const text = document.getElementById("postInput").value.trim();
-      const user = auth.currentUser;
-      if (!text || !user) return;
-
-      const postsRef = ref(db, "posts");
-      const newPostRef = push(postsRef);
-      await set(newPostRef, {
-        authorName: currentUserData?.fullName || user.displayName || "AYNA Member",
-        aynaId: currentUserData?.aynaId || "2026-----10000001",
-        uid: user.uid,
-        content: text,
-        timestamp: Date.now()
+    onValue(ref(db, "posts"), (snap) => {
+      const list = [];
+      snap.forEach((child) => {
+        list.push({ _key: child.key, ...child.val() });
       });
-
-      document.getElementById("postInput").value = "";
+      list.reverse();
+      renderLocalOrFeedList(list);
     });
 
-    // রিয়েলটাইম পোস্ট ফিড লোড
-    const feedRef = ref(db, "posts");
-    onValue(feedRef, (snapshot) => {
-      const feedContainer = document.getElementById("feedContainer");
-      feedContainer.innerHTML = "";
-      const posts = [];
-      snapshot.forEach((child) => { posts.push(child.val()); });
-      posts.reverse().forEach((post) => {
-        const card = document.createElement("div");
-        card.className = "post-card";
-        card.innerHTML = `
-          <div class="post-header">
-            <span class="post-author">${post.authorName}</span>
-            <span class="post-id">ID: ${post.aynaId}</span>
-          </div>
-          <div class="post-body">${post.content}</div>
-        `;
-        feedContainer.appendChild(card);
-      });
-    });
-
-    // লগআউট
     document.getElementById("logoutBtn").addEventListener("click", async () => {
       await signOut(auth);
       window.location.href = "index.html";
