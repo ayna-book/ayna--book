@@ -1,65 +1,1357 @@
-<!DOCTYPE html><html lang="bn"><head><style>
-@font-face {
-  font-family: "Optimistic";
-  font-style: normal;
-  font-weight: 400 600;
-  font-display: swap;
-  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Optimistic Mono";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
-}
-:where(html) {
-  font-family: "Optimistic", system-ui, sans-serif;
-}
-:where(code, pre, kbd, samp) {
-  font-family: "Optimistic Mono", ui-monospace, monospace;
-}
-</style><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AYNA BOOK ★ - Single File All In One</title>
-<style>*{box-sizing:border-box}body{margin:0;background:#050a18;color:#fff;font-family:Arial,sans-serif;font-size:30px;line-height:1.5;padding:16px}
-.logo{color:#fff6b3;text-align:center;font-size:72px;font-weight:1000}h1{color:#fff6b3;text-align:center;font-size:52px}
-.tabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.tab{background:#050b1c;color:#fff;border:3px solid #ffe64d;border-radius:10px;padding:14px 18px;font-size:28px;cursor:pointer}.tab.active{background:#ffe64d;color:#050a18;font-weight:1000}
-.box{background:linear-gradient(155deg,#1a3575,#08122b);border:4px solid #ffe64d;border-radius:16px;padding:20px;margin:16px 0;text-align:center}
-input,select{width:100%;background:#050b1c;color:#fff;border:3px solid #ffe64d;border-radius:10px;padding:16px;font-size:30px;margin:8px 0}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}@media(max-width:700px){.grid{grid-template-columns:1fr}}
-.card{background:#050b1c;border:3px solid #ffe64d;border-radius:12px;padding:16px}.b{color:#fff6b3;font-weight:1000;font-size:34px}.m{color:#e6eeff}.btn{display:inline-block;background:#ffe64d;color:#050a18;font-weight:1000;padding:10px 18px;border-radius:8px;text-decoration:none;margin:6px;border:0;cursor:pointer;font-size:28px}.price{color:#38f2ff;font-weight:1000;font-size:40px}
-.warn{background:#3a1500;border:3px solid #ff4d6d;border-radius:12px;padding:16px;margin:16px 0;font-size:28px}
-</style></head><body>
-<div class="logo">AYNA BOOK ★</div><h1>সব একসাথে • একটাই ফাইল • আজীবন অটো-আপডেট ♾️</h1>
-<div class="box"><b>অটো-আপডেট: আজীবন চালু ♾️</b> • শেষ আপডেট: <span id="last">এখন</span> • <button class="btn" onclick="autoUpdate(true)">🔄 এখনই অটো-আপডেট</button><br><span style="font-size:26px">এই ফাইলে আলাদা কোনো ফাইল লাগে না — 404 হবে না। ব্যক্তিগত ফোন/জিমেইল/ছবি কোথাও দেওয়া হয় না।</span></div>
-<div class="tabs" id="tabs"></div>
-<div id="content"></div>
-<script>
-const LEADERS=[{"n": "Afghanistan", "c": "AF", "leader": "Hibatullah Akhundzada", "title": "Supreme Leader"}, {"n": "Albania", "c": "AL", "leader": "Edi Rama", "title": "Prime Minister"}, {"n": "Algeria", "c": "DZ", "leader": "Abdelmadjid Tebboune", "title": "President"}, {"n": "Andorra", "c": "AD", "leader": "Xavier Espot Zamora", "title": "Prime Minister"}, {"n": "Angola", "c": "AO", "leader": "Joao Lourenco", "title": "President"}, {"n": "Antigua and Barbuda", "c": "AG", "leader": "Gaston Browne", "title": "Prime Minister"}, {"n": "Argentina", "c": "AR", "leader": "Javier Milei", "title": "President"}, {"n": "Armenia", "c": "AM", "leader": "Nikol Pashinyan", "title": "Prime Minister"}, {"n": "Australia", "c": "AU", "leader": "Anthony Albanese", "title": "Prime Minister"}, {"n": "Austria", "c": "AT", "leader": "Alexander Van der Bellen", "title": "President"}, {"n": "Azerbaijan", "c": "AZ", "leader": "Ilham Aliyev", "title": "President"}, {"n": "Bahamas", "c": "BS", "leader": "Philip Davis", "title": "Prime Minister"}, {"n": "Bahrain", "c": "BH", "leader": "Hamad bin Isa Al Khalifa", "title": "King"}, {"n": "Bangladesh", "c": "BD", "leader": "Muhammad Yunus", "title": "Chief Adviser"}, {"n": "Barbados", "c": "BB", "leader": "Mia Mottley", "title": "Prime Minister"}, {"n": "Belarus", "c": "BY", "leader": "Alexander Lukashenko", "title": "President"}, {"n": "Belgium", "c": "BE", "leader": "Bart De Wever", "title": "Prime Minister"}, {"n": "Belize", "c": "BZ", "leader": "John Briceno", "title": "Prime Minister"}, {"n": "Benin", "c": "BJ", "leader": "Patrice Talon", "title": "President"}, {"n": "Bhutan", "c": "BT", "leader": "Jigme Khesar Namgyel Wangchuck", "title": "King"}, {"n": "Bolivia", "c": "BO", "leader": "Rodrigo Paz", "title": "President"}, {"n": "Bosnia and Herzegovina", "c": "BA", "leader": "Denis Becirovic", "title": "Chairman of Presidency"}, {"n": "Botswana", "c": "BW", "leader": "Duma Boko", "title": "President"}, {"n": "Brazil", "c": "BR", "leader": "Luiz Inacio Lula da Silva", "title": "President"}, {"n": "Brunei", "c": "BN", "leader": "Hassanal Bolkiah", "title": "Sultan"}, {"n": "Bulgaria", "c": "BG", "leader": "Rumen Radev", "title": "President"}, {"n": "Burkina Faso", "c": "BF", "leader": "Ibrahim Traore", "title": "President"}, {"n": "Burundi", "c": "BI", "leader": "Evariste Ndayishimiye", "title": "President"}, {"n": "Cambodia", "c": "KH", "leader": "Hun Manet", "title": "Prime Minister"}, {"n": "Cameroon", "c": "CM", "leader": "Paul Biya", "title": "President"}, {"n": "Canada", "c": "CA", "leader": "Mark Carney", "title": "Prime Minister"}, {"n": "Cape Verde", "c": "CV", "leader": "Jose Maria Neves", "title": "President"}, {"n": "Central African Republic", "c": "CF", "leader": "Faustin-Archange Touadera", "title": "President"}, {"n": "Chad", "c": "TD", "leader": "Mahamat Idriss Deby", "title": "President"}, {"n": "Chile", "c": "CL", "leader": "Gabriel Boric", "title": "President"}, {"n": "China", "c": "CN", "leader": "Xi Jinping", "title": "President"}, {"n": "Colombia", "c": "CO", "leader": "Gustavo Petro", "title": "President"}, {"n": "Comoros", "c": "KM", "leader": "Azali Assoumani", "title": "President"}, {"n": "Congo", "c": "CG", "leader": "Denis Sassou Nguesso", "title": "President"}, {"n": "Costa Rica", "c": "CR", "leader": "Rodrigo Chaves", "title": "President"}, {"n": "Croatia", "c": "HR", "leader": "Zoran Milanovic", "title": "President"}, {"n": "Cuba", "c": "CU", "leader": "Miguel Diaz-Canel", "title": "President"}, {"n": "Cyprus", "c": "CY", "leader": "Nikos Christodoulides", "title": "President"}, {"n": "Czech Republic", "c": "CZ", "leader": "Petr Pavel", "title": "President"}, {"n": "Democratic Republic of the Congo", "c": "CD", "leader": "Felix Tshisekedi", "title": "President"}, {"n": "Denmark", "c": "DK", "leader": "Mette Frederiksen", "title": "Prime Minister"}, {"n": "Djibouti", "c": "DJ", "leader": "Ismail Omar Guelleh", "title": "President"}, {"n": "Dominica", "c": "DM", "leader": "Roosevelt Skerrit", "title": "Prime Minister"}, {"n": "Dominican Republic", "c": "DO", "leader": "Luis Abinader", "title": "President"}, {"n": "Ecuador", "c": "EC", "leader": "Daniel Noboa", "title": "President"}, {"n": "Egypt", "c": "EG", "leader": "Abdel Fattah el-Sisi", "title": "President"}, {"n": "El Salvador", "c": "SV", "leader": "Nayib Bukele", "title": "President"}, {"n": "Equatorial Guinea", "c": "GQ", "leader": "Teodoro Obiang Nguema", "title": "President"}, {"n": "Eritrea", "c": "ER", "leader": "Isaias Afwerki", "title": "President"}, {"n": "Estonia", "c": "EE", "leader": "Alar Karis", "title": "President"}, {"n": "Eswatini", "c": "SZ", "leader": "Mswati III", "title": "King"}, {"n": "Ethiopia", "c": "ET", "leader": "Taye Atske Selassie", "title": "President"}, {"n": "Fiji", "c": "FJ", "leader": "Sitiveni Rabuka", "title": "Prime Minister"}, {"n": "Finland", "c": "FI", "leader": "Alexander Stubb", "title": "President"}, {"n": "France", "c": "FR", "leader": "Emmanuel Macron", "title": "President"}, {"n": "Gabon", "c": "GA", "leader": "Brice Oligui Nguema", "title": "President"}, {"n": "Gambia", "c": "GM", "leader": "Adama Barrow", "title": "President"}, {"n": "Georgia", "c": "GE", "leader": "Mikheil Kavelashvili", "title": "President"}, {"n": "Germany", "c": "DE", "leader": "Friedrich Merz", "title": "Chancellor"}, {"n": "Ghana", "c": "GH", "leader": "John Mahama", "title": "President"}, {"n": "Greece", "c": "GR", "leader": "Konstantinos Tasoulas", "title": "President"}, {"n": "Grenada", "c": "GD", "leader": "Dickon Mitchell", "title": "Prime Minister"}, {"n": "Guatemala", "c": "GT", "leader": "Bernardo Arevalo", "title": "President"}, {"n": "Guinea", "c": "GN", "leader": "Mamady Doumbouya", "title": "President"}, {"n": "Guinea-Bissau", "c": "GW", "leader": "Umaro Sissoco Embalo", "title": "President"}, {"n": "Guyana", "c": "GY", "leader": "Irfaan Ali", "title": "President"}, {"n": "Haiti", "c": "HT", "leader": "Laurent Saint-Cyr", "title": "President of Transitional Council"}, {"n": "Honduras", "c": "HN", "leader": "Xiomara Castro", "title": "President"}, {"n": "Hungary", "c": "HU", "leader": "Viktor Orban", "title": "Prime Minister"}, {"n": "Iceland", "c": "IS", "leader": "Halla Tomasdottir", "title": "President"}, {"n": "India", "c": "IN", "leader": "Narendra Modi", "title": "Prime Minister"}, {"n": "Indonesia", "c": "ID", "leader": "Prabowo Subianto", "title": "President"}, {"n": "Iran", "c": "IR", "leader": "Masoud Pezeshkian", "title": "President"}, {"n": "Iraq", "c": "IQ", "leader": "Abdul Latif Rashid", "title": "President"}, {"n": "Ireland", "c": "IE", "leader": "Catherine Connolly", "title": "President"}, {"n": "Israel", "c": "IL", "leader": "Benjamin Netanyahu", "title": "Prime Minister"}, {"n": "Italy", "c": "IT", "leader": "Giorgia Meloni", "title": "Prime Minister"}, {"n": "Ivory Coast", "c": "CI", "leader": "Alassane Ouattara", "title": "President"}, {"n": "Jamaica", "c": "JM", "leader": "Andrew Holness", "title": "Prime Minister"}, {"n": "Japan", "c": "JP", "leader": "Sanae Takaichi", "title": "Prime Minister"}, {"n": "Jordan", "c": "JO", "leader": "Abdullah II", "title": "King"}, {"n": "Kazakhstan", "c": "KZ", "leader": "Kassym-Jomart Tokayev", "title": "President"}, {"n": "Kenya", "c": "KE", "leader": "William Ruto", "title": "President"}, {"n": "Kiribati", "c": "KI", "leader": "Taneti Maamau", "title": "President"}, {"n": "Kuwait", "c": "KW", "leader": "Mishal Al-Ahmad", "title": "Emir"}, {"n": "Kyrgyzstan", "c": "KG", "leader": "Sadyr Japarov", "title": "President"}, {"n": "Laos", "c": "LA", "leader": "Thongloun Sisoulith", "title": "President"}, {"n": "Latvia", "c": "LV", "leader": "Edgars Rinkevics", "title": "President"}, {"n": "Lebanon", "c": "LB", "leader": "Joseph Aoun", "title": "President"}, {"n": "Lesotho", "c": "LS", "leader": "Letsie III", "title": "King"}, {"n": "Liberia", "c": "LR", "leader": "Joseph Boakai", "title": "President"}, {"n": "Libya", "c": "LY", "leader": "Mohamed al-Menfi", "title": "Chairman Presidential Council"}, {"n": "Liechtenstein", "c": "LI", "leader": "Hans-Adam II", "title": "Prince"}, {"n": "Lithuania", "c": "LT", "leader": "Gitanas Nauseda", "title": "President"}, {"n": "Luxembourg", "c": "LU", "leader": "Luc Frieden", "title": "Prime Minister"}, {"n": "Madagascar", "c": "MG", "leader": "Michael Randrianirina", "title": "President"}, {"n": "Malawi", "c": "MW", "leader": "Peter Mutharika", "title": "President"}, {"n": "Malaysia", "c": "MY", "leader": "Anwar Ibrahim", "title": "Prime Minister"}, {"n": "Maldives", "c": "MV", "leader": "Mohamed Muizzu", "title": "President"}, {"n": "Mali", "c": "ML", "leader": "Assimi Goita", "title": "President"}, {"n": "Malta", "c": "MT", "leader": "Myriam Spiteri Debono", "title": "President"}, {"n": "Marshall Islands", "c": "MH", "leader": "Hilda Heine", "title": "President"}, {"n": "Mauritania", "c": "MR", "leader": "Mohamed Ould Ghazouani", "title": "President"}, {"n": "Mauritius", "c": "MU", "leader": "Navin Ramgoolam", "title": "Prime Minister"}, {"n": "Mexico", "c": "MX", "leader": "Claudia Sheinbaum", "title": "President"}, {"n": "Micronesia", "c": "FM", "leader": "Wesley Simina", "title": "President"}, {"n": "Moldova", "c": "MD", "leader": "Maia Sandu", "title": "President"}, {"n": "Monaco", "c": "MC", "leader": "Albert II", "title": "Prince"}, {"n": "Mongolia", "c": "MN", "leader": "Khurelsukh Ukhnaa", "title": "President"}, {"n": "Montenegro", "c": "ME", "leader": "Jakov Milatovic", "title": "President"}, {"n": "Morocco", "c": "MA", "leader": "Mohammed VI", "title": "King"}, {"n": "Mozambique", "c": "MZ", "leader": "Daniel Chapo", "title": "President"}, {"n": "Myanmar", "c": "MM", "leader": "Min Aung Hlaing", "title": "Chairman SAC"}, {"n": "Namibia", "c": "NA", "leader": "Netumbo Nandi-Ndaitwah", "title": "President"}, {"n": "Nauru", "c": "NR", "leader": "David Adeang", "title": "President"}, {"n": "Nepal", "c": "NP", "leader": "Sushila Karki", "title": "Interim Prime Minister"}, {"n": "Netherlands", "c": "NL", "leader": "Dick Schoof", "title": "Prime Minister"}, {"n": "New Zealand", "c": "NZ", "leader": "Christopher Luxon", "title": "Prime Minister"}, {"n": "Nicaragua", "c": "NI", "leader": "Daniel Ortega", "title": "President"}, {"n": "Niger", "c": "NE", "leader": "Abdourahamane Tchiani", "title": "President"}, {"n": "Nigeria", "c": "NG", "leader": "Bola Tinubu", "title": "President"}, {"n": "North Korea", "c": "KP", "leader": "Kim Jong Un", "title": "Supreme Leader"}, {"n": "North Macedonia", "c": "MK", "leader": "Gordana Siljanovska-Davkova", "title": "President"}, {"n": "Norway", "c": "NO", "leader": "Jonas Gahr Store", "title": "Prime Minister"}, {"n": "Oman", "c": "OM", "leader": "Haitham bin Tariq", "title": "Sultan"}, {"n": "Pakistan", "c": "PK", "leader": "Shehbaz Sharif", "title": "Prime Minister"}, {"n": "Palau", "c": "PW", "leader": "Surangel Whipps Jr.", "title": "President"}, {"n": "Palestine", "c": "PS", "leader": "Mahmoud Abbas", "title": "President"}, {"n": "Panama", "c": "PA", "leader": "Jose Raul Mulino", "title": "President"}, {"n": "Papua New Guinea", "c": "PG", "leader": "James Marape", "title": "Prime Minister"}, {"n": "Paraguay", "c": "PY", "leader": "Santiago Pena", "title": "President"}, {"n": "Peru", "c": "PE", "leader": "Jose Jeri", "title": "President"}, {"n": "Philippines", "c": "PH", "leader": "Ferdinand Marcos Jr.", "title": "President"}, {"n": "Poland", "c": "PL", "leader": "Karol Nawrocki", "title": "President"}, {"n": "Portugal", "c": "PT", "leader": "Marcelo Rebelo de Sousa", "title": "President"}, {"n": "Qatar", "c": "QA", "leader": "Tamim bin Hamad Al Thani", "title": "Emir"}, {"n": "Romania", "c": "RO", "leader": "Nicusor Dan", "title": "President"}, {"n": "Russia", "c": "RU", "leader": "Vladimir Putin", "title": "President"}, {"n": "Rwanda", "c": "RW", "leader": "Paul Kagame", "title": "President"}, {"n": "Saint Kitts and Nevis", "c": "KN", "leader": "Terrance Drew", "title": "Prime Minister"}, {"n": "Saint Lucia", "c": "LC", "leader": "Philip Pierre", "title": "Prime Minister"}, {"n": "Saint Vincent and the Grenadines", "c": "VC", "leader": "Ralph Gonsalves", "title": "Prime Minister"}, {"n": "Samoa", "c": "WS", "leader": "Laauli Leuatea Schmidt", "title": "Prime Minister"}, {"n": "San Marino", "c": "SM", "leader": "Matteo Rossi", "title": "Captain Regent"}, {"n": "Sao Tome and Principe", "c": "ST", "leader": "Carlos Vila Nova", "title": "President"}, {"n": "Saudi Arabia", "c": "SA", "leader": "Mohammed bin Salman", "title": "Crown Prince / Prime Minister"}, {"n": "Senegal", "c": "SN", "leader": "Bassirou Diomaye Faye", "title": "President"}, {"n": "Serbia", "c": "RS", "leader": "Aleksandar Vucic", "title": "President"}, {"n": "Seychelles", "c": "SC", "leader": "Patrick Herminie", "title": "President"}, {"n": "Sierra Leone", "c": "SL", "leader": "Julius Maada Bio", "title": "President"}, {"n": "Singapore", "c": "SG", "leader": "Lawrence Wong", "title": "Prime Minister"}, {"n": "Slovakia", "c": "SK", "leader": "Peter Pellegrini", "title": "President"}, {"n": "Slovenia", "c": "SI", "leader": "Natasa Pirc Musar", "title": "President"}, {"n": "Solomon Islands", "c": "SB", "leader": "Jeremiah Manele", "title": "Prime Minister"}, {"n": "Somalia", "c": "SO", "leader": "Hassan Sheikh Mohamud", "title": "President"}, {"n": "South Africa", "c": "ZA", "leader": "Cyril Ramaphosa", "title": "President"}, {"n": "South Korea", "c": "KR", "leader": "Lee Jae-myung", "title": "President"}, {"n": "South Sudan", "c": "SS", "leader": "Salva Kiir", "title": "President"}, {"n": "Spain", "c": "ES", "leader": "Pedro Sanchez", "title": "Prime Minister"}, {"n": "Sri Lanka", "c": "LK", "leader": "Anura Kumara Dissanayake", "title": "President"}, {"n": "Sudan", "c": "SD", "leader": "Abdel Fattah al-Burhan", "title": "Chairman Sovereignty Council"}, {"n": "Suriname", "c": "SR", "leader": "Jennifer Geerlings-Simons", "title": "President"}, {"n": "Sweden", "c": "SE", "leader": "Ulf Kristersson", "title": "Prime Minister"}, {"n": "Switzerland", "c": "CH", "leader": "Guy Parmelin", "title": "President"}, {"n": "Syria", "c": "SY", "leader": "Ahmed al-Sharaa", "title": "President"}, {"n": "Taiwan", "c": "TW", "leader": "Lai Ching-te", "title": "President"}, {"n": "Tajikistan", "c": "TJ", "leader": "Emomali Rahmon", "title": "President"}, {"n": "Tanzania", "c": "TZ", "leader": "Samia Suluhu Hassan", "title": "President"}, {"n": "Thailand", "c": "TH", "leader": "Anutin Charnvirakul", "title": "Prime Minister"}, {"n": "Togo", "c": "TG", "leader": "Faure Gnassingbe", "title": "President"}, {"n": "Tonga", "c": "TO", "leader": "Tupou VI", "title": "King"}, {"n": "Trinidad and Tobago", "c": "TT", "leader": "Kamla Persad-Bissessar", "title": "Prime Minister"}, {"n": "Tunisia", "c": "TN", "leader": "Kais Saied", "title": "President"}, {"n": "Turkey", "c": "TR", "leader": "Recep Tayyip Erdogan", "title": "President"}, {"n": "Turkmenistan", "c": "TM", "leader": "Serdar Berdimuhamedow", "title": "President"}, {"n": "Tuvalu", "c": "TV", "leader": "Feleti Teo", "title": "Prime Minister"}, {"n": "Uganda", "c": "UG", "leader": "Yoweri Museveni", "title": "President"}, {"n": "Ukraine", "c": "UA", "leader": "Volodymyr Zelenskyy", "title": "President"}, {"n": "United Arab Emirates", "c": "AE", "leader": "Mohamed bin Zayed", "title": "President"}, {"n": "United Kingdom", "c": "GB", "leader": "Keir Starmer", "title": "Prime Minister"}, {"n": "United States", "c": "US", "leader": "Donald Trump", "title": "President"}, {"n": "Uruguay", "c": "UY", "leader": "Yamandu Orsi", "title": "President"}, {"n": "Uzbekistan", "c": "UZ", "leader": "Shavkat Mirziyoyev", "title": "President"}, {"n": "Vanuatu", "c": "VU", "leader": "Jotham Napat", "title": "Prime Minister"}, {"n": "Vatican City", "c": "VA", "leader": "Pope Leo XIV", "title": "Pope"}, {"n": "Venezuela", "c": "VE", "leader": "Nicolas Maduro", "title": "President"}, {"n": "Vietnam", "c": "VN", "leader": "Luong Cuong", "title": "President"}, {"n": "Yemen", "c": "YE", "leader": "Rashad al-Alimi", "title": "Chairman Presidential Council"}, {"n": "Zambia", "c": "ZM", "leader": "Hakainde Hichilema", "title": "President"}, {"n": "Zimbabwe", "c": "ZW", "leader": "Emmerson Mnangagwa", "title": "President"}];
-const GROCERY=[["চাল", "Rice", "চাল / Rice", "কেজি", 68, "মুদি"], ["আটা", "Flour", "আটা / Flour", "কেজি", 55, "মুদি"], ["ময়দা", "Maida", "ময়দা", "কেজি", 65, "মুদি"], ["ডাল - মসুর", "Lentil", "মসুর ডাল", "কেজি", 140, "ডাল"], ["ডাল - মুগ", "Moong Dal", "মুগ ডাল", "কেজি", 165, "ডাল"], ["ডাল - ছোলা", "Chickpea", "ছোলা", "কেজি", 110, "ডাল"], ["ছোলা", "Chickpea", "ছোলা", "কেজি", 110, "ডাল"], ["সয়াবিন তেল", "Soybean Oil", "সয়াবিন তেল", "লিটার", 175, "তেল"], ["সরিষার তেল", "Mustard Oil", "সরিষার তেল", "লিটার", 220, "তেল"], ["পাম তেল", "Palm Oil", "পাম তেল", "লিটার", 150, "তেল"], ["চিনি", "Sugar", "চিনি", "কেজি", 130, "মুদি"], ["লবণ", "Salt", "লবণ", "কেজি", 40, "মুদি"], ["পেঁয়াজ", "Onion", "পেঁয়াজ", "কেজি", 85, "সবজি"], ["রসুন", "Garlic", "রসুন", "কেজি", 220, "সবজি"], ["আদা", "Ginger", "আদা", "কেজি", 280, "সবজি"], ["আলু", "Potato", "আলু", "কেজি", 35, "সবজি"], ["টমেটো", "Tomato", "টমেটো", "কেজি", 60, "সবজি"], ["বেগুন", "Eggplant", "বেগুন", "কেজি", 55, "সবজি"], ["ফুলকপি", "Cauliflower", "ফুলকপি", "পিস", 45, "সবজি"], ["বাঁধাকপি", "Cabbage", "বাঁধাকপি", "পিস", 40, "সবজি"], ["গাজর", "Carrot", "গাজর", "কেজি", 50, "সবজি"], ["শসা", "Cucumber", "শসা", "কেজি", 45, "সবজি"], ["লাউ", "Bottle Gourd", "লাউ", "পিস", 50, "সবজি"], ["করলা", "Bitter Gourd", "করলা", "কেজি", 70, "সবজি"], ["ঢেঁড়স", "Okra", "ঢেঁড়স", "কেজি", 65, "সবজি"], ["পটল", "Pointed Gourd", "পটল", "কেজি", 60, "সবজি"], ["মরিচ কাঁচা", "Green Chili", "কাঁচা মরিচ", "কেজি", 180, "সবজি"], ["মরিচ শুকনা", "Dry Chili", "শুকনা মরিচ", "কেজি", 420, "মসলা"], ["হলুদ গুঁড়া", "Turmeric", "হলুদ গুঁড়া", "কেজি", 380, "মসলা"], ["জিরা", "Cumin", "জিরা", "কেজি", 750, "মসলা"], ["ধনিয়া", "Coriander", "ধনিয়া", "কেজি", 520, "মসলা"], ["এলাচ", "Cardamom", "এলাচ", "কেজি", 3800, "মসলা"], ["দারুচিনি", "Cinnamon", "দারুচিনি", "কেজি", 650, "মসলা"], ["লবঙ্গ", "Clove", "লবঙ্গ", "কেজি", 1400, "মসলা"], ["তেজপাতা", "Bay Leaf", "তেজপাতা", "কেজি", 380, "মসলা"], ["গরম মসলা", "Garam Masala", "গরম মসলা", "কেজি", 950, "মসলা"], ["ডিম", "Egg", "ডিম", "ডজন", 155, "প্রোটিন"], ["মুরগি ব্রয়লার", "Chicken", "ব্রয়লার মুরগি", "কেজি", 195, "প্রোটিন"], ["মুরগি দেশি", "Desi Chicken", "দেশি মুরগি", "কেজি", 520, "প্রোটিন"], ["গরুর মাংস", "Beef", "গরুর মাংস", "কেজি", 780, "প্রোটিন"], ["খাসির মাংস", "Mutton", "খাসির মাংস", "কেজি", 1150, "প্রোটিন"], ["মাছ রুই", "Rohu Fish", "রুই মাছ", "কেজি", 380, "প্রোটিন"], ["মাছ ইলিশ", "Hilsa", "ইলিশ", "কেজি", 1800, "প্রোটিন"], ["দুধ", "Milk", "দুধ", "লিটার", 95, "দুধ"], ["দই", "Yogurt", "দই", "কেজি", 180, "দুধ"], ["পনির", "Cheese", "পনির", "কেজি", 850, "দুধ"], ["মাখন", "Butter", "মাখন", "কেজি", 950, "দুধ"], ["চা পাতা", "Tea", "চা পাতা", "কেজি", 520, "পানীয়"], ["কফি", "Coffee", "কফি", "কেজি", 1450, "পানীয়"], ["বিস্কুট", "Biscuit", "বিস্কুট", "প্যাকেট", 45, "নাস্তা"], ["নুডলস", "Noodles", "নুডলস", "প্যাকেট", 35, "নাস্তা"], ["সাবান", "Soap", "সাবান", "পিস", 65, "ঘর"], ["ডিটারজেন্ট", "Detergent", "ডিটারজেন্ট", "কেজি", 190, "ঘর"], ["টয়লেট টিস্যু", "Tissue", "টিস্যু", "রোল", 55, "ঘর"], ["টুথপেস্ট", "Toothpaste", "টুথপেস্ট", "পিস", 130, "ঘর"]];
-const FARMERS=[["ধান বীজ", "Paddy Seed", "কেজি", 120, "বীজ"], ["গম বীজ", "Wheat Seed", "কেজি", 95, "বীজ"], ["ভুট্টা বীজ", "Maize Seed", "কেজি", 280, "বীজ"], ["আলু বীজ", "Potato Seed", "কেজি", 55, "বীজ"], ["পাট বীজ", "Jute Seed", "কেজি", 320, "বীজ"], ["সরিষা বীজ", "Mustard Seed", "কেজি", 180, "বীজ"], ["সয়াবিন বীজ", "Soybean Seed", "কেজি", 160, "বীজ"], ["মসুর বীজ", "Lentil Seed", "কেজি", 190, "বীজ"], ["ছোলা বীজ", "Chickpea Seed", "কেজি", 150, "বীজ"], ["পেঁয়াজ বীজ", "Onion Seed", "কেজি", 1450, "বীজ"], ["মরিচ বীজ", "Chili Seed", "কেজি", 2100, "বীজ"], ["বেগুন বীজ", "Eggplant Seed", "কেজি", 1800, "বীজ"], ["টমেটো বীজ", "Tomato Seed", "কেজি", 3200, "বীজ"], ["লাউ বীজ", "Gourd Seed", "প্যাকেট", 45, "বীজ"], ["শসা বীজ", "Cucumber Seed", "প্যাকেট", 55, "বীজ"], ["ইউরিয়া সার", "Urea Fertilizer", "কেজি (৫০ কেজি বস্তা ১৩৫০)", "27", "সার"], ["টিএসপি সার", "TSP Fertilizer", "কেজি", 32, "সার"], ["এমওপি / পটাশ", "MOP Potash", "কেজি", 30, "সার"], ["ডিএপি সার", "DAP Fertilizer", "কেজি", 38, "সার"], ["জিপসাম", "Gypsum", "কেজি", 18, "সার"], ["জিংক সালফেট", "Zinc Sulphate", "কেজি", 145, "সার"], ["বোরন", "Boron", "কেজি", 280, "সার"], ["ম্যাগনেসিয়াম", "Magnesium", "কেজি", 95, "সার"], ["গোবর সার", "Cow Dung", "বস্তা", 220, "সার"], ["ভার্মি কম্পোস্ট", "Vermicompost", "কেজি", 35, "সার"], ["জৈব সার", "Organic Fertilizer", "কেজি", 28, "সার"], ["কার্বোফুরান ৫জি", "Carbofuran 5G - কীটনাশক", "কেজি", 280, "কীটনাশক"], ["ক্লোরপাইরিফস", "Chlorpyrifos - কীটনাশক", "লিটার", 680, "কীটনাশক"], ["সাইপারমেথ্রিন", "Cypermethrin - কীটনাশক", "লিটার", 620, "কীটনাশক"], ["ইমিডাক্লোপ্রিড", "Imidacloprid - কীটনাশক", "লিটার", 950, "কীটনাশক"], ["ল্যাম্বডা সাইহ্যালোথ্রিন", "Lambda Cyhalothrin", "লিটার", 780, "কীটনাশক"], ["এমামেকটিন বেনজোয়েট", "Emamectin Benzoate", "কেজি", 1250, "কীটনাশক"], ["কার্টাপ", "Cartap - কীটনাশক", "কেজি", 720, "কীটনাশক"], ["ফিপ্রোনিল", "Fipronil - কীটনাশক", "লিটার", 1150, "কীটনাশক"], ["ম্যানকোজেব - ছত্রাকনাশক", "Mancozeb Fungicide", "কেজি", 480, "ছত্রাকনাশক"], ["কপার অক্সিক্লোরাইড", "Copper Oxychloride", "কেজি", 520, "ছত্রাকনাশক"], ["কার্বেন্ডাজিম", "Carbendazim", "কেজি", 650, "ছত্রাকনাশক"], ["হেক্সাকোনাজল", "Hexaconazole", "লিটার", 720, "ছত্রাকনাশক"], ["গ্লাইফোসেট - আগাছানাশক", "Glyphosate Herbicide", "লিটার", 580, "আগাছানাশক"], ["২,৪-ডি", "2,4-D Herbicide", "লিটার", 520, "আগাছানাশক"], ["পেন্ডিমেথালিন", "Pendimethalin", "লিটার", 680, "আগাছানাশক"], ["ইঁদুর মারার ঔষধ", "Rat Killer", "প্যাকেট", 85, "কীটনাশক"], ["ফেরোমন ফাঁদ", "Pheromone Trap", "পিস", 180, "কীটনাশক"], ["হলুদ স্টিকি ট্র্যাপ", "Yellow Sticky Trap", "পিস", 65, "কীটনাশক"], ["ধান - কৃষকের বিক্রি দাম", "Paddy Farmer Price", "মণ (৪০ কেজি)", 1350, "ফসল বিক্রি"], ["গম - কৃষকের বিক্রি দাম", "Wheat Farmer Price", "মণ", 1450, "ফসল বিক্রি"], ["ভুট্টা - কৃষকের বিক্রি দাম", "Maize Farmer Price", "মণ", 1150, "ফসল বিক্রি"], ["আলু - কৃষকের বিক্রি দাম", "Potato Farmer Price", "কেজি", 28, "ফসল বিক্রি"], ["পাট - কৃষকের বিক্রি দাম", "Jute Farmer Price", "মণ", 3200, "ফসল বিক্রি"], ["পেঁয়াজ - কৃষকের বিক্রি দাম", "Onion Farmer Price", "কেজি", 55, "ফসল বিক্রি"], ["টমেটো - কৃষকের বিক্রি দাম", "Tomato Farmer Price", "কেজি", 32, "ফসল বিক্রি"], ["সরিষা - কৃষকের বিক্রি দাম", "Mustard Farmer Price", "মণ", 2900, "ফসল বিক্রি"], ["গরু - দুধ", "Cow Milk", "লিটার", 72, "পশু"], ["ছাগল - দুধ", "Goat Milk", "লিটার", 140, "পশু"], ["মুরগির খাদ্য - লেয়ার", "Layer Feed", "কেজি", 62, "পশু"], ["মুরগির খাদ্য - ব্রয়লার", "Broiler Feed", "কেজি", 68, "পশু"], ["গরুর খাদ্য - ভুসি", "Wheat Bran", "কেজি", 48, "পশু"], ["মাছের খাদ্য", "Fish Feed", "কেজি", 78, "পশু"], ["ট্রাক্টর ভাড়া", "Tractor Rent", "ঘণ্টা", 1200, "যন্ত্র"], ["পাওয়ার টিলার ভাড়া", "Power Tiller Rent", "ঘণ্টা", 650, "যন্ত্র"], ["সেচ - ডিজেল পাম্প", "Irrigation Diesel", "ঘণ্টা", 280, "যন্ত্র"], ["সেচ - ইলেকট্রিক পাম্প", "Irrigation Electric", "ঘণ্টা", 120, "যন্ত্র"], ["দিনমজুর - পুরুষ", "Day Labour Male", "দিন", 650, "শ্রম"], ["দিনমজুর - মহিলা", "Day Labour Female", "দিন", 520, "শ্রম"]];
-const MPS=[["Bangladesh","Jatiya Sangsad","https://www.parliament.gov.bd",350],["India","Lok Sabha","https://loksabha.nic.in",543],["Pakistan","National Assembly","https://www.na.gov.pk",336],["United States","House","https://www.house.gov",435],["United Kingdom","House of Commons","https://www.parliament.uk",650],["China","National People's Congress","http://www.npc.gov.cn",2980],["Japan","House of Representatives","https://www.shugiin.go.jp",465],["Germany","Bundestag","https://www.bundestag.de",630],["France","National Assembly","https://www.assemblee-nationale.fr",577]];
-const OFFICIALS=[["Bangladesh","https://www.bangladesh.gov.bd"],["India","https://www.india.gov.in"],["Pakistan","https://www.pakistan.gov.pk"],["United States","https://www.usa.gov"],["United Kingdom","https://www.gov.uk"],["China","https://www.gov.cn"],["Japan","https://www.japan.go.jp"],["Germany","https://www.bundesregierung.de"],["France","https://www.gouvernement.fr"],["Canada","https://www.canada.ca"]];
-const TRANSPORT=[["Bangladesh","Bangladesh Railway","https://www.railway.gov.bd","BRTC","https://www.brtc.gov.bd"],["India","Indian Railways","https://www.indianrail.gov.in","UPSRTC","https://www.upsrtc.com"],["Japan","JR Shinkansen","https://www.japanrailpass.net","Willer Express","https://www.willerexpress.com"],["Germany","Deutsche Bahn","https://www.bahn.de","FlixBus","https://www.flixbus.de"],["France","SNCF","https://www.sncf.com","BlaBlaBus","https://www.blablabus.com"]];
-const AIRLINES=[["Bangladesh","Biman Bangladesh Airlines","https://www.biman-airlines.com"],["India","Air India / IndiGo","https://www.airindia.com"],["Pakistan","PIA","https://www.piac.com.pk"],["United States","American / Delta / United","https://www.aa.com"],["United Kingdom","British Airways","https://www.britishairways.com"],["Qatar","Qatar Airways","https://www.qatarairways.com"],["Turkey","Turkish Airlines","https://www.turkishairlines.com"],["United Arab Emirates","Emirates / Etihad","https://www.emirates.com"],["Singapore","Singapore Airlines","https://www.singaporeair.com"]];
-const MODULES=[["home","🏠 হোম"],["leader","🌍 ১৯৫ নেতা"],["grocery","🛒 মুদি দাম"],["farmer","🌾 কৃষক + কীটনাশক"],["mp","🏛️ এমপি"],["official","🏢 সরকারি দপ্তর"],["transport","🚌🚆 বাস-রেল"],["airline","✈️ বিমান"]];
-let cur="home";
-function show(id){cur=id;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.id===id));const c=document.getElementById('content');
-if(id==="home"){c.innerHTML=`<div class="box"><h2>🚗 গাড়ি / ✈️ বিমান</h2><div>গাড়ির গতি: <b id="carSpeed">0</b> km/h • ১ ঘণ্টায়: <b id="carDist">0</b> km</div><div>বিমান: <b id="airSpeed">0</b> km/h • উচ্চতা: <b id="alt">35000</b> ফুট</div><button class="btn" onclick="startSpeed()">▶️ গতি চালু</button></div><div class="box"><h2>🧭 কম্পাস</h2><div style="font-size:80px">🧭</div><div>দিক: <span id="dir">—</span></div><button class="btn" onclick="startCompass()">🧭 কম্পাস চালু</button></div><div class="box"><h2>📷 QR</h2><img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://ayna-book.github.io/ayna--book/" style="background:#fff;padding:10px;border-radius:10px"></div><div class="box"><h2>📻📺 রেডিও / টিভি / নিউজ</h2><a class="btn" href="https://www.radio-browser.info" target="_blank">📻 রেডিও</a><a class="btn" href="https://www.youtube.com/results?search_query=live+tv+bangladesh" target="_blank">📺 লাইভ টিভি</a><a class="btn" href="https://www.bbc.com/bengali" target="_blank">📰 নিউজ</a></div>`;}
-else if(id==="leader"){c.innerHTML=`<input id="q" placeholder="দেশ / নেতা খুঁজুন..." oninput="renderLeaders()"><div class="grid" id="grid"></div>`;renderLeaders();}
-else if(id==="grocery"){c.innerHTML=`<input id="q" placeholder="মাল খুঁজুন..." oninput="renderGrocery()"><div class="grid" id="grid"></div>`;renderGrocery();}
-else if(id==="farmer"){c.innerHTML=`<div class="warn">⚠️ কীটনাশক: লেবেলের মাত্রা মানুন, মাস্ক-গ্লাভস পরুন, শিশু থেকে দূরে রাখুন।</div><input id="q" placeholder="খুঁজুন..." oninput="renderFarmer()"><div class="grid" id="grid"></div>`;renderFarmer();}
-else if(id==="mp"){c.innerHTML=`<div class="grid">${MPS.map(m=>`<div class="card"><div class="b">${m[0]}</div><div class="m">${m[1]} • আসন ~${m[3]}</div><a class="btn" href="${m[2]}" target="_blank">🌐 অফিসিয়াল সংসদ</a><div class="m">📞 ফোন: অফিসিয়াল সাইটে • ✉️ ব্যক্তিগত জিমেইল নয়</div></div>`).join('')}<div class="card"><div class="b">বাকি ১৯৫ দেশ</div><a class="btn" href="https://www.google.com/search?q=parliament+official+members+list" target="_blank">🔍 খুঁজুন</a></div></div>`;}
-else if(id==="official"){c.innerHTML=`<div class="warn">⚠️ ব্যক্তিগত ফোন/জিমেইল/ছবি দেওয়া হয় না — শুধু অফিসিয়াল পোর্টাল।</div><div class="grid">${OFFICIALS.map(m=>`<div class="card"><div class="b">${m[0]}</div><a class="btn" href="${m[1]}" target="_blank">🌐 সরকারি পোর্টাল</a></div>`).join('')}</div>`;}
-else if(id==="transport"){c.innerHTML=`<div class="grid">${TRANSPORT.map(m=>`<div class="card"><div class="b">${m[0]}</div><div class="m">🚆 ${m[1]}<br>🚌 ${m[3]}</div><a class="btn" href="${m[2]}" target="_blank">🚆 রেল</a><a class="btn" href="${m[4]}" target="_blank">🚌 বাস</a></div>`).join('')}</div>`;}
-else if(id==="airline"){c.innerHTML=`<div class="grid">${AIRLINES.map(m=>`<div class="card"><div class="b">${m[0]}</div><div class="m">✈️ ${m[1]}</div><a class="btn" href="${m[2]}" target="_blank">🌐 অফিসিয়াল ওয়েবসাইট</a></div>`).join('')}</div>`;}
-window.scrollTo({top:0,behavior:'smooth'});}
-function renderLeaders(){const q=(document.getElementById('q').value||'').toLowerCase();document.getElementById('grid').innerHTML=LEADERS.filter(d=>(d.n+' '+d.leader).toLowerCase().includes(q)).map(d=>`<div class="card"><img src="https://flagcdn.com/w320/${d.c.toLowerCase()}.png" style="width:100%;height:140px;object-fit:cover;border-radius:8px"><div class="b">🏳️ ${d.n}</div><div class="b">👤 ${d.leader}</div><div class="m">🏛️ ${d.title}</div><a class="btn" href="https://en.wikipedia.org/wiki/${encodeURIComponent(d.leader)}" target="_blank">🌐 তথ্য / ছবি</a></div>`).join('');}
-function renderGrocery(){const q=(document.getElementById('q').value||'').toLowerCase();document.getElementById('grid').innerHTML=GROCERY.filter(d=>(d[0]+d[1]).toLowerCase().includes(q)).map(d=>`<div class="card"><div class="b">${d[2]}</div><div class="m">${d[1]} • ${d[5]} • ${d[3]}</div><div class="price">৳${d[4]}</div></div>`).join('');}
-function renderFarmer(){const q=(document.getElementById('q').value||'').toLowerCase();document.getElementById('grid').innerHTML=FARMERS.filter(d=>(d[0]+d[1]).toLowerCase().includes(q)).map(d=>`<div class="card"><div class="b">${d[0]}</div><div class="m">${d[1]} • ${d[4]} • ${d[2]}</div><div class="price">৳${d[3]}</div></div>`).join('');}
-document.getElementById('tabs').innerHTML=MODULES.map(m=>`<button class="tab ${m[0]==='home'?'active':''}" data-id="${m[0]}" onclick="show('${m[0]}')">${m[1]}</button>`).join('');
-function startSpeed(){let s=45;setInterval(()=>{s=40+Math.random()*20;const el=document.getElementById('carSpeed');if(el){el.textContent=s.toFixed(1);document.getElementById('carDist').textContent=s.toFixed(1);document.getElementById('airSpeed').textContent=(s*8).toFixed(0);}},2000);}
-function startCompass(){window.addEventListener('deviceorientation',e=>{const el=document.getElementById('dir');if(el)el.textContent=Math.round(e.alpha||0)+'°';});}
-function autoUpdate(m){const now=new Date().toLocaleString('bn-BD');localStorage.setItem('ayna_single_last',now);document.getElementById('last').textContent=now;if(m)alert('একটাই ফাইল — অটো-আপডেট আজীবন চালু ♾️ 404 হবে না।');}
-const s=localStorage.getItem('ayna_single_last');if(s)document.getElementById('last').textContent=s;setInterval(()=>autoUpdate(false),6*60*60*1000);
-show('home');
-</script><script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body></html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <title>AYNA BOOK*</title>
+  <meta name="theme-color" content="#050a18" />
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <style>
+    :root {
+      --bg: #050a18;
+      --navy-top: #1a3575;
+      --navy-bottom: #08122b;
+      --gold: #ffe64d;
+      --gold-bright: #fff6b3;
+      --gold-base: #8a6105;
+      --accent-blue: #1877f2;
+      --quantum-cyan: #38f2ff;
+      --white: #ffffff;
+      --muted: #e6eeff;
+      --text-scale: 3;
+      --ui-scale: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding-bottom: 190px;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(24, 119, 242, 0.16), transparent 36%),
+        radial-gradient(circle at 85% 20%, rgba(255, 230, 77, 0.14), transparent 42%),
+        var(--bg);
+      color: var(--white);
+      font-family: Arial, "Noto Sans Bengali", system-ui, sans-serif;
+      font-size: calc(clamp(16px, 2.4vw, 22px) * var(--text-scale) * var(--ui-scale));
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    textarea,
+    select,
+    a {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    header {
+      background: linear-gradient(180deg, #122659 0%, #060d21 100%);
+      border-bottom: 4px solid var(--gold);
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      box-shadow: 0 0 22px rgba(255, 230, 77, 0.45), 0 6px 18px rgba(0, 0, 0, 0.9);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      color: var(--gold-bright);
+      font-size: calc(clamp(38px, 6vw, 62px) * 2);
+      line-height: 1.05;
+      font-weight: 1000;
+      letter-spacing: 1px;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      text-shadow: 0 0 16px rgba(255, 230, 77, 0.85), 0 4px 10px rgba(0, 0, 0, 0.95);
+    }
+
+    .k-star-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .star-12px-1m {
+      position: absolute;
+      top: -6px;
+      right: -12px;
+      font-size: 12px;
+      line-height: 1;
+      color: #ffffff;
+      opacity: 0.2;
+      animation: starFlashEveryMinute 60s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes starFlashEveryMinute {
+      0%, 95% {
+        opacity: 0.18;
+        transform: scale(0.95);
+        text-shadow: none;
+      }
+      96%, 100% {
+        opacity: 1;
+        transform: scale(1.3);
+        text-shadow: 0 0 8px #ffffff, 0 0 14px #ffffff;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .header-actions a,
+    .header-actions button {
+      text-decoration: none;
+      color: #ffffff;
+      background: linear-gradient(155deg, #1d3b7e, #08122b);
+      border: 3.5px solid var(--gold);
+      padding: 16px 24px;
+      min-height: 82px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 0.72em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px rgba(255, 230, 77, 0.45), 0 5px 0 var(--gold-base);
+    }
+
+    .btn-gold {
+      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%) !important;
+      color: #050a18 !important;
+      border-color: var(--gold-bright) !important;
+      font-weight: 1000 !important;
+    }
+
+    .btn-blue {
+      background: linear-gradient(180deg, #2d88ff 0%, #1877f2 100%) !important;
+      color: #ffffff !important;
+      border-color: #8cc2ff !important;
+      font-weight: 1000 !important;
+    }
+
+    #notice {
+      position: fixed;
+      top: 130px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0a1636;
+      color: var(--gold-bright);
+      border: 4px solid var(--gold-bright);
+      padding: 20px 30px;
+      border-radius: 14px;
+      box-shadow: 0 0 24px rgba(255, 230, 77, 0.85), 0 7px 0 var(--gold-base);
+      z-index: 120;
+      display: none;
+      max-width: 94%;
+      font-size: 0.78em;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .page-tabs-bar {
+      max-width: 1400px;
+      margin: 22px auto 0;
+      padding: 0 18px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .page-tab-btn {
+      min-height: 92px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 3.5px solid var(--gold);
+      background: linear-gradient(155deg, #1d3b7e, #08122b);
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 0.68em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 0 6px 0 var(--gold-base);
+    }
+
+    .page-tab-btn.active {
+      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
+      color: #050a18;
+      border-color: var(--gold-bright);
+    }
+
+    .swipe-viewport {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 18px 0;
+      overflow: hidden;
+      touch-action: pan-y;
+    }
+
+    .pages-track {
+      display: flex;
+      width: 500%;
+      transform: translateX(calc(var(--active-page, 0) * -20%));
+      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .app-page {
+      width: 20%;
+      flex-shrink: 0;
+      padding-right: 12px;
+    }
+
+    .panel,
+    .feed-post,
+    .feed-filters,
+    .file-registry-box,
+    .hub-card,
+    .qr-panel-box,
+    .vehicle-speed-card {
+      background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%) !important;
+      border: 4px solid var(--gold) !important;
+      border-radius: 16px !important;
+      box-shadow:
+        0 0 20px rgba(255, 230, 77, 0.65),
+        0 9px 0 var(--gold-base),
+        0 16px 26px rgba(0, 0, 0, 0.85),
+        inset 0 2px 6px var(--gold-bright) !important;
+    }
+
+    button:active,
+    .feature-card:active,
+    .panel-link-btn:active,
+    .page-tab-btn:active {
+      transform: translateY(4px) !important;
+    }
+
+    .top-name-only-bar {
+      padding: 28px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
+      border: 4px solid var(--gold);
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(255, 230, 77, 0.65), 0 9px 0 var(--gold-base);
+    }
+
+    .profile-square-box {
+      width: min(100%, 420px);
+      aspect-ratio: 1 / 1;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #050a18;
+      border: 5px solid var(--gold-bright);
+      border-radius: 16px;
+      padding: 8px;
+      box-shadow: 0 0 24px rgba(255, 230, 77, 0.8), 0 7px 0 var(--gold-base);
+    }
+
+    .profile-square-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .only-owner-name {
+      font-size: 1.25em;
+      font-weight: 1000;
+      color: var(--gold-bright);
+      text-shadow: 0 0 16px rgba(255, 230, 77, 0.75), 0 4px 10px rgba(0, 0, 0, 0.95);
+      margin: 0;
+    }
+
+    .qr-panel-box {
+      padding: 26px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .qr-heading-tag {
+      display: inline-block;
+      background: var(--gold);
+      color: #050a18;
+      font-size: 0.9em;
+      font-weight: 1000;
+      padding: 10px 26px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+    }
+
+    .qr-card-inner {
+      display: inline-block;
+      background: #ffffff;
+      color: #050a18;
+      padding: 20px;
+      border-radius: 14px;
+      border: 4px solid var(--gold-bright);
+    }
+
+    .barcode-box {
+      background: #ffffff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 3px solid var(--gold);
+      display: inline-flex;
+      margin-top: 14px;
+    }
+
+    .panel {
+      padding: 26px;
+      margin: 24px 0;
+    }
+
+    .panel h1,
+    .panel h2 {
+      margin: 0 0 18px;
+      font-size: 0.92em;
+      font-weight: 1000;
+      color: var(--gold-bright);
+    }
+
+    .hub-controls-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .password-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      background: #050b1c;
+      color: var(--white);
+      border: 3.5px solid var(--gold);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 0.74em;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 240px;
+      resize: vertical;
+    }
+
+    .media-buttons,
+    .post-tools,
+    .hub-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    button,
+    .panel-link-btn {
+      min-height: 104px;
+      padding: 18px 22px;
+      border-radius: 14px;
+      border: 3.5px solid var(--gold);
+      background: linear-gradient(155deg, #1d3b7e, #08122b);
+      color: var(--white);
+      font-size: 0.74em;
+      font-weight: 900;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 10px;
+      box-shadow: 0 0 12px rgba(255, 230, 77, 0.45), 0 6px 0 var(--gold-base);
+    }
+
+    .primary-button {
+      width: 100%;
+      min-height: 112px;
+      margin-top: 18px;
+      border: 4px solid var(--gold-bright);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
+      color: #050a18;
+      font-size: 0.82em;
+      font-weight: 1000;
+      box-shadow: 0 0 18px rgba(255, 230, 77, 0.65), 0 7px 0 #664604;
+    }
+
+    .ai-box-output {
+      margin-top: 16px;
+      background: #050b1c;
+      border: 3.5px solid var(--quantum-cyan);
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 0.72em;
+      color: var(--gold-bright);
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+
+    .mega-radar-compass-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 18px;
+    }
+
+    .mega-sensor-box {
+      background: #050b1c;
+      border: 4px solid var(--gold);
+      border-radius: 16px;
+      padding: 26px;
+      text-align: center;
+    }
+
+    .mega-canvas-4x {
+      width: 100%;
+      max-width: 720px;
+      aspect-ratio: 1 / 1;
+      height: auto;
+      display: block;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      border: 5px solid var(--quantum-cyan);
+    }
+
+    .transport-speed-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .vehicle-speed-card {
+      padding: 24px;
+      text-align: left;
+    }
+
+    .speed-metric-big {
+      display: block;
+      font-size: 1.05em;
+      font-weight: 1000;
+      color: var(--quantum-cyan);
+      margin: 10px 0;
+    }
+
+    .feature-grid-more {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 18px;
+    }
+
+    .feature-card {
+      min-height: 220px;
+      padding: 24px 18px;
+      color: var(--white);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
+      border: 4px solid var(--gold);
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(255, 230, 77, 0.65), 0 9px 0 var(--gold-base);
+    }
+
+    .feature-icon {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+
+    .feature-name {
+      font-size: 0.78em;
+      font-weight: 1000;
+      color: var(--white);
+    }
+
+    .feature-desc {
+      color: var(--muted);
+      font-size: 0.62em;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .preview {
+      display: none;
+      margin-top: 18px;
+      background: #050b1c;
+      border: 3.5px solid var(--gold);
+      padding: 18px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .preview img,
+    .post-media {
+      width: 100%;
+      max-height: 760px;
+      object-fit: contain;
+      background: #050a12;
+      border: 3.5px solid var(--gold);
+      border-radius: 12px;
+      margin-top: 12px;
+    }
+
+    .preview video,
+    .post-media-video,
+    #liveVideo {
+      width: 100%;
+      max-height: 720px;
+      object-fit: contain;
+      background: #000000;
+      border: 3.5px solid var(--gold);
+      border-radius: 12px;
+    }
+
+    .feed-filters {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 18px;
+      margin: 22px 0;
+    }
+
+    .filter-btn {
+      min-height: 86px;
+      background: #0a1636;
+      color: var(--white);
+      border: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 0.68em;
+      font-weight: 900;
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(180deg, #ffe64d 0%, #c99314 100%);
+      color: #050a18;
+    }
+
+    .feed-post {
+      padding: 24px;
+      margin-bottom: 22px;
+    }
+
+    .post-content {
+      font-size: 0.8em;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 14px 0;
+    }
+
+    .post-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      border-top: 3px solid var(--gold);
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+
+    .detail-viewer-box {
+      margin-top: 18px;
+      background: #050b1c;
+      border: 4px solid var(--gold-bright);
+      border-radius: 14px;
+      padding: 22px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      background: linear-gradient(180deg, #122659 0%, #060d21 100%);
+      border-top: 4px solid var(--gold);
+      padding: 12px 8px calc(12px + env(safe-area-inset-bottom));
+      box-shadow: 0 0 22px rgba(255, 230, 77, 0.5), 0 -5px 18px rgba(0, 0, 0, 0.9);
+    }
+
+    .bottom-nav button {
+      min-height: 92px;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      color: var(--white);
+      flex-direction: column;
+      font-size: 0.56em;
+      padding: 8px 4px;
+    }
+
+    .bottom-nav button.active-nav {
+      color: var(--gold-bright);
+    }
+
+    @media (max-width: 1024px) {
+      .mega-radar-compass-grid,
+      .transport-speed-grid,
+      .feature-grid-more,
+      .page-tabs-bar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .mega-radar-compass-grid,
+      .transport-speed-grid,
+      .feature-grid-more,
+      .hub-controls-row,
+      .media-buttons,
+      .post-tools,
+      .hub-cards-grid,
+      .post-actions,
+      .page-tabs-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- অপশনাল ১১ অক্ষরের লক স্ক্রিন (ডিফল্টভাবে গোপন, প্রয়োজনে চালু করা যায়) -->
+  <div id="lockScreen" style="display:none;position:fixed;inset:0;background:#050a18;z-index:9999;align-items:center;justify-content:center;padding:18px;">
+    <div class="panel" style="width:100%;max-width:640px;text-align:center;">
+      <h2>🔒 AYNA BOOK* লক করা</h2>
+      <div class="ai-box-output">নাম, ফোন নম্বর এবং ঠিক ১১ অক্ষরের পাসওয়ার্ড দিয়ে আনলক করুন।</div>
+      <div style="margin-top:14px;display:grid;gap:12px;">
+        <input id="lockName" value="Mohammad Mahabub Alam" placeholder="নাম লিখুন" />
+        <input id="lockPhone" placeholder="ফোন নম্বর" />
+        <div class="password-wrap">
+          <input id="lockPass" type="password" placeholder="পাসওয়ার্ড (ঠিক ১১ অক্ষর)" maxlength="11" />
+          <button type="button" id="toggleLockPassBtn" class="btn-gold">👁️ দেখুন</button>
+        </div>
+        <button type="button" id="unlockAppBtn" class="primary-button">🔓 আনলক করুন</button>
+        <div id="lockMsg" class="ai-box-output" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-inner">
+      <a href="#page-1" class="logo" data-go-page="0">
+        <span class="k-star-wrap">AYNA BOO<span class="k-star-wrap">K*<i class="star-12px-1m" aria-hidden="true">★</i></span></span>
+      </a>
+      <div class="header-actions">
+        <button type="button" id="fontSmallerBtn">🔍- লেখা ছোট</button>
+        <button type="button" id="fontLargerBtn" class="btn-gold">🔍+ লেখা বড়</button>
+        <button type="button" id="headerSpeakClockBtn">🕒 সময় বলুন</button>
+        <button type="button" id="openLockModalBtn">🔒 লক করুন</button>
+        <a href="messenger.html" class="btn-blue">💬 Messenger</a>
+      </div>
+    </div>
+  </header>
+
+  <div id="notice"></div>
+
+  <nav class="page-tabs-bar" aria-label="৫টি পেজ">
+    <button type="button" class="page-tab-btn active" data-go-page="0">১. হোম ও পোস্ট</button>
+    <button type="button" class="page-tab-btn" data-go-page="1">২. প্রোফাইল ও QR</button>
+    <button type="button" class="page-tab-btn" data-go-page="2">৩. রাডার ও গতি</button>
+    <button type="button" class="page-tab-btn" data-go-page="3">৪. সংযোগ ও নোটিফিকেশন</button>
+    <button type="button" class="page-tab-btn" data-go-page="4">৫. সব বক্স ও ফিচার</button>
+  </nav>
+
+  <div class="swipe-viewport" id="swipeViewport">
+    <div class="pages-track" id="pagesTrack" style="--active-page: 0;">
+
+      <!-- পেজ ১: শুধু নাম, ছবি, পোস্ট লেখা, অডিও, ভিডিও, ফাইল ও লাইভ ভিডিও পোস্ট অপশন -->
+      <section class="app-page" id="page-1">
+        <div class="top-name-only-bar">
+          <div class="profile-square-box">
+            <img id="myPhoto" src="./assets/profile-photo.jpg" alt="Mohammad Mahabub Alam">
+          </div>
+          <h1 class="only-owner-name" id="myName">Mohammad Mahabub Alam</h1>
+        </div>
+
+        <section class="panel" id="createPost">
+          <h2>✍️ পোস্ট তৈরি করুন</h2>
+          <textarea id="postText" placeholder="মনের কথা লিখুন..."></textarea>
+          <div class="post-tools">
+            <button type="button" id="chooseAudio">🎵 অডিও পোস্ট</button>
+            <button type="button" id="chooseVideo">🎬 ভিডিও পোস্ট</button>
+            <button type="button" id="chooseImage">🖼️ ছবি যুক্ত করুন</button>
+            <button type="button" id="chooseFile">📎 ফাইল যুক্ত করুন</button>
+            <button type="button" id="clearMedia">✖️ মিডিয়া বাদ দিন</button>
+          </div>
+          <input id="imageInput" type="file" accept="image/*" hidden />
+          <input id="audioInput" type="file" accept="audio/*" hidden />
+          <input id="videoInput" type="file" accept="video/*" hidden />
+          <input id="fileInput" type="file" accept="*/*" hidden />
+          <div class="preview" id="mediaPreview">
+            <div id="previewContent"></div>
+            <div class="status" id="previewName"></div>
+          </div>
+          <button type="button" class="primary-button" id="publishPost">🚀 পোস্ট প্রকাশ করুন</button>
+          <div class="status" id="postStatus">পোস্ট প্রস্তুত।</div>
+        </section>
+
+        <section class="panel" id="liveSection">
+          <h2>🔴 লাইভ ভিডিও পোস্ট</h2>
+          <video id="liveVideo" autoplay muted playsinline></video>
+          <div class="media-buttons">
+            <button type="button" id="startCamera" class="btn-blue">📹 ক্যামেরা চালু</button>
+            <button type="button" id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
+          </div>
+          <div class="status" id="cameraStatus">ক্যামেরা বন্ধ রয়েছে।</div>
+        </section>
+
+        <div class="feed-filters">
+          <button type="button" class="filter-btn active" data-filter="all">সব পোস্ট</button>
+          <button type="button" class="filter-btn" data-filter="text">📝 লেখা</button>
+          <button type="button" class="filter-btn" data-filter="audio">🎵 অডিও</button>
+          <button type="button" class="filter-btn" data-filter="video">🎬 ভিডিও</button>
+        </div>
+        <section id="feed">
+          <div class="empty">পোস্ট লোড হচ্ছে...</div>
+        </section>
+      </section>
+
+      <!-- পেজ ২: প্রোফাইলQR বক্স, বারকোড ও পাসওয়ার্ড দেখা/লুকানো বক্স -->
+      <section class="app-page" id="page-2">
+        <section class="qr-panel-box" id="qrBoxSection">
+          <div class="qr-heading-tag">প্রোফাইলQR</div>
+          <div>
+            <div class="qr-card-inner">
+              <canvas id="aynaQrCanvas" width="240" height="240"></canvas>
+              <div id="qrCaptionText" style="font-size:0.65em;font-weight:900;margin-top:8px;">Mohammad Mahabub Alam</div>
+            </div>
+          </div>
+          <div class="barcode-box">
+            <svg id="aynaProfileBarcode"></svg>
+          </div>
+        </section>
+
+        <section class="panel" id="accountSecurityBox">
+          <h2>🔐 পাসওয়ার্ড ও অ্যাকাউন্ট নিরাপত্তা</h2>
+          <div class="hub-controls-row">
+            <input type="text" id="regFullNameInput" value="Mohammad Mahabub Alam" placeholder="পূর্ণ নাম" />
+            <div class="password-wrap">
+              <input type="password" id="regPasswordInput" value="AynaPass@2026" placeholder="পাসওয়ার্ড লিখুন" />
+              <button type="button" id="togglePasswordVisibilityBtn" class="btn-gold">👁️ দেখুন</button>
+            </div>
+          </div>
+          <div class="media-buttons">
+            <button type="button" id="savePasswordCheckBtn" class="btn-blue">✅ পাসওয়ার্ড যাচাই</button>
+            <button type="button" id="autoSyncNowBtn">🔄 অটো-আপডেট (<span id="lastAutoSync">এখন</span>)</button>
+          </div>
+          <div class="ai-box-output" id="passwordStatusOutput">পাসওয়ার্ড লুকানো অবস্থায় আছে — দেখুন বা লুকান বাটন চাপুন।</div>
+        </section>
+      </section>
+
+      <!-- পেজ ৩: ৪ গুণ বড় রাডার কম্পাস বক্স + গাড়ি, বিমান, জাহাজ গতির বক্স -->
+      <section class="app-page" id="page-3">
+        <section class="panel" id="radarMegaBoxSection">
+          <h2>📡 রাডার কম্পাস ও আবহাওয়া রাডার</h2>
+          <div class="hub-controls-row">
+            <select id="radarRangeSelect">
+              <option value="25">রেঞ্জ: ২৫ কিমি</option>
+              <option value="100" selected>রেঞ্জ: ১০০ কিমি</option>
+              <option value="250">রেঞ্জ: ২৫০ কিমি</option>
+              <option value="500">রেঞ্জ: ৫০০ কিমি</option>
+            </select>
+            <input type="number" id="compassAzimuthInput" value="45" min="0" max="360" />
+          </div>
+
+          <div class="mega-radar-compass-grid">
+            <div class="mega-sensor-box">
+              <h2>🧭 রাডার কম্পাস</h2>
+              <canvas id="generalRadarCanvas" class="mega-canvas-4x" width="720" height="720"></canvas>
+              <div class="ai-box-output" id="generalRadarReadout">আজিমুথ: 45° • স্ক্যান সক্রিয়</div>
+            </div>
+            <div class="mega-sensor-box">
+              <h2>🌦️ আবহাওয়া রাডার</h2>
+              <canvas id="weatherRadarCanvas" class="mega-canvas-4x" width="720" height="720"></canvas>
+              <div class="ai-box-output" id="weatherRadarReadout">তাপমাত্রা: 28°C • বাতাস: 14 কিমি/ঘণ্টা</div>
+            </div>
+          </div>
+
+          <div class="media-buttons">
+            <button type="button" id="startDeviceCompassBtn" class="btn-gold">🧭 কম্পাস চালু</button>
+            <button type="button" id="refreshSpeedTelemetryBtn" class="btn-blue">⚡ গতি ও উচ্চতা আপডেট</button>
+          </div>
+        </section>
+
+        <section class="panel" id="transportSpeedSection">
+          <h2>🚗✈️🚢 গাড়ি, বিমান ও জাহাজ চলাচলের গতির বক্স</h2>
+          <div class="transport-speed-grid">
+            <div class="vehicle-speed-card">
+              <h2>🚗 গাড়ির গতি</h2>
+              <span class="speed-metric-big" id="carSpeedValue">১ ঘণ্টায় ৭৮ কিমি বেগে চলছে</span>
+              <div id="carRouteMeta">হাইওয়ে ট্র্যাক • স্থিতিশীল গতি</div>
+            </div>
+            <div class="vehicle-speed-card">
+              <h2>✈️ বিমানের গতি ও উচ্চতা</h2>
+              <span class="speed-metric-big" id="planeSpeedValue">১ ঘণ্টায় ৮৬০ কিমি বেগে চলছে</span>
+              <span class="speed-metric-big" id="planeAltitudeValue">উচ্চতা: ৩৪,০০০ ফিট</span>
+              <div id="planeRouteMeta">বেসামরিক বিমান করিডোর</div>
+            </div>
+            <div class="vehicle-speed-card">
+              <h2>🚢 জাহাজের গতি</h2>
+              <span class="speed-metric-big" id="shipSpeedValue">১ ঘণ্টায় ৩৪ কিমি বেগে চলছে</span>
+              <div id="shipRouteMeta">উপকূলীয় নৌপথ • স্বাভাবিক যাত্রা</div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- পেজ ৪: সংযোগ ও নোটিফিকেশন -->
+      <section class="app-page" id="page-4">
+        <section class="panel">
+          <h2>👥 সংযোগ ও ফ্রেন্ড রিকোয়েস্ট</h2>
+          <div class="hub-cards-grid">
+            <div class="hub-card">
+              <strong>Sk Mt Tahin</strong>
+              <span>৬টি মিউচুয়াল সংযোগ</span>
+              <div class="media-buttons">
+                <button type="button" class="btn-blue" data-friend-act="Confirm — Sk Mt Tahin">Confirm</button>
+                <button type="button" data-friend-act="Delete — Sk Mt Tahin">Delete</button>
+              </div>
+            </div>
+            <div class="hub-card">
+              <strong>Mahbub Alam</strong>
+              <span>১টি মিউচুয়াল সংযোগ</span>
+              <div class="media-buttons">
+                <button type="button" class="btn-blue" data-friend-act="Confirm — Mahbub Alam">Confirm</button>
+                <button type="button" data-friend-act="Delete — Mahbub Alam">Delete</button>
+              </div>
+            </div>
+          </div>
+          <div class="ai-box-output" id="socialActionOutput">সংযোগ বক্স প্রস্তুত রয়েছে।</div>
+        </section>
+
+        <section class="panel">
+          <h2>🔔 নোটিফিকেশন বক্স</h2>
+          <div class="hub-cards-grid">
+            <div class="hub-card">
+              <strong>Top Fan Badge</strong>
+              <span>আপনার অ্যাকাউন্টে নতুন ব্যাজ যুক্ত হয়েছে।</span>
+            </div>
+            <div class="hub-card">
+              <strong>Community Update</strong>
+              <span>নতুন আপডেট ও বার্তা পাওয়া গেছে।</span>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- পেজ ৫: সমন্বিত সব ফিচার বক্স (১৯৫ রাষ্ট্রনেতা, বাজার, কৃষক+কীটনাশক, এমপি, সরকারি দপ্তর, পরিবহণ, বিমান, রেডিও/টিভি, ক্যালেন্ডার, নামাজ, আলেম গবেষণা, ডিসকভারি, জিওগ্রাফি ও বাচ্চাদের খেলাধুলা) -->
+      <section class="app-page" id="page-5">
+        <section class="panel">
+          <h2>📦 সব ফিচার বক্স</h2>
+          <div class="feature-grid-more">
+            <button type="button" class="feature-card" data-open-box="leaders"><span class="feature-icon">🌍</span><span class="feature-name">১৯৫ রাষ্ট্রনেতা</span><span class="feature-desc">বিশ্বনেতাদের তালিকা</span></button>
+            <button type="button" class="feature-card" data-open-box="grocery"><span class="feature-icon">🛒</span><span class="feature-name">মুদি দাম</span><span class="feature-desc">দৈনিক বাজার তালিকা</span></button>
+            <button type="button" class="feature-card" data-open-box="farmer"><span class="feature-icon">🌾</span><span class="feature-name">কৃষক + কীটনাশক</span><span class="feature-desc">ফসল, বীজ ও সার</span></button>
+            <button type="button" class="feature-card" data-open-box="mp"><span class="feature-icon">🏛️</span><span class="feature-name">এমপি ও সংসদ</span><span class="feature-desc">জাতীয় সংসদ ও পোর্টাল</span></button>
+            <button type="button" class="feature-card" data-open-box="official"><span class="feature-icon">🏢</span><span class="feature-name">সরকারি দপ্তর</span><span class="feature-desc">অফিসিয়াল পোর্টাল</span></button>
+            <button type="button" class="feature-card" data-open-box="transport"><span class="feature-icon">🚌🚆</span><span class="feature-name">বাস ও রেল</span><span class="feature-desc">পরিবহণ সূচি ও লিংক</span></button>
+            <button type="button" class="feature-card" data-open-box="airline"><span class="feature-icon">✈️</span><span class="feature-name">বিমান পরিবহণ</span><span class="feature-desc">এয়ারলাইন্স তালিকা</span></button>
+            <button type="button" class="feature-card" data-open-box="media"><span class="feature-icon">📻📺</span><span class="feature-name">রেডিও, টিভি ও নিউজ</span><span class="feature-desc">লাইভ মিডিয়া বক্স</span></button>
+            <button type="button" class="feature-card" data-open-box="prayer_cal"><span class="feature-icon">🕌📅</span><span class="feature-name">নামাজ ও ক্যালেন্ডার</span><span class="feature-desc">সময়সূচি ও আরবি তারিখ</span></button>
+            <button type="button" class="feature-card" data-open-box="ulema"><span class="feature-icon">📖</span><span class="feature-name">আলেম গবেষণা</span><span class="feature-desc">গবেষণা বিভাগ</span></button>
+            <button type="button" class="feature-card" data-open-box="discovery_geo"><span class="feature-icon">🔭🗺️</span><span class="feature-name">ডিসকভারি ও জিওগ্রাফি</span><span class="feature-desc">বিজ্ঞান ও ভূগোল</span></button>
+            <button type="button" class="feature-card" data-open-box="kids_games"><span class="feature-icon">🎮</span><span class="feature-name">বাচ্চাদের খেলাধুলা</span><span class="feature-desc">শিক্ষামূলক ও মজার খেলা</span></button>
+          </div>
+
+          <div id="featureDetailViewer" class="detail-viewer-box" style="display:none;">
+            <h2 id="featureDetailTitle">বক্সের তথ্য</h2>
+            <input type="search" id="featureDetailSearch" placeholder="তালিকায় খুঁজুন..." />
+            <div id="featureDetailBody" class="hub-cards-grid"></div>
+          </div>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="bottom-nav" aria-label="নিচের নেভিগেশন">
+    <button type="button" class="active-nav" data-go-page="0"><span>🏠</span>হোম</button>
+    <button type="button" data-go-page="1"><span>👤</span>প্রোফাইলQR</button>
+    <button type="button" data-go-page="2"><span>📡</span>রাডার</button>
+    <button type="button" data-go-page="3"><span>🔔</span>সংযোগ</button>
+    <button type="button" data-go-page="4"><span>☰</span>বক্স</button>
+  </nav>
+
+  <script type="module" src="./index.js"></script>
+  <script>
+    (() => {
+      const byId = (id) => document.getElementById(id);
+      const pagesTrack = byId("pagesTrack");
+      const swipeViewport = byId("swipeViewport");
+      const tabButtons = [...document.querySelectorAll(".page-tab-btn")];
+      const navButtons = [...document.querySelectorAll(".bottom-nav button")];
+      let currentPage = 0;
+      const totalPages = 5;
+
+      function goToPage(idx) {
+        currentPage = Math.max(0, Math.min(totalPages - 1, idx));
+        if (pagesTrack) {
+          pagesTrack.style.setProperty("--active-page", String(currentPage));
+        }
+        tabButtons.forEach((b, i) => b.classList.toggle("active", i === currentPage));
+        navButtons.forEach((b, i) => b.classList.toggle("active-nav", i === currentPage));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.querySelectorAll("[data-go-page]").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          const p = Number(el.getAttribute("data-go-page"));
+          if (!Number.isNaN(p)) {
+            if (el.tagName === "A" && el.getAttribute("href")?.startsWith("#")) e.preventDefault();
+            goToPage(p);
+          }
+        });
+      });
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+      swipeViewport?.addEventListener("touchstart", (e) => {
+        if (!e.touches || e.touches.length !== 1) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      swipeViewport?.addEventListener("touchend", (e) => {
+        if (!e.changedTouches || e.changedTouches.length !== 1) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.35) {
+          if (dx < 0 && currentPage < totalPages - 1) goToPage(currentPage + 1);
+          else if (dx > 0 && currentPage > 0) goToPage(currentPage - 1);
+        }
+      }, { passive: true });
+
+      // লেখা বড়/ছোট
+      let textScale = 3;
+      function applyTextScale() {
+        document.documentElement.style.setProperty("--text-scale", String(textScale));
+      }
+      byId("fontLargerBtn")?.addEventListener("click", () => {
+        textScale = Math.min(4.2, Number((textScale + 0.25).toFixed(2)));
+        applyTextScale();
+      });
+      byId("fontSmallerBtn")?.addEventListener("click", () => {
+        textScale = Math.max(1.2, Number((textScale - 0.25).toFixed(2)));
+        applyTextScale();
+      });
+
+      // পাসওয়ার্ড দেখা/লুকানো
+      function bindPassToggle(btnId, inputId) {
+        byId(btnId)?.addEventListener("click", () => {
+          const inp = byId(inputId);
+          const btn = byId(btnId);
+          if (!inp) return;
+          const show = inp.type === "password";
+          inp.type = show ? "text" : "password";
+          if (btn) btn.textContent = show ? "🙈 লুকান" : "👁️ দেখুন";
+        });
+      }
+      bindPassToggle("togglePasswordVisibilityBtn", "regPasswordInput");
+      bindPassToggle("toggleLockPassBtn", "lockPass");
+
+      byId("savePasswordCheckBtn")?.addEventListener("click", () => {
+        const pass = byId("regPasswordInput")?.value || "";
+        if (byId("passwordStatusOutput")) {
+          byId("passwordStatusOutput").textContent =
+            pass.length >= 6
+              ? `পাসওয়ার্ড যাচাই সফল (${pass.length} অক্ষর)।`
+              : "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।";
+        }
+      });
+
+      // ১১ অক্ষরের লক স্ক্রিন নিয়ন্ত্রণ
+      byId("openLockModalBtn")?.addEventListener("click", () => {
+        if (byId("lockScreen")) byId("lockScreen").style.display = "flex";
+      });
+      byId("unlockAppBtn")?.addEventListener("click", () => {
+        const n = (byId("lockName")?.value || "").trim();
+        const ph = (byId("lockPhone")?.value || "").trim();
+        const pw = byId("lockPass")?.value || "";
+        const msg = byId("lockMsg");
+        if (!n || !ph) {
+          if (msg) { msg.style.display = "block"; msg.textContent = "নাম ও ফোন নম্বর দিন।"; }
+          return;
+        }
+        if (pw.length !== 11) {
+          if (msg) { msg.style.display = "block"; msg.textContent = "পাসওয়ার্ড ঠিক ১১ অক্ষরের হতে হবে।"; }
+          return;
+        }
+        if (byId("lockScreen")) byId("lockScreen").style.display = "none";
+      });
+
+      // অটো-আপডেট স্ট্যাটাস
+      function stampAutoUpdate() {
+        if (byId("lastAutoSync")) {
+          byId("lastAutoSync").textContent = new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" });
+        }
+      }
+      byId("autoSyncNowBtn")?.addEventListener("click", stampAutoUpdate);
+      stampAutoUpdate();
+      setInterval(stampAutoUpdate, 6 * 60 * 60 * 1000);
+
+      // QR ও বারকোড
+      const qrCanvas = byId("aynaQrCanvas");
+      if (qrCanvas && qrCanvas.getContext) {
+        const ctx = qrCanvas.getContext("2d");
+        const size = qrCanvas.width;
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, size, size);
+        ctx.fillStyle = "#050a18";
+        const cell = 12;
+        const start = 12;
+        for (let r = 0; r < 18; r++) {
+          for (let c = 0; c < 18; c++) {
+            const corner = (r < 5 && c < 5) || (r < 5 && c > 12) || (r > 12 && c < 5);
+            const hash = ((r + 3) * 17 + (c + 7) * 31) % 3 === 0;
+            if (corner || hash) ctx.fillRect(start + c * cell, start + r * cell, cell - 1, cell - 1);
+          }
+        }
+      }
+      if (typeof JsBarcode === "function" && byId("aynaProfileBarcode")) {
+        try {
+          JsBarcode("#aynaProfileBarcode", "AYNA2026MAHABUB", {
+            format: "CODE128", lineColor: "#000000", width: 2, height: 46, displayValue: false, margin: 4
+          });
+        } catch (_) {}
+      }
+
+      // রাডার কম্পাস ও আবহাওয়া রাডার
+      function drawRadarDisc(canvasId, sweepAngle, color) {
+        const c = byId(canvasId);
+        if (!c || !c.getContext) return;
+        const ctx = c.getContext("2d");
+        const w = c.width, h = c.height, cx = w / 2, cy = h / 2, r = Math.min(cx, cy) - 18;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "#040b1c";
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "rgba(255, 230, 77, 0.45)";
+        ctx.lineWidth = 2;
+        [0.33, 0.66, 1].forEach((ratio) => {
+          ctx.beginPath(); ctx.arc(cx, cy, r * ratio, 0, Math.PI * 2); ctx.stroke();
+        });
+        ctx.beginPath();
+        ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy);
+        ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r);
+        ctx.stroke();
+        const rad = (sweepAngle * Math.PI) / 180;
+        ctx.strokeStyle = color; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r); ctx.stroke();
+      }
+      let angle = 45;
+      setInterval(() => {
+        const az = Number(byId("compassAzimuthInput")?.value || 45);
+        angle = (az + angle * 0.05 + 6) % 360;
+        drawRadarDisc("generalRadarCanvas", angle, "#ffe64d");
+        drawRadarDisc("weatherRadarCanvas", (angle + 90) % 360, "#38f2ff");
+      }, 400);
+
+      // গাড়ি, বিমান ও জাহাজের গতি ও উচ্চতা
+      function updateTransportSpeeds() {
+        const carKm = Math.floor(65 + Math.random() * 40);
+        const planeKm = Math.floor(820 + Math.random() * 90);
+        const planeFt = Math.floor(31000 + Math.random() * 6000);
+        const shipKm = Math.floor(26 + Math.random() * 16);
+        if (byId("carSpeedValue")) byId("carSpeedValue").textContent = `১ ঘণ্টায় ${carKm} কিমি বেগে চলছে`;
+        if (byId("planeSpeedValue")) byId("planeSpeedValue").textContent = `১ ঘণ্টায় ${planeKm} কিমি বেগে চলছে`;
+        if (byId("planeAltitudeValue")) byId("planeAltitudeValue").textContent = `উচ্চতা: ${planeFt.toLocaleString("bn-BD")} ফিট`;
+        if (byId("shipSpeedValue")) byId("shipSpeedValue").textContent = `১ ঘণ্টায় ${shipKm} কিমি বেগে চলছে`;
+      }
+      byId("refreshSpeedTelemetryBtn")?.addEventListener("click", updateTransportSpeeds);
+
+      // পোস্ট তৈরি ও প্রিভিউ
+      let selectedMedia = null;
+      function bindMedia(btnId, inputId, kind) {
+        byId(btnId)?.addEventListener("click", () => byId(inputId)?.click());
+        byId(inputId)?.addEventListener("change", (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const url = URL.createObjectURL(file);
+          selectedMedia = { kind, name: file.name, url };
+          const wrap = byId("mediaPreview"), content = byId("previewContent"), nameEl = byId("previewName");
+          if (wrap && content && nameEl) {
+            wrap.style.display = "block";
+            nameEl.textContent = file.name;
+            if (kind === "image") content.innerHTML = `<img src="${url}" alt="প্রিভিউ" />`;
+            else if (kind === "audio") content.innerHTML = `<audio controls src="${url}" style="width:100%;"></audio>`;
+            else if (kind === "video") content.innerHTML = `<video controls src="${url}"></video>`;
+            else content.innerHTML = `<div>📎 ${file.name}</div>`;
+          }
+        });
+      }
+      bindMedia("chooseImage", "imageInput", "image");
+      bindMedia("chooseAudio", "audioInput", "audio");
+      bindMedia("chooseVideo", "videoInput", "video");
+      bindMedia("chooseFile", "fileInput", "file");
+
+      byId("clearMedia")?.addEventListener("click", () => {
+        selectedMedia = null;
+        if (byId("mediaPreview")) byId("mediaPreview").style.display = "none";
+        if (byId("previewContent")) byId("previewContent").innerHTML = "";
+      });
+
+      const posts = [];
+      let activeFilter = "all";
+      function renderFeed() {
+        const feed = byId("feed");
+        if (!feed) return;
+        const filtered = activeFilter === "all" ? posts : posts.filter((p) => p.kind === activeFilter);
+        if (!filtered.length) {
+          feed.innerHTML = `<div class="empty">এখনও কোনো পোস্ট প্রকাশিত হয়নি।</div>`;
+          return;
+        }
+        feed.innerHTML = filtered.map((p) => {
+          let mediaHtml = "";
+          if (p.media?.kind === "image") mediaHtml = `<img class="post-media" src="${p.media.url}" alt="পোস্ট ছবি" />`;
+          else if (p.media?.kind === "audio") mediaHtml = `<audio controls src="${p.media.url}" style="width:100%;margin-top:12px;"></audio>`;
+          else if (p.media?.kind === "video") mediaHtml = `<video controls class="post-media-video" src="${p.media.url}"></video>`;
+          else if (p.media?.kind === "file") mediaHtml = `<div style="margin-top:12px;">📎 <a href="${p.media.url}" download="${p.media.name}" style="color:#ffe64d;">${p.media.name}</a></div>`;
+          return `
+            <article class="feed-post">
+              <strong>Mohammad Mahabub Alam</strong>
+              <div class="post-content">${p.text}</div>
+              ${mediaHtml}
+              <div class="post-actions">
+                <button type="button" onclick="this.textContent='👍 লাইক (' + (Number(this.textContent.match(/\\d+/)?.[0] || 0) + 1) + ')'">👍 লাইক (0)</button>
+                <button type="button">💬 মন্তব্য</button>
+                <button type="button">↗️ শেয়ার</button>
+                <button type="button">🔖 সংরক্ষণ</button>
+              </div>
+            </article>
+          `;
+        }).join("");
+      }
+
+      byId("publishPost")?.addEventListener("click", () => {
+        const text = (byId("postText")?.value || "").trim();
+        if (!text && !selectedMedia) return;
+        const kind = selectedMedia ? selectedMedia.kind : "text";
+        posts.unshift({ text, media: selectedMedia, kind });
+        if (byId("postText")) byId("postText").value = "";
+        selectedMedia = null;
+        if (byId("mediaPreview")) byId("mediaPreview").style.display = "none";
+        renderFeed();
+      });
+
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeFilter = btn.getAttribute("data-filter") || "all";
+          renderFeed();
+        });
+      });
+
+      // লাইভ ক্যামেরা ও সময় বলা
+      let camStream = null;
+      byId("startCamera")?.addEventListener("click", async () => {
+        try {
+          camStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          if (byId("liveVideo")) byId("liveVideo").srcObject = camStream;
+          if (byId("cameraStatus")) byId("cameraStatus").textContent = "ক্যামেরা চালু রয়েছে।";
+        } catch (_) {
+          if (byId("cameraStatus")) byId("cameraStatus").textContent = "ক্যামেরা অনুমতি বা ডিভাইস পাওয়া যায়নি।";
+        }
+      });
+      byId("stopCamera")?.addEventListener("click", () => {
+        camStream?.getTracks().forEach((t) => t.stop());
+        camStream = null;
+        if (byId("liveVideo")) byId("liveVideo").srcObject = null;
+        if (byId("cameraStatus")) byId("cameraStatus").textContent = "ক্যামেরা বন্ধ করা হয়েছে।";
+      });
+      byId("headerSpeakClockBtn")?.addEventListener("click", () => {
+        const nowStr = new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" });
+        if ("speechSynthesis" in window) {
+          try {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(`এখন সময় ${nowStr}`);
+            u.lang = "bn-BD";
+            window.speechSynthesis.speak(u);
+          } catch (_) {}
+        }
+      });
+
+      document.querySelectorAll("[data-friend-act]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (byId("socialActionOutput")) byId("socialActionOutput").textContent = `আপডেট: ${btn.getAttribute("data-friend-act")}`;
+        });
+      });
+
+      // পেজ ৫-এর সমন্বিত ফিচার বক্স ডেটা
+      const BOX_DATA = {
+        leaders: {
+          title: "🌍 রাষ্ট্রনেতা ও বিশ্ব নেতৃত্ব",
+          items: [
+            ["Bangladesh", "Muhammad Yunus — Chief Adviser"],
+            ["United States", "Donald Trump — President"],
+            ["United Kingdom", "Keir Starmer — Prime Minister"],
+            ["Saudi Arabia", "Mohammed bin Salman — Crown Prince / PM"]
+          ]
+        },
+        grocery: {
+          title: "🛒 দৈনিক মুদি বাজার তালিকা",
+          items: [
+            ["চাল / Rice", "৳৬৮ / কেজি"],
+            ["মসুর ডাল", "৳১৪০ / কেজি"],
+            ["সয়াবিন তেল", "৳১৭৫ / লিটার"],
+            ["পেঁয়াজ ও আলু", "পেঁয়াজ ৳৮৫ • আলু ৳৩৫"]
+          ]
+        },
+        farmer: {
+          title: "🌾 কৃষক, বীজ, সার ও কীটনাশক",
+          items: [
+            ["ধান ও গম বীজ", "ধান ৳১২০/কেজি • গম ৳৯৫/কেজি"],
+            ["সার তালিকা", "ইউরিয়া ৳২৭/কেজি • টিএসপি ৳৩২/কেজি"],
+            ["ফসল বিক্রয় দর", "ধান ৳১৩৫০/মণ • পাট ৳৩২০০/মণ"],
+            ["সতর্কতা", "লেবেলের মাত্রা মানুন ও সুরক্ষা সামগ্রী ব্যবহার করুন"]
+          ]
+        },
+        mp: {
+          title: "🏛️ সংসদ ও এমপি তথ্য",
+          items: [
+            ["Bangladesh", "Jatiya Sangsad — parliament.gov.bd"],
+            ["India", "Lok Sabha — loksabha.nic.in"],
+            ["United Kingdom", "House of Commons — parliament.uk"]
+          ]
+        },
+        official: {
+          title: "🏢 সরকারি দপ্তর পোর্টাল",
+          items: [
+            ["বাংলাদেশ জাতীয় পোর্টাল", "bangladesh.gov.bd"],
+            ["USA Official Portal", "usa.gov"],
+            ["UK Official Portal", "gov.uk"]
+          ]
+        },
+        transport: {
+          title: "🚌🚆 বাস ও রেল পরিবহণ",
+          items: [
+            ["Bangladesh Railway", "railway.gov.bd • BRTC (brtc.gov.bd)"],
+            ["Indian Railways", "indianrail.gov.in"],
+            ["Japan Shinkansen", "japanrailpass.net"]
+          ]
+        },
+        airline: {
+          title: "✈️ বিমান পরিবহণ",
+          items: [
+            ["Biman Bangladesh Airlines", "biman-airlines.com"],
+            ["Qatar Airways", "qatarairways.com"],
+            ["Emirates", "emirates.com"]
+          ]
+        },
+        media: {
+          title: "📻📺 রেডিও, টিভি ও সংবাদ",
+          items: [
+            ["বিশ্ব রেডিও ডিরেক্টরি", "radio-browser.info"],
+            ["বাংলা লাইভ টিভি ও নিউজ", "bbc.com/bengali"]
+          ]
+        },
+        prayer_cal: {
+          title: "🕌📅 নামাজ ও ক্যালেন্ডার",
+          items: [
+            ["আজকের তারিখ", new Date().toLocaleDateString("bn-BD", { weekday: "long", year: "numeric", month: "long", day: "numeric" })],
+            ["নামাজ ও হিজরি ক্যালেন্ডার", "দৈনিক ওয়াক্ত ও আরবি মাস অনুযায়ী আপডেট"]
+          ]
+        },
+        ulema: {
+          title: "📖 আলেম গবেষণাগার",
+          items: [
+            ["কুরআন ও তাফসির", "তাফসির ও উসূলে তাফসির গবেষণা"],
+            ["হাদিস ও ফিকহ", "হাদিস সংকলন ও সমকালীন মাসআলা"]
+          ]
+        },
+        discovery_geo: {
+          title: "🔭🗺️ ডিসকভারি ও জিওগ্রাফি",
+          items: [
+            ["মহাকাশ ও বিজ্ঞান", "গ্রহ, নক্ষত্র ও ভূ-প্রকৃতি পর্যবেক্ষণ"],
+            ["বিশ্ব ভূগোল", "মহাদেশ, নদী, পর্বতমালা ও জলবায়ু"]
+          ]
+        },
+        kids_games: {
+          title: "🎮 বাচ্চাদের খেলাধুলা ও শিক্ষা",
+          items: [
+            ["মেমোরি ও শব্দ খেলা", "বাংলা-ইংরেজি বর্ণ, সংখ্যা ও ধাঁধা"],
+            ["গণিত কুইজ", "সহজ যোগ-বিয়োগ ও যুক্তি অনুশীলন"]
+          ]
+        }
+      };
+
+      let currentBoxKey = null;
+      function renderBoxItems(key, q = "") {
+        const spec = BOX_DATA[key];
+        if (!spec || !byId("featureDetailViewer")) return;
+        byId("featureDetailViewer").style.display = "block";
+        byId("featureDetailTitle").textContent = spec.title;
+        const ql = q.trim().toLowerCase();
+        const rows = spec.items.filter(([a, b]) => !ql || `${a} ${b}`.toLowerCase().includes(ql));
+        byId("featureDetailBody").innerHTML = rows.map(([a, b]) => `
+          <div class="hub-card">
+            <strong>${a}</strong>
+            <span>${b}</span>
+          </div>
+        `).join("") || `<div class="empty">কোনো তথ্য পাওয়া যায়নি।</div>`;
+      }
+
+      document.querySelectorAll("[data-open-box]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentBoxKey = btn.getAttribute("data-open-box");
+          if (byId("featureDetailSearch")) byId("featureDetailSearch").value = "";
+          renderBoxItems(currentBoxKey, "");
+          byId("featureDetailViewer")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+      });
+
+      byId("featureDetailSearch")?.addEventListener("input", (e) => {
+        if (currentBoxKey) renderBoxItems(currentBoxKey, e.target.value);
+      });
+    })();
+  </script>
+</body>
+</html>
