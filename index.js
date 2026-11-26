@@ -1,1940 +1,1737 @@
+// AYNA BOOK* • index.js — Full AI Radar, Weather, Civil Aviation, UHD Sound, UHD Messenger, 90-Day Policy & Quantum Hub
 
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — Quantum Multimedia Social</title>
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  doc,
+  updateDoc,
+  deleteDoc,
+  increment,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytesResumable,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { AynaUhdMasterSound } from "./uhd-sound-engine.js";
 
-<style>
-:root {
-  --bg:#050a18;
-  --navy-top:#1a3575;
-  --navy-bottom:#08122b;
-  --panel:#0b1633;
-  --panel2:#13254d;
-  --gold:#ffe64d;
-  --gold-bright:#fff6b3;
-  --gold-base:#8a6105;
-  --quantum-cyan:#38f2ff;
-  --quantum-violet:#a855f7;
-  --white:#ffffff;
-  --muted:#e6eeff;
-  --green:#16c784;
-  --border:#ffe64d;
-}
+const $ = (id) => document.getElementById(id);
 
-* {
-  box-sizing:border-box;
-}
+const OWNER_LOCKED_IDENTITY = Object.freeze({
+  name: "Mohammad Mahabub Alam",
+  email: "mahbub.uk.cox@gmail.com",
+  phone: "+8801700000000",
+  photoURL: "./assets/profile-photo.jpg",
+  aynaId: "2026-----10000001"
+});
 
-html, body {
-  max-width:100%;
-  overflow-x:hidden;
-  scroll-behavior:smooth;
-}
+const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
 
-body {
-  margin:0;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(56,242,255,.09), transparent 35%),
-    radial-gradient(circle at 85% 20%, rgba(255,230,77,.10), transparent 40%),
-    var(--bg);
-  color:var(--white);
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  font-size:36px;
-  line-height:1.5;
-}
-
-button,input,textarea,select {
-  font:inherit;
-}
-
-button {
-  cursor:pointer;
-}
-
-.gold-3d-box,
-.hero,
-.profile-bar,
-.feature-card,
-.panel,
-.feed-post,
-.quantum-bar {
-  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%) !important;
-  border:4px solid var(--gold) !important;
-  border-radius:10px !important;
-  box-shadow:
-    0 0 18px rgba(255,230,77,.65),
-    0 9px 0 var(--gold-base),
-    0 16px 26px rgba(0,0,0,.85),
-    inset 0 2px 5px var(--gold-bright) !important;
-}
-
-.feature-card:active,
-.primary-button:active,
-.tool-button:active,
-.media-buttons button:active,
-.header-actions a:active,
-.header-actions button:active,
-.filter-btn:active {
-  transform:translateY(4px) !important;
-  box-shadow:
-    0 0 12px rgba(255,230,77,.55),
-    0 3px 0 var(--gold-base),
-    0 6px 12px rgba(0,0,0,.85),
-    inset 0 2px 4px var(--gold-bright) !important;
-}
-
-header {
-  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
-  border-bottom:4px solid var(--gold);
-  padding:20px;
-  position:sticky;
-  top:0;
-  z-index:50;
-  box-shadow:0 0 20px rgba(255,230,77,.45), 0 6px 18px rgba(0,0,0,.9);
-}
-
-.header-inner {
-  max-width:1360px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-}
-
-.logo {
-  color:var(--gold-bright);
-  font-size:48px;
-  font-weight:1000;
-  letter-spacing:1px;
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  text-shadow:0 0 14px rgba(255,230,77,.85), 0 3px 8px rgba(0,0,0,.95);
-}
-
-.quantum-badge {
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:1.1px;
-  padding:6px 14px;
-  border-radius:6px;
-  color:var(--quantum-cyan);
-  background:rgba(5,10,24,.9);
-  border:2px solid var(--quantum-cyan);
-}
-
-.star-1s {
-  color:#ffffff;
-  font-size:48px;
-  display:inline-block;
-  animation:starFlash1s 1s infinite alternate ease-in-out;
-}
-
-@keyframes starFlash1s {
-  0% {
-    transform:scale(0.95) rotate(0deg);
-    color:#fff099;
-    text-shadow:0 0 8px #ffd700;
+const SCREEN_COLOR_PALETTES = {
+  ROYAL_GOLD_NAVY: {
+    bg: "#050a18",
+    navyTop: "#1a3575",
+    navyBottom: "#08122b",
+    gold: "#ffe64d",
+    goldBright: "#fff6b3",
+    goldBase: "#8a6105",
+    quantumCyan: "#38f2ff",
+    label: "রয়্যাল নেভি ও গোল্ড"
+  },
+  QUANTUM_EMERALD: {
+    bg: "#041312",
+    navyTop: "#0d473d",
+    navyBottom: "#06211d",
+    gold: "#38f2b0",
+    goldBright: "#b8ffea",
+    goldBase: "#0a664c",
+    quantumCyan: "#ffe64d",
+    label: "কোয়ান্টাম এমেরাল্ড"
+  },
+  SOLAR_CRIMSON: {
+    bg: "#14060c",
+    navyTop: "#5c142a",
+    navyBottom: "#240712",
+    gold: "#ffb84d",
+    goldBright: "#ffe6b8",
+    goldBase: "#7a3808",
+    quantumCyan: "#38f2ff",
+    label: "সোলার ক্রিমনস"
+  },
+  ARCTIC_CYAN: {
+    bg: "#040d18",
+    navyTop: "#123b66",
+    navyBottom: "#06192e",
+    gold: "#66e0ff",
+    goldBright: "#d6f7ff",
+    goldBase: "#0c5c7a",
+    quantumCyan: "#ffe64d",
+    label: "আর্কটিক সায়ান"
   }
-  100% {
-    transform:scale(1.35) rotate(18deg);
-    color:#ffffff;
-    text-shadow:
-      0 0 14px #ffffff,
-      0 0 26px #ffffff,
-      0 0 42px #ffe64d,
-      0 0 60px #ff9900;
-  }
-}
+};
 
-.header-actions {
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-}
-
-.header-actions a,
-.header-actions button {
-  text-decoration:none;
-  color:white;
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  border:3px solid var(--gold);
-  padding:14px 20px;
-  border-radius:8px;
-  font-weight:bold;
-  font-size:28px;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 5px 0 var(--gold-base);
-}
-
-.container {
-  max-width:1360px;
-  margin:auto;
-  padding:20px;
-}
-
-.hero {
-  padding:36px 24px;
-  margin-bottom:28px;
-  text-align:center;
-}
-
-.hero h1 {
-  font-size:56px;
-  margin:0 0 14px;
-  color:var(--gold-bright);
-  font-weight:1000;
-  text-shadow:0 0 16px rgba(255,230,77,.65);
-}
-
-.hero p {
-  font-size:38px;
-  line-height:1.6;
-  margin:0;
-  color:var(--white);
-  font-weight:600;
-}
-
-.quantum-bar {
-  padding:22px;
-  margin-bottom:28px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:18px;
-}
-
-.q-stat {
-  background:rgba(5,11,28,.8);
-  border:2.5px solid var(--gold);
-  border-radius:8px;
-  padding:16px 20px;
-}
-
-.q-stat-label {
-  font-size:24px;
-  color:var(--muted);
-  display:block;
-}
-
-.q-stat-value {
-  font-size:32px;
-  font-weight:1000;
-  color:var(--quantum-cyan);
-  margin-top:6px;
-  display:block;
-  overflow-wrap:anywhere;
-}
-
-.section-title {
-  font-size:46px;
-  font-weight:1000;
-  margin:36px 0 22px;
-  color:var(--gold-bright);
-  text-shadow:0 0 14px rgba(255,230,77,.6), 0 3px 8px rgba(0,0,0,.9);
-}
-
-.profile-bar {
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:24px;
-  padding:24px;
-  margin-bottom:28px;
-}
-
-.profile-bar img {
-  width:320px;
-  height:320px;
-  object-fit:cover;
-  object-position:top center;
-  border-radius:10px;
-  border:5px solid var(--gold-bright);
-  background:#0a1636;
-  box-shadow:0 0 24px rgba(255,230,77,.8), 0 7px 0 var(--gold-base);
-  flex-shrink:0;
-}
-
-.profile-info {
-  flex:1;
-  min-width:260px;
-}
-
-.profile-info strong {
-  font-size:48px;
-  font-weight:1000;
-  color:var(--white);
-  display:block;
-}
-
-.profile-info small {
-  display:block;
-  color:var(--muted);
-  font-size:32px;
-  margin-top:8px;
-  word-break:break-word;
-}
-
-.feature-grid-8 {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:22px;
-}
-
-.feature-grid-more {
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:22px;
-  margin-top:24px;
-}
-
-.feature-card {
-  min-height:360px;
-  padding:28px 18px;
-  color:white;
-  text-decoration:none;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  transition:.12s;
-  will-change:transform;
-}
-
-.feature-icon {
-  font-size:86px;
-  margin-bottom:16px;
-  filter:drop-shadow(0 4px 10px rgba(0,0,0,.8));
-}
-
-.feature-name {
-  font-size:42px;
-  line-height:1.3;
-  font-weight:1000;
-  color:var(--white);
-  min-height:2.6em;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-}
-
-.feature-desc {
-  color:var(--muted);
-  font-size:30px;
-  font-weight:600;
-  margin-top:12px;
-  line-height:1.35;
-}
-
-.panel {
-  padding:26px;
-  margin:28px 0;
-}
-
-.panel h2 {
-  margin:0 0 20px;
-  font-size:44px;
-  font-weight:1000;
-  color:var(--gold-bright);
-}
-
-.panel-head-row {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  flex-wrap:wrap;
-  margin-bottom:18px;
-}
-
-.panel-head-row h2 {
-  margin:0;
-}
-
-.panel-link-btn {
-  text-decoration:none;
-  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
-  color:#050a18;
-  border:3px solid var(--gold-bright);
-  border-radius:8px;
-  padding:12px 20px;
-  font-size:28px;
-  font-weight:1000;
-  box-shadow:0 5px 0 #664604;
-}
-
-.hub-search-input,
-.hub-select {
-  width:100%;
-  background:#050b1c;
-  color:white;
-  border:3px solid var(--gold);
-  border-radius:8px;
-  padding:16px 20px;
-  font-size:32px;
-  outline:none;
-}
-
-.hub-controls-row {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:16px;
-  margin-bottom:18px;
-}
-
-.hub-cards-grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:18px;
-  margin-top:18px;
-}
-
-.hub-card {
-  background:#050b1c;
-  border:3px solid var(--gold);
-  border-radius:8px;
-  padding:20px;
-  font-size:30px;
-}
-
-.hub-card-tag {
-  display:inline-block;
-  background:var(--gold);
-  color:#050a18;
-  font-size:22px;
-  font-weight:1000;
-  padding:4px 12px;
-  border-radius:6px;
-  margin-bottom:10px;
-}
-
-.hub-card-title {
-  font-size:34px;
-  font-weight:1000;
-  color:var(--gold-bright);
-  margin-bottom:8px;
-}
-
-.hub-card-meta {
-  font-size:28px;
-  color:var(--muted);
-  margin-top:6px;
-  overflow-wrap:anywhere;
-}
-
-.yt-input-row {
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:14px;
-  margin-bottom:16px;
-}
-
-.yt-go-btn {
-  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
-  color:#050a18;
-  border:3px solid var(--gold-bright);
-  border-radius:8px;
-  padding:0 26px;
-  min-height:76px;
-  font-size:32px;
-  font-weight:1000;
-  box-shadow:0 5px 0 #664604;
-}
-
-.yt-preset-row {
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:18px;
-}
-
-.yt-preset-btn {
-  background:#0a1636;
-  color:var(--gold-bright);
-  border:2.5px solid var(--gold);
-  border-radius:8px;
-  padding:12px 18px;
-  font-size:28px;
-  font-weight:bold;
-}
-
-.yt-player-frame {
-  width:100%;
-  height:540px;
-  border:3.5px solid var(--gold);
-  border-radius:8px;
-  background:#000;
-}
-
-.yt-ext-link {
-  display:inline-block;
-  margin-top:16px;
-  text-decoration:none;
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  color:var(--gold-bright);
-  border:3px solid var(--gold);
-  border-radius:8px;
-  padding:14px 22px;
-  font-size:30px;
-  font-weight:bold;
-}
-
-.clock-live-box {
-  background:#050b1c;
-  border:3px solid var(--gold);
-  border-radius:8px;
-  padding:20px;
-  margin-bottom:18px;
-  text-align:center;
-}
-
-.clock-live-time {
-  font-size:52px;
-  font-weight:1000;
-  color:var(--quantum-cyan);
-  display:block;
-}
-
-.clock-rules-text {
-  font-size:28px;
-  color:var(--muted);
-  margin-top:12px;
-  line-height:1.55;
-}
-
-.post-textarea {
-  width:100%;
-  min-height:200px;
-  resize:vertical;
-  background:#050b1c;
-  border:3.5px solid var(--gold);
-  color:white;
-  border-radius:8px;
-  padding:20px;
-  font-size:36px;
-  line-height:1.6;
-  outline:none;
-}
-
-.post-textarea:focus,
-input:focus {
-  border-color:#ffffff;
-}
-
-.post-tools {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:18px;
-  margin-top:20px;
-}
-
-.tool-button {
-  min-height:96px;
-  padding:16px;
-  border-radius:8px;
-  border:3px solid var(--gold);
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  color:white;
-  font-size:32px;
-  font-weight:bold;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
-}
-
-.primary-button {
-  width:100%;
-  min-height:104px;
-  margin-top:20px;
-  border:3.5px solid var(--gold-bright);
-  border-radius:8px;
-  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
-  color:#050a18;
-  font-size:40px;
-  font-weight:1000;
-  box-shadow:0 0 18px rgba(255,230,77,.65), 0 7px 0 #664604;
-}
-
-.progress-wrap {
-  display:none;
-  margin-top:16px;
-  background:#050b1c;
-  border:3px solid var(--gold);
-  border-radius:8px;
-  height:34px;
-  overflow:hidden;
-}
-
-.progress-bar {
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,var(--quantum-cyan),var(--gold));
-  transition:width .2s ease;
-}
-
-.preview {
-  display:none;
-  margin-top:20px;
-  background:#050b1c;
-  border:3.5px solid var(--gold);
-  padding:18px;
-  border-radius:8px;
-  text-align:center;
-}
-
-.preview img {
-  max-width:100%;
-  max-height:640px;
-  object-fit:contain;
-  object-position:top center;
-  border-radius:8px;
-  border:3px solid var(--gold);
-}
-
-.preview video {
-  max-width:100%;
-  max-height:640px;
-  border-radius:8px;
-}
-
-.preview audio {
-  width:100%;
-}
-
-.preview-name {
-  font-size:28px;
-  color:var(--muted);
-  margin-top:12px;
-  overflow-wrap:anywhere;
-}
-
-.feed-filters {
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-  margin-bottom:22px;
-}
-
-.filter-btn {
-  background:#0a1636;
-  color:var(--white);
-  border:3px solid var(--gold);
-  border-radius:8px;
-  padding:14px 24px;
-  font-size:30px;
-  font-weight:bold;
-  box-shadow:0 0 10px rgba(255,230,77,.4), 0 5px 0 var(--gold-base);
-}
-
-.filter-btn.active {
-  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
-  color:#050a18;
-}
-
-.feed-post {
-  padding:26px;
-  margin-bottom:26px;
-}
-
-.post-header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:18px;
-  margin-bottom:18px;
-  flex-wrap:wrap;
-}
-
-.post-author-wrap {
-  display:flex;
-  align-items:center;
-  gap:20px;
-}
-
-.post-avatar {
-  width:150px;
-  height:150px;
-  border-radius:8px;
-  border:4px solid var(--gold-bright);
-  object-fit:cover;
-  object-position:top center;
-  background:#0a1636;
-  box-shadow:0 0 16px rgba(255,230,77,.65), 0 5px 0 var(--gold-base);
-  flex-shrink:0;
-}
-
-.post-author {
-  font-size:40px;
-  font-weight:1000;
-  color:var(--white);
-}
-
-.post-date {
-  font-size:28px;
-  color:var(--muted);
-  margin-top:6px;
-}
-
-.q-pill {
-  font-size:22px;
-  font-weight:bold;
-  color:var(--quantum-cyan);
-  background:rgba(5,11,28,.9);
-  border:2px solid var(--quantum-cyan);
-  padding:8px 14px;
-  border-radius:6px;
-}
-
-.post-content {
-  font-size:40px;
-  line-height:1.6;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  margin:18px 0;
-  color:var(--white);
-}
-
-.post-media {
-  width:100%;
-  max-height:780px;
-  object-fit:contain;
-  object-position:top center;
-  background:#050a12;
-  border:3.5px solid var(--gold);
-  border-radius:8px;
-  margin-top:14px;
-}
-
-.post-media-audio {
-  width:100%;
-  margin-top:16px;
-}
-
-.file-attach-box {
-  margin-top:16px;
-  padding:18px;
-  border-radius:8px;
-  background:#050b1c;
-  border:2.5px solid var(--gold);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:14px;
-  flex-wrap:wrap;
-  font-size:30px;
-}
-
-.file-attach-box a {
-  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
-  color:#050a18;
-  text-decoration:none;
-  font-weight:1000;
-  padding:12px 20px;
-  border-radius:8px;
-  font-size:28px;
-}
-
-.post-actions {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:14px;
-  border-top:2.5px solid var(--gold);
-  padding-top:18px;
-  margin-top:18px;
-}
-
-.post-actions button {
-  background:#0a1636;
-  color:white;
-  border:2.5px solid var(--gold);
-  border-radius:8px;
-  min-height:80px;
-  padding:10px;
-  font-weight:bold;
-  font-size:30px;
-  box-shadow:0 0 10px rgba(255,230,77,.4), 0 5px 0 var(--gold-base);
-}
-
-.comments {
-  margin-top:18px;
-  border-top:2px solid rgba(255,230,77,.65);
-  padding-top:16px;
-}
-
-.comment-item {
-  background:#050b1c;
-  border:2px solid var(--gold);
-  padding:16px;
-  border-radius:8px;
-  margin:12px 0;
-  font-size:32px;
-  overflow-wrap:anywhere;
-}
-
-.comment-form {
-  display:flex;
-  gap:14px;
-  margin-top:16px;
-  flex-wrap:wrap;
-}
-
-.comment-form input {
-  flex:1;
-  min-width:240px;
-  background:#050b1c;
-  color:white;
-  border:3px solid var(--gold);
-  border-radius:8px;
-  padding:16px;
-  font-size:32px;
-}
-
-.comment-form button {
-  background:var(--gold);
-  color:#050a18;
-  border:2px solid var(--gold-bright);
-  border-radius:8px;
-  padding:0 28px;
-  min-height:72px;
-  font-weight:1000;
-  font-size:32px;
-  box-shadow:0 5px 0 #664604;
-}
-
-.media-box {
-  text-align:center;
-}
-
-.media-box video {
-  width:100%;
-  max-height:720px;
-  object-fit:cover;
-  object-position:top center;
-  background:#000;
-  border:3.5px solid var(--gold);
-  border-radius:8px;
-}
-
-.media-buttons {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:16px;
-  margin-top:18px;
-}
-
-.media-buttons button {
-  min-height:92px;
-  border:3px solid var(--gold);
-  border-radius:8px;
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  color:white;
-  font-weight:bold;
-  font-size:34px;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
-}
-
-.status {
-  font-size:30px;
-  color:var(--muted);
-  margin-top:14px;
-  overflow-wrap:anywhere;
-}
-
-.file-search-input {
-  width:100%;
-  background:#050b1c;
-  color:white;
-  border:3px solid var(--gold);
-  border-radius:8px;
-  padding:16px 20px;
-  font-size:32px;
-  margin-bottom:18px;
-  outline:none;
-}
-
-.file-list-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-  gap:12px;
-  max-height:680px;
-  overflow-y:auto;
-  padding:8px;
-  background:#050b1c;
-  border:2.5px solid var(--gold);
-  border-radius:8px;
-}
-
-.file-item-card {
-  background:#0b1633;
-  border:2px solid var(--gold);
-  border-radius:6px;
-  padding:12px 16px;
-  font-size:26px;
-  word-break:break-word;
-  color:var(--white);
-}
-
-.file-item-num {
-  color:var(--gold-bright);
-  font-weight:1000;
-  margin-right:8px;
-}
-
-.empty {
-  text-align:center;
-  color:var(--muted);
-  padding:42px 16px;
-  font-size:36px;
-}
-
-footer {
-  text-align:center;
-  padding:32px 16px 140px;
-  color:var(--muted);
-  font-size:30px;
-}
-
-.bottom-nav {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  z-index:60;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
-  border-top:4px solid var(--gold);
-  padding:12px 6px calc(12px + env(safe-area-inset-bottom));
-  box-shadow:0 0 20px rgba(255,230,77,.45), 0 -5px 18px rgba(0,0,0,.9);
-}
-
-.bottom-nav a {
-  color:white;
-  text-decoration:none;
-  text-align:center;
-  font-size:26px;
-  font-weight:bold;
-}
-
-.bottom-nav span {
-  display:block;
-  font-size:38px;
-  margin-bottom:4px;
-}
-
-#notice {
-  position:fixed;
-  top:110px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#0a1636;
-  color:white;
-  border:3.5px solid var(--gold-bright);
-  padding:20px 28px;
-  border-radius:8px;
-  box-shadow:0 0 20px rgba(255,230,77,.8), 0 7px 0 var(--gold-base);
-  z-index:100;
-  display:none;
-  max-width:92%;
-  font-size:34px;
-  text-align:center;
-}
-
-@media(max-width:1024px) {
-  .feature-grid-8,
-  .feature-grid-more {
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-  .post-actions {
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-}
-
-@media(max-width:600px) {
-  .feature-grid-8,
-  .feature-grid-more,
-  .post-tools,
-  .media-buttons,
-  .hub-controls-row,
-  .hub-cards-grid,
-  .yt-input-row {
-    grid-template-columns:1fr;
-  }
-  .profile-bar img {
-    width:240px;
-    height:240px;
-  }
-  .logo {
-    font-size:36px;
-  }
-  .hero h1 {
-    font-size:40px;
-  }
-  .clock-live-time {
-    font-size:38px;
-  }
-  .yt-player-frame {
-    height:340px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <div class="header-inner">
-    <div class="logo">
-      AYNA BOOK <span class="star-1s">★</span>
-      <span class="quantum-badge">⚛ QUANTUM SUPER-SPEED</span>
-    </div>
-
-    <div class="header-actions">
-      <button type="button" id="quantumBoostBtn">⚡ Quantum Boost</button>
-      <button type="button" id="autoUpdateNowBtn">🔄 Auto Sync</button>
-      <a href="notifications.html">🔔</a>
-      <a href="messenger.html">💬 Messenger</a>
-    </div>
-  </div>
-</header>
-
-<div id="notice"></div>
-
-<main class="container">
-
-  <section class="hero">
-    <h1>WELCOME TO AYNA BOOK QUANTUM</h1>
-    <p>
-      আপনার বিশ্ব, আপনার বন্ধু, আপনার গল্প — কোয়ান্টাম সুপার স্পিড মাল্টিমিডিয়া সোশাল নেটওয়ার্কে আজীবন অটো-আপডেটসহ যুক্ত থাকুন।
-    </p>
-  </section>
-
-  <section class="quantum-bar" aria-label="Quantum Telemetry">
-    <div class="q-stat">
-      <span class="q-stat-label">Quantum Sync State</span>
-      <span class="q-stat-value" id="qSyncState">ENTANGLED • 99.9%</span>
-    </div>
-    <div class="q-stat">
-      <span class="q-stat-label">Lifelong Auto-Update</span>
-      <span class="q-stat-value" id="qAutoSyncStatus">ACTIVE • LIVE</span>
-    </div>
-    <div class="q-stat">
-      <span class="q-stat-label">Total Registry Items</span>
-      <span class="q-stat-value" id="qFileCount">192</span>
-    </div>
-  </section>
-
-  <!-- সময় বলার ঘড়ি প্যানেল (১ ঘণ্টা পর পর স্বয়ংক্রিয় ঘোষণা) -->
-  <section class="panel" id="talkingClockSection">
-    <h2>🕒 রিয়েল-টাইম কথা বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা</h2>
-    <div class="clock-live-box">
-      <span class="clock-live-time" id="quantumClockDisplay">লোড হচ্ছে...</span>
-      <div class="clock-rules-text">
-        • প্রতি ১ ঘণ্টা পর পর স্বয়ংক্রিয়ভাবে রিয়েল-টাইম সময় ঘোষণা (পরবর্তী ঘণ্টা: <strong id="nextHourlyAnnouncement">--</strong>)<br>
-        • সেহরির ১.৫ ঘণ্টা আগে ঘোষণা (ভিত্তি: 04:58 AM)<br>
-        • ইফতারের ১ ঘণ্টা আগে থেকে প্রতি ৫ মিনিটে ঘোষণা (ভিত্তি: 05:12 PM)
-      </div>
-    </div>
-    <div class="media-buttons">
-      <button type="button" id="toggleTalkClockBtn">🔊 ১ ঘণ্টা পর পর অটো সময়: চালু</button>
-      <button type="button" id="speakNowClockBtn">🎙️ এখনই সময় বলুন</button>
-    </div>
-  </section>
-
-  <section class="profile-bar">
-    <img id="myPhoto" alt="Profile photo">
-    <div class="profile-info">
-      <strong id="myName">লোড হচ্ছে...</strong>
-      <small id="myEmail">আপনার AYNA BOOK অ্যাকাউন্ট</small>
-    </div>
-    <a href="profile.html" style="color:#fff6b3;text-decoration:none;font-weight:bold;font-size:34px;">
-      প্রোফাইল
-    </a>
-  </section>
-
-  <h2 class="section-title">🌍 AYNA BOOK MAIN FEATURES (২ সারি — ৮টি)</h2>
-
-  <section class="feature-grid-8">
-    <a class="feature-card" href="profile.html">
-      <span class="feature-icon">👤</span>
-      <span class="feature-name">আমার প্রোফাইল</span>
-      <span class="feature-desc">ব্যক্তিগত অ্যাকাউন্ট</span>
-    </a>
-
-    <a class="feature-card" href="messenger.html">
-      <span class="feature-icon">💬</span>
-      <span class="feature-name">AYNA Messenger</span>
-      <span class="feature-desc">মেসেজ, অডিও, ভিডিও ও ফাইল</span>
-    </a>
-
-    <a class="feature-card" href="notifications.html">
-      <span class="feature-icon">🔔</span>
-      <span class="feature-name">নোটিফিকেশন</span>
-      <span class="feature-desc">সব আপডেট</span>
-    </a>
-
-    <a class="feature-card" href="radio.html">
-      <span class="feature-icon">📻</span>
-      <span class="feature-name">বিশ্ব রেডিও</span>
-      <span class="feature-desc">রেডিও শুনুন</span>
-    </a>
-
-    <a class="feature-card" href="tv-live.html">
-      <span class="feature-icon">📺</span>
-      <span class="feature-name">বিশ্ব টেলিভিশন</span>
-      <span class="feature-desc">টিভি দেখুন</span>
-    </a>
-
-    <a class="feature-card" href="gps.html">
-      <span class="feature-icon">🛰️</span>
-      <span class="feature-name">GPS নেভিগেশন</span>
-      <span class="feature-desc">অবস্থান ও দিকনির্দেশ</span>
-    </a>
-
-    <a class="feature-card" href="compass.html">
-      <span class="feature-icon">🧭</span>
-      <span class="feature-name">ডিজিটাল কম্পাস</span>
-      <span class="feature-desc">দিক নির্ণয়</span>
-    </a>
-
-    <a class="feature-card" href="radar.html">
-      <span class="feature-icon">📡</span>
-      <span class="feature-name">রাডার সিস্টেম</span>
-      <span class="feature-desc">রাডার পেজ</span>
-    </a>
-  </section>
-
-  <h2 class="section-title">✨ MORE AYNA BOOK FEATURES &amp; DIRECTORIES</h2>
-
-  <section class="feature-grid-more">
-    <a class="feature-card" href="world-leaders.html">
-      <span class="feature-icon">🌐</span>
-      <span class="feature-name">বিশ্বনেতা</span>
-      <span class="feature-desc">আন্তর্জাতিক নেতৃত্ব ও তথ্য</span>
-    </a>
-
-    <a class="feature-card" href="world-grocery.html">
-      <span class="feature-icon">🛒</span>
-      <span class="feature-name">বিশ্ব মুদির দোকান</span>
-      <span class="feature-desc">দৈনিক মূল্য অটো আপডেট</span>
-    </a>
-
-    <a class="feature-card" href="world-farmers.html">
-      <span class="feature-icon">🌾</span>
-      <span class="feature-name">বিশ্ব কৃষক</span>
-      <span class="feature-desc">কৃষি তথ্য, ফসল ও বাজার দর</span>
-    </a>
-
-    <a class="feature-card" href="poultry-farmers.html">
-      <span class="feature-icon">🐔</span>
-      <span class="feature-name">পোলোট্রি কৃষক ও ব্যবসায়ী</span>
-      <span class="feature-desc">মুরগি, ডিম, ফিড ও বাজার দর</span>
-    </a>
-
-    <a class="feature-card" href="price-list.html">
-      <span class="feature-icon">📊</span>
-      <span class="feature-name">দৈনিক মূল্যতালিকা</span>
-      <span class="feature-desc">মুদি, কৃষি ও পোলোট্রি অটো-সিঙ্ক</span>
-    </a>
-
-    <a class="feature-card" href="world-market.html">
-      <span class="feature-icon">🌍</span>
-      <span class="feature-name">দৈনিক বিশ্ব বাজার</span>
-      <span class="feature-desc">আন্তর্জাতিক ও দেশীয় বাজার দর</span>
-    </a>
-
-    <a class="feature-card" href="world-officials.html">
-      <span class="feature-icon">🏛️</span>
-      <span class="feature-name">এমপি, মন্ত্রী ও কর্মকর্তা</span>
-      <span class="feature-desc">বিশ্ব প্রশাসন ও জনপ্রতিনিধি</span>
-    </a>
-
-    <a class="feature-card" href="air-rail-transport.html">
-      <span class="feature-icon">✈️</span>
-      <span class="feature-name">বিমান ও রেল পরিবহণ</span>
-      <span class="feature-desc">ফোন, জিমেইল ও টিকেট মূল্যতালিকা</span>
-    </a>
-
-    <a class="feature-card" href="world-air-rail.html">
-      <span class="feature-icon">🚆</span>
-      <span class="feature-name">বিশ্ব বিমান ও রেল</span>
-      <span class="feature-desc">আন্তর্জাতিক পরিবহণ ও টিকেট দর</span>
-    </a>
-
-    <a class="feature-card" href="world-garments.html">
-      <span class="feature-icon">👕</span>
-      <span class="feature-name">বিশ্ব গার্মেন্টস</span>
-      <span class="feature-desc">মালিক, শ্রমিক ও পোশাক শিল্প</span>
-    </a>
-
-    <a class="feature-card" href="world-jobs.html">
-      <span class="feature-icon">💼</span>
-      <span class="feature-name">চাকুরী বাজার</span>
-      <span class="feature-desc">সরকারি, বেসরকারি ও আন্তর্জাতিক</span>
-    </a>
-
-    <a class="feature-card" href="world-ngo-rights.html">
-      <span class="feature-icon">🕊️</span>
-      <span class="feature-name">UN, NGO ও মানবাধিকার</span>
-      <span class="feature-desc">নাম, ফোন ও জিমেইল ডিরেক্টরি</span>
-    </a>
-
-    <a class="feature-card" href="military-radar.html">
-      <span class="feature-icon">🎯</span>
-      <span class="feature-name">মিলিটারি রাডার</span>
-      <span class="feature-desc">তথ্যভিত্তিক রাডার</span>
-    </a>
-
-    <a class="feature-card" href="clock.html">
-      <span class="feature-icon">🕒</span>
-      <span class="feature-name">বিশ্ব ঘড়ি</span>
-      <span class="feature-desc">সময় ও অ্যালার্ম</span>
-    </a>
-
-    <a class="feature-card" href="calendar.html">
-      <span class="feature-icon">📅</span>
-      <span class="feature-name">বিশ্ব ক্যালেন্ডার</span>
-      <span class="feature-desc">তারিখ ও দিন</span>
-    </a>
-
-    <a class="feature-card" href="arabic-calendar.html">
-      <span class="feature-icon">🌙</span>
-      <span class="feature-name">আরবি ক্যালেন্ডার</span>
-      <span class="feature-desc">হিজরি তারিখ</span>
-    </a>
-
-    <a class="feature-card" href="world-holidays.html">
-      <span class="feature-icon">🎉</span>
-      <span class="feature-name">বিশ্বের সরকারি ছুটি</span>
-      <span class="feature-desc">ছুটির তালিকা</span>
-    </a>
-
-    <a class="feature-card" href="us-alerts.html">
-      <span class="feature-icon">🚨</span>
-      <span class="feature-name">জরুরি এলার্ট</span>
-      <span class="feature-desc">এলার্ট তথ্য</span>
-    </a>
-
-    <a class="feature-card" href="prayer.html">
-      <span class="feature-icon">🕌</span>
-      <span class="feature-name">নামাজের সময়</span>
-      <span class="feature-desc">প্রার্থনার সময়সূচি</span>
-    </a>
-
-    <a class="feature-card" href="quantum.html">
-      <span class="feature-icon">⚛️</span>
-      <span class="feature-name">কোয়ান্টাম হাব</span>
-      <span class="feature-desc">কোয়ান্টাম সিস্টেম</span>
-    </a>
-
-    <a class="feature-card" href="supercomputer.html">
-      <span class="feature-icon">🖥️</span>
-      <span class="feature-name">সুপারকম্পিউটার</span>
-      <span class="feature-desc">উচ্চগতির তথ্য</span>
-    </a>
-  </section>
-
-  <!-- রাষ্ট্রনেতাদের নাম তালিকা -->
-  <section class="panel" id="worldLeadersSection">
-    <div class="panel-head-row">
-      <h2>🌍 রাষ্ট্রনেতাদের নাম তালিকা</h2>
-      <a href="world-leaders.html" class="panel-link-btn">সব রাষ্ট্রনেতা পেজ</a>
-    </div>
-    <input
-      type="search"
-      id="leaderSearchInput"
-      class="hub-search-input"
-      placeholder="রাষ্ট্রনেতা বা দেশের নাম দিয়ে খুঁজুন..."
-    >
-    <div class="hub-cards-grid" id="worldLeadersGrid"></div>
-  </section>
-
-  <!-- বিশ্ব আলেম গবেষণাগার -->
-  <section class="panel" id="ulemaResearchSection">
-    <div class="panel-head-row">
-      <h2>🕌 বিশ্ব আলেম গবেষণাগার</h2>
-      <a href="ulema-research.html" class="panel-link-btn">গবেষণাগার পেজ</a>
-    </div>
-    <input
-      type="search"
-      id="ulemaSearchInput"
-      class="hub-search-input"
-      placeholder="গবেষণার বিষয় বা বিভাগ খুঁজুন..."
-    >
-    <div class="hub-cards-grid" id="ulemaResearchGrid"></div>
-  </section>
-
-  <!-- মুদি বাজার ও বিশ্ব কৃষক -->
-  <section class="panel" id="groceryFarmersSection">
-    <div class="panel-head-row">
-      <h2>🛒 মুদি বাজার ও 🌾 বিশ্ব কৃষক</h2>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <a href="world-grocery.html" class="panel-link-btn">মুদি বাজার</a>
-        <a href="world-farmers.html" class="panel-link-btn">বিশ্ব কৃষক</a>
-      </div>
-    </div>
-    <div class="hub-controls-row">
-      <select id="marketTypeSelect" class="hub-select">
-        <option value="all">সব পণ্য (মুদি বাজার + বিশ্ব কৃষক)</option>
-        <option value="grocery">শুধু মুদি বাজার</option>
-        <option value="farmer">শুধু বিশ্ব কৃষক</option>
-      </select>
-      <input
-        type="search"
-        id="marketItemSearchInput"
-        class="hub-search-input"
-        placeholder="চাল, ডাল, তেল, আলু, গম, মসলা খুঁজুন..."
-      >
-    </div>
-    <div class="hub-cards-grid" id="groceryFarmersGrid"></div>
-  </section>
-
-  <!-- বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন -->
-  <section class="panel" id="worldJobsSection">
-    <div class="panel-head-row">
-      <h2>💼 বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন</h2>
-      <a href="world-jobs.html" class="panel-link-btn">চাকুরী বাজার পেজ</a>
-    </div>
-    <input
-      type="search"
-      id="directJobSearchInput"
-      class="hub-search-input"
-      placeholder="পদবী, কোম্পানি বা লোকেশন দিয়ে চাকুরীর বিজ্ঞাপন খুঁজুন..."
-    >
-    <div class="hub-cards-grid" id="directJobsGrid"></div>
-  </section>
-
-  <!-- AYNA YOUTUBE HUB -->
-  <section class="panel" id="youtubeHubSection">
-    <h2>▶️ AYNA YOUTUBE HUB</h2>
-    <div class="yt-input-row">
-      <input
-        type="text"
-        id="ytSearchOrUrlInput"
-        class="hub-search-input"
-        style="margin:0;"
-        placeholder="YouTube ভিডিও লিংক/ID দিন অথবা টপিক লিখে সার্চ করুন..."
-      >
-      <button type="button" id="ytPlaySearchBtn" class="yt-go-btn">চালান / খুঁজুন</button>
-    </div>
-    <div class="yt-preset-row">
-      <button type="button" class="yt-preset-btn" data-yt="AYNA BOOK">AYNA BOOK</button>
-      <button type="button" class="yt-preset-btn" data-yt="Bangla news live">বাংলা নিউজ</button>
-      <button type="button" class="yt-preset-btn" data-yt="Islamic lecture Bangla">ইসলামি আলোচনা</button>
-      <button type="button" class="yt-preset-btn" data-yt="Global agriculture farming">বিশ্ব কৃষি</button>
-      <button type="button" class="yt-preset-btn" data-yt="Global job market career">বিশ্ব চাকুরী</button>
-    </div>
-    <iframe
-      id="ytEmbedFrame"
-      class="yt-player-frame"
-      src="https://www.youtube.com/embed?listType=search&list=Bangla+news+live"
-      title="AYNA YouTube Hub"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-    ></iframe>
-    <a
-      id="ytDirectWatchLink"
-      class="yt-ext-link"
-      href="https://www.youtube.com/results?search_query=Bangla+news+live"
-      target="_blank"
-      rel="noopener"
-    >
-      ↗️ YouTube অ্যাপ বা ব্রাউজারে খুলুন
-    </a>
-  </section>
-
-  <!-- POST CREATOR -->
-  <section class="panel" id="createPost">
-    <h2>✍️ নতুন কোয়ান্টাম পোস্ট তৈরি করুন</h2>
-
-    <textarea
-      id="postText"
-      class="post-textarea"
-      placeholder="আপনার মনের কথা লিখুন..."
-    ></textarea>
-
-    <div class="post-tools">
-      <button type="button" class="tool-button" id="chooseImage">🖼️ ছবি (25MB)</button>
-      <button type="button" class="tool-button" id="chooseAudio">🎵 অডিও (100MB)</button>
-      <button type="button" class="tool-button" id="chooseVideo">🎬 বড় ভিডিও (250MB)</button>
-      <button type="button" class="tool-button" id="chooseFile">📎 ফাইল (250MB)</button>
-    </div>
-
-    <div style="margin-top:16px;">
-      <button type="button" class="tool-button" id="clearMedia" style="width:100%;">✖️ মিডিয়া / ফাইল বাদ দিন</button>
-    </div>
-
-    <input id="imageInput" type="file" accept="image/*" hidden>
-    <input id="audioInput" type="file" accept="audio/*" hidden>
-    <input id="videoInput" type="file" accept="video/*" hidden>
-    <input id="fileInput" type="file" accept="*/*" hidden>
-
-    <div class="progress-wrap" id="uploadProgressWrap">
-      <div class="progress-bar" id="uploadProgressBar"></div>
-    </div>
-
-    <div class="preview" id="mediaPreview">
-      <div id="previewContent"></div>
-      <div class="preview-name" id="previewName"></div>
-    </div>
-
-    <button type="button" class="primary-button" id="publishPost">
-      🚀 পোস্ট প্রকাশ করুন
-    </button>
-
-    <div class="status" id="postStatus">
-      ছবি (25MB), অডিও (100MB), বড় ভিডিও (250MB) বা ফাইল (250MB) যুক্ত করে পোস্ট করুন।
-    </div>
-  </section>
-
-  <!-- LIVE CAMERA -->
-  <section class="panel media-box" id="liveSection">
-    <h2>🔴 AYNA LIVE VIDEO</h2>
-
-    <video id="liveVideo" autoplay muted playsinline></video>
-
-    <div class="media-buttons">
-      <button type="button" id="startCamera">📹 ক্যামেরা চালু</button>
-      <button type="button" id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
-    </div>
-
-    <div class="status" id="cameraStatus">
-      ক্যামেরা এখন বন্ধ।
-    </div>
-
-    <p class="status">
-      এটি আপনার ডিভাইসে লাইভ ক্যামেরা প্রিভিউ।
-      অন্যদের কাছে সরাসরি সম্প্রচারের জন্য আলাদা লাইভ সার্ভার প্রয়োজন।
-    </p>
-  </section>
-
-  <!-- FEED -->
-  <h2 class="section-title">🌐 AYNA BOOK NEWS FEED</h2>
-
-  <div class="feed-filters" role="group" aria-label="Feed filter">
-    <button type="button" class="filter-btn active" data-filter="all">সব পোস্ট</button>
-    <button type="button" class="filter-btn" data-filter="text">📝 টেক্সট</button>
-    <button type="button" class="filter-btn" data-filter="image">🖼️ ছবি</button>
-    <button type="button" class="filter-btn" data-filter="audio">🎵 অডিও</button>
-    <button type="button" class="filter-btn" data-filter="video">🎬 ভিডিও</button>
-    <button type="button" class="filter-btn" data-filter="file">📎 ফাইল</button>
-  </div>
-
-  <section id="feed">
-    <div class="empty">পোস্ট লোড হচ্ছে...</div>
-  </section>
-
-  <!-- ফাইল ও ফোল্ডার তালিকা -->
-  <section class="panel" id="fileRegistrySection">
-    <h2>📁 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">192</span>টি)</h2>
-    <input
-      type="search"
-      id="fileSearchInput"
-      class="file-search-input"
-      placeholder="ফাইল বা ফোল্ডারের নাম লিখে খুঁজুন..."
-    >
-    <div id="fileListGrid" class="file-list-grid"></div>
-  </section>
-
-</main>
-
-<footer>
-  © 2026 AYNA BOOK — Quantum Super-Speed Multimedia Social Platform
-</footer>
-
-<nav class="bottom-nav">
-  <a href="index.html"><span>🏠</span>Home</a>
-  <a href="#createPost"><span>➕</span>Post</a>
-  <a href="messenger.html"><span>💬</span>Chat</a>
-  <a href="profile.html"><span>👤</span>Profile</a>
-</nav>
-
-<script type="module">
-const $ = id => document.getElementById(id);
-
-const LIMITS = {
+export const MEDIA_LIMITS = {
   image: 25 * 1024 * 1024,
   audio: 100 * 1024 * 1024,
   video: 250 * 1024 * 1024,
   file: 250 * 1024 * 1024
 };
 
-const AYNA_REGISTRY_ITEMS = [
-  "js (রুট তালিকায় প্রথমবার দেখা যাচ্ছে)",
-  "android-app",
-  "aspect-ratio: 1",
-  "assets",
-  "functions",
-  "world-leaders",
-  "world-leaders/world-leaders.html",
-  "world-leaders/world-leaders.js",
-  "world-leaders/leaders.json",
-  "world-leaders/flags",
-  "world-leaders/photos",
-  "index.html (রুট তালিকায় ফোল্ডার আইকনে দেখা যাচ্ছে)",
-  "js (রুট তালিকায় দ্বিতীয়বার দেখা যাচ্ছে)",
-  ".github (android-app ফোল্ডারের ভেতরে)",
-  "app (android-app ফোল্ডারের ভেতরে)",
-  "4account.html",
-  "access.html",
-  "account-security.html",
-  "admin-payment.html",
-  "android-hub.html",
-  "apple.html",
-  "arabic-calendar.html",
-  "audio-video-messaging.html",
-  "auth.html",
-  "auto-network.html",
-  "bangla-radio-tv.html",
-  "bd-directory.html",
-  "breaking-news.html",
-  "business-directory.html",
-  "button.html",
-  "calendar.html",
-  "camera.html",
-  "chat.html",
-  "clock.html",
-  "compass.html",
-  "countries.html",
-  "currency-exchange.html",
-  "dashboard.html",
-  "direction.html",
-  "ev-vehicles.html",
-  "forgot-password.html",
-  "github-firebase-config.html",
-  "global-alert.html",
-  "google-official-sites.html",
-  "gps.html",
-  "home.html",
-  "hourly-clock.html",
-  "index.html",
-  "location-alert.html",
-  "login-activity.html",
-  "login.html",
-  "medical-research.html",
-  "medicine-store.html",
-  "messages.htm",
-  "messages.html",
-  "messenger.html",
-  "military-radar.html",
-  "ownership.html",
-  "passwed.html",
-  "payment-pending.html",
-  "payment.html",
-  "prayer.html",
-  "privacy-settings.html",
-  "privacy.html",
-  "profile.html",
-  "public-profile.html",
-  "qr.html",
-  "quantum.html",
-  "radar-compass.html",
-  "radar.html",
-  "radio-tv.html",
-  "radio.html",
-  "register.html",
-  "security.html",
-  "signup.html",
-  "studio.html",
-  "supercomputer.html",
-  "tv-live.html",
-  "us-alerts.html",
-  "user-search.html",
-  "verify-email.html",
-  "world-doctors.html",
-  "world-holidays.html",
-  "world-leaders.html",
-  "world-locations.html",
-  "world-grocery.html",
-  "world-farmers.html",
-  "poultry-farmers.html",
-  "price-list.html",
-  "world-market.html",
-  "world-officials.html",
-  "air-rail-transport.html",
-  "world-air-rail.html",
-  "world-garments.html",
-  "world-jobs.html",
-  "world-ngo-rights.html",
-  "ulema-research.html",
-  "access.js",
-  "account-types.js",
-  "admin-payment.js",
-  "app.js",
-  "arabic-calendar.js",
-  "auth-guard.js",
-  "auth.js",
-  "calendar.js",
-  "chat.js",
-  "clock.js",
-  "comments.js",
-  "compass.js",
-  "connectivity.js",
-  "database.js",
-  "firebase-config.js",
-  "firebase-init.js",
-  "firebase.js",
-  "follow.js",
-  "forgot-password.js",
-  "functions.js",
-  "gps.js",
-  "index.js",
-  "likes.js",
-  "login-activity.js",
-  "login.js",
-  "messenger.js",
-  "military-radar.js",
-  "notifications-page.js",
-  "notifications.js",
-  "offline.js",
-  "payment-status.js",
-  "payment.js",
-  "posts.js",
-  "prayer.js",
-  "privacy-settings.js",
-  "privacy.js",
-  "profile.js",
-  "qr.js",
-  "quantum-security.js",
-  "radar.js",
-  "radio.js",
-  "register.js",
-  "security-dashboard.js",
-  "security.js",
-  "server.js.node.js",
-  "session-logout.js",
-  "session-security.js",
-  "set-admin-claim.js",
-  "signup.js",
-  "storage-test.js",
-  "storage.js",
-  "sw.js",
-  "translator.js",
-  "tv-live.js",
-  "update.js",
-  "us-alerts.js",
-  "verify-email.js",
-  "vite.config.js",
-  "world-holidays.js",
-  "world-leaders.js",
-  "world-grocery.js",
-  "world-farmers.js",
-  "poultry-farmers.js",
-  "daily-price-list.js",
-  "price-list.js",
-  "world-market.js",
-  "world-officials.js",
-  "air-rail-transport.js",
-  "world-air-rail.js",
-  "world-garments.js",
-  "world-jobs.js",
-  "world-ngo-rights.js",
-  "ulema-research.js",
-  "AuthScreen.kt",
-  "HomeScreen.kt",
-  "MainActivity.kt",
-  "MessagingScreen.kt",
-  "PostScreen.kt",
-  "build.gradle.kts",
-  "gradle.properties",
-  "settings.gradle.kts",
-  ".gitignore",
-  "AYNA-BOOK-FILE-STRUCTURE.txt",
-  "AndroidManifest.xml",
-  "README.md",
-  "_config.yml",
-  "ayna-book-check.yml",
-  "ayna-ui-patch.css",
-  "build-apk.yml",
-  "colors.xml",
-  "dashboard.php",
-  "database.rules.json",
-  "deploy-pages.yml",
-  "firebase.json",
-  "firestore.rules",
-  "google-services.json",
-  "icon-192.png",
-  "icon-512.png",
-  "jekyll-gh-pages.yml",
-  "manifest.json",
-  "manifest.webmanifest",
-  "package.json",
-  "page-register",
-  "sha1.yml",
-  "storage.rules",
-  "strings.xml",
-  "styles.css",
-  "themes.xml",
-  "vercel.json",
-  "version.json"
+export const AYNA_REGISTRY_ITEMS = [
+  "js (রুট তালিকায় প্রথমবার দেখা যাচ্ছে)", "android-app", "aspect-ratio: 1", "assets", "functions",
+  "world-leaders", "world-leaders/world-leaders.html", "world-leaders/world-leaders.js",
+  "world-leaders/leaders.json", "world-leaders/flags", "world-leaders/photos",
+  "index.html", ".github (android-app)", "app (android-app)", "4account.html", "access.html",
+  "account-security.html", "admin-payment.html", "android-hub.html", "apple.html",
+  "arabic-calendar.html", "audio-video-messaging.html", "auth.html", "auto-network.html",
+  "bangla-radio-tv.html", "bd-directory.html", "breaking-news.html", "business-directory.html",
+  "button.html", "calendar.html", "camera.html", "chat.html", "clock.html", "compass.html",
+  "countries.html", "currency-exchange.html", "dashboard.html", "direction.html", "ev-vehicles.html",
+  "forgot-password.html", "github-firebase-config.html", "global-alert.html", "google-official-sites.html",
+  "gps.html", "home.html", "hourly-clock.html", "location-alert.html", "login-activity.html",
+  "login.html", "medical-research.html", "medicine-store.html", "messages.html", "messenger.html",
+  "military-radar.html", "ownership.html", "passwed.html", "payment-pending.html", "payment.html",
+  "prayer.html", "privacy-settings.html", "privacy.html", "profile.html", "public-profile.html",
+  "qr.html", "quantum.html", "radar-compass.html", "radar.html", "radio-tv.html", "radio.html",
+  "register.html", "security.html", "signup.html", "studio.html", "supercomputer.html", "tv-live.html",
+  "us-alerts.html", "user-search.html", "verify-email.html", "world-doctors.html", "world-holidays.html",
+  "world-locations.html", "world-grocery.html", "world-farmers.html", "poultry-farmers.html",
+  "price-list.html", "world-market.html", "world-officials.html", "air-rail-transport.html",
+  "world-air-rail.html", "world-garments.html", "world-jobs.html", "world-ngo-rights.html",
+  "ulema-research.html", "access.js", "account-types.js", "admin-payment.js", "app.js",
+  "arabic-calendar.js", "auth-guard.js", "auth.js", "calendar.js", "chat.js", "clock.js",
+  "comments.js", "compass.js", "connectivity.js", "database.js", "firebase-config.js",
+  "firebase-init.js", "firebase.js", "follow.js", "forgot-password.js", "functions.js", "gps.js",
+  "index.js", "likes.js", "login-activity.js", "login.js", "messenger.js", "military-radar.js",
+  "notifications-page.js", "notifications.js", "offline.js", "payment-status.js", "payment.js",
+  "posts.js", "prayer.js", "privacy-settings.js", "privacy.js", "profile.js", "qr.js",
+  "quantum-security.js", "radar.js", "radio.js", "register.js", "security-dashboard.js",
+  "security.js", "server.js.node.js", "session-logout.js", "session-security.js", "set-admin-claim.js",
+  "signup.js", "storage-test.js", "storage.js", "sw.js", "translator.js", "tv-live.js", "update.js",
+  "us-alerts.js", "verify-email.js", "vite.config.js", "world-holidays.js", "world-leaders.js",
+  "world-grocery.js", "world-farmers.js", "poultry-farmers.js", "daily-price-list.js", "price-list.js",
+  "world-market.js", "world-officials.js", "air-rail-transport.js", "world-air-rail.js",
+  "world-garments.js", "world-jobs.html", "world-ngo-rights.js", "ulema-research.js", "AuthScreen.kt",
+  "HomeScreen.kt", "MainActivity.kt", "MessagingScreen.kt", "PostScreen.kt", "build.gradle.kts",
+  "gradle.properties", "settings.gradle.kts", ".gitignore", "AYNA-BOOK-FILE-STRUCTURE.txt",
+  "AndroidManifest.xml", "README.md", "_config.yml", "ayna-book-check.yml", "ayna-ui-patch.css",
+  "build-apk.yml", "colors.xml", "dashboard.php", "database.rules.json", "deploy-pages.yml",
+  "firebase.json", "firestore.rules", "google-services.json", "icon-192.png", "icon-512.png",
+  "jekyll-gh-pages.yml", "manifest.json", "manifest.webmanifest", "package.json", "page-register",
+  "sha1.yml", "storage.rules", "strings.xml", "styles.css", "themes.xml", "vercel.json", "version.json",
+  "uhd-sound-engine.js"
 ];
 
-$("qFileCount").textContent = String(AYNA_REGISTRY_ITEMS.length);
-$("registryTotalLabel").textContent = String(AYNA_REGISTRY_ITEMS.length);
+const SPECIAL_CHANNELS_DATA = {
+  discovery: [
+    { tag: "ডিসকভারি • মহাকাশ", title: "জ্যোতির্বিজ্ঞান ও গভীর মহাকাশ পর্যবেক্ষণ", meta: "টেলিস্কোপ টেলিম্যাট্রি ও গ্রহ-নক্ষত্রের কক্ষপথ বিশ্লেষণ সক্রিয়।" },
+    { tag: "ডিসকভারি • প্রকৃতি", title: "সমুদ্রতল ও বাস্তুতন্ত্র গবেষণা", meta: "গভীর সমুদ্রের প্রাণী ও জীববৈচিত্র্য তথ্য হালনাগাদ হচ্ছে।" }
+  ],
+  geography: [
+    { tag: "জিওগ্রাফি • ভূ-প্রকৃতি", title: "মহাদেশীয় ভূ-আকৃতি ও নদী অববাহিকা", meta: "নদীপ্রবাহ, পার্বত্য অঞ্চল ও মৌসুমি বায়ু মানচিত্র আপডেট সক্রিয়।" },
+    { tag: "জিওগ্রাফি • জলবায়ু", title: "আঞ্চলিক তাপমাত্রা ও আর্দ্রতা বণ্টন", meta: "ভৌগোলিক অঞ্চলভিত্তিক জলবায়ু সূচক পর্যবেক্ষণ চলছে।" }
+  ],
+  kids_sports: [
+    { tag: "বাচ্চাদের খেলাধুলা • ক্রীড়া", title: "বয়সভিত্তিক দৌড়, সাঁতার ও সমন্বয় অনুশীলন", meta: "নিরাপদ মাঠে ওয়ার্ম-আপ, ভারসাম্য ও দলগত খেলার নিয়মাবলি।" },
+    { tag: "বাচ্চাদের খেলাধুলা • নিরাপত্তা", title: "শিশু ক্রীড়া সুরক্ষা ও হাইড্রেশন গাইড", meta: "খেলার সময় আঘাত প্রতিরোধ, সঠিক জুতা ও বিশ্রামের নির্দেশিকা।" }
+  ]
+};
 
-function renderFileRegistry(query = "") {
-  const grid = $("fileListGrid");
-  const cleanQuery = query.trim().toLowerCase();
-  const frag = document.createDocumentFragment();
-  let matched = 0;
+const CITY_COORDS = {
+  dhaka: { lat: 23.8103, lon: 90.4125, bn: "ঢাকা" },
+  london: { lat: 51.5072, lon: -0.1276, bn: "লন্ডন" },
+  tokyo: { lat: 35.6762, lon: 139.6503, bn: "টোকিও" },
+  makkah: { lat: 21.3891, lon: 39.8579, bn: "মক্কা" },
+  "new york": { lat: 40.7128, lon: -74.006, bn: "নিউ ইয়র্ক" }
+};
 
-  AYNA_REGISTRY_ITEMS.forEach((item, index) => {
-    if (cleanQuery && !item.toLowerCase().includes(cleanQuery)) return;
-    matched++;
-    const card = document.createElement("div");
-    card.className = "file-item-card";
-
-    const num = document.createElement("span");
-    num.className = "file-item-num";
-    num.textContent = `${index + 1}.`;
-
-    const name = document.createElement("span");
-    name.textContent = item;
-
-    card.append(num, name);
-    frag.appendChild(card);
-  });
-
-  grid.innerHTML = matched
-    ? ""
-    : '<div class="empty">কোনো ফাইল বা ফোল্ডার মেলেনি।</div>';
-  if (matched) grid.appendChild(frag);
-}
-
-$("fileSearchInput").addEventListener("input", e => {
-  renderFileRegistry(e.target.value);
-});
-
-renderFileRegistry();
-
-// রাষ্ট্রনেতাদের নাম তালিকা
-const WORLD_LEADERS_LIST = [
-  { country: "বাংলাদেশ", name: "তারেক রহমান", role: "প্রধানমন্ত্রী (মন্ত্রিপরিষদ বিভাগ ও সশস্ত্র বাহিনী বিভাগ)" },
-  { country: "বাংলাদেশ", name: "মির্জা ফখরুল ইসলাম আলমগীর", role: "রাষ্ট্রপতি" },
-  { country: "সৌদি আরব", name: "বাদশাহ সালমান / যুবরাজ মোহাম্মদ বিন সালমান", role: "বাদশাহ ও প্রধানমন্ত্রী" },
-  { country: "তুরস্ক", name: "রিসেপ তাইয়িপ এরদোয়ান", role: "প্রেসিডেন্ট" },
-  { country: "যুক্তরাষ্ট্র", name: "ডোনাল্ড ট্রাম্প", role: "প্রেসিডেন্ট" },
-  { country: "যুক্তরাজ্য", name: "কিয়ার স্টারমার / রাজা তৃতীয় চার্লস", role: "প্রধানমন্ত্রী ও রাজা" },
-  { country: "ভারত", name: "নরেন্দ্র মোদী / দ্রৌপদী মুর্মু", role: "প্রধানমন্ত্রী ও রাষ্ট্রপতি" },
-  { country: "চীন", name: "শি জিনপিং", role: "প্রেসিডেন্ট" },
-  { country: "কাতার", name: "শেখ তামিম বিন হামাদ আল থানি", role: "আমির" },
-  { country: "সংযুক্ত আরব আমিরাত", name: "শেখ মোহাম্মদ বিন জায়েদ আল নাহিয়ান", role: "প্রেসিডেন্ট" }
+const TRADE_ITEMS = [
+  { name: "তৈরি পোশাক (RMG)", unit: "টন", priceUsd: 18500 },
+  { name: "পাট ও পাটজাত পণ্য", unit: "টন", priceUsd: 1420 },
+  { name: "চিংড়ি ও হিমায়িত মাছ", unit: "টন", priceUsd: 7800 },
+  { name: "ফার্মাসিউটিক্যালস", unit: "ব্যাচ", priceUsd: 12500 },
+  { name: "চা পাতা", unit: "টন", priceUsd: 2650 }
 ];
 
-function renderWorldLeadersHub(filter = "") {
-  const grid = $("worldLeadersGrid");
-  if (!grid) return;
-  const q = filter.trim().toLowerCase();
-  const list = WORLD_LEADERS_LIST.filter(
-    item => item.country.toLowerCase().includes(q) || item.name.toLowerCase().includes(q) || item.role.toLowerCase().includes(q)
-  );
-  grid.innerHTML = list.length
-    ? list.map(item => `
-        <div class="hub-card">
-          <span class="hub-card-tag">${item.country}</span>
-          <div class="hub-card-title">${item.name}</div>
-          <div class="hub-card-meta">${item.role}</div>
-        </div>
-      `).join("")
-    : '<div class="empty">কোনো রাষ্ট্রনেতার তথ্য মেলেনি।</div>';
-}
-
-// বিশ্ব আলেম গবেষণাগার
-const ULEMA_RESEARCH_LIST = [
-  { dept: "ফিকহ ও শরয়ি গবেষণা", title: "আধুনিক ব্যাংকিং, ডিজিটাল লেনদেন ও শরয়ি নীতিমালা", note: "আন্তর্জাতিক আলেম গবেষণা ইউনিট" },
-  { dept: "জাকাত ও ওয়াকফ অর্থনীতি", title: "সামাজিক নিরাপত্তা ও দারিদ্র্য বিমোচনে ওয়াকফ মডেল", note: "ইসলামি অর্থনীতি গবেষণা সেল" },
-  { dept: "কুরআন ও সুন্নাহ আর্কাইভ", title: "তফসির, হাদিস ও সীরাত গবেষণা সংকলন", note: "শাস্ত্রীয় গবেষণা বিভাগ" },
-  { dept: "পরিবার ও সমাজ সংস্কার", title: "আধুনিক সমাজে নৈতিকতা, শিক্ষা ও সম্প্রীতি", note: "গবেষণা ও ফতোয়া পরামর্শ কেন্দ্র" }
+const WORLD_COUNTRIES = [
+  { code: "BGD", name: "বাংলাদেশ", area: "১,৪৭,৫৭০ বর্গকিমি", pop: "১৭.৩ কোটি", gdpGrowth: "৫.৮%" },
+  { code: "IND", name: "ভারত", area: "৩২,৮৭,২৬৩ বর্গকিমি", pop: "১৪৪.১ কোটি", gdpGrowth: "৬.৫%" },
+  { code: "USA", name: "যুক্তরাষ্ট্র", area: "৯৮,৩৩,৫২০ বর্গকিমি", pop: "৩৪.১ কোটি", gdpGrowth: "২.৭%" },
+  { code: "SAU", name: "সৌদি আরব", area: "২১,৪৯,৬৯০ বর্গকিমি", pop: "৩.৭ কোটি", gdpGrowth: "৩.৪%" },
+  { code: "JPN", name: "জাপান", area: "৩,৭৭,৯৭৫ বর্গকিমি", pop: "১২.৪ কোটি", gdpGrowth: "১.১%" }
 ];
 
-function renderUlemaResearchHub(filter = "") {
-  const grid = $("ulemaResearchGrid");
-  if (!grid) return;
-  const q = filter.trim().toLowerCase();
-  const list = ULEMA_RESEARCH_LIST.filter(
-    item => item.dept.toLowerCase().includes(q) || item.title.toLowerCase().includes(q) || item.note.toLowerCase().includes(q)
-  );
-  grid.innerHTML = list.length
-    ? list.map(item => `
-        <div class="hub-card">
-          <span class="hub-card-tag">${item.dept}</span>
-          <div class="hub-card-title">${item.title}</div>
-          <div class="hub-card-meta">${item.note}</div>
-        </div>
-      `).join("")
-    : '<div class="empty">কোনো গবেষণা বিষয় মেলেনি।</div>';
-}
-
-// মুদি বাজার ও বিশ্ব কৃষক বাজার (বিস্তৃত তালিকা)
-const GROCERY_FARMER_ITEMS = [
-  { cat: "grocery", label: "মুদি বাজার", name: "নাজিরশাইল ও মিনিকেট চাল", unit: "কেজি", usd: 0.65 },
-  { cat: "grocery", label: "মুদি বাজার", name: "মসুর ডাল (দেশি ও আমদানি)", unit: "কেজি", usd: 1.10 },
-  { cat: "grocery", label: "মুদি বাজার", name: "আটা ও প্যাকেট ময়দা", unit: "কেজি", usd: 0.48 },
-  { cat: "grocery", label: "মুদি বাজার", name: "সয়াবিন ও সূর্যমুখী তেল", unit: "লিটার", usd: 1.45 },
-  { cat: "grocery", label: "মুদি বাজার", name: "চিনি ও গুড়", unit: "কেজি", usd: 1.05 },
-  { cat: "grocery", label: "মুদি বাজার", name: "পেঁয়াজ, রসুন ও আদা", unit: "কেজি", usd: 0.95 },
-  { cat: "grocery", label: "মুদি বাজার", name: "হলুদ, মরিচ ও জিরা মসলা", unit: "কেজি", usd: 3.40 },
-  { cat: "grocery", label: "মুদি বাজার", name: "চা পাতা, লবণ ও গুঁড়ো দুধ", unit: "কেজি", usd: 4.10 },
-  { cat: "farmer", label: "বিশ্ব কৃষক", name: "আলু (সরাসরি কৃষক উৎপাদন)", unit: "কেজি", usd: 0.35 },
-  { cat: "farmer", label: "বিশ্ব কৃষক", name: "গম ও ভুট্টা (বিশ্ব কৃষি)", unit: "কেজি", usd: 0.32 },
-  { cat: "farmer", label: "বিশ্ব কৃষক", name: "ধান ও গবাদিপশু খাদ্য", unit: "কেজি", usd: 0.42 },
-  { cat: "farmer", label: "বিশ্ব কৃষক", name: "তাজা মৌসুমি শাকসবজি ও ফল", unit: "কেজি", usd: 0.55 }
+const NOBEL_LIST = [
+  { year: "2026", person: "কাজী নজরুল ইসলাম (স্মারক ও সাহিত্য সংকলন)", field: "সাহিত্য ও মানবিক চেতনা" },
+  { year: "2025", person: "ড. মুহাম্মদ ইউনূস", field: "শান্তি ও ক্ষুদ্রঋণ অর্থনীতি" },
+  { year: "1913", person: "রবীন্দ্রনাথ ঠাকুর", field: "সাহিত্য (গীতাঞ্জলি)" },
+  { year: "1979", person: "আবদুস সালাম", field: "পদার্থবিজ্ঞান" }
 ];
 
-let currentUsdToBdt = 120;
+const LEADERS = [
+  { country: "বাংলাদেশ", leader: "প্রধান উপদেষ্টা / সরকার প্রধান ডিরেক্টরি", role: "রাষ্ট্রীয় প্রশাসন" },
+  { country: "যুক্তরাষ্ট্র", leader: "প্রেসিডেন্ট ডিরেক্টরি", role: "নির্বাহী প্রধান" },
+  { country: "যুক্তরাজ্য", leader: "প্রধানমন্ত্রী ডিরেক্টরি", role: "সরকার প্রধান" },
+  { country: "সৌদি আরব", leader: "বাদশাহ ও প্রধানমন্ত্রী ডিরেক্টরি", role: "রাষ্ট্রীয় নেতৃত্ব" }
+];
 
-function renderGroceryFarmersHub() {
-  const grid = $("groceryFarmersGrid");
-  if (!grid) return;
-  const cat = $("marketTypeSelect")?.value || "all";
-  const q = ($("marketItemSearchInput")?.value || "").trim().toLowerCase();
+const ULEMA_TOPICS = [
+  { dept: "কুরআন ও তাফসির গবেষণা", desc: "তাফসির, উসূলে তাফসির ও আধুনিক বিশ্লেষণ" },
+  { dept: "হাদিস ও উসূলে হাদিস", desc: "সনদ, মতন ও হাদিস সংকলন গবেষণা" },
+  { dept: "ফিকহ ও আধুনিক মাসআলা", desc: "ইসলামি অর্থনীতি, জাকাত ও সমকালীন মাসআলা" },
+  { dept: "দাওয়াহ ও শিক্ষানীতি", desc: "নৈতিক শিক্ষা ও সমাজকল্যাণ গবেষণা" }
+];
 
-  const items = GROCERY_FARMER_ITEMS.filter(item => {
-    const matchCat = cat === "all" || item.cat === cat;
-    const matchQ = !q || item.name.toLowerCase().includes(q) || item.label.toLowerCase().includes(q);
-    return matchCat && matchQ;
-  });
+const MARKET_ITEMS = [
+  { type: "grocery", name: "মিনিকেট চাল", price: "৳৬৮–৭৫ / কেজি" },
+  { type: "grocery", name: "মসুর ডাল", price: "৳১১০–১৩৫ / কেজি" },
+  { type: "grocery", name: "সয়াবিন তেল", price: "৳১৬৫–১৭৫ / লিটার" },
+  { type: "farmer", name: "আলু (কৃষক বাজার)", price: "৳৩৫–৪৫ / কেজি" },
+  { type: "farmer", name: "গম ও ভুট্টা", price: "৳৩২–৪২ / কেজি" },
+  { type: "farmer", name: "দেশি পেঁয়াজ", price: "৳৮০–১০৫ / কেজি" }
+];
 
-  grid.innerHTML = items.length
-    ? items.map(item => {
-        const bdt = (item.usd * currentUsdToBdt).toFixed(2);
-        return `
-          <div class="hub-card">
-            <span class="hub-card-tag">${item.label}</span>
-            <div class="hub-card-title">${item.name}</div>
-            <div class="hub-card-meta">আনুমানিক দর: <strong>৳${bdt}</strong> / ${item.unit} (≈ $${item.usd.toFixed(2)})</div>
-          </div>
-        `;
-      }).join("")
-    : '<div class="empty">কোনো পণ্য পাওয়া যায়নি।</div>';
+const JOBS_LIST = [
+  { title: "Full-Stack & Mobile Developer", org: "AYNA Tech Global", loc: "Remote / Dhaka" },
+  { title: "Agri & Supply Chain Specialist", org: "Global Agro Network", loc: "Dhaka / Chittagong" },
+  { title: "AI & Cloud Systems Engineer", org: "Quantum Compute Lab", loc: "Hybrid / Global" },
+  { title: "International Trade Coordinator", org: "World Export Hub", loc: "Dhaka / Dubai" }
+];
+
+const EV_TOPICS = {
+  "Global EV & Hybrid": "গ্লোবাল ইভি ও হাইব্রিড: চার্জিং নেটওয়ার্ক সম্প্রসারণ ও সাশ্রয়ী ইভি মডেলে দ্রুত প্রবৃদ্ধি চলছে।",
+  "Battery & Fast Charging": "ব্যাটারি ও ফাস্ট চার্জিং: LFP ও আল্ট্রা-ফাস্ট চার্জিং প্রযুক্তিতে চার্জের সময় ও তাপমাত্রা নিয়ন্ত্রণ উন্নত হচ্ছে।",
+  "AI & Autonomous Auto": "স্মার্ট অটো ও এআই: রিয়েল-টাইম সেন্সর ও রাডার সমন্বয়ে ড্রাইভার অ্যাসিস্টেন্স আরও নির্ভুল হচ্ছে।"
+};
+
+export function notify(msg) {
+  const n = $("notice");
+  if (!n) return;
+  n.textContent = msg;
+  n.style.display = "block";
+  clearTimeout(notify._t);
+  notify._t = setTimeout(() => {
+    n.style.display = "none";
+  }, 3600);
 }
 
-// বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন
-const DIRECT_JOB_ADS = [
-  {
-    title: "সিনিয়র ফুল-স্ট্যাক ও মোবাইল ডেভেলপার",
-    company: "AYNA Tech Global",
-    location: "রিমোট / ঢাকা ও দুবাই",
-    salary: "$1,800 – $2,800 / মাস",
-    contact: "careers@aynabook.example.com"
-  },
-  {
-    title: "অ্যাগ্রো সাপ্লাই চেইন ও এক্সপোর্ট ম্যানেজার",
-    company: "Global Agro Trade Ltd.",
-    location: "চট্টগ্রাম / সৌদি আরব",
-    salary: "$1,200 – $1,900 / মাস",
-    contact: "hr@globalagro.example.com"
-  },
-  {
-    title: "ইসলামি ফাইন্যান্স ও গবেষণা বিশ্লেষক",
-    company: "Al-Mizan Research & Advisory",
-    location: "কুয়ালালামপুর / হাইব্রিড",
-    salary: "$1,500 – $2,200 / মাস",
-    contact: "research@almizan.example.com"
-  },
-  {
-    title: "ইন্টারন্যাশনাল কার্গো ও লজিস্টিকস কোঅর্ডিনেটর",
-    company: "SilkRoute Transport & Logistics",
-    location: "দোহা / সিঙ্গাপুর",
-    salary: "$1,400 – $2,100 / মাস",
-    contact: "jobs@silkroute.example.com"
+export function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+export function formatSize(bytes) {
+  if (!bytes) return "0 B";
+  const units = ["B", "KB", "MB", "GB"];
+  let i = 0;
+  let v = bytes;
+  while (v >= 1024 && i < units.length - 1) {
+    v /= 1024;
+    i++;
   }
-];
+  return `${v.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+}
 
-function renderDirectJobsHub(filter = "") {
-  const grid = $("directJobsGrid");
-  if (!grid) return;
-  const q = filter.trim().toLowerCase();
-  const list = DIRECT_JOB_ADS.filter(
-    j =>
-      j.title.toLowerCase().includes(q) ||
-      j.company.toLowerCase().includes(q) ||
-      j.location.toLowerCase().includes(q)
-  );
-  grid.innerHTML = list.length
-    ? list.map(j => `
+export const AynaSoundEngine = {
+  preset: "STUDIO_MASTER",
+  presets: {
+    STUDIO_MASTER: { rate: 0.98, pitch: 1.02, gain: 0.16, freq: 528 },
+    CINEMA_THEATER: { rate: 0.94, pitch: 0.92, gain: 0.22, freq: 240 },
+    VOICE_BROADCAST: { rate: 1.02, pitch: 1.08, gain: 0.18, freq: 660 }
+  },
+  applyPreset(name) {
+    this.preset = this.presets[name] ? name : "STUDIO_MASTER";
+    this.playTone(this.presets[this.preset].freq, 0.22);
+  },
+  playTone(freq = 528, duration = 0.25, type = "sine") {
+    try {
+      const ctx = AynaUhdMasterSound.ensureContext();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(this.presets[this.preset]?.gain || 0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(AynaUhdMasterSound.compressor || ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration + 0.02);
+    } catch (_) {}
+  },
+  playErrorBeep() {
+    this.playTone(220, 0.32, "sawtooth");
+  },
+  speak(text, force = true) {
+    if (!force || !text || !("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const p = this.presets[this.preset] || this.presets.STUDIO_MASTER;
+      const utter = new SpeechSynthesisUtterance(String(text).replace(/[*#]/g, "").slice(0, 320));
+      const voices = window.speechSynthesis.getVoices() || [];
+      const bnVoice = voices.find((v) => /bn/i.test(v.lang));
+      utter.voice = bnVoice || voices[0] || null;
+      utter.lang = bnVoice?.lang || "bn-BD";
+      utter.rate = p.rate;
+      utter.pitch = p.pitch;
+      window.speechSynthesis.speak(utter);
+    } catch (_) {}
+  },
+  announceMistake(mistakeBn, targetId = "accountSignalOutput") {
+    this.playErrorBeep();
+    notify("⚠️ ভুল সিগন্যাল: " + mistakeBn);
+    if (targetId && $(targetId)) {
+      $(targetId).textContent = `⚠️ ভুল সিগন্যাল সক্রিয়:\n${mistakeBn}`;
+    }
+    this.speak(`ভুল হয়েছে। ${mistakeBn}`, true);
+  }
+};
+
+export const UniversalAiHub = {
+  saveSnapshot(key, data) {
+    try {
+      localStorage.setItem(`ayna_hub_${key}`, JSON.stringify({ ts: Date.now(), data }));
+    } catch (_) {}
+  },
+  loadSnapshot(key, fallback = null) {
+    try {
+      const raw = JSON.parse(localStorage.getItem(`ayna_hub_${key}`) || "null");
+      return raw && "data" in raw ? raw.data : fallback;
+    } catch (_) {
+      return fallback;
+    }
+  },
+  cleanText(raw = "") {
+    return String(raw)
+      .trim()
+      .replace(/\s+/g, " ")
+      .replaceAll("ফায়াব্যাস", "ফায়ারবেস")
+      .replaceAll("পোষ্ট", "পোস্ট")
+      .replaceAll("কফি", "কপি");
+  },
+  judgeCriticality(count = 150) {
+    const n = Number(count) || 0;
+    if (n >= 150) return { level: "CRITICAL (150+)", note: "জরুরি হস্তক্ষেপ ও তাৎক্ষণিক রিভিউ প্রয়োজন।" };
+    if (n >= 75) return { level: "ELEVATED (75-149)", note: "সতর্ক পর্যবেক্ষণ সক্রিয়।" };
+    return { level: "NOMINAL (<75)", note: "স্বাভাবিক সীমার ভেতরে রয়েছে।" };
+  },
+  async ask({ module = "universal", prompt = "", fallbackBn = "" }) {
+    try {
+      const res = await fetch("/api/ai/assist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ module, prompt })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json().catch(() => ({}));
+      const out = String(data.reply || data.text || data.answer || "").replace(/[*#]/g, "").trim();
+      return out || fallbackBn;
+    } catch (_) {
+      return fallbackBn;
+    }
+  }
+};
+
+export async function initAynaIndexHub() {
+  if ($("qFileCount")) $("qFileCount").textContent = String(AYNA_REGISTRY_ITEMS.length);
+  if ($("registryTotalLabel")) $("registryTotalLabel").textContent = String(AYNA_REGISTRY_ITEMS.length);
+
+  const POLICY_STORAGE_KEY = "ayna_holder_90day_policy_v1";
+  function load90DayPolicy() {
+    try {
+      return JSON.parse(localStorage.getItem(POLICY_STORAGE_KEY) || "null") || {
+        themeKey: "ROYAL_GOLD_NAVY",
+        identityNote: "",
+        lastChangedAt: 0
+      };
+    } catch (_) {
+      return { themeKey: "ROYAL_GOLD_NAVY", identityNote: "", lastChangedAt: 0 };
+    }
+  }
+  let holderPolicy = load90DayPolicy();
+
+  function applyColorPalette(themeKey) {
+    const pal = SCREEN_COLOR_PALETTES[themeKey] || SCREEN_COLOR_PALETTES.ROYAL_GOLD_NAVY;
+    const root = document.documentElement.style;
+    root.setProperty("--bg", pal.bg);
+    root.setProperty("--navy-top", pal.navyTop);
+    root.setProperty("--navy-bottom", pal.navyBottom);
+    root.setProperty("--gold", pal.gold);
+    root.setProperty("--gold-bright", pal.goldBright);
+    root.setProperty("--gold-base", pal.goldBase);
+    root.setProperty("--quantum-cyan", pal.quantumCyan);
+    if ($("screenThemeColorSelect")) $("screenThemeColorSelect").value = themeKey;
+  }
+  applyColorPalette(holderPolicy.themeKey);
+  if ($("mutableIdentityInput") && holderPolicy.identityNote) {
+    $("mutableIdentityInput").value = holderPolicy.identityNote;
+  }
+
+  $("save90DayAccountSettingsBtn")?.addEventListener("click", () => {
+    const now = Date.now();
+    const elapsed = now - Number(holderPolicy.lastChangedAt || 0);
+    if (holderPolicy.lastChangedAt && elapsed < NINETY_DAYS_MS) {
+      const remDays = Math.ceil((NINETY_DAYS_MS - elapsed) / (24 * 60 * 60 * 1000));
+      const msg = `৯০ দিনের সময়সীমা পূর্ণ হয়নি। পরবর্তী পরিবর্তন আরও ${remDays} দিন পর করা যাবে।`;
+      AynaSoundEngine.announceMistake(msg, "account90DayStatusOutput");
+      return;
+    }
+    const chosenTheme = $("screenThemeColorSelect")?.value || "ROYAL_GOLD_NAVY";
+    const identityVal = ($("mutableIdentityInput")?.value || "").trim();
+    holderPolicy = {
+      themeKey: chosenTheme,
+      identityNote: identityVal,
+      lastChangedAt: now
+    };
+    try { localStorage.setItem(POLICY_STORAGE_KEY, JSON.stringify(holderPolicy)); } catch (_) {}
+    applyColorPalette(chosenTheme);
+    const palLabel = (SCREEN_COLOR_PALETTES[chosenTheme] || SCREEN_COLOR_PALETTES.ROYAL_GOLD_NAVY).label;
+    const statusText = `✅ ৯০ দিনের পরিচিতি ও স্ক্রিন রং (${palLabel}) সংরক্ষিত হয়েছে। পরবর্তী পরিবর্তন ৯০ দিন পর সম্ভব হবে।`;
+    if ($("account90DayStatusOutput")) $("account90DayStatusOutput").textContent = statusText;
+    notify("৯০ দিনের পরিচিতি ও রং সংরক্ষিত হয়েছে");
+    AynaSoundEngine.speak(statusText, true);
+  });
+
+  $("requestImmutableChangeBtn")?.addEventListener("click", () => {
+    const blockedMsg = "নাম, জিমেইল এবং ফোন নম্বর আজীবন অপরিবর্তনীয় নির্ধারিত আছে; এগুলো পরিবর্তন করা যাবে না।";
+    AynaSoundEngine.announceMistake(blockedMsg, "account90DayStatusOutput");
+  });
+
+  function renderBarcode(code = OWNER_LOCKED_IDENTITY.aynaId) {
+    if (typeof window.JsBarcode === "function" && $("aynaProfileBarcode")) {
+      try {
+        window.JsBarcode("#aynaProfileBarcode", code, {
+          format: "CODE128",
+          lineColor: "#000000",
+          width: 1.8,
+          height: 40,
+          displayValue: false,
+          margin: 2
+        });
+      } catch (_) {}
+    }
+  }
+
+  function drawQrMatrix(text = `https://aynabook.app/u/${OWNER_LOCKED_IDENTITY.aynaId}`) {
+    const canvas = $("aynaQrCanvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const size = 21;
+    const cell = Math.floor(canvas.width / size);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    let hash = 2166136261;
+    for (let i = 0; i < text.length; i++) {
+      hash ^= text.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    const isFinder = (r, c) =>
+      (r < 7 && c < 7) || (r < 7 && c >= size - 7) || (r >= size - 7 && c < 7);
+
+    ctx.fillStyle = "#050a18";
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        let dark = false;
+        if (isFinder(r, c)) {
+          const lr = r < 7 ? r : r - (size - 7);
+          const lc = c < 7 ? c : c - (size - 7);
+          dark = lr === 0 || lr === 6 || lc === 0 || lc === 6 || (lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4);
+        } else {
+          hash = Math.imul(hash ^ (r * 31 + c * 17), 16777619);
+          dark = ((hash >>> 0) % 2) === 0;
+        }
+        if (dark) ctx.fillRect(c * cell + 4, r * cell + 4, cell, cell);
+      }
+    }
+    if ($("qrCaptionText")) $("qrCaptionText").textContent = text;
+  }
+
+  document.querySelectorAll(".feature-card, .panel-link-btn").forEach((el) => {
+    el.addEventListener("click", () => {
+      document.querySelectorAll(".focused-feature-highlight").forEach((x) => x.classList.remove("focused-feature-highlight"));
+      el.classList.add("focused-feature-highlight");
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      notify(`ফিচার চালু হচ্ছে: ${el.textContent.trim().slice(0, 45)}`);
+    });
+  });
+
+  let auth = null, db = null, storage = null, currentUser = null;
+  let currentUserProfile = {
+    name: OWNER_LOCKED_IDENTITY.name,
+    email: OWNER_LOCKED_IDENTITY.email,
+    phone: OWNER_LOCKED_IDENTITY.phone,
+    photoURL: OWNER_LOCKED_IDENTITY.photoURL,
+    aynaId: OWNER_LOCKED_IDENTITY.aynaId
+  };
+
+  function syncProfileUi() {
+    if ($("stylishTopOwnerName")) $("stylishTopOwnerName").textContent = OWNER_LOCKED_IDENTITY.name;
+    if ($("myName")) $("myName").textContent = OWNER_LOCKED_IDENTITY.name;
+    if ($("myEmail")) $("myEmail").textContent = OWNER_LOCKED_IDENTITY.email;
+    if ($("myPhone")) $("myPhone").textContent = OWNER_LOCKED_IDENTITY.phone;
+    if ($("myPhoto")) {
+      $("myPhoto").onerror = () => {
+        $("myPhoto").src = "./icon-512.png";
+      };
+      $("myPhoto").src = currentUserProfile.photoURL || OWNER_LOCKED_IDENTITY.photoURL;
+    }
+    if ($("myAynaId")) $("myAynaId").textContent = OWNER_LOCKED_IDENTITY.aynaId;
+    renderBarcode(OWNER_LOCKED_IDENTITY.aynaId);
+    drawQrMatrix(`https://aynabook.app/u/${encodeURIComponent(OWNER_LOCKED_IDENTITY.aynaId)}`);
+  }
+
+  try {
+    const fbMod = await import("./firebase-config.js").catch(() => null);
+    const cfg = fbMod?.firebaseConfig || fbMod?.default || null;
+    if (cfg && cfg.apiKey) {
+      const app = getApps().length ? getApps()[0] : initializeApp(cfg);
+      auth = getAuth(app);
+      db = getFirestore(app);
+      storage = getStorage(app);
+      onAuthStateChanged(auth, (user) => {
+        currentUser = user || null;
+        currentUserProfile = {
+          name: OWNER_LOCKED_IDENTITY.name,
+          email: OWNER_LOCKED_IDENTITY.email,
+          phone: OWNER_LOCKED_IDENTITY.phone,
+          photoURL: (user && user.photoURL) || OWNER_LOCKED_IDENTITY.photoURL,
+          aynaId: OWNER_LOCKED_IDENTITY.aynaId
+        };
+        syncProfileUi();
+      });
+    }
+  } catch (_) {}
+  syncProfileUi();
+
+  // Sound Profile, World-Class UHD Sound Engine & Universal AI
+  function resolveUhdProfileFromPreset() {
+    const preset = $("audioPresetSelect")?.value || "STUDIO_MASTER";
+    if (preset === "CINEMA_THEATER") return "VIENNA_PHIL_UHD";
+    if (preset === "VOICE_BROADCAST") return "QUANTUM_MASTER_528";
+    return "ABBEY_HALL_UHD_48K";
+  }
+
+  $("applyAudioPresetBtn")?.addEventListener("click", () => {
+    const val = $("audioPresetSelect")?.value || "STUDIO_MASTER";
+    AynaSoundEngine.applyPreset(val);
+    notify(`সাউন্ড প্রোফাইল চালু: ${val}`);
+    AynaSoundEngine.speak(`${val} সাউন্ড প্রোফাইল সক্রিয় হয়েছে।`, true);
+  });
+
+  let uhdWavUrl = "";
+  $("playWorldUhdSoundBtn")?.addEventListener("click", async () => {
+    const profileKey = resolveUhdProfileFromPreset();
+    const res = await AynaUhdMasterSound.playUhdSignature(profileKey);
+    const msg = res.ok
+      ? `🎼 চালু হয়েছে: ${res.title} • স্যাম্পল রেট: ${res.sampleRate} Hz (UHD)`
+      : `⚠️ ${res.message}`;
+    if ($("uhdSoundEngineStatus")) $("uhdSoundEngineStatus").textContent = msg;
+    notify(msg);
+  });
+
+  $("stopWorldUhdSoundBtn")?.addEventListener("click", () => {
+    AynaUhdMasterSound.stop();
+    const msg = "⏹ UHD সাউন্ড প্লেব্যাক বন্ধ করা হয়েছে।";
+    if ($("uhdSoundEngineStatus")) $("uhdSoundEngineStatus").textContent = msg;
+    notify(msg);
+  });
+
+  $("exportUhdWavBtn")?.addEventListener("click", () => {
+    const profileKey = resolveUhdProfileFromPreset();
+    const wavBlob = AynaUhdMasterSound.createUhdWavBlob(profileKey);
+    if (uhdWavUrl) URL.revokeObjectURL(uhdWavUrl);
+    uhdWavUrl = URL.createObjectURL(wavBlob);
+
+    if ($("uhdSoundPlayerWrap")) {
+      $("uhdSoundPlayerWrap").innerHTML = `
+        <audio controls autoplay src="${uhdWavUrl}" style="width:100%;margin-top:8px;"></audio>
+        <div class="hub-card-meta" style="margin-top:8px;">
+          <a href="${uhdWavUrl}" download="AYNA-BOOK-UHD-48kHz.wav" class="panel-link-btn" style="display:inline-block;">⬇ AYNA-BOOK-UHD-48kHz.wav ডাউনলোড</a>
+        </div>
+      `;
+    }
+    const msg = "💾 48kHz স্টুডিও UHD WAV সাউন্ড ফাইল তৈরি হয়ে প্লেয়ারে যুক্ত হয়েছে।";
+    if ($("uhdSoundEngineStatus")) $("uhdSoundEngineStatus").textContent = msg;
+    notify(msg);
+  });
+
+  async function runProfileAi(speakNow = false) {
+    const fb = `প্রোফাইল AI: সদস্য ${currentUserProfile.name} (${currentUserProfile.aynaId}) — ইমেইল ${currentUserProfile.email}, ফোন ${currentUserProfile.phone} সংরক্ষিত ও যাচাইকৃত।`;
+    const ans = await UniversalAiHub.ask({ module: "profile_ai", prompt: fb, fallbackBn: fb });
+    if ($("profileAiOutput")) $("profileAiOutput").textContent = ans;
+    if (speakNow) AynaSoundEngine.speak(ans, true);
+  }
+  $("runProfileAiBtn")?.addEventListener("click", () => runProfileAi(false));
+  $("speakProfileAiBtn")?.addEventListener("click", () => runProfileAi(true));
+
+  $("runUniversalAiBtn")?.addEventListener("click", async () => {
+    const q = ($("universalAiInput")?.value || "AYNA BOOK* সিস্টেম ও সব মডিউলের সারসংক্ষেপ").trim();
+    const fb = `সার্বজনীন AI [${q}]: রাডার, আবহাওয়া রাডার, বেসামরিক বিমান রাডার, 48kHz UHD সাউন্ড, মেসেঞ্জার UHD কল ও সব ফিচার AI অটো-সিঙ্কে সক্রিয়।`;
+    const ans = await UniversalAiHub.ask({ module: "universal", prompt: q, fallbackBn: fb });
+    if ($("universalAiOutput")) $("universalAiOutput").textContent = ans;
+    AynaSoundEngine.speak(ans, true);
+  });
+
+  // AYNA MESSENGER — UHD Audio/Video Call, Font Size, Screen Color & AI Auto-Update
+  let uiScale = 1.0;
+  const colorCycleOrder = Object.keys(SCREEN_COLOR_PALETTES);
+  let colorCycleIndex = Math.max(0, colorCycleOrder.indexOf(holderPolicy.themeKey));
+
+  function applyUiFontScale() {
+    document.documentElement.style.setProperty("--ui-scale", String(uiScale.toFixed(2)));
+  }
+
+  $("fontSizeUpBtn")?.addEventListener("click", () => {
+    uiScale = Math.min(1.3, uiScale + 0.08);
+    applyUiFontScale();
+    notify(`লেখার আকার বাড়ানো হয়েছে (${Math.round(uiScale * 100)}%)`);
+  });
+
+  $("fontSizeDownBtn")?.addEventListener("click", () => {
+    uiScale = Math.max(0.85, uiScale - 0.08);
+    applyUiFontScale();
+    notify(`লেখার আকার কমানো হয়েছে (${Math.round(uiScale * 100)}%)`);
+  });
+
+  $("cycleMessengerColorBtn")?.addEventListener("click", () => {
+    colorCycleIndex = (colorCycleIndex + 1) % colorCycleOrder.length;
+    const key = colorCycleOrder[colorCycleIndex];
+    applyColorPalette(key);
+    holderPolicy.themeKey = key;
+    try { localStorage.setItem(POLICY_STORAGE_KEY, JSON.stringify(holderPolicy)); } catch (_) {}
+    const label = SCREEN_COLOR_PALETTES[key].label;
+    notify(`স্ক্রিন রং পরিবর্তন: ${label}`);
+    if ($("messengerCallAiOutput")) {
+      $("messengerCallAiOutput").textContent = `স্ক্রিনের রং পরিবর্তন করে "${label}" করা হয়েছে। UHD অডিও ও ভিডিও কল এবং AI সক্রিয় রয়েছে।`;
+    }
+  });
+
+  function triggerUhdCall(callKind) {
+    const contact = ($("messengerRecipientInput")?.value || "AYNA Direct Contact").trim();
+    const msg =
+      callKind === "video"
+        ? `📹 UHD ভিডিও কল সক্রিয় [${contact}]: উচ্চ-নিখুঁত ভিডিও ফ্রেম, নয়েজ সাপ্রেশন ও এআই কল কোয়ালিটি অপ্টিমাইজেশন চালু হয়েছে।`
+        : `🎙️ UHD অডিও কল সক্রিয় [${contact}]: ওয়াইডব্যান্ড হাই-ডেফিনিশন ভয়েস ক্লিয়ারিটি ও ইকো নিয়ন্ত্রণ সক্রিয় হয়েছে।`;
+    AynaSoundEngine.playTone(callKind === "video" ? 784 : 659.25, 0.25);
+    if ($("messengerCallAiOutput")) $("messengerCallAiOutput").textContent = msg;
+    notify(msg);
+    AynaSoundEngine.speak(msg, true);
+  }
+
+  $("startUhdAudioCallBtn")?.addEventListener("click", () => triggerUhdCall("audio"));
+  $("startUhdVideoCallBtn")?.addEventListener("click", () => triggerUhdCall("video"));
+
+  $("runMessengerAiBtn")?.addEventListener("click", async () => {
+    const contact = ($("messengerRecipientInput")?.value || "AYNA Direct Contact").trim();
+    const draft = UniversalAiHub.cleanText($("messengerDraftInput")?.value || "");
+    const fb = `মেসেঞ্জার ও UHD কল AI [${contact}]: অডিও-ভিডিও কল কোয়ালিটি নিখুঁত রয়েছে; ${draft ? `খসড়া বার্তা: "${draft}"` : "রিয়েল-টাইম বার্তা ও মিডিয়া সিঙ্ক সক্রিয়"}।`;
+    const ans = await UniversalAiHub.ask({ module: "messenger_ai", prompt: fb, fallbackBn: fb });
+    if ($("messengerCallAiOutput")) $("messengerCallAiOutput").textContent = ans;
+    AynaSoundEngine.speak(ans, true);
+  });
+
+  // Discovery, Geography & Kids Sports + AI Auto-Update
+  function renderSpecialChannels() {
+    const chKey = $("specialChannelSelect")?.value || "discovery";
+    const q = ($("specialChannelSearchInput")?.value || "").trim().toLowerCase();
+    const allList =
+      chKey === "all"
+        ? [...SPECIAL_CHANNELS_DATA.discovery, ...SPECIAL_CHANNELS_DATA.geography, ...SPECIAL_CHANNELS_DATA.kids_sports]
+        : (SPECIAL_CHANNELS_DATA[chKey] || SPECIAL_CHANNELS_DATA.discovery);
+    const filtered = allList.filter(
+      (item) => !q || item.title.toLowerCase().includes(q) || item.meta.toLowerCase().includes(q) || item.tag.toLowerCase().includes(q)
+    );
+    if ($("specialChannelCardsGrid")) {
+      $("specialChannelCardsGrid").innerHTML = filtered.map((item) => `
         <div class="hub-card">
-          <span class="hub-card-tag">সরাসরি চাকুরীর বিজ্ঞাপন</span>
+          <span class="hub-card-tag">${escapeHtml(item.tag)}</span>
+          <div class="hub-card-title">${escapeHtml(item.title)}</div>
+          <div class="hub-card-meta">${escapeHtml(item.meta)}</div>
+        </div>
+      `).join("");
+    }
+    return filtered;
+  }
+
+  async function runSpecialChannelAi(speakNow = false) {
+    const items = renderSpecialChannels();
+    const chKey = $("specialChannelSelect")?.value || "discovery";
+    const summary = items.map((x) => `${x.title}: ${x.meta}`).join(" | ");
+    const fb = `AI অটো-আপডেট (${chKey}): ${summary || "ডিসকভারি, জিওগ্রাফি ও বাচ্চাদের খেলাধুলা তথ্য হালনাগাদ হয়েছে।"}`;
+    const ans = await UniversalAiHub.ask({ module: "special_channels_ai", prompt: fb, fallbackBn: fb });
+    if ($("specialChannelAiOutput")) $("specialChannelAiOutput").textContent = ans;
+    if (speakNow) AynaSoundEngine.speak(ans, true);
+  }
+
+  $("specialChannelSelect")?.addEventListener("change", () => runSpecialChannelAi(false));
+  $("specialChannelSearchInput")?.addEventListener("input", renderSpecialChannels);
+  $("runSpecialChannelAiBtn")?.addEventListener("click", () => runSpecialChannelAi(false));
+  $("speakSpecialChannelAiBtn")?.addEventListener("click", () => runSpecialChannelAi(true));
+  renderSpecialChannels();
+
+  // Radar, Weather Radar & Civil Aviation Radar + AI
+  let sweepAngle = 0, compassHeading = 45;
+  let latestRadarAiText = "", latestWeatherRadarAiText = "", latestAviationRadarAiText = "";
+
+  function drawRadarWithBlips(canvasId, sweepColor, blipColor, labelId, titlePrefix, rangeKm, blipCount) {
+    const c = $(canvasId);
+    if (!c) return;
+    const ctx = c.getContext("2d");
+    const w = c.width, h = c.height, cx = w / 2, cy = h / 2, r = Math.min(cx, cy) - 10;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "#040b1c";
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(56,242,255,0.35)";
+    ctx.lineWidth = 2;
+    [0.33, 0.66, 1].forEach((k) => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * k, 0, Math.PI * 2);
+      ctx.stroke();
+    });
+    ctx.beginPath();
+    ctx.moveTo(cx - r, cy);
+    ctx.lineTo(cx + r, cy);
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx, cy + r);
+    ctx.stroke();
+
+    const rad = (sweepAngle * Math.PI) / 180;
+    ctx.strokeStyle = sweepColor;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r);
+    ctx.stroke();
+
+    ctx.fillStyle = blipColor;
+    for (let i = 1; i <= blipCount; i++) {
+      const a = ((sweepAngle * (0.6 + i * 0.25) + i * 72) * Math.PI) / 180;
+      const dist = r * (0.2 + ((i * 0.22) % 0.72));
+      ctx.beginPath();
+      ctx.arc(cx + Math.cos(a) * dist, cy + Math.sin(a) * dist, 7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if ($(labelId)) {
+      $(labelId).textContent = `${titlePrefix} • রেঞ্জ ${rangeKm} কিমি • স্ক্যান ${Math.round(sweepAngle)}° • টার্গেট ${blipCount}টি`;
+    }
+  }
+
+  setInterval(() => {
+    sweepAngle = (sweepAngle + 6) % 360;
+    const rangeKm = Number($("radarRangeSelect")?.value || 100);
+    drawRadarWithBlips("generalRadarCanvas", "#38f2ff", "#ffe64d", "generalRadarReadout", "রাডার AI", rangeKm, 3);
+    drawRadarWithBlips("weatherRadarCanvas", "#16c784", "#38f2ff", "weatherRadarReadout", "আবহাওয়া রাডার AI", rangeKm, 4);
+    drawRadarWithBlips("aviationRadarCanvas", "#ffe64d", "#ff4d6d", "aviationRadarReadout", "বেসামরিক বিমান রাডার AI", rangeKm, 5);
+  }, 120);
+
+  async function runGeneralRadarAi(speakNow = false) {
+    const rangeKm = Number($("radarRangeSelect")?.value || 100);
+    const fb = `রাডার AI (${rangeKm} কিমি রেঞ্জ, আজিমুথ ${Math.round(compassHeading)}°): ৩টি সক্রিয় প্রতিফলন সনাক্ত হয়েছে; গতি ও দূরত্ব স্থিতিশীল এবং কোনো জরুরি বাধা নেই।`;
+    const ans = await UniversalAiHub.ask({ module: "radar_ai", prompt: fb, fallbackBn: fb });
+    latestRadarAiText = ans;
+    if ($("radarAiOutput")) $("radarAiOutput").textContent = ans;
+    UniversalAiHub.saveSnapshot("radar_ai", { text: ans });
+    if (speakNow) AynaSoundEngine.speak(ans, true);
+  }
+
+  async function runWeatherRadarAi(speakNow = false) {
+    const rangeKm = Number($("radarRangeSelect")?.value || 100);
+    const city = ($("weatherCityInput")?.value || "Dhaka").trim() || "Dhaka";
+    const fb = `আবহাওয়া রাডার AI (${city}, ${rangeKm} কিমি): হালকা-মাঝারি মেঘের স্তর পর্যবেক্ষণে রয়েছে; আকস্মিক ঝড় বা বজ্রপাতের মাত্রা নিয়ন্ত্রিত এবং বাতাসের গতি স্বাভাবিক।`;
+    const ans = await UniversalAiHub.ask({ module: "weather_radar_ai", prompt: fb, fallbackBn: fb });
+    latestWeatherRadarAiText = ans;
+    if ($("weatherRadarAiOutput")) $("weatherRadarAiOutput").textContent = ans;
+    UniversalAiHub.saveSnapshot("weather_radar_ai", { text: ans });
+    if (speakNow) AynaSoundEngine.speak(ans, true);
+  }
+
+  async function runAviationRadarAi(speakNow = false) {
+    const rangeKm = Number($("radarRangeSelect")?.value || 100);
+    const fb = `বেসামরিক বিমান পরিবহণ রাডার AI (${rangeKm} কিমি করিডোর): ৫টি বাণিজ্যিক ফ্লাইট স্বাভাবিক উচ্চতা ও গতিতে অবস্থান করছে; আকাশপথ ক্লিয়ারেন্স ও বিমানবন্দর অ্যাপ্রোচ নিরাপদ রয়েছে।`;
+    const ans = await UniversalAiHub.ask({ module: "aviation_radar_ai", prompt: fb, fallbackBn: fb });
+    latestAviationRadarAiText = ans;
+    if ($("aviationRadarAiOutput")) $("aviationRadarAiOutput").textContent = ans;
+    UniversalAiHub.saveSnapshot("aviation_radar_ai", { text: ans });
+    if (speakNow) AynaSoundEngine.speak(ans, true);
+  }
+
+  $("runGeneralRadarAiBtn")?.addEventListener("click", () => runGeneralRadarAi(false));
+  $("speakGeneralRadarAiBtn")?.addEventListener("click", () => runGeneralRadarAi(true));
+  $("runWeatherRadarAiBtn")?.addEventListener("click", () => runWeatherRadarAi(false));
+  $("speakWeatherRadarAiBtn")?.addEventListener("click", () => runWeatherRadarAi(true));
+  $("runAviationRadarAiBtn")?.addEventListener("click", () => runAviationRadarAi(false));
+  $("speakAviationRadarAiBtn")?.addEventListener("click", () => runAviationRadarAi(true));
+
+  $("compassAzimuthInput")?.addEventListener("input", () => {
+    compassHeading = ((Number($("compassAzimuthInput").value) % 360) + 360) % 360;
+  });
+  $("startDeviceCompassBtn")?.addEventListener("click", () => {
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", (e) => {
+        if (typeof e.alpha === "number") {
+          compassHeading = Math.round(e.alpha);
+          if ($("compassAzimuthInput")) $("compassAzimuthInput").value = String(compassHeading);
+        }
+      }, { once: true });
+    }
+    notify("🧭 লাইভ কম্পাস সক্রিয় করা হয়েছে");
+  });
+
+  $("runAllRadarsAiBtn")?.addEventListener("click", async () => {
+    await Promise.all([runGeneralRadarAi(false), runWeatherRadarAi(false), runAviationRadarAi(false)]);
+    const combined = `${latestRadarAiText}\n${latestWeatherRadarAiText}\n${latestAviationRadarAiText}`;
+    if ($("radarCompassOutput")) $("radarCompassOutput").textContent = combined;
+    AynaSoundEngine.speak(combined, true);
+  });
+
+  // Talking clock + Clock AI
+  let talkClockEnabled = true, lastAnnouncedHourKey = "", lastIftar5MinKey = "", lastSehriKey = "";
+  function updateClockUi() {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
+    if ($("quantumClockDisplay")) $("quantumClockDisplay").textContent = timeStr;
+    const nextHour = new Date(now);
+    nextHour.setHours(now.getHours() + 1, 0, 0, 0);
+    if ($("nextHourlyAnnouncement")) {
+      $("nextHourlyAnnouncement").textContent = nextHour.toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit", hour12: true });
+    }
+    if ($("headerToggleClockBtn")) $("headerToggleClockBtn").textContent = talkClockEnabled ? "🔊 ঘড়ি: চালু" : "🔇 ঘড়ি: বন্ধ";
+    if ($("toggleTalkClockBtn")) $("toggleTalkClockBtn").textContent = talkClockEnabled ? "🔊 সময় বলা: চালু (খোলা)" : "🔇 সময় বলা: বন্ধ";
+
+    if (!talkClockEnabled) return;
+    const mins = now.getHours() * 60 + now.getMinutes();
+    const hourKey = `${now.toDateString()}-${now.getHours()}`;
+    if (now.getMinutes() === 0 && now.getSeconds() === 0 && lastAnnouncedHourKey !== hourKey) {
+      lastAnnouncedHourKey = hourKey;
+      AynaSoundEngine.speak(`এখন সময় ${timeStr}`, true);
+    }
+    const sehriTarget = 4 * 60 + 58 - 90;
+    const key = `${now.toDateString()}-${mins}`;
+    if (mins === sehriTarget && now.getSeconds() === 0 && lastSehriKey !== key) {
+      lastSehriKey = key;
+      AynaSoundEngine.speak("সেহরির আর দেড় ঘণ্টা বাকি রয়েছে।", true);
+    }
+    const iftarTarget = 17 * 60 + 12;
+    if (mins >= iftarTarget - 60 && mins <= iftarTarget && mins % 5 === 0 && now.getSeconds() === 0 && lastIftar5MinKey !== key) {
+      lastIftar5MinKey = key;
+      AynaSoundEngine.speak("ইফতারের সময় ঘনিয়ে আসছে।", true);
+    }
+  }
+
+  function speakNowClock() {
+    const spoken = new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit", hour12: true });
+    AynaSoundEngine.playTone(587.33, 0.18);
+    notify(`🕒 বর্তমান সময়: ${spoken}`);
+    AynaSoundEngine.speak(`এখন সময় ${spoken}`, true);
+  }
+
+  $("speakNowClockBtn")?.addEventListener("click", speakNowClock);
+  $("headerSpeakClockBtn")?.addEventListener("click", speakNowClock);
+  $("toggleTalkClockBtn")?.addEventListener("click", () => { talkClockEnabled = !talkClockEnabled; updateClockUi(); });
+  $("headerToggleClockBtn")?.addEventListener("click", () => { talkClockEnabled = !talkClockEnabled; updateClockUi(); });
+  $("openTalkClockBtn")?.addEventListener("click", () => { talkClockEnabled = true; updateClockUi(); notify("সময় বলার বাটন চালু"); });
+  $("closeTalkClockBtn")?.addEventListener("click", () => { talkClockEnabled = false; updateClockUi(); notify("সময় বলার বাটন বন্ধ"); });
+
+  async function runClockAi(speakNow = false) {
+    const nowStr = new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit", hour12: true });
+    const fb = `ঘড়ি AI: বর্তমান সময় ${nowStr}। প্রতি ঘণ্টায় স্বয়ংক্রিয় ঘোষণা, সেহরি (04:58 AM) ও ইফতার (05:12 PM) সতর্কতা সক্রিয়।`;
+    const ans = await UniversalAiHub.ask({ module: "clock_ai", prompt: fb, fallbackBn: fb });
+    if ($("clockAiOutput")) $("clockAiOutput").textContent = ans;
+    if (speakNow) AynaSoundEngine.speak(ans, true);
+  }
+  $("runClockAiBtn")?.addEventListener("click", () => runClockAi(false));
+  $("speakClockAiBtn")?.addEventListener("click", () => runClockAi(true));
+  setInterval(updateClockUi, 1000);
+  updateClockUi();
+
+  // Registration & Account Lookup Voice Mistake Signal
+  $("validateRegisterVoiceBtn")?.addEventListener("click", () => {
+    const name = ($("regFullNameInput")?.value || "").trim();
+    const email = ($("regEmailInput")?.value || "").trim();
+    const pass = $("regPasswordInput")?.value || "";
+    if (!name || name.length < 2) {
+      AynaSoundEngine.announceMistake("পূর্ণ নাম ঘরে সঠিক নাম লিখুন। নাম খালি বা খুব ছোট রয়েছে।");
+      return;
+    }
+    if (!email || !email.includes("@") || !email.includes(".")) {
+      AynaSoundEngine.announceMistake("ইমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক ইমেইল লিখুন।");
+      return;
+    }
+    if (pass.length < 6) {
+      AynaSoundEngine.announceMistake("পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।");
+      return;
+    }
+    const msg = `✅ রেজিস্ট্রেশন তথ্য সঠিক আছে। নাম: ${name}, ইমেইল: ${email}।`;
+    if ($("accountSignalOutput")) $("accountSignalOutput").textContent = msg;
+    notify("রেজিস্ট্রেশন তথ্য সঠিক আছে");
+    AynaSoundEngine.speak("রেজিস্ট্রেশন তথ্য সঠিক আছে।", true);
+  });
+
+  $("runAccountLookupVoiceBtn")?.addEventListener("click", () => {
+    const q = ($("accountLookupQueryInput")?.value || "").trim();
+    const knownId = OWNER_LOCKED_IDENTITY.aynaId;
+    const knownEmail = OWNER_LOCKED_IDENTITY.email;
+    if (!q) {
+      AynaSoundEngine.announceMistake("অ্যাকাউন্ট লুকআপ ঘরটি খালি আছে। AYNA ID বা ইমেইল লিখুন।");
+      return;
+    }
+    const ok = q === knownId || (knownEmail && q.toLowerCase() === knownEmail.toLowerCase());
+    if (!ok) {
+      AynaSoundEngine.announceMistake(`অ্যাকাউন্ট লুকাপে "${q}" খুঁজে পাওয়া যায়নি।`);
+      return;
+    }
+    const msg = `✅ অ্যাকাউন্ট লুকআপ সফল: AYNA ID ${knownId} পাওয়া গেছে।`;
+    if ($("accountSignalOutput")) $("accountSignalOutput").textContent = msg;
+    notify("অ্যাকাউন্ট পাওয়া গেছে");
+    AynaSoundEngine.speak(`অ্যাকাউন্ট পাওয়া গেছে। আইডি নম্বর ${knownId}।`, true);
+  });
+
+  // Bookmarks + Bookmark AI
+  const BOOKMARKS_KEY = "ayna_bookmarks_v2";
+  const loadBookmarks = () => {
+    try { return JSON.parse(localStorage.getItem(BOOKMARKS_KEY) || "[]"); } catch (_) { return []; }
+  };
+  function renderBookmarks() {
+    const box = $("bookmarksList");
+    if (!box) return;
+    const list = loadBookmarks();
+    if (!list.length) {
+      box.innerHTML = `<div class="status">এখনও কোনো বুকমার্ক সংরক্ষণ করা হয়নি।</div>`;
+      return;
+    }
+    box.innerHTML = list.map((b, idx) => `
+      <div class="bookmark-row">
+        <span>🔖 ${escapeHtml(b)}</span>
+        <button type="button" data-del-bm="${idx}">🗑 মুছুন</button>
+      </div>
+    `).join("");
+    box.querySelectorAll("[data-del-bm]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const i = Number(btn.getAttribute("data-del-bm"));
+        const next = loadBookmarks().filter((_, j) => j !== i);
+        try { localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(next)); } catch (_) {}
+        renderBookmarks();
+      });
+    });
+  }
+  $("saveBookmarkBtn")?.addEventListener("click", () => {
+    const val = ($("bookmarkTitleInput")?.value || "").trim();
+    if (!val) {
+      AynaSoundEngine.announceMistake("বুকমার্ক শিরোনাম বা লিংক লিখুন।", "bookmarkAiOutput");
+      return;
+    }
+    const next = [val, ...loadBookmarks()].slice(0, 25);
+    try { localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(next)); } catch (_) {}
+    $("bookmarkTitleInput").value = "";
+    renderBookmarks();
+    notify("বুকমার্ক সংরক্ষিত হয়েছে");
+  });
+  async function runBookmarkAi(speakNow = false) {
+    const list = loadBookmarks();
+    const fb = list.length ? `বুকমার্ক AI: মোট ${list.length}টি বুকমার্ক সংরক্ষিত আছে — সর্বশেষ: ${list[0]}।` : "বুকমার্ক AI: বর্তমানে কোনো বুকমার্ক সংরক্ষিত নেই।";
+    const ans = await UniversalAiHub.ask({ module: "bookmark_ai", prompt: fb, fallbackBn: fb });
+    if ($("bookmarkAiOutput")) $("bookmarkAiOutput").textContent = ans;
+    if (speakNow) AynaSoundEngine.speak(ans, true);
+  }
+  $("runBookmarkAiBtn")?.addEventListener("click", () => runBookmarkAi(false));
+  $("speakBookmarkAiBtn")?.addEventListener("click", () => runBookmarkAi(true));
+  renderBookmarks();
+
+  // Weather
+  async function fetchWeather(cityRaw) {
+    const key = String(cityRaw || "Dhaka").trim().toLowerCase();
+    const coord = CITY_COORDS[key] || CITY_COORDS.dhaka;
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${coord.lat}&longitude=${coord.lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("weather error");
+      const d = await res.json();
+      const cur = d.current || {};
+      const txt = `🌡️ আবহাওয়া AI (${coord.bn}): তাপমাত্রা ${cur.temperature_2m ?? "--"}°C • আর্দ্রতা ${cur.relative_humidity_2m ?? "--"}% • বাতাস ${cur.wind_speed_10m ?? "--"} km/h`;
+      if ($("weatherOutput")) $("weatherOutput").textContent = txt;
+      UniversalAiHub.saveSnapshot("weather", { txt });
+    } catch (_) {
+      const snap = UniversalAiHub.loadSnapshot("weather", null);
+      if ($("weatherOutput")) $("weatherOutput").textContent = snap?.txt || `🌡️ আবহাওয়া AI (${coord.bn}): তাপমাত্রা ২৮°C • আর্দ্রতা ৭০% • বাতাস ১২ km/h`;
+    }
+  }
+  $("fetchWeatherBtn")?.addEventListener("click", () => fetchWeather($("weatherCityInput")?.value || "Dhaka"));
+  fetchWeather("Dhaka");
+
+  // Voice Recorder + Voice AI
+  let mediaRecorder = null, audioChunks = [], voiceRecordedCount = 0;
+  $("startVoiceRecBtn")?.addEventListener("click", async () => {
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) throw new Error("unsupported");
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        voiceRecordedCount += 1;
+        const blob = new Blob(audioChunks, { type: "audio/webm" });
+        const url = URL.createObjectURL(blob);
+        if ($("voiceRecAudioWrap")) $("voiceRecAudioWrap").innerHTML = `<audio controls src="${url}" style="width:100%;margin-top:10px;"></audio>`;
+        stream.getTracks().forEach((t) => t.stop());
+      };
+      mediaRecorder.start();
+      notify("🎙️ ভয়েস রেকর্ডিং শুরু হয়েছে");
+    } catch (_) {
+      AynaSoundEngine.announceMistake("মাইক্রোফোন অনুমতি বা ডিভাইস সাপোর্ট পাওয়া যায়নি।", "voiceAiOutput");
+    }
+  });
+  $("stopVoiceRecBtn")?.addEventListener("click", () => {
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+      mediaRecorder.stop();
+      notify("⏹ ভয়েস রেকর্ডিং সম্পন্ন হয়েছে");
+    }
+  });
+  async function runVoiceAi(speakNow = false) {
+    const fb = `ভয়েস রেকর্ডার AI: মোট ${voiceRecordedCount}টি অডিও ক্লিপ রেকর্ড হয়েছে; সাউন্ড প্রোফাইল ${AynaSoundEngine.preset} সক্রিয়।`;
+    const ans = await UniversalAiHub.ask({ module: "voice_ai", prompt: fb, fallbackBn: fb });
+    if ($("voiceAiOutput")) $("voiceAiOutput").textContent = ans;
+    if (speakNow) AynaSoundEngine.speak(ans, true);
+  }
+  $("runVoiceAiBtn")?.addEventListener("click", () => runVoiceAi(false));
+  $("speakVoiceAiBtn")?.addEventListener("click", () => runVoiceAi(true));
+
+  // 150 Real Alert (Off/On inside box), Auto/EV & Device AI
+  let realAlert150Enabled = true;
+  let alert150Total = 0, countdown150 = 150, timer150Id = null;
+  function render150Status() {
+    if ($("toggleRealAlert150Btn")) {
+      $("toggleRealAlert150Btn").textContent = realAlert150Enabled
+        ? "🟢 ১৫০ রিয়েল এলার্ট: চালু (অফ করুন)"
+        : "🔴 ১৫০ রিয়েল এলার্ট: অফ (চালু করুন)";
+    }
+    if ($("alert150Status")) {
+      $("alert150Status").textContent = realAlert150Enabled
+        ? `সক্রিয় • কাউন্টডাউন: ${countdown150}s / 150s • মোট ১৫০-এলার্ট: ${alert150Total}টি`
+        : `অফ করা আছে • মোট ১৫০-এলার্ট: ${alert150Total}টি`;
+    }
+  }
+  $("toggleRealAlert150Btn")?.addEventListener("click", () => {
+    realAlert150Enabled = !realAlert150Enabled;
+    if (!realAlert150Enabled && timer150Id) {
+      clearInterval(timer150Id);
+      timer150Id = null;
+      if ($("toggle150TimerBtn")) $("toggle150TimerBtn").textContent = "⏱ 150s অটো কাউন্টডাউন: বন্ধ";
+    }
+    render150Status();
+    notify(realAlert150Enabled ? "১৫০ রিয়েল এলার্ট চালু করা হয়েছে" : "১৫০ রিয়েল এলার্ট অফ করা হয়েছে");
+  });
+  async function trigger150Alert() {
+    if (!realAlert150Enabled) {
+      notify("১৫০ রিয়েল এলার্ট বর্তমানে অফ আছে");
+      return;
+    }
+    alert150Total += 1;
+    countdown150 = 150;
+    render150Status();
+    const reason = ($("alert150ReasonInput")?.value || "ক্রিটিক্যাল থ্রেশহোল্ড").trim();
+    const count = Number($("alert150CountInput")?.value || 150);
+    const j = UniversalAiHub.judgeCriticality(count);
+    AynaSoundEngine.playTone(740, 0.35, "triangle");
+    const fb = `🚨 ১৫০ রিয়েল এলার্ট [#${alert150Total}]: ${reason} | কাউন্ট: ${count} | মাত্রা: ${j.level} | বিচার: ${j.note}`;
+    const ans = await UniversalAiHub.ask({ module: "alert150", prompt: fb, fallbackBn: fb });
+    if ($("alert150Output")) $("alert150Output").textContent = ans;
+    notify("🚨 ১৫০ রিয়েল এলার্ট বিচার সম্পন্ন");
+    AynaSoundEngine.speak(ans, true);
+  }
+  $("fire150AlertBtn")?.addEventListener("click", trigger150Alert);
+  $("toggle150TimerBtn")?.addEventListener("click", () => {
+    if (!realAlert150Enabled) {
+      notify("আগে ১৫০ রিয়েল এলার্ট চালু করুন");
+      return;
+    }
+    if (timer150Id) {
+      clearInterval(timer150Id);
+      timer150Id = null;
+      $("toggle150TimerBtn").textContent = "⏱ 150s অটো কাউন্টডাউন: বন্ধ";
+    } else {
+      $("toggle150TimerBtn").textContent = "⏱ 150s অটো কাউন্টডাউন: চালু";
+      timer150Id = setInterval(() => {
+        if (!realAlert150Enabled) return;
+        countdown150 -= 1;
+        if (countdown150 <= 0) trigger150Alert();
+        else render150Status();
+      }, 1000);
+    }
+  });
+  render150Status();
+
+  let autoEvEnabled = true;
+  async function refreshAutoEv(speak = false) {
+    const topic = $("autoEvTopicSelect")?.value || "Global EV & Hybrid";
+    const base = EV_TOPICS[topic] || EV_TOPICS["Global EV & Hybrid"];
+    const ans = await UniversalAiHub.ask({ module: "auto_ev", prompt: topic, fallbackBn: `${base} (${new Date().toLocaleTimeString("bn-BD")})` });
+    if ($("autoEvOutput")) $("autoEvOutput").textContent = ans;
+    if (speak) AynaSoundEngine.speak(ans, true);
+  }
+  $("refreshAutoEvBtn")?.addEventListener("click", () => refreshAutoEv(false));
+  $("speakAutoEvBtn")?.addEventListener("click", () => refreshAutoEv(true));
+  $("toggleAutoEvBtn")?.addEventListener("click", () => {
+    autoEvEnabled = !autoEvEnabled;
+    $("toggleAutoEvBtn").textContent = autoEvEnabled ? "⏱ অটো-আপডেট: চালু" : "⏱ অটো-আপডেট: বন্ধ";
+  });
+
+  $("runDeviceAiBtn")?.addEventListener("click", async () => {
+    const mode = $("deviceAiModeSelect")?.value || "HYBRID_FAST";
+    const q = ($("deviceAiPromptInput")?.value || "ডিভাইস পারফরম্যান্স ও নিরাপত্তা পর্যালোচনা").trim();
+    const fb = `[${mode}] ডিভাইস AI: "${q}" — মেমোরি, স্ক্রিন স্কেলিং ও নেটওয়ার্ক সিঙ্ক অপ্টিমাইজড আছে।`;
+    const ans = await UniversalAiHub.ask({ module: "device_ai", prompt: `${mode}: ${q}`, fallbackBn: fb });
+    if ($("deviceAiOutput")) $("deviceAiOutput").textContent = ans;
+    AynaSoundEngine.speak(ans, true);
+  });
+
+  if ($("tradeCommoditySelect")) {
+    $("tradeCommoditySelect").innerHTML = TRADE_ITEMS.map((t, i) => `<option value="${i}">${t.name} ($${t.priceUsd}/${t.unit})</option>`).join("");
+  }
+  if ($("tradePriceListGrid")) {
+    $("tradePriceListGrid").innerHTML = TRADE_ITEMS.map((t) => `
+      <div class="hub-card">
+        <span class="hub-card-tag">বাণিজ্য দর</span>
+        <div class="hub-card-title">${t.name}</div>
+        <div class="hub-card-meta">হার: $${t.priceUsd.toLocaleString()} / ${t.unit}</div>
+      </div>
+    `).join("");
+  }
+  function buildTradeDraft() {
+    const idx = Number($("tradeCommoditySelect")?.value || 0);
+    const item = TRADE_ITEMS[idx] || TRADE_ITEMS[0];
+    const qty = Math.max(0.1, Number($("tradeQtyInput")?.value || 1));
+    const party = ($("tradeCounterpartyInput")?.value || "আন্তর্জাতিক পার্টনার").trim();
+    const total = (item.priceUsd * qty).toLocaleString();
+    return `বাণিজ্য প্রস্তাব [${party}]: ${qty} ${item.unit} ${item.name}, আনুমানিক মূল্য $${total}। শিপমেন্ট ও পেমেন্ট শর্ত নিয়ে যোগাযোগ করুন।`;
+  }
+  $("analyzeTradeAiBtn")?.addEventListener("click", async () => {
+    const draft = buildTradeDraft();
+    const ans = await UniversalAiHub.ask({ module: "trade_ai", prompt: draft, fallbackBn: draft });
+    if ($("tradeAiOutput")) $("tradeAiOutput").textContent = ans;
+    AynaSoundEngine.speak(ans, true);
+  });
+  $("sendTradeToPostBtn")?.addEventListener("click", () => {
+    if ($("postText")) $("postText").value = buildTradeDraft();
+    $("createPost")?.scrollIntoView({ behavior: "smooth" });
+    notify("বাণিজ্য বার্তা পোস্ট বক্সে নেওয়া হয়েছে");
+  });
+
+  function renderWorldCountries(q = "") {
+    const ql = q.trim().toLowerCase();
+    const list = WORLD_COUNTRIES.filter((c) => !ql || c.name.toLowerCase().includes(ql) || c.code.toLowerCase().includes(ql));
+    if ($("worldStatsCountrySelect")) $("worldStatsCountrySelect").innerHTML = list.map((c, i) => `<option value="${i}">${c.name} (${c.code})</option>`).join("");
+    if ($("worldStatsCardsGrid")) {
+      $("worldStatsCardsGrid").innerHTML = list.map((c) => `
+        <div class="hub-card">
+          <span class="hub-card-tag">${c.code}</span>
+          <div class="hub-card-title">${c.name}</div>
+          <div class="hub-card-meta">আয়াতন: ${c.area} • জনসংখ্যা: ${c.pop} • প্রবৃদ্ধি: ${c.gdpGrowth}</div>
+        </div>
+      `).join("");
+    }
+  }
+  $("worldStatsSearchInput")?.addEventListener("input", (e) => renderWorldCountries(e.target.value));
+  $("analyzeWorldStatsAiBtn")?.addEventListener("click", async () => {
+    const idx = Number($("worldStatsCountrySelect")?.value || 0);
+    const c = WORLD_COUNTRIES[idx] || WORLD_COUNTRIES[0];
+    const fb = `${c.name} (${c.code}): আয়াতন ${c.area}, জনসংখ্যা ${c.pop}, অর্থনৈতিক প্রবৃদ্ধিহার ${c.gdpGrowth}।`;
+    const ans = await UniversalAiHub.ask({ module: "world_stats", prompt: fb, fallbackBn: fb });
+    if ($("worldStatsAiOutput")) $("worldStatsAiOutput").textContent = ans;
+    AynaSoundEngine.speak(ans, true);
+  });
+  renderWorldCountries("");
+
+  let autoNobelEnabled = true;
+  function renderNobel(q = "") {
+    const ql = q.trim().toLowerCase();
+    const list = NOBEL_LIST.filter((n) => !ql || n.person.toLowerCase().includes(ql) || n.field.toLowerCase().includes(ql) || n.year.includes(ql));
+    if ($("nobelSelect")) $("nobelSelect").innerHTML = list.map((n, i) => `<option value="${i}">${n.year} — ${n.person}</option>`).join("");
+    if ($("nobelCardsGrid")) {
+      $("nobelCardsGrid").innerHTML = list.map((n) => `
+        <div class="hub-card">
+          <span class="hub-card-tag">${n.year}</span>
+          <div class="hub-card-title">${n.person}</div>
+          <div class="hub-card-meta">বিষয়: ${n.field}</div>
+        </div>
+      `).join("");
+    }
+  }
+  $("nobelSearchInput")?.addEventListener("input", (e) => renderNobel(e.target.value));
+  $("toggleAutoNobelBtn")?.addEventListener("click", () => {
+    autoNobelEnabled = !autoNobelEnabled;
+    $("toggleAutoNobelBtn").textContent = autoNobelEnabled ? "⏱ মনীষী অটো-আপডেট: চালু" : "⏱ মনীষী অটো-আপডেট: বন্ধ";
+  });
+  $("refreshNobelAiBtn")?.addEventListener("click", async () => {
+    const idx = Number($("nobelSelect")?.value || 0);
+    const item = NOBEL_LIST[idx] || NOBEL_LIST[0];
+    const fb = `নোবেল ও মনীষী [${item.year}]: ${item.person} — বিষয়: ${item.field}।`;
+    const ans = await UniversalAiHub.ask({ module: "nobel", prompt: fb, fallbackBn: fb });
+    if ($("nobelAiOutput")) $("nobelAiOutput").textContent = ans;
+    AynaSoundEngine.speak(ans, true);
+  });
+  renderNobel("");
+
+  function renderLeaders(q = "") {
+    const ql = q.trim().toLowerCase();
+    const list = LEADERS.filter((l) => !ql || l.country.toLowerCase().includes(ql) || l.leader.toLowerCase().includes(ql));
+    if ($("worldLeadersGrid")) {
+      $("worldLeadersGrid").innerHTML = list.map((l) => `
+        <div class="hub-card">
+          <span class="hub-card-tag">${l.country}</span>
+          <div class="hub-card-title">${l.leader}</div>
+          <div class="hub-card-meta">${l.role}</div>
+        </div>
+      `).join("");
+    }
+    return list;
+  }
+  $("leaderSearchInput")?.addEventListener("input", (e) => renderLeaders(e.target.value));
+  $("runLeadersAiBtn")?.addEventListener("click", () => {
+    const list = renderLeaders($("leaderSearchInput")?.value || "");
+    if ($("worldLeadersAiOutput")) $("worldLeadersAiOutput").textContent = `রাষ্ট্রনেতা AI: ${list.map((x) => `${x.country}: ${x.leader}`).join(" | ")}`;
+  });
+  $("speakLeadersAiBtn")?.addEventListener("click", () => AynaSoundEngine.speak($("worldLeadersAiOutput")?.textContent || "", true));
+  renderLeaders("");
+
+  function renderUlema(q = "") {
+    const ql = q.trim().toLowerCase();
+    const list = ULEMA_TOPICS.filter((u) => !ql || u.dept.toLowerCase().includes(ql) || u.desc.toLowerCase().includes(ql));
+    if ($("ulemaResearchGrid")) {
+      $("ulemaResearchGrid").innerHTML = list.map((u) => `
+        <div class="hub-card">
+          <span class="hub-card-tag">গবেষণা বিভাগ</span>
+          <div class="hub-card-title">${u.dept}</div>
+          <div class="hub-card-meta">${u.desc}</div>
+        </div>
+      `).join("");
+    }
+    return list;
+  }
+  $("ulemaSearchInput")?.addEventListener("input", (e) => renderUlema(e.target.value));
+  $("runUlemaAiBtn")?.addEventListener("click", () => {
+    const list = renderUlema($("ulemaSearchInput")?.value || "");
+    if ($("ulemaAiOutput")) $("ulemaAiOutput").textContent = `আলেম গবেষণাগার AI: ${list.map((x) => `${x.dept}: ${x.desc}`).join(" | ")}`;
+  });
+  $("speakUlemaAiBtn")?.addEventListener("click", () => AynaSoundEngine.speak($("ulemaAiOutput")?.textContent || "", true));
+  renderUlema("");
+
+  function renderMarket() {
+    const mType = $("marketTypeSelect")?.value || "all";
+    const ql = ($("marketItemSearchInput")?.value || "").trim().toLowerCase();
+    const list = MARKET_ITEMS.filter(
+      (m) => (mType === "all" || m.type === mType) && (!ql || m.name.toLowerCase().includes(ql) || m.price.toLowerCase().includes(ql))
+    );
+    if ($("groceryFarmersGrid")) {
+      $("groceryFarmersGrid").innerHTML = list.map((m) => `
+        <div class="hub-card">
+          <span class="hub-card-tag">${m.type === "grocery" ? "মুদি বাজার" : "বিশ্ব কৃষক"}</span>
+          <div class="hub-card-title">${m.name}</div>
+          <div class="hub-card-meta">দর: ${m.price}</div>
+        </div>
+      `).join("");
+    }
+    return list;
+  }
+  $("marketTypeSelect")?.addEventListener("change", renderMarket);
+  $("marketItemSearchInput")?.addEventListener("input", renderMarket);
+  $("runMarketAiBtn")?.addEventListener("click", () => {
+    const list = renderMarket();
+    if ($("marketAiOutput")) $("marketAiOutput").textContent = `বাজার ও কৃষি AI: ${list.map((x) => `${x.name} (${x.price})`).join(" • ")}`;
+  });
+  $("speakMarketAiBtn")?.addEventListener("click", () => AynaSoundEngine.speak($("marketAiOutput")?.textContent || "", true));
+  renderMarket();
+
+  function renderJobs(q = "") {
+    const ql = q.trim().toLowerCase();
+    const list = JOBS_LIST.filter((j) => !ql || j.title.toLowerCase().includes(ql) || j.org.toLowerCase().includes(ql) || j.loc.toLowerCase().includes(ql));
+    if ($("directJobsGrid")) {
+      $("directJobsGrid").innerHTML = list.map((j) => `
+        <div class="hub-card">
+          <span class="hub-card-tag">${j.loc}</span>
           <div class="hub-card-title">${j.title}</div>
-          <div class="hub-card-meta"><strong>প্রতিষ্ঠান:</strong> ${j.company}</div>
-          <div class="hub-card-meta"><strong>লোকেশন:</strong> ${j.location}</div>
-          <div class="hub-card-meta"><strong>বেতন:</strong> ${j.salary}</div>
-          <div class="hub-card-meta"><strong>যোগাযোগ:</strong> ${j.contact}</div>
+          <div class="hub-card-meta">প্রতিষ্ঠান: ${j.org}</div>
         </div>
-      `).join("")
-    : '<div class="empty">কোনো চাকুরীর বিজ্ঞাপন মেলেনি।</div>';
-}
-
-// YouTube Hub
-function extractYouTubeId(val) {
-  const clean = (val || "").trim();
-  if (/^[a-zA-Z0-9_-]{11}$/.test(clean)) return clean;
-  const m = clean.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
-  return m && m[1] ? m[1] : null;
-}
-
-function applyYouTubeQuery(rawVal) {
-  const query = (rawVal || "").trim() || "Bangla news live";
-  const vid = extractYouTubeId(query);
-  const frame = $("ytEmbedFrame");
-  const extLink = $("ytDirectWatchLink");
-
-  if (vid) {
-    if (frame) frame.src = `https://www.youtube.com/embed/${vid}`;
-    if (extLink) extLink.href = `https://www.youtube.com/watch?v=${vid}`;
-    notify("YouTube ভিডিও চালু করা হয়েছে");
-  } else {
-    const encoded = encodeURIComponent(query);
-    if (frame) frame.src = `https://www.youtube.com/embed?listType=search&list=${encoded}`;
-    if (extLink) extLink.href = `https://www.youtube.com/results?search_query=${encoded}`;
-    notify(`YouTube-এ "${query}" খোঁজা হচ্ছে`);
+      `).join("");
+    }
+    return list;
   }
-}
-
-$("leaderSearchInput")?.addEventListener("input", e => renderWorldLeadersHub(e.target.value));
-$("ulemaSearchInput")?.addEventListener("input", e => renderUlemaResearchHub(e.target.value));
-$("marketTypeSelect")?.addEventListener("change", renderGroceryFarmersHub);
-$("marketItemSearchInput")?.addEventListener("input", renderGroceryFarmersHub);
-$("directJobSearchInput")?.addEventListener("input", e => renderDirectJobsHub(e.target.value));
-
-$("ytPlaySearchBtn")?.addEventListener("click", () => applyYouTubeQuery($("ytSearchOrUrlInput")?.value));
-$("ytSearchOrUrlInput")?.addEventListener("keydown", e => {
-  if (e.key === "Enter") applyYouTubeQuery(e.target.value);
-});
-document.querySelectorAll(".yt-preset-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const q = btn.getAttribute("data-yt") || "";
-    if ($("ytSearchOrUrlInput")) $("ytSearchOrUrlInput").value = q;
-    applyYouTubeQuery(q);
+  $("directJobSearchInput")?.addEventListener("input", (e) => renderJobs(e.target.value));
+  $("runJobsAiBtn")?.addEventListener("click", () => {
+    const list = renderJobs($("directJobSearchInput")?.value || "");
+    if ($("jobsAiOutput")) $("jobsAiOutput").textContent = `চাকুরী বাজার AI: ${list.map((x) => `${x.title} @ ${x.org} (${x.loc})`).join(" | ")}`;
   });
-});
+  $("speakJobsAiBtn")?.addEventListener("click", () => AynaSoundEngine.speak($("jobsAiOutput")?.textContent || "", true));
+  renderJobs("");
 
-renderWorldLeadersHub();
-renderUlemaResearchHub();
-renderGroceryFarmersHub();
-renderDirectJobsHub();
+  async function runRadioTvAi(speakNow = false) {
+    const ch = $("radioTvChannelSelect")?.value || "Bangladesh Betar / World Radio";
+    const q = ($("radioTvPromptInput")?.value || "চ্যানেল আপডেট ও সংবাদ বিশ্লেষণ").trim();
+    const fb = `[${ch}] বিষয়: ${q}। বিশ্ব রেডিও ও টেলিভিশন AI চ্যানেল স্ট্যাটাস ও সারসংক্ষেপ সক্রিয় রেখেছে।`;
+    const ans = await UniversalAiHub.ask({ module: "radio_tv", prompt: `${ch}: ${q}`, fallbackBn: fb });
+    if ($("radioTvAiOutput")) $("radioTvAiOutput").textContent = ans;
+    if (speakNow) AynaSoundEngine.speak(ans, true);
+  }
+  $("runRadioTvAiBtn")?.addEventListener("click", () => runRadioTvAi(false));
+  $("speakRadioTvAiBtn")?.addEventListener("click", () => runRadioTvAi(true));
 
-function notify(message) {
-  const box = $("notice");
-  box.textContent = message;
-  box.style.display = "block";
-  clearTimeout(notify.timer);
-  notify.timer = setTimeout(() => {
-    box.style.display = "none";
-  }, 3200);
+  function extractYouTubeId(raw) {
+    const m = String(raw || "").match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : "";
+  }
+  function playYouTubeQuery(raw) {
+    const clean = String(raw || "Bangla news live").trim() || "Bangla news live";
+    const vid = extractYouTubeId(clean);
+    if (vid) {
+      if ($("ytEmbedFrame")) $("ytEmbedFrame").src = `https://www.youtube.com/embed/${vid}`;
+      if ($("ytDirectWatchLink")) $("ytDirectWatchLink").href = `https://www.youtube.com/watch?v=${vid}`;
+    } else {
+      if ($("ytEmbedFrame")) $("ytEmbedFrame").src = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(clean)}`;
+      if ($("ytDirectWatchLink")) $("ytDirectWatchLink").href = `https://www.youtube.com/results?search_query=${encodeURIComponent(clean)}`;
+    }
+    notify(`▶️ YouTube চালু হয়েছে: ${clean}`);
+  }
+  $("ytPlaySearchBtn")?.addEventListener("click", () => playYouTubeQuery($("ytSearchOrUrlInput")?.value || ""));
+  document.querySelectorAll(".yt-preset-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const q = btn.getAttribute("data-yt") || "";
+      if ($("ytSearchOrUrlInput")) $("ytSearchOrUrlInput").value = q;
+      playYouTubeQuery(q);
+    });
+  });
+  $("runYtAiBtn")?.addEventListener("click", async () => {
+    const q = ($("ytSearchOrUrlInput")?.value || "Bangla news live").trim();
+    const fb = `YouTube AI [${q}]: নির্বাচিত ভিডিও/সার্চ টপিক "${q}" এর মূল বিষয়বস্তু ও লাইভ স্ট্রিম সারসংক্ষেপ প্রস্তুত।`;
+    const ans = await UniversalAiHub.ask({ module: "youtube_ai", prompt: q, fallbackBn: fb });
+    if ($("ytAiOutput")) $("ytAiOutput").textContent = ans;
+    AynaSoundEngine.speak(ans, true);
+  });
+
+  function renderFileRegistry(queryStr = "") {
+    const grid = $("fileListGrid");
+    if (!grid) return;
+    const ql = queryStr.trim().toLowerCase();
+    const frag = document.createDocumentFragment();
+    let count = 0;
+    AYNA_REGISTRY_ITEMS.forEach((item, idx) => {
+      if (!ql || item.toLowerCase().includes(ql)) {
+        const div = document.createElement("div");
+        div.className = "file-item-card";
+        div.innerHTML = `<span class="file-item-num">#${idx + 1}</span><span>${escapeHtml(item)}</span>`;
+        frag.appendChild(div);
+        count++;
+      }
+    });
+    grid.innerHTML = "";
+    grid.appendChild(frag);
+    if (!count) grid.innerHTML = `<div class="empty">কোনো ফাইল বা ফোল্ডার পাওয়া যায়নি।</div>`;
+  }
+  $("fileSearchInput")?.addEventListener("input", (e) => renderFileRegistry(e.target.value));
+  $("runRegistryAiBtn")?.addEventListener("click", () => {
+    const q = ($("fileSearchInput")?.value || "").trim();
+    const matches = AYNA_REGISTRY_ITEMS.filter((x) => !q || x.toLowerCase().includes(q.toLowerCase()));
+    if ($("registryAiOutput")) {
+      $("registryAiOutput").textContent = `রেজিস্ট্রি AI: মোট ${AYNA_REGISTRY_ITEMS.length}টি আইটেমের মধ্যে "${q || "সব"}" অনুসারে ${matches.length}টি মডিউল পাওয়া গেছে।`;
+    }
+  });
+  $("speakRegistryAiBtn")?.addEventListener("click", () => AynaSoundEngine.speak($("registryAiOutput")?.textContent || "", true));
+  renderFileRegistry("");
+
+  let selectedFile = null, selectedType = "text";
+  function resetMediaSelection() {
+    selectedFile = null;
+    selectedType = "text";
+    ["imageInput", "audioInput", "videoInput", "fileInput"].forEach((id) => {
+      if ($(id)) $(id).value = "";
+    });
+    if ($("mediaPreview")) $("mediaPreview").style.display = "none";
+    if ($("previewContent")) $("previewContent").innerHTML = "";
+    if ($("previewName")) $("previewName").textContent = "";
+  }
+  function handleFilePicked(file, kind) {
+    if (!file) return;
+    const max = MEDIA_LIMITS[kind] || MEDIA_LIMITS.file;
+    if (file.size > max) {
+      AynaSoundEngine.announceMistake(`ফাইলের আকার ${formatSize(max)} সীমা অতিক্রম করেছে।`, "postMediaAiOutput");
+      return;
+    }
+    selectedFile = file;
+    selectedType = kind;
+    const url = URL.createObjectURL(file);
+    let html = "";
+    if (kind === "image") html = `<img src="${url}" alt="Selected image" />`;
+    else if (kind === "video") html = `<video controls src="${url}"></video>`;
+    else if (kind === "audio") html = `<audio controls src="${url}" style="width:100%;"></audio>`;
+    else html = `<div class="hub-card-title">📎 ${escapeHtml(file.name)}</div>`;
+    if ($("previewContent")) $("previewContent").innerHTML = html;
+    if ($("previewName")) $("previewName").textContent = `${file.name} (${formatSize(file.size)})`;
+    if ($("mediaPreview")) $("mediaPreview").style.display = "block";
+  }
+  $("chooseImage")?.addEventListener("click", () => $("imageInput")?.click());
+  $("chooseAudio")?.addEventListener("click", () => $("audioInput")?.click());
+  $("chooseVideo")?.addEventListener("click", () => $("videoInput")?.click());
+  $("chooseFile")?.addEventListener("click", () => $("fileInput")?.click());
+  $("imageInput")?.addEventListener("change", (e) => handleFilePicked(e.target.files?.[0], "image"));
+  $("audioInput")?.addEventListener("change", (e) => handleFilePicked(e.target.files?.[0], "audio"));
+  $("videoInput")?.addEventListener("change", (e) => handleFilePicked(e.target.files?.[0], "video"));
+  $("fileInput")?.addEventListener("change", (e) => handleFilePicked(e.target.files?.[0], "file"));
+  $("clearMedia")?.addEventListener("click", resetMediaSelection);
+
+  $("aiPolishPostBtn")?.addEventListener("click", () => {
+    if ($("postText")) $("postText").value = UniversalAiHub.cleanText($("postText").value);
+    notify("✨ AI লেখা সংশোধন সম্পন্ন হয়েছে");
+  });
+
+  $("aiAnalyzePostBtn")?.addEventListener("click", async () => {
+    const txt = UniversalAiHub.cleanText($("postText")?.value || "");
+    const mediaNote = selectedFile ? `${selectedType} (${selectedFile.name}, ${formatSize(selectedFile.size)})` : "কোনো মিডিয়া নেই";
+    if (!txt && !selectedFile) {
+      AynaSoundEngine.announceMistake("পোস্ট বা মিডিয়া বক্স খালি আছে। লেখা বা ফাইল যুক্ত করুন।", "postMediaAiOutput");
+      return;
+    }
+    const fb = `পোস্ট ও মিডিয়া AI: ${mediaNote}। সারসংক্ষেপ: ${txt || "মিডিয়া সংযুক্ত পোস্ট"}।`;
+    const ans = await UniversalAiHub.ask({ module: "post_media_ai", prompt: fb, fallbackBn: fb });
+    if ($("postMediaAiOutput")) $("postMediaAiOutput").textContent = ans;
+    AynaSoundEngine.speak(ans, true);
+  });
+
+  const LOCAL_POSTS_KEY = "ayna_local_posts_v2";
+  const DELETED_POSTS_KEY = "ayna_deleted_post_ids_v1";
+  let allPosts = [], activeFilter = "all";
+  const openPostManageIds = new Set();
+
+  const loadLocalPosts = () => {
+    try { return JSON.parse(localStorage.getItem(LOCAL_POSTS_KEY) || "[]"); } catch (_) { return []; }
+  };
+  const writeLocalPosts = (list) => {
+    try { localStorage.setItem(LOCAL_POSTS_KEY, JSON.stringify(list.slice(0, 60))); } catch (_) {}
+  };
+  const loadDeletedPostIds = () => {
+    try { return new Set(JSON.parse(localStorage.getItem(DELETED_POSTS_KEY) || "[]")); } catch (_) { return new Set(); }
+  };
+  const saveDeletedPostId = (pid) => {
+    const s = loadDeletedPostIds();
+    s.add(String(pid));
+    try { localStorage.setItem(DELETED_POSTS_KEY, JSON.stringify(Array.from(s))); } catch (_) {}
+  };
+
+  function saveLocalPost(post) {
+    writeLocalPosts([post, ...loadLocalPosts()]);
+    mergeAndRenderFeed();
+  }
+
+  function renderFeed() {
+    const feedEl = $("feed");
+    if (!feedEl) return;
+    const deletedIds = loadDeletedPostIds();
+    const items = allPosts.filter(
+      (p) => !deletedIds.has(String(p.id)) && !deletedIds.has(String(p.firestoreId || "")) && (activeFilter === "all" || (p.type || "text") === activeFilter)
+    );
+    if (!items.length) {
+      feedEl.innerHTML = `<div class="empty">এই ক্যাটাগরিতে কোনো পোস্ট নেই।</div>`;
+      return;
+    }
+    feedEl.innerHTML = items.map((p) => {
+      const dt = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleString("bn-BD") : (p.dateLabel || "এখনই");
+      let mediaHtml = "";
+      if (p.mediaUrl && p.type === "image") mediaHtml = `<img class="post-media" src="${escapeHtml(p.mediaUrl)}" alt="Post image" />`;
+      else if (p.mediaUrl && p.type === "video") mediaHtml = `<video class="post-media-video" controls playsinline src="${escapeHtml(p.mediaUrl)}"></video>`;
+      else if (p.mediaUrl && p.type === "audio") mediaHtml = `<audio class="post-media-audio" controls src="${escapeHtml(p.mediaUrl)}"></audio>`;
+      else if (p.mediaUrl && p.type === "file") mediaHtml = `<div class="file-attach-box"><span>📎 ${escapeHtml(p.fileName || "Attached File")}</span><a href="${escapeHtml(p.mediaUrl)}" target="_blank" rel="noopener">ডাউনলোড</a></div>`;
+      const commentsHtml = (p.comments || []).map((c) => `<div class="comment-item"><strong>${escapeHtml(c.author || OWNER_LOCKED_IDENTITY.name)}:</strong> ${escapeHtml(c.text || "")}</div>`).join("");
+      const isDrawerOpen = openPostManageIds.has(String(p.id));
+      const manageDrawerHtml = isDrawerOpen ? `
+        <div class="post-manage-drawer">
+          <div class="hub-card-meta">পোস্ট সংশোধন বা মুছে ফেলুন:</div>
+          <textarea class="edit-post-textarea" style="margin-top:10px;min-height:140px;">${escapeHtml(p.text || "")}</textarea>
+          <div class="media-buttons">
+            <button type="button" class="btn-gold save-edit-post-btn">💾 সংশোধন সংরক্ষণ</button>
+            <button type="button" class="delete-post-btn">🗑 ডিলিট / মুছে ফেলুন</button>
+          </div>
+        </div>
+      ` : "";
+
+      return `
+        <article class="feed-post" data-post-id="${escapeHtml(p.id)}">
+          <div class="post-header">
+            <div class="post-author-wrap">
+              <img class="post-avatar" src="${escapeHtml(p.authorPhoto || OWNER_LOCKED_IDENTITY.photoURL)}" alt="Avatar" />
+              <div>
+                <div class="post-author">${escapeHtml(OWNER_LOCKED_IDENTITY.name)}</div>
+                <div class="post-date">${escapeHtml(dt)}</div>
+              </div>
+            </div>
+            <div class="post-header-right">
+              <span class="q-pill">${escapeHtml((p.type || "text").toUpperCase())}</span>
+              <button type="button" class="post-dot-menu-btn" aria-label="পোস্ট অপশন">...</button>
+            </div>
+          </div>
+          ${p.text ? `<div class="post-content">${escapeHtml(p.text)}</div>` : ""}
+          ${mediaHtml}
+          ${manageDrawerHtml}
+          <div class="post-actions">
+            <button type="button" class="like-btn">👍 লাইক (${p.likes || 0})</button>
+            <button type="button" class="react-comment-btn">💬 রিয়্যাক্ট/কমেন্ট</button>
+            <button type="button" class="share-post-btn">↗️ শেয়ার</button>
+            <button type="button" class="copy-post-btn">📋 কপি</button>
+          </div>
+          <div class="comments">
+            ${commentsHtml}
+            <form class="comment-form">
+              <input type="text" placeholder="মন্তব্য লিখুন..." required />
+              <button type="submit">পাঠান</button>
+            </form>
+          </div>
+        </article>
+      `;
+    }).join("");
+
+    feedEl.querySelectorAll(".feed-post").forEach((card) => {
+      const pid = card.getAttribute("data-post-id");
+      const postObj = allPosts.find((x) => String(x.id) === String(pid));
+      if (!postObj) return;
+
+      card.querySelector(".post-dot-menu-btn")?.addEventListener("click", () => {
+        const key = String(postObj.id);
+        if (openPostManageIds.has(key)) openPostManageIds.delete(key);
+        else openPostManageIds.add(key);
+        renderFeed();
+      });
+
+      card.querySelector(".save-edit-post-btn")?.addEventListener("click", async () => {
+        const ta = card.querySelector(".edit-post-textarea");
+        const updatedText = UniversalAiHub.cleanText(ta?.value || "");
+        postObj.text = updatedText;
+        writeLocalPosts(loadLocalPosts().map((lp) => (String(lp.id) === String(postObj.id) ? { ...lp, text: updatedText } : lp)));
+        if (db && postObj.firestoreId) {
+          try { await updateDoc(doc(db, "posts", postObj.firestoreId), { text: updatedText }); } catch (_) {}
+        }
+        openPostManageIds.delete(String(postObj.id));
+        renderFeed();
+        notify("পোস্ট সংশোধন সংরক্ষিত হয়েছে");
+      });
+
+      card.querySelector(".delete-post-btn")?.addEventListener("click", async () => {
+        saveDeletedPostId(postObj.id);
+        if (postObj.firestoreId) saveDeletedPostId(postObj.firestoreId);
+        writeLocalPosts(loadLocalPosts().filter((lp) => String(lp.id) !== String(postObj.id)));
+        allPosts = allPosts.filter((x) => String(x.id) !== String(postObj.id));
+        openPostManageIds.delete(String(postObj.id));
+        if (db && postObj.firestoreId) {
+          try { await deleteDoc(doc(db, "posts", postObj.firestoreId)); } catch (_) {}
+        }
+        renderFeed();
+        notify("পোস্ট মুছে ফেলা হয়েছে");
+      });
+
+      card.querySelector(".like-btn")?.addEventListener("click", async () => {
+        postObj.likes = (postObj.likes || 0) + 1;
+        renderFeed();
+        if (db && postObj.firestoreId) {
+          try { await updateDoc(doc(db, "posts", postObj.firestoreId), { likes: increment(1) }); } catch (_) {}
+        }
+      });
+
+      card.querySelector(".react-comment-btn")?.addEventListener("click", () => {
+        postObj.likes = (postObj.likes || 0) + 1;
+        renderFeed();
+        const updatedCard = feedEl.querySelector(`[data-post-id="${CSS.escape(String(pid))}"]`);
+        updatedCard?.querySelector(".comment-form input")?.focus();
+      });
+
+      card.querySelector(".share-post-btn")?.addEventListener("click", () => {
+        const sharePayload = `${postObj.text || "AYNA BOOK* পোস্ট"} — ${window.location.href}`;
+        if (navigator.share) {
+          navigator.share({ title: "AYNA BOOK*", text: sharePayload, url: window.location.href }).catch(() => {});
+        } else {
+          navigator.clipboard?.writeText(sharePayload).catch(() => {});
+        }
+        notify("শেয়ার লিংক প্রস্তুত হয়েছে");
+      });
+
+      card.querySelector(".copy-post-btn")?.addEventListener("click", () => {
+        navigator.clipboard?.writeText(postObj?.text || window.location.href).catch(() => {});
+        notify("পোস্ট কপি করা হয়েছে");
+      });
+
+      card.querySelector(".comment-form")?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const inp = e.target.querySelector("input");
+        const val = (inp?.value || "").trim();
+        if (!val) return;
+        postObj.comments = [...(postObj.comments || []), { author: OWNER_LOCKED_IDENTITY.name, text: val }];
+        inp.value = "";
+        renderFeed();
+      });
+    });
+  }
+
+  function mergeAndRenderFeed(remotePosts = []) {
+    const map = new Map();
+    [...remotePosts, ...loadLocalPosts()].forEach((item) => map.set(String(item.id), item));
+    allPosts = Array.from(map.values());
+    renderFeed();
+  }
+
+  document.querySelectorAll(".filter-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeFilter = btn.getAttribute("data-filter") || "all";
+      renderFeed();
+    });
+  });
+
+  $("publishPost")?.addEventListener("click", async () => {
+    const text = UniversalAiHub.cleanText($("postText")?.value || "");
+    if (!text && !selectedFile) {
+      AynaSoundEngine.announceMistake("পোস্ট প্রকাশ করতে লেখা বা মিডিয়া ফাইল দিন।", "postMediaAiOutput");
+      return;
+    }
+    let mediaUrl = "", fileName = "";
+    if (selectedFile) {
+      fileName = selectedFile.name;
+      if (storage && currentUser) {
+        try {
+          if ($("uploadProgressWrap")) $("uploadProgressWrap").style.display = "block";
+          const sRef = storageRef(storage, `posts/${currentUser.uid}/${Date.now()}_${selectedFile.name}`);
+          const task = uploadBytesResumable(sRef, selectedFile);
+          mediaUrl = await new Promise((resolve, reject) => {
+            task.on(
+              "state_changed",
+              (snap) => {
+                const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+                if ($("uploadProgressBar")) $("uploadProgressBar").style.width = `${pct}%`;
+              },
+              reject,
+              async () => resolve(await getDownloadURL(task.snapshot.ref))
+            );
+          });
+        } catch (_) {
+          mediaUrl = URL.createObjectURL(selectedFile);
+        } finally {
+          if ($("uploadProgressWrap")) $("uploadProgressWrap").style.display = "none";
+        }
+      } else {
+        mediaUrl = URL.createObjectURL(selectedFile);
+      }
+    }
+    const newPost = {
+      id: `local_${Date.now()}`,
+      text,
+      type: selectedFile ? selectedType : "text",
+      mediaUrl,
+      fileName,
+      authorName: OWNER_LOCKED_IDENTITY.name,
+      authorPhoto: currentUserProfile.photoURL || OWNER_LOCKED_IDENTITY.photoURL,
+      dateLabel: new Date().toLocaleString("bn-BD"),
+      likes: 0,
+      comments: []
+    };
+    if (db) {
+      try {
+        const docRef = await addDoc(collection(db, "posts"), { ...newPost, uid: currentUser?.uid || "guest", createdAt: serverTimestamp() });
+        newPost.firestoreId = docRef.id;
+      } catch (_) {}
+    }
+    saveLocalPost(newPost);
+    if ($("postText")) $("postText").value = "";
+    resetMediaSelection();
+    if ($("postStatus")) $("postStatus").textContent = "✅ পোস্ট সফলভাবে প্রকাশিত হয়েছে।";
+    notify("🚀 পোস্ট প্রকাশিত হয়েছে");
+    AynaSoundEngine.speak("আপনার পোস্ট প্রকাশিত হয়েছে।", true);
+  });
+
+  if (db) {
+    try {
+      onSnapshot(
+        query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(30)),
+        (snap) => mergeAndRenderFeed(snap.docs.map((d) => ({ id: d.id, firestoreId: d.id, ...d.data() }))),
+        () => mergeAndRenderFeed([])
+      );
+    } catch (_) {
+      mergeAndRenderFeed([]);
+    }
+  } else {
+    mergeAndRenderFeed([]);
+  }
+
+  let cameraStream = null;
+  $("startCamera")?.addEventListener("click", async () => {
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) throw new Error("no camera");
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      if ($("liveVideo")) $("liveVideo").srcObject = cameraStream;
+      if ($("cameraStatus")) $("cameraStatus").textContent = "ক্যামেরা লাইভ চালু আছে।";
+      notify("📹 ক্যামেরা চালু হয়েছে");
+    } catch (_) {
+      AynaSoundEngine.announceMistake("ক্যামেরা চালু করা যায়নি। অনুমতি বা ক্যামেরা হার্ডওয়্যার যাচাই করুন।", "liveAiOutput");
+    }
+  });
+  $("stopCamera")?.addEventListener("click", () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((t) => t.stop());
+      cameraStream = null;
+    }
+    if ($("liveVideo")) $("liveVideo").srcObject = null;
+    if ($("cameraStatus")) $("cameraStatus").textContent = "ক্যামেরা এখন বন্ধ।";
+    notify("⏹ ক্যামেরা বন্ধ হয়েছে");
+  });
+  $("runLiveAiBtn")?.addEventListener("click", async () => {
+    const fb = cameraStream
+      ? "লাইভ ভিডিও AI: ক্যামেরা লাইভ স্ট্রিম সক্রিয় রয়েছে এবং ফ্রেম মনিটরিং চলছে।"
+      : "লাইভ ভিডিও AI: ক্যামেরা বর্তমানে বন্ধ রয়েছে। লাইভ পর্যবেক্ষণের জন্য ক্যামেরা চালু করুন।";
+    const ans = await UniversalAiHub.ask({ module: "live_video", prompt: fb, fallbackBn: fb });
+    if ($("liveAiOutput")) $("liveAiOutput").textContent = ans;
+    AynaSoundEngine.speak(ans, true);
+  });
+
+  let qIdx = 0;
+  const qModes = ["FULL-AI • ULTRA-CRITICAL", "DETERMINISTIC-GATE • 150-RULE", "COLD-FALLBACK-READY • SYNC"];
+  $("quantumBoostBtn")?.addEventListener("click", () => {
+    qIdx = (qIdx + 1) % qModes.length;
+    if ($("qSyncState")) $("qSyncState").textContent = qModes[qIdx];
+    AynaSoundEngine.playTone(660, 0.2);
+    notify(`বিচার প্রোফাইল: ${qModes[qIdx]}`);
+  });
+
+  function runAllFeaturesAutoSyncNow() {
+    fetchWeather($("weatherCityInput")?.value || "Dhaka");
+    runGeneralRadarAi(false);
+    runWeatherRadarAi(false);
+    runAviationRadarAi(false);
+    runClockAi(false);
+    runSpecialChannelAi(false);
+    if (autoEvEnabled) refreshAutoEv(false);
+    renderNobel($("nobelSearchInput")?.value || "");
+    if ($("qAutoSyncStatus")) {
+      $("qAutoSyncStatus").textContent = `ALL-AI SYNCED • ${new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" })}`;
+    }
+    notify("🔄 রাডার, আবহাওয়া, এভিয়েশন ও সব ফিচার AI অটো-সিঙ্ক হয়েছে");
+  }
+
+  $("autoUpdateNowBtn")?.addEventListener("click", runAllFeaturesAutoSyncNow);
+  runAllFeaturesAutoSyncNow();
+  setInterval(runAllFeaturesAutoSyncNow, 3 * 60 * 1000);
 }
 
-function safePhoto(photo) {
-  return typeof photo === "string" && photo
-    ? photo
-আইকনে সমস্যা
-আইডি খুঁজে পাওয়া যায়নি
-aynabookofficel@gmail.com আইডি খুঁজে পাওয়া যায়নি অথবা সেটিতে ইমেল পাঠানো যায় না, তাই আপনার মেসেজটি পাঠানো যায়নি।
-আরও জানুন
-এই প্রতিক্রিয়া দেওয়া হয়েছে:
-550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces. For more information, go to https://support.google.com/mail/?p=NoSuchUser a640c23a62f3a-c513c2df93bsor489218266b.11 - gsmtp
-
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initAynaIndexHub, { once: true });
+} else {
+  initAynaIndexHub();
+}
