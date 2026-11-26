@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -23,6 +22,7 @@
   --muted:#e6eeff;
   --green:#16c784;
   --border:#ffe64d;
+  --ui-scale:1.0;
 }
 
 * {
@@ -43,7 +43,7 @@ body {
     var(--bg);
   color:var(--white);
   font-family:Arial,"Noto Sans Bengali",sans-serif;
-  font-size:36px;
+  font-size:calc(36px * var(--ui-scale));
   line-height:1.5;
 }
 
@@ -306,6 +306,10 @@ header {
   will-change:transform;
 }
 
+.focused-feature-highlight {
+  outline:4px solid var(--quantum-cyan) !important;
+}
+
 .feature-icon {
   font-size:86px;
   margin-bottom:16px;
@@ -357,7 +361,8 @@ header {
   margin:0;
 }
 
-.panel-link-btn {
+.panel-link-btn,
+.btn-gold {
   text-decoration:none;
   background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
   color:#050a18;
@@ -508,7 +513,8 @@ header {
   line-height:1.55;
 }
 
-.post-textarea {
+.post-textarea,
+.edit-post-textarea {
   width:100%;
   min-height:200px;
   resize:vertical;
@@ -649,6 +655,60 @@ input:focus {
   flex-wrap:wrap;
 }
 
+.post-header-right {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.post-dot-menu-btn {
+  background:#0a1636;
+  color:var(--gold-bright);
+  border:2.5px solid var(--gold);
+  border-radius:8px;
+  padding:6px 14px;
+  font-size:30px;
+  font-weight:1000;
+}
+
+.post-manage-drawer {
+  margin-top:16px;
+  padding:16px;
+  background:#050b1c;
+  border:2.5px solid var(--quantum-cyan);
+  border-radius:8px;
+}
+
+.delete-post-btn {
+  background:#661024;
+  color:#ffffff;
+  border:2.5px solid #ff6b8b;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+.bookmark-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 16px;
+  margin-top:10px;
+  background:#050b1c;
+  border:2px solid var(--gold);
+  border-radius:8px;
+  font-size:28px;
+}
+
+.bookmark-row button {
+  background:#0a1636;
+  color:#fff6b3;
+  border:2px solid var(--gold);
+  border-radius:6px;
+  padding:8px 14px;
+  font-size:24px;
+}
+
 .post-author-wrap {
   display:flex;
   align-items:center;
@@ -698,7 +758,8 @@ input:focus {
   color:var(--white);
 }
 
-.post-media {
+.post-media,
+.post-media-video {
   width:100%;
   max-height:780px;
   object-fit:contain;
@@ -842,6 +903,7 @@ input:focus {
   color:var(--muted);
   margin-top:14px;
   overflow-wrap:anywhere;
+  white-space:pre-line;
 }
 
 .file-search-input {
@@ -989,13 +1051,15 @@ footer {
 <header>
   <div class="header-inner">
     <div class="logo">
-      AYNA BOOK <span class="star-1s">★</span>
+      <span id="stylishTopOwnerName">AYNA BOOK</span> <span class="star-1s">★</span>
       <span class="quantum-badge">⚛ QUANTUM SUPER-SPEED</span>
     </div>
 
     <div class="header-actions">
       <button type="button" id="quantumBoostBtn">⚡ Quantum Boost</button>
       <button type="button" id="autoUpdateNowBtn">🔄 Auto Sync</button>
+      <button type="button" id="headerSpeakClockBtn">🕒 সময়</button>
+      <button type="button" id="headerToggleClockBtn">🔊 ঘড়ি: চালু</button>
       <a href="notifications.html">🔔</a>
       <a href="messenger.html">💬 Messenger</a>
     </div>
@@ -1040,20 +1104,287 @@ footer {
       </div>
     </div>
     <div class="media-buttons">
-      <button type="button" id="toggleTalkClockBtn">🔊 ১ ঘণ্টা পর পর অটো সময়: চালু</button>
+      <button type="button" id="toggleTalkClockBtn">🔊 সময় বলা: চালু (খোলা)</button>
       <button type="button" id="speakNowClockBtn">🎙️ এখনই সময় বলুন</button>
+      <button type="button" id="openTalkClockBtn">▶ অটো সময় চালু</button>
+      <button type="button" id="closeTalkClockBtn">⏹ অটো সময় বন্ধ</button>
+      <button type="button" id="runClockAiBtn">🤖 ঘড়ি AI বিশ্লেষণ</button>
+      <button type="button" id="speakClockAiBtn">🗣️ ঘড়ি AI ভয়েস</button>
     </div>
+    <div class="status" id="clockAiOutput"></div>
   </section>
 
+  <!-- প্রোফাইল, ৯০-দিনের নীতি, QR/বারকোড ও AI -->
   <section class="profile-bar">
     <img id="myPhoto" alt="Profile photo">
     <div class="profile-info">
       <strong id="myName">লোড হচ্ছে...</strong>
       <small id="myEmail">আপনার AYNA BOOK অ্যাকাউন্ট</small>
+      <small id="myPhone"></small>
+      <small id="myAynaId"></small>
+      <div style="margin-top:12px;">
+        <svg id="aynaProfileBarcode"></svg>
+        <canvas id="aynaQrCanvas" width="120" height="120" style="background:#fff;border-radius:6px;vertical-align:middle;"></canvas>
+        <div class="status" id="qrCaptionText"></div>
+      </div>
     </div>
     <a href="profile.html" style="color:#fff6b3;text-decoration:none;font-weight:bold;font-size:34px;">
       প্রোফাইল
     </a>
+  </section>
+
+  <section class="panel" id="account90DayPanel">
+    <h2>🛡️ ৯০-দিনের পরিচিতি নীতি, রং ও সাউন্ড/AI নিয়ন্ত্রণ</h2>
+    <div class="hub-controls-row">
+      <select id="screenThemeColorSelect" class="hub-select">
+        <option value="ROYAL_GOLD_NAVY">রয়্যাল নেভি ও গোল্ড</option>
+        <option value="QUANTUM_EMERALD">কোয়ান্টাম এমেরাল্ড</option>
+        <option value="SOLAR_CRIMSON">সোলার ক্রিমনস</option>
+        <option value="ARCTIC_CYAN">আর্কটিক সায়ান</option>
+      </select>
+      <input type="text" id="mutableIdentityInput" class="hub-search-input" placeholder="৯০-দিনের পরিচিতি নোট...">
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="save90DayAccountSettingsBtn">💾 ৯০-দিনের সেটিংস সংরক্ষণ</button>
+      <button type="button" id="requestImmutableChangeBtn">🔒 স্থায়ী তথ্য পরিবর্তনের অনুরোধ</button>
+      <button type="button" id="runProfileAiBtn">🤖 প্রোফাইল AI</button>
+      <button type="button" id="speakProfileAiBtn">🗣️ প্রোফাইল AI ভয়েস</button>
+    </div>
+    <div class="hub-controls-row" style="margin-top:16px;">
+      <select id="audioPresetSelect" class="hub-select">
+        <option value="STUDIO_MASTER">STUDIO_MASTER</option>
+        <option value="CINEMA_THEATER">CINEMA_THEATER</option>
+        <option value="VOICE_BROADCAST">VOICE_BROADCAST</option>
+      </select>
+      <button type="button" id="applyAudioPresetBtn" class="tool-button">🎚️ সাউন্ড প্রোফাইল প্রয়োগ</button>
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="playWorldUhdSoundBtn">🎼 UHD সাউন্ড চালু</button>
+      <button type="button" id="stopWorldUhdSoundBtn">⏹ UHD সাউন্ড বন্ধ</button>
+      <button type="button" id="exportUhdWavBtn">💾 48kHz WAV তৈরি</button>
+    </div>
+    <div id="uhdSoundPlayerWrap"></div>
+    <div class="status" id="account90DayStatusOutput"></div>
+    <div class="status" id="uhdSoundEngineStatus"></div>
+    <div class="status" id="profileAiOutput"></div>
+
+    <div class="yt-input-row" style="margin-top:18px;">
+      <input type="text" id="universalAiInput" class="hub-search-input" style="margin:0;" placeholder="সার্বজনীন AI প্রশ্ন লিখুন...">
+      <button type="button" id="runUniversalAiBtn" class="yt-go-btn">🤖 সার্বজনীন AI</button>
+    </div>
+    <div class="status" id="universalAiOutput"></div>
+  </section>
+
+  <!-- রেজিস্ট্রেশন ও অ্যাকাউন্ট লুকআপ সিগন্যাল -->
+  <section class="panel" id="accountSignalPanel">
+    <h2>🔎 রেজিস্ট্রেশন ও অ্যাকাউন্ট লুকআপ যাচাই</h2>
+    <div class="hub-controls-row">
+      <input type="text" id="regFullNameInput" class="hub-search-input" placeholder="পূর্ণ নাম">
+      <input type="email" id="regEmailInput" class="hub-search-input" placeholder="ইমেইল ঠিকানা">
+      <input type="password" id="regPasswordInput" class="hub-search-input" placeholder="পাসওয়ার্ড (অন্তত ৬ অক্ষর)">
+      <input type="text" id="accountLookupQueryInput" class="hub-search-input" placeholder="AYNA ID বা ইমেইল দিয়ে খুঁজুন">
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="validateRegisterVoiceBtn">✅ রেজিস্ট্রেশন তথ্য যাচাই</button>
+      <button type="button" id="runAccountLookupVoiceBtn">🔍 অ্যাকাউন্ট লুকআপ</button>
+    </div>
+    <div class="status" id="accountSignalOutput"></div>
+  </section>
+
+  <!-- মেসেঞ্জার UHD কল, স্কেল ও ১৫০ এলার্ট -->
+  <section class="panel" id="messengerQuantumPanel">
+    <h2>💬 AYNA Messenger UHD কল, স্ক্রিন ও ১৫০ এলার্ট</h2>
+    <div class="hub-controls-row">
+      <input type="text" id="messengerRecipientInput" class="hub-search-input" placeholder="প্রাপকের নাম বা ID">
+      <input type="text" id="messengerDraftInput" class="hub-search-input" placeholder="খসড়া বার্তা লিখুন...">
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="startUhdAudioCallBtn">🎙️ UHD অডিও কল</button>
+      <button type="button" id="startUhdVideoCallBtn">📹 UHD ভিডিও কল</button>
+      <button type="button" id="runMessengerAiBtn">🤖 মেসেঞ্জার AI</button>
+      <button type="button" id="cycleMessengerColorBtn">🎨 স্ক্রিন রং বদলান</button>
+      <button type="button" id="fontSizeUpBtn">🔎 লেখা বড় করুন</button>
+      <button type="button" id="fontSizeDownBtn">🔎 লেখা ছোট করুন</button>
+    </div>
+    <div class="status" id="messengerCallAiOutput"></div>
+
+    <div class="hub-controls-row" style="margin-top:20px;">
+      <input type="text" id="alert150ReasonInput" class="hub-search-input" placeholder="১৫০ এলার্টের কারণ">
+      <input type="number" id="alert150CountInput" class="hub-search-input" value="150" placeholder="কাউন্ট">
+    </div>
+    <div class="status" id="alert150Status"></div>
+    <div class="media-buttons">
+      <button type="button" id="toggleRealAlert150Btn">🟢 ১৫০ রিয়েল এলার্ট: চালু</button>
+      <button type="button" id="fire150AlertBtn">🚨 ১৫০ এলার্ট ট্রিগার</button>
+      <button type="button" id="toggle150TimerBtn">⏱ 150s অটো কাউন্টডাউন: বন্ধ</button>
+    </div>
+    <div class="status" id="alert150Output"></div>
+  </section>
+
+  <!-- রাডার, আবহাওয়া, এভিয়েশন, কম্পাস ও বুকমার্ক -->
+  <section class="panel" id="radarHubPanel">
+    <h2>📡 রাডার, আবহাওয়া, বিমান রাডার, কম্পাস ও বুকমার্ক</h2>
+    <div class="hub-controls-row">
+      <select id="radarRangeSelect" class="hub-select">
+        <option value="100">রেঞ্জ: 100 km</option>
+        <option value="250">রেঞ্জ: 250 km</option>
+        <option value="500">রেঞ্জ: 500 km</option>
+      </select>
+      <input type="number" id="compassAzimuthInput" class="hub-search-input" value="45" placeholder="কম্পাস আজিমুথ (°)">
+    </div>
+    <div class="hub-cards-grid">
+      <div class="hub-card">
+        <canvas id="generalRadarCanvas" width="240" height="240"></canvas>
+        <div class="status" id="generalRadarReadout"></div>
+        <div class="media-buttons">
+          <button type="button" id="runGeneralRadarAiBtn">🤖 রাডার AI</button>
+          <button type="button" id="speakGeneralRadarAiBtn">🗣️ ভয়েস</button>
+        </div>
+        <div class="status" id="radarAiOutput"></div>
+      </div>
+      <div class="hub-card">
+        <canvas id="weatherRadarCanvas" width="240" height="240"></canvas>
+        <div class="status" id="weatherRadarReadout"></div>
+        <div class="media-buttons">
+          <button type="button" id="runWeatherRadarAiBtn">🤖 আবহাওয়া রাডার AI</button>
+          <button type="button" id="speakWeatherRadarAiBtn">🗣️ ভয়েস</button>
+        </div>
+        <div class="status" id="weatherRadarAiOutput"></div>
+      </div>
+      <div class="hub-card">
+        <canvas id="aviationRadarCanvas" width="240" height="240"></canvas>
+        <div class="status" id="aviationRadarReadout"></div>
+        <div class="media-buttons">
+          <button type="button" id="runAviationRadarAiBtn">🤖 বিমান রাডার AI</button>
+          <button type="button" id="speakAviationRadarAiBtn">🗣️ ভয়েস</button>
+        </div>
+        <div class="status" id="aviationRadarAiOutput"></div>
+      </div>
+      <div class="hub-card">
+        <div class="hub-card-title">🌡️ আবহাওয়া ও 🧭 কম্পাস</div>
+        <div class="yt-input-row">
+          <input type="text" id="weatherCityInput" class="hub-search-input" style="margin:0;" value="Dhaka" placeholder="শহরের নাম">
+          <button type="button" id="fetchWeatherBtn" class="yt-go-btn">আবহাওয়া</button>
+        </div>
+        <div class="status" id="weatherOutput"></div>
+        <div class="media-buttons">
+          <button type="button" id="startDeviceCompassBtn">🧭 লাইভ কম্পাস</button>
+          <button type="button" id="runAllRadarsAiBtn">📡 সব রাডার AI</button>
+        </div>
+        <div class="status" id="radarCompassOutput"></div>
+      </div>
+    </div>
+
+    <div class="yt-input-row" style="margin-top:20px;">
+      <input type="text" id="bookmarkTitleInput" class="hub-search-input" style="margin:0;" placeholder="বুকমার্ক শিরোনাম বা লিংক...">
+      <button type="button" id="saveBookmarkBtn" class="yt-go-btn">🔖 সংরক্ষণ</button>
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="runBookmarkAiBtn">🤖 বুকমার্ক AI</button>
+      <button type="button" id="speakBookmarkAiBtn">🗣️ বুকমার্ক AI ভয়েস</button>
+    </div>
+    <div class="status" id="bookmarkAiOutput"></div>
+    <div id="bookmarksList"></div>
+  </section>
+
+  <!-- স্পেশাল চ্যানেল, বাণিজ্য, বিশ্ব তথ্য, নোবেল, EV ও ডিভাইস AI -->
+  <section class="panel" id="specialChannelsPanel">
+    <h2>🌐 ডিসকভারি, জিওগ্রাফি ও বাচ্চাদের খেলাধুলা</h2>
+    <div class="hub-controls-row">
+      <select id="specialChannelSelect" class="hub-select">
+        <option value="discovery">ডিসকভারি</option>
+        <option value="geography">জিওগ্রাফি</option>
+        <option value="kids_sports">বাচ্চাদের খেলাধুলা</option>
+        <option value="all">সব চ্যানেল</option>
+      </select>
+      <input type="search" id="specialChannelSearchInput" class="hub-search-input" placeholder="চ্যানেল বা বিষয় খুঁজুন...">
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="runSpecialChannelAiBtn">🤖 চ্যানেল AI</button>
+      <button type="button" id="speakSpecialChannelAiBtn">🗣️ চ্যানেল AI ভয়েস</button>
+    </div>
+    <div class="status" id="specialChannelAiOutput"></div>
+    <div class="hub-cards-grid" id="specialChannelCardsGrid"></div>
+  </section>
+
+  <section class="panel" id="tradeWorldPanel">
+    <h2>📦 বাণিজ্য, বিশ্ব পরিসংখ্যান, নোবেল ও EV/ডিভাইস AI</h2>
+    <div class="hub-controls-row">
+      <select id="tradeCommoditySelect" class="hub-select"></select>
+      <input type="number" id="tradeQtyInput" class="hub-search-input" value="1" min="0.1" step="0.1" placeholder="পরিমাণ">
+      <input type="text" id="tradeCounterpartyInput" class="hub-search-input" placeholder="পার্টনার বা প্রতিষ্ঠানের নাম">
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="analyzeTradeAiBtn">🤖 বাণিজ্য AI</button>
+      <button type="button" id="sendTradeToPostBtn">📝 পোস্টে পাঠান</button>
+    </div>
+    <div class="status" id="tradeAiOutput"></div>
+    <div class="hub-cards-grid" id="tradePriceListGrid"></div>
+
+    <div class="hub-controls-row" style="margin-top:20px;">
+      <input type="search" id="worldStatsSearchInput" class="hub-search-input" placeholder="দেশ খুঁজুন...">
+      <select id="worldStatsCountrySelect" class="hub-select"></select>
+    </div>
+    <button type="button" id="analyzeWorldStatsAiBtn" class="tool-button" style="width:100%;">🌍 বিশ্ব পরিসংখ্যান AI</button>
+    <div class="status" id="worldStatsAiOutput"></div>
+    <div class="hub-cards-grid" id="worldStatsCardsGrid"></div>
+
+    <div class="hub-controls-row" style="margin-top:20px;">
+      <input type="search" id="nobelSearchInput" class="hub-search-input" placeholder="নোবেল বা মনীষী খুঁজুন...">
+      <select id="nobelSelect" class="hub-select"></select>
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="toggleAutoNobelBtn">⏱ মনীষী অটো-আপডেট: চালু</button>
+      <button type="button" id="refreshNobelAiBtn">🏅 নোবেল AI আপডেট</button>
+    </div>
+    <div class="status" id="nobelAiOutput"></div>
+    <div class="hub-cards-grid" id="nobelCardsGrid"></div>
+
+    <div class="hub-controls-row" style="margin-top:20px;">
+      <select id="autoEvTopicSelect" class="hub-select">
+        <option value="Global EV & Hybrid">Global EV &amp; Hybrid</option>
+        <option value="Battery & Fast Charging">Battery &amp; Fast Charging</option>
+        <option value="AI & Autonomous Auto">AI &amp; Autonomous Auto</option>
+      </select>
+      <select id="deviceAiModeSelect" class="hub-select">
+        <option value="HYBRID_FAST">HYBRID_FAST</option>
+        <option value="DEEP_AUDIT">DEEP_AUDIT</option>
+      </select>
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="refreshAutoEvBtn">⚡ EV আপডেট</button>
+      <button type="button" id="speakAutoEvBtn">🗣️ EV ভয়েস</button>
+      <button type="button" id="toggleAutoEvBtn">⏱ অটো-আপডেট: চালু</button>
+    </div>
+    <div class="status" id="autoEvOutput"></div>
+
+    <div class="yt-input-row" style="margin-top:16px;">
+      <input type="text" id="deviceAiPromptInput" class="hub-search-input" style="margin:0;" placeholder="ডিভাইস AI প্রশ্ন...">
+      <button type="button" id="runDeviceAiBtn" class="yt-go-btn">🖥️ ডিভাইস AI</button>
+    </div>
+    <div class="status" id="deviceAiOutput"></div>
+
+    <div class="hub-controls-row" style="margin-top:16px;">
+      <select id="radioTvChannelSelect" class="hub-select">
+        <option value="Bangladesh Betar / World Radio">Bangladesh Betar / World Radio</option>
+        <option value="World News TV Live">World News TV Live</option>
+      </select>
+      <input type="text" id="radioTvPromptInput" class="hub-search-input" placeholder="রেডিও/টিভি প্রশ্ন...">
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="runRadioTvAiBtn">📺 রেডিও/টিভি AI</button>
+      <button type="button" id="speakRadioTvAiBtn">🗣️ ভয়েস</button>
+    </div>
+    <div class="status" id="radioTvAiOutput"></div>
+
+    <div class="media-buttons" style="margin-top:16px;">
+      <button type="button" id="startVoiceRecBtn">🎙️ ভয়েস রেকর্ড শুরু</button>
+      <button type="button" id="stopVoiceRecBtn">⏹ রেকর্ড বন্ধ</button>
+      <button type="button" id="runVoiceAiBtn">🤖 ভয়েস AI</button>
+      <button type="button" id="speakVoiceAiBtn">🗣️ ভয়েস AI বলুন</button>
+    </div>
+    <div id="voiceRecAudioWrap"></div>
+    <div class="status" id="voiceAiOutput"></div>
   </section>
 
   <h2 class="section-title">🌍 AYNA BOOK MAIN FEATURES (২ সারি — ৮টি)</h2>
@@ -1116,121 +1447,101 @@ footer {
       <span class="feature-name">বিশ্বনেতা</span>
       <span class="feature-desc">আন্তর্জাতিক নেতৃত্ব ও তথ্য</span>
     </a>
-
     <a class="feature-card" href="world-grocery.html">
       <span class="feature-icon">🛒</span>
       <span class="feature-name">বিশ্ব মুদির দোকান</span>
       <span class="feature-desc">দৈনিক মূল্য অটো আপডেট</span>
     </a>
-
     <a class="feature-card" href="world-farmers.html">
       <span class="feature-icon">🌾</span>
       <span class="feature-name">বিশ্ব কৃষক</span>
       <span class="feature-desc">কৃষি তথ্য, ফসল ও বাজার দর</span>
     </a>
-
     <a class="feature-card" href="poultry-farmers.html">
       <span class="feature-icon">🐔</span>
       <span class="feature-name">পোলোট্রি কৃষক ও ব্যবসায়ী</span>
       <span class="feature-desc">মুরগি, ডিম, ফিড ও বাজার দর</span>
     </a>
-
     <a class="feature-card" href="price-list.html">
       <span class="feature-icon">📊</span>
       <span class="feature-name">দৈনিক মূল্যতালিকা</span>
       <span class="feature-desc">মুদি, কৃষি ও পোলোট্রি অটো-সিঙ্ক</span>
     </a>
-
     <a class="feature-card" href="world-market.html">
       <span class="feature-icon">🌍</span>
       <span class="feature-name">দৈনিক বিশ্ব বাজার</span>
       <span class="feature-desc">আন্তর্জাতিক ও দেশীয় বাজার দর</span>
     </a>
-
     <a class="feature-card" href="world-officials.html">
       <span class="feature-icon">🏛️</span>
       <span class="feature-name">এমপি, মন্ত্রী ও কর্মকর্তা</span>
       <span class="feature-desc">বিশ্ব প্রশাসন ও জনপ্রতিনিধি</span>
     </a>
-
     <a class="feature-card" href="air-rail-transport.html">
       <span class="feature-icon">✈️</span>
       <span class="feature-name">বিমান ও রেল পরিবহণ</span>
       <span class="feature-desc">ফোন, জিমেইল ও টিকেট মূল্যতালিকা</span>
     </a>
-
     <a class="feature-card" href="world-air-rail.html">
       <span class="feature-icon">🚆</span>
       <span class="feature-name">বিশ্ব বিমান ও রেল</span>
       <span class="feature-desc">আন্তর্জাতিক পরিবহণ ও টিকেট দর</span>
     </a>
-
     <a class="feature-card" href="world-garments.html">
       <span class="feature-icon">👕</span>
       <span class="feature-name">বিশ্ব গার্মেন্টস</span>
       <span class="feature-desc">মালিক, শ্রমিক ও পোশাক শিল্প</span>
     </a>
-
     <a class="feature-card" href="world-jobs.html">
       <span class="feature-icon">💼</span>
       <span class="feature-name">চাকুরী বাজার</span>
       <span class="feature-desc">সরকারি, বেসরকারি ও আন্তর্জাতিক</span>
     </a>
-
     <a class="feature-card" href="world-ngo-rights.html">
       <span class="feature-icon">🕊️</span>
       <span class="feature-name">UN, NGO ও মানবাধিকার</span>
       <span class="feature-desc">নাম, ফোন ও জিমেইল ডিরেক্টরি</span>
     </a>
-
     <a class="feature-card" href="military-radar.html">
       <span class="feature-icon">🎯</span>
       <span class="feature-name">মিলিটারি রাডার</span>
       <span class="feature-desc">তথ্যভিত্তিক রাডার</span>
     </a>
-
     <a class="feature-card" href="clock.html">
       <span class="feature-icon">🕒</span>
       <span class="feature-name">বিশ্ব ঘড়ি</span>
       <span class="feature-desc">সময় ও অ্যালার্ম</span>
     </a>
-
     <a class="feature-card" href="calendar.html">
       <span class="feature-icon">📅</span>
       <span class="feature-name">বিশ্ব ক্যালেন্ডার</span>
       <span class="feature-desc">তারিখ ও দিন</span>
     </a>
-
     <a class="feature-card" href="arabic-calendar.html">
       <span class="feature-icon">🌙</span>
       <span class="feature-name">আরবি ক্যালেন্ডার</span>
       <span class="feature-desc">হিজরি তারিখ</span>
     </a>
-
     <a class="feature-card" href="world-holidays.html">
       <span class="feature-icon">🎉</span>
       <span class="feature-name">বিশ্বের সরকারি ছুটি</span>
       <span class="feature-desc">ছুটির তালিকা</span>
     </a>
-
     <a class="feature-card" href="us-alerts.html">
       <span class="feature-icon">🚨</span>
       <span class="feature-name">জরুরি এলার্ট</span>
       <span class="feature-desc">এলার্ট তথ্য</span>
     </a>
-
     <a class="feature-card" href="prayer.html">
       <span class="feature-icon">🕌</span>
       <span class="feature-name">নামাজের সময়</span>
       <span class="feature-desc">প্রার্থনার সময়সূচি</span>
     </a>
-
     <a class="feature-card" href="quantum.html">
       <span class="feature-icon">⚛️</span>
       <span class="feature-name">কোয়ান্টাম হাব</span>
       <span class="feature-desc">কোয়ান্টাম সিস্টেম</span>
     </a>
-
     <a class="feature-card" href="supercomputer.html">
       <span class="feature-icon">🖥️</span>
       <span class="feature-name">সুপারকম্পিউটার</span>
@@ -1244,12 +1555,12 @@ footer {
       <h2>🌍 রাষ্ট্রনেতাদের নাম তালিকা</h2>
       <a href="world-leaders.html" class="panel-link-btn">সব রাষ্ট্রনেতা পেজ</a>
     </div>
-    <input
-      type="search"
-      id="leaderSearchInput"
-      class="hub-search-input"
-      placeholder="রাষ্ট্রনেতা বা দেশের নাম দিয়ে খুঁজুন..."
-    >
+    <input type="search" id="leaderSearchInput" class="hub-search-input" placeholder="রাষ্ট্রনেতা বা দেশের নাম দিয়ে খুঁজুন...">
+    <div class="media-buttons">
+      <button type="button" id="runLeadersAiBtn">🤖 রাষ্ট্রনেতা AI</button>
+      <button type="button" id="speakLeadersAiBtn">🗣️ ভয়েস</button>
+    </div>
+    <div class="status" id="worldLeadersAiOutput"></div>
     <div class="hub-cards-grid" id="worldLeadersGrid"></div>
   </section>
 
@@ -1259,12 +1570,12 @@ footer {
       <h2>🕌 বিশ্ব আলেম গবেষণাগার</h2>
       <a href="ulema-research.html" class="panel-link-btn">গবেষণাগার পেজ</a>
     </div>
-    <input
-      type="search"
-      id="ulemaSearchInput"
-      class="hub-search-input"
-      placeholder="গবেষণার বিষয় বা বিভাগ খুঁজুন..."
-    >
+    <input type="search" id="ulemaSearchInput" class="hub-search-input" placeholder="গবেষণার বিষয় বা বিভাগ খুঁজুন...">
+    <div class="media-buttons">
+      <button type="button" id="runUlemaAiBtn">🤖 গবেষণাগার AI</button>
+      <button type="button" id="speakUlemaAiBtn">🗣️ ভয়েস</button>
+    </div>
+    <div class="status" id="ulemaAiOutput"></div>
     <div class="hub-cards-grid" id="ulemaResearchGrid"></div>
   </section>
 
@@ -1283,13 +1594,13 @@ footer {
         <option value="grocery">শুধু মুদি বাজার</option>
         <option value="farmer">শুধু বিশ্ব কৃষক</option>
       </select>
-      <input
-        type="search"
-        id="marketItemSearchInput"
-        class="hub-search-input"
-        placeholder="চাল, ডাল, তেল, আলু, গম, মসলা খুঁজুন..."
-      >
+      <input type="search" id="marketItemSearchInput" class="hub-search-input" placeholder="চাল, ডাল, তেল, আলু, গম, মসলা খুঁজুন...">
     </div>
+    <div class="media-buttons">
+      <button type="button" id="runMarketAiBtn">🤖 বাজার AI</button>
+      <button type="button" id="speakMarketAiBtn">🗣️ ভয়েস</button>
+    </div>
+    <div class="status" id="marketAiOutput"></div>
     <div class="hub-cards-grid" id="groceryFarmersGrid"></div>
   </section>
 
@@ -1299,12 +1610,12 @@ footer {
       <h2>💼 বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন</h2>
       <a href="world-jobs.html" class="panel-link-btn">চাকুরী বাজার পেজ</a>
     </div>
-    <input
-      type="search"
-      id="directJobSearchInput"
-      class="hub-search-input"
-      placeholder="পদবী, কোম্পানি বা লোকেশন দিয়ে চাকুরীর বিজ্ঞাপন খুঁজুন..."
-    >
+    <input type="search" id="directJobSearchInput" class="hub-search-input" placeholder="পদবী, কোম্পানি বা লোকেশন দিয়ে চাকুরীর বিজ্ঞাপন খুঁজুন...">
+    <div class="media-buttons">
+      <button type="button" id="runJobsAiBtn">🤖 চাকুরী AI</button>
+      <button type="button" id="speakJobsAiBtn">🗣️ ভয়েস</button>
+    </div>
+    <div class="status" id="jobsAiOutput"></div>
     <div class="hub-cards-grid" id="directJobsGrid"></div>
   </section>
 
@@ -1312,13 +1623,7 @@ footer {
   <section class="panel" id="youtubeHubSection">
     <h2>▶️ AYNA YOUTUBE HUB</h2>
     <div class="yt-input-row">
-      <input
-        type="text"
-        id="ytSearchOrUrlInput"
-        class="hub-search-input"
-        style="margin:0;"
-        placeholder="YouTube ভিডিও লিংক/ID দিন অথবা টপিক লিখে সার্চ করুন..."
-      >
+      <input type="text" id="ytSearchOrUrlInput" class="hub-search-input" style="margin:0;" placeholder="YouTube ভিডিও লিংক/ID দিন অথবা টপিক লিখে সার্চ করুন...">
       <button type="button" id="ytPlaySearchBtn" class="yt-go-btn">চালান / খুঁজুন</button>
     </div>
     <div class="yt-preset-row">
@@ -1327,7 +1632,9 @@ footer {
       <button type="button" class="yt-preset-btn" data-yt="Islamic lecture Bangla">ইসলামি আলোচনা</button>
       <button type="button" class="yt-preset-btn" data-yt="Global agriculture farming">বিশ্ব কৃষি</button>
       <button type="button" class="yt-preset-btn" data-yt="Global job market career">বিশ্ব চাকুরী</button>
+      <button type="button" id="runYtAiBtn" class="yt-preset-btn">🤖 YouTube AI</button>
     </div>
+    <div class="status" id="ytAiOutput"></div>
     <iframe
       id="ytEmbedFrame"
       class="yt-player-frame"
@@ -1351,11 +1658,7 @@ footer {
   <section class="panel" id="createPost">
     <h2>✍️ নতুন কোয়ান্টাম পোস্ট তৈরি করুন</h2>
 
-    <textarea
-      id="postText"
-      class="post-textarea"
-      placeholder="আপনার মনের কথা লিখুন..."
-    ></textarea>
+    <textarea id="postText" class="post-textarea" placeholder="আপনার মনের কথা লিখুন..."></textarea>
 
     <div class="post-tools">
       <button type="button" class="tool-button" id="chooseImage">🖼️ ছবি (25MB)</button>
@@ -1363,6 +1666,12 @@ footer {
       <button type="button" class="tool-button" id="chooseVideo">🎬 বড় ভিডিও (250MB)</button>
       <button type="button" class="tool-button" id="chooseFile">📎 ফাইল (250MB)</button>
     </div>
+
+    <div class="media-buttons">
+      <button type="button" class="tool-button" id="aiPolishPostBtn">✨ AI লেখা ঠিক করুন</button>
+      <button type="button" class="tool-button" id="aiAnalyzePostBtn">🤖 পোস্ট ও মিডিয়া AI</button>
+    </div>
+    <div class="status" id="postMediaAiOutput"></div>
 
     <div style="margin-top:16px;">
       <button type="button" class="tool-button" id="clearMedia" style="width:100%;">✖️ মিডিয়া / ফাইল বাদ দিন</button>
@@ -1400,16 +1709,13 @@ footer {
     <div class="media-buttons">
       <button type="button" id="startCamera">📹 ক্যামেরা চালু</button>
       <button type="button" id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
+      <button type="button" id="runLiveAiBtn">🤖 লাইভ ভিডিও AI</button>
     </div>
 
+    <div class="status" id="liveAiOutput"></div>
     <div class="status" id="cameraStatus">
       ক্যামেরা এখন বন্ধ।
     </div>
-
-    <p class="status">
-      এটি আপনার ডিভাইসে লাইভ ক্যামেরা প্রিভিউ।
-      অন্যদের কাছে সরাসরি সম্প্রচারের জন্য আলাদা লাইভ সার্ভার প্রয়োজন।
-    </p>
   </section>
 
   <!-- FEED -->
@@ -1431,12 +1737,12 @@ footer {
   <!-- ফাইল ও ফোল্ডার তালিকা -->
   <section class="panel" id="fileRegistrySection">
     <h2>📁 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">192</span>টি)</h2>
-    <input
-      type="search"
-      id="fileSearchInput"
-      class="file-search-input"
-      placeholder="ফাইল বা ফোল্ডারের নাম লিখে খুঁজুন..."
-    >
+    <input type="search" id="fileSearchInput" class="file-search-input" placeholder="ফাইল বা ফোল্ডারের নাম লিখে খুঁজুন...">
+    <div class="media-buttons">
+      <button type="button" id="runRegistryAiBtn">🤖 রেজিস্ট্রি AI</button>
+      <button type="button" id="speakRegistryAiBtn">🗣️ ভয়েস</button>
+    </div>
+    <div class="status" id="registryAiOutput"></div>
     <div id="fileListGrid" class="file-list-grid"></div>
   </section>
 
@@ -1453,488 +1759,6 @@ footer {
   <a href="profile.html"><span>👤</span>Profile</a>
 </nav>
 
-<script type="module">
-const $ = id => document.getElementById(id);
-
-const LIMITS = {
-  image: 25 * 1024 * 1024,
-  audio: 100 * 1024 * 1024,
-  video: 250 * 1024 * 1024,
-  file: 250 * 1024 * 1024
-};
-
-const AYNA_REGISTRY_ITEMS = [
-  "js (রুট তালিকায় প্রথমবার দেখা যাচ্ছে)",
-  "android-app",
-  "aspect-ratio: 1",
-  "assets",
-  "functions",
-  "world-leaders",
-  "world-leaders/world-leaders.html",
-  "world-leaders/world-leaders.js",
-  "world-leaders/leaders.json",
-  "world-leaders/flags",
-  "world-leaders/photos",
-  "index.html (রুট তালিকায় ফোল্ডার আইকনে দেখা যাচ্ছে)",
-  "js (রুট তালিকায় দ্বিতীয়বার দেখা যাচ্ছে)",
-  ".github (android-app ফোল্ডারের ভেতরে)",
-  "app (android-app ফোল্ডারের ভেতরে)",
-  "4account.html",
-  "access.html",
-  "account-security.html",
-  "admin-payment.html",
-  "android-hub.html",
-  "apple.html",
-  "arabic-calendar.html",
-  "audio-video-messaging.html",
-  "auth.html",
-  "auto-network.html",
-  "bangla-radio-tv.html",
-  "bd-directory.html",
-  "breaking-news.html",
-  "business-directory.html",
-  "button.html",
-  "calendar.html",
-  "camera.html",
-  "chat.html",
-  "clock.html",
-  "compass.html",
-  "countries.html",
-  "currency-exchange.html",
-  "dashboard.html",
-  "direction.html",
-  "ev-vehicles.html",
-  "forgot-password.html",
-  "github-firebase-config.html",
-  "global-alert.html",
-  "google-official-sites.html",
-  "gps.html",
-  "home.html",
-  "hourly-clock.html",
-  "index.html",
-  "location-alert.html",
-  "login-activity.html",
-  "login.html",
-  "medical-research.html",
-  "medicine-store.html",
-  "messages.htm",
-  "messages.html",
-  "messenger.html",
-  "military-radar.html",
-  "ownership.html",
-  "passwed.html",
-  "payment-pending.html",
-  "payment.html",
-  "prayer.html",
-  "privacy-settings.html",
-  "privacy.html",
-  "profile.html",
-  "public-profile.html",
-  "qr.html",
-  "quantum.html",
-  "radar-compass.html",
-  "radar.html",
-  "radio-tv.html",
-  "radio.html",
-  "register.html",
-  "security.html",
-  "signup.html",
-  "studio.html",
-  "supercomputer.html",
-  "tv-live.html",
-  "us-alerts.html",
-  "user-search.html",
-  "verify-email.html",
-  "world-doctors.html",
-  "world-holidays.html",
-  "world-leaders.html",
-  "world-locations.html",
-  "world-grocery.html",
-  "world-farmers.html",
-  "poultry-farmers.html",
-  "price-list.html",
-  "world-market.html",
-  "world-officials.html",
-  "air-rail-transport.html",
-  "world-air-rail.html",
-  "world-garments.html",
-  "world-jobs.html",
-  "world-ngo-rights.html",
-  "ulema-research.html",
-  "access.js",
-  "account-types.js",
-  "admin-payment.js",
-  "app.js",
-  "arabic-calendar.js",
-  "auth-guard.js",
-  "auth.js",
-  "calendar.js",
-  "chat.js",
-  "clock.js",
-  "comments.js",
-  "compass.js",
-  "connectivity.js",
-  "database.js",
-  "firebase-config.js",
-  "firebase-init.js",
-  "firebase.js",
-  "follow.js",
-  "forgot-password.js",
-  "functions.js",
-  "gps.js",
-  "index.js",
-  "likes.js",
-  "login-activity.js",
-  "login.js",
-  "messenger.js",
-  "military-radar.js",
-  "notifications-page.js",
-  "notifications.js",
-  "offline.js",
-  "payment-status.js",
-  "payment.js",
-  "posts.js",
-  "prayer.js",
-  "privacy-settings.js",
-  "privacy.js",
-  "profile.js",
-  "qr.js",
-  "quantum-security.js",
-  "radar.js",
-  "radio.js",
-  "register.js",
-  "security-dashboard.js",
-  "security.js",
-  "server.js.node.js",
-  "session-logout.js",
-  "session-security.js",
-  "set-admin-claim.js",
-  "signup.js",
-  "storage-test.js",
-  "storage.js",
-  "sw.js",
-  "translator.js",
-  "tv-live.js",
-  "update.js",
-  "us-alerts.js",
-  "verify-email.js",
-  "vite.config.js",
-  "world-holidays.js",
-  "world-leaders.js",
-  "world-grocery.js",
-  "world-farmers.js",
-  "poultry-farmers.js",
-  "daily-price-list.js",
-  "price-list.js",
-  "world-market.js",
-  "world-officials.js",
-  "air-rail-transport.js",
-  "world-air-rail.js",
-  "world-garments.js",
-  "world-jobs.js",
-  "world-ngo-rights.js",
-  "ulema-research.js",
-  "AuthScreen.kt",
-  "HomeScreen.kt",
-  "MainActivity.kt",
-  "MessagingScreen.kt",
-  "PostScreen.kt",
-  "build.gradle.kts",
-  "gradle.properties",
-  "settings.gradle.kts",
-  ".gitignore",
-  "AYNA-BOOK-FILE-STRUCTURE.txt",
-  "AndroidManifest.xml",
-  "README.md",
-  "_config.yml",
-  "ayna-book-check.yml",
-  "ayna-ui-patch.css",
-  "build-apk.yml",
-  "colors.xml",
-  "dashboard.php",
-  "database.rules.json",
-  "deploy-pages.yml",
-  "firebase.json",
-  "firestore.rules",
-  "google-services.json",
-  "icon-192.png",
-  "icon-512.png",
-  "jekyll-gh-pages.yml",
-  "manifest.json",
-  "manifest.webmanifest",
-  "package.json",
-  "page-register",
-  "sha1.yml",
-  "storage.rules",
-  "strings.xml",
-  "styles.css",
-  "themes.xml",
-  "vercel.json",
-  "version.json"
-];
-
-$("qFileCount").textContent = String(AYNA_REGISTRY_ITEMS.length);
-$("registryTotalLabel").textContent = String(AYNA_REGISTRY_ITEMS.length);
-
-function renderFileRegistry(query = "") {
-  const grid = $("fileListGrid");
-  const cleanQuery = query.trim().toLowerCase();
-  const frag = document.createDocumentFragment();
-  let matched = 0;
-
-  AYNA_REGISTRY_ITEMS.forEach((item, index) => {
-    if (cleanQuery && !item.toLowerCase().includes(cleanQuery)) return;
-    matched++;
-    const card = document.createElement("div");
-    card.className = "file-item-card";
-
-    const num = document.createElement("span");
-    num.className = "file-item-num";
-    num.textContent = `${index + 1}.`;
-
-    const name = document.createElement("span");
-    name.textContent = item;
-
-    card.append(num, name);
-    frag.appendChild(card);
-  });
-
-  grid.innerHTML = matched
-    ? ""
-    : '<div class="empty">কোনো ফাইল বা ফোল্ডার মেলেনি।</div>';
-  if (matched) grid.appendChild(frag);
-}
-
-$("fileSearchInput").addEventListener("input", e => {
-  renderFileRegistry(e.target.value);
-});
-
-renderFileRegistry();
-
-// রাষ্ট্রনেতাদের নাম তালিকা
-const WORLD_LEADERS_LIST = [
-  { country: "বাংলাদেশ", name: "তারেক রহমান", role: "প্রধানমন্ত্রী (মন্ত্রিপরিষদ বিভাগ ও সশস্ত্র বাহিনী বিভাগ)" },
-  { country: "বাংলাদেশ", name: "মির্জা ফখরুল ইসলাম আলমগীর", role: "রাষ্ট্রপতি" },
-  { country: "সৌদি আরব", name: "বাদশাহ সালমান / যুবরাজ মোহাম্মদ বিন সালমান", role: "বাদশাহ ও প্রধানমন্ত্রী" },
-  { country: "তুরস্ক", name: "রিসেপ তাইয়িপ এরদোয়ান", role: "প্রেসিডেন্ট" },
-  { country: "যুক্তরাষ্ট্র", name: "ডোনাল্ড ট্রাম্প", role: "প্রেসিডেন্ট" },
-  { country: "যুক্তরাজ্য", name: "কিয়ার স্টারমার / রাজা তৃতীয় চার্লস", role: "প্রধানমন্ত্রী ও রাজা" },
-  { country: "ভারত", name: "নরেন্দ্র মোদী / দ্রৌপদী মুর্মু", role: "প্রধানমন্ত্রী ও রাষ্ট্রপতি" },
-  { country: "চীন", name: "শি জিনপিং", role: "প্রেসিডেন্ট" },
-  { country: "কাতার", name: "শেখ তামিম বিন হামাদ আল থানি", role: "আমির" },
-  { country: "সংযুক্ত আরব আমিরাত", name: "শেখ মোহাম্মদ বিন জায়েদ আল নাহিয়ান", role: "প্রেসিডেন্ট" }
-];
-
-function renderWorldLeadersHub(filter = "") {
-  const grid = $("worldLeadersGrid");
-  if (!grid) return;
-  const q = filter.trim().toLowerCase();
-  const list = WORLD_LEADERS_LIST.filter(
-    item => item.country.toLowerCase().includes(q) || item.name.toLowerCase().includes(q) || item.role.toLowerCase().includes(q)
-  );
-  grid.innerHTML = list.length
-    ? list.map(item => `
-        <div class="hub-card">
-          <span class="hub-card-tag">${item.country}</span>
-          <div class="hub-card-title">${item.name}</div>
-          <div class="hub-card-meta">${item.role}</div>
-        </div>
-      `).join("")
-    : '<div class="empty">কোনো রাষ্ট্রনেতার তথ্য মেলেনি।</div>';
-}
-
-// বিশ্ব আলেম গবেষণাগার
-const ULEMA_RESEARCH_LIST = [
-  { dept: "ফিকহ ও শরয়ি গবেষণা", title: "আধুনিক ব্যাংকিং, ডিজিটাল লেনদেন ও শরয়ি নীতিমালা", note: "আন্তর্জাতিক আলেম গবেষণা ইউনিট" },
-  { dept: "জাকাত ও ওয়াকফ অর্থনীতি", title: "সামাজিক নিরাপত্তা ও দারিদ্র্য বিমোচনে ওয়াকফ মডেল", note: "ইসলামি অর্থনীতি গবেষণা সেল" },
-  { dept: "কুরআন ও সুন্নাহ আর্কাইভ", title: "তফসির, হাদিস ও সীরাত গবেষণা সংকলন", note: "শাস্ত্রীয় গবেষণা বিভাগ" },
-  { dept: "পরিবার ও সমাজ সংস্কার", title: "আধুনিক সমাজে নৈতিকতা, শিক্ষা ও সম্প্রীতি", note: "গবেষণা ও ফতোয়া পরামর্শ কেন্দ্র" }
-];
-
-function renderUlemaResearchHub(filter = "") {
-  const grid = $("ulemaResearchGrid");
-  if (!grid) return;
-  const q = filter.trim().toLowerCase();
-  const list = ULEMA_RESEARCH_LIST.filter(
-    item => item.dept.toLowerCase().includes(q) || item.title.toLowerCase().includes(q) || item.note.toLowerCase().includes(q)
-  );
-  grid.innerHTML = list.length
-    ? list.map(item => `
-        <div class="hub-card">
-          <span class="hub-card-tag">${item.dept}</span>
-          <div class="hub-card-title">${item.title}</div>
-          <div class="hub-card-meta">${item.note}</div>
-        </div>
-      `).join("")
-    : '<div class="empty">কোনো গবেষণা বিষয় মেলেনি।</div>';
-}
-
-// মুদি বাজার ও বিশ্ব কৃষক বাজার (বিস্তৃত তালিকা)
-const GROCERY_FARMER_ITEMS = [
-  { cat: "grocery", label: "মুদি বাজার", name: "নাজিরশাইল ও মিনিকেট চাল", unit: "কেজি", usd: 0.65 },
-  { cat: "grocery", label: "মুদি বাজার", name: "মসুর ডাল (দেশি ও আমদানি)", unit: "কেজি", usd: 1.10 },
-  { cat: "grocery", label: "মুদি বাজার", name: "আটা ও প্যাকেট ময়দা", unit: "কেজি", usd: 0.48 },
-  { cat: "grocery", label: "মুদি বাজার", name: "সয়াবিন ও সূর্যমুখী তেল", unit: "লিটার", usd: 1.45 },
-  { cat: "grocery", label: "মুদি বাজার", name: "চিনি ও গুড়", unit: "কেজি", usd: 1.05 },
-  { cat: "grocery", label: "মুদি বাজার", name: "পেঁয়াজ, রসুন ও আদা", unit: "কেজি", usd: 0.95 },
-  { cat: "grocery", label: "মুদি বাজার", name: "হলুদ, মরিচ ও জিরা মসলা", unit: "কেজি", usd: 3.40 },
-  { cat: "grocery", label: "মুদি বাজার", name: "চা পাতা, লবণ ও গুঁড়ো দুধ", unit: "কেজি", usd: 4.10 },
-  { cat: "farmer", label: "বিশ্ব কৃষক", name: "আলু (সরাসরি কৃষক উৎপাদন)", unit: "কেজি", usd: 0.35 },
-  { cat: "farmer", label: "বিশ্ব কৃষক", name: "গম ও ভুট্টা (বিশ্ব কৃষি)", unit: "কেজি", usd: 0.32 },
-  { cat: "farmer", label: "বিশ্ব কৃষক", name: "ধান ও গবাদিপশু খাদ্য", unit: "কেজি", usd: 0.42 },
-  { cat: "farmer", label: "বিশ্ব কৃষক", name: "তাজা মৌসুমি শাকসবজি ও ফল", unit: "কেজি", usd: 0.55 }
-];
-
-let currentUsdToBdt = 120;
-
-function renderGroceryFarmersHub() {
-  const grid = $("groceryFarmersGrid");
-  if (!grid) return;
-  const cat = $("marketTypeSelect")?.value || "all";
-  const q = ($("marketItemSearchInput")?.value || "").trim().toLowerCase();
-
-  const items = GROCERY_FARMER_ITEMS.filter(item => {
-    const matchCat = cat === "all" || item.cat === cat;
-    const matchQ = !q || item.name.toLowerCase().includes(q) || item.label.toLowerCase().includes(q);
-    return matchCat && matchQ;
-  });
-
-  grid.innerHTML = items.length
-    ? items.map(item => {
-        const bdt = (item.usd * currentUsdToBdt).toFixed(2);
-        return `
-          <div class="hub-card">
-            <span class="hub-card-tag">${item.label}</span>
-            <div class="hub-card-title">${item.name}</div>
-            <div class="hub-card-meta">আনুমানিক দর: <strong>৳${bdt}</strong> / ${item.unit} (≈ $${item.usd.toFixed(2)})</div>
-          </div>
-        `;
-      }).join("")
-    : '<div class="empty">কোনো পণ্য পাওয়া যায়নি।</div>';
-}
-
-// বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন
-const DIRECT_JOB_ADS = [
-  {
-    title: "সিনিয়র ফুল-স্ট্যাক ও মোবাইল ডেভেলপার",
-    company: "AYNA Tech Global",
-    location: "রিমোট / ঢাকা ও দুবাই",
-    salary: "$1,800 – $2,800 / মাস",
-    contact: "careers@aynabook.example.com"
-  },
-  {
-    title: "অ্যাগ্রো সাপ্লাই চেইন ও এক্সপোর্ট ম্যানেজার",
-    company: "Global Agro Trade Ltd.",
-    location: "চট্টগ্রাম / সৌদি আরব",
-    salary: "$1,200 – $1,900 / মাস",
-    contact: "hr@globalagro.example.com"
-  },
-  {
-    title: "ইসলামি ফাইন্যান্স ও গবেষণা বিশ্লেষক",
-    company: "Al-Mizan Research & Advisory",
-    location: "কুয়ালালামপুর / হাইব্রিড",
-    salary: "$1,500 – $2,200 / মাস",
-    contact: "research@almizan.example.com"
-  },
-  {
-    title: "ইন্টারন্যাশনাল কার্গো ও লজিস্টিকস কোঅর্ডিনেটর",
-    company: "SilkRoute Transport & Logistics",
-    location: "দোহা / সিঙ্গাপুর",
-    salary: "$1,400 – $2,100 / মাস",
-    contact: "jobs@silkroute.example.com"
-  }
-];
-
-function renderDirectJobsHub(filter = "") {
-  const grid = $("directJobsGrid");
-  if (!grid) return;
-  const q = filter.trim().toLowerCase();
-  const list = DIRECT_JOB_ADS.filter(
-    j =>
-      j.title.toLowerCase().includes(q) ||
-      j.company.toLowerCase().includes(q) ||
-      j.location.toLowerCase().includes(q)
-  );
-  grid.innerHTML = list.length
-    ? list.map(j => `
-        <div class="hub-card">
-          <span class="hub-card-tag">সরাসরি চাকুরীর বিজ্ঞাপন</span>
-          <div class="hub-card-title">${j.title}</div>
-          <div class="hub-card-meta"><strong>প্রতিষ্ঠান:</strong> ${j.company}</div>
-          <div class="hub-card-meta"><strong>লোকেশন:</strong> ${j.location}</div>
-          <div class="hub-card-meta"><strong>বেতন:</strong> ${j.salary}</div>
-          <div class="hub-card-meta"><strong>যোগাযোগ:</strong> ${j.contact}</div>
-        </div>
-      `).join("")
-    : '<div class="empty">কোনো চাকুরীর বিজ্ঞাপন মেলেনি।</div>';
-}
-
-// YouTube Hub
-function extractYouTubeId(val) {
-  const clean = (val || "").trim();
-  if (/^[a-zA-Z0-9_-]{11}$/.test(clean)) return clean;
-  const m = clean.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
-  return m && m[1] ? m[1] : null;
-}
-
-function applyYouTubeQuery(rawVal) {
-  const query = (rawVal || "").trim() || "Bangla news live";
-  const vid = extractYouTubeId(query);
-  const frame = $("ytEmbedFrame");
-  const extLink = $("ytDirectWatchLink");
-
-  if (vid) {
-    if (frame) frame.src = `https://www.youtube.com/embed/${vid}`;
-    if (extLink) extLink.href = `https://www.youtube.com/watch?v=${vid}`;
-    notify("YouTube ভিডিও চালু করা হয়েছে");
-  } else {
-    const encoded = encodeURIComponent(query);
-    if (frame) frame.src = `https://www.youtube.com/embed?listType=search&list=${encoded}`;
-    if (extLink) extLink.href = `https://www.youtube.com/results?search_query=${encoded}`;
-    notify(`YouTube-এ "${query}" খোঁজা হচ্ছে`);
-  }
-}
-
-$("leaderSearchInput")?.addEventListener("input", e => renderWorldLeadersHub(e.target.value));
-$("ulemaSearchInput")?.addEventListener("input", e => renderUlemaResearchHub(e.target.value));
-$("marketTypeSelect")?.addEventListener("change", renderGroceryFarmersHub);
-$("marketItemSearchInput")?.addEventListener("input", renderGroceryFarmersHub);
-$("directJobSearchInput")?.addEventListener("input", e => renderDirectJobsHub(e.target.value));
-
-$("ytPlaySearchBtn")?.addEventListener("click", () => applyYouTubeQuery($("ytSearchOrUrlInput")?.value));
-$("ytSearchOrUrlInput")?.addEventListener("keydown", e => {
-  if (e.key === "Enter") applyYouTubeQuery(e.target.value);
-});
-document.querySelectorAll(".yt-preset-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const q = btn.getAttribute("data-yt") || "";
-    if ($("ytSearchOrUrlInput")) $("ytSearchOrUrlInput").value = q;
-    applyYouTubeQuery(q);
-  });
-});
-
-renderWorldLeadersHub();
-renderUlemaResearchHub();
-renderGroceryFarmersHub();
-renderDirectJobsHub();
-
-function notify(message) {
-  const box = $("notice");
-  box.textContent = message;
-  box.style.display = "block";
-  clearTimeout(notify.timer);
-  notify.timer = setTimeout(() => {
-    box.style.display = "none";
-  }, 3200);
-}
-
-function safePhoto(photo) {
-  return typeof photo === "string" && photo
-    ? photo
-আইকনে সমস্যা
-আইডি খুঁজে পাওয়া যায়নি
-aynabookofficel@gmail.com আইডি খুঁজে পাওয়া যায়নি অথবা সেটিতে ইমেল পাঠানো যায় না, তাই আপনার মেসেজটি পাঠানো যায়নি।
-আরও জানুন
-এই প্রতিক্রিয়া দেওয়া হয়েছে:
-550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces. For more information, go to https://support.google.com/mail/?p=NoSuchUser a640c23a62f3a-c513c2df93bsor489218266b.11 - gsmtp
-
+<script type="module" src="./index.js"></script>
+</body>
+</html>
