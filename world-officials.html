@@ -1,328 +1,202 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — বিশ্ব এমপি, মন্ত্রী ও সরকারি কর্মকর্তা</title>
-
-<style>
-:root {
-  --bg: #050a18;
-  --navy-top: #172e63;
-  --navy-bottom: #08122b;
-  --gold: #ffd700;
-  --gold-base: #755206;
-  --white: #ffffff;
-  --muted: #dce6fa;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--bg);
-  color: var(--white);
-  font-family: Arial, "Noto Sans Bengali", sans-serif;
-  font-size: 20px;
-  padding-bottom: 80px;
-}
-
-.gold-3d {
-  background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
-  border: 2.5px solid var(--gold);
-  border-radius: 6px;
-  box-shadow:
-    0 7px 0 var(--gold-base),
-    0 12px 22px rgba(0, 0, 0, 0.8),
-    inset 0 2px 3px rgba(255, 242, 166, 0.5);
-}
-
-header {
-  background: linear-gradient(180deg, #0f1f47 0%, #060d21 100%);
-  border-bottom: 2.5px solid var(--gold);
-  padding: 14px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.brand {
-  color: var(--gold);
-  font-size: 24px;
-  font-weight: 1000;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.star-1s {
-  color: #ffffff;
-  font-size: 26px;
-  display: inline-block;
-  animation: starFlash1s 1s infinite alternate ease-in-out;
-}
-
-@keyframes starFlash1s {
-  0% { transform: scale(0.95); text-shadow: 0 0 6px #ffd700; }
-  100% { transform: scale(1.35); text-shadow: 0 0 14px #ffffff, 0 0 32px #ffd700; }
-}
-
-.back-btn {
-  text-decoration: none;
-  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
-  color: #050a18;
-  font-weight: 1000;
-  font-size: 17px;
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1.5px solid #fff2a6;
-  box-shadow: 0 4px 0 #664604;
-}
-
-.container {
-  max-width: 1050px;
-  margin: 18px auto;
-  padding: 0 14px;
-}
-
-.page-title {
-  font-size: 28px;
-  font-weight: 1000;
-  color: var(--gold);
-  margin-bottom: 16px;
-}
-
-.box-pad {
-  padding: 18px;
-  margin-bottom: 20px;
-}
-
-.box-pad h2 {
-  color: var(--gold);
-  font-size: 23px;
-  margin-bottom: 12px;
-}
-
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 12px;
-}
-
-@media(min-width: 650px) {
-  .grid-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-input, select, textarea {
-  width: 100%;
-  background: #050b1c;
-  color: var(--white);
-  border: 2px solid var(--gold);
-  border-radius: 6px;
-  padding: 12px 14px;
-  font-size: 19px;
-  margin-bottom: 12px;
-}
-
-.btn-gold-3d {
-  width: 100%;
-  min-height: 56px;
-  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
-  color: #050a18;
-  font-size: 21px;
-  font-weight: 1000;
-  border: 2px solid #fff2a6;
-  border-radius: 6px;
-  box-shadow: 0 5px 0 #664604;
-  cursor: pointer;
-}
-
-.btn-gold-3d:active {
-  transform: translateY(4px);
-  box-shadow: 0 2px 0 #664604;
-}
-
-.officials-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 16px;
-}
-
-@media(min-width: 750px) {
-  .officials-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.official-card {
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.official-top {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 10px;
-}
-
-.official-photo {
-  width: 92px;
-  height: 92px;
-  object-fit: cover;
-  border: 3px solid var(--gold);
-  border-radius: 6px;
-  background: #050b1c;
-  flex-shrink: 0;
-  box-shadow: 0 4px 0 var(--gold-base);
-}
-
-.official-badge {
-  display: inline-block;
-  background: #050b1c;
-  color: var(--gold);
-  border: 1.5px solid var(--gold);
-  border-radius: 6px;
-  padding: 3px 10px;
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.official-name {
-  font-size: 22px;
-  font-weight: 1000;
-  color: var(--white);
-}
-
-.official-role {
-  font-size: 17px;
-  font-weight: bold;
-  color: var(--gold);
-  margin-top: 3px;
-}
-
-.official-meta {
-  font-size: 16px;
-  color: var(--muted);
-  margin-top: 3px;
-}
-
-.official-bio {
-  font-size: 18px;
-  line-height: 1.55;
-  color: var(--muted);
-  white-space: pre-wrap;
-}
-
-.official-footer {
-  border-top: 1px solid rgba(255, 215, 0, 0.35);
-  padding-top: 10px;
-  font-size: 15px;
-  color: var(--muted);
-}
-
-#notice {
-  position: fixed;
-  top: 76px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #0a1636;
-  color: #ffffff;
-  border: 2px solid var(--gold);
-  padding: 12px 18px;
-  border-radius: 6px;
-  z-index: 100;
-  display: none;
-  font-size: 18px;
-  text-align: center;
-}
-</style>
-</head>
-<body>
-
-<header>
-  <a href="index.html" class="brand">AYNA BOOK <span class="star-1s">★</span></a>
-  <a href="index.html" class="back-btn">🏠 হোম</a>
-</header>
-
-<div id="notice"></div>
-
-<main class="container">
-  <h1 class="page-title">🏛️ বিশ্বের সকল এমপি, মন্ত্রী ও সরকারি কর্মকর্তা</h1>
-
-  <!-- ফিল্টার ও অনুসন্ধান -->
-  <section class="gold-3d box-pad">
-    <h2>🔍 ক্যাটাগরি, দেশ, দপ্তর বা নাম দিয়ে খুঁজুন</h2>
-    <div class="grid-2">
-      <select id="officialCategoryFilter">
-        <option value="ALL">🌐 সব ক্যাটাগরি</option>
-        <option value="সংসদ সদস্য (MP)">সংসদ সদস্য (MP)</option>
-        <option value="মন্ত্রী ও প্রতিমন্ত্রী">মন্ত্রী ও প্রতিমন্ত্রী</option>
-        <option value="সরকারি কর্মকর্তা">সরকারি কর্মকর্তা</option>
-        <option value="কূটনীতিক ও রাষ্ট্রদূত">কূটনীতিক ও রাষ্ট্রদূত</option>
-        <option value="স্থানীয় প্রশাসন">স্থানীয় প্রশাসন</option>
-      </select>
-
-      <input id="officialCountryFilter" type="text" placeholder="দেশ বা এলাকা (যেমন: বাংলাদেশ, সৌদি আরব, যুক্তরাজ্য)...">
-    </div>
-
-    <input id="officialSearchInput" type="text" placeholder="নাম, পদবি, মন্ত্রণালয়/দপ্তর বা আসন লিখে খুঁজুন...">
-  </section>
-
-  <!-- নতুন এমপি, মন্ত্রী বা সরকারি কর্মকর্তার তথ্য যুক্ত করার ফর্ম -->
-  <section class="gold-3d box-pad">
-    <h2>➕ নতুন এমপি, মন্ত্রী বা সরকারি কর্মকর্তার তথ্য যুক্ত করুন</h2>
-    <div class="grid-2">
-      <select id="newOfficialCategory">
-        <option value="সংসদ সদস্য (MP)">সংসদ সদস্য (MP)</option>
-        <option value="মন্ত্রী ও প্রতিমন্ত্রী">মন্ত্রী ও প্রতিমন্ত্রী</option>
-        <option value="সরকারি কর্মকর্তা">সরকারি কর্মকর্তা</option>
-        <option value="কূটনীতিক ও রাষ্ট্রদূত">কূটনীতিক ও রাষ্ট্রদূত</option>
-        <option value="স্থানীয় প্রশাসন">স্থানীয় প্রশাসন</option>
-      </select>
-
-      <input id="newOfficialCountry" type="text" placeholder="দেশ (যেমন: বাংলাদেশ, সৌদি আরব, যুক্তরাষ্ট্র)...">
-    </div>
-
-    <div class="grid-2">
-      <input id="newOfficialName" type="text" placeholder="নাম...">
-      <input id="newOfficialRole" type="text" placeholder="পদবি (যেমন: সংসদ সদস্য, মন্ত্রী, সচিব, জেলা প্রশাসক)...">
-    </div>
-
-    <div class="grid-2">
-      <input id="newOfficialDept" type="text" placeholder="মন্ত্রণালয় / দপ্তর / সংসদীয় আসন...">
-      <input id="newOfficialPhoto" type="url" placeholder="ছবির লিংক (ঐচ্ছিক)...">
-    </div>
-
-    <input id="newOfficialContact" type="text" placeholder="দাপ্তরিক ওয়েবসাইট / ইমেইল / যোগাযোগ (ঐচ্ছিক)...">
-    <textarea id="newOfficialBio" rows="3" placeholder="দায়িত্ব, দপ্তর বা সংক্ষিপ্ত পরিচিতি লিখুন..."></textarea>
-    <button id="addOfficialBtn" type="button" class="btn-gold-3d">
-      📌 তালিকায় তথ্য যুক্ত করুন
-    </button>
-  </section>
-
-  <!-- তালিকা -->
-  <section id="worldOfficialsList" class="officials-grid">
-    <div class="gold-3d box-pad" style="grid-column:1/-1;text-align:center;">
-      তথ্য লোড হচ্ছে...
-    </div>
-  </section>
-</main>
-
-<script type="module" src="./world-officials.js"></script>
-</body>
-</html>
+Global_Parliaments_195
+Diplomatic_Data_Sources
+A	B	C	D	E	F	G	H
+1	GLOBAL PARLIAMENTARY DIRECTORY & DIPLOMATIC PROTOCOL REGISTRY (195 STATES)
+2	SL	Country / State	Region	National Parliament / Legislature	Structure	Presiding Officer / Speaker Role	Official MP Directory & Contact Portal	IPU Parline Global API/Data Link
+3	1	Bangladesh	South Asia	Jatiya Sangsad (জাতীয় সংসদ)	Unicameral	Speaker of the Jatiya Sangsad	https://www.parliament.gov.bd/	https://data.ipu.org/
+4	2	India	South Asia	Sansad (Lok Sabha & Rajya Sabha)	Bicameral	Speaker of Lok Sabha / Chairman of Rajya Sabha	https://sansad.in/	https://data.ipu.org/
+5	3	Pakistan	South Asia	Majlis-e-Shoora (National Assembly & Senate)	Bicameral	Speaker of the National Assembly	https://na.gov.pk/	https://data.ipu.org/
+6	4	Sri Lanka	South Asia	Parliament of Sri Lanka	Unicameral	Speaker of the Parliament	https://www.parliament.lk/	https://data.ipu.org/
+7	5	Nepal	South Asia	Federal Parliament of Nepal	Bicameral	Speaker of the House of Representatives	https://hr.parliament.gov.np/	https://data.ipu.org/
+8	6	Bhutan	South Asia	Parliament of Bhutan	Bicameral	Speaker of the National Assembly	https://www.nab.gov.bt/	https://data.ipu.org/
+9	7	Maldives	South Asia	People's Majlis	Unicameral	Speaker of the People's Majlis	https://majlis.gov.mv/	https://data.ipu.org/
+10	8	Afghanistan	South Asia	National Assembly (Suspended/De Facto)	N/A	N/A	https://data.ipu.org/parliament/AF	https://data.ipu.org/
+11	9	China	East Asia	National People's Congress (NPC)	Unicameral	Chairman of the Standing Committee	http://www.npc.gov.cn/	https://data.ipu.org/
+12	10	Japan	East Asia	National Diet (Kokkai)	Bicameral	Speaker of the House of Representatives	https://www.shugiin.go.jp/	https://data.ipu.org/
+13	11	South Korea	East Asia	National Assembly (Gukhoe)	Unicameral	Speaker of the National Assembly	https://www.assembly.go.kr/	https://data.ipu.org/
+14	12	North Korea	East Asia	Supreme People's Assembly	Unicameral	Chairman of the Standing Committee	https://data.ipu.org/parliament/KP	https://data.ipu.org/
+15	13	Mongolia	East Asia	State Great Khural	Unicameral	Chairman of the State Great Khural	https://www.parliament.mn/	https://data.ipu.org/
+16	14	Indonesia	Southeast Asia	People's Consultative Assembly (MPR/DPR)	Bicameral	Speaker of the House of Representatives	https://www.dpr.go.id/	https://data.ipu.org/
+17	15	Malaysia	Southeast Asia	Parliament of Malaysia (Dewan Rakyat)	Bicameral	Speaker of the Dewan Rakyat	https://www.parlimen.gov.my/	https://data.ipu.org/
+18	16	Singapore	Southeast Asia	Parliament of Singapore	Unicameral	Speaker of Parliament	https://www.parliament.gov.sg/	https://data.ipu.org/
+19	17	Thailand	Southeast Asia	National Assembly of Thailand	Bicameral	President of the National Assembly	https://www.parliament.go.th/	https://data.ipu.org/
+20	18	Vietnam	Southeast Asia	National Assembly of Vietnam	Unicameral	Chairman of the National Assembly	https://quochoi.vn/	https://data.ipu.org/
+21	19	Philippines	Southeast Asia	Congress of the Philippines	Bicameral	Speaker of the House / Senate President	https://www.congress.gov.ph/	https://data.ipu.org/
+22	20	Cambodia	Southeast Asia	Parliament of Cambodia	Bicameral	President of the National Assembly	https://nac.org.kh/	https://data.ipu.org/
+23	21	Laos	Southeast Asia	National Assembly of Laos	Unicameral	President of the National Assembly	https://na.gov.la/	https://data.ipu.org/
+24	22	Myanmar	Southeast Asia	Pyidaungsu Hluttaw (Suspended)	Bicameral	N/A	https://data.ipu.org/parliament/MM	https://data.ipu.org/
+25	23	Brunei	Southeast Asia	Legislative Council of Brunei	Unicameral	Speaker of the Legislative Council	https://www.councils.gov.bn/	https://data.ipu.org/
+26	24	Timor-Leste	Southeast Asia	National Parliament	Unicameral	President of the National Parliament	https://www.parlamento.tl/	https://data.ipu.org/
+27	25	Saudi Arabia	Middle East	Consultative Assembly (Majlis ash-Shura)	Unicameral	Speaker of the Consultative Assembly	https://www.shura.gov.sa/	https://data.ipu.org/
+28	26	United Arab Emirates	Middle East	Federal National Council (FNC)	Unicameral	Speaker of the Federal National Council	https://www.almajles.gov.ae/	https://data.ipu.org/
+29	27	Qatar	Middle East	Consultative Assembly (Majlis ash-Shura)	Unicameral	Speaker of the Shura Council	https://www.shura.qa/	https://data.ipu.org/
+30	28	Kuwait	Middle East	National Assembly (Majlis al-Umma)	Unicameral	Speaker of the National Assembly	https://www.kna.kw/	https://data.ipu.org/
+31	29	Oman	Middle East	Council of Oman	Bicameral	Chairman of Majlis A'Shura	https://www.shura.om/	https://data.ipu.org/
+32	30	Bahrain	Middle East	National Assembly of Bahrain	Bicameral	Speaker of the Council of Representatives	https://www.nuwab.bh/	https://data.ipu.org/
+33	31	Turkey	Middle East	Grand National Assembly of Turkey (TBMM)	Unicameral	Speaker of the Grand National Assembly	https://www.tbmm.gov.tr/	https://data.ipu.org/
+34	32	Iran	Middle East	Islamic Consultative Assembly (Majlis)	Unicameral	Speaker of the Parliament	https://www.parliran.ir/	https://data.ipu.org/
+35	33	Iraq	Middle East	Council of Representatives	Unicameral	Speaker of the Council of Representatives	https://iq.parliament.iq/	https://data.ipu.org/
+36	34	Jordan	Middle East	Parliament of Jordan	Bicameral	Speaker of the House of Representatives	https://www.representatives.jo/	https://data.ipu.org/
+37	35	Lebanon	Middle East	Parliament of Lebanon	Unicameral	Speaker of the Parliament	https://www.lp.gov.lb/	https://data.ipu.org/
+38	36	Israel	Middle East	The Knesset	Unicameral	Speaker of the Knesset	https://main.knesset.gov.il/	https://data.ipu.org/
+39	37	Palestine	Middle East	Palestinian Legislative Council	Unicameral	Speaker of the PLC	https://data.ipu.org/parliament/PS	https://data.ipu.org/
+40	38	Syria	Middle East	People's Assembly of Syria	Unicameral	Speaker of the People's Assembly	http://parliament.gov.sy/	https://data.ipu.org/
+41	39	Yemen	Middle East	House of Representatives	Unicameral	Speaker of the House of Representatives	https://yemenparliament.gov.ye/	https://data.ipu.org/
+42	40	Kazakhstan	Central Asia	Parliament of Kazakhstan	Bicameral	Chairman of the Mazhilis	https://www.parlam.kz/	https://data.ipu.org/
+43	41	Uzbekistan	Central Asia	Oliy Majlis	Bicameral	Speaker of the Legislative Chamber	https://parliament.gov.uz/	https://data.ipu.org/
+44	42	Turkmenistan	Central Asia	Assembly of Turkmenistan (Mejlis)	Unicameral	Chairwoman of the Mejlis	https://mejlis.gov.tm/	https://data.ipu.org/
+45	43	Kyrgyzstan	Central Asia	Supreme Council (Jogorku Kenesh)	Unicameral	Speaker of the Jogorku Kenesh	http://www.kenesh.kg/	https://data.ipu.org/
+46	44	Tajikistan	Central Asia	Supreme Assembly (Majlisi Oli)	Bicameral	Chairman of Majlisi namoyandagon	https://parlament.tj/	https://data.ipu.org/
+47	45	United Kingdom	Europe	Parliament of the United Kingdom	Bicameral	Speaker of the House of Commons / Lord Speaker	https://members.parliament.uk/	https://data.ipu.org/
+48	46	France	Europe	Parliament of France (Assemblée nationale & Sénat)	Bicameral	President of the National Assembly	https://www.assemblee-nationale.fr/	https://data.ipu.org/
+49	47	Germany	Europe	Bundestag & Bundesrat	Bicameral	President of the Bundestag	https://www.bundestag.de/en/members	https://data.ipu.org/
+50	48	Italy	Europe	Parliament of Italy (Camera & Senato)	Bicameral	President of the Chamber of Deputies	https://www.camera.it/	https://data.ipu.org/
+51	49	Spain	Europe	Cortes Generales	Bicameral	President of the Congress of Deputies	https://www.congreso.es/	https://data.ipu.org/
+52	50	Russia	Europe	Federal Assembly (State Duma & Federation Council)	Bicameral	Chairman of the State Duma	http://duma.gov.ru/	https://data.ipu.org/
+53	51	Ukraine	Europe	Verkhovna Rada	Unicameral	Chairman of the Verkhovna Rada	https://www.rada.gov.ua/	https://data.ipu.org/
+54	52	Poland	Europe	National Assembly (Sejm & Senate)	Bicameral	Marshal of the Sejm	https://www.sejm.gov.pl/	https://data.ipu.org/
+55	53	Netherlands	Europe	States General (Tweede & Eerste Kamer)	Bicameral	President of the House of Representatives	https://www.houseofrepresentatives.nl/	https://data.ipu.org/
+56	54	Belgium	Europe	Federal Parliament of Belgium	Bicameral	President of the Chamber of Representatives	https://www.dekamer.be/	https://data.ipu.org/
+57	55	Sweden	Europe	Riksdag	Unicameral	Speaker of the Riksdag	https://www.riksdagen.se/	https://data.ipu.org/
+58	56	Norway	Europe	Storting	Unicameral	President of the Storting	https://www.stortinget.no/	https://data.ipu.org/
+59	57	Denmark	Europe	Folketing	Unicameral	Speaker of the Folketing	https://www.thedanishparliament.dk/	https://data.ipu.org/
+60	58	Finland	Europe	Eduskunta	Unicameral	Speaker of the Parliament	https://www.eduskunta.fi/	https://data.ipu.org/
+61	59	Switzerland	Europe	Federal Assembly	Bicameral	President of the National Council	https://www.parlament.ch/	https://data.ipu.org/
+62	60	Austria	Europe	Austrian Parliament	Bicameral	President of the National Council	https://www.parlament.gv.at/	https://data.ipu.org/
+63	61	Portugal	Europe	Assembly of the Republic	Unicameral	President of the Assembly	https://www.parlamento.pt/	https://data.ipu.org/
+64	62	Greece	Europe	Hellenic Parliament	Unicameral	Speaker of the Hellenic Parliament	https://www.hellenicparliament.gr/	https://data.ipu.org/
+65	63	Ireland	Europe	Oireachtas	Bicameral	Ceann Comhairle	https://www.oireachtas.ie/	https://data.ipu.org/
+66	64	Czech Republic	Europe	Parliament of the Czech Republic	Bicameral	President of the Chamber of Deputies	https://www.psp.cz/	https://data.ipu.org/
+67	65	Romania	Europe	Parliament of Romania	Bicameral	President of the Chamber of Deputies	https://www.cdep.ro/	https://data.ipu.org/
+68	66	Hungary	Europe	National Assembly (Országgyűlés)	Unicameral	Speaker of the National Assembly	https://www.parlament.hu/	https://data.ipu.org/
+69	67	Bulgaria	Europe	National Assembly of Bulgaria	Unicameral	Chairperson of the National Assembly	https://www.parliament.bg/	https://data.ipu.org/
+70	68	Croatia	Europe	Croatian Parliament (Sabor)	Unicameral	Speaker of the Croatian Parliament	https://www.sabor.hr/	https://data.ipu.org/
+71	69	Serbia	Europe	National Assembly of Serbia	Unicameral	President of the National Assembly	http://www.parlament.gov.rs/	https://data.ipu.org/
+72	70	Slovakia	Europe	National Council of Slovakia	Unicameral	Speaker of the National Council	https://www.nrsr.sk/	https://data.ipu.org/
+73	71	Slovenia	Europe	Parliament of Slovenia	Bicameral	President of the National Assembly	https://www.dz-rs.si/	https://data.ipu.org/
+74	72	Lithuania	Europe	Seimas	Unicameral	Speaker of the Seimas	https://www.lrs.lt/	https://data.ipu.org/
+75	73	Latvia	Europe	Saeima	Unicameral	Speaker of the Saeima	https://www.saeima.lv/	https://data.ipu.org/
+76	74	Estonia	Europe	Riigikogu	Unicameral	President of the Riigikogu	https://www.riigikogu.ee/	https://data.ipu.org/
+77	75	Iceland	Europe	Althing	Unicameral	Speaker of the Althing	https://www.althingi.is/	https://data.ipu.org/
+78	76	Luxembourg	Europe	Chamber of Deputies	Unicameral	President of the Chamber of Deputies	https://www.chd.lu/	https://data.ipu.org/
+79	77	Malta	Europe	Parliament of Malta	Unicameral	Speaker of the House of Representatives	https://parlament.mt/	https://data.ipu.org/
+80	78	Cyprus	Europe	House of Representatives	Unicameral	President of the House	http://www.parliament.cy/	https://data.ipu.org/
+81	79	Albania	Europe	Parliament of Albania (Kuvendi)	Unicameral	Speaker of the Parliament	https://www.parlament.al/	https://data.ipu.org/
+82	80	North Macedonia	Europe	Assembly of North Macedonia	Unicameral	President of the Assembly	https://www.sobranie.mk/	https://data.ipu.org/
+83	81	Bosnia and Herzegovina	Europe	Parliamentary Assembly	Bicameral	Speaker of the House of Representatives	https://www.parlament.ba/	https://data.ipu.org/
+84	82	Montenegro	Europe	Parliament of Montenegro	Unicameral	President of the Parliament	https://www.skupstina.me/	https://data.ipu.org/
+85	83	Moldova	Europe	Parliament of Moldova	Unicameral	President of the Parliament	https://www.parlament.md/	https://data.ipu.org/
+86	84	Belarus	Europe	National Assembly of Belarus	Bicameral	Chairman of the House of Representatives	http://www.house.gov.by/	https://data.ipu.org/
+87	85	Georgia	Europe	Parliament of Georgia	Unicameral	Chairman of the Parliament	https://parliament.ge/	https://data.ipu.org/
+88	86	Armenia	Europe	National Assembly of Armenia	Unicameral	President of the National Assembly	http://www.parliament.am/	https://data.ipu.org/
+89	87	Azerbaijan	Europe	National Assembly (Milli Majlis)	Unicameral	Speaker of the National Assembly	https://meclis.gov.az/	https://data.ipu.org/
+90	88	Andorra	Europe	General Council	Unicameral	General Syndic	https://www.consellgeneral.ad/	https://data.ipu.org/
+91	89	Monaco	Europe	National Council	Unicameral	President of the National Council	https://www.conseil-national.mc/	https://data.ipu.org/
+92	90	San Marino	Europe	Grand and General Council	Unicameral	Captains Regent	https://www.consigliograndeegenerale.sm/	https://data.ipu.org/
+93	91	Liechtenstein	Europe	Landtag of Liechtenstein	Unicameral	President of the Landtag	https://www.landtag.li/	https://data.ipu.org/
+94	92	Vatican City	Europe	Pontifical Commission	Unicameral	President of the Pontifical Commission	https://www.vaticanstate.va/	https://data.ipu.org/
+95	93	United States	North America	United States Congress (House & Senate)	Bicameral	Speaker of the House / President Pro Tempore	https://www.congress.gov/members	https://data.ipu.org/
+96	94	Canada	North America	Parliament of Canada (House of Commons & Senate)	Bicameral	Speaker of the House of Commons	https://www.ourcommons.ca/members/en	https://data.ipu.org/
+97	95	Mexico	North America	Congress of the Union	Bicameral	President of the Chamber of Deputies	https://www.diputados.gob.mx/	https://data.ipu.org/
+98	96	Brazil	South America	National Congress of Brazil	Bicameral	President of the Chamber of Deputies	https://www.camara.leg.br/	https://data.ipu.org/
+99	97	Argentina	South America	National Congress of Argentina	Bicameral	President of the Chamber of Deputies	https://www.hcdn.gob.ar/	https://data.ipu.org/
+100	98	Colombia	South America	Congress of Colombia	Bicameral	President of the Senate	https://www.camara.gov.co/	https://data.ipu.org/
+101	99	Chile	South America	National Congress of Chile	Bicameral	President of the Chamber of Deputies	https://www.camara.cl/	https://data.ipu.org/
+102	100	Peru	South America	Congress of the Republic of Peru	Unicameral	President of the Congress	https://www.congreso.gob.pe/	https://data.ipu.org/
+103	101	Venezuela	South America	National Assembly of Venezuela	Unicameral	President of the National Assembly	https://www.asambleanacional.gob.ve/	https://data.ipu.org/
+104	102	Ecuador	South America	National Assembly of Ecuador	Unicameral	President of the National Assembly	https://www.asambleanacional.gob.ec/	https://data.ipu.org/
+105	103	Bolivia	South America	Plurinational Legislative Assembly	Bicameral	President of the Chamber of Deputies	https://diputados.gob.bo/	https://data.ipu.org/
+106	104	Paraguay	South America	Congress of Paraguay	Bicameral	President of the Chamber of Deputies	http://www.diputados.gov.py/	https://data.ipu.org/
+107	105	Uruguay	South America	General Assembly of Uruguay	Bicameral	President of the General Assembly	https://parlamento.gub.uy/	https://data.ipu.org/
+108	106	Guyana	South America	National Assembly of Guyana	Unicameral	Speaker of the National Assembly	https://parliament.gov.gy/	https://data.ipu.org/
+109	107	Suriname	South America	National Assembly of Suriname	Unicameral	Speaker of the National Assembly	https://www.dna.sr/	https://data.ipu.org/
+110	108	Cuba	Caribbean	National Assembly of People's Power	Unicameral	President of the National Assembly	https://www.parlamentocubano.gob.cu/	https://data.ipu.org/
+111	109	Dominican Republic	Caribbean	Congress of the Dominican Republic	Bicameral	President of the Chamber of Deputies	https://www.camaradediputados.gob.do/	https://data.ipu.org/
+112	110	Haiti	Caribbean	National Assembly of Haiti	Bicameral	President of the Senate	https://data.ipu.org/parliament/HT	https://data.ipu.org/
+113	111	Jamaica	Caribbean	Parliament of Jamaica	Bicameral	Speaker of the House of Representatives	https://japarliament.gov.jm/	https://data.ipu.org/
+114	112	Trinidad and Tobago	Caribbean	Parliament of Trinidad and Tobago	Bicameral	Speaker of the House of Representatives	https://www.ttparliament.org/	https://data.ipu.org/
+115	113	Bahamas	Caribbean	Parliament of The Bahamas	Bicameral	Speaker of the House of Assembly	https://www.bahamas.gov.bs/	https://data.ipu.org/
+116	114	Barbados	Caribbean	Parliament of Barbados	Bicameral	Speaker of the House of Assembly	https://www.barbadosparliament.com/	https://data.ipu.org/
+117	115	Costa Rica	Central America	Legislative Assembly of Costa Rica	Unicameral	President of the Legislative Assembly	http://www.asamblea.go.cr/	https://data.ipu.org/
+118	116	Panama	Central America	National Assembly of Panama	Unicameral	President of the National Assembly	https://www.asamblea.gob.pa/	https://data.ipu.org/
+119	117	Guatemala	Central America	Congress of the Republic	Unicameral	President of the Congress	https://www.congreso.gob.gt/	https://data.ipu.org/
+120	118	Honduras	Central America	National Congress of Honduras	Unicameral	President of the National Congress	https://www.congresonacional.hn/	https://data.ipu.org/
+121	119	El Salvador	Central America	Legislative Assembly of El Salvador	Unicameral	President of the Legislative Assembly	https://www.asamblea.gob.sv/	https://data.ipu.org/
+122	120	Nicaragua	Central America	National Assembly of Nicaragua	Unicameral	President of the National Assembly	https://www.asamblea.gob.ni/	https://data.ipu.org/
+123	121	Belize	Central America	National Assembly of Belize	Bicameral	Speaker of the House of Representatives	https://www.nationalassembly.gov.bz/	https://data.ipu.org/
+124	122	Antigua and Barbuda	Caribbean	Parliament of Antigua and Barbuda	Bicameral	Speaker of the House	https://data.ipu.org/parliament/AG	https://data.ipu.org/
+125	123	Dominica	Caribbean	House of Assembly of Dominica	Unicameral	Speaker of the House	https://data.ipu.org/parliament/DM	https://data.ipu.org/
+126	124	Grenada	Caribbean	Parliament of Grenada	Bicameral	Speaker of the House	https://data.ipu.org/parliament/GD	https://data.ipu.org/
+127	125	Saint Kitts and Nevis	Caribbean	National Assembly	Unicameral	Speaker of the National Assembly	https://data.ipu.org/parliament/KN	https://data.ipu.org/
+128	126	Saint Lucia	Caribbean	Parliament of Saint Lucia	Bicameral	Speaker of the House	http://www.parliament.govt.lc/	https://data.ipu.org/
+129	127	Saint Vincent and the Grenadines	Caribbean	House of Assembly	Unicameral	Speaker of the House	https://assembly.gov.vc/	https://data.ipu.org/
+130	128	Egypt	Africa	Parliament of Egypt (House of Representatives & Senate)	Bicameral	Speaker of the House of Representatives	https://www.parliament.gov.eg/	https://data.ipu.org/
+131	129	South Africa	Africa	Parliament of South Africa	Bicameral	Speaker of the National Assembly	https://www.parliament.gov.za/	https://data.ipu.org/
+132	130	Nigeria	Africa	National Assembly of Nigeria	Bicameral	Speaker of the House / Senate President	https://nass.gov.ng/	https://data.ipu.org/
+133	131	Kenya	Africa	Parliament of Kenya	Bicameral	Speaker of the National Assembly	http://www.parliament.go.ke/	https://data.ipu.org/
+134	132	Ethiopia	Africa	Federal Parliamentary Assembly	Bicameral	Speaker of the House of Peoples' Representatives	https://www.hopr.gov.et/	https://data.ipu.org/
+135	133	Ghana	Africa	Parliament of Ghana	Unicameral	Speaker of Parliament	https://www.parliament.gh/	https://data.ipu.org/
+136	134	Morocco	Africa	Parliament of Morocco	Bicameral	President of the House of Representatives	https://www.chambredesrepresentants.ma/	https://data.ipu.org/
+137	135	Algeria	Africa	Parliament of Algeria	Bicameral	President of the People's National Assembly	https://www.apn.dz/	https://data.ipu.org/
+138	136	Tunisia	Africa	Assembly of the Representatives of the People	Bicameral	President of the Assembly	http://www.arp.tn/	https://data.ipu.org/
+139	137	Libya	Africa	House of Representatives	Unicameral	Speaker of the House of Representatives	https://parliament.ly/	https://data.ipu.org/
+140	138	Sudan	Africa	Transitional Legislative Council (Suspended)	N/A	N/A	https://data.ipu.org/parliament/SD	https://data.ipu.org/
+141	139	South Sudan	Africa	Transitional National Legislative Assembly	Bicameral	Speaker of the Assembly	https://data.ipu.org/parliament/SS	https://data.ipu.org/
+142	140	Tanzania	Africa	National Assembly of Tanzania (Bunge)	Unicameral	Speaker of the National Assembly	https://www.parliament.go.tz/	https://data.ipu.org/
+143	141	Uganda	Africa	Parliament of Uganda	Unicameral	Speaker of Parliament	https://www.parliament.go.ug/	https://data.ipu.org/
+144	142	Rwanda	Africa	Parliament of Rwanda	Bicameral	Speaker of the Chamber of Deputies	https://www.parliament.gov.rw/	https://data.ipu.org/
+145	143	Burundi	Africa	Parliament of Burundi	Bicameral	President of the National Assembly	https://www.assemblee.bi/	https://data.ipu.org/
+146	144	Democratic Republic of the Congo	Africa	Parliament of the DRC	Bicameral	President of the National Assembly	https://www.assemblee-nationale.cd/	https://data.ipu.org/
+147	145	Republic of the Congo	Africa	Parliament of the Republic of the Congo	Bicameral	President of the National Assembly	https://www.assemblee-nationale.cg/	https://data.ipu.org/
+148	146	Angola	Africa	National Assembly of Angola	Unicameral	President of the National Assembly	https://www.parlamento.ao/	https://data.ipu.org/
+149	147	Zambia	Africa	National Assembly of Zambia	Unicameral	Speaker of the National Assembly	https://www.parliament.gov.zm/	https://data.ipu.org/
+150	148	Zimbabwe	Africa	Parliament of Zimbabwe	Bicameral	Speaker of the National Assembly	https://www.parlzim.gov.zw/	https://data.ipu.org/
+151	149	Mozambique	Africa	Assembly of the Republic	Unicameral	President of the Assembly	https://www.parlamento.mz/	https://data.ipu.org/
+152	150	Namibia	Africa	Parliament of Namibia	Bicameral	Speaker of the National Assembly	https://www.parliament.na/	https://data.ipu.org/
+153	151	Botswana	Africa	National Assembly of Botswana	Unicameral	Speaker of the National Assembly	https://www.parliament.gov.bw/	https://data.ipu.org/
+154	152	Senegal	Africa	National Assembly of Senegal	Unicameral	President of the National Assembly	http://www.assemblee-nationale.sn/	https://data.ipu.org/
+155	153	Ivory Coast	Africa	Parliament of Ivory Coast	Bicameral	President of the National Assembly	http://www.assnat.ci/	https://data.ipu.org/
+156	154	Cameroon	Africa	Parliament of Cameroon	Bicameral	President of the National Assembly	https://www.assnat.cm/	https://data.ipu.org/
+157	155	Mali	Africa	National Transitional Council	Unicameral	President of the Council	https://data.ipu.org/parliament/ML	https://data.ipu.org/
+158	156	Burkina Faso	Africa	Transitional Legislative Assembly	Unicameral	President of the Assembly	https://www.assembleenationale.bf/	https://data.ipu.org/
+159	157	Niger	Africa	National Assembly (Suspended)	Unicameral	N/A	https://data.ipu.org/parliament/NE	https://data.ipu.org/
+160	158	Guinea	Africa	National Transitional Council	Unicameral	President of the Council	https://data.ipu.org/parliament/GN	https://data.ipu.org/
+161	159	Benin	Africa	National Assembly of Benin	Unicameral	President of the National Assembly	https://assemblee-nationale.bj/	https://data.ipu.org/
+162	160	Togo	Africa	National Assembly of Togo	Bicameral	President of the National Assembly	https://assemblee-nationale.tg/	https://data.ipu.org/
+163	161	Sierra Leone	Africa	Parliament of Sierra Leone	Unicameral	Speaker of Parliament	https://www.parliament.gov.sl/	https://data.ipu.org/
+164	162	Liberia	Africa	Legislature of Liberia	Bicameral	Speaker of the House of Representatives	https://legislature.gov.lr/	https://data.ipu.org/
+165	163	Mauritania	Africa	National Assembly of Mauritania	Unicameral	President of the National Assembly	http://www.assembleenationale.mr/	https://data.ipu.org/
+166	164	Somalia	Africa	Federal Parliament of Somalia	Bicameral	Speaker of the House of the People	https://parliament.gov.so/	https://data.ipu.org/
+167	165	Eritrea	Africa	National Assembly of Eritrea	Unicameral	Chairman of the National Assembly	https://data.ipu.org/parliament/ER	https://data.ipu.org/
+168	166	Djibouti	Africa	National Assembly of Djibouti	Unicameral	President of the National Assembly	https://www.assemblee-nationale.dj/	https://data.ipu.org/
+169	167	Madagascar	Africa	Parliament of Madagascar	Bicameral	President of the National Assembly	https://www.assemblee-nationale.mg/	https://data.ipu.org/
+170	168	Mauritius	Africa	National Assembly of Mauritius	Unicameral	Speaker of the National Assembly	https://mauritiusassembly.govmu.org/	https://data.ipu.org/
+171	169	Seychelles	Africa	National Assembly of Seychelles	Unicameral	Speaker of the National Assembly	https://www.nationalassembly.sc/	https://data.ipu.org/
+172	170	Comoros	Africa	Assembly of the Union	Unicameral	President of the Assembly	https://data.ipu.org/parliament/KM	https://data.ipu.org/
+173	171	Cabo Verde	Africa	National Assembly of Cabo Verde	Unicameral	President of the National Assembly	https://www.parlamento.cv/	https://data.ipu.org/
+174	172	Gabon	Africa	Transitional Parliament of Gabon	Bicameral	President of the National Assembly	https://www.assemblee-nationale.ga/	https://data.ipu.org/
+175	173	Equatorial Guinea	Africa	Parliament of Equatorial Guinea	Bicameral	President of the Chamber of Deputies	https://data.ipu.org/parliament/GQ	https://data.ipu.org/
+176	174	Central African Republic	Africa	National Assembly	Unicameral	President of the National Assembly	https://data.ipu.org/parliament/CF	https://data.ipu.org/
+177	175	Chad	Africa	National Transitional Council	Unicameral	President of the Council	https://data.ipu.org/parliament/TD	https://data.ipu.org/
+178	176	Gambia	Africa	National Assembly of The Gambia	Unicameral	Speaker of the National Assembly	https://www.assembly.gm/	https://data.ipu.org/
+179	177	Guinea-Bissau	Africa	National People's Assembly	Unicameral	President of the Assembly	https://www.anpguinebissau.org/	https://data.ipu.org/
+180	178	Lesotho	Africa	Parliament of Lesotho	Bicameral	Speaker of the National Assembly	https://parliament.ls/	https://data.ipu.org/
+181	179	Eswatini	Africa	Parliament of Eswatini	Bicameral	Speaker of the House of Assembly	https://www.parliament.gov.sz/	https://data.ipu.org/
+182	180	Malawi	Africa	National Assembly of Malawi	Unicameral	Speaker of the National Assembly	https://www.parliament.gov.mw/	https://data.ipu.org/
+183	181	Sao Tome and Principe	Africa	National Assembly	Unicameral	President of the National Assembly	https://www.parlamento.st/	https://data.ipu.org/
+184	182	Australia	Oceania	Parliament of Australia	Bicameral	Speaker of the House of Representatives	https://www.aph.gov.au/Senators_and_Members	https://data.ipu.org/
+185	183	New Zealand	Oceania	New Zealand Parliament	Unicameral	Speaker of the House of Representatives	https://www.parliament.nz/en/mps-and-electorates/	https://data.ipu.org/
+186	184	Papua New Guinea	Oceania	National Parliament of Papua New Guinea	Unicameral	Speaker of the National Parliament	http://www.parliament.gov.pg/	https://data.ipu.org/
+187	185	Fiji	Oceania	Parliament of Fiji	Unicameral	Speaker of the Parliament	https://www.parliament.gov.fj/	https://data.ipu.org/
+188	186	Solomon Islands	Oceania	National Parliament of Solomon Islands	Unicameral	Speaker of the National Parliament	http://www.parliament.gov.sb/	https://data.ipu.org/
+189	187	Vanuatu	Oceania	Parliament of Vanuatu	Unicameral	Speaker of the Parliament	https://parliament.gov.vu/	https://data.ipu.org/
+190	188	Samoa	Oceania	Legislative Assembly of Samoa	Unicameral	Speaker of the Legislative Assembly	https://www.palemene.ws/	https://data.ipu.org/
+191	189	Tonga	Oceania	Legislative Assembly of Tonga	Unicameral	Speaker of the Legislative Assembly	https://www.parliament.gov.to/	https://data.ipu.org/
+192	190	Kiribati	Oceania	House of Assembly (Maneaba ni Maungatabu)	Unicameral	Speaker of the House	https://www.parliament.gov.ki/	https://data.ipu.org/
+193	191	Micronesia	Oceania	Congress of the Federated States of Micronesia	Unicameral	Speaker of the Congress	https://www.cfsm.gov.fm/	https://data.ipu.org/
+194	192	Marshall Islands	Oceania	Legislature of the Marshall Islands (Nitijela)	Unicameral	Speaker of the Nitijela	https://rmiparliament.org/	https://data.ipu.org/
+195	193	Palau	Oceania	Olbiil Era Kelulau (National Congress)	Bicameral	Speaker of the House of Delegates	https://www.palaugov.pw/	https://data.ipu.org/
+196	194	Nauru	Oceania	Parliament of Nauru	Unicameral	Speaker of Parliament	http://www.naurugov.nr/	https://data.ipu.org/
+197	195	Tuvalu	Oceania	Parliament of Tuvalu (Palamene)	Unicameral	Speaker of Parliament	https://data.ipu.org/parliament/TV	https://data.ipu.org/
+198	196	Cook Islands	Oceania	Parliament of the Cook Islands	Unicameral	Speaker of Parliament	https://parliament.gov.ck/	https://data.ipu.org/
+199	197	Niue	Oceania	Niue Assembly	Unicameral	Speaker of the Assembly	https://data.ipu.org/parliament/NU	https://data.ipu.org/
