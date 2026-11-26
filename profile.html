@@ -1,611 +1,511 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — আমার প্রোফাইল ও AI</title>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AYNA BOOK ★ Profile, QR Scanner & Backup Vault</title>
+  <style>
+    :root {
+      --navy-dark: #050a18;
+      --navy-mid: #10214a;
+      --card-bg: rgba(9, 19, 45, 0.9);
+      --gold: #ffe64d;
+      --gold-soft: #fff6b3;
+      --cyan: #38f2ff;
+      --alert: #ff4d6d;
+      --text: #eef6ff;
+      --muted: #9ec5e8;
+    }
 
-<style>
-:root {
-  --bg:#050a18;
-  --navy-top:#1a3575;
-  --navy-bottom:#08122b;
-  --gold:#ffe64d;
-  --gold-bright:#fff6b3;
-  --gold-base:#8a6105;
-  --quantum-cyan:#38f2ff;
-  --white:#ffffff;
-  --muted:#e6eeff;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
 
-* {
-  box-sizing:border-box;
-}
+    body {
+      background: radial-gradient(circle at top, var(--navy-mid), var(--navy-dark) 75%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+    }
 
-html, body {
-  max-width:100%;
-  overflow-x:hidden;
-}
+    .topbar {
+      max-width: 1120px;
+      margin: 0 auto 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 230, 77, 0.35);
+      border-radius: 14px;
+      padding: 12px 18px;
+    }
 
-body {
-  margin:0;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(56,242,255,.09), transparent 35%),
-    radial-gradient(circle at 85% 20%, rgba(255,230,77,.10), transparent 40%),
-    var(--bg);
-  color:var(--white);
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  font-size:32px;
-  line-height:1.5;
-}
+    .brand {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--gold);
+    }
 
-button,input,textarea,select {
-  font:inherit;
-}
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-button {
-  cursor:pointer;
-}
+    .btn {
+      background: linear-gradient(135deg, #1b3b7c, #0b1938);
+      color: var(--gold-soft);
+      border: 1px solid rgba(255, 230, 77, 0.45);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
 
-.panel, .profile-card {
-  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%);
-  border:4px solid var(--gold);
-  border-radius:12px;
-  box-shadow:
-    0 0 18px rgba(255,230,77,.65),
-    0 9px 0 var(--gold-base),
-    0 16px 26px rgba(0,0,0,.85),
-    inset 0 2px 5px var(--gold-bright);
-}
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
 
-header {
-  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
-  border-bottom:4px solid var(--gold);
-  padding:20px;
-  position:sticky;
-  top:0;
-  z-index:50;
-}
+    .btn.cyan-btn {
+      border-color: rgba(56, 242, 255, 0.55);
+      color: var(--cyan);
+    }
 
-.header-inner {
-  max-width:1200px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-}
+    .btn.danger-btn {
+      border-color: rgba(255, 77, 109, 0.65);
+      color: #ff9eb0;
+    }
 
-.logo {
-  color:var(--gold-bright);
-  font-size:42px;
-  font-weight:1000;
-}
+    .grid-layout {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(300px, 1fr));
+      gap: 18px;
+    }
 
-.header-actions {
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
+    @media (max-width: 880px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
 
-.header-actions a,
-.header-actions button {
-  text-decoration:none;
-  color:white;
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  border:3px solid var(--gold);
-  padding:10px 18px;
-  border-radius:8px;
-  font-weight:bold;
-  font-size:25px;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 5px 0 var(--gold-base);
-}
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid rgba(56, 242, 255, 0.24);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    }
 
-.container {
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
-}
+    .panel-title {
+      color: var(--gold);
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-.panel {
-  padding:24px;
-  margin:22px 0;
-  text-align:center;
-}
+    .field-group {
+      margin-bottom: 12px;
+    }
 
-.panel h1, .panel h2 {
-  margin:0 0 12px;
-  font-size:40px;
-  font-weight:1000;
-  color:var(--gold-bright);
-}
+    label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
 
-.profile-card {
-  padding:24px;
-  margin:22px 0;
-  display:flex;
-  gap:24px;
-  align-items:center;
-  flex-wrap:wrap;
-}
+    input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(56, 242, 255, 0.3);
+      background: rgba(5, 12, 28, 0.9);
+      color: var(--text);
+      font-size: 0.92rem;
+    }
 
-.photo-wrap {
-  position:relative;
-  width:280px;
-  height:320px;
-  flex-shrink:0;
-}
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
 
-.photo-wrap img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:top center;
-  border-radius:10px;
-  border:5px solid var(--gold-bright);
-  background:#0a1636;
-}
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
 
-.barcode-box {
-  position:absolute;
-  bottom:10px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#ffffff;
-  border:3px solid var(--gold-bright);
-  border-radius:6px;
-  padding:4px 10px;
-}
+    .qr-box {
+      margin-top: 12px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 230, 77, 0.3);
+      background: #040914;
+      padding: 10px;
+    }
 
-.barcode-box svg {
-  height:36px;
-  width:auto;
-  display:block;
-}
+    video#qrVideo {
+      width: 100%;
+      max-height: 240px;
+      border-radius: 10px;
+      background: #02050c;
+      display: block;
+    }
 
-.info-col {
-  flex:1;
-  min-width:260px;
-}
+    .result-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(16, 36, 76, 0.7);
+      border: 1px solid rgba(56, 242, 255, 0.25);
+      font-size: 0.86rem;
+      color: var(--cyan);
+      word-break: break-word;
+    }
 
-.info-col strong {
-  display:block;
-  font-size:42px;
-  font-weight:1000;
-}
+    .diag-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
 
-.info-col small {
-  display:block;
-  font-size:28px;
-  color:var(--muted);
-  margin-top:6px;
-  word-break:break-word;
-}
+    .stat-card {
+      background: rgba(14, 29, 64, 0.85);
+      border: 1px solid rgba(255, 230, 77, 0.2);
+      border-radius: 10px;
+      padding: 10px;
+    }
 
-.id-chip {
-  display:inline-block;
-  margin-top:12px;
-  padding:6px 14px;
-  border-radius:8px;
-  border:2.5px solid var(--gold);
-  background:#050b1c;
-  color:var(--gold-bright);
-  font-family:monospace;
-  font-size:28px;
-  font-weight:1000;
-}
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
 
-.form-box {
-  padding:24px;
-  margin:22px 0;
-}
+    .stat-val {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--gold-soft);
+      margin-top: 3px;
+    }
 
-.form-box h2 {
-  margin:0 0 18px;
-  font-size:36px;
-  font-weight:1000;
-  color:var(--gold-bright);
-}
+    .icon-preview-wrap {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-.field-label {
-  display:block;
-  font-size:28px;
-  font-weight:bold;
-  margin:14px 0 8px;
-  color:var(--gold-bright);
-}
-
-.field-input,
-.field-textarea {
-  width:100%;
-  background:#050b1c;
-  color:white;
-  border:3px solid var(--gold);
-  border-radius:8px;
-  padding:14px 18px;
-  font-size:28px;
-  outline:none;
-}
-
-.field-textarea {
-  min-height:140px;
-  resize:vertical;
-}
-
-.btn-grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-  margin-top:18px;
-}
-
-.btn {
-  min-height:76px;
-  padding:14px;
-  border-radius:8px;
-  border:3px solid var(--gold);
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  color:white;
-  font-size:27px;
-  font-weight:bold;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
-}
-
-.save-btn {
-  grid-column:1 / -1;
-  min-height:86px;
-  border:3.5px solid var(--gold-bright);
-  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
-  color:#050a18;
-  font-size:30px;
-  font-weight:1000;
-  box-shadow:0 0 18px rgba(255,230,77,.65), 0 7px 0 #664604;
-}
-
-.ai-box {
-  margin-top:18px;
-  background:#050b1c;
-  border:3px solid var(--quantum-cyan);
-  border-radius:8px;
-  padding:18px;
-  font-size:28px;
-  color:var(--gold-bright);
-  white-space:pre-line;
-  overflow-wrap:anywhere;
-}
-
-#notice {
-  position:fixed;
-  top:102px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#0a1636;
-  color:white;
-  border:3.5px solid var(--gold-bright);
-  padding:16px 24px;
-  border-radius:8px;
-  z-index:100;
-  display:none;
-  max-width:92%;
-  font-size:28px;
-  text-align:center;
-}
-
-footer {
-  text-align:center;
-  padding:28px 16px 120px;
-  color:var(--muted);
-  font-size:26px;
-}
-
-.bottom-nav {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  z-index:60;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
-  border-top:4px solid var(--gold);
-  padding:10px 6px calc(10px + env(safe-area-inset-bottom));
-}
-
-.bottom-nav a {
-  color:white;
-  text-decoration:none;
-  text-align:center;
-  font-size:24px;
-  font-weight:bold;
-}
-
-.bottom-nav span {
-  display:block;
-  font-size:32px;
-}
-
-@media(max-width:600px) {
-  .btn-grid {
-    grid-template-columns:1fr;
-  }
-  .photo-wrap {
-    width:220px;
-    height:250px;
-  }
-}
-</style>
+    img#iconPreviewImg {
+      width: 72px;
+      height: 72px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 230, 77, 0.5);
+      background: #050a18;
+    }
+  </style>
 </head>
 <body>
+  <header class="topbar">
+    <div class="brand">AYNA BOOK ★ প্রোফাইল, QR ও ব্যাকআপ হাব</div>
+    <nav class="nav-links">
+      <a class="btn" href="ayna-book-complete-hub.html">হোম হাব</a>
+      <a class="btn" href="radar.html">রাডার ও আবহাওয়া</a>
+      <button class="btn cyan-btn" id="btnSpeakProfile">ভয়েস সারসংক্ষেপ</button>
+    </nav>
+  </header>
 
-<header>
-  <div class="header-inner">
-    <div class="logo">AYNA BOOK ★</div>
-    <div class="header-actions">
-      <button type="button" id="speakClockBtn">🕒 সময় বলুন</button>
-      <button type="button" id="toggleClockBtn">🔊 ঘড়ি: চালু</button>
-      <a href="index.html">🏠 হোম</a>
-      <a href="messenger.html">💬 Messenger</a>
-    </div>
-  </div>
-</header>
-
-<div id="notice"></div>
-
-<main class="container">
-  <section class="panel">
-    <h1>AYNA BOOK — আমার প্রোফাইল</h1>
-    <p>আপনার প্রোফাইল তথ্য, AYNA ID, বারকোড ও বায়ো আপডেট করুন। ভুল করলে কণ্ঠের মাধ্যমে ভুলের জায়গা বলে দেওয়া হবে।</p>
-  </section>
-
-  <section class="profile-card">
-    <div class="photo-wrap">
-      <img id="profilePhoto" alt="Profile photo">
-      <div class="barcode-box">
-        <svg id="profileBarcode"></svg>
+  <main class="grid-layout">
+    <!-- ১. প্রোফাইল ও ডিজিটাল ID -->
+    <section class="panel">
+      <div class="panel-title">
+        <span>ব্যবহারকারী প্রোফাইল ও ID</span>
       </div>
-    </div>
 
-    <div class="info-col">
-      <strong id="displayName">Mohammad Mahabub Alam</strong>
-      <small id="displayEmail">mahbub.uk.cox@gmail.com</small>
-      <small id="displayBio">কোয়ান্টাম ও সুপারকম্পিউটার মাল্টিমিডিয়া হাব সদস্য।</small>
-      <span class="id-chip" id="displayId">2026-----10000001</span>
-    </div>
-  </section>
+      <form id="profileForm">
+        <div class="field-group">
+          <label for="profileName">নাম / কলসাইন</label>
+          <input id="profileName" type="text" placeholder="যেমন: AYNA Explorer" required />
+        </div>
 
-  <section class="form-box">
-    <h2>✏️ প্রোফাইল তথ্য সম্পাদনা ও AI</h2>
+        <div class="field-group">
+          <label for="profileId">AYNA ID / কোড</label>
+          <input id="profileId" type="text" placeholder="যেমন: AYNA-2026-001" required />
+        </div>
 
-    <label class="field-label" for="inputName">পূর্ণ নাম</label>
-    <input type="text" id="inputName" class="field-input" value="Mohammad Mahabub Alam">
+        <div class="field-group">
+          <label for="profileCity">বর্তমান শহর / কেন্দ্র</label>
+          <input id="profileCity" type="text" placeholder="যেমন: Dhaka, Bangladesh" />
+        </div>
 
-    <label class="field-label" for="inputEmail">ইমেইল ঠিকানা</label>
-    <input type="email" id="inputEmail" class="field-input" value="mahbub.uk.cox@gmail.com">
+        <div class="field-group">
+          <label for="profileBio">পরিচিতি / স্ট্যাটাস নোট</label>
+          <textarea id="profileBio" rows="2" placeholder="আপনার সংক্ষিপ্ত নোট বা বার্তা..."></textarea>
+        </div>
 
-    <label class="field-label" for="inputAynaId">AYNA ID</label>
-    <input type="text" id="inputAynaId" class="field-input" value="2026-----10000001">
+        <div class="actions-row">
+          <button type="submit" class="btn">প্রোফাইল সংরক্ষণ</button>
+          <button type="button" class="btn cyan-btn" id="btnBroadcastId">লাইভ সিঙ্ক পাঠান</button>
+        </div>
+      </form>
 
-    <label class="field-label" for="inputBio">প্রোফাইল বায়ো / পরিচিতি</label>
-    <textarea id="inputBio" class="field-textarea" placeholder="আপনার সম্পর্কে সংক্ষেপে লিখুন...">কোয়ান্টাম ও সুপারকম্পিউটার মাল্টিমিডিয়া হাব সদস্য।</textarea>
+      <div id="profileStatus" class="result-box">প্রোফাইল তথ্য প্রস্তুত।</div>
+    </section>
 
-    <input type="file" id="photoPicker" accept="image/*" hidden>
+    <!-- ২. QR কোড স্ক্যানার -->
+    <section class="panel">
+      <div class="panel-title">
+        <span>ক্যামেরা QR কোড স্ক্যানার</span>
+      </div>
 
-    <div class="btn-grid">
-      <button type="button" class="btn" id="changePhotoBtn">🖼️ প্রোফাইল ছবি পরিবর্তন</button>
-      <button type="button" class="btn" id="speakProfileBtn">🔊 প্রোফাইল তথ্য কণ্ঠে শুনুন</button>
-      <button type="button" class="btn save-btn" id="saveProfileBtn">💾 প্রোফাইল সংরক্ষণ করুন</button>
-      <button type="button" class="btn" id="aiBioBtn">🤖 AI বায়ো উন্নত করুন</button>
-      <button type="button" class="btn" id="replaySignalBtn">🔁 শেষ সিগন্যাল আবার শুনুন</button>
-    </div>
+      <div class="actions-row" style="margin-top: 0; margin-bottom: 10px;">
+        <button type="button" class="btn cyan-btn" id="btnStartQr">ক্যামেরা চালু</button>
+        <button type="button" class="btn danger-btn" id="btnStopQr">ক্যামেরা বন্ধ</button>
+      </div>
 
-    <div class="ai-box" id="profileAiOutput">প্রোফাইল AI ও ভয়েস যাচাই সিস্টেম প্রস্তুত।</div>
-  </section>
-</main>
+      <div class="qr-box">
+        <video id="qrVideo" playsinline muted></video>
+      </div>
 
-<footer>
-  © 2026 AYNA BOOK — Profile &amp; AI Hub
-</footer>
+      <div id="qrResultBox" class="result-box">
+        স্ক্যান ফলাফল: এখনও কোনো QR কোড স্ক্যান করা হয়নি।
+      </div>
+    </section>
 
-<nav class="bottom-nav">
-  <a href="index.html"><span>🏠</span>Home</a>
-  <a href="index.html#createPost"><span>➕</span>Post</a>
-  <a href="messenger.html"><span>💬</span>Chat</a>
-  <a href="profile.html"><span>👤</span>Profile</a>
-</nav>
+    <!-- ৩. ব্যাকআপ, রিস্টোর ও PWA আইকন -->
+    <section class="panel">
+      <div class="panel-title">
+        <span>ব্যাকআপ, রিস্টোর ও অ্যাপ আইকন</span>
+      </div>
 
-<script>
-const $ = id => document.getElementById(id);
-let lastSignalText = "প্রোফাইল ভয়েস সিগন্যাল প্রস্তুত আছে।";
-let clockEnabled = true;
+      <div class="actions-row" style="margin-top: 0;">
+        <button type="button" class="btn" id="btnDownloadBackup">ব্যাকআপ ডাউনলোড (.json)</button>
+        <label class="btn cyan-btn" for="restoreFileInput" style="margin: 0;">ব্যাকআপ রিস্টোর</label>
+        <input id="restoreFileInput" type="file" accept="application/json,.json" style="display: none;" />
+      </div>
 
-function notify(msg) {
-  const el = $("notice");
-  el.textContent = msg;
-  el.style.display = "block";
-  clearTimeout(notify.t);
-  notify.t = setTimeout(() => { el.style.display = "none"; }, 3200);
-}
+      <div class="icon-preview-wrap">
+        <img id="iconPreviewImg" alt="AYNA Icon Preview" />
+        <div>
+          <div style="font-size: 0.86rem; color: var(--gold-soft); font-weight: 700; margin-bottom: 6px;">
+            512×512 মাস্টার PWA আইকন
+          </div>
+          <button type="button" class="btn" id="btnGenerateIcon">আইকন তৈরি ও ডাউনলোড</button>
+        </div>
+      </div>
 
-const VoiceChecker = {
-  beep() {
-    try {
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) return;
-      const ctx = new Ctx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(320, ctx.currentTime);
-      osc.frequency.setValueAtTime(205, ctx.currentTime + 0.14);
-      gain.gain.setValueAtTime(0.14, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.34);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.35);
-    } catch (_) {}
-  },
-  speak(text) {
-    if (!text || !("speechSynthesis" in window)) return;
-    lastSignalText = text;
-    try {
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(String(text).slice(0, 260));
-      const voices = window.speechSynthesis.getVoices() || [];
-      const bn = voices.find(v => /bn/i.test(v.lang));
-      u.voice = bn || voices[0] || null;
-      u.lang = bn?.lang || "bn-BD";
-      u.rate = 0.96;
-      window.speechSynthesis.speak(u);
-    } catch (_) {}
-  },
-  errorAt(fieldName, reasonBn) {
-    this.beep();
-    const full = `${fieldName} ঘরে ভুল হয়েছে। ${reasonBn}`;
-    notify("⚠️ " + full);
-    $("profileAiOutput").textContent = "⚠️ ভুলের জায়গা চিহ্নিত:\n" + full;
-    this.speak(full);
-  }
-};
+      <div id="backupStatusBox" class="result-box">
+        ব্যাকআপ ও আইকন ইঞ্জিন প্রস্তুত।
+      </div>
+    </section>
 
-function drawBarcode(val) {
-  if (typeof JsBarcode === "function") {
-    try {
-      JsBarcode("#profileBarcode", val || "2026-----10000001", {
-        format: "CODE128",
-        lineColor: "#000000",
-        width: 1.5,
-        height: 34,
-        displayValue: false,
-        margin: 0
+    <!-- ৪. সিস্টেম ডায়াগনস্টিকস ও স্ট্যাটাস -->
+    <section class="panel">
+      <div class="panel-title">
+        <span>সিস্টেম হেলথ ও ডায়াগনস্টিকস</span>
+        <button type="button" class="btn" id="btnRefreshDiag">রিফ্রেশ</button>
+      </div>
+
+      <div class="diag-grid">
+        <div class="stat-card">
+          <div class="stat-label">সক্রিয় মডিউল</div>
+          <div class="stat-val" id="diagModulesVal">- / -</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">হেলথ স্কোর</div>
+          <div class="stat-val" id="diagHealthVal">0%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">লোকাল স্টোরেজ</div>
+          <div class="stat-val" id="diagStorageVal">0 KB</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">সাম্প্রতিক এরর</div>
+          <div class="stat-val" id="diagErrorsVal">0</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- AYNA BOOK মডিউলসমূহ -->
+  <script src="uhd-sounds-engine.js"></script>
+  <script src="speed-booster-engine.js"></script>
+  <script src="storage-vault.js"></script>
+  <script src="backup-engine.js"></script>
+  <script src="app-icon-generator.js"></script>
+  <script src="qr-scanner-engine.js"></script>
+  <script src="net-status-monitor.js"></script>
+  <script src="diagnostics-health-hub.js"></script>
+  <script src="realtime-sync-bus.js"></script>
+
+  <script>
+    (function initProfileHub() {
+      const PROFILE_KEY = "ayna_profile_data";
+      const sound = window.aynaSound || window.uhdSoundsEngine;
+      const bus = window.aynaBus;
+      const vault = window.aynaVault;
+      const diag = window.aynaDiag;
+
+      const nameInput = document.getElementById("profileName");
+      const idInput = document.getElementById("profileId");
+      const cityInput = document.getElementById("profileCity");
+      const bioInput = document.getElementById("profileBio");
+      const profileStatus = document.getElementById("profileStatus");
+
+      function loadProfile() {
+        try {
+          const raw = localStorage.getItem(PROFILE_KEY);
+          if (!raw) return;
+          const p = JSON.parse(raw);
+          nameInput.value = p.name || "";
+          idInput.value = p.id || "";
+          cityInput.value = p.city || "";
+          bioInput.value = p.bio || "";
+          profileStatus.textContent = `লোড হয়েছে: ${p.name || "User"} (${p.id || "No ID"})`;
+        } catch (_) {}
+      }
+
+      function saveProfile(e) {
+        if (e) e.preventDefault();
+        const profileData = {
+          name: nameInput.value.trim(),
+          id: idInput.value.trim(),
+          city: cityInput.value.trim(),
+          bio: bioInput.value.trim(),
+          updatedAt: new Date().toISOString()
+        };
+
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(profileData));
+        vault?.saveItem?.("profiles", profileData);
+        bus?.publish?.("profile:updated", profileData);
+
+        sound?.playTone?.("confirm");
+        sound?.speak?.(`${profileData.name} প্রোফাইল সংরক্ষিত হয়েছে।`);
+        profileStatus.textContent = `সংরক্ষিত হয়েছে: ${profileData.name} (${profileData.id})`;
+        refreshDiagnostics();
+      }
+
+      document.getElementById("profileForm").addEventListener("submit", saveProfile);
+
+      document.getElementById("btnBroadcastId").addEventListener("click", () => {
+        const current = {
+          name: nameInput.value.trim() || "AYNA User",
+          id: idInput.value.trim() || "AYNA-ID",
+          city: cityInput.value.trim() || "Dhaka"
+        };
+        bus?.publish?.("profile:beacon", current);
+        sound?.playTone?.("confirm");
+        profileStatus.textContent = `লাইভ সিঙ্ক পাঠানো হয়েছে: ${current.name} • ${current.id}`;
       });
-    } catch (_) {}
-  }
-}
 
-function loadSavedProfile() {
-  try {
-    const saved = JSON.parse(localStorage.getItem("ayna_profile_data") || "null");
-    if (!saved) {
-      drawBarcode("2026-----10000001");
-      return;
-    }
-    $("inputName").value = saved.name || "Mohammad Mahabub Alam";
-    $("inputEmail").value = saved.email || "mahbub.uk.cox@gmail.com";
-    $("inputAynaId").value = saved.aynaId || "2026-----10000001";
-    $("inputBio").value = saved.bio || "";
-    $("displayName").textContent = $("inputName").value;
-    $("displayEmail").textContent = $("inputEmail").value;
-    $("displayBio").textContent = $("inputBio").value;
-    $("displayId").textContent = $("inputAynaId").value;
-    if (saved.photo) $("profilePhoto").src = saved.photo;
-    drawBarcode($("inputAynaId").value);
-  } catch (_) {
-    drawBarcode("2026-----10000001");
-  }
-}
-loadSavedProfile();
+      document.getElementById("btnSpeakProfile").addEventListener("click", () => {
+        const summary = `প্রোফাইল নাম ${nameInput.value || "সেট করা হয়নি"}, আইডি ${idInput.value || "নেই"}, অবস্থান ${cityInput.value || "অনির্ধারিত"}।`;
+        sound?.speak?.(summary);
+      });
 
-$("changePhotoBtn").onclick = () => $("photoPicker").click();
-$("photoPicker").onchange = e => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    $("profilePhoto").src = reader.result;
-    notify("প্রোফাইল ছবি যুক্ত হয়েছে");
-  };
-  reader.readAsDataURL(file);
-};
+      // QR স্ক্যানার কন্ট্রোল
+      const videoEl = document.getElementById("qrVideo");
+      const qrResultBox = document.getElementById("qrResultBox");
 
-$("saveProfileBtn").onclick = () => {
-  const name = ($("inputName").value || "").trim();
-  const email = ($("inputEmail").value || "").trim();
-  const aynaId = ($("inputAynaId").value || "").trim();
-  const bio = ($("inputBio").value || "").trim();
+      document.getElementById("btnStartQr").addEventListener("click", async () => {
+        if (!window.aynaQrScanner) {
+          qrResultBox.textContent = "QR স্ক্যানার মডিউল পাওয়া যায়নি।";
+          return;
+        }
+        qrResultBox.textContent = "ক্যামেরা চালু হচ্ছে...";
+        await window.aynaQrScanner.start(
+          videoEl,
+          detectedText => {
+            qrResultBox.textContent = `স্ক্যান ফলাফল: ${detectedText}`;
+            vault?.saveItem?.("qr_scans", { value: detectedText });
+            bus?.publish?.("qr:detected", { value: detectedText });
+            sound?.playTone?.("confirm");
+            sound?.speak?.("QR কোড স্ক্যান সফল হয়েছে।");
+            refreshDiagnostics();
+          },
+          errMsg => {
+            qrResultBox.textContent = `ত্রুটি: ${errMsg}`;
+            sound?.playTone?.("alert");
+          }
+        );
+      });
 
-  if (name.length < 2) {
-    VoiceChecker.errorAt("পূর্ণ নাম", "সঠিক নাম লিখুন।");
-    return;
-  }
-  if (!email.includes("@") || !email.includes(".")) {
-    VoiceChecker.errorAt("ইমেইল ঠিকানা", "সঠিক ইমেইল ঠিকানা লিখুন।");
-    return;
-  }
-  if (aynaId.length < 6) {
-    VoiceChecker.errorAt("AYNA ID", "সঠিক AYNA ID লিখুন।");
-    return;
-  }
+      document.getElementById("btnStopQr").addEventListener("click", () => {
+        window.aynaQrScanner?.stop?.();
+        qrResultBox.textContent = "স্ক্যান ফলাফল: ক্যামেরা বন্ধ করা হয়েছে।";
+      });
 
-  $("displayName").textContent = name;
-  $("displayEmail").textContent = email;
-  $("displayBio").textContent = bio;
-  $("displayId").textContent = aynaId;
-  drawBarcode(aynaId);
+      // ব্যাকআপ, রিস্টোর ও আইকন জেনারেটর
+      const backupStatusBox = document.getElementById("backupStatusBox");
+      const iconPreviewImg = document.getElementById("iconPreviewImg");
 
-  try {
-    localStorage.setItem("ayna_profile_data", JSON.stringify({
-      name,
-      email,
-      aynaId,
-      bio,
-      photo: $("profilePhoto").src || ""
-    }));
-  } catch (_) {}
+      document.getElementById("btnDownloadBackup").addEventListener("click", () => {
+        if (!window.aynaBackup) return;
+        const count = window.aynaBackup.downloadBackup();
+        sound?.playTone?.("confirm");
+        backupStatusBox.textContent = `ব্যাকআপ ফাইল ডাউনলোড হয়েছে (${count}টি ডেটা আইটেম)।`;
+      });
 
-  const ok = `প্রোফাইল তথ্য সংরক্ষণ করা হয়েছে। নাম ${name}, AYNA ID ${aynaId}।`;
-  $("profileAiOutput").textContent = "✅ " + ok;
-  notify("✅ প্রোফাইল সংরক্ষণ হয়েছে");
-  VoiceChecker.speak(ok);
-};
+      document.getElementById("restoreFileInput").addEventListener("change", async event => {
+        const file = event.target.files?.[0];
+        if (!file || !window.aynaBackup) return;
+        const res = await window.aynaBackup.restoreBackup(file);
+        backupStatusBox.textContent = res.message;
+        if (res.ok) {
+          sound?.playTone?.("confirm");
+          loadProfile();
+          refreshDiagnostics();
+        } else {
+          sound?.playTone?.("alert");
+        }
+        event.target.value = "";
+      });
 
-$("speakProfileBtn").onclick = () => {
-  const txt = `প্রোফাইল নাম ${$("displayName").textContent}। ইমেইল ${$("displayEmail").textContent}। AYNA ID ${$("displayId").textContent}।`;
-  $("profileAiOutput").textContent = "🔊 " + txt;
-  VoiceChecker.speak(txt);
-};
+      document.getElementById("btnGenerateIcon").addEventListener("click", () => {
+        if (typeof window.generateAynaAppIcon !== "function") return;
+        const dataUrl = window.generateAynaAppIcon(512, true);
+        iconPreviewImg.src = dataUrl;
+        sound?.playTone?.("confirm");
+        backupStatusBox.textContent = "512×512 AYNA BOOK আইকন তৈরি ও ডাউনলোড হয়েছে।";
+      });
 
-$("aiBioBtn").onclick = async () => {
-  const curBio = ($("inputBio").value || "").trim();
-  const name = ($("inputName").value || "Mohammad Mahabub Alam").trim();
-  const fallback = `${name} — AYNA BOOK কোয়ান্টাম, রাডার, যোগাযোগ ও AI হাবের সক্রিয় সদস্য।`;
-  try {
-    const res = await fetch("/api/ai/assist", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ module: "profile_bio_ai", text: `${name}: ${curBio}` })
-    });
-    const d = res.ok ? await res.json().catch(() => ({})) : {};
-    const out = (d.reply || d.text || d.answer || fallback).replace(/[*#]/g, "").trim();
-    $("inputBio").value = out;
-    $("profileAiOutput").textContent = "🤖 AI বায়ো আপডেট:\n" + out;
-    VoiceChecker.speak("AI বায়ো উন্নত করা হয়েছে।");
-  } catch (_) {
-    $("inputBio").value = fallback;
-    $("profileAiOutput").textContent = "🤖 AI বায়ো আপডেট:\n" + fallback;
-    VoiceChecker.speak("AI বায়ো উন্নত করা হয়েছে।");
-  }
-};
+      // ডায়াগনস্টিকস আপডেট
+      function refreshDiagnostics() {
+        if (!diag) return;
+        const info = diag.checkModules();
+        const kb = diag.getStorageUsageKb();
+        document.getElementById("diagModulesVal").textContent = `${info.activeCount} / ${info.totalCount}`;
+        document.getElementById("diagHealthVal").textContent = `${info.healthPercent}%`;
+        document.getElementById("diagStorageVal").textContent = `${kb} KB`;
+        document.getElementById("diagErrorsVal").textContent = String(info.recentErrors);
+      }
 
-$("replaySignalBtn").onclick = () => {
-  $("profileAiOutput").textContent = "🔁 শেষ সিগন্যাল:\n" + lastSignalText;
-  VoiceChecker.speak(lastSignalText);
-};
+      document.getElementById("btnRefreshDiag").addEventListener("click", refreshDiagnostics);
 
-$("speakClockBtn").onclick = () => {
-  const t = "এখন সময় " + new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit", hour12: true });
-  notify("🎙️ " + t);
-  VoiceChecker.speak(t);
-};
+      // প্রিভিউ আইকন আগে থেকেই দেখানো
+      if (typeof window.generateAynaAppIcon === "function") {
+        iconPreviewImg.src = window.generateAynaAppIcon(512, false);
+      }
 
-$("toggleClockBtn").onclick = () => {
-  clockEnabled = !clockEnabled;
-  $("toggleClockBtn").textContent = clockEnabled ? "🔊 ঘড়ি: চালু" : "🔇 ঘড়ি: বন্ধ";
-  notify(clockEnabled ? "ঘড়ি চালু হয়েছে" : "ঘড়ি বন্ধ হয়েছে");
-};
-</script>
+      loadProfile();
+      refreshDiagnostics();
+    })();
+  </script>
 </body>
 </html>
