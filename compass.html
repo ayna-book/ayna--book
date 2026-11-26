@@ -1,55 +1,260 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080d18">
-<title>AYNA Compass</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AYNA BOOK — 4x AI Compass</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#080d18;color:white;font-family:Arial;text-align:center}
-header{padding:20px;color:#e9c65a}
-main{height:calc(100dvh - 65px);display:flex;flex-direction:column;align-items:center;justify-content:space-around}
-.compass{width:min(80vw,45vh);aspect-ratio:1;border:5px solid #d7b64b;border-radius:50%;position:relative;background:radial-gradient(circle,#17263d,#050912)}
-.direction{position:absolute;font-size:22px;font-weight:bold}
-.n{top:8px;left:48%;color:red}.s{bottom:8px;left:48%}
-.e{right:12px;top:47%}.w{left:12px;top:47%}
-.needle{position:absolute;left:50%;top:50%;width:5px;height:75%;background:linear-gradient(red 50%,white 50%);transform:translate(-50%,-50%)}
-button{padding:14px 22px;background:#d7b64b;border:0;border-radius:8px}
+  body {
+    margin:0;
+    padding:24px;
+    background:#050a18;
+    color:#ffffff;
+    font-family:Arial,"Noto Sans Bengali",sans-serif;
+    font-size:28px;
+    text-align:center;
+  }
+  .compass-panel {
+    max-width:960px;
+    margin:0 auto;
+    padding:24px;
+    background:linear-gradient(155deg,#1a3575 0%,#08122b 100%);
+    border:4px solid #ffe64d;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(255,230,77,.55);
+  }
+  h1 {
+    margin:0 0 18px;
+    color:#fff6b3;
+    font-size:38px;
+  }
+  .controls {
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  input, button {
+    padding:12px 18px;
+    border-radius:8px;
+    border:3px solid #ffe64d;
+    font-size:24px;
+    font-weight:bold;
+  }
+  input {
+    width:180px;
+    background:#050b1c;
+    color:#ffffff;
+    text-align:center;
+  }
+  button {
+    background:linear-gradient(155deg,#1d3b7e,#08122b);
+    color:#fff6b3;
+    cursor:pointer;
+  }
+  #compassCanvas {
+    width:840px;
+    max-width:100%;
+    aspect-ratio:1 / 1;
+    height:auto;
+    display:block;
+    margin:0 auto 16px;
+    border-radius:50%;
+    border:6px solid #38f2ff;
+    background:#040917;
+    box-shadow:0 0 36px rgba(56,242,255,.45);
+  }
+  #compassReadout, #compassAiBox {
+    margin-top:14px;
+    padding:16px;
+    border-radius:8px;
+    background:#050b1c;
+    border:3px solid #38f2ff;
+    color:#fff6b3;
+    white-space:pre-line;
+  }
 </style>
 </head>
 <body>
-<header><h2>AYNA BOOK COMPASS</h2></header>
-<main>
-<div class="compass">
-<span class="direction n">N</span>
-<span class="direction s">S</span>
-<span class="direction e">E</span>
-<span class="direction w">W</span>
-<div class="needle" id="needle"></div>
+
+<div class="compass-panel">
+  <h1>🧭 AYNA BOOK — 4x AI কম্পাস</h1>
+
+  <div class="controls">
+    <input type="number" id="compassDegInput" value="45" min="0" max="360" placeholder="0–360°">
+    <button type="button" id="startLiveCompassBtn">🧭 লাইভ কম্পাস চালু</button>
+    <button type="button" id="runCompassAiBtn">🤖 AI দিকনির্দেশ ও কণ্ঠ</button>
+  </div>
+
+  <canvas id="compassCanvas" width="840" height="840"></canvas>
+
+  <div id="compassReadout">AI Compass: ৪৫° উত্তর-পূর্ব (NE)</div>
+  <div id="compassAiBox">AI কম্পাস প্রস্তুত — ডিগ্রি পরিবর্তন করুন বা লাইভ কম্পাস চালু করুন।</div>
 </div>
-<h2 id="heading">Direction: অপেক্ষমাণ</h2>
-<button onclick="startCompass()">COMPASS চালু করুন</button>
-</main>
+
 <script>
-async function startCompass(){
-try{
-if(typeof DeviceOrientationEvent!=="undefined" &&
-typeof DeviceOrientationEvent.requestPermission==="function"){
-const permission=await DeviceOrientationEvent.requestPermission();
-if(permission!=="granted")throw new Error("Permission denied");
+const $ = id => document.getElementById(id);
+const canvas = $("compassCanvas");
+const ctx = canvas.getContext("2d");
+let liveHeading = null;
+
+function getCardinalBn(deg) {
+  const n = ((Number(deg) % 360) + 360) % 360;
+  if (n >= 337.5 || n < 22.5) return "উত্তর (N)";
+  if (n < 67.5) return "উত্তর-পূর্ব (NE)";
+  if (n < 112.5) return "পূর্ব (E)";
+  if (n < 157.5) return "দক্ষিণ-পূর্ব (SE)";
+  if (n < 202.5) return "দক্ষিণ (S)";
+  if (n < 247.5) return "দক্ষিণ-পশ্চিম (SW)";
+  if (n < 292.5) return "পশ্চিম (W)";
+  return "উত্তর-পশ্চিম (NW)";
 }
-window.addEventListener("deviceorientation",e=>{
-let angle;
-if(typeof e.webkitCompassHeading==="number")angle=e.webkitCompassHeading;
-else if(e.alpha!==null)angle=360-e.alpha;
-else return;
-needle.style.transform=`translate(-50%,-50%) rotate(${angle}deg)`;
-heading.textContent="Direction: "+Math.round(angle)+"°";
+
+function speakBn(text) {
+  if (!text || !("speechSynthesis" in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices() || [];
+    const bn = voices.find(v => /bn/i.test(v.lang));
+    u.voice = bn || voices[0] || null;
+    u.lang = bn?.lang || "bn-BD";
+    u.rate = 0.96;
+    window.speechSynthesis.speak(u);
+  } catch (_) {}
+}
+
+function drawCompass(deg) {
+  const heading = ((Number(deg) % 360) + 360) % 360;
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const maxR = Math.min(cx, cy) - 28;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // বাইরের ও ভেতরের রিং
+  ctx.fillStyle = "#040917";
+  ctx.beginPath();
+  ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = "#ffe64d";
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, maxR - 4, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // ৩৬০° টিক মার্ক
+  for (let d = 0; d < 360; d += 15) {
+    const rad = ((d - heading - 90) * Math.PI) / 180;
+    const major = d % 45 === 0;
+    const rInner = major ? maxR - 36 : maxR - 20;
+    ctx.strokeStyle = d % 90 === 0 ? "#ffe64d" : "rgba(56, 242, 255, 0.55)";
+    ctx.lineWidth = major ? 4 : 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(rad) * rInner, cy + Math.sin(rad) * rInner);
+    ctx.lineTo(cx + Math.cos(rad) * (maxR - 6), cy + Math.sin(rad) * (maxR - 6));
+    ctx.stroke();
+  }
+
+  // ৮টি দিকের অক্ষর
+  const cardinals = [
+    { label: "N", deg: 0, color: "#ff4d6d" },
+    { label: "NE", deg: 45, color: "#38f2ff" },
+    { label: "E", deg: 90, color: "#ffe64d" },
+    { label: "SE", deg: 135, color: "#38f2ff" },
+    { label: "S", deg: 180, color: "#ffe64d" },
+    { label: "SW", deg: 225, color: "#38f2ff" },
+    { label: "W", deg: 270, color: "#ffe64d" },
+    { label: "NW", deg: 315, color: "#38f2ff" }
+  ];
+
+  ctx.font = "bold 30px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  cardinals.forEach(c => {
+    const rad = ((c.deg - heading - 90) * Math.PI) / 180;
+    const lx = cx + Math.cos(rad) * (maxR - 68);
+    const ly = cy + Math.sin(rad) * (maxR - 68);
+    ctx.fillStyle = c.color;
+    ctx.fillText(c.label, lx, ly);
+  });
+
+  // কম্পাসের কাঁটা
+  const needleRad = ((heading - 90) * Math.PI) / 180;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(needleRad + Math.PI / 2);
+
+  ctx.fillStyle = "#ff4d6d";
+  ctx.beginPath();
+  ctx.moveTo(0, -maxR + 95);
+  ctx.lineTo(22, 0);
+  ctx.lineTo(-22, 0);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = "#38f2ff";
+  ctx.beginPath();
+  ctx.moveTo(0, maxR - 95);
+  ctx.lineTo(22, 0);
+  ctx.lineTo(-22, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // কেন্দ্রবিন্দু
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.arc(cx, cy, 14, 0, Math.PI * 2);
+  ctx.fill();
+
+  $("compassReadout").textContent = `AI Compass: ${Math.round(heading)}° ${getCardinalBn(heading)}`;
+}
+
+function renderLoop() {
+  const val = liveHeading !== null ? liveHeading : Number($("compassDegInput").value || 0);
+  drawCompass(val);
+  requestAnimationFrame(renderLoop);
+}
+renderLoop();
+
+$("compassDegInput").addEventListener("input", () => {
+  liveHeading = null;
 });
-}catch(e){heading.textContent="Compass পাওয়া যায়নি: "+e.message}
-}
+
+$("startLiveCompassBtn").addEventListener("click", async () => {
+  try {
+    if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
+      const res = await DeviceOrientationEvent.requestPermission();
+      if (res !== "granted") {
+        $("compassAiBox").textContent = "⚠️ কম্পাস সেন্সর অনুমতি দেওয়া হয়নি। ম্যানুয়াল ডিগ্রি ব্যবহার করুন।";
+        return;
+      }
+    }
+    window.addEventListener("deviceorientation", e => {
+      const h = typeof e.webkitCompassHeading === "number"
+        ? e.webkitCompassHeading
+        : (typeof e.alpha === "number" ? (360 - e.alpha) % 360 : null);
+      if (typeof h === "number" && !Number.isNaN(h)) {
+        liveHeading = h;
+        $("compassDegInput").value = String(Math.round(h));
+      }
+    }, { passive: true });
+    $("compassAiBox").textContent = "✅ লাইভ ডিভাইস কম্পাস সক্রিয় হয়েছে।";
+  } catch (_) {
+    $("compassAiBox").textContent = "ম্যানুয়াল ডিগ্রি দিয়ে কম্পাস চালু রয়েছে।";
+  }
+});
+
+$("runCompassAiBtn").addEventListener("click", () => {
+  const deg = Math.round(((Number($("compassDegInput").value || 0) % 360) + 360) % 360);
+  const dir = getCardinalBn(deg);
+  const msg = `AI কম্পাস বর্তমানে ${deg} ডিগ্রি অর্থাৎ ${dir} দিক নির্ণয় করছে।`;
+  $("compassAiBox").textContent = "🤖 " + msg;
+  speakBn(msg);
+});
 </script>
 </body>
 </html>
