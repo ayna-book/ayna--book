@@ -1,798 +1,658 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#060d21">
-<title>AYNA BOOK ★ Ultra-Critical Quantum High-Speed Hub</title>
-<script src="uhd-sounds-engine.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AYNA BOOK ★ Master Hub</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root {
+      --bg-deep: #050a18;
+      --bg-mid: #10214a;
+      --card: rgba(8, 18, 44, 0.9);
+      --gold: #ffe64d;
+      --gold-soft: #fff6b3;
+      --cyan: #38f2ff;
+      --danger: #ff4d6d;
+      --ok: #3cff9e;
+      --text: #eef6ff;
+      --muted: #9ec5e8;
+    }
 
-<style>
-:root {
-  --bg:#050a18;
-  --navy-top:#1a3575;
-  --navy-bottom:#08122b;
-  --gold:#ffe64d;
-  --gold-bright:#fff6b3;
-  --gold-base:#8a6105;
-  --cyan:#38f2ff;
-  --white:#ffffff;
-  --muted:#e6eeff;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
 
-* {
-  box-sizing:border-box;
-}
+    body {
+      background: radial-gradient(circle at top, var(--bg-mid), var(--bg-deep) 75%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+    }
 
-html, body {
-  max-width:100%;
-  overflow-x:hidden;
-  scroll-behavior:smooth;
-}
+    .topbar {
+      max-width: 1220px;
+      margin: 0 auto 18px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: var(--card);
+      border: 1px solid rgba(255, 230, 77, 0.4);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    }
 
-body {
-  margin:0;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(56,242,255,.10), transparent 35%),
-    radial-gradient(circle at 85% 20%, rgba(255,230,77,.12), transparent 40%),
-    var(--bg);
-  color:var(--white);
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  font-size:48px;
-  line-height:1.5;
-}
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-button,input,textarea,select {
-  font:inherit;
-}
+    .brand-title {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.6px;
+    }
 
-button {
-  cursor:pointer;
-}
+    .status-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      border: 1px solid rgba(56, 242, 255, 0.45);
+      color: var(--cyan);
+      background: rgba(56, 242, 255, 0.12);
+    }
 
-.feature-box {
-  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%);
-  border:5px solid var(--gold);
-  border-radius:16px;
-  padding:32px;
-  margin:32px 0;
-  box-shadow:
-    0 0 24px rgba(255,230,77,.65),
-    0 12px 0 var(--gold-base),
-    0 20px 30px rgba(0,0,0,.85),
-    inset 0 2px 8px var(--gold-bright);
-}
+    .status-pill.offline {
+      border-color: rgba(255, 77, 109, 0.7);
+      color: #ff9eb0;
+      background: rgba(255, 77, 109, 0.15);
+    }
 
-header {
-  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
-  border-bottom:5px solid var(--gold);
-  padding:24px;
-  position:sticky;
-  top:0;
-  z-index:50;
-}
+    .nav-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
-.header-inner {
-  max-width:1360px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-  flex-wrap:wrap;
-}
+    .btn {
+      background: linear-gradient(135deg, #1b3b7c, #0a1736);
+      color: var(--gold-soft);
+      border: 1px solid rgba(255, 230, 77, 0.45);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
 
-/* AYNA BOOK ২ গুণ বড় + ★ কর্ণারে ১ সেকেন্ড পর পর সাদা আলো */
-.ayna-brand {
-  color:var(--gold-bright);
-  font-size:92px;
-  font-weight:1000;
-  letter-spacing:2px;
-  display:inline-flex;
-  align-items:center;
-  gap:14px;
-  text-shadow:0 0 18px rgba(255,230,77,.85), 0 4px 10px rgba(0,0,0,.95);
-}
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
 
-.star-corner-white-pulse {
-  color:#ffffff;
-  font-size:96px;
-  display:inline-block;
-  transform:translateY(-14px);
-  animation:starWhitePulse1s 1s infinite alternate ease-in-out;
-}
+    .btn.cyan {
+      border-color: rgba(56, 242, 255, 0.55);
+      color: var(--cyan);
+    }
 
-@keyframes starWhitePulse1s {
-  0% {
-    color:#ffffff;
-    transform:translateY(-14px) scale(1);
-    text-shadow:0 0 8px #ffffff, 0 0 14px rgba(255,255,255,.6);
-  }
-  100% {
-    color:#ffffff;
-    transform:translateY(-14px) scale(1.28);
-    text-shadow:
-      0 0 20px #ffffff,
-      0 0 38px #ffffff,
-      0 0 60px #ffffff,
-      0 0 85px #e6f7ff;
-  }
-}
+    .btn.sos {
+      background: linear-gradient(135deg, #7a1228, #380712);
+      border-color: rgba(255, 77, 109, 0.85);
+      color: #ffd6de;
+    }
 
-.big-btn {
-  min-height:112px;
-  padding:22px 32px;
-  border-radius:14px;
-  border:4px solid var(--gold-bright);
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  color:#ffffff;
-  font-size:44px;
-  font-weight:1000;
-  box-shadow:0 0 16px rgba(255,230,77,.55), 0 8px 0 var(--gold-base);
-}
+    .main-grid {
+      max-width: 1220px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 18px;
+    }
 
-.primary-big-btn {
-  min-height:120px;
-  padding:24px 36px;
-  border-radius:14px;
-  border:4px solid var(--gold-bright);
-  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
-  color:#050a18;
-  font-size:46px;
-  font-weight:1000;
-  box-shadow:0 0 22px rgba(255,230,77,.75), 0 8px 0 #664604;
-}
+    @media (max-width: 960px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
-.big-btn:active, .primary-big-btn:active {
-  transform:translateY(5px);
-}
+    .panel {
+      background: var(--card);
+      border: 1px solid rgba(56, 242, 255, 0.24);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42);
+      margin-bottom: 18px;
+    }
 
-.container {
-  max-width:1360px;
-  margin:auto;
-  padding:24px;
-}
+    .panel:last-child {
+      margin-bottom: 0;
+    }
 
-/* ছবি পরিষ্কার (নিচে বার নেই), ডান পাশে নাম উপরে ও বক্সে নিচে শুধু "QR" */
-.profile-card-layout {
-  display:flex;
-  gap:32px;
-  align-items:flex-start;
-  flex-wrap:wrap;
-}
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
 
-.profile-photo-box {
-  width:380px;
-  height:420px;
-  border-radius:14px;
-  border:5px solid var(--gold-bright);
-  overflow:hidden;
-  background:#0a1636;
-  flex-shrink:0;
-}
+    .panel-title {
+      color: var(--gold);
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
 
-.profile-photo-box img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:top center;
-  display:block;
-}
+    .radar-shell {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255, 230, 77, 0.55);
+      box-shadow: 0 0 28px rgba(56, 242, 255, 0.16);
+      background: #040914;
+    }
 
-.profile-right-col {
-  flex:1;
-  min-width:320px;
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-}
+    canvas#masterRadarCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
 
-.profile-name-top {
-  font-size:56px;
-  font-weight:1000;
-  color:var(--gold-bright);
-  margin:0;
-}
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
 
-.profile-sub-info {
-  font-size:42px;
-  color:var(--muted);
-  margin:0;
-  word-break:break-word;
-}
+    @media (max-width: 560px) {
+      .metrics-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
 
-.qr-boxed-panel {
-  background:#050b1c;
-  border:4px solid var(--gold);
-  border-radius:14px;
-  padding:24px;
-  text-align:center;
-  max-width:340px;
-}
+    .metric-card {
+      background: rgba(14, 30, 66, 0.85);
+      border: 1px solid rgba(255, 230, 77, 0.2);
+      border-radius: 10px;
+      padding: 10px;
+    }
 
-.qr-title-only {
-  font-size:42px;
-  font-weight:1000;
-  color:#fff6b3;
-  margin-bottom:14px;
-}
+    .metric-label {
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
 
-.qr-boxed-panel canvas {
-  width:220px;
-  height:220px;
-  background:#ffffff;
-  padding:10px;
-  border-radius:10px;
-  display:block;
-  margin:0 auto;
-}
+    .metric-value {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--cyan);
+      margin-top: 3px;
+    }
 
-.field-input, .field-select, .field-textarea {
-  width:100%;
-  background:#050b1c;
-  color:#ffffff;
-  border:4px solid var(--gold);
-  border-radius:12px;
-  padding:20px 24px;
-  font-size:42px;
-  margin-bottom:18px;
-  outline:none;
-}
+    .controls-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
-.pass-row {
-  display:flex;
-  gap:16px;
-  align-items:stretch;
-  margin-bottom:18px;
-}
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
 
-.pass-row input {
-  margin-bottom:0;
-  flex:1;
-}
+    input[type="text"] {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(56, 242, 255, 0.35);
+      background: rgba(5, 12, 28, 0.92);
+      color: var(--text);
+      font-size: 0.92rem;
+    }
 
-.btn-row {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:18px;
-  margin-top:16px;
-}
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
 
-.ai-output-box {
-  margin-top:20px;
-  background:#050b1c;
-  border:4px solid var(--cyan);
-  border-radius:12px;
-  padding:24px;
-  font-size:42px;
-  color:var(--gold-bright);
-  white-space:pre-line;
-  overflow-wrap:anywhere;
-}
+    .output-box {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(13, 30, 64, 0.75);
+      border: 1px solid rgba(56, 242, 255, 0.25);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--text);
+      min-height: 76px;
+      white-space: pre-line;
+    }
 
-.radar-canvas-big {
-  width:840px;
-  max-width:100%;
-  aspect-ratio:1 / 1;
-  height:auto;
-  display:block;
-  margin:20px auto;
-  border-radius:50%;
-  border:6px solid var(--cyan);
-  background:#030814;
-  box-shadow:0 0 36px rgba(56,242,255,.45);
-}
+    .log-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 170px;
+      overflow-y: auto;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
 
-#notice {
-  position:fixed;
-  top:140px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#0a1636;
-  color:#ffffff;
-  border:4px solid var(--gold-bright);
-  padding:24px 36px;
-  border-radius:14px;
-  z-index:120;
-  display:none;
-  max-width:94%;
-  font-size:42px;
-  text-align:center;
-}
-
-footer {
-  text-align:center;
-  padding:40px 20px 180px;
-  color:var(--muted);
-  font-size:38px;
-}
-
-/* নিচে Home, Profile, Box, Chat, Post, Video বাটন */
-.bottom-dock {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  z-index:80;
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
-  border-top:5px solid var(--gold);
-  padding:12px 6px calc(12px + env(safe-area-inset-bottom));
-}
-
-.bottom-dock a {
-  color:#ffffff;
-  text-decoration:none;
-  text-align:center;
-  font-size:28px;
-  font-weight:1000;
-  padding:6px 4px;
-}
-
-.bottom-dock span {
-  display:block;
-  font-size:40px;
-}
-
-@media(max-width:760px) {
-  .ayna-brand {
-    font-size:64px;
-  }
-  .star-corner-white-pulse {
-    font-size:68px;
-  }
-  .btn-row, .pass-row {
-    grid-template-columns:1fr;
-    flex-direction:column;
-  }
-  .bottom-dock {
-    grid-template-columns:repeat(3,1fr);
-  }
-}
-</style>
+    .log-item {
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: rgba(6, 15, 34, 0.8);
+      border-left: 3px solid var(--gold);
+    }
+  </style>
 </head>
 <body>
-
-<header>
-  <div class="header-inner">
-    <div class="ayna-brand">
-      AYNA BOOK<span class="star-corner-white-pulse">★</span>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-title">AYNA BOOK ★ MASTER HUB</div>
+      <span id="netStatusPill" class="status-pill">ONLINE</span>
+      <span id="healthStatusPill" class="status-pill">HEALTH: --%</span>
     </div>
-    <div class="btn-row" style="margin:0;">
-      <button type="button" class="big-btn" id="uhdSoundBtn">🔊 UHD সাউন্ড</button>
-      <button type="button" class="big-btn" id="speakTimeBtn">🕒 সময় বলুন</button>
-    </div>
-  </div>
-</header>
+    <nav class="nav-group">
+      <a class="btn" href="radar.html">পূর্ণ রাডার</a>
+      <a class="btn" href="profile.html">প্রোফাইল ও QR</a>
+      <a class="btn cyan" href="ayna-book-complete-hub.html">ক্লাসিক হাব</a>
+      <button type="button" class="btn sos" id="btnSosBeacon">SOS BEACON</button>
+    </nav>
+  </header>
 
-<div id="notice"></div>
-
-<main class="container">
-
-  <!-- প্রোফাইল বক্স: ছবির নিচে বার নেই; ডান পাশে নাম উপরে ও বক্সে নিচে শুধু "QR" -->
-  <section class="feature-box" id="boxSection">
-    <div class="profile-card-layout">
-      <div class="profile-photo-box">
-        <img id="profileImg" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='380' height='420'%3E%3Crect width='100%25' height='100%25' fill='%2310234d'/%3E%3Ccircle cx='190' cy='150' r='70' fill='%23ffe64d'/%3E%3Crect x='85' y='240' width='210' height='130' rx='24' fill='%2338f2ff'/%3E%3C/svg%3E" alt="Profile Photo">
-      </div>
-
-      <div class="profile-right-col">
-        <h1 class="profile-name-top">Mohammad Mahabub Alam</h1>
-        <p class="profile-sub-info">mahbub.uk.cox@gmail.com</p>
-        <p class="profile-sub-info">কোয়ান্টাম ও সুপারকম্পিউটার মাল্টিমিডিয়া হাব সদস্য।</p>
-        <p class="profile-sub-info"><strong>2026-----10000001</strong></p>
-
-        <div class="qr-boxed-panel">
-          <div class="qr-title-only">QR</div>
-          <canvas id="qrBoxCanvas" width="220" height="220"></canvas>
+  <main class="main-grid">
+    <!-- বাম কলাম: রাডার, GPS, হেডিং কম্পাস ও আবহাওয়া -->
+    <div>
+      <section class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">GPS, কম্পাস ও বেসামরিক-আবহাওয়া রাডার</h2>
+          <span id="activeUserBadge" class="status-pill">GUEST</span>
         </div>
-      </div>
+
+        <div class="radar-shell">
+          <canvas id="masterRadarCanvas" width="840" height="840"></canvas>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-label">স্থানাঙ্ক</div>
+            <div class="metric-value" id="hudCoords">23.8103, 90.4125</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">কম্পাস হেডিং</div>
+            <div class="metric-value" id="hudHeading">0°</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">আবহাওয়া</div>
+            <div class="metric-value" id="hudWeather">28°C • CLEAR</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">বেসামরিক নোড</div>
+            <div class="metric-value" id="hudNodes">0 Active</div>
+          </div>
+        </div>
+
+        <div class="controls-wrap">
+          <button type="button" class="btn cyan" id="btnLocateNow">লাইভ GPS ধরুন</button>
+          <button type="button" class="btn" id="btnEnableCompass">কম্পাস চালু</button>
+          <button type="button" class="btn" id="btnCycleWeather">আবহাওয়া সিমুলেট</button>
+          <button type="button" class="btn" id="btnVoiceBrief">ভয়েস ব্রিফিং</button>
+        </div>
+      </section>
     </div>
 
-    <div class="btn-row">
-      <button type="button" class="big-btn" id="profileAiBtn">🤖 প্রোফাইল ও QR AI</button>
-      <button type="button" class="big-btn" id="appDownloadAiBtn">⬇️ অ্যাপ ডাউনলোড AI</button>
+    <!-- ডান কলাম: AI অর্কেস্ট্রেটর, ব্যাকআপ/আইকন ও লাইভ সিঙ্ক লগ -->
+    <div>
+      <section class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">AYNA AI কমান্ড অর্কেস্ট্রেটর</h2>
+        </div>
+
+        <div class="input-row">
+          <input id="aiCommandInput" type="text" placeholder="কমান্ড বা প্রশ্ন লিখুন (যেমন: আজকের আবহাওয়া ও রাডার অবস্থা বলো)..." />
+          <button type="button" class="btn cyan" id="btnRunAiCommand">চালান</button>
+        </div>
+
+        <div id="aiCommandOutput" class="output-box">
+          AYNA AI অর্কেস্ট্রেটর প্রস্তুত। যেকোনো কমান্ড দিলে তা ভয়েস, স্টোরেজ ভল্ট এবং ক্রস-ট্যাব সিঙ্ক বাসে আপডেট হবে।
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">ব্যাকআপ, মাস্টার আইকন ও ডায়াগনস্টিকস</h2>
+        </div>
+
+        <div class="controls-wrap">
+          <button type="button" class="btn" id="btnMasterBackup">ব্যাকআপ (.json)</button>
+          <button type="button" class="btn cyan" id="btnMasterIcon">512px আইকন</button>
+          <button type="button" class="btn" id="btnMasterDiag">সিস্টেম চেক</button>
+        </div>
+
+        <div id="liveSyncLog" class="log-list">
+          <div class="log-item">সিস্টেম ইনিশিয়ালাইজেশন শুরু হয়েছে...</div>
+        </div>
+      </section>
     </div>
-    <div class="ai-output-box" id="profileAiBox">প্রোফাইল ও QR বক্স AI প্রস্তুত।</div>
-  </section>
+  </main>
 
-  <!-- ১ম রেজিস্ট্রেশন বক্স (পাসওয়ার্ড, রি-পাসওয়ার্ড ও দেখাও/লুকাও) -->
-  <section class="feature-box" id="registerSection">
-    <h2>📝 ১. রেজিস্ট্রেশন (পাসওয়ার্ড, রি-পাসওয়ার্ড ও দেখাও/লুকাও)</h2>
-    <input type="text" id="regName" class="field-input" placeholder="পূর্ণ নাম লিখুন">
-    <input type="email" id="regEmail" class="field-input" placeholder="ইমেইল ঠিকানা লিখুন">
+  <!-- সংযুক্ত সব ইঞ্জিন ও মডিউল (সঠিক লোড ক্রমে) -->
+  <script src="uhd-sounds-engine.js"></script>
+  <script src="speed-booster-engine.js"></script>
+  <script src="storage-vault.js"></script>
+  <script src="backup-engine.js"></script>
+  <script src="app-icon-generator.js"></script>
+  <script src="gps-ai-module.js"></script>
+  <script src="device-orientation-compass.js"></script>
+  <script src="google-connect-hub.js"></script>
+  <script src="qr-scanner-engine.js"></script>
+  <script src="net-status-monitor.js"></script>
+  <script src="realtime-sync-bus.js"></script>
+  <script src="civil-weather-radar.js"></script>
+  <script src="radar-overlay-renderer.js"></script>
+  <script src="radar-sound-sync-bridge.js"></script>
+  <script src="ai-command-orchestrator.js"></script>
+  <script src="diagnostics-health-hub.js"></script>
 
-    <div class="pass-row">
-      <input type="password" id="regPass" class="field-input" placeholder="পাসওয়ার্ড লিখুন">
-      <button type="button" class="big-btn" id="toggleRegPassBtn">👁️ দেখাও / লুকাও</button>
-    </div>
+  <script>
+    (function bootAynaMasterIndex() {
+      const canvas = document.getElementById("masterRadarCanvas");
+      const ctx = canvas.getContext("2d");
 
-    <div class="pass-row">
-      <input type="password" id="regRepass" class="field-input" placeholder="রি-পাসওয়ার্ড লিখুন">
-      <button type="button" class="big-btn" id="toggleRegRepassBtn">👁️ দেখাও / লুকাও</button>
-    </div>
+      const sound = window.aynaSound || window.uhdSoundsEngine;
+      const speed = window.aynaSpeed;
+      const bus = window.aynaBus;
+      const vault = window.aynaVault;
+      const radarEngine = window.aynaCivilWeather;
+      const overlay = window.aynaRadarOverlay;
+      const headingMod = window.aynaHeading;
+      const aiMod = window.aynaAi;
+      const diag = window.aynaDiag;
 
-    <div class="btn-row">
-      <button type="button" class="primary-big-btn" id="registerSubmitBtn">✅ রেজিস্ট্রেশন বাটন</button>
-      <button type="button" class="big-btn" id="registerAiBtn">🤖 রেজিস্ট্রেশন AI</button>
-    </div>
-    <div class="ai-output-box" id="registerStatusBox">রেজিস্ট্রেশনে ভুল হলে UHD সাউন্ড ও কণ্ঠে ভুলের জায়গা বলে দেওয়া হবে।</div>
-  </section>
+      let currentLat = Number(localStorage.getItem("ayna_last_lat") || 23.8103);
+      let currentLon = Number(localStorage.getItem("ayna_last_lon") || 90.4125);
+      let compassDeg = 0;
+      let sweepDeg = 0;
+      let weatherIndex = 0;
 
-  <!-- নিচে লগইন বক্স (পাসওয়ার্ড দেখাও/লুকাও) -->
-  <section class="feature-box" id="loginSection">
-    <h2>🔐 ২. লগইন (পাসওয়ার্ড দেখাও/লুকাও)</h2>
-    <input type="text" id="loginIdOrEmail" class="field-input" placeholder="AYNA ID বা ইমেইল লিখুন">
+      const weatherPresets = [
+        { conditionCode: "clear", temperatureC: 28, humidityPct: 62, windSpeedKmh: 12, windDirectionDeg: 180, visibilityKm: 10 },
+        { conditionCode: "rain", temperatureC: 24, humidityPct: 90, windSpeedKmh: 24, windDirectionDeg: 210, visibilityKm: 4.5 },
+        { conditionCode: "storm", temperatureC: 22, humidityPct: 95, windSpeedKmh: 50, windDirectionDeg: 245, visibilityKm: 1.5 }
+      ];
 
-    <div class="pass-row">
-      <input type="password" id="loginPass" class="field-input" placeholder="লগইন পাসওয়ার্ড লিখুন">
-      <button type="button" class="big-btn" id="toggleLoginPassBtn">👁️ দেখাও / লুকাও</button>
-    </div>
+      const civilNodes = [
+        { id: "N-01", name: "Dhaka Central", category: "checkpoint", lat: 23.8103, lon: 90.4125, speedKmh: 0 },
+        { id: "N-02", name: "Airport Corridor", category: "transit", lat: 23.8513, lon: 90.4072, speedKmh: 42 },
+        { id: "N-03", name: "Buriganga Lane", category: "vessel", lat: 23.7104, lon: 90.4074, speedKmh: 20 }
+      ];
 
-    <div class="btn-row">
-      <button type="button" class="primary-big-btn" id="loginSubmitBtn">🔓 লগইন বাটন</button>
-      <button type="button" class="big-btn" id="loginAiBtn">🤖 লগইন AI</button>
-    </div>
-    <div class="ai-output-box" id="loginStatusBox">লগইন তথ্য যাচাই ও ভয়েস সিগন্যাল প্রস্তুত।</div>
-  </section>
-
-  <!-- রাডার ও কম্পাস বক্স + AI -->
-  <section class="feature-box" id="radarCompassBox">
-    <h2>📡🧭 বেসামরিক রাডার, আবহাওয়া রাডার ও AI কম্পাস</h2>
-    <div class="btn-row">
-      <select id="radarModeSelect" class="field-select" style="margin-bottom:0;">
-        <option value="civil">✈️ বেসামরিক রাডার (আকাশপথ ট্রাফিক)</option>
-        <option value="weather">🌦️ আবহাওয়া রাডার (মেঘ ও বৃষ্টি)</option>
-        <option value="compass">🧭 AI কম্পাস (০°–৩৬০° দিক)</option>
-      </select>
-      <input type="number" id="compassHeadingInput" class="field-input" style="margin-bottom:0;" value="45" min="0" max="360">
-    </div>
-
-    <canvas id="radarCompassCanvas" class="radar-canvas-big" width="840" height="840"></canvas>
-
-    <div class="btn-row">
-      <button type="button" class="big-btn" id="liveSensorCompassBtn">🧭 লাইভ কম্পাস চালু</button>
-      <button type="button" class="big-btn" id="radarDetailAiBtn">🤖 রাডার ও কম্পাস AI</button>
-    </div>
-
-    <div class="ai-output-box" id="radarDetailBox">বেসামরিক রাডার আকাশপথের টার্গেট ও দূরত্ব স্ক্যান করে; আবহাওয়া রাডার মেঘ ও বৃষ্টির ঘনত্ব মাপে; আর AI কম্পাস ম্যাগনেটিক/ডিগ্রি সেন্সর থেকে উত্তর ও দিক (N, NE, E, SE, S, SW, W, NW) নির্ণয় করে।</div>
-  </section>
-
-  <!-- ভিডিও ও পোস্ট বক্স + সব ফিচারে AI -->
-  <section class="feature-box" id="videoPostBox">
-    <h2>🎬✍️ ভিডিও, পোস্ট ও সব ফিচার AI হাব</h2>
-    <video id="liveVideoView" autoplay muted playsinline style="width:100%;max-height:520px;border-radius:12px;border:4px solid #ffe64d;background:#000;"></video>
-    <textarea id="postBoxText" class="field-textarea" style="margin-top:18px;" placeholder="পোস্ট, রেডিও/টিভি, বাজার, চাকুরী বা যেকোনো বিষয় লিখুন..."></textarea>
-
-    <div class="btn-row">
-      <button type="button" class="big-btn" id="startVideoBtn">📹 ভিডিও চালু</button>
-      <button type="button" class="big-btn" id="stopVideoBtn">⏹ ভিডিও বন্ধ</button>
-      <button type="button" class="primary-big-btn" id="publishBoxPostBtn">🚀 পোস্ট প্রকাশ করুন</button>
-      <button type="button" class="big-btn" id="allFeaturesAiBtn">🤖 সব ফিচার AI বিশ্লেষণ</button>
-    </div>
-    <div class="ai-output-box" id="allFeaturesAiBox">পোস্ট, ভিডিও, রেডিও, টিভি, বাজার ও চাকুরীসহ সব ফিচারে AI সক্রিয়।</div>
-  </section>
-
-</main>
-
-<footer>
-  © 2026 AYNA BOOK ★ Ultra-Critical Quantum Hub
-</footer>
-
-<!-- নিচে Home, Profile, Box, Chat, Post, Video বাটন -->
-<nav class="bottom-dock" aria-label="Bottom Navigation">
-  <a href="#boxSection"><span>🏠</span>Home</a>
-  <a href="#boxSection"><span>👤</span>Profile</a>
-  <a href="#registerSection"><span>📦</span>Box</a>
-  <a href="#loginSection"><span>💬</span>Chat</a>
-  <a href="#videoPostBox"><span>➕</span>Post</a>
-  <a href="#videoPostBox"><span>🎬</span>Video</a>
-</nav>
-
-<script>
-const $ = id => document.getElementById(id);
-const sound = window.aynaSound || window.uhdSoundsEngine;
-
-function showNotice(msg) {
-  const n = $("notice");
-  n.textContent = msg;
-  n.style.display = "block";
-  clearTimeout(showNotice.t);
-  showNotice.t = setTimeout(() => { n.style.display = "none"; }, 3400);
-}
-
-function failAt(boxId, fieldName, reasonBn) {
-  sound?.announceError(fieldName, reasonBn, txt => {
-    if ($(boxId)) $(boxId).textContent = "⚠️ " + txt;
-    showNotice("⚠️ " + txt);
-  });
-}
-
-$("uhdSoundBtn").onclick = () => {
-  sound?.playTone("uhd");
-  sound?.speak("ইউ এইচ ডি সাউন্ড ইঞ্জিন চালু হয়েছে।", showNotice);
-};
-
-$("speakTimeBtn").onclick = () => {
-  sound?.announceCurrentTime(showNotice);
-};
-
-function drawQrInBox(text = "AYNA-BOOK-2026-----10000001") {
-  const c = $("qrBoxCanvas");
-  if (!c) return;
-  const ctx = c.getContext("2d");
-  const cells = 21;
-  const step = Math.floor(c.width / cells);
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, c.width, c.height);
-  ctx.fillStyle = "#050a18";
-
-  let h = 2166136261;
-  for (let i = 0; i < text.length; i++) {
-    h ^= text.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-
-  for (let r = 0; r < cells; r++) {
-    for (let col = 0; col < cells; col++) {
-      const corner = (r < 7 && col < 7) || (r < 7 && col >= cells - 7) || (r >= cells - 7 && col < 7);
-      if (corner) {
-        const lr = r < 7 ? r : r - (cells - 7);
-        const lc = col < 7 ? col : col - (cells - 7);
-        if (lr === 0 || lr === 6 || lc === 0 || lc === 6 || (lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4)) {
-          ctx.fillRect(col * step, r * step, step, step);
+      function addLog(text) {
+        const list = document.getElementById("liveSyncLog");
+        if (!list) return;
+        const item = document.createElement("div");
+        item.className = "log-item";
+        const timeStr = new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+        item.textContent = `[${timeStr}] ${text}`;
+        list.prepend(item);
+        while (list.children.length > 20) {
+          list.removeChild(list.lastChild);
         }
-      } else if (((h >>> ((r * cells + col) % 24)) ^ (r * 5 + col * 11)) & 1) {
-        ctx.fillRect(col * step, r * step, step, step);
       }
-    }
-  }
-}
-drawQrInBox();
 
-function bindPassToggle(btnId, inputId) {
-  $(btnId).onclick = () => {
-    sound?.playTone("confirm");
-    const inp = $(inputId);
-    inp.type = inp.type === "password" ? "text" : "password";
-  };
-}
-bindPassToggle("toggleRegPassBtn", "regPass");
-bindPassToggle("toggleRegRepassBtn", "regRepass");
-bindPassToggle("toggleLoginPassBtn", "loginPass");
+      function syncHud() {
+        document.getElementById("hudCoords").textContent =
+          `${currentLat.toFixed(4)}, ${currentLon.toFixed(4)}`;
+        document.getElementById("hudHeading").textContent =
+          `${Math.round(compassDeg)}°`;
 
-$("registerSubmitBtn").onclick = () => {
-  const name = ($("regName").value || "").trim();
-  const email = ($("regEmail").value || "").trim();
-  const pass = $("regPass").value || "";
-  const repass = $("regRepass").value || "";
+        if (radarEngine) {
+          const targets = radarEngine.setCivilTargets(currentLat, currentLon, civilNodes);
+          const { weather } = radarEngine.updateWeather({});
+          document.getElementById("hudWeather").textContent =
+            `${weather.temperatureC}°C • ${weather.conditionCode.toUpperCase()}`;
+          document.getElementById("hudNodes").textContent =
+            `${targets.length} Nodes`;
+        }
 
-  if (name.length < 2) return failAt("registerStatusBox", "পূর্ণ নাম", "সঠিক নাম লিখুন।");
-  if (!email.includes("@") || !email.includes(".")) return failAt("registerStatusBox", "ইমেইল", "সঠিক ইমেইল ঠিকানা লিখুন।");
-  if (pass.length < 6) return failAt("registerStatusBox", "পাসওয়ার্ড", "অন্তত ৬ অক্ষরের পাসওয়ার্ড লিখুন।");
-  if (pass !== repass) return failAt("registerStatusBox", "রি-পাসওয়ার্ড", "মূল পাসওয়ার্ডের সাথে মিলছে না।");
+        try {
+          const profRaw = localStorage.getItem("ayna_profile_data");
+          if (profRaw) {
+            const prof = JSON.parse(profRaw);
+            if (prof?.name) {
+              document.getElementById("activeUserBadge").textContent = prof.name;
+            }
+          }
+        } catch (_) {}
 
-  sound?.playTone("confirm");
-  const ok = `রেজিস্ট্রেশন সফল হয়েছে। স্বাগতম ${name}।`;
-  $("registerStatusBox").textContent = "✅ " + ok;
-  sound?.speak(ok, showNotice);
-};
-
-$("loginSubmitBtn").onclick = () => {
-  const idOrEmail = ($("loginIdOrEmail").value || "").trim();
-  const pass = $("loginPass").value || "";
-
-  if (!idOrEmail) return failAt("loginStatusBox", "AYNA ID বা ইমেইল", "ঘরটি খালি আছে।");
-  if (pass.length < 6) return failAt("loginStatusBox", "লগইন পাসওয়ার্ড", "সঠিক পাসওয়ার্ড লিখুন।");
-
-  sound?.playTone("confirm");
-  const ok = `লগইন সফল হয়েছে। অ্যাকাউন্ট: ${idOrEmail}`;
-  $("loginStatusBox").textContent = "✅ " + ok;
-  sound?.speak("লগইন সফল হয়েছে।", showNotice);
-};
-
-const rcCanvas = $("radarCompassCanvas");
-const rcCtx = rcCanvas.getContext("2d");
-let rcAngle = 0;
-let sensorHeading = null;
-
-function dirNameBn(deg) {
-  const n = ((Number(deg) % 360) + 360) % 360;
-  if (n >= 337.5 || n < 22.5) return "উত্তর (N)";
-  if (n < 67.5) return "উত্তর-পূর্ব (NE)";
-  if (n < 112.5) return "পূর্ব (E)";
-  if (n < 157.5) return "দক্ষিণ-পূর্ব (SE)";
-  if (n < 202.5) return "দক্ষিণ (S)";
-  if (n < 247.5) return "দক্ষিণ-পশ্চিম (SW)";
-  if (n < 292.5) return "পশ্চিম (W)";
-  return "উত্তর-পশ্চিম (NW)";
-}
-
-function drawRadarOrCompass() {
-  rcAngle = (rcAngle + 0.035) % (Math.PI * 2);
-  const mode = $("radarModeSelect").value;
-  const heading = sensorHeading !== null ? sensorHeading : Number($("compassHeadingInput").value || 45);
-  const cx = 420, cy = 420, maxR = 392;
-
-  rcCtx.clearRect(0, 0, 840, 840);
-  rcCtx.fillStyle = "#030917";
-  rcCtx.beginPath();
-  rcCtx.arc(cx, cy, maxR, 0, Math.PI * 2);
-  rcCtx.fill();
-
-  for (let i = 1; i <= 4; i++) {
-    rcCtx.strokeStyle = mode === "weather" ? "rgba(22,199,132,0.32)" : "rgba(56,242,255,0.32)";
-    rcCtx.lineWidth = 3;
-    rcCtx.beginPath();
-    rcCtx.arc(cx, cy, (maxR * i) / 4, 0, Math.PI * 2);
-    rcCtx.stroke();
-  }
-
-  if (mode === "compass") {
-    for (let d = 0; d < 360; d += 15) {
-      const rad = ((d - heading - 90) * Math.PI) / 180;
-      const major = d % 45 === 0;
-      const rIn = major ? maxR - 38 : maxR - 20;
-      rcCtx.strokeStyle = d % 90 === 0 ? "#ffe64d" : "#38f2ff";
-      rcCtx.lineWidth = major ? 4 : 2;
-      rcCtx.beginPath();
-      rcCtx.moveTo(cx + Math.cos(rad) * rIn, cy + Math.sin(rad) * rIn);
-      rcCtx.lineTo(cx + Math.cos(rad) * (maxR - 6), cy + Math.sin(rad) * (maxR - 6));
-      rcCtx.stroke();
-    }
-
-    const nRad = ((heading - 90) * Math.PI) / 180;
-    rcCtx.save();
-    rcCtx.translate(cx, cy);
-    rcCtx.rotate(nRad + Math.PI / 2);
-    rcCtx.fillStyle = "#ff4d6d";
-    rcCtx.beginPath();
-    rcCtx.moveTo(0, -maxR + 90);
-    rcCtx.lineTo(24, 0);
-    rcCtx.lineTo(-24, 0);
-    rcCtx.closePath();
-    rcCtx.fill();
-    rcCtx.restore();
-
-    rcCtx.fillStyle = "#ffe64d";
-    rcCtx.font = "bold 36px Arial";
-    rcCtx.textAlign = "center";
-    rcCtx.fillText(`${Math.round(heading)}° • ${dirNameBn(heading)}`, cx, cy + 120);
-  } else {
-    const grad = rcCtx.createConicGradient(rcAngle - 0.55, cx, cy);
-    grad.addColorStop(0, "rgba(56,242,255,0)");
-    grad.addColorStop(1, mode === "weather" ? "rgba(22,199,132,0.55)" : "rgba(56,242,255,0.65)");
-    rcCtx.fillStyle = grad;
-    rcCtx.beginPath();
-    rcCtx.moveTo(cx, cy);
-    rcCtx.arc(cx, cy, maxR, rcAngle - 0.55, rcAngle);
-    rcCtx.closePath();
-    rcCtx.fill();
-
-    if (mode === "weather") {
-      const sg = rcCtx.createRadialGradient(540, 290, 12, 540, 290, 110);
-      sg.addColorStop(0, "rgba(255,77,109,0.75)");
-      sg.addColorStop(1, "rgba(245,158,11,0.1)");
-      rcCtx.fillStyle = sg;
-      rcCtx.beginPath();
-      rcCtx.arc(540, 290, 110, 0, Math.PI * 2);
-      rcCtx.fill();
-    } else {
-      rcCtx.fillStyle = "#ffe64d";
-      rcCtx.beginPath();
-      rcCtx.arc(520, 260, 14, 0, Math.PI * 2);
-      rcCtx.fill();
-      rcCtx.fillStyle = "#ffffff";
-      rcCtx.font = "bold 28px Arial";
-      rcCtx.fillText("BG-104 • 34,000ft", 542, 266);
-    }
-  }
-
-  requestAnimationFrame(drawRadarOrCompass);
-}
-drawRadarOrCompass();
-
-$("compassHeadingInput").oninput = () => { sensorHeading = null; };
-$("liveSensorCompassBtn").onclick = async () => {
-  sound?.playTone("radar");
-  try {
-    if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
-      const p = await DeviceOrientationEvent.requestPermission();
-      if (p !== "granted") return failAt("radarDetailBox", "কম্পাস সেন্সর", "অনুমতি পাওয়া যায়নি।");
-    }
-    window.addEventListener("deviceorientation", e => {
-      const h = typeof e.webkitCompassHeading === "number"
-        ? e.webkitCompassHeading
-        : (typeof e.alpha === "number" ? (360 - e.alpha) % 360 : null);
-      if (typeof h === "number" && !Number.isNaN(h)) {
-        sensorHeading = h;
-        $("compassHeadingInput").value = String(Math.round(h));
+        if (diag) {
+          const info = diag.checkModules();
+          document.getElementById("healthStatusPill").textContent = `HEALTH: ${info.healthPercent}%`;
+        }
       }
-    }, { passive: true });
-    showNotice("🧭 লাইভ কম্পাস চালু হয়েছে");
-  } catch (_) {
-    showNotice("ম্যানুয়াল ডিগ্রি দিয়ে কম্পাস সক্রিয় রয়েছে");
-  }
-};
 
-let camStream = null;
-$("startVideoBtn").onclick = async () => {
-  sound?.playTone("confirm");
-  try {
-    camStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "user", width: { ideal: 3840 }, height: { ideal: 2160 } },
-      audio: false
-    });
-    $("liveVideoView").srcObject = camStream;
-    showNotice("📹 ভিডিও চালু হয়েছে");
-  } catch (_) {
-    failAt("allFeaturesAiBox", "ভিডিও ক্যামেরা", "চালু করা যায়নি; অনুমতি যাচাই করুন।");
-  }
-};
+      function updateNetworkBadge(info) {
+        const pill = document.getElementById("netStatusPill");
+        const online = info ? Boolean(info.online) : navigator.onLine;
+        pill.textContent = online ? `ONLINE (${info?.effectiveType || "NET"})` : "OFFLINE";
+        pill.className = online ? "status-pill" : "status-pill offline";
+      }
 
-$("stopVideoBtn").onclick = () => {
-  sound?.playTone("confirm");
-  if (camStream) {
-    camStream.getTracks().forEach(t => t.stop());
-    camStream = null;
-  }
-  $("liveVideoView").srcObject = null;
-  showNotice("⏹ ভিডিও বন্ধ হয়েছে");
-};
+      function drawRadar() {
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2;
+        const maxR = Math.min(cx, cy) * 0.86;
 
-$("publishBoxPostBtn").onclick = () => {
-  const txt = ($("postBoxText").value || "").trim();
-  if (!txt) return failAt("allFeaturesAiBox", "পোস্ট বক্স", "লেখা খালি আছে।");
-  sound?.playTone("confirm");
-  $("allFeaturesAiBox").textContent = "✅ পোস্ট প্রকাশিত:\n" + txt;
-  $("postBoxText").value = "";
-  sound?.speak("পোস্ট প্রকাশ করা হয়েছে।", showNotice);
-};
+        ctx.clearRect(0, 0, w, h);
 
-$("profileAiBtn").onclick = () => {
-  sound?.playTone("uhd");
-  const msg = "প্রোফাইল ও QR কোড সক্রিয় রয়েছে। স্ক্যান করে দ্রুত প্রোফাইল ও আইডি শেয়ার করা যাবে।";
-  $("profileAiBox").textContent = "🤖 " + msg;
-  sound?.speak(msg);
-};
+        const grad = ctx.createRadialGradient(cx, cy, 12, cx, cy, maxR);
+        grad.addColorStop(0, "rgba(18, 48, 98, 0.68)");
+        grad.addColorStop(1, "rgba(4, 10, 24, 0.96)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+        ctx.fill();
 
-$("appDownloadAiBtn").onclick = () => {
-  sound?.playTone("uhd");
-  const msg = "অ্যাপ ডাউনলোড ও রেজিস্ট্রেশন/লগইন বক্স প্রস্তুত। প্রথমে রেজিস্ট্রেশন এবং নিচে লগইন ব্যবহার করুন।";
-  $("profileAiBox").textContent = "🤖 " + msg;
-  sound?.speak(msg);
-};
+        [0.25, 0.5, 0.75, 1].forEach(r => {
+          ctx.strokeStyle = "rgba(56, 242, 255, 0.22)";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(cx, cy, maxR * r, 0, Math.PI * 2);
+          ctx.stroke();
+        });
 
-$("registerAiBtn").onclick = () => {
-  sound?.playTone("uhd");
-  const msg = "রেজিস্ট্রেশন AI: নাম, ইমেইল, পাসওয়ার্ড ও রি-পাসওয়ার্ড সঠিক থাকলে রেজিস্ট্রেশন সম্পন্ন হবে।";
-  $("registerStatusBox").textContent = "🤖 " + msg;
-  sound?.speak(msg);
-};
+        const rad = (sweepDeg - 90) * (Math.PI / 180);
+        ctx.strokeStyle = "#ffe64d";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(rad) * maxR, cy + Math.sin(rad) * maxR);
+        ctx.stroke();
 
-$("loginAiBtn").onclick = () => {
-  sound?.playTone("uhd");
-  const msg = "লগইন AI: সঠিক AYNA ID বা ইমেইল এবং পাসওয়ার্ড দিয়ে নিরাপদে লগইন করুন।";
-  $("loginStatusBox").textContent = "🤖 " + msg;
-  sound?.speak(msg);
-};
+        if (overlay) {
+          overlay.draw(ctx, w, h, sweepDeg);
+        }
 
-$("radarDetailAiBtn").onclick = () => {
-  sound?.playTone("radar");
-  const deg = Number($("compassHeadingInput").value || 45);
-  const msg = `বেসামরিক রাডার আকাশপথের বিমান, আবহাওয়া রাডার মেঘ/বৃষ্টি এবং AI কম্পাস ${Math.round(deg)}° (${dirNameBn(deg)}) দিক নির্ণয় করছে।`;
-  $("radarDetailBox").textContent = "🤖 " + msg;
-  sound?.speak(msg);
-};
+        ctx.fillStyle = "#ffe64d";
+        ctx.beginPath();
+        ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
-$("allFeaturesAiBtn").onclick = () => {
-  sound?.playTone("uhd");
-  const txt = ($("postBoxText").value || "সব ফিচার").trim();
-  const msg = `সব ফিচার AI সক্রিয়: "${txt}" বিষয়ে রেডিও, টিভি, বাজার, চাকুরী, পোস্ট ও ভিডিও বিশ্লেষণ প্রস্তুত।`;
-  $("allFeaturesAiBox").textContent = "🤖 " + msg;
-  sound?.speak(msg);
-};
-</script>
+      function renderLoop(now) {
+        const allowFrame = speed ? speed.shouldRenderFrame(now) : true;
+        if (allowFrame) {
+          sweepDeg = (sweepDeg + 2.0) % 360;
+          drawRadar();
+        }
+        requestAnimationFrame(renderLoop);
+      }
+
+      // বোতাম ইভেন্টসমূহ
+      document.getElementById("btnLocateNow").addEventListener("click", () => {
+        if (!navigator.geolocation) {
+          addLog("এই ব্রাউজারে Geolocation সমর্থন নেই।");
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            currentLat = pos.coords.latitude;
+            currentLon = pos.coords.longitude;
+            localStorage.setItem("ayna_last_lat", String(currentLat));
+            localStorage.setItem("ayna_last_lon", String(currentLon));
+            window.aynaRadarBridge?.publishOrigin?.(currentLat, currentLon, { source: "index.html" });
+            sound?.playTone?.("confirm");
+            addLog(`GPS আপডেট: ${currentLat.toFixed(4)}, ${currentLon.toFixed(4)}`);
+            syncHud();
+          },
+          () => {
+            addLog("GPS অবস্থান পাওয়া যায়নি; পূর্ববর্তী স্থানাঙ্ক সক্রিয় আছে।");
+          },
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      });
+
+      document.getElementById("btnEnableCompass").addEventListener("click", async () => {
+        if (!headingMod || typeof headingMod.enable !== "function") return;
+        const res = await headingMod.enable();
+        addLog(res.ok ? "লাইভ কম্পাস সেন্সর সক্রিয় হয়েছে।" : res.message);
+      });
+
+      document.getElementById("btnCycleWeather").addEventListener("click", () => {
+        weatherIndex = (weatherIndex + 1) % weatherPresets.length;
+        const preset = weatherPresets[weatherIndex];
+        const { advisory } = radarEngine?.updateWeather?.(preset) || {};
+        addLog(`আবহাওয়া মোড: ${preset.conditionCode.toUpperCase()} (${preset.temperatureC}°C)`);
+        if (advisory) {
+          document.getElementById("aiCommandOutput").textContent = advisory.summaryBn;
+        }
+        syncHud();
+      });
+
+      document.getElementById("btnVoiceBrief").addEventListener("click", () => {
+        const adv = radarEngine?.getWeatherAdvisory?.();
+        const msg = adv
+          ? `বর্তমান স্থানাঙ্ক ${currentLat.toFixed(2)} ও ${currentLon.toFixed(2)}। ${adv.summaryBn}`
+          : "AYNA BOOK মাস্টার হাব সক্রিয় আছে।";
+        sound?.speak?.(msg);
+        addLog("ভয়েস ব্রিফিং চালু করা হয়েছে।");
+      });
+
+      document.getElementById("btnSosBeacon").addEventListener("click", () => {
+        const packet = {
+          lat: currentLat,
+          lon: currentLon,
+          message: `জরুরি SOS সংকেত! অবস্থান: ${currentLat.toFixed(4)}, ${currentLon.toFixed(4)}`
+        };
+        vault?.saveItem?.("sos_alerts", packet);
+        bus?.publish?.("sos:beacon", packet);
+        sound?.playTone?.("alert");
+        sound?.speak?.(packet.message);
+        addLog("SOS সংকেত সম্প্রচার ও সংরক্ষণ করা হয়েছে!");
+      });
+
+      document.getElementById("btnRunAiCommand").addEventListener("click", async () => {
+        const inputEl = document.getElementById("aiCommandInput");
+        const outEl = document.getElementById("aiCommandOutput");
+        const query = inputEl.value.trim();
+        if (!query) return;
+
+        outEl.textContent = "AI কমান্ড প্রক্রিয়াকরণ হচ্ছে...";
+        const res = aiMod
+          ? await aiMod.execute("master-hub", query)
+          : { ok: true, text: `AYNA AI: "${query}" গ্রহণ করা হয়েছে।` };
+
+        outEl.textContent = res.text;
+        addLog(`AI কমান্ড সম্পন্ন: "${query}"`);
+      });
+
+      document.getElementById("btnMasterBackup").addEventListener("click", () => {
+        if (!window.aynaBackup) return;
+        const count = window.aynaBackup.downloadBackup();
+        sound?.playTone?.("confirm");
+        addLog(`ব্যাকআপ ফাইল নামানো হয়েছে (${count}টি কি)।`);
+      });
+
+      document.getElementById("btnMasterIcon").addEventListener("click", () => {
+        if (typeof window.generateAynaAppIcon !== "function") return;
+        window.generateAynaAppIcon(512, true);
+        sound?.playTone?.("confirm");
+        addLog("512×512 AYNA BOOK আইকন তৈরি ও ডাউনলোড হয়েছে।");
+      });
+
+      document.getElementById("btnMasterDiag").addEventListener("click", () => {
+        if (!diag) return;
+        const info = diag.checkModules();
+        const kb = diag.getStorageUsageKb();
+        const msg = `হেলথ: ${info.healthPercent}% (${info.activeCount}/${info.totalCount} মডিউল) • স্টোরেজ: ${kb} KB • এরর: ${info.recentErrors}`;
+        document.getElementById("aiCommandOutput").textContent = msg;
+        addLog(msg);
+        syncHud();
+      });
+
+      // ক্রস-ট্যাব বাস ও সেন্সর সাবস্ক্রিপশন
+      if (headingMod && typeof headingMod.onHeading === "function") {
+        headingMod.onHeading(deg => {
+          compassDeg = deg;
+          document.getElementById("hudHeading").textContent = `${Math.round(compassDeg)}°`;
+        });
+      }
+
+      if (bus && typeof bus.subscribe === "function") {
+        bus.subscribe("profile:updated", p => {
+          if (p?.name) document.getElementById("activeUserBadge").textContent = p.name;
+          addLog(`প্রোফাইল সিঙ্ক: ${p?.name || "User"} (${p?.id || ""})`);
+        });
+        bus.subscribe("qr:detected", q => {
+          addLog(`QR স্ক্যান সিঙ্ক: ${q?.value || ""}`);
+        });
+        bus.subscribe("radar:origin-sync", loc => {
+          if (typeof loc?.lat === "number" && typeof loc?.lon === "number") {
+            currentLat = loc.lat;
+            currentLon = loc.lon;
+            syncHud();
+            addLog(`অন্য পেজ থেকে লোকেশন সিঙ্ক হয়েছে।`);
+          }
+        });
+      }
+
+      if (window.aynaNet) {
+        updateNetworkBadge(window.aynaNet.init());
+        window.aynaNet.onChange(info => {
+          updateNetworkBadge(info);
+          addLog(info.online ? `নেটওয়ার্ক সক্রিয় (${info.effectiveType})` : "নেটওয়ার্ক অফলাইন মোডে গেছে।");
+        });
+      } else {
+        updateNetworkBadge({ online: navigator.onLine, effectiveType: "NET" });
+      }
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      }
+
+      syncHud();
+      requestAnimationFrame(renderLoop);
+    })();
+  </script>
 </body>
 </html>
