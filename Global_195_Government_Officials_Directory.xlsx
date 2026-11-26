@@ -1,0 +1,61 @@
+import requests
+import pandas as pd
+
+# ==============================================================================
+# GLOBAL GOVERNMENT & CABINET OFFICIALS EXTRACTOR (WIKIDATA SPARQL API)
+# Fetches Official Names, Countries, Ministerial Roles, Portraits & Public Emails
+# ==============================================================================
+
+SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
+
+# SPARQL query for current Heads of Government, Cabinet Ministers & Senior Officials
+QUERY = """
+SELECT DISTINCT ?countryLabel ?officialLabel ?roleLabel ?photo ?website ?email WHERE {
+  ?official wdt:P31 wd:Q5;                # Human
+            p:P39 ?statement.             # Holds public office
+  ?statement ps:P39 ?role.
+  
+  # Matches Ministers (Q83307), Heads of Government (Q2285706), or Heads of State (Q48352)
+  VALUES ?category { wd:Q83307 wd:Q2285706 wd:Q48352 }
+  ?role wdt:P279* ?category.
+  
+  FILTER NOT EXISTS { ?statement pq:P582 ?endTime } # Currently in office
+  
+  ?official wdt:P27 ?country.
+  OPTIONAL { ?official wdt:P18 ?photo. }
+  OPTIONAL { ?official wdt:P856 ?website. }
+  OPTIONAL { ?official wdt:P968 ?email. }
+  
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,bn". }
+}
+LIMIT 5000
+"""
+
+def extract_government_officials():
+    headers = {
+        "User-Agent": "GlobalGovDirectoryExtractor/1.0 (Contact: info@gov-registry.org)",
+        "Accept": "application/sparql-results+json"
+    }
+    print("[*] Querying Global Wikidata Diplomatic & Cabinet Registry...")
+    resp = requests.get(SPARQL_ENDPOINT, params={"query": QUERY, "format": "json"}, headers=headers, timeout=60)
+    resp.raise_for_status()
+    results = resp.json()["results"]["bindings"]
+    
+    rows = []
+    for r in results:
+        rows.append({
+            "Country": r.get("countryLabel", {}).get("value", "N/A"),
+            "Official_Name": r.get("officialLabel", {}).get("value", "N/A"),
+            "Designation": r.get("roleLabel", {}).get("value", "N/A"),
+            "Official_Photo_URL": r.get("photo", {}).get("value", ""),
+            "Official_Portal": r.get("website", {}).get("value", ""),
+            "Public_Official_Email": r.get("email", {}).get("value", "").replace("mailto:", "")
+        })
+        
+    df = pd.DataFrame(rows)
+    out_file = "Global_Government_Officials_Live.xlsx"
+    df.to_excel(out_file, index=False)
+    print(f"[+] Exported {len(df)} government official records to {out_file}")
+
+if __name__ == "__main__":
+    extract_government_officials()
