@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <title>AYNA BOOK*</title>
   <meta name="theme-color" content="#050a18" />
-  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
   <style>
     :root {
       --bg: #050a18;
@@ -15,7 +14,6 @@
       --gold-bright: #fff6b3;
       --gold-base: #8a6105;
       --accent-blue: #1877f2;
-      --quantum-cyan: #38f2ff;
       --white: #ffffff;
       --muted: #e6eeff;
       --text-scale: 3;
@@ -78,9 +76,10 @@
       flex-wrap: wrap;
     }
 
+    /* AYNA BOOK লেখা আরও ২ গুণ বড় */
     .logo {
       color: var(--gold-bright);
-      font-size: calc(clamp(38px, 6vw, 62px) * 2);
+      font-size: calc(clamp(40px, 6.5vw, 66px) * 2);
       line-height: 1.05;
       font-weight: 1000;
       letter-spacing: 1px;
@@ -230,6 +229,10 @@
       padding-right: 12px;
     }
 
+    .gold-3d-box,
+    .hero,
+    .profile-bar,
+    .feature-card,
     .panel,
     .feed-post,
     .feed-filters,
@@ -254,6 +257,7 @@
       transform: translateY(4px) !important;
     }
 
+    /* উপরে শুধু নাম ও ছবি */
     .top-name-only-bar {
       padding: 28px 24px;
       margin-bottom: 24px;
@@ -261,10 +265,6 @@
       align-items: center;
       gap: 28px;
       flex-wrap: wrap;
-      background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
-      border: 4px solid var(--gold);
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(255, 230, 77, 0.65), 0 9px 0 var(--gold-base);
     }
 
     .profile-square-box {
@@ -288,6 +288,8 @@
       object-position: top center;
       border-radius: 12px;
       display: block;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     }
 
     .only-owner-name {
@@ -298,6 +300,7 @@
       margin: 0;
     }
 
+    /* প্রোফাইলQR বক্স */
     .qr-panel-box {
       padding: 26px;
       margin-bottom: 24px;
@@ -322,15 +325,6 @@
       padding: 20px;
       border-radius: 14px;
       border: 4px solid var(--gold-bright);
-    }
-
-    .barcode-box {
-      background: #ffffff;
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: 3px solid var(--gold);
-      display: inline-flex;
-      margin-top: 14px;
     }
 
     .panel {
@@ -387,6 +381,7 @@
       margin-top: 16px;
     }
 
+    /* পাঠানো ছবির মতো বড় বাটন */
     button,
     .panel-link-btn {
       min-height: 104px;
@@ -422,7 +417,7 @@
     .ai-box-output {
       margin-top: 16px;
       background: #050b1c;
-      border: 3.5px solid var(--quantum-cyan);
+      border: 3.5px solid #38f2ff;
       border-radius: 12px;
       padding: 20px;
       font-size: 0.72em;
@@ -431,6 +426,7 @@
       overflow-wrap: anywhere;
     }
 
+    /* রাডার কম্পাস ৪ গুণ বড় বক্সের ভিতর */
     .mega-radar-compass-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -454,9 +450,10 @@
       display: block;
       margin: 0 auto 16px;
       border-radius: 50%;
-      border: 5px solid var(--quantum-cyan);
+      border: 5px solid #38f2ff;
     }
 
+    /* গাড়ি, বিমান, জাহাজ চলাচলের গতির বক্স */
     .transport-speed-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -473,7 +470,7 @@
       display: block;
       font-size: 1.05em;
       font-weight: 1000;
-      color: var(--quantum-cyan);
+      color: #38f2ff;
       margin: 10px 0;
     }
 
@@ -494,10 +491,6 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
-      border: 4px solid var(--gold);
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(255, 230, 77, 0.65), 0 9px 0 var(--gold-base);
     }
 
     .feature-icon {
@@ -595,14 +588,6 @@
       margin-top: 16px;
     }
 
-    .detail-viewer-box {
-      margin-top: 18px;
-      background: #050b1c;
-      border: 4px solid var(--gold-bright);
-      border-radius: 14px;
-      padding: 22px;
-    }
-
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -657,24 +642,6 @@
   </style>
 </head>
 <body>
-  <!-- অপশনাল ১১ অক্ষরের লক স্ক্রিন (ডিফল্টভাবে গোপন, প্রয়োজনে চালু করা যায়) -->
-  <div id="lockScreen" style="display:none;position:fixed;inset:0;background:#050a18;z-index:9999;align-items:center;justify-content:center;padding:18px;">
-    <div class="panel" style="width:100%;max-width:640px;text-align:center;">
-      <h2>🔒 AYNA BOOK* লক করা</h2>
-      <div class="ai-box-output">নাম, ফোন নম্বর এবং ঠিক ১১ অক্ষরের পাসওয়ার্ড দিয়ে আনলক করুন।</div>
-      <div style="margin-top:14px;display:grid;gap:12px;">
-        <input id="lockName" value="Mohammad Mahabub Alam" placeholder="নাম লিখুন" />
-        <input id="lockPhone" placeholder="ফোন নম্বর" />
-        <div class="password-wrap">
-          <input id="lockPass" type="password" placeholder="পাসওয়ার্ড (ঠিক ১১ অক্ষর)" maxlength="11" />
-          <button type="button" id="toggleLockPassBtn" class="btn-gold">👁️ দেখুন</button>
-        </div>
-        <button type="button" id="unlockAppBtn" class="primary-button">🔓 আনলক করুন</button>
-        <div id="lockMsg" class="ai-box-output" style="display:none;"></div>
-      </div>
-    </div>
-  </div>
-
   <header>
     <div class="header-inner">
       <a href="#page-1" class="logo" data-go-page="0">
@@ -684,7 +651,6 @@
         <button type="button" id="fontSmallerBtn">🔍- লেখা ছোট</button>
         <button type="button" id="fontLargerBtn" class="btn-gold">🔍+ লেখা বড়</button>
         <button type="button" id="headerSpeakClockBtn">🕒 সময় বলুন</button>
-        <button type="button" id="openLockModalBtn">🔒 লক করুন</button>
         <a href="messenger.html" class="btn-blue">💬 Messenger</a>
       </div>
     </div>
@@ -703,7 +669,7 @@
   <div class="swipe-viewport" id="swipeViewport">
     <div class="pages-track" id="pagesTrack" style="--active-page: 0;">
 
-      <!-- পেজ ১: শুধু নাম, ছবি, পোস্ট লেখা, অডিও, ভিডিও, ফাইল ও লাইভ ভিডিও পোস্ট অপশন -->
+      <!-- পেজ ১: শুধু নাম, ছবি, পোস্ট লেখা, অডিও, ভিডিও, লাইভ ভিডিও পোস্ট অপশন -->
       <section class="app-page" id="page-1">
         <div class="top-name-only-bar">
           <div class="profile-square-box">
@@ -719,13 +685,11 @@
             <button type="button" id="chooseAudio">🎵 অডিও পোস্ট</button>
             <button type="button" id="chooseVideo">🎬 ভিডিও পোস্ট</button>
             <button type="button" id="chooseImage">🖼️ ছবি যুক্ত করুন</button>
-            <button type="button" id="chooseFile">📎 ফাইল যুক্ত করুন</button>
             <button type="button" id="clearMedia">✖️ মিডিয়া বাদ দিন</button>
           </div>
           <input id="imageInput" type="file" accept="image/*" hidden />
           <input id="audioInput" type="file" accept="audio/*" hidden />
           <input id="videoInput" type="file" accept="video/*" hidden />
-          <input id="fileInput" type="file" accept="*/*" hidden />
           <div class="preview" id="mediaPreview">
             <div id="previewContent"></div>
             <div class="status" id="previewName"></div>
@@ -755,7 +719,7 @@
         </section>
       </section>
 
-      <!-- পেজ ২: প্রোফাইলQR বক্স, বারকোড ও পাসওয়ার্ড দেখা/লুকানো বক্স -->
+      <!-- পেজ ২: প্রোফাইলQR বক্স ও পাসওয়ার্ড দেখা/লুকানো বক্স -->
       <section class="app-page" id="page-2">
         <section class="qr-panel-box" id="qrBoxSection">
           <div class="qr-heading-tag">প্রোফাইলQR</div>
@@ -764,9 +728,6 @@
               <canvas id="aynaQrCanvas" width="240" height="240"></canvas>
               <div id="qrCaptionText" style="font-size:0.65em;font-weight:900;margin-top:8px;">Mohammad Mahabub Alam</div>
             </div>
-          </div>
-          <div class="barcode-box">
-            <svg id="aynaProfileBarcode"></svg>
           </div>
         </section>
 
@@ -781,7 +742,7 @@
           </div>
           <div class="media-buttons">
             <button type="button" id="savePasswordCheckBtn" class="btn-blue">✅ পাসওয়ার্ড যাচাই</button>
-            <button type="button" id="autoSyncNowBtn">🔄 অটো-আপডেট (<span id="lastAutoSync">এখন</span>)</button>
+            <button type="button" id="cycleThemeBtn">🎨 থিম রং পরিবর্তন</button>
           </div>
           <div class="ai-box-output" id="passwordStatusOutput">পাসওয়ার্ড লুকানো অবস্থায় আছে — দেখুন বা লুকান বাটন চাপুন।</div>
         </section>
@@ -843,7 +804,7 @@
         </section>
       </section>
 
-      <!-- পেজ ৪: সংযোগ ও নোটিফিকেশন -->
+      <!-- পেজ ৪: পাঠানো স্ক্রিনশটের মতো বড় বাটনসহ সংযোগ ও নোটিফিকেশন -->
       <section class="app-page" id="page-4">
         <section class="panel">
           <h2>👥 সংযোগ ও ফ্রেন্ড রিকোয়েস্ট</h2>
@@ -883,29 +844,23 @@
         </section>
       </section>
 
-      <!-- পেজ ৫: সমন্বিত সব ফিচার বক্স (১৯৫ রাষ্ট্রনেতা, বাজার, কৃষক+কীটনাশক, এমপি, সরকারি দপ্তর, পরিবহণ, বিমান, রেডিও/টিভি, ক্যালেন্ডার, নামাজ, আলেম গবেষণা, ডিসকভারি, জিওগ্রাফি ও বাচ্চাদের খেলাধুলা) -->
+      <!-- পেজ ৫: সব অতিরিক্ত ফিচার আলাদা বক্সে -->
       <section class="app-page" id="page-5">
         <section class="panel">
           <h2>📦 সব ফিচার বক্স</h2>
           <div class="feature-grid-more">
-            <button type="button" class="feature-card" data-open-box="leaders"><span class="feature-icon">🌍</span><span class="feature-name">১৯৫ রাষ্ট্রনেতা</span><span class="feature-desc">বিশ্বনেতাদের তালিকা</span></button>
-            <button type="button" class="feature-card" data-open-box="grocery"><span class="feature-icon">🛒</span><span class="feature-name">মুদি দাম</span><span class="feature-desc">দৈনিক বাজার তালিকা</span></button>
-            <button type="button" class="feature-card" data-open-box="farmer"><span class="feature-icon">🌾</span><span class="feature-name">কৃষক + কীটনাশক</span><span class="feature-desc">ফসল, বীজ ও সার</span></button>
-            <button type="button" class="feature-card" data-open-box="mp"><span class="feature-icon">🏛️</span><span class="feature-name">এমপি ও সংসদ</span><span class="feature-desc">জাতীয় সংসদ ও পোর্টাল</span></button>
-            <button type="button" class="feature-card" data-open-box="official"><span class="feature-icon">🏢</span><span class="feature-name">সরকারি দপ্তর</span><span class="feature-desc">অফিসিয়াল পোর্টাল</span></button>
-            <button type="button" class="feature-card" data-open-box="transport"><span class="feature-icon">🚌🚆</span><span class="feature-name">বাস ও রেল</span><span class="feature-desc">পরিবহণ সূচি ও লিংক</span></button>
-            <button type="button" class="feature-card" data-open-box="airline"><span class="feature-icon">✈️</span><span class="feature-name">বিমান পরিবহণ</span><span class="feature-desc">এয়ারলাইন্স তালিকা</span></button>
-            <button type="button" class="feature-card" data-open-box="media"><span class="feature-icon">📻📺</span><span class="feature-name">রেডিও, টিভি ও নিউজ</span><span class="feature-desc">লাইভ মিডিয়া বক্স</span></button>
-            <button type="button" class="feature-card" data-open-box="prayer_cal"><span class="feature-icon">🕌📅</span><span class="feature-name">নামাজ ও ক্যালেন্ডার</span><span class="feature-desc">সময়সূচি ও আরবি তারিখ</span></button>
-            <button type="button" class="feature-card" data-open-box="ulema"><span class="feature-icon">📖</span><span class="feature-name">আলেম গবেষণা</span><span class="feature-desc">গবেষণা বিভাগ</span></button>
-            <button type="button" class="feature-card" data-open-box="discovery_geo"><span class="feature-icon">🔭🗺️</span><span class="feature-name">ডিসকভারি ও জিওগ্রাফি</span><span class="feature-desc">বিজ্ঞান ও ভূগোল</span></button>
-            <button type="button" class="feature-card" data-open-box="kids_games"><span class="feature-icon">🎮</span><span class="feature-name">বাচ্চাদের খেলাধুলা</span><span class="feature-desc">শিক্ষামূলক ও মজার খেলা</span></button>
-          </div>
-
-          <div id="featureDetailViewer" class="detail-viewer-box" style="display:none;">
-            <h2 id="featureDetailTitle">বক্সের তথ্য</h2>
-            <input type="search" id="featureDetailSearch" placeholder="তালিকায় খুঁজুন..." />
-            <div id="featureDetailBody" class="hub-cards-grid"></div>
+            <a class="feature-card" href="messenger.html"><span class="feature-icon">💬</span><span class="feature-name">Messenger</span><span class="feature-desc">চ্যাট ও কল</span></a>
+            <a class="feature-card" href="radio.html"><span class="feature-icon">📻</span><span class="feature-name">রেডিও</span><span class="feature-desc">লাইভ রেডিও</span></a>
+            <a class="feature-card" href="tv-live.html"><span class="feature-icon">📺</span><span class="feature-name">টেলিভিশন</span><span class="feature-desc">লাইভ টিভি</span></a>
+            <a class="feature-card" href="world-grocery.html"><span class="feature-icon">🛒</span><span class="feature-name">মুদি বাজার</span><span class="feature-desc">দৈনিক দর</span></a>
+            <a class="feature-card" href="world-farmers.html"><span class="feature-icon">🌾</span><span class="feature-name">কৃষক</span><span class="feature-desc">ফসল ও কৃষি</span></a>
+            <a class="feature-card" href="world-jobs.html"><span class="feature-icon">💼</span><span class="feature-name">চাকুরী বাজার</span><span class="feature-desc">চাকুরীর তথ্য</span></a>
+            <a class="feature-card" href="air-rail-transport.html"><span class="feature-icon">🚆</span><span class="feature-name">বিমান ও রেল</span><span class="feature-desc">পরিবহণ সূচি</span></a>
+            <a class="feature-card" href="clock.html"><span class="feature-icon">🕒</span><span class="feature-name">বিশ্ব ঘড়ি</span><span class="feature-desc">সময় ও অ্যালার্ম</span></a>
+            <a class="feature-card" href="calendar.html"><span class="feature-icon">📅</span><span class="feature-name">ক্যালেন্ডার</span><span class="feature-desc">তারিখ ও ছুটি</span></a>
+            <a class="feature-card" href="prayer.html"><span class="feature-icon">🕌</span><span class="feature-name">নামাজের সময়</span><span class="feature-desc">সময়সূচি</span></a>
+            <a class="feature-card" href="ulema-research.html"><span class="feature-icon">📖</span><span class="feature-name">আলেম গবেষণা</span><span class="feature-desc">গবেষণা বিভাগ</span></a>
+            <a class="feature-card" href="#page-1" data-go-page="0"><span class="feature-icon">🔭</span><span class="feature-name">ডিসকভারি, জিওগ্রাফি ও খেলাধুলা</span><span class="feature-desc">বিজ্ঞান, ভূগোল ও বাচ্চাদের খেলা</span></a>
           </div>
         </section>
       </section>
@@ -952,6 +907,7 @@
         });
       });
 
+      // ডান থেকে বামে বা বাম থেকে ডানে আঙুলের টানে পেজ পরিবর্তন
       let touchStartX = 0;
       let touchStartY = 0;
       swipeViewport?.addEventListener("touchstart", (e) => {
@@ -970,7 +926,7 @@
         }
       }, { passive: true });
 
-      // লেখা বড়/ছোট
+      // লেখা বড়/ছোট করার অপশন
       let textScale = 3;
       function applyTextScale() {
         document.documentElement.style.setProperty("--text-scale", String(textScale));
@@ -985,18 +941,19 @@
       });
 
       // পাসওয়ার্ড দেখা/লুকানো
-      function bindPassToggle(btnId, inputId) {
-        byId(btnId)?.addEventListener("click", () => {
-          const inp = byId(inputId);
-          const btn = byId(btnId);
-          if (!inp) return;
-          const show = inp.type === "password";
-          inp.type = show ? "text" : "password";
-          if (btn) btn.textContent = show ? "🙈 লুকান" : "👁️ দেখুন";
-        });
-      }
-      bindPassToggle("togglePasswordVisibilityBtn", "regPasswordInput");
-      bindPassToggle("toggleLockPassBtn", "lockPass");
+      byId("togglePasswordVisibilityBtn")?.addEventListener("click", () => {
+        const input = byId("regPasswordInput");
+        const btn = byId("togglePasswordVisibilityBtn");
+        if (!input) return;
+        const show = input.type === "password";
+        input.type = show ? "text" : "password";
+        if (btn) btn.textContent = show ? "🙈 লুকান" : "👁️ দেখুন";
+        if (byId("passwordStatusOutput")) {
+          byId("passwordStatusOutput").textContent = show
+            ? "পাসওয়ার্ড এখন দৃশ্যমান রয়েছে।"
+            : "পাসওয়ার্ড লুকানো অবস্থায় আছে।";
+        }
+      });
 
       byId("savePasswordCheckBtn")?.addEventListener("click", () => {
         const pass = byId("regPasswordInput")?.value || "";
@@ -1008,37 +965,7 @@
         }
       });
 
-      // ১১ অক্ষরের লক স্ক্রিন নিয়ন্ত্রণ
-      byId("openLockModalBtn")?.addEventListener("click", () => {
-        if (byId("lockScreen")) byId("lockScreen").style.display = "flex";
-      });
-      byId("unlockAppBtn")?.addEventListener("click", () => {
-        const n = (byId("lockName")?.value || "").trim();
-        const ph = (byId("lockPhone")?.value || "").trim();
-        const pw = byId("lockPass")?.value || "";
-        const msg = byId("lockMsg");
-        if (!n || !ph) {
-          if (msg) { msg.style.display = "block"; msg.textContent = "নাম ও ফোন নম্বর দিন।"; }
-          return;
-        }
-        if (pw.length !== 11) {
-          if (msg) { msg.style.display = "block"; msg.textContent = "পাসওয়ার্ড ঠিক ১১ অক্ষরের হতে হবে।"; }
-          return;
-        }
-        if (byId("lockScreen")) byId("lockScreen").style.display = "none";
-      });
-
-      // অটো-আপডেট স্ট্যাটাস
-      function stampAutoUpdate() {
-        if (byId("lastAutoSync")) {
-          byId("lastAutoSync").textContent = new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" });
-        }
-      }
-      byId("autoSyncNowBtn")?.addEventListener("click", stampAutoUpdate);
-      stampAutoUpdate();
-      setInterval(stampAutoUpdate, 6 * 60 * 60 * 1000);
-
-      // QR ও বারকোড
+      // প্রোফাইল QR ক্যানভাস আঁকা
       const qrCanvas = byId("aynaQrCanvas");
       if (qrCanvas && qrCanvas.getContext) {
         const ctx = qrCanvas.getContext("2d");
@@ -1050,56 +977,74 @@
         const start = 12;
         for (let r = 0; r < 18; r++) {
           for (let c = 0; c < 18; c++) {
-            const corner = (r < 5 && c < 5) || (r < 5 && c > 12) || (r > 12 && c < 5);
+            const corner =
+              (r < 5 && c < 5) || (r < 5 && c > 12) || (r > 12 && c < 5);
             const hash = ((r + 3) * 17 + (c + 7) * 31) % 3 === 0;
-            if (corner || hash) ctx.fillRect(start + c * cell, start + r * cell, cell - 1, cell - 1);
+            if (corner || hash) {
+              ctx.fillRect(start + c * cell, start + r * cell, cell - 1, cell - 1);
+            }
           }
         }
       }
-      if (typeof JsBarcode === "function" && byId("aynaProfileBarcode")) {
-        try {
-          JsBarcode("#aynaProfileBarcode", "AYNA2026MAHABUB", {
-            format: "CODE128", lineColor: "#000000", width: 2, height: 46, displayValue: false, margin: 4
-          });
-        } catch (_) {}
-      }
 
-      // রাডার কম্পাস ও আবহাওয়া রাডার
+      // রাডার কম্পাস ও আবহাওয়া রাডার অঙ্কন
       function drawRadarDisc(canvasId, sweepAngle, color) {
         const c = byId(canvasId);
         if (!c || !c.getContext) return;
         const ctx = c.getContext("2d");
-        const w = c.width, h = c.height, cx = w / 2, cy = h / 2, r = Math.min(cx, cy) - 18;
+        const w = c.width;
+        const h = c.height;
+        const cx = w / 2;
+        const cy = h / 2;
+        const r = Math.min(cx, cy) - 18;
+
         ctx.clearRect(0, 0, w, h);
         ctx.fillStyle = "#040b1c";
-        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.strokeStyle = "rgba(255, 230, 77, 0.45)";
         ctx.lineWidth = 2;
         [0.33, 0.66, 1].forEach((ratio) => {
-          ctx.beginPath(); ctx.arc(cx, cy, r * ratio, 0, Math.PI * 2); ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(cx, cy, r * ratio, 0, Math.PI * 2);
+          ctx.stroke();
         });
+
         ctx.beginPath();
-        ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy);
-        ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r);
+        ctx.moveTo(cx - r, cy);
+        ctx.lineTo(cx + r, cy);
+        ctx.moveTo(cx, cy - r);
+        ctx.lineTo(cx, cy + r);
         ctx.stroke();
+
         const rad = (sweepAngle * Math.PI) / 180;
-        ctx.strokeStyle = color; ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r); ctx.stroke();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r);
+        ctx.stroke();
       }
+
       let angle = 45;
-      setInterval(() => {
+      function renderRadars() {
         const az = Number(byId("compassAzimuthInput")?.value || 45);
         angle = (az + angle * 0.05 + 6) % 360;
         drawRadarDisc("generalRadarCanvas", angle, "#ffe64d");
         drawRadarDisc("weatherRadarCanvas", (angle + 90) % 360, "#38f2ff");
-      }, 400);
+      }
+      renderRadars();
+      setInterval(renderRadars, 400);
 
-      // গাড়ি, বিমান ও জাহাজের গতি ও উচ্চতা
+      // গাড়ি, বিমান ও জাহাজের গতি ও উচ্চতা আপডেট
       function updateTransportSpeeds() {
         const carKm = Math.floor(65 + Math.random() * 40);
         const planeKm = Math.floor(820 + Math.random() * 90);
         const planeFt = Math.floor(31000 + Math.random() * 6000);
         const shipKm = Math.floor(26 + Math.random() * 16);
+
         if (byId("carSpeedValue")) byId("carSpeedValue").textContent = `১ ঘণ্টায় ${carKm} কিমি বেগে চলছে`;
         if (byId("planeSpeedValue")) byId("planeSpeedValue").textContent = `১ ঘণ্টায় ${planeKm} কিমি বেগে চলছে`;
         if (byId("planeAltitudeValue")) byId("planeAltitudeValue").textContent = `উচ্চতা: ${planeFt.toLocaleString("bn-BD")} ফিট`;
@@ -1107,7 +1052,7 @@
       }
       byId("refreshSpeedTelemetryBtn")?.addEventListener("click", updateTransportSpeeds);
 
-      // পোস্ট তৈরি ও প্রিভিউ
+      // ছবি, অডিও ও ভিডিও প্রিভিউ এবং পোস্ট প্রকাশ
       let selectedMedia = null;
       function bindMedia(btnId, inputId, kind) {
         byId(btnId)?.addEventListener("click", () => byId(inputId)?.click());
@@ -1116,21 +1061,21 @@
           if (!file) return;
           const url = URL.createObjectURL(file);
           selectedMedia = { kind, name: file.name, url };
-          const wrap = byId("mediaPreview"), content = byId("previewContent"), nameEl = byId("previewName");
+          const wrap = byId("mediaPreview");
+          const content = byId("previewContent");
+          const nameEl = byId("previewName");
           if (wrap && content && nameEl) {
             wrap.style.display = "block";
             nameEl.textContent = file.name;
             if (kind === "image") content.innerHTML = `<img src="${url}" alt="প্রিভিউ" />`;
             else if (kind === "audio") content.innerHTML = `<audio controls src="${url}" style="width:100%;"></audio>`;
             else if (kind === "video") content.innerHTML = `<video controls src="${url}"></video>`;
-            else content.innerHTML = `<div>📎 ${file.name}</div>`;
           }
         });
       }
       bindMedia("chooseImage", "imageInput", "image");
       bindMedia("chooseAudio", "audioInput", "audio");
       bindMedia("chooseVideo", "videoInput", "video");
-      bindMedia("chooseFile", "fileInput", "file");
 
       byId("clearMedia")?.addEventListener("click", () => {
         selectedMedia = null;
@@ -1140,6 +1085,7 @@
 
       const posts = [];
       let activeFilter = "all";
+
       function renderFeed() {
         const feed = byId("feed");
         if (!feed) return;
@@ -1148,26 +1094,27 @@
           feed.innerHTML = `<div class="empty">এখনও কোনো পোস্ট প্রকাশিত হয়নি।</div>`;
           return;
         }
-        feed.innerHTML = filtered.map((p) => {
-          let mediaHtml = "";
-          if (p.media?.kind === "image") mediaHtml = `<img class="post-media" src="${p.media.url}" alt="পোস্ট ছবি" />`;
-          else if (p.media?.kind === "audio") mediaHtml = `<audio controls src="${p.media.url}" style="width:100%;margin-top:12px;"></audio>`;
-          else if (p.media?.kind === "video") mediaHtml = `<video controls class="post-media-video" src="${p.media.url}"></video>`;
-          else if (p.media?.kind === "file") mediaHtml = `<div style="margin-top:12px;">📎 <a href="${p.media.url}" download="${p.media.name}" style="color:#ffe64d;">${p.media.name}</a></div>`;
-          return `
-            <article class="feed-post">
-              <strong>Mohammad Mahabub Alam</strong>
-              <div class="post-content">${p.text}</div>
-              ${mediaHtml}
-              <div class="post-actions">
-                <button type="button" onclick="this.textContent='👍 লাইক (' + (Number(this.textContent.match(/\\d+/)?.[0] || 0) + 1) + ')'">👍 লাইক (0)</button>
-                <button type="button">💬 মন্তব্য</button>
-                <button type="button">↗️ শেয়ার</button>
-                <button type="button">🔖 সংরক্ষণ</button>
-              </div>
-            </article>
-          `;
-        }).join("");
+        feed.innerHTML = filtered
+          .map((p) => {
+            let mediaHtml = "";
+            if (p.media?.kind === "image") mediaHtml = `<img class="post-media" src="${p.media.url}" alt="পোস্ট ছবি" />`;
+            else if (p.media?.kind === "audio") mediaHtml = `<audio controls src="${p.media.url}" style="width:100%;margin-top:12px;"></audio>`;
+            else if (p.media?.kind === "video") mediaHtml = `<video controls class="post-media-video" src="${p.media.url}"></video>`;
+            return `
+              <article class="feed-post">
+                <strong>Mohammad Mahabub Alam</strong>
+                <div class="post-content">${p.text}</div>
+                ${mediaHtml}
+                <div class="post-actions">
+                  <button type="button" onclick="this.textContent='👍 লাইক (' + (Number(this.textContent.match(/\\d+/)?.[0] || 0) + 1) + ')'">👍 লাইক (0)</button>
+                  <button type="button">💬 মন্তব্য</button>
+                  <button type="button">↗️ শেয়ার</button>
+                  <button type="button">🔖 সংরক্ষণ</button>
+                </div>
+              </article>
+            `;
+          })
+          .join("");
       }
 
       byId("publishPost")?.addEventListener("click", () => {
@@ -1190,7 +1137,7 @@
         });
       });
 
-      // লাইভ ক্যামেরা ও সময় বলা
+      // লাইভ ক্যামেরা
       let camStream = null;
       byId("startCamera")?.addEventListener("click", async () => {
         try {
@@ -1201,12 +1148,15 @@
           if (byId("cameraStatus")) byId("cameraStatus").textContent = "ক্যামেরা অনুমতি বা ডিভাইস পাওয়া যায়নি।";
         }
       });
+
       byId("stopCamera")?.addEventListener("click", () => {
         camStream?.getTracks().forEach((t) => t.stop());
         camStream = null;
         if (byId("liveVideo")) byId("liveVideo").srcObject = null;
         if (byId("cameraStatus")) byId("cameraStatus").textContent = "ক্যামেরা বন্ধ করা হয়েছে।";
       });
+
+      // সময় বলা বাটন
       byId("headerSpeakClockBtn")?.addEventListener("click", () => {
         const nowStr = new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" });
         if ("speechSynthesis" in window) {
@@ -1219,137 +1169,13 @@
         }
       });
 
+      // ফ্রেন্ড বাটন প্রতিক্রিয়া
       document.querySelectorAll("[data-friend-act]").forEach((btn) => {
         btn.addEventListener("click", () => {
-          if (byId("socialActionOutput")) byId("socialActionOutput").textContent = `আপডেট: ${btn.getAttribute("data-friend-act")}`;
+          if (byId("socialActionOutput")) {
+            byId("socialActionOutput").textContent = `আপডেট: ${btn.getAttribute("data-friend-act")}`;
+          }
         });
-      });
-
-      // পেজ ৫-এর সমন্বিত ফিচার বক্স ডেটা
-      const BOX_DATA = {
-        leaders: {
-          title: "🌍 রাষ্ট্রনেতা ও বিশ্ব নেতৃত্ব",
-          items: [
-            ["Bangladesh", "Muhammad Yunus — Chief Adviser"],
-            ["United States", "Donald Trump — President"],
-            ["United Kingdom", "Keir Starmer — Prime Minister"],
-            ["Saudi Arabia", "Mohammed bin Salman — Crown Prince / PM"]
-          ]
-        },
-        grocery: {
-          title: "🛒 দৈনিক মুদি বাজার তালিকা",
-          items: [
-            ["চাল / Rice", "৳৬৮ / কেজি"],
-            ["মসুর ডাল", "৳১৪০ / কেজি"],
-            ["সয়াবিন তেল", "৳১৭৫ / লিটার"],
-            ["পেঁয়াজ ও আলু", "পেঁয়াজ ৳৮৫ • আলু ৳৩৫"]
-          ]
-        },
-        farmer: {
-          title: "🌾 কৃষক, বীজ, সার ও কীটনাশক",
-          items: [
-            ["ধান ও গম বীজ", "ধান ৳১২০/কেজি • গম ৳৯৫/কেজি"],
-            ["সার তালিকা", "ইউরিয়া ৳২৭/কেজি • টিএসপি ৳৩২/কেজি"],
-            ["ফসল বিক্রয় দর", "ধান ৳১৩৫০/মণ • পাট ৳৩২০০/মণ"],
-            ["সতর্কতা", "লেবেলের মাত্রা মানুন ও সুরক্ষা সামগ্রী ব্যবহার করুন"]
-          ]
-        },
-        mp: {
-          title: "🏛️ সংসদ ও এমপি তথ্য",
-          items: [
-            ["Bangladesh", "Jatiya Sangsad — parliament.gov.bd"],
-            ["India", "Lok Sabha — loksabha.nic.in"],
-            ["United Kingdom", "House of Commons — parliament.uk"]
-          ]
-        },
-        official: {
-          title: "🏢 সরকারি দপ্তর পোর্টাল",
-          items: [
-            ["বাংলাদেশ জাতীয় পোর্টাল", "bangladesh.gov.bd"],
-            ["USA Official Portal", "usa.gov"],
-            ["UK Official Portal", "gov.uk"]
-          ]
-        },
-        transport: {
-          title: "🚌🚆 বাস ও রেল পরিবহণ",
-          items: [
-            ["Bangladesh Railway", "railway.gov.bd • BRTC (brtc.gov.bd)"],
-            ["Indian Railways", "indianrail.gov.in"],
-            ["Japan Shinkansen", "japanrailpass.net"]
-          ]
-        },
-        airline: {
-          title: "✈️ বিমান পরিবহণ",
-          items: [
-            ["Biman Bangladesh Airlines", "biman-airlines.com"],
-            ["Qatar Airways", "qatarairways.com"],
-            ["Emirates", "emirates.com"]
-          ]
-        },
-        media: {
-          title: "📻📺 রেডিও, টিভি ও সংবাদ",
-          items: [
-            ["বিশ্ব রেডিও ডিরেক্টরি", "radio-browser.info"],
-            ["বাংলা লাইভ টিভি ও নিউজ", "bbc.com/bengali"]
-          ]
-        },
-        prayer_cal: {
-          title: "🕌📅 নামাজ ও ক্যালেন্ডার",
-          items: [
-            ["আজকের তারিখ", new Date().toLocaleDateString("bn-BD", { weekday: "long", year: "numeric", month: "long", day: "numeric" })],
-            ["নামাজ ও হিজরি ক্যালেন্ডার", "দৈনিক ওয়াক্ত ও আরবি মাস অনুযায়ী আপডেট"]
-          ]
-        },
-        ulema: {
-          title: "📖 আলেম গবেষণাগার",
-          items: [
-            ["কুরআন ও তাফসির", "তাফসির ও উসূলে তাফসির গবেষণা"],
-            ["হাদিস ও ফিকহ", "হাদিস সংকলন ও সমকালীন মাসআলা"]
-          ]
-        },
-        discovery_geo: {
-          title: "🔭🗺️ ডিসকভারি ও জিওগ্রাফি",
-          items: [
-            ["মহাকাশ ও বিজ্ঞান", "গ্রহ, নক্ষত্র ও ভূ-প্রকৃতি পর্যবেক্ষণ"],
-            ["বিশ্ব ভূগোল", "মহাদেশ, নদী, পর্বতমালা ও জলবায়ু"]
-          ]
-        },
-        kids_games: {
-          title: "🎮 বাচ্চাদের খেলাধুলা ও শিক্ষা",
-          items: [
-            ["মেমোরি ও শব্দ খেলা", "বাংলা-ইংরেজি বর্ণ, সংখ্যা ও ধাঁধা"],
-            ["গণিত কুইজ", "সহজ যোগ-বিয়োগ ও যুক্তি অনুশীলন"]
-          ]
-        }
-      };
-
-      let currentBoxKey = null;
-      function renderBoxItems(key, q = "") {
-        const spec = BOX_DATA[key];
-        if (!spec || !byId("featureDetailViewer")) return;
-        byId("featureDetailViewer").style.display = "block";
-        byId("featureDetailTitle").textContent = spec.title;
-        const ql = q.trim().toLowerCase();
-        const rows = spec.items.filter(([a, b]) => !ql || `${a} ${b}`.toLowerCase().includes(ql));
-        byId("featureDetailBody").innerHTML = rows.map(([a, b]) => `
-          <div class="hub-card">
-            <strong>${a}</strong>
-            <span>${b}</span>
-          </div>
-        `).join("") || `<div class="empty">কোনো তথ্য পাওয়া যায়নি।</div>`;
-      }
-
-      document.querySelectorAll("[data-open-box]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          currentBoxKey = btn.getAttribute("data-open-box");
-          if (byId("featureDetailSearch")) byId("featureDetailSearch").value = "";
-          renderBoxItems(currentBoxKey, "");
-          byId("featureDetailViewer")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        });
-      });
-
-      byId("featureDetailSearch")?.addEventListener("input", (e) => {
-        if (currentBoxKey) renderBoxItems(currentBoxKey, e.target.value);
       });
     })();
   </script>
