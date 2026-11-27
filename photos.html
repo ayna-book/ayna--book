@@ -1,0 +1,459 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK — Photos</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ background:#050914;
+ color:#fff;
+ font-family:Arial,sans-serif;
+ padding-bottom:90px;
+}
+
+header{
+ height:72px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:0 14px;
+ background:#071b49;
+ border-bottom:2px solid #d4af37;
+}
+
+.logo{
+ font-size:27px;
+ font-weight:900;
+ color:#ffd700;
+}
+
+button{
+ background:#102b62;
+ color:#fff;
+ border:1px solid #d4af37;
+ border-radius:12px;
+ padding:13px 18px;
+ font-size:19px;
+ font-weight:900;
+}
+
+.hero{
+ padding:25px 16px;
+ background:linear-gradient(135deg,#123d82,#07142e);
+}
+
+h1{
+ font-size:34px;
+ margin:0 0 8px;
+ color:#ffd700;
+}
+
+.sub{
+ font-size:19px;
+ color:#c6d0e2;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:10px;
+ padding:12px;
+}
+
+.photo{
+ width:100%;
+ aspect-ratio:1/1;
+ object-fit:cover;
+ border-radius:14px;
+ border:2px solid #263c65;
+ background:#101f3d;
+ cursor:pointer;
+}
+
+.empty{
+ grid-column:1/-1;
+ padding:55px 15px;
+ text-align:center;
+ color:#b4bfd3;
+ font-size:22px;
+ font-weight:800;
+}
+
+.bottom{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ height:78px;
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ background:#071b49;
+ border-top:2px solid #d4af37;
+}
+
+.bottom div{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ font-size:19px;
+ font-weight:900;
+ cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+ <div class="logo">
+  AYNA BOOK
+ </div>
+
+ <button
+   onclick="location.href='profile.html'">
+   ← Profile
+ </button>
+
+</header>
+
+
+<section class="hero">
+
+ <h1>
+  🖼️ Photos
+ </h1>
+
+ <div class="sub">
+  Your photo collection
+ </div>
+
+</section>
+
+
+<main
+  id="photoGrid"
+  class="grid">
+
+ <div class="empty">
+  Loading photos...
+ </div>
+
+</main>
+
+
+<nav class="bottom">
+
+ <div
+   onclick="location.href='home.html'">
+   🏠 Home
+ </div>
+
+ <div
+   onclick="location.href='profile.html'">
+   👤 Profile
+ </div>
+
+ <div
+   onclick="location.href='messenger.html'">
+   💬 Messenger
+ </div>
+
+</nav>
+
+
+<script type="module">
+
+import {
+  auth,
+  database
+} from "./firebase-init.js";
+
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+
+const grid =
+  document.getElementById("photoGrid");
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+onAuthStateChanged(
+  auth,
+  async user => {
+
+    if(!user){
+
+      location.replace(
+        "login.html"
+      );
+
+      return;
+    }
+
+
+    /*
+      নিজের Photos:
+
+      photos.html
+
+      অন্য user's Photos:
+
+      photos.html?uid=USER_UID
+    */
+
+    const params =
+      new URLSearchParams(
+        location.search
+      );
+
+
+    const uid =
+      params.get("uid") ||
+      user.uid;
+
+
+    try{
+
+      const snap =
+        await get(
+          ref(database,"posts")
+        );
+
+
+      const photos = [];
+
+
+      /* =====================================================
+         READ POSTS
+      ===================================================== */
+
+      if(snap.exists()){
+
+        snap.forEach(item => {
+
+          const p =
+            item.val() || {};
+
+
+          const owner =
+            p.uid ||
+            p.userId ||
+            p.authorUid;
+
+
+          /*
+            Only this user's posts
+          */
+
+          if(owner !== uid){
+
+            return;
+          }
+
+
+          /*
+            Supported image fields
+          */
+
+          const url =
+            p.photoURL ||
+            p.imageUrl ||
+            p.image ||
+            p.photo ||
+            (
+              p.mediaType === "image"
+                ? p.mediaUrl
+                : ""
+            );
+
+
+          if(url){
+
+            photos.push({
+
+              url:url,
+
+              createdAt:
+                Number(
+                  p.createdAt || 0
+                )
+
+            });
+
+          }
+
+        });
+
+      }
+
+
+      /* =====================================================
+         NEWEST FIRST
+      ===================================================== */
+
+      photos.sort(
+        (a,b) =>
+          b.createdAt -
+          a.createdAt
+      );
+
+
+      grid.innerHTML = "";
+
+
+      /* =====================================================
+         EMPTY
+      ===================================================== */
+
+      if(!photos.length){
+
+        grid.innerHTML = `
+
+          <div class="empty">
+
+            🖼️
+
+            <br><br>
+
+            No photos yet.
+
+          </div>
+
+        `;
+
+        return;
+      }
+
+
+      /* =====================================================
+         DISPLAY PHOTOS
+      ===================================================== */
+
+      photos.forEach(
+        photo => {
+
+          const img =
+            document.createElement(
+              "img"
+            );
+
+
+          img.className =
+            "photo";
+
+
+          img.src =
+            photo.url;
+
+
+          img.alt =
+            "AYNA BOOK Photo";
+
+
+          img.loading =
+            "lazy";
+
+
+          /* =================================================
+             IMAGE ERROR
+          ================================================= */
+
+          img.onerror = () => {
+
+            img.remove();
+
+            if(
+              !grid.querySelector(
+                ".photo"
+              )
+            ){
+
+              grid.innerHTML = `
+
+                <div class="empty">
+
+                  ⚠️
+
+                  <br><br>
+
+                  Photos could not be displayed.
+
+                </div>
+
+              `;
+
+            }
+
+          };
+
+
+          /* =================================================
+             OPEN PHOTO
+          ================================================= */
+
+          img.onclick = () => {
+
+            window.open(
+              photo.url,
+              "_blank"
+            );
+
+          };
+
+
+          grid.appendChild(
+            img
+          );
+
+        }
+      );
+
+
+    }catch(error){
+
+      console.error(
+        "AYNA BOOK Photos Error:",
+        error
+      );
+
+
+      grid.innerHTML = `
+
+        <div class="empty">
+
+          ⚠️
+
+          <br><br>
+
+          Photos could not be loaded.
+
+        </div>
+
+      `;
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
