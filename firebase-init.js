@@ -1,117 +1,266 @@
 // ============================================================
 // AYNA BOOK — Firebase Initialization
-// Firebase Web SDK 13.4.0
+// File: firebase-init.js
+// Firebase Web SDK — CDN / ES Modules
 // ============================================================
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import { initializeApp, getApps, getApp }
+  from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
 import {
-  getAuth
+  getAuth,
+  setPersistence,
+  browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
-  getDatabase
+  getDatabase,
+  ref,
+  onValue,
+  onDisconnect,
+  set,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
-import {
-  getAnalytics
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-analytics.js";
-
-
-// ============================================================
-// FIREBASE CONFIGURATION
-// ============================================================
+// ------------------------------------------------------------
+// AYNA BOOK Firebase Configuration
+// ------------------------------------------------------------
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
+  apiKey: "YOUR_FIREBASE_API_KEY",
+
   authDomain: "ayna-book.firebaseapp.com",
 
-  databaseURL:
-    "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL: "https://YOUR_DATABASE_URL",
 
   projectId: "ayna-book",
 
-  storageBucket:
-    "ayna-book.firebasestorage.app",
+  storageBucket: "ayna-book.firebasestorage.app",
 
   messagingSenderId: "805601138500",
 
-  appId:
-    "1:805601138500:web:47acdc90cb0cb521626911",
+  appId: "YOUR_FIREBASE_APP_ID",
 
-  measurementId:
-    "G-RKHHSKNB4B"
+  measurementId: "YOUR_MEASUREMENT_ID"
 };
 
+// ------------------------------------------------------------
+// Firebase App
+// ------------------------------------------------------------
 
-// ============================================================
-// INITIALIZE FIREBASE
-// ============================================================
+const app = getApps().length
+  ? getApp()
+  : initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-
-
-// ============================================================
-// FIREBASE AUTH
-// ============================================================
+// ------------------------------------------------------------
+// Firebase Authentication
+// ------------------------------------------------------------
 
 const auth = getAuth(app);
 
+// Keep login session on the device/browser.
+setPersistence(auth, browserLocalPersistence)
+  .catch((error) => {
+    console.error(
+      "AYNA BOOK Firebase Auth Persistence Error:",
+      error
+    );
+  });
 
-// ============================================================
-// FIREBASE REALTIME DATABASE
-// ============================================================
+// ------------------------------------------------------------
+// Firebase Realtime Database
+// ------------------------------------------------------------
 
 const database = getDatabase(app);
 
+// ------------------------------------------------------------
+// Connection Monitor
+// ------------------------------------------------------------
 
-// ============================================================
-// FIREBASE ANALYTICS
-// Analytics is optional.
-// If Analytics fails, Auth and RTDB will continue working.
-// ============================================================
+const connectedRef = ref(database, ".info/connected");
 
-let analytics = null;
+onValue(
+  connectedRef,
+  (snapshot) => {
 
-try {
-  if (
-    typeof window !== "undefined" &&
-    typeof document !== "undefined"
-  ) {
-    analytics = getAnalytics(app);
+    if (snapshot.val() === true) {
+
+      console.log(
+        "🟢 AYNA BOOK Firebase: CONNECTED"
+      );
+
+      window.dispatchEvent(
+        new CustomEvent("ayna-firebase-connected", {
+          detail: {
+            connected: true
+          }
+        })
+      );
+
+    } else {
+
+      console.warn(
+        "🔴 AYNA BOOK Firebase: DISCONNECTED"
+      );
+
+      window.dispatchEvent(
+        new CustomEvent("ayna-firebase-disconnected", {
+          detail: {
+            connected: false
+          }
+        })
+      );
+    }
+  },
+  (error) => {
+
+    console.error(
+      "AYNA BOOK Firebase Connection Error:",
+      error
+    );
+
+    window.dispatchEvent(
+      new CustomEvent("ayna-firebase-error", {
+        detail: {
+          error: error
+        }
+      })
+    );
   }
-} catch (error) {
-  console.warn(
-    "AYNA BOOK: Firebase Analytics unavailable.",
-    error
+);
+
+// ------------------------------------------------------------
+// Helper: Check Firebase Connection
+// ------------------------------------------------------------
+
+export function watchFirebaseConnection(callback) {
+
+  return onValue(
+    connectedRef,
+    (snapshot) => {
+
+      const connected = snapshot.val() === true;
+
+      callback(connected);
+    },
+    (error) => {
+
+      console.error(
+        "Firebase connection watcher error:",
+        error
+      );
+
+      callback(false, error);
+    }
   );
-
-  analytics = null;
 }
 
+// ------------------------------------------------------------
+// Helper: Set User Presence
+// ------------------------------------------------------------
 
-// ============================================================
-// DEBUG INFORMATION
-// ============================================================
+export async function setUserPresence(uid) {
 
-if (typeof window !== "undefined") {
-  console.log("==============================================");
-  console.log("AYNA BOOK Firebase initialized");
-  console.log("Project:", firebaseConfig.projectId);
-  console.log("Auth:", !!auth);
-  console.log("Realtime Database:", !!database);
-  console.log("Analytics:", !!analytics);
-  console.log("==============================================");
+  if (!uid) {
+    console.warn(
+      "AYNA BOOK Presence: UID missing"
+    );
+    return;
+  }
+
+  try {
+
+    const presenceRef =
+      ref(database, `presence/${uid}`);
+
+    const onlineData = {
+      online: true,
+      lastChanged: serverTimestamp()
+    };
+
+    await set(
+      presenceRef,
+      onlineData
+    );
+
+    onDisconnect(presenceRef)
+      .set({
+        online: false,
+        lastChanged: serverTimestamp()
+      });
+
+    console.log(
+      "🟢 AYNA BOOK Presence: ONLINE",
+      uid
+    );
+
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK Presence Error:",
+      error
+    );
+  }
 }
 
+// ------------------------------------------------------------
+// Helper: Set User Offline
+// ------------------------------------------------------------
 
-// ============================================================
-// EXPORT
-// ============================================================
+export async function setUserOffline(uid) {
+
+  if (!uid) {
+    return;
+  }
+
+  try {
+
+    const presenceRef =
+      ref(database, `presence/${uid}`);
+
+    await set(
+      presenceRef,
+      {
+        online: false,
+        lastChanged: serverTimestamp()
+      }
+    );
+
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK Offline Error:",
+      error
+    );
+  }
+}
+
+// ------------------------------------------------------------
+// Export
+// ------------------------------------------------------------
 
 export {
   app,
   auth,
   database,
-  analytics
+  firebaseConfig
 };
+
+// ------------------------------------------------------------
+// Global AYNA BOOK Firebase Object
+// ------------------------------------------------------------
+
+window.AYNA_FIREBASE = {
+  app,
+  auth,
+  database,
+  firebaseConfig,
+
+  watchFirebaseConnection,
+  setUserPresence,
+  setUserOffline
+};
+
+console.log(
+  "🚀 AYNA BOOK Firebase initialized"
+);
