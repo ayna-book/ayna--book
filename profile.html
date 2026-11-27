@@ -1,511 +1,711 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AYNA BOOK ★ Profile, QR Scanner & Backup Vault</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#071b49">
+
+  <title>AYNA BOOK — Profile</title>
+
   <style>
-    :root {
-      --navy-dark: #050a18;
-      --navy-mid: #10214a;
-      --card-bg: rgba(9, 19, 45, 0.9);
-      --gold: #ffe64d;
-      --gold-soft: #fff6b3;
-      --cyan: #38f2ff;
-      --alert: #ff4d6d;
-      --text: #eef6ff;
-      --muted: #9ec5e8;
+    :root{
+      --bg:#050914;
+      --card:#0b1428;
+      --card2:#101d36;
+      --navy:#071b49;
+      --gold:#ffd700;
+      --gold2:#d4af37;
+      --white:#ffffff;
+      --muted:#aeb9cf;
+      --line:#26385e;
+      --green:#20d878;
+      --red:#ff4d5e;
+      --blue:#4285f4;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
     }
 
-    body {
-      background: radial-gradient(circle at top, var(--navy-mid), var(--navy-dark) 75%);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 16px;
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top,#102653 0%,#050914 45%,#02040a 100%);
+      color:var(--white);
+      font-family:Arial,Helvetica,sans-serif;
+      font-size:22px;
+      padding-bottom:100px;
     }
 
-    .topbar {
-      max-width: 1120px;
-      margin: 0 auto 18px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: var(--card-bg);
-      border: 1px solid rgba(255, 230, 77, 0.35);
-      border-radius: 14px;
-      padding: 12px 18px;
+    button,
+    input,
+    textarea{
+      font:inherit;
     }
 
-    .brand {
-      font-size: 1.2rem;
-      font-weight: 900;
-      color: var(--gold);
+    button{
+      cursor:pointer;
     }
 
-    .nav-links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:100;
+      min-height:78px;
+      background:linear-gradient(180deg,#102b62,#071631);
+      border-bottom:2px solid var(--gold2);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 16px;
     }
 
-    .btn {
-      background: linear-gradient(135deg, #1b3b7c, #0b1938);
-      color: var(--gold-soft);
-      border: 1px solid rgba(255, 230, 77, 0.45);
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.15s ease, border-color 0.15s ease;
+    .brand{
+      font-size:30px;
+      font-weight:900;
+      color:var(--gold);
+      letter-spacing:.5px;
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
-      border-color: var(--cyan);
-      color: var(--cyan);
+    .top-actions{
+      display:flex;
+      gap:8px;
     }
 
-    .btn.cyan-btn {
-      border-color: rgba(56, 242, 255, 0.55);
-      color: var(--cyan);
+    .icon-btn{
+      min-width:54px;
+      min-height:54px;
+      border:1px solid var(--gold2);
+      border-radius:14px;
+      background:#0b1c3d;
+      color:white;
+      font-size:26px;
     }
 
-    .btn.danger-btn {
-      border-color: rgba(255, 77, 109, 0.65);
-      color: #ff9eb0;
+    .container{
+      width:min(100%,1000px);
+      margin:auto;
     }
 
-    .grid-layout {
-      max-width: 1120px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(300px, 1fr));
-      gap: 18px;
+    .profile-header{
+      background:var(--card);
+      border-bottom:1px solid var(--line);
     }
 
-    @media (max-width: 880px) {
-      .grid-layout {
-        grid-template-columns: 1fr;
+    .cover{
+      height:220px;
+      background:
+        linear-gradient(135deg,#173d83,#071633 55%,#02050d);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .cover::after{
+      content:"AYNA BOOK";
+      position:absolute;
+      right:20px;
+      bottom:18px;
+      color:rgba(255,215,0,.15);
+      font-size:48px;
+      font-weight:900;
+    }
+
+    .profile-main{
+      padding:0 20px 22px;
+      position:relative;
+    }
+
+    .avatar-wrap{
+      width:170px;
+      height:170px;
+      margin-top:-85px;
+      position:relative;
+      z-index:3;
+    }
+
+    .avatar{
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      object-fit:cover;
+      border:5px solid var(--gold);
+      background:#10203e;
+      display:block;
+    }
+
+    .online-dot{
+      position:absolute;
+      right:12px;
+      bottom:12px;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:var(--green);
+      border:4px solid var(--card);
+    }
+
+    .profile-name{
+      margin-top:14px;
+      font-size:38px;
+      font-weight:900;
+      word-break:break-word;
+    }
+
+    .profile-email{
+      margin-top:5px;
+      color:var(--muted);
+      font-size:20px;
+      word-break:break-word;
+    }
+
+    .profile-bio{
+      margin-top:16px;
+      color:#e7ecf7;
+      line-height:1.5;
+      font-size:22px;
+    }
+
+    .verified{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:#2f8cff;
+      color:white;
+      font-size:17px;
+      vertical-align:middle;
+      margin-left:6px;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-top:22px;
+    }
+
+    .stat{
+      text-align:center;
+      background:var(--card2);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px 5px;
+    }
+
+    .stat strong{
+      display:block;
+      font-size:30px;
+      color:var(--gold);
+    }
+
+    .stat span{
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      font-size:17px;
+    }
+
+    .profile-actions{
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .btn{
+      min-height:60px;
+      border-radius:14px;
+      border:1px solid var(--gold2);
+      background:#10285a;
+      color:white;
+      font-size:21px;
+      font-weight:800;
+      padding:10px 14px;
+    }
+
+    .btn.primary{
+      background:linear-gradient(135deg,#ffd700,#b68a00);
+      color:#080b12;
+    }
+
+    .btn.danger{
+      border-color:#ff4d5e;
+      background:#35101a;
+    }
+
+    .section{
+      margin:16px 12px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      overflow:hidden;
+    }
+
+    .section-title{
+      padding:18px;
+      border-bottom:1px solid var(--line);
+      color:var(--gold);
+      font-size:27px;
+      font-weight:900;
+    }
+
+    .menu-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      padding:14px;
+    }
+
+    .menu-card{
+      min-height:105px;
+      padding:15px;
+      border-radius:16px;
+      background:var(--card2);
+      border:1px solid var(--line);
+      color:white;
+      text-align:left;
+    }
+
+    .menu-card .emoji{
+      display:block;
+      font-size:34px;
+      margin-bottom:8px;
+    }
+
+    .menu-card strong{
+      display:block;
+      font-size:22px;
+    }
+
+    .menu-card small{
+      display:block;
+      color:var(--muted);
+      margin-top:5px;
+      font-size:16px;
+    }
+
+    .post{
+      padding:18px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .post:last-child{
+      border-bottom:0;
+    }
+
+    .post-head{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .post-avatar{
+      width:52px;
+      height:52px;
+      border-radius:50%;
+      object-fit:cover;
+      border:2px solid var(--gold2);
+    }
+
+    .post-author{
+      font-weight:800;
+      font-size:20px;
+    }
+
+    .post-time{
+      display:block;
+      color:var(--muted);
+      font-size:15px;
+      margin-top:3px;
+    }
+
+    .post-text{
+      margin-top:15px;
+      line-height:1.5;
+      font-size:21px;
+    }
+
+    .post-actions{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-top:15px;
+    }
+
+    .post-actions button{
+      min-height:50px;
+      background:#0e1d37;
+      color:white;
+      border:1px solid var(--line);
+      border-radius:12px;
+      font-size:18px;
+    }
+
+    .bottom-nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:200;
+      min-height:78px;
+      background:#07142d;
+      border-top:2px solid var(--gold2);
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      padding:7px 5px;
+    }
+
+    .bottom-nav button{
+      border:0;
+      background:transparent;
+      color:white;
+      font-size:15px;
+      font-weight:700;
+    }
+
+    .bottom-nav .nav-icon{
+      display:block;
+      font-size:28px;
+      margin-bottom:3px;
+    }
+
+    .loading{
+      padding:40px 20px;
+      text-align:center;
+      color:var(--muted);
+      font-size:24px;
+    }
+
+    .empty{
+      padding:30px 20px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:95px;
+      transform:translateX(-50%) translateY(20px);
+      z-index:999;
+      background:#111d34;
+      color:white;
+      border:1px solid var(--gold2);
+      border-radius:14px;
+      padding:14px 20px;
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      max-width:90%;
+      text-align:center;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    @media(max-width:650px){
+      body{
+        font-size:20px;
+      }
+
+      .brand{
+        font-size:26px;
+      }
+
+      .cover{
+        height:170px;
+      }
+
+      .avatar-wrap,
+      .avatar{
+        width:140px;
+        height:140px;
+      }
+
+      .avatar-wrap{
+        margin-top:-70px;
+      }
+
+      .profile-name{
+        font-size:31px;
+      }
+
+      .stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .profile-actions{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .profile-actions .primary{
+        grid-column:1/-1;
+      }
+
+      .menu-grid{
+        grid-template-columns:1fr 1fr;
       }
     }
 
-    .panel {
-      background: var(--card-bg);
-      border: 1px solid rgba(56, 242, 255, 0.24);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-    }
+    @media(max-width:420px){
+      .menu-grid{
+        grid-template-columns:1fr;
+      }
 
-    .panel-title {
-      color: var(--gold);
-      font-size: 1.05rem;
-      font-weight: 800;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+      .cover::after{
+        font-size:30px;
+      }
 
-    .field-group {
-      margin-bottom: 12px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-bottom: 5px;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(56, 242, 255, 0.3);
-      background: rgba(5, 12, 28, 0.9);
-      color: var(--text);
-      font-size: 0.92rem;
-    }
-
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--gold);
-    }
-
-    .actions-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .qr-box {
-      margin-top: 12px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 230, 77, 0.3);
-      background: #040914;
-      padding: 10px;
-    }
-
-    video#qrVideo {
-      width: 100%;
-      max-height: 240px;
-      border-radius: 10px;
-      background: #02050c;
-      display: block;
-    }
-
-    .result-box {
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: rgba(16, 36, 76, 0.7);
-      border: 1px solid rgba(56, 242, 255, 0.25);
-      font-size: 0.86rem;
-      color: var(--cyan);
-      word-break: break-word;
-    }
-
-    .diag-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .stat-card {
-      background: rgba(14, 29, 64, 0.85);
-      border: 1px solid rgba(255, 230, 77, 0.2);
-      border-radius: 10px;
-      padding: 10px;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .stat-val {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--gold-soft);
-      margin-top: 3px;
-    }
-
-    .icon-preview-wrap {
-      margin-top: 12px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    img#iconPreviewImg {
-      width: 72px;
-      height: 72px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 230, 77, 0.5);
-      background: #050a18;
+      .profile-main{
+        padding-left:14px;
+        padding-right:14px;
+      }
     }
   </style>
 </head>
+
 <body>
+
   <header class="topbar">
-    <div class="brand">AYNA BOOK ★ প্রোফাইল, QR ও ব্যাকআপ হাব</div>
-    <nav class="nav-links">
-      <a class="btn" href="ayna-book-complete-hub.html">হোম হাব</a>
-      <a class="btn" href="radar.html">রাডার ও আবহাওয়া</a>
-      <button class="btn cyan-btn" id="btnSpeakProfile">ভয়েস সারসংক্ষেপ</button>
-    </nav>
+    <div class="brand">AYNA BOOK</div>
+
+    <div class="top-actions">
+      <button class="icon-btn" id="homeBtn" title="Home">⌂</button>
+      <button class="icon-btn" id="logoutBtn" title="Logout">↪</button>
+    </div>
   </header>
 
-  <main class="grid-layout">
-    <!-- ১. প্রোফাইল ও ডিজিটাল ID -->
-    <section class="panel">
-      <div class="panel-title">
-        <span>ব্যবহারকারী প্রোফাইল ও ID</span>
-      </div>
+  <main class="container">
 
-      <form id="profileForm">
-        <div class="field-group">
-          <label for="profileName">নাম / কলসাইন</label>
-          <input id="profileName" type="text" placeholder="যেমন: AYNA Explorer" required />
+    <section class="profile-header">
+
+      <div class="cover"></div>
+
+      <div class="profile-main">
+
+        <div class="avatar-wrap">
+          <img
+            id="profileAvatar"
+            class="avatar"
+            src="https://ui-avatars.com/api/?name=AYNA+BOOK&background=071b49&color=FFD700&size=300"
+            alt="Profile photo"
+          >
+          <span class="online-dot"></span>
         </div>
 
-        <div class="field-group">
-          <label for="profileId">AYNA ID / কোড</label>
-          <input id="profileId" type="text" placeholder="যেমন: AYNA-2026-001" required />
+        <div class="profile-name">
+          <span id="profileName">Profile Loading...</span>
+          <span id="verifiedBadge" class="verified" style="display:none;">✓</span>
         </div>
 
-        <div class="field-group">
-          <label for="profileCity">বর্তমান শহর / কেন্দ্র</label>
-          <input id="profileCity" type="text" placeholder="যেমন: Dhaka, Bangladesh" />
+        <div class="profile-email" id="profileEmail">
+          Loading...
         </div>
 
-        <div class="field-group">
-          <label for="profileBio">পরিচিতি / স্ট্যাটাস নোট</label>
-          <textarea id="profileBio" rows="2" placeholder="আপনার সংক্ষিপ্ত নোট বা বার্তা..."></textarea>
+        <div class="profile-bio" id="profileBio">
+          AYNA BOOK — Connect • Share • Create
         </div>
 
-        <div class="actions-row">
-          <button type="submit" class="btn">প্রোফাইল সংরক্ষণ</button>
-          <button type="button" class="btn cyan-btn" id="btnBroadcastId">লাইভ সিঙ্ক পাঠান</button>
-        </div>
-      </form>
+        <div class="stats">
 
-      <div id="profileStatus" class="result-box">প্রোফাইল তথ্য প্রস্তুত।</div>
-    </section>
-
-    <!-- ২. QR কোড স্ক্যানার -->
-    <section class="panel">
-      <div class="panel-title">
-        <span>ক্যামেরা QR কোড স্ক্যানার</span>
-      </div>
-
-      <div class="actions-row" style="margin-top: 0; margin-bottom: 10px;">
-        <button type="button" class="btn cyan-btn" id="btnStartQr">ক্যামেরা চালু</button>
-        <button type="button" class="btn danger-btn" id="btnStopQr">ক্যামেরা বন্ধ</button>
-      </div>
-
-      <div class="qr-box">
-        <video id="qrVideo" playsinline muted></video>
-      </div>
-
-      <div id="qrResultBox" class="result-box">
-        স্ক্যান ফলাফল: এখনও কোনো QR কোড স্ক্যান করা হয়নি।
-      </div>
-    </section>
-
-    <!-- ৩. ব্যাকআপ, রিস্টোর ও PWA আইকন -->
-    <section class="panel">
-      <div class="panel-title">
-        <span>ব্যাকআপ, রিস্টোর ও অ্যাপ আইকন</span>
-      </div>
-
-      <div class="actions-row" style="margin-top: 0;">
-        <button type="button" class="btn" id="btnDownloadBackup">ব্যাকআপ ডাউনলোড (.json)</button>
-        <label class="btn cyan-btn" for="restoreFileInput" style="margin: 0;">ব্যাকআপ রিস্টোর</label>
-        <input id="restoreFileInput" type="file" accept="application/json,.json" style="display: none;" />
-      </div>
-
-      <div class="icon-preview-wrap">
-        <img id="iconPreviewImg" alt="AYNA Icon Preview" />
-        <div>
-          <div style="font-size: 0.86rem; color: var(--gold-soft); font-weight: 700; margin-bottom: 6px;">
-            512×512 মাস্টার PWA আইকন
+          <div class="stat">
+            <strong id="postCount">0</strong>
+            <span>Posts</span>
           </div>
-          <button type="button" class="btn" id="btnGenerateIcon">আইকন তৈরি ও ডাউনলোড</button>
-        </div>
-      </div>
 
-      <div id="backupStatusBox" class="result-box">
-        ব্যাকআপ ও আইকন ইঞ্জিন প্রস্তুত।
+          <div class="stat">
+            <strong id="friendCount">0</strong>
+            <span>Friends</span>
+          </div>
+
+          <div class="stat">
+            <strong id="followerCount">0</strong>
+            <span>Followers</span>
+          </div>
+
+          <div class="stat">
+            <strong id="followingCount">0</strong>
+            <span>Following</span>
+          </div>
+
+        </div>
+
+        <div class="profile-actions">
+          <button class="btn primary" id="editProfileBtn">
+            ✏️ Edit Profile
+          </button>
+
+          <button class="btn" id="shareProfileBtn">
+            ↗ Share
+          </button>
+
+          <button class="btn" id="qrBtn">
+            ▣ QR
+          </button>
+        </div>
+
       </div>
     </section>
 
-    <!-- ৪. সিস্টেম ডায়াগনস্টিকস ও স্ট্যাটাস -->
-    <section class="panel">
-      <div class="panel-title">
-        <span>সিস্টেম হেলথ ও ডায়াগনস্টিকস</span>
-        <button type="button" class="btn" id="btnRefreshDiag">রিফ্রেশ</button>
+    <!-- Profile menu -->
+
+    <section class="section">
+
+      <div class="section-title">
+        👤 Profile
       </div>
 
-      <div class="diag-grid">
-        <div class="stat-card">
-          <div class="stat-label">সক্রিয় মডিউল</div>
-          <div class="stat-val" id="diagModulesVal">- / -</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">হেলথ স্কোর</div>
-          <div class="stat-val" id="diagHealthVal">0%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">লোকাল স্টোরেজ</div>
-          <div class="stat-val" id="diagStorageVal">0 KB</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">সাম্প্রতিক এরর</div>
-          <div class="stat-val" id="diagErrorsVal">0</div>
-        </div>
+      <div class="menu-grid">
+
+        <button class="menu-card" id="aboutBtn">
+          <span class="emoji">ℹ️</span>
+          <strong>About</strong>
+          <small>Personal information</small>
+        </button>
+
+        <button class="menu-card" id="photosBtn">
+          <span class="emoji">🖼️</span>
+          <strong>Photos</strong>
+          <small>Your photo collection</small>
+        </button>
+
+        <button class="menu-card" id="videosBtn">
+          <span class="emoji">🎬</span>
+          <strong>Videos</strong>
+          <small>Your video posts</small>
+        </button>
+
+        <button class="menu-card" id="reelsBtn">
+          <span class="emoji">📱</span>
+          <strong>Reels</strong>
+          <small>Short videos</small>
+        </button>
+
+        <button class="menu-card" id="storiesBtn">
+          <span class="emoji">⭕</span>
+          <strong>Stories</strong>
+          <small>24-hour stories</small>
+        </button>
+
+        <button class="menu-card" id="memoriesBtn">
+          <span class="emoji">🕰️</span>
+          <strong>Memories</strong>
+          <small>Your memories</small>
+        </button>
+
+        <button class="menu-card" id="friendsBtn">
+          <span class="emoji">👥</span>
+          <strong>Friends</strong>
+          <small>Friends and requests</small>
+        </button>
+
+        <button class="menu-card" id="followersBtn">
+          <span class="emoji">🌐</span>
+          <strong>Followers</strong>
+          <small>People following you</small>
+        </button>
+
       </div>
     </section>
+
+    <!-- Account -->
+
+    <section class="section">
+
+      <div class="section-title">
+        ⚙️ Account & Security
+      </div>
+
+      <div class="menu-grid">
+
+        <button class="menu-card" id="securityBtn">
+          <span class="emoji">🔐</span>
+          <strong>Security</strong>
+          <small>Password and login activity</small>
+        </button>
+
+        <button class="menu-card" id="settingsBtn">
+          <span class="emoji">⚙️</span>
+          <strong>Settings</strong>
+          <small>Account preferences</small>
+        </button>
+
+        <button class="menu-card" id="privacyBtn">
+          <span class="emoji">🛡️</span>
+          <strong>Privacy</strong>
+          <small>Control your privacy</small>
+        </button>
+
+        <button class="menu-card" id="notificationsBtn">
+          <span class="emoji">🔔</span>
+          <strong>Notifications</strong>
+          <small>Notification settings</small>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Posts -->
+
+    <section class="section">
+
+      <div class="section-title">
+        📝 My Posts
+      </div>
+
+      <div id="postsContainer">
+        <div class="loading">
+          Posts loading...
+        </div>
+      </div>
+
+    </section>
+
   </main>
 
-  <!-- AYNA BOOK মডিউলসমূহ -->
-  <script src="uhd-sounds-engine.js"></script>
-  <script src="speed-booster-engine.js"></script>
-  <script src="storage-vault.js"></script>
-  <script src="backup-engine.js"></script>
-  <script src="app-icon-generator.js"></script>
-  <script src="qr-scanner-engine.js"></script>
-  <script src="net-status-monitor.js"></script>
-  <script src="diagnostics-health-hub.js"></script>
-  <script src="realtime-sync-bus.js"></script>
+  <!-- Bottom navigation -->
 
-  <script>
-    (function initProfileHub() {
-      const PROFILE_KEY = "ayna_profile_data";
-      const sound = window.aynaSound || window.uhdSoundsEngine;
-      const bus = window.aynaBus;
-      const vault = window.aynaVault;
-      const diag = window.aynaDiag;
+  <nav class="bottom-nav">
 
-      const nameInput = document.getElementById("profileName");
-      const idInput = document.getElementById("profileId");
-      const cityInput = document.getElementById("profileCity");
-      const bioInput = document.getElementById("profileBio");
-      const profileStatus = document.getElementById("profileStatus");
+    <button id="bottomHome">
+      <span class="nav-icon">⌂</span>
+      Home
+    </button>
 
-      function loadProfile() {
-        try {
-          const raw = localStorage.getItem(PROFILE_KEY);
-          if (!raw) return;
-          const p = JSON.parse(raw);
-          nameInput.value = p.name || "";
-          idInput.value = p.id || "";
-          cityInput.value = p.city || "";
-          bioInput.value = p.bio || "";
-          profileStatus.textContent = `লোড হয়েছে: ${p.name || "User"} (${p.id || "No ID"})`;
-        } catch (_) {}
-      }
+    <button id="bottomFriends">
+      <span class="nav-icon">👥</span>
+      Friends
+    </button>
 
-      function saveProfile(e) {
-        if (e) e.preventDefault();
-        const profileData = {
-          name: nameInput.value.trim(),
-          id: idInput.value.trim(),
-          city: cityInput.value.trim(),
-          bio: bioInput.value.trim(),
-          updatedAt: new Date().toISOString()
-        };
+    <button id="bottomMessenger">
+      <span class="nav-icon">💬</span>
+      Messenger
+    </button>
 
-        localStorage.setItem(PROFILE_KEY, JSON.stringify(profileData));
-        vault?.saveItem?.("profiles", profileData);
-        bus?.publish?.("profile:updated", profileData);
+    <button id="bottomReels">
+      <span class="nav-icon">▶</span>
+      Reels
+    </button>
 
-        sound?.playTone?.("confirm");
-        sound?.speak?.(`${profileData.name} প্রোফাইল সংরক্ষিত হয়েছে।`);
-        profileStatus.textContent = `সংরক্ষিত হয়েছে: ${profileData.name} (${profileData.id})`;
-        refreshDiagnostics();
-      }
+    <button id="bottomSettings">
+      <span class="nav-icon">⚙</span>
+      Settings
+    </button>
 
-      document.getElementById("profileForm").addEventListener("submit", saveProfile);
+  </nav>
 
-      document.getElementById("btnBroadcastId").addEventListener("click", () => {
-        const current = {
-          name: nameInput.value.trim() || "AYNA User",
-          id: idInput.value.trim() || "AYNA-ID",
-          city: cityInput.value.trim() || "Dhaka"
-        };
-        bus?.publish?.("profile:beacon", current);
-        sound?.playTone?.("confirm");
-        profileStatus.textContent = `লাইভ সিঙ্ক পাঠানো হয়েছে: ${current.name} • ${current.id}`;
-      });
+  <div id="toast" class="toast"></div>
 
-      document.getElementById("btnSpeakProfile").addEventListener("click", () => {
-        const summary = `প্রোফাইল নাম ${nameInput.value || "সেট করা হয়নি"}, আইডি ${idInput.value || "নেই"}, অবস্থান ${cityInput.value || "অনির্ধারিত"}।`;
-        sound?.speak?.(summary);
-      });
+  <script type="module" src="./firebase-init.js"></script>
+  <script type="module" src="./auth-guard.js"></script>
+  <script type="module" src="./profile.js"></script>
 
-      // QR স্ক্যানার কন্ট্রোল
-      const videoEl = document.getElementById("qrVideo");
-      const qrResultBox = document.getElementById("qrResultBox");
-
-      document.getElementById("btnStartQr").addEventListener("click", async () => {
-        if (!window.aynaQrScanner) {
-          qrResultBox.textContent = "QR স্ক্যানার মডিউল পাওয়া যায়নি।";
-          return;
-        }
-        qrResultBox.textContent = "ক্যামেরা চালু হচ্ছে...";
-        await window.aynaQrScanner.start(
-          videoEl,
-          detectedText => {
-            qrResultBox.textContent = `স্ক্যান ফলাফল: ${detectedText}`;
-            vault?.saveItem?.("qr_scans", { value: detectedText });
-            bus?.publish?.("qr:detected", { value: detectedText });
-            sound?.playTone?.("confirm");
-            sound?.speak?.("QR কোড স্ক্যান সফল হয়েছে।");
-            refreshDiagnostics();
-          },
-          errMsg => {
-            qrResultBox.textContent = `ত্রুটি: ${errMsg}`;
-            sound?.playTone?.("alert");
-          }
-        );
-      });
-
-      document.getElementById("btnStopQr").addEventListener("click", () => {
-        window.aynaQrScanner?.stop?.();
-        qrResultBox.textContent = "স্ক্যান ফলাফল: ক্যামেরা বন্ধ করা হয়েছে।";
-      });
-
-      // ব্যাকআপ, রিস্টোর ও আইকন জেনারেটর
-      const backupStatusBox = document.getElementById("backupStatusBox");
-      const iconPreviewImg = document.getElementById("iconPreviewImg");
-
-      document.getElementById("btnDownloadBackup").addEventListener("click", () => {
-        if (!window.aynaBackup) return;
-        const count = window.aynaBackup.downloadBackup();
-        sound?.playTone?.("confirm");
-        backupStatusBox.textContent = `ব্যাকআপ ফাইল ডাউনলোড হয়েছে (${count}টি ডেটা আইটেম)।`;
-      });
-
-      document.getElementById("restoreFileInput").addEventListener("change", async event => {
-        const file = event.target.files?.[0];
-        if (!file || !window.aynaBackup) return;
-        const res = await window.aynaBackup.restoreBackup(file);
-        backupStatusBox.textContent = res.message;
-        if (res.ok) {
-          sound?.playTone?.("confirm");
-          loadProfile();
-          refreshDiagnostics();
-        } else {
-          sound?.playTone?.("alert");
-        }
-        event.target.value = "";
-      });
-
-      document.getElementById("btnGenerateIcon").addEventListener("click", () => {
-        if (typeof window.generateAynaAppIcon !== "function") return;
-        const dataUrl = window.generateAynaAppIcon(512, true);
-        iconPreviewImg.src = dataUrl;
-        sound?.playTone?.("confirm");
-        backupStatusBox.textContent = "512×512 AYNA BOOK আইকন তৈরি ও ডাউনলোড হয়েছে।";
-      });
-
-      // ডায়াগনস্টিকস আপডেট
-      function refreshDiagnostics() {
-        if (!diag) return;
-        const info = diag.checkModules();
-        const kb = diag.getStorageUsageKb();
-        document.getElementById("diagModulesVal").textContent = `${info.activeCount} / ${info.totalCount}`;
-        document.getElementById("diagHealthVal").textContent = `${info.healthPercent}%`;
-        document.getElementById("diagStorageVal").textContent = `${kb} KB`;
-        document.getElementById("diagErrorsVal").textContent = String(info.recentErrors);
-      }
-
-      document.getElementById("btnRefreshDiag").addEventListener("click", refreshDiagnostics);
-
-      // প্রিভিউ আইকন আগে থেকেই দেখানো
-      if (typeof window.generateAynaAppIcon === "function") {
-        iconPreviewImg.src = window.generateAynaAppIcon(512, false);
-      }
-
-      loadProfile();
-      refreshDiagnostics();
-    })();
-  </script>
 </body>
 </html>
