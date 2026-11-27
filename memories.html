@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK — Memories</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#050914;
+ color:#fff;
+ font-family:Arial,sans-serif;
+ padding-bottom:95px;
+}
+header{
+ min-height:75px;
+ padding:10px 14px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ background:#071b49;
+ border-bottom:2px solid #d4af37;
+}
+.logo{font-size:27px;font-weight:900;color:#ffd700}
+button{
+ border:1px solid #d4af37;
+ background:#102b62;
+ color:#fff;
+ border-radius:12px;
+ padding:13px 17px;
+ font-size:19px;
+ font-weight:900;
+}
+.hero{
+ padding:24px 15px;
+ background:linear-gradient(135deg,#123d82,#07142e);
+}
+h1{
+ font-size:36px;
+ margin:0 0 10px;
+ color:#ffd700;
+}
+.sub{font-size:20px;color:#d4dbea;line-height:1.4}
+.layout{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) 125px;
+ gap:10px;
+ padding:12px;
+ align-items:start;
+}
+.section-title{
+ font-size:27px;
+ color:#ffd700;
+ font-weight:900;
+ margin:12px 14px;
+}
+.qr-box{
+ position:sticky;
+ top:10px;
+ padding:9px;
+ text-align:center;
+ background:#10264b;
+ border:2px solid #d4af37;
+ border-radius:14px;
+}
+.qr-heading{
+ font-size:16px;
+ font-weight:900;
+ color:#ffd700;
+ margin-bottom:9px;
+}
+#accountQR{
+ width:100%;
+ aspect-ratio:1/1;
+ background:#fff;
+ border-radius:7px;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ overflow:hidden;
+}
+#accountQR img,
+#accountQR canvas{
+ width:100%!important;
+ height:100%!important;
+}
+.qr-caption{
+ font-size:13px;
+ margin-top:8px;
+ color:#fff;
+ font-weight:800;
+}
+.memories{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;
+}
+.memory-card{
+ min-width:0;
+ overflow:hidden;
+ background:#0e1e3c;
+ border:1px solid #34496b;
+ border-radius:14px;
+}
+.memory-image{
+ width:100%;
+ aspect-ratio:1/1;
+ display:block;
+ object-fit:cover;
+ background:#101f3d;
+}
+.memory-content{padding:11px}
+.memory-date{
+ font-size:15px;
+ color:#ffd700;
+ font-weight:900;
+ margin-bottom:7px;
+}
+.memory-caption{
+ font-size:18px;
+ line-height:1.35;
+ overflow-wrap:anywhere;
+}
+.memory-type{
+ font-size:14px;
+ color:#b9c8e0;
+ margin-top:8px;
+}
+.empty{
+ grid-column:1/-1;
+ padding:45px 10px;
+ text-align:center;
+ color:#c4cee0;
+ font-size:21px;
+ font-weight:800;
+ line-height:1.5;
+}
+.bottom{
+ position:fixed;
+ bottom:0;left:0;right:0;
+ height:78px;
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ background:#071b49;
+ border-top:2px solid #d4af37;
+ z-index:50;
+}
+.bottom div{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:19px;
+ font-weight:900;
+ cursor:pointer;
+}
+@media(max-width:360px){
+ .layout{grid-template-columns:minmax(0,1fr) 105px}
+ .memories{grid-template-columns:1fr}
+ .logo{font-size:23px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">AYNA BOOK</div>
+ <button onclick="location.href='profile.html'">← Profile</button>
+</header>
+
+<section class="hero">
+ <h1>🕰️ Memories</h1>
+ <div class="sub">
+  Your special moments, photos and memories
+ </div>
+</section>
+
+<div class="layout">
+
+ <main>
+  <div class="section-title">📸 Your Memories</div>
+  <div id="memoriesGrid" class="memories">
+   <div class="empty">Loading memories...</div>
+  </div>
+ </main>
+
+ <aside class="qr-box">
+  <div class="qr-heading">ACCOUNT QR</div>
+  <div id="accountQR">QR</div>
+  <div class="qr-caption">Scan Account</div>
+ </aside>
+
+</div>
+
+<nav class="bottom">
+ <div onclick="location.href='home.html'">🏠 Home</div>
+ <div onclick="location.href='profile.html'">👤 Profile</div>
+ <div onclick="location.href='photos.html'">🖼️ Photos</div>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script type="module">
+import {auth,database} from "./firebase-init.js";
+
+import {onAuthStateChanged}
+from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {ref,get}
+from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+const grid=document.getElementById("memoriesGrid");
+
+function escapeHtml(value){
+ return String(value??"")
+ .replaceAll("&","&amp;")
+ .replaceAll("<","&lt;")
+ .replaceAll(">","&gt;")
+ .replaceAll('"',"&quot;")
+ .replaceAll("'","&#039;");
+}
+
+function formatDate(value){
+ if(!value)return "Date not available";
+ let n=Number(value);
+ if(!Number.isFinite(n))return "Date not available";
+ if(n<1000000000000)n=n*1000;
+ const d=new Date(n);
+ if(Number.isNaN(d.getTime()))return "Date not available";
+ return d.toLocaleDateString(undefined,{
+  year:"numeric",
+  month:"long",
+  day:"numeric"
+ });
+}
+
+onAuthStateChanged(auth,async user=>{
+
+ if(!user){
+  location.replace("login.html");
+  return;
+ }
+
+ const params=new URLSearchParams(location.search);
+ const uid=params.get("uid")||user.uid;
+
+ // Account QR
+ const qr=document.getElementById("accountQR");
+ qr.innerHTML="";
+
+ const profileUrl=
+  location.origin+
+  location.pathname.replace(/[^/]*$/,"")+
+  "profile.html?uid="+encodeURIComponent(uid);
+
+ if(window.QRCode){
+  new QRCode(qr,{
+   text:profileUrl,
+   width:150,
+   height:150,
+   correctLevel:QRCode.CorrectLevel.M
+  });
+ }else{
+  qr.textContent="QR unavailable";
+ }
+
+ try{
+
+  const snap=await get(ref(database,"posts"));
+  const memories=[];
+
+  if(snap.exists()){
+
+   snap.forEach(item=>{
+
+    const p=item.val()||{};
+    const owner=p.uid||p.userId||p.authorUid;
+
+    if(owner!==uid)return;
+
+    const image=
+     p.photoURL||
+     p.imageUrl||
+     p.image||
+     p.photo||
+     (p.mediaType==="image"?p.mediaUrl:"");
+
+    const video=
+     p.videoUrl||
+     p.video||
+     (p.mediaType==="video"?p.mediaUrl:"");
+
+    const createdAt=
+     Number(p.createdAt||p.timestamp||0);
+
+    // Only show dated posts as memories.
+    if(!createdAt)return;
+
+    memories.push({
+     id:item.key,
+     image:image,
+     video:video,
+     caption:p.caption||p.text||p.description||"A special moment",
+     createdAt:createdAt
+    });
+
+   });
+
+  }
+
+  memories.sort((a,b)=>b.createdAt-a.createdAt);
+  grid.innerHTML="";
+
+  if(!memories.length){
+   grid.innerHTML=`
+    <div class="empty">
+     🕰️<br>
+     No memories available yet.<br>
+     Your dated posts will appear here.
+    </div>`;
+   return;
+  }
+
+  memories.forEach(memory=>{
+
+   const card=document.createElement("article");
+   card.className="memory-card";
+
+   if(memory.image){
+
+    const img=document.createElement("img");
+    img.className="memory-image";
+    img.src=memory.image;
+    img.alt="Memory photo";
+    img.loading="lazy";
+    img.onerror=()=>img.remove();
+    card.appendChild(img);
+
+   }else if(memory.video){
+
+    const video=document.createElement("video");
+    video.className="memory-image";
+    video.src=memory.video;
+    video.controls=true;
+    video.playsInline=true;
+    video.preload="metadata";
+    card.appendChild(video);
+
+   }else{
+
+    const placeholder=document.createElement("div");
+    placeholder.className="memory-image";
+    placeholder.style.display="grid";
+    placeholder.style.placeItems="center";
+    placeholder.style.fontSize="48px";
+    placeholder.textContent="📝";
+    card.appendChild(placeholder);
+
+   }
+
+   const content=document.createElement("div");
+   content.className="memory-content";
+
+   const date=document.createElement("div");
+   date.className="memory-date";
+   date.textContent="📅 "+formatDate(memory.createdAt);
+
+   const caption=document.createElement("div");
+   caption.className="memory-caption";
+   caption.textContent=memory.caption;
+
+   const type=document.createElement("div");
+   type.className="memory-type";
+   type.textContent=memory.image?"📷 Photo":
+    memory.video?"🎬 Video":"📝 Post";
+
+   content.append(date,caption,type);
+   card.appendChild(content);
+   grid.appendChild(card);
+
+  });
+
+ }catch(error){
+
+  console.error("AYNA Memories Error:",error);
+
+  grid.innerHTML=`
+   <div class="empty">
+    ⚠️ Memories could not be loaded.<br>
+    Check your Firebase Database Rules.
+   </div>`;
+
+ }
+
+});
+</script>
+
+</body>
+</html>
