@@ -1,139 +1,454 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=5">
+
   <meta name="theme-color" content="#071b49">
 
-  <title>AYNA BOOK — Messaging</title>
+  <title>AYNA BOOK — Messenger</title>
 
   <link rel="stylesheet" href="./styles.css">
 
   <style>
+    :root {
+      --bg1: #050a18;
+      --bg2: #071b49;
+      --card: #ffffff10;
+      --border: #ffffff30;
+      --gold: #ffd84d;
+      --cyan: #35d9ef;
+      --purple: #8b5cf6;
+      --pink: #ff4fa3;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+    }
+
     body {
       min-height: 100vh;
+      margin: 0;
       padding: 20px;
-      background: linear-gradient(135deg, #071b49, #512b81);
-      color: white;
+      background:
+        radial-gradient(circle at top, #173d82 0%, transparent 35%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--white);
       font-family: Arial, sans-serif;
+      font-size: 18px;
     }
 
-    .chat-card {
-      max-width: 650px;
-      margin: 25px auto;
-      padding: 22px;
-      background: #ffffff12;
-      border: 1px solid #ffffff35;
-      border-radius: 20px;
-    }
+    /* -------------------------------------------------------
+       AUTH CHECK
+    ------------------------------------------------------- */
 
-    .chat-card h1,
-    .subtitle {
+    #authGuardLoader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #050a18;
+      color: white;
       text-align: center;
     }
 
-    .subtitle {
-      color: #35d9ef;
+    .auth-loader-box {
+      width: min(90%, 500px);
+      padding: 35px 20px;
+      border: 1px solid #ffd84d55;
+      border-radius: 24px;
+      background: #ffffff0d;
     }
 
+    .auth-loader-title {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--gold);
+      margin-bottom: 15px;
+    }
+
+    .auth-loader-text {
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    .auth-dots {
+      margin-top: 20px;
+      font-size: 30px;
+      letter-spacing: 8px;
+      color: var(--cyan);
+      animation: authPulse 1.2s infinite;
+    }
+
+    @keyframes authPulse {
+      0%, 100% {
+        opacity: .35;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* -------------------------------------------------------
+       MAIN CARD
+    ------------------------------------------------------- */
+
+    .chat-card {
+      width: 100%;
+      max-width: 850px;
+      margin: 25px auto;
+      padding: 25px;
+
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+
+      box-shadow:
+        0 20px 60px #00000055,
+        inset 0 1px 0 #ffffff15;
+    }
+
+    .chat-card h1 {
+      margin: 0;
+      text-align: center;
+      font-size: clamp(32px, 7vw, 52px);
+      color: white;
+    }
+
+    .subtitle {
+      margin: 10px 0 25px;
+      text-align: center;
+      color: var(--cyan);
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: clamp(24px, 5vw, 36px);
+      line-height: 1.3;
+      margin-top: 25px;
+    }
+
+    .muted {
+      color: #ddd;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    /* -------------------------------------------------------
+       MESSAGES
+    ------------------------------------------------------- */
+
     #messages {
-      height: 380px;
+      height: min(52vh, 520px);
+      min-height: 300px;
+
       overflow-y: auto;
-      padding: 12px;
-      margin: 20px 0;
-      background: #071b4970;
-      border-radius: 12px;
+
+      padding: 16px;
+      margin: 25px 0;
+
+      background: #030b20cc;
+      border: 1px solid #ffffff18;
+      border-radius: 18px;
+
+      scroll-behavior: smooth;
+    }
+
+    #messages::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    #messages::-webkit-scrollbar-thumb {
+      background: #ffffff30;
+      border-radius: 20px;
     }
 
     .bubble {
       max-width: 85%;
-      margin: 10px 0;
-      padding: 12px;
-      background: #ffffff20;
-      border-radius: 12px;
+      margin: 13px 0;
+      padding: 15px 17px;
+
+      background: #ffffff15;
+      border: 1px solid #ffffff12;
+      border-radius: 17px;
+
       overflow-wrap: anywhere;
+      line-height: 1.6;
+      font-size: 18px;
     }
 
     .bubble.mine {
       margin-left: auto;
-      background: #8b5cf6;
+      background: linear-gradient(
+        135deg,
+        #8b5cf6,
+        #5b3db7
+      );
     }
 
     .bubble p {
+      margin: 0;
       white-space: pre-wrap;
     }
 
     .bubble small {
       display: block;
-      font-size: 11px;
+      margin-top: 8px;
+      font-size: 13px;
       opacity: .8;
     }
 
+    /* -------------------------------------------------------
+       FORM
+    ------------------------------------------------------- */
+
     label {
       display: block;
-      margin: 12px 0 7px;
+      margin: 18px 0 8px;
+      color: var(--gold);
+      font-size: 21px;
+      font-weight: 700;
     }
 
     textarea {
+      display: block;
+
       width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
+      min-height: 120px;
+
+      padding: 16px;
+
+      border: 1px solid #ffffff35;
+      border-radius: 16px;
+
+      background: #020817;
+      color: white;
+
       font: inherit;
+      font-size: 19px;
+      line-height: 1.5;
+
+      resize: vertical;
+      outline: none;
     }
+
+    textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px #35d9ef22;
+    }
+
+    textarea::placeholder {
+      color: #aaa;
+    }
+
+    /* -------------------------------------------------------
+       BUTTONS
+    ------------------------------------------------------- */
 
     button,
     .back-link {
       display: block;
       width: 100%;
-      margin-top: 13px;
-      padding: 13px;
+
+      margin-top: 15px;
+      padding: 17px;
+
       border: 0;
-      border-radius: 10px;
-      background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #35d9ef);
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--pink),
+          var(--purple),
+          var(--cyan)
+        );
+
       color: white;
-      font-size: 16px;
-      font-weight: bold;
+
+      font-size: 21px;
+      font-weight: 800;
+
       text-align: center;
       text-decoration: none;
+
       cursor: pointer;
+
+      transition:
+        transform .15s ease,
+        opacity .15s ease;
+    }
+
+    button:hover,
+    .back-link:hover {
+      transform: translateY(-2px);
+    }
+
+    button:active,
+    .back-link:active {
+      transform: scale(.98);
     }
 
     button:disabled {
-      opacity: .6;
+      opacity: .5;
       cursor: wait;
+      transform: none;
     }
+
+    /* -------------------------------------------------------
+       STATUS
+    ------------------------------------------------------- */
 
     #chatStatus {
-      min-height: 24px;
+      min-height: 30px;
+      margin-top: 18px;
+
       overflow-wrap: anywhere;
+
+      color: #fff;
+      line-height: 1.7;
+      font-size: 18px;
+
+      text-align: center;
+    }
+
+    /* -------------------------------------------------------
+       TOP USER STATUS
+    ------------------------------------------------------- */
+
+    #currentUserBox {
+      display: none;
+
+      margin: 15px 0;
+      padding: 14px;
+
+      border: 1px solid #ffd84d44;
+      border-radius: 14px;
+
+      background: #ffd84d0c;
+
+      color: #fff;
+      text-align: center;
+
+      font-size: 17px;
       line-height: 1.6;
     }
 
-    .muted {
-      color: #ddd;
-      font-size: 13px;
-      line-height: 1.6;
+    #currentUserBox strong {
+      color: var(--gold);
+    }
+
+    /* -------------------------------------------------------
+       MOBILE
+    ------------------------------------------------------- */
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 10px;
+        font-size: 17px;
+      }
+
+      .chat-card {
+        margin: 10px auto;
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      #messages {
+        height: 48vh;
+        min-height: 280px;
+        padding: 12px;
+      }
+
+      .bubble {
+        max-width: 92%;
+        font-size: 17px;
+      }
+
+      textarea {
+        min-height: 130px;
+        font-size: 18px;
+      }
+
+      button,
+      .back-link {
+        font-size: 20px;
+        padding: 16px;
+      }
     }
   </style>
 </head>
 
 <body>
+
+  <!-- =====================================================
+       AUTH LOADING SCREEN
+  ====================================================== -->
+
+  <div id="authGuardLoader">
+    <div class="auth-loader-box">
+
+      <div class="auth-loader-title">
+        🔐 AYNA BOOK
+      </div>
+
+      <div class="auth-loader-text">
+        আপনার অ্যাকাউন্ট যাচাই করা হচ্ছে...
+      </div>
+
+      <div class="auth-dots">
+        • • •
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- =====================================================
+       MAIN CHAT
+  ====================================================== -->
+
   <main class="chat-card">
 
-    <h1>💬 AYNA BOOK</h1>
+    <h1>
+      💬 AYNA BOOK
+    </h1>
 
     <p class="subtitle">
-      Connect. Create. Share.
+      Connect • Create • Share
     </p>
 
-    <h2>🌍 Global Community Chat</h2>
+    <h2 class="section-title">
+      🌍 Global Community Chat
+    </h2>
+
+    <div id="currentUserBox">
+      আপনি লগইন করেছেন।
+    </div>
 
     <p class="muted">
-      এটি একটি সাধারণ কমিউনিটি চ্যাট রুম।
-      এখানে পাঠানো বার্তা রুমের অন্য সদস্যরাও দেখতে পারবেন।
+      এটি AYNA BOOK-এর কমিউনিটি চ্যাট।
+      এখানে পাঠানো মেসেজ রুমের অন্যান্য সদস্যরা
+      দেখতে পারবেন।
     </p>
+
+
+    <!-- =================================================
+         MESSAGE AREA
+    ================================================== -->
 
     <div
       id="messages"
@@ -141,42 +456,94 @@
       aria-live="polite"
       aria-label="চ্যাট বার্তা"
     >
-      <p>মেসেজ লোড হচ্ছে...</p>
+      <p>
+        🔄 মেসেজ লোড হচ্ছে...
+      </p>
     </div>
+
+
+    <!-- =================================================
+         MESSAGE FORM
+    ================================================== -->
 
     <form id="chatForm">
 
-      <label for="message">আপনার মেসেজ লিখুন</label>
+      <label for="message">
+        ✍️ আপনার মেসেজ লিখুন
+      </label>
 
       <textarea
         id="message"
-        rows="3"
+        rows="4"
         maxlength="2000"
-        placeholder="এখানে মেসেজ লিখুন..."
+        placeholder="এখানে আপনার মেসেজ লিখুন..."
         required
+        autocomplete="off"
       ></textarea>
 
-      <button id="sendButton" type="submit" disabled>
+      <button
+        id="sendButton"
+        type="submit"
+        disabled
+      >
         🚀 Send Message
       </button>
 
     </form>
 
-    <p id="chatStatus" role="status" aria-live="polite">
-      Firebase সংযোগের অপেক্ষায়...
+
+    <!-- =================================================
+         STATUS
+    ================================================== -->
+
+    <p
+      id="chatStatus"
+      role="status"
+      aria-live="polite"
+    >
+      🔄 Firebase সংযোগের অপেক্ষায়...
     </p>
 
-    <a class="back-link" href="./index.html">
+
+    <!-- =================================================
+         HOME
+    ================================================== -->
+
+    <a
+      class="back-link"
+      href="./index.html"
+    >
       🏠 হোম পেজে ফিরে যান
     </a>
 
+
     <p class="muted">
-      এই সংস্করণে ব্যক্তিগত চ্যাট, AI অনুবাদ, ভয়েস কল
-      এবং ভিডিও কল এখনো যুক্ত হয়নি।
+      🔒 এই পেজে প্রবেশের জন্য AYNA BOOK অ্যাকাউন্টে
+      লগইন করা প্রয়োজন।
     </p>
 
   </main>
 
-  <script type="module" src="./js/messages.js"></script>
+
+  <!-- =====================================================
+       AUTH GUARD
+       এটি আগে Firebase Auth যাচাই করবে
+  ====================================================== -->
+
+  <script
+    type="module"
+    src="./auth-guard.js"
+  ></script>
+
+
+  <!-- =====================================================
+       MESSAGE APPLICATION
+  ====================================================== -->
+
+  <script
+    type="module"
+    src="./js/messages.js"
+  ></script>
+
 </body>
 </html>
