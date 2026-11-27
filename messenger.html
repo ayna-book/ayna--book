@@ -1,530 +1,2124 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — AYNA Messenger</title>
+  <meta charset="UTF-8">
 
-<style>
-:root {
-  --bg:#050a18;
-  --navy-top:#1a3575;
-  --navy-bottom:#08122b;
-  --gold:#ffe64d;
-  --gold-bright:#fff6b3;
-  --gold-base:#8a6105;
-  --quantum-cyan:#38f2ff;
-  --white:#ffffff;
-  --muted:#e6eeff;
-}
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
 
-* {
-  box-sizing:border-box;
-}
+  <meta name="theme-color" content="#06152f">
+  <meta name="color-scheme" content="dark">
 
-html, body {
-  max-width:100%;
-  overflow-x:hidden;
-  scroll-behavior:smooth;
-}
+  <meta
+    name="description"
+    content="AYNA BOOK Messenger — Connect, Share, Create"
+  >
 
-body {
-  margin:0;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(56,242,255,.09), transparent 35%),
-    radial-gradient(circle at 85% 20%, rgba(255,230,77,.10), transparent 40%),
-    var(--bg);
-  color:var(--white);
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  font-size:34px;
-  line-height:1.5;
-}
+  <title>AYNA BOOK — Messenger</title>
 
-button,input,textarea {
-  font:inherit;
-}
+  <link rel="manifest" href="./manifest.webmanifest">
 
-button {
-  cursor:pointer;
-}
+  <style>
+    /* =========================================================
+       AYNA BOOK — MESSENGER
+       Full-screen mobile messenger UI
+       ========================================================= */
 
-.gold-3d-box,
-.hero,
-.panel,
-.msg-item {
-  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%) !important;
-  border:4px solid var(--gold) !important;
-  border-radius:10px !important;
-  box-shadow:
-    0 0 18px rgba(255,230,77,.65),
-    0 9px 0 var(--gold-base),
-    0 16px 26px rgba(0,0,0,.85),
-    inset 0 2px 5px var(--gold-bright) !important;
-}
+    :root {
+      --bg: #030712;
+      --bg2: #06152f;
+      --navy: #071b49;
+      --navy2: #0b2864;
+      --card: #0a1730;
+      --card2: #0d2042;
 
-.primary-button:active,
-.tool-button:active,
-.header-actions a:active,
-.header-actions button:active {
-  transform:translateY(4px) !important;
-  box-shadow:
-    0 0 12px rgba(255,230,77,.55),
-    0 3px 0 var(--gold-base),
-    0 6px 12px rgba(0,0,0,.85),
-    inset 0 2px 4px var(--gold-bright) !important;
-}
+      --gold: #ffd84d;
+      --gold2: #ffea8a;
 
-header {
-  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
-  border-bottom:4px solid var(--gold);
-  padding:20px;
-  position:sticky;
-  top:0;
-  z-index:50;
-  box-shadow:0 0 20px rgba(255,230,77,.45), 0 6px 18px rgba(0,0,0,.9);
-}
+      --white: #ffffff;
+      --text: #f6f8ff;
+      --muted: #aebbd5;
 
-.header-inner {
-  max-width:1200px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-}
+      --green: #35e889;
+      --red: #ff5d6c;
+      --cyan: #54d9ff;
+      --purple: #a88bff;
 
-.logo {
-  color:var(--gold-bright);
-  font-size:44px;
-  font-weight:1000;
-  letter-spacing:1px;
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  text-decoration:none;
-  text-shadow:0 0 14px rgba(255,230,77,.85), 0 3px 8px rgba(0,0,0,.95);
-}
+      --border: rgba(255, 216, 77, 0.55);
 
-.star-1s {
-  color:#ffffff;
-  font-size:44px;
-  display:inline-block;
-  animation:starFlash1s 1s infinite alternate ease-in-out;
-}
+      --radius: 20px;
+      --shadow:
+        0 15px 50px rgba(0, 0, 0, 0.45);
+    }
 
-@keyframes starFlash1s {
-  0% {
-    transform:scale(0.95) rotate(0deg);
-    color:#fff099;
-    text-shadow:0 0 8px #ffd700;
-  }
-  100% {
-    transform:scale(1.35) rotate(18deg);
-    color:#ffffff;
-    text-shadow:
-      0 0 14px #ffffff,
-      0 0 26px #ffffff,
-      0 0 42px #ffe64d,
-      0 0 60px #ff9900;
-  }
-}
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.header-actions {
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
+    html {
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+    }
 
-.header-actions a,
-.header-actions button {
-  text-decoration:none;
-  color:white;
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  border:3px solid var(--gold);
-  padding:12px 18px;
-  border-radius:8px;
-  font-weight:bold;
-  font-size:25px;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 5px 0 var(--gold-base);
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
 
-.container {
-  max-width:1200px;
-  margin:auto;
-  padding:22px;
-}
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(24, 66, 140, 0.35),
+          transparent 42%
+        ),
+        linear-gradient(
+          180deg,
+          #071b49 0%,
+          #040b19 45%,
+          #030712 100%
+        );
 
-.hero {
-  padding:28px 22px;
-  margin-bottom:24px;
-  text-align:center;
-}
+      color: var(--text);
 
-.hero h1 {
-  font-size:48px;
-  margin:0 0 10px;
-  color:var(--gold-bright);
-  font-weight:1000;
-}
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
 
-.hero p {
-  font-size:30px;
-  margin:0;
-  color:var(--white);
-}
+      font-size: 20px;
+      overflow-x: hidden;
+    }
 
-.panel {
-  padding:26px;
-  margin-bottom:24px;
-}
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
 
-.panel h2 {
-  margin:0 0 18px;
-  font-size:38px;
-  font-weight:1000;
-  color:var(--gold-bright);
-}
+    button {
+      cursor: pointer;
+    }
 
-.field-group {
-  margin-bottom:18px;
-}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-.field-label {
-  display:block;
-  font-size:28px;
-  font-weight:bold;
-  color:var(--gold-bright);
-  margin-bottom:8px;
-}
+    /* =========================================================
+       AUTH LOADER
+       ========================================================= */
 
-.hub-input,
-.hub-textarea {
-  width:100%;
-  background:#050b1c;
-  color:white;
-  border:3.5px solid var(--gold);
-  border-radius:8px;
-  padding:16px 20px;
-  font-size:30px;
-  outline:none;
-}
+    #authGuardLoader {
+      position: fixed;
+      inset: 0;
 
-.hub-textarea {
-  min-height:130px;
-  resize:vertical;
-}
+      z-index: 99999;
 
-.hub-input:focus,
-.hub-textarea:focus {
-  border-color:#ffffff;
-}
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
 
-.action-row {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-  margin-top:12px;
-}
+      gap: 22px;
 
-.tool-button {
-  min-height:76px;
-  padding:14px;
-  border-radius:8px;
-  border:3px solid var(--gold);
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  color:white;
-  font-size:27px;
-  font-weight:bold;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
-}
+      background:
+        radial-gradient(
+          circle at center,
+          #0b2864 0%,
+          #050d1e 55%,
+          #030712 100%
+        );
+    }
 
-.primary-button {
-  width:100%;
-  min-height:86px;
-  margin-top:14px;
-  border:3.5px solid var(--gold-bright);
-  border-radius:8px;
-  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
-  color:#050a18;
-  font-size:32px;
-  font-weight:1000;
-  box-shadow:0 0 18px rgba(255,230,77,.65), 0 7px 0 #664604;
-}
+    .auth-logo {
+      width: 90px;
+      height: 90px;
 
-.msg-list {
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  margin-top:18px;
-}
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-.msg-item {
-  padding:20px;
-}
+      border: 2px solid var(--gold);
+      border-radius: 50%;
 
-.msg-meta {
-  font-size:24px;
-  color:var(--quantum-cyan);
-  font-weight:bold;
-  margin-bottom:6px;
-}
+      color: var(--gold);
+      font-size: 30px;
+      font-weight: 1000;
 
-.msg-body {
-  font-size:32px;
-  color:var(--white);
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-}
+      box-shadow:
+        0 0 35px rgba(255, 216, 77, 0.25);
+    }
 
-.signal-box {
-  margin-top:16px;
-  background:#050b1c;
-  border:3px solid var(--quantum-cyan);
-  border-radius:8px;
-  padding:16px;
-  font-size:27px;
-  color:var(--gold-bright);
-  white-space:pre-line;
-}
+    .loader-title {
+      color: var(--gold2);
+      font-size: 28px;
+      font-weight: 1000;
+      text-align: center;
+    }
 
-footer {
-  text-align:center;
-  padding:32px 16px 130px;
-  color:var(--muted);
-  font-size:28px;
-}
+    .loader-subtitle {
+      color: var(--muted);
+      font-size: 18px;
+      text-align: center;
+    }
 
-.bottom-nav {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  z-index:60;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
-  border-top:4px solid var(--gold);
-  padding:10px 6px calc(10px + env(safe-area-inset-bottom));
-  box-shadow:0 0 20px rgba(255,230,77,.45), 0 -5px 18px rgba(0,0,0,.9);
-}
+    .loader-dots {
+      display: flex;
+      gap: 9px;
+    }
 
-.bottom-nav a {
-  color:white;
-  text-decoration:none;
-  text-align:center;
-  font-size:24px;
-  font-weight:bold;
-}
+    .loader-dots span {
+      width: 13px;
+      height: 13px;
 
-.bottom-nav span {
-  display:block;
-  font-size:34px;
-  margin-bottom:2px;
-}
+      border-radius: 50%;
 
-#notice {
-  position:fixed;
-  top:104px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#0a1636;
-  color:white;
-  border:3.5px solid var(--gold-bright);
-  padding:16px 24px;
-  border-radius:8px;
-  box-shadow:0 0 20px rgba(255,230,77,.8), 0 7px 0 var(--gold-base);
-  z-index:100;
-  display:none;
-  max-width:92%;
-  font-size:28px;
-  text-align:center;
-}
+      background: var(--gold);
 
-@media(max-width:600px) {
-  .action-row {
-    grid-template-columns:1fr;
-  }
-  .logo {
-    font-size:34px;
-  }
-  .hero h1 {
-    font-size:36px;
-  }
-}
-</style>
+      animation: ayDots 1.2s infinite ease-in-out;
+    }
+
+    .loader-dots span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .loader-dots span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes ayDots {
+      0%,
+      80%,
+      100% {
+        opacity: 0.25;
+        transform: translateY(0);
+      }
+
+      40% {
+        opacity: 1;
+        transform: translateY(-9px);
+      }
+    }
+
+    /* =========================================================
+       TOP HEADER
+       ========================================================= */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+
+      z-index: 1000;
+
+      min-height: 88px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 14px;
+
+      padding:
+        max(12px, env(safe-area-inset-top))
+        16px
+        14px
+        16px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(9, 35, 82, 0.98),
+          rgba(4, 15, 34, 0.98)
+        );
+
+      border-bottom: 1px solid var(--border);
+
+      box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.35);
+
+      backdrop-filter: blur(18px);
+    }
+
+    .brand-area {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 54px;
+      height: 54px;
+
+      flex: 0 0 54px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 2px solid var(--gold);
+      border-radius: 15px;
+
+      background: #071a3d;
+
+      color: var(--gold);
+
+      font-size: 17px;
+      font-weight: 1000;
+
+      box-shadow:
+        0 0 22px rgba(255, 216, 77, 0.14);
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-name {
+      font-size: 25px;
+      font-weight: 1000;
+      line-height: 1.05;
+      color: var(--white);
+      white-space: nowrap;
+    }
+
+    .brand-name span {
+      color: var(--gold);
+    }
+
+    .brand-status {
+      margin-top: 5px;
+
+      display: flex;
+      align-items: center;
+      gap: 7px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .online-dot {
+      width: 10px;
+      height: 10px;
+
+      border-radius: 50%;
+
+      background: var(--green);
+
+      box-shadow:
+        0 0 12px rgba(53, 232, 137, 0.7);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 48px;
+      height: 48px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 1px solid rgba(255, 216, 77, 0.45);
+      border-radius: 14px;
+
+      background: rgba(255, 255, 255, 0.05);
+
+      color: var(--white);
+
+      font-size: 24px;
+
+      transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* =========================================================
+       PAGE
+       ========================================================= */
+
+    .page {
+      width: min(100%, 1200px);
+      margin: 0 auto;
+
+      padding:
+        18px
+        14px
+        calc(32px + env(safe-area-inset-bottom));
+    }
+
+    /* =========================================================
+       CURRENT USER
+       ========================================================= */
+
+    .current-user-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      padding: 17px;
+
+      margin-bottom: 15px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(16, 50, 105, 0.92),
+          rgba(7, 22, 48, 0.96)
+        );
+
+      border: 1px solid rgba(84, 217, 255, 0.28);
+      border-radius: var(--radius);
+
+      box-shadow: var(--shadow);
+    }
+
+    .avatar {
+      width: 62px;
+      height: 62px;
+
+      flex: 0 0 62px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+
+      background: #0a214d;
+
+      color: var(--gold);
+
+      font-size: 24px;
+      font-weight: 1000;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 23px;
+      font-weight: 1000;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-email {
+      margin-top: 3px;
+
+      color: var(--muted);
+
+      font-size: 15px;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-badge {
+      display: inline-flex;
+
+      margin-top: 7px;
+      padding: 5px 10px;
+
+      border: 1px solid rgba(255, 216, 77, 0.35);
+      border-radius: 999px;
+
+      color: var(--gold2);
+
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    /* =========================================================
+       QUICK ACTIONS
+       ========================================================= */
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+
+      margin-bottom: 15px;
+    }
+
+    .quick-btn {
+      min-height: 78px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      gap: 5px;
+
+      padding: 8px;
+
+      border: 1px solid rgba(255, 216, 77, 0.3);
+      border-radius: 16px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(14, 41, 84, 0.95),
+          rgba(7, 21, 44, 0.95)
+        );
+
+      color: var(--white);
+
+      font-size: 13px;
+      font-weight: 900;
+
+      transition:
+        transform 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    .quick-btn strong {
+      font-size: 25px;
+    }
+
+    .quick-btn:active {
+      transform: scale(0.96);
+      border-color: var(--gold);
+    }
+
+    /* =========================================================
+       CHAT CARD
+       ========================================================= */
+
+    .chat-card {
+      overflow: hidden;
+
+      border:
+        1px solid rgba(255, 216, 77, 0.38);
+
+      border-radius: 24px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(8, 25, 55, 0.98),
+          rgba(3, 10, 23, 0.98)
+        );
+
+      box-shadow: var(--shadow);
+    }
+
+    .chat-header {
+      min-height: 82px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 12px;
+
+      padding: 15px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #0d2d68,
+          #071a3c
+        );
+
+      border-bottom: 1px solid rgba(255, 216, 77, 0.25);
+    }
+
+    .chat-title-area {
+      min-width: 0;
+    }
+
+    .chat-title {
+      font-size: 25px;
+      font-weight: 1000;
+      color: var(--white);
+    }
+
+    .chat-subtitle {
+      margin-top: 4px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .chat-online {
+      color: var(--green);
+    }
+
+    .chat-header-actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .call-btn {
+      width: 47px;
+      height: 47px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 1px solid rgba(84, 217, 255, 0.35);
+      border-radius: 14px;
+
+      background: rgba(84, 217, 255, 0.08);
+
+      color: var(--cyan);
+
+      font-size: 22px;
+    }
+
+    .video-btn {
+      border-color: rgba(168, 139, 255, 0.4);
+      background: rgba(168, 139, 255, 0.08);
+      color: var(--purple);
+    }
+
+    /* =========================================================
+       MESSAGES
+       ========================================================= */
+
+    #messages {
+      height: min(58vh, 650px);
+      min-height: 420px;
+
+      overflow-y: auto;
+      overscroll-behavior: contain;
+
+      padding: 18px 14px;
+
+      scroll-behavior: smooth;
+
+      background:
+        radial-gradient(
+          circle at center top,
+          rgba(11, 40, 100, 0.18),
+          transparent 55%
+        );
+    }
+
+    #messages::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    #messages::-webkit-scrollbar-thumb {
+      background: rgba(255, 216, 77, 0.35);
+      border-radius: 99px;
+    }
+
+    .message {
+      display: flex;
+
+      margin-bottom: 13px;
+    }
+
+    .message.own {
+      justify-content: flex-end;
+    }
+
+    .message-bubble {
+      max-width: min(85%, 760px);
+
+      padding: 13px 15px;
+
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 19px 19px 19px 5px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #102a55,
+          #091a36
+        );
+
+      box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.18);
+    }
+
+    .message.own .message-bubble {
+      border-radius: 19px 19px 5px 19px;
+
+      border-color: rgba(255, 216, 77, 0.28);
+
+      background:
+        linear-gradient(
+          135deg,
+          #19477d,
+          #0b2a55
+        );
+    }
+
+    .message-sender {
+      margin-bottom: 5px;
+
+      color: var(--gold2);
+
+      font-size: 13px;
+      font-weight: 1000;
+    }
+
+    .message-text {
+      white-space: pre-wrap;
+      word-break: break-word;
+
+      color: var(--text);
+
+      font-size: 19px;
+      line-height: 1.48;
+    }
+
+    .message-time {
+      margin-top: 6px;
+
+      color: rgba(220, 230, 250, 0.62);
+
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .empty-message {
+      min-height: 100%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      text-align: center;
+
+      padding: 30px;
+
+      color: var(--muted);
+    }
+
+    .empty-message strong {
+      color: var(--gold2);
+      font-size: 23px;
+    }
+
+    .empty-message span {
+      margin-top: 8px;
+      font-size: 16px;
+    }
+
+    /* =========================================================
+       CHAT INPUT
+       ========================================================= */
+
+    .composer {
+      padding: 13px;
+
+      border-top: 1px solid rgba(255, 216, 77, 0.2);
+
+      background:
+        linear-gradient(
+          180deg,
+          #06152e,
+          #040c1c
+        );
+    }
+
+    .composer-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 9px;
+    }
+
+    .message-input {
+      flex: 1;
+
+      min-height: 60px;
+      max-height: 160px;
+
+      resize: vertical;
+
+      padding: 14px 16px;
+
+      border:
+        1px solid rgba(255, 216, 77, 0.35);
+
+      border-radius: 18px;
+
+      outline: none;
+
+      background:
+        rgba(255, 255, 255, 0.045);
+
+      color: var(--white);
+
+      font-size: 19px;
+      line-height: 1.4;
+    }
+
+    .message-input::placeholder {
+      color: #8392ae;
+    }
+
+    .message-input:focus {
+      border-color: var(--gold);
+
+      box-shadow:
+        0 0 0 3px rgba(255, 216, 77, 0.08);
+    }
+
+    .send-button {
+      width: 62px;
+      height: 60px;
+
+      flex: 0 0 62px;
+
+      border: 1px solid var(--gold);
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #ffd84d,
+          #d9a900
+        );
+
+      color: #071226;
+
+      font-size: 25px;
+      font-weight: 1000;
+
+      box-shadow:
+        0 7px 22px rgba(255, 216, 77, 0.18);
+    }
+
+    .send-button:active {
+      transform: scale(0.95);
+    }
+
+    .composer-help {
+      margin-top: 8px;
+
+      color: #8392ae;
+
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* =========================================================
+       CALL AREA
+       ========================================================= */
+
+    .call-panel {
+      display: none;
+
+      position: fixed;
+      inset: 0;
+
+      z-index: 5000;
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(19, 59, 120, 0.95),
+          #02050d 75%
+        );
+    }
+
+    .call-panel.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .call-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding:
+        max(16px, env(safe-area-inset-top))
+        16px
+        16px;
+    }
+
+    .call-title {
+      color: var(--gold2);
+      font-size: 23px;
+      font-weight: 1000;
+    }
+
+    .call-state {
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .remote-video {
+      width: 100%;
+      flex: 1;
+
+      object-fit: cover;
+
+      background: #000;
+    }
+
+    .local-video {
+      position: absolute;
+
+      right: 16px;
+      bottom: 150px;
+
+      width: 130px;
+      height: 185px;
+
+      object-fit: cover;
+
+      background: #000;
+
+      border: 2px solid var(--gold);
+      border-radius: 16px;
+
+      box-shadow: var(--shadow);
+    }
+
+    .call-avatar {
+      position: absolute;
+      inset: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      flex-direction: column;
+
+      gap: 15px;
+
+      pointer-events: none;
+    }
+
+    .call-avatar-circle {
+      width: 120px;
+      height: 120px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+
+      color: var(--gold);
+
+      font-size: 45px;
+      font-weight: 1000;
+
+      background: #071b49;
+    }
+
+    .call-avatar-name {
+      color: var(--white);
+      font-size: 25px;
+      font-weight: 1000;
+    }
+
+    .call-controls {
+      position: absolute;
+
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      gap: 14px;
+
+      padding:
+        20px
+        15px
+        max(25px, env(safe-area-inset-bottom));
+
+      background:
+        linear-gradient(
+          180deg,
+          transparent,
+          rgba(0, 0, 0, 0.85)
+        );
+    }
+
+    .call-control {
+      width: 58px;
+      height: 58px;
+
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+
+      background: rgba(255, 255, 255, 0.1);
+
+      color: white;
+
+      font-size: 24px;
+    }
+
+    .call-control.end {
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    /* =========================================================
+       NOTIFICATION / STATUS
+       ========================================================= */
+
+    #chatStatus {
+      min-height: 24px;
+
+      margin-top: 8px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    #chatStatus.success {
+      color: var(--green);
+    }
+
+    #chatStatus.error {
+      color: var(--red);
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
+    .footer {
+      padding: 25px 10px 5px;
+
+      text-align: center;
+
+      color: #71819e;
+
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .footer strong {
+      color: var(--gold);
+    }
+
+    /* =========================================================
+       DESKTOP
+       ========================================================= */
+
+    @media (min-width: 800px) {
+      body {
+        font-size: 21px;
+      }
+
+      .page {
+        padding-top: 25px;
+      }
+
+      #messages {
+        height: 620px;
+      }
+
+      .message-text {
+        font-size: 20px;
+      }
+
+      .quick-btn {
+        min-height: 95px;
+        font-size: 16px;
+      }
+
+      .quick-btn strong {
+        font-size: 30px;
+      }
+    }
+
+    /* =========================================================
+       SMALL MOBILE
+       ========================================================= */
+
+    @media (max-width: 420px) {
+      .topbar {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .brand-logo {
+        width: 47px;
+        height: 47px;
+        flex-basis: 47px;
+      }
+
+      .brand-name {
+        font-size: 21px;
+      }
+
+      .brand-status {
+        font-size: 12px;
+      }
+
+      .icon-btn {
+        width: 43px;
+        height: 43px;
+      }
+
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .quick-btn {
+        min-height: 72px;
+      }
+
+      #messages {
+        min-height: 390px;
+      }
+
+      .message-text {
+        font-size: 18px;
+      }
+
+      .message-bubble {
+        max-width: 91%;
+      }
+    }
+
+    /* =========================================================
+       REDUCED MOTION
+       ========================================================= */
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
-  <div class="header-inner">
-    <a class="logo" href="index.html">
-      AYNA BOOK <span class="star-1s">★</span>
-    </a>
-    <div class="header-actions">
-      <button type="button" id="speakClockBtn">🕒 সময় বলুন</button>
-      <button type="button" id="toggleClockBtn">🔊 ঘড়ি: চালু</button>
-      <a href="index.html">🏠 হোম</a>
-      <a href="profile.html">👤 প্রোফাইল</a>
+  <!-- =======================================================
+       AUTH LOADER
+       ======================================================= -->
+
+  <div id="authGuardLoader">
+    <div class="auth-logo">AY</div>
+
+    <div class="loader-title">
+      AYNA BOOK
+    </div>
+
+    <div class="loader-subtitle">
+      Messenger নিরাপদভাবে চালু হচ্ছে...
+    </div>
+
+    <div class="loader-dots">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   </div>
-</header>
 
-<div id="notice"></div>
 
-<main class="container">
-  <section class="hero">
-    <h1>AYNA BOOK — AYNA Messenger</h1>
-    <p>দ্রুত বার্তা পাঠান, AI দিয়ে মেসেজ ও কণ্ঠ শুনুন, এবং খালি বা ভুল বার্তায় কণ্ঠ সিগন্যাল পান।</p>
+  <!-- =======================================================
+       TOP BAR
+       ======================================================= -->
+
+  <header class="topbar">
+
+    <div class="brand-area">
+
+      <div class="brand-logo">
+        AY
+      </div>
+
+      <div class="brand-text">
+
+        <div class="brand-name">
+          AYNA <span>BOOK</span>
+        </div>
+
+        <div class="brand-status">
+          <span class="online-dot"></span>
+          Messenger • Connected
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="top-actions">
+
+      <button
+        type="button"
+        class="icon-btn"
+        id="homeBtn"
+        title="Home"
+        aria-label="Home"
+      >
+        ⌂
+      </button>
+
+      <button
+        type="button"
+        class="icon-btn"
+        id="profileBtn"
+        title="Profile"
+        aria-label="Profile"
+      >
+        👤
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =======================================================
+       MAIN
+       ======================================================= -->
+
+  <main class="page">
+
+
+    <!-- =====================================================
+         CURRENT USER
+         ===================================================== -->
+
+    <section
+      class="current-user-card"
+      id="currentUserBox"
+      aria-label="Current user"
+    >
+
+      <div class="avatar" id="currentUserAvatar">
+        AY
+      </div>
+
+      <div class="user-info">
+
+        <div
+          class="user-name"
+          id="currentUserName"
+        >
+          Loading user...
+        </div>
+
+        <div
+          class="user-email"
+          id="currentUserEmail"
+        >
+          Please wait...
+        </div>
+
+        <div
+          class="user-badge"
+          id="currentUserBadge"
+        >
+          AYNA BOOK USER
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUICK ACTIONS
+         ===================================================== -->
+
+    <section class="quick-actions">
+
+      <button
+        type="button"
+        class="quick-btn"
+        id="newChatBtn"
+      >
+        <strong>＋</strong>
+        New Chat
+      </button>
+
+      <button
+        type="button"
+        class="quick-btn"
+        id="audioCallBtn"
+      >
+        <strong>☎</strong>
+        Audio Call
+      </button>
+
+      <button
+        type="button"
+        class="quick-btn"
+        id="videoCallBtn"
+      >
+        <strong>▣</strong>
+        Video Call
+      </button>
+
+      <button
+        type="button"
+        class="quick-btn"
+        id="searchPeopleBtn"
+      >
+        <strong>⌕</strong>
+        Find People
+      </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         CHAT
+         ===================================================== -->
+
+    <section class="chat-card">
+
+      <header class="chat-header">
+
+        <div class="chat-title-area">
+
+          <div class="chat-title">
+            🌐 Global Community
+          </div>
+
+          <div class="chat-subtitle">
+            <span class="chat-online">● Online</span>
+            &nbsp; • &nbsp;
+            Real-time AYNA Messenger
+          </div>
+
+        </div>
+
+
+        <div class="chat-header-actions">
+
+          <button
+            type="button"
+            class="call-btn"
+            id="headerAudioCallBtn"
+            title="Audio call"
+            aria-label="Audio call"
+          >
+            ☎
+          </button>
+
+          <button
+            type="button"
+            class="call-btn video-btn"
+            id="headerVideoCallBtn"
+            title="Video call"
+            aria-label="Video call"
+          >
+            ▣
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- ===================================================
+           MESSAGE LIST
+           =================================================== -->
+
+      <div
+        id="messages"
+        aria-live="polite"
+        aria-label="Messages"
+      >
+
+        <div
+          class="empty-message"
+          data-empty-message="true"
+        >
+          <strong>AYNA BOOK Messenger</strong>
+
+          <span>
+            Real-time conversation শুরু করুন।
+          </span>
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           COMPOSER
+           =================================================== -->
+
+      <div class="composer">
+
+        <form id="chatForm" autocomplete="off">
+
+          <div class="composer-row">
+
+            <textarea
+              id="message"
+              class="message-input"
+              rows="1"
+              maxlength="2000"
+              placeholder="আপনার মেসেজ লিখুন..."
+              aria-label="Message"
+            ></textarea>
+
+            <button
+              type="submit"
+              id="sendButton"
+              class="send-button"
+              aria-label="Send message"
+              title="Send message"
+            >
+              ➤
+            </button>
+
+          </div>
+
+          <div class="composer-help">
+            Enter = Send &nbsp; • &nbsp;
+            Shift + Enter = New line
+          </div>
+
+        </form>
+
+        <div id="chatStatus">
+          Messenger প্রস্তুত হচ্ছে...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="footer">
+
+      <strong>AYNA BOOK</strong><br>
+
+      Connect • Share • Create<br>
+
+      Secure real-time communication powered by Firebase.
+
+    </footer>
+
+  </main>
+
+
+  <!-- =======================================================
+       CALL PANEL
+       ======================================================= -->
+
+  <section
+    id="callPanel"
+    class="call-panel"
+    aria-hidden="true"
+  >
+
+    <div class="call-top">
+
+      <div>
+
+        <div
+          id="callTitle"
+          class="call-title"
+        >
+          AYNA Call
+        </div>
+
+        <div
+          id="callState"
+          class="call-state"
+        >
+          Connecting...
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="icon-btn"
+        id="closeCallBtn"
+        aria-label="Close call"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <video
+      id="remoteVideo"
+      class="remote-video"
+      autoplay
+      playsinline
+    ></video>
+
+
+    <video
+      id="localVideo"
+      class="local-video"
+      autoplay
+      muted
+      playsinline
+    ></video>
+
+
+    <div
+      id="callAvatar"
+      class="call-avatar"
+    >
+
+      <div class="call-avatar-circle">
+        AY
+      </div>
+
+      <div
+        id="callAvatarName"
+        class="call-avatar-name"
+      >
+        AYNA BOOK
+      </div>
+
+    </div>
+
+
+    <div class="call-controls">
+
+      <button
+        type="button"
+        class="call-control"
+        id="muteCallBtn"
+        title="Mute microphone"
+        aria-label="Mute microphone"
+      >
+        🎙
+      </button>
+
+      <button
+        type="button"
+        class="call-control"
+        id="cameraCallBtn"
+        title="Camera"
+        aria-label="Camera"
+      >
+        📹
+      </button>
+
+      <button
+        type="button"
+        class="call-control"
+        id="switchCameraBtn"
+        title="Switch camera"
+        aria-label="Switch camera"
+      >
+        🔄
+      </button>
+
+      <button
+        type="button"
+        class="call-control end"
+        id="endCallBtn"
+        title="End call"
+        aria-label="End call"
+      >
+        ☎
+      </button>
+
+    </div>
+
   </section>
 
-  <section class="panel">
-    <h2>💬 নতুন বার্তা ও AI সহকারী</h2>
 
-    <div class="field-group">
-      <label class="field-label" for="msgRecipient">প্রাপকের নাম বা AYNA ID</label>
-      <input type="text" id="msgRecipient" class="hub-input" placeholder="যেমন: 2026-----10000001 অথবা প্রাপকের নাম">
-    </div>
+  <!-- =======================================================
+       AUTH GUARD
+       ======================================================= -->
 
-    <div class="field-group">
-      <label class="field-label" for="msgInput">আপনার বার্তা</label>
-      <textarea id="msgInput" class="hub-textarea" placeholder="আপনার বার্তা লিখুন..."></textarea>
-    </div>
+  <script type="module" src="./auth-guard.js"></script>
 
-    <div class="action-row">
-      <button type="button" id="aiPolishMsgBtn" class="tool-button">✨ AI বার্তা সংশোধন</button>
-      <button type="button" id="speakLatestMsgBtn" class="tool-button">🔊 সর্বশেষ বার্তা কণ্ঠে শুনুন</button>
-    </div>
 
-    <button type="button" id="sendMsgBtn" class="primary-button">📤 বার্তা পাঠান</button>
-    <button type="button" id="repeatSignalBtn" class="tool-button" style="width:100%;margin-top:12px;">🔊 শেষ সিগন্যাল আবার শুনুন</button>
+  <!-- =======================================================
+       MESSENGER
+       ======================================================= -->
 
-    <div class="signal-box" id="msgSignalBox">
-      মেসেঞ্জার প্রস্তুত: প্রাপক বা বার্তা খালি থাকলে কণ্ঠের মাধ্যমে ভুলের জায়গা বলে দেওয়া হবে।
-    </div>
-  </section>
+  <script type="module" src="./js/messages.js"></script>
 
-  <section class="panel">
-    <h2>📨 সাম্প্রতিক বার্তা তালিকা</h2>
-    <div class="msg-list" id="messagesList"></div>
-  </section>
-</main>
 
-<footer>
-  © 2026 AYNA BOOK — Messenger Hub
-</footer>
+  <!-- =======================================================
+       PAGE UI
+       ======================================================= -->
 
-<nav class="bottom-nav">
-  <a href="index.html"><span>🏠</span>Home</a>
-  <a href="index.html#createPost"><span>➕</span>Post</a>
-  <a href="messenger.html"><span>💬</span>Chat</a>
-  <a href="profile.html"><span>👤</span>Profile</a>
-</nav>
+  <script type="module">
 
-<script type="module">
-import { AynaVoiceSignal } from "./ayna-voice-signal.js";
-import { database } from "./firebase-init.js";
+    /*
+     * AYNA BOOK — Messenger UI
+     *
+     * This file intentionally contains only UI helpers.
+     * Real Firebase messaging is handled by:
+     *
+     * ./js/messages.js
+     *
+     * Authentication protection:
+     *
+     * ./auth-guard.js
+     */
 
-const $ = id => document.getElementById(id);
-let messages = [
-  {
-    to: "2026-----10000001",
-    text: "AYNA BOOK হাই-স্পিড মেসেঞ্জারে স্বাগতম।",
-    time: new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit", hour12: true })
-  }
-];
+    const $ = (id) => document.getElementById(id);
 
-$("speakClockBtn")?.addEventListener("click", () => AynaVoiceSignal.speakCurrentTime());
-$("toggleClockBtn")?.addEventListener("click", () => AynaVoiceSignal.toggleClock("toggleClockBtn"));
-$("repeatSignalBtn")?.addEventListener("click", () => AynaVoiceSignal.repeatLast());
 
-function renderMessages() {
-  const wrap = $("messagesList");
-  if (!wrap) return;
-  wrap.innerHTML = messages.map(m => `
-    <div class="msg-item">
-      <div class="msg-meta">প্রাপক: ${m.to} • ${m.time}</div>
-      <div class="msg-body">${m.text}</div>
-    </div>
-  `).join("");
-}
+    /* =======================================================
+       NAVIGATION
+       ======================================================= */
 
-$("aiPolishMsgBtn")?.addEventListener("click", () => {
-  const raw = ($("msgInput")?.value || "").trim();
-  if (!raw) {
-    AynaVoiceSignal.error("বার্তার ঘরটি খালি আছে। সংশোধন করার মতো লেখা লিখুন।", "msgSignalBox");
-    $("msgInput")?.focus();
-    return;
-  }
-  const cleaned = raw
-    .replace(/\s+/g, " ")
-    .replaceAll("পোষ্ট", "পোস্ট")
-    .replaceAll("ফায়াব্যাস", "ফায়ারবেস");
-  $("msgInput").value = cleaned;
-  AynaVoiceSignal.success("AI বার্তা সংশোধন সম্পন্ন হয়েছে।", "msgSignalBox");
-});
+    $("homeBtn")?.addEventListener("click", () => {
+      window.location.href = "./index.html";
+    });
 
-$("speakLatestMsgBtn")?.addEventListener("click", () => {
-  const latest = messages[0];
-  if (!latest) return;
-  AynaVoiceSignal.speak(`সর্বশেষ বার্তা: ${latest.text}`, true);
-});
 
-$("sendMsgBtn")?.addEventListener("click", async () => {
-  const to = ($("msgRecipient")?.value || "").trim();
-  const text = ($("msgInput")?.value || "").trim();
+    $("profileBtn")?.addEventListener("click", () => {
+      window.location.href = "./profile.html";
+    });
 
-  if (!to) {
-    AynaVoiceSignal.error("প্রাপকের ঘরের ভুল হয়েছে। প্রাপকের নাম বা AYNA ID লিখুন।", "msgSignalBox");
-    $("msgRecipient")?.focus();
-    return;
-  }
-  if (!text) {
-    AynaVoiceSignal.error("বার্তার ঘরের ভুল হয়েছে। পাঠানোর মতো বার্তা লিখুন।", "msgSignalBox");
-    $("msgInput")?.focus();
-    return;
-  }
 
-  const time = new Date().toLocaleTimeString("bn-BD", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  });
+    /* =======================================================
+       CALL UI
+       ======================================================= */
 
-  messages.unshift({ to, text, time });
-  $("msgInput").value = "";
-  renderMessages();
+    const callPanel = $("callPanel");
+    const remoteVideo = $("remoteVideo");
+    const localVideo = $("localVideo");
+    const callAvatar = $("callAvatar");
+    const callState = $("callState");
 
-  try {
-    localStorage.setItem("ayna_messenger_history", JSON.stringify(messages.slice(0, 30)));
-  } catch (_) {}
+    let localStream = null;
 
-  if (database) {
-    try {
-      const { ref, push } = await import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js");
-      await push(ref(database, "messages"), {
-        to,
-        text,
-        time,
-        createdAt: Date.now()
-      }).catch(() => {});
-    } catch (_) {}
-  }
 
-  AynaVoiceSignal.success(`${to} এর কাছে বার্তা পাঠানো হয়েছে।`, "msgSignalBox");
-});
+    function openCallPanel(type = "audio") {
 
-try {
-  const savedMsgs = JSON.parse(localStorage.getItem("ayna_messenger_history") || "null");
-  if (Array.isArray(savedMsgs) && savedMsgs.length) {
-    messages = savedMsgs;
-  }
-} catch (_) {}
+      if (!callPanel) return;
 
-renderMessages();
-</script>
+      callPanel.classList.add("active");
+
+      callPanel.setAttribute("aria-hidden", "false");
+
+      $("callTitle").textContent =
+        type === "video"
+          ? "AYNA Video Call"
+          : "AYNA Audio Call";
+
+      callState.textContent =
+        "Call interface ready";
+
+      if (type === "video") {
+
+        if (remoteVideo) {
+          remoteVideo.style.display = "block";
+        }
+
+        if (localVideo) {
+          localVideo.style.display = "block";
+        }
+
+        if (callAvatar) {
+          callAvatar.style.display = "none";
+        }
+
+      } else {
+
+        if (remoteVideo) {
+          remoteVideo.style.display = "none";
+        }
+
+        if (localVideo) {
+          localVideo.style.display = "none";
+        }
+
+        if (callAvatar) {
+          callAvatar.style.display = "flex";
+        }
+
+      }
+    }
+
+
+    function closeCallPanel() {
+
+      if (!callPanel) return;
+
+      callPanel.classList.remove("active");
+
+      callPanel.setAttribute("aria-hidden", "true");
+
+      if (remoteVideo) {
+        remoteVideo.srcObject = null;
+      }
+
+      if (localVideo) {
+        localVideo.srcObject = null;
+      }
+
+      if (localStream) {
+
+        localStream.getTracks().forEach((track) => {
+          try {
+            track.stop();
+          } catch (error) {
+            console.warn(error);
+          }
+        });
+
+        localStream = null;
+      }
+    }
+
+
+    async function startLocalPreview(videoEnabled) {
+
+      if (!navigator.mediaDevices?.getUserMedia) {
+
+        if (callState) {
+          callState.textContent =
+            "এই browser-এ microphone/camera support নেই.";
+        }
+
+        return;
+      }
+
+      try {
+
+        localStream =
+          await navigator.mediaDevices.getUserMedia({
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true,
+              channelCount: 2,
+              sampleRate: 48000
+            },
+
+            video: videoEnabled
+              ? {
+                  width: {
+                    ideal: 3840
+                  },
+
+                  height: {
+                    ideal: 2160
+                  },
+
+                  frameRate: {
+                    ideal: 30,
+                    max: 60
+                  },
+
+                  facingMode: "user"
+                }
+              : false
+          });
+
+
+        if (localVideo && videoEnabled) {
+
+          localVideo.srcObject = localStream;
+
+          try {
+            await localVideo.play();
+          } catch (error) {
+            console.warn(
+              "Local video autoplay blocked:",
+              error
+            );
+          }
+        }
+
+
+        if (callState) {
+          callState.textContent =
+            videoEnabled
+              ? "Camera + microphone ready"
+              : "Microphone ready";
+        }
+
+      } catch (error) {
+
+        console.error(
+          "AYNA call media error:",
+          error
+        );
+
+        if (callState) {
+          callState.textContent =
+            "Microphone/Camera permission প্রয়োজন.";
+        }
+      }
+    }
+
+
+    /* =======================================================
+       AUDIO CALL
+       ======================================================= */
+
+    async function startAudioCall() {
+
+      openCallPanel("audio");
+
+      await startLocalPreview(false);
+    }
+
+
+    /* =======================================================
+       VIDEO CALL
+       ======================================================= */
+
+    async function startVideoCall() {
+
+      openCallPanel("video");
+
+      await startLocalPreview(true);
+    }
+
+
+    $("audioCallBtn")?.addEventListener(
+      "click",
+      startAudioCall
+    );
+
+
+    $("headerAudioCallBtn")?.addEventListener(
+      "click",
+      startAudioCall
+    );
+
+
+    $("videoCallBtn")?.addEventListener(
+      "click",
+      startVideoCall
+    );
+
+
+    $("headerVideoCallBtn")?.addEventListener(
+      "click",
+      startVideoCall
+    );
+
+
+    $("closeCallBtn")?.addEventListener(
+      "click",
+      closeCallPanel
+    );
+
+
+    $("endCallBtn")?.addEventListener(
+      "click",
+      closeCallPanel
+    );
+
+
+    /* =======================================================
+       MUTE
+       ======================================================= */
+
+    $("muteCallBtn")?.addEventListener(
+      "click",
+      () => {
+
+        if (!localStream) return;
+
+        const tracks =
+          localStream.getAudioTracks();
+
+        if (!tracks.length) return;
+
+        const enabled =
+          !tracks[0].enabled;
+
+        tracks.forEach((track) => {
+          track.enabled = enabled;
+        });
+
+        $("muteCallBtn").textContent =
+          enabled ? "🎙" : "🔇";
+      }
+    );
+
+
+    /* =======================================================
+       CAMERA
+       ======================================================= */
+
+    $("cameraCallBtn")?.addEventListener(
+      "click",
+      () => {
+
+        if (!localStream) return;
+
+        const tracks =
+          localStream.getVideoTracks();
+
+        if (!tracks.length) return;
+
+        const enabled =
+          !tracks[0].enabled;
+
+        tracks.forEach((track) => {
+          track.enabled = enabled;
+        });
+
+        $("cameraCallBtn").textContent =
+          enabled ? "📹" : "🚫";
+      }
+    );
+
+
+    /* =======================================================
+       SWITCH CAMERA
+       ======================================================= */
+
+    $("switchCameraBtn")?.addEventListener(
+      "click",
+      async () => {
+
+        if (!localStream) return;
+
+        const videoTracks =
+          localStream.getVideoTracks();
+
+        if (!videoTracks.length) return;
+
+        const currentTrack =
+          videoTracks[0];
+
+        const currentFacing =
+          currentTrack.getSettings?.().facingMode ||
+          "user";
+
+        const nextFacing =
+          currentFacing === "environment"
+            ? "user"
+            : "environment";
+
+
+        try {
+
+          const newStream =
+            await navigator.mediaDevices.getUserMedia({
+              audio: false,
+
+              video: {
+                width: {
+                  ideal: 3840
+                },
+
+                height: {
+                  ideal: 2160
+                },
+
+                frameRate: {
+                  ideal: 30,
+                  max: 60
+                },
+
+                facingMode: nextFacing
+              }
+            });
+
+
+          const newTrack =
+            newStream.getVideoTracks()[0];
+
+          if (!newTrack) return;
+
+
+          currentTrack.stop();
+
+
+          localStream.removeTrack(
+            currentTrack
+          );
+
+          localStream.addTrack(
+            newTrack
+          );
+
+
+          if (localVideo) {
+            localVideo.srcObject =
+              localStream;
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Camera switch failed:",
+            error
+          );
+
+          if (callState) {
+            callState.textContent =
+              "Camera switch করা সম্ভব হয়নি.";
+          }
+        }
+      }
+    );
+
+
+    /* =======================================================
+       NEW CHAT
+       ======================================================= */
+
+    $("newChatBtn")?.addEventListener(
+      "click",
+      () => {
+
+        const input =
+          $("message");
+
+        if (!input) return;
+
+        input.focus();
+
+        if (!input.value) {
+          input.placeholder =
+            "নতুন মেসেজ লিখুন...";
+        }
+      }
+    );
+
+
+    /* =======================================================
+       FIND PEOPLE
+       ======================================================= */
+
+    $("searchPeopleBtn")?.addEventListener(
+      "click",
+      () => {
+
+        const input =
+          $("message");
+
+        if (!input) return;
+
+        input.value =
+          "@";
+
+        input.focus();
+      }
+    );
+
+
+    /* =======================================================
+       GLOBAL KEYBOARD SHORTCUT
+       ======================================================= */
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (
+          event.key === "Escape" &&
+          callPanel?.classList.contains("active")
+        ) {
+          closeCallPanel();
+        }
+
+      }
+    );
+
+
+    /* =======================================================
+       CLEANUP
+       ======================================================= */
+
+    window.addEventListener(
+      "beforeunload",
+      () => {
+
+        if (localStream) {
+
+          localStream.getTracks()
+            .forEach((track) => {
+              try {
+                track.stop();
+              } catch (error) {}
+            });
+        }
+      }
+    );
+
+
+    /* =======================================================
+       SERVICE WORKER
+       ======================================================= */
+
+    if (
+      "serviceWorker" in navigator
+    ) {
+
+      window.addEventListener(
+        "load",
+        () => {
+
+          navigator.serviceWorker
+            .register("./sw.js")
+            .catch((error) => {
+
+              console.warn(
+                "Service Worker:",
+                error
+              );
+
+            });
+
+        }
+      );
+
+    }
+
+  </script>
 
 </body>
 </html>
