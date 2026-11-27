@@ -1,0 +1,1396 @@
+// ============================================================
+// AYNA BOOK — birthday.js
+// Birthday System
+// ------------------------------------------------------------
+// Features:
+// 1. Logged-in user birthday loading
+// 2. Today's birthday detection
+// 3. Friends' birthday list
+// 4. Birthday wishes
+// 5. RTDB wish saving
+// 6. Share
+// 7. WhatsApp
+// 8. Profile / Messenger navigation
+// 9. Compatible with birthday.html
+// ============================================================
+
+import {
+  auth,
+  database
+} from "./firebase-init.js";
+
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {
+  ref,
+  get,
+  set,
+  push,
+  update,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+
+// ============================================================
+// GLOBAL
+// ============================================================
+
+let currentUser = null;
+let birthdayUser = null;
+let allUsers = {};
+let friends = {};
+
+const params = new URLSearchParams(location.search);
+
+const targetUid =
+  params.get("uid") ||
+  params.get("userId") ||
+  "";
+
+
+// ============================================================
+// DOM
+// ============================================================
+
+const loading =
+  document.getElementById("loading");
+
+const errorBox =
+  document.getElementById("errorBox");
+
+const personName =
+  document.getElementById("personName");
+
+const profilePhoto =
+  document.getElementById("profilePhoto");
+
+const birthdayDate =
+  document.getElementById("birthdayDate");
+
+const personStatus =
+  document.getElementById("personStatus");
+
+const shareLink =
+  document.getElementById("shareLink");
+
+
+// ============================================================
+// AUTH
+// ============================================================
+
+onAuthStateChanged(auth, async (user) => {
+
+  currentUser = user || null;
+
+  try {
+
+    // --------------------------------------------------------
+    // If URL has UID, open that user's birthday page
+    // --------------------------------------------------------
+
+    if (targetUid) {
+
+      await loadBirthdayUser(targetUid);
+
+    }
+
+    // --------------------------------------------------------
+    // Otherwise logged-in user's birthday
+    // --------------------------------------------------------
+
+    else if (user) {
+
+      await loadBirthdayUser(user.uid);
+
+    }
+
+    // --------------------------------------------------------
+    // Not logged in
+    // --------------------------------------------------------
+
+    else {
+
+      showDefaultBirthday();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "AYNA Birthday Error:",
+      error
+    );
+
+    showError(
+      "জন্মদিনের তথ্য লোড করা যায়নি। Firebase RTDB Rules এবং users data পরীক্ষা করুন।"
+    );
+
+    showDefaultBirthday();
+
+  }
+
+});
+
+
+// ============================================================
+// LOAD BIRTHDAY USER
+// ============================================================
+
+async function loadBirthdayUser(uid) {
+
+  const userRef =
+    ref(
+      database,
+      "users/" + uid
+    );
+
+  const snapshot =
+    await get(userRef);
+
+
+  if (!snapshot.exists()) {
+
+    showError(
+      "এই বন্ধুর অ্যাকাউন্টের তথ্য পাওয়া যায়নি।"
+    );
+
+    showDefaultBirthday();
+
+    return;
+
+  }
+
+
+  birthdayUser = {
+    uid: uid,
+    ...snapshot.val()
+  };
+
+
+  renderBirthdayUser();
+
+}
+
+
+// ============================================================
+// RENDER USER
+// ============================================================
+
+function renderBirthdayUser() {
+
+  const u =
+    birthdayUser || {};
+
+
+  const name =
+    u.fullName ||
+    u.name ||
+    u.displayName ||
+    "প্রিয় বন্ধু";
+
+
+  const photo =
+    u.photoURL ||
+    u.photoUrl ||
+    u.profilePhoto ||
+    u.avatar ||
+    createAvatar(name);
+
+
+  if (personName) {
+
+    personName.textContent =
+      name;
+
+  }
+
+
+  if (profilePhoto) {
+
+    profilePhoto.src =
+      photo;
+
+    profilePhoto.onerror =
+      () => {
+
+        profilePhoto.src =
+          createAvatar(name);
+
+      };
+
+  }
+
+
+  const birthday =
+    getBirthdayValue(u);
+
+
+  if (birthdayDate) {
+
+    if (birthday) {
+
+      birthdayDate.textContent =
+        "🎂 জন্মদিন: " +
+        formatDate(birthday);
+
+    } else {
+
+      birthdayDate.textContent =
+        "🎂 শুভ জন্মদিন";
+
+    }
+
+  }
+
+
+  if (personStatus) {
+
+    if (isBirthdayToday(birthday)) {
+
+      personStatus.textContent =
+        "🎉 আজ আপনার বিশেষ দিন! 🌹";
+
+    } else {
+
+      personStatus.textContent =
+        "🌹 AYNA BOOK ও বন্ধুদের পক্ষ থেকে রইল আন্তরিক শুভেচ্ছা।";
+
+    }
+
+  }
+
+
+  if (shareLink) {
+
+    shareLink.textContent =
+      location.href;
+
+  }
+
+
+  hideLoading();
+
+}
+
+
+// ============================================================
+// GET BIRTHDAY VALUE
+// ============================================================
+
+function getBirthdayValue(user) {
+
+  if (!user) {
+    return "";
+  }
+
+
+  return (
+    user.birthday ||
+    user.birthDate ||
+    user.dateOfBirth ||
+    user.dob ||
+    ""
+  );
+
+}
+
+
+// ============================================================
+// CREATE AVATAR
+// ============================================================
+
+function createAvatar(name) {
+
+  return (
+    "https://ui-avatars.com/api/" +
+    "?name=" +
+    encodeURIComponent(name) +
+    "&background=07152f" +
+    "&color=FFD700" +
+    "&size=600"
+  );
+
+}
+
+
+// ============================================================
+// DATE PARSER
+// ============================================================
+
+function parseBirthday(value) {
+
+  if (!value) {
+    return null;
+  }
+
+
+  // YYYY-MM-DD
+  if (
+    typeof value === "string" &&
+    /^\d{4}-\d{1,2}-\d{1,2}$/.test(value)
+  ) {
+
+    const parts =
+      value.split("-").map(Number);
+
+    return {
+      year: parts[0],
+      month: parts[1],
+      day: parts[2]
+    };
+
+  }
+
+
+  // DD/MM/YYYY
+  if (
+    typeof value === "string" &&
+    /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)
+  ) {
+
+    const parts =
+      value.split("/").map(Number);
+
+    return {
+      year: parts[2],
+      month: parts[1],
+      day: parts[0]
+    };
+
+  }
+
+
+  // Date object / timestamp / other valid date
+  const date =
+    new Date(value);
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return null;
+
+  }
+
+
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate()
+  };
+
+}
+
+
+// ============================================================
+// IS BIRTHDAY TODAY
+// ============================================================
+
+function isBirthdayToday(value) {
+
+  const birthday =
+    parseBirthday(value);
+
+  if (!birthday) {
+    return false;
+  }
+
+
+  const today =
+    new Date();
+
+
+  return (
+    birthday.month ===
+      today.getMonth() + 1
+    &&
+    birthday.day ===
+      today.getDate()
+  );
+
+}
+
+
+// ============================================================
+// FORMAT DATE
+// ============================================================
+
+function formatDate(value) {
+
+  const birthday =
+    parseBirthday(value);
+
+
+  if (!birthday) {
+
+    return value || "";
+
+  }
+
+
+  try {
+
+    const date =
+      new Date(
+        birthday.year,
+        birthday.month - 1,
+        birthday.day
+      );
+
+
+    return date.toLocaleDateString(
+      "bn-BD",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }
+    );
+
+  } catch {
+
+    return value;
+
+  }
+
+}
+
+
+// ============================================================
+// TODAY'S BIRTHDAY
+// ============================================================
+
+export function checkTodayBirthday(user) {
+
+  if (!user) {
+    return false;
+  }
+
+
+  return isBirthdayToday(
+    getBirthdayValue(user)
+  );
+
+}
+
+
+// ============================================================
+// LOAD ALL USERS
+// ============================================================
+
+export async function loadAllUsers() {
+
+  const usersRef =
+    ref(
+      database,
+      "users"
+    );
+
+
+  const snapshot =
+    await get(usersRef);
+
+
+  if (!snapshot.exists()) {
+
+    return {};
+
+  }
+
+
+  allUsers =
+    snapshot.val() || {};
+
+
+  return allUsers;
+
+}
+
+
+// ============================================================
+// FIND TODAY'S BIRTHDAYS
+// ============================================================
+
+export async function findTodayBirthdays() {
+
+  const users =
+    await loadAllUsers();
+
+
+  const result = [];
+
+
+  Object.entries(users)
+    .forEach(
+      ([uid, user]) => {
+
+        const birthday =
+          getBirthdayValue(user);
+
+
+        if (
+          birthday &&
+          isBirthdayToday(birthday)
+        ) {
+
+          result.push({
+
+            uid,
+
+            ...user
+
+          });
+
+        }
+
+      }
+    );
+
+
+  return result;
+
+}
+
+
+// ============================================================
+// FIND UPCOMING BIRTHDAYS
+// ============================================================
+
+export async function findUpcomingBirthdays(
+  days = 30
+) {
+
+  const users =
+    await loadAllUsers();
+
+
+  const today =
+    new Date();
+
+  today.setHours(
+    0, 0, 0, 0
+  );
+
+
+  const result = [];
+
+
+  Object.entries(users)
+    .forEach(
+      ([uid, user]) => {
+
+        const birthday =
+          parseBirthday(
+            getBirthdayValue(user)
+          );
+
+
+        if (!birthday) {
+          return;
+        }
+
+
+        let next =
+          new Date(
+            today.getFullYear(),
+            birthday.month - 1,
+            birthday.day
+          );
+
+
+        if (
+          next < today
+        ) {
+
+          next =
+            new Date(
+              today.getFullYear() + 1,
+              birthday.month - 1,
+              birthday.day
+            );
+
+        }
+
+
+        const diff =
+          Math.ceil(
+            (
+              next.getTime() -
+              today.getTime()
+            )
+            /
+            86400000
+          );
+
+
+        if (
+          diff >= 0 &&
+          diff <= days
+        ) {
+
+          result.push({
+
+            uid,
+
+            ...user,
+
+            daysUntil:
+              diff,
+
+            nextBirthday:
+              next.getTime()
+
+          });
+
+        }
+
+      }
+    );
+
+
+  result.sort(
+    (a, b) =>
+      a.daysUntil -
+      b.daysUntil
+  );
+
+
+  return result;
+
+}
+
+
+// ============================================================
+// LOAD FRIENDS
+// ============================================================
+
+export async function loadFriends() {
+
+  if (!currentUser) {
+
+    return {};
+
+  }
+
+
+  const friendRef =
+    ref(
+      database,
+      "users/" +
+      currentUser.uid +
+      "/friends"
+    );
+
+
+  const snapshot =
+    await get(friendRef);
+
+
+  if (!snapshot.exists()) {
+
+    friends = {};
+
+    return {};
+
+  }
+
+
+  friends =
+    snapshot.val() || {};
+
+
+  return friends;
+
+}
+
+
+// ============================================================
+// FIND FRIEND BIRTHDAYS
+// ============================================================
+
+export async function findFriendBirthdays() {
+
+  if (!currentUser) {
+
+    return [];
+
+  }
+
+
+  await loadFriends();
+
+
+  const result = [];
+
+
+  for (
+    const friendUid
+    of Object.keys(friends)
+  ) {
+
+    const userSnapshot =
+      await get(
+        ref(
+          database,
+          "users/" +
+          friendUid
+        )
+      );
+
+
+    if (
+      !userSnapshot.exists()
+    ) {
+
+      continue;
+
+    }
+
+
+    const user =
+      userSnapshot.val();
+
+
+    const birthday =
+      getBirthdayValue(user);
+
+
+    if (
+      birthday &&
+      isBirthdayToday(birthday)
+    ) {
+
+      result.push({
+
+        uid: friendUid,
+
+        ...user
+
+      });
+
+    }
+
+  }
+
+
+  return result;
+
+}
+
+
+// ============================================================
+// SAVE BIRTHDAY WISH
+// ============================================================
+
+export async function saveBirthdayWish({
+
+  receiverUid,
+
+  receiverName,
+
+  message,
+
+  senderName = ""
+
+}) {
+
+  if (!currentUser) {
+
+    throw new Error(
+      "LOGIN_REQUIRED"
+    );
+
+  }
+
+
+  if (!receiverUid) {
+
+    throw new Error(
+      "RECEIVER_REQUIRED"
+    );
+
+  }
+
+
+  if (!message) {
+
+    throw new Error(
+      "MESSAGE_REQUIRED"
+    );
+
+  }
+
+
+  const wishesRef =
+    ref(
+      database,
+      "birthdayWishes/" +
+      receiverUid
+    );
+
+
+  const newWish =
+    push(wishesRef);
+
+
+  const data = {
+
+    wishId:
+      newWish.key,
+
+    receiverUid,
+
+    receiverName:
+      receiverName || "",
+
+    senderUid:
+      currentUser.uid,
+
+    senderName:
+      senderName ||
+      currentUser.displayName ||
+      currentUser.email ||
+      "AYNA BOOK User",
+
+    senderEmail:
+      currentUser.email ||
+      "",
+
+    message,
+
+    createdAt:
+      serverTimestamp(),
+
+    type:
+      "birthday"
+
+  };
+
+
+  await set(
+    newWish,
+    data
+  );
+
+
+  return newWish.key;
+
+}
+
+
+// ============================================================
+// SEND CURRENT BIRTHDAY WISH
+// ============================================================
+
+window.sendCustomWish = async function () {
+
+  const senderInput =
+    document.getElementById(
+      "senderName"
+    );
+
+  const messageInput =
+    document.getElementById(
+      "customMessage"
+    );
+
+
+  const sender =
+    senderInput?.value.trim() ||
+    currentUser?.displayName ||
+    "একজন প্রিয় বন্ধু";
+
+
+  const message =
+    messageInput?.value.trim();
+
+
+  const receiverUid =
+    birthdayUser?.uid ||
+    targetUid;
+
+
+  const receiverName =
+    birthdayUser?.fullName ||
+    birthdayUser?.name ||
+    birthdayUser?.displayName ||
+    "প্রিয় বন্ধু";
+
+
+  if (!message) {
+
+    alert(
+      "দয়া করে জন্মদিনের শুভেচ্ছা বার্তা লিখুন।"
+    );
+
+    return;
+
+  }
+
+
+  if (!receiverUid) {
+
+    alert(
+      "যার জন্মদিন তাকে নির্ধারণ করা যায়নি।"
+    );
+
+    return;
+
+  }
+
+
+  const finalMessage =
+`🌹 শুভ জন্মদিন ${receiverName}! 🌹
+
+${message}
+
+— ${sender}
+
+🌹 AYNA BOOK`;
+
+
+  if (messageInput) {
+
+    messageInput.value =
+      finalMessage;
+
+  }
+
+
+  // ----------------------------------------------------------
+  // Save to RTDB
+  // ----------------------------------------------------------
+
+  try {
+
+    await saveBirthdayWish({
+
+      receiverUid,
+
+      receiverName,
+
+      message:
+        finalMessage,
+
+      senderName:
+        sender
+
+    });
+
+
+    alert(
+      "🎉 আপনার জন্মদিনের শুভেচ্ছা সফলভাবে সংরক্ষণ হয়েছে।"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Birthday wish save error:",
+      error
+    );
+
+
+    if (
+      error.message ===
+      "LOGIN_REQUIRED"
+    ) {
+
+      alert(
+        "শুভেচ্ছা সংরক্ষণ করতে আগে Login করুন।"
+      );
+
+    } else {
+
+      alert(
+        "বার্তাটি তৈরি হয়েছে, কিন্তু Firebase-এ সংরক্ষণ করা যায়নি। RTDB Rules পরীক্ষা করুন।"
+      );
+
+    }
+
+  }
+
+};
+
+
+// ============================================================
+// COPY WISH
+// ============================================================
+
+window.copyWish = async function () {
+
+  const messageInput =
+    document.getElementById(
+      "customMessage"
+    );
+
+
+  const text =
+    messageInput?.value.trim();
+
+
+  if (!text) {
+
+    alert(
+      "আগে একটি শুভেচ্ছা বার্তা লিখুন।"
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    await navigator.clipboard.writeText(
+      text
+    );
+
+
+    alert(
+      "🌹 শুভেচ্ছা বার্তাটি কপি হয়েছে।"
+    );
+
+  } catch {
+
+    // Fallback
+    if (messageInput) {
+
+      messageInput.select();
+
+      document.execCommand(
+        "copy"
+      );
+
+      alert(
+        "🌹 শুভেচ্ছা বার্তাটি কপি হয়েছে।"
+      );
+
+    }
+
+  }
+
+};
+
+
+// ============================================================
+// SHARE BIRTHDAY
+// ============================================================
+
+window.shareBirthday = async function () {
+
+  const name =
+    birthdayUser?.fullName ||
+    birthdayUser?.name ||
+    birthdayUser?.displayName ||
+    "প্রিয় বন্ধু";
+
+
+  const text =
+`🌹 শুভ জন্মদিন ${name}! 🌹
+
+AYNA BOOK পরিবারের পক্ষ থেকে
+রইল একগুচ্ছ গোলাপ ও আন্তরিক শুভেচ্ছা।
+
+🎂 ${location.href}`;
+
+
+  if (
+    navigator.share
+  ) {
+
+    try {
+
+      await navigator.share({
+
+        title:
+          `শুভ জন্মদিন — ${name}`,
+
+        text,
+
+        url:
+          location.href
+
+      });
+
+      return;
+
+    } catch (error) {
+
+      console.log(
+        "Share cancelled:",
+        error
+      );
+
+    }
+
+  }
+
+
+  try {
+
+    await navigator.clipboard.writeText(
+      text
+    );
+
+
+    alert(
+      "জন্মদিনের শুভেচ্ছাটি কপি হয়েছে। এখন শেয়ার করতে পারেন।"
+    );
+
+  } catch {
+
+    alert(text);
+
+  }
+
+};
+
+
+// ============================================================
+// WHATSAPP
+// ============================================================
+
+window.shareWhatsApp = function () {
+
+  const name =
+    birthdayUser?.fullName ||
+    birthdayUser?.name ||
+    birthdayUser?.displayName ||
+    "প্রিয় বন্ধু";
+
+
+  const text =
+`🌹 শুভ জন্মদিন ${name}! 🌹
+
+AYNA BOOK পরিবারের পক্ষ থেকে
+রইল একগুচ্ছ গোলাপ ও আন্তরিক শুভেচ্ছা।
+
+🎂 ${location.href}`;
+
+
+  const url =
+    "https://wa.me/?text=" +
+    encodeURIComponent(
+      text
+    );
+
+
+  window.open(
+    url,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
+};
+
+
+// ============================================================
+// OPEN PROFILE
+// ============================================================
+
+window.openProfile = function () {
+
+  const uid =
+    birthdayUser?.uid ||
+    targetUid;
+
+
+  if (uid) {
+
+    location.href =
+      "profile.html?uid=" +
+      encodeURIComponent(uid);
+
+  } else {
+
+    location.href =
+      "profile.html";
+
+  }
+
+};
+
+
+// ============================================================
+// OPEN MESSENGER
+// ============================================================
+
+window.openMessenger = function () {
+
+  const uid =
+    birthdayUser?.uid ||
+    targetUid;
+
+
+  if (uid) {
+
+    location.href =
+      "messenger.html?uid=" +
+      encodeURIComponent(uid);
+
+  } else {
+
+    location.href =
+      "messenger.html";
+
+  }
+
+};
+
+
+// ============================================================
+// HOME
+// ============================================================
+
+window.goHome = function () {
+
+  location.href =
+    "index.html";
+
+};
+
+
+// ============================================================
+// SHOW DEFAULT
+// ============================================================
+
+function showDefaultBirthday() {
+
+  if (personName) {
+
+    personName.textContent =
+      "প্রিয় বন্ধু";
+
+  }
+
+
+  if (profilePhoto) {
+
+    profilePhoto.src =
+      createAvatar(
+        "Birthday"
+      );
+
+  }
+
+
+  if (birthdayDate) {
+
+    birthdayDate.textContent =
+      "🎂 শুভ জন্মদিন";
+
+  }
+
+
+  if (personStatus) {
+
+    personStatus.textContent =
+      "আপনার জন্য রইল ভালোবাসা ও একগুচ্ছ গোলাপ।";
+
+  }
+
+
+  if (shareLink) {
+
+    shareLink.textContent =
+      location.href;
+
+  }
+
+
+  hideLoading();
+
+}
+
+
+// ============================================================
+// ERROR
+// ============================================================
+
+function showError(message) {
+
+  if (!errorBox) {
+    return;
+  }
+
+
+  errorBox.textContent =
+    "⚠️ " + message;
+
+
+  errorBox.style.display =
+    "block";
+
+}
+
+
+// ============================================================
+// HIDE LOADING
+// ============================================================
+
+function hideLoading() {
+
+  if (loading) {
+
+    loading.style.display =
+      "none";
+
+  }
+
+}
+
+
+// ============================================================
+// GLOBAL API
+// ============================================================
+
+window.AYNA_BIRTHDAY = {
+
+  getCurrentUser:
+    () => currentUser,
+
+  getBirthdayUser:
+    () => birthdayUser,
+
+  isBirthdayToday,
+
+  findTodayBirthdays,
+
+  findUpcomingBirthdays,
+
+  loadAllUsers,
+
+  loadFriends,
+
+  findFriendBirthdays,
+
+  saveBirthdayWish
+
+};
+
+
+// ============================================================
+// INITIAL SHARE URL
+// ============================================================
+
+if (shareLink) {
+
+  shareLink.textContent =
+    location.href;
+
+}
+
+
+// ============================================================
+// OPTIONAL CONSOLE INFO
+// ============================================================
+
+console.log(
+  "🎂 AYNA BOOK Birthday System Loaded"
+);
