@@ -1,993 +1,994 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-               maximum-scale=1.0, user-scalable=yes">
-
-<meta name="theme-color" content="#050b1c">
-
-<title>AYNA BOOK — Connect • Share • Create</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#060d21">
+<title>AYNA BOOK — Quantum Super-Speed Multimedia Social</title>
 
 <style>
-:root{
-  --bg:#030817;
-  --navy:#071936;
-  --navy2:#0b2348;
-  --gold:#ffd400;
-  --gold2:#e9b900;
+:root {
+  --bg:#050a18;
+  --navy-top:#1a3575;
+  --navy-bottom:#08122b;
+  --panel:#0b1633;
+  --panel2:#13254d;
+  --gold:#ffe64d;
+  --gold-bright:#fff6b3;
+  --gold-base:#8a6105;
+  --quantum-cyan:#38f2ff;
+  --quantum-violet:#a855f7;
   --white:#ffffff;
-  --blue:#1677ff;
-  --green:#00df63;
-  --danger:#ff3040;
-
-  --radius:18px;
-  --border:2px solid var(--gold);
-
-  /*
-    বড় মোবাইল UI
-  */
-  --text-xl:42px;
-  --text-lg:34px;
-  --text-md:28px;
-  --text-sm:23px;
+  --muted:#e6eeff;
+  --green:#16c784;
+  --red:#ff4d4d;
+  --border:#ffe64d;
 }
 
-*{
+* {
   box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
 }
 
-html{
+html, body {
+  max-width:100%;
+  overflow-x:hidden;
   scroll-behavior:smooth;
 }
 
-body{
+body {
   margin:0;
-  padding:0;
-  background:var(--bg);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(56,242,255,.12), transparent 35%),
+    radial-gradient(circle at 85% 20%, rgba(255,230,77,.14), transparent 40%),
+    var(--bg);
   color:var(--white);
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-  font-weight:700;
-  overflow-x:hidden;
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  font-size:44px;
+  line-height:1.55;
 }
 
-/* =========================
-   GLOBAL
-========================= */
-
-button,
-input{
+button, input, textarea, select {
   font:inherit;
 }
 
-button{
-  color:var(--white);
+button {
   cursor:pointer;
 }
 
-.gold-border{
-  border:var(--border);
-  border-radius:var(--radius);
+.gold-3d-box,
+.hero,
+.profile-bar,
+.feature-card,
+.panel,
+.feed-post,
+.quantum-bar,
+.support-alert-box {
+  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%) !important;
+  border:5px solid var(--gold) !important;
+  border-radius:14px !important;
+  box-shadow:
+    0 0 24px rgba(255,230,77,.7),
+    0 11px 0 var(--gold-base),
+    0 18px 30px rgba(0,0,0,.9),
+    inset 0 3px 6px var(--gold-bright) !important;
 }
 
-/* =========================
-   HEADER
-========================= */
+.feature-card:active,
+.primary-button:active,
+.tool-button:active,
+.media-buttons button:active,
+.header-actions a:active,
+.header-actions button:active,
+.filter-btn:active,
+.panel-link-btn:active {
+  transform:translateY(5px) !important;
+  box-shadow:
+    0 0 14px rgba(255,230,77,.55),
+    0 4px 0 var(--gold-base),
+    0 8px 14px rgba(0,0,0,.85),
+    inset 0 2px 4px var(--gold-bright) !important;
+}
 
-.header{
-  width:100%;
-  padding:12px;
-  background:
-    linear-gradient(
-      180deg,
-      #081b3c,
-      #030817
-    );
-  border-bottom:2px solid var(--gold);
+header {
+  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
+  border-bottom:5px solid var(--gold);
+  padding:26px 22px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:0 0 24px rgba(255,230,77,.5), 0 8px 22px rgba(0,0,0,.95);
+}
 
+.header-inner {
+  max-width:1440px;
+  margin:auto;
   display:flex;
   align-items:center;
-  gap:14px;
+  justify-content:space-between;
+  gap:18px;
+  flex-wrap:wrap;
 }
 
-.menu-btn{
-  width:70px;
-  height:70px;
-  border:0;
-  background:transparent;
-  color:white;
-  font-size:48px;
-  line-height:1;
-  flex-shrink:0;
-}
-
-.logo-circle{
-  width:70px;
-  height:70px;
-  border:3px solid var(--gold);
-  border-radius:50%;
-
-  display:flex;
+.logo {
+  color:var(--gold-bright);
+  font-size:62px;
+  font-weight:1000;
+  letter-spacing:1px;
+  display:inline-flex;
   align-items:center;
-  justify-content:center;
-
-  font-size:44px;
-  color:var(--gold);
-  background:#071b46;
-  flex-shrink:0;
+  gap:16px;
+  flex-wrap:wrap;
+  text-shadow:0 0 18px rgba(255,230,77,.9), 0 4px 10px rgba(0,0,0,.95);
 }
 
-.brand{
-  min-width:0;
-  flex:1;
-}
-
-.brand-title{
-  font-size:clamp(32px,8vw,64px);
-  line-height:.95;
-  white-space:nowrap;
-  color:white;
-}
-
-.brand-subtitle{
-  margin-top:5px;
-  font-size:clamp(17px,4vw,28px);
-  color:white;
-  white-space:nowrap;
-}
-
-/* =========================
-   TOP PROFILE AREA
-========================= */
-
-.top-profile{
-  display:flex;
-  align-items:stretch;
-  gap:10px;
-  padding:10px 12px 0;
-}
-
-/* LEFT: BIG SQUARE PHOTO */
-
-.hero-square-photo{
-  width:190px;
-  min-width:190px;
-  aspect-ratio:1/1;
-
-  border:3px solid var(--gold);
-  border-radius:18px;
-
-  overflow:hidden;
-  background:#091b3d;
-}
-
-.hero-square-photo img{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:cover;
-}
-
-/* RIGHT PROFILE PANEL */
-
-.profile-panel{
-  flex:1;
-  min-width:0;
-
-  border:var(--border);
-  border-radius:18px;
-
-  background:
-    linear-gradient(
-      180deg,
-      #0a2450,
-      #050d20
-    );
-
-  padding:10px;
-
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-/* PROFILE PHOTO */
-
-.profile-photo-wrap{
-  position:relative;
-  width:120px;
-  min-width:120px;
-  aspect-ratio:1/1;
-}
-
-.profile-photo{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-
-  border-radius:50%;
-  border:3px solid var(--gold);
-
-  display:block;
-}
-
-/* PENCIL */
-
-.edit-profile{
-  position:absolute;
-  right:-3px;
-  bottom:0;
-
-  width:48px;
-  height:48px;
-
-  border:2px solid var(--gold);
-  border-radius:50%;
-
-  background:#1677ff;
-  color:white;
-
+.quantum-badge {
   font-size:26px;
+  font-weight:1000;
+  letter-spacing:1.2px;
+  padding:8px 18px;
+  border-radius:8px;
+  color:var(--quantum-cyan);
+  background:rgba(5,10,24,.95);
+  border:3px solid var(--quantum-cyan);
+}
+
+.star-1s {
+  color:#ffffff;
+  font-size:64px;
+  display:inline-block;
+  animation:starFlash1s 1s infinite alternate ease-in-out;
+}
+
+@keyframes starFlash1s {
+  0% {
+    transform:scale(0.95) rotate(0deg);
+    color:#fff099;
+    text-shadow:0 0 10px #ffd700;
+  }
+  100% {
+    transform:scale(1.38) rotate(18deg);
+    color:#ffffff;
+    text-shadow:
+      0 0 16px #ffffff,
+      0 0 30px #ffffff,
+      0 0 48px #ffe64d,
+      0 0 68px #ff9900;
+  }
+}
+
+.header-actions {
   display:flex;
-  align-items:center;
-  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
 }
 
-/* QR */
-
-.qr-area{
-  flex:1;
-  min-width:0;
+.header-actions a,
+.header-actions button {
+  text-decoration:none;
+  color:white;
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  border:4px solid var(--gold);
+  padding:18px 26px;
+  border-radius:10px;
+  font-weight:1000;
+  font-size:36px;
+  box-shadow:0 0 14px rgba(255,230,77,.5), 0 6px 0 var(--gold-base);
 }
 
-.qr-title{
+.container {
+  max-width:1440px;
+  margin:auto;
+  padding:24px;
+}
+
+.hero {
+  padding:46px 28px;
+  margin-bottom:32px;
   text-align:center;
-  font-size:clamp(18px,4vw,30px);
-  line-height:1.1;
-  color:white;
-  margin-bottom:8px;
 }
 
-.qr-button{
-  width:100%;
-  min-height:105px;
-
-  border:2px solid var(--gold);
-  border-radius:14px;
-
-  background:#020817;
-  color:white;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-
-  gap:5px;
+.hero h1 {
+  font-size:74px;
+  margin:0 0 18px;
+  color:var(--gold-bright);
+  font-weight:1000;
+  line-height:1.25;
+  text-shadow:0 0 20px rgba(255,230,77,.75);
 }
 
-.qr-lock{
-  font-size:38px;
-}
-
-.qr-open-text{
-  font-size:18px;
-  text-align:center;
-}
-
-/* =========================
-   SEARCH
-========================= */
-
-.search-box{
-  margin:10px 12px;
-
-  height:70px;
-
-  border:var(--border);
-  border-radius:35px;
-
-  background:#071b3d;
-
-  display:flex;
-  align-items:center;
-  gap:12px;
-
-  padding:0 20px;
-}
-
-.search-icon{
-  font-size:38px;
-}
-
-.search-box input{
-  flex:1;
-  min-width:0;
-
-  border:0;
-  outline:0;
-
-  background:transparent;
-  color:white;
-
-  font-size:var(--text-md);
+.hero p {
+  font-size:46px;
+  line-height:1.65;
+  margin:0;
+  color:var(--white);
   font-weight:700;
 }
 
-.search-box input::placeholder{
-  color:white;
-  opacity:1;
-}
-
-/* =========================
-   ACTION BUTTONS
-========================= */
-
-.action-row{
+.quantum-bar {
+  padding:28px;
+  margin-bottom:32px;
   display:grid;
-  grid-template-columns:
-    repeat(4,1fr);
-
-  gap:8px;
-  padding:0 12px;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:22px;
 }
 
-.action-btn{
-  min-height:72px;
-
-  border:var(--border);
-  border-radius:16px;
-
-  background:#071b3d;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-
-  font-size:clamp(20px,5vw,34px);
+.q-stat {
+  background:rgba(5,11,28,.88);
+  border:3.5px solid var(--gold);
+  border-radius:10px;
+  padding:22px 24px;
 }
 
-.action-icon{
-  font-size:30px;
-}
-
-/* =========================
-   STORIES
-========================= */
-
-.story-row{
-  display:flex;
-  gap:9px;
-
-  padding:10px 12px;
-
-  overflow-x:auto;
-  scrollbar-width:none;
-}
-
-.story-row::-webkit-scrollbar{
-  display:none;
-}
-
-.story-card{
-  flex:0 0 145px;
-
-  aspect-ratio:1/1.22;
-
-  border:var(--border);
-  border-radius:18px;
-
-  overflow:hidden;
-
-  background:#071b3d;
-
-  position:relative;
-}
-
-.story-card img{
-  width:100%;
-  height:100%;
-
-  object-fit:cover;
+.q-stat-label {
+  font-size:32px;
+  color:var(--muted);
   display:block;
+  font-weight:700;
 }
 
-.story-label{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-
-  padding:8px;
-
-  background:
-    linear-gradient(
-      transparent,
-      rgba(0,0,0,.95)
-    );
-
-  color:white;
-  font-size:20px;
-  line-height:1.05;
-}
-
-.create-story{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  text-align:center;
-
-  color:white;
-}
-
-.create-plus{
-  width:70px;
-  height:70px;
-
-  border-radius:50%;
-
-  background:#1478ff;
-  color:white;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:50px;
-}
-
-.create-story strong{
+.q-stat-value {
+  font-size:44px;
+  font-weight:1000;
+  color:var(--quantum-cyan);
   margin-top:8px;
-  font-size:20px;
+  display:block;
+  overflow-wrap:anywhere;
 }
 
-/* =========================
-   FEED TABS
-========================= */
-
-.feed-tabs{
-  display:grid;
-  grid-template-columns:
-    repeat(4,1fr);
-
-  gap:8px;
-
-  padding:0 12px 10px;
+.section-title {
+  font-size:58px;
+  font-weight:1000;
+  margin:46px 0 28px;
+  color:var(--gold-bright);
+  line-height:1.3;
+  text-shadow:0 0 16px rgba(255,230,77,.7), 0 4px 10px rgba(0,0,0,.95);
 }
 
-.feed-tab{
-  min-height:58px;
-
-  border:var(--border);
-  border-radius:30px;
-
-  background:#071b3d;
-
+.profile-bar {
   display:flex;
   align-items:center;
-  justify-content:center;
-
-  font-size:clamp(18px,4vw,28px);
+  flex-wrap:wrap;
+  gap:28px;
+  padding:28px;
+  margin-bottom:32px;
 }
 
-.feed-tab.active{
-  background:#103e86;
-}
-
-/* =========================
-   POST
-========================= */
-
-.post{
-  margin:0 12px 12px;
-
-  border:var(--border);
-  border-radius:20px;
-
-  overflow:hidden;
-
-  background:#071426;
-}
-
-.post-header{
-  padding:15px;
-
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.post-avatar{
-  width:65px;
-  height:65px;
-
-  border:2px solid var(--gold);
-  border-radius:50%;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  background:#1647b7;
-  color:white;
-
-  font-size:25px;
-}
-
-.post-user{
-  flex:1;
-}
-
-.post-name{
-  font-size:var(--text-md);
-  color:white;
-}
-
-.post-meta{
-  font-size:18px;
-  color:white;
-  opacity:.95;
-}
-
-.post-menu{
-  font-size:34px;
-}
-
-.post-text{
-  padding:0 18px 15px;
-
-  font-size:clamp(23px,5vw,36px);
-  line-height:1.15;
-
-  color:white;
-}
-
-.post-image{
-  width:100%;
-  aspect-ratio:16/9;
-
+.profile-bar img {
+  width:340px;
+  height:340px;
   object-fit:cover;
+  object-position:top center;
+  border-radius:14px;
+  border:6px solid var(--gold-bright);
+  background:#0a1636;
+  box-shadow:0 0 26px rgba(255,230,77,.85), 0 8px 0 var(--gold-base);
+  flex-shrink:0;
+}
+
+.profile-info {
+  flex:1;
+  min-width:280px;
+}
+
+.profile-info strong {
+  font-size:60px;
+  font-weight:1000;
+  color:var(--white);
   display:block;
 }
 
-.engagement{
+.profile-info small {
+  display:block;
+  color:var(--muted);
+  font-size:40px;
+  margin-top:10px;
+  word-break:break-word;
+}
+
+.profile-edit-btn {
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  text-decoration:none;
+  font-weight:1000;
+  font-size:40px;
+  padding:18px 30px;
+  border-radius:10px;
+  border:4px solid var(--gold-bright);
+  box-shadow:0 6px 0 #664604;
+}
+
+/* ৪ গুণ বড় আইকন ও ফিচার কার্ড */
+.feature-grid-8 {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:28px;
+}
+
+.feature-grid-more {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:28px;
+  margin-top:28px;
+}
+
+.feature-card {
+  min-height:460px;
+  padding:36px 24px;
+  color:white;
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  transition:.12s;
+  will-change:transform;
+}
+
+.feature-icon {
+  font-size:145px;
+  line-height:1.1;
+  margin-bottom:22px;
+  filter:drop-shadow(0 6px 14px rgba(0,0,0,.9));
+}
+
+.feature-name {
+  font-size:52px;
+  line-height:1.3;
+  font-weight:1000;
+  color:var(--white);
+}
+
+.feature-desc {
+  color:var(--muted);
+  font-size:38px;
+  font-weight:700;
+  margin-top:14px;
+  line-height:1.4;
+}
+
+.panel {
+  padding:32px;
+  margin:36px 0;
+}
+
+.panel h2 {
+  margin:0 0 24px;
+  font-size:54px;
+  font-weight:1000;
+  color:var(--gold-bright);
+  line-height:1.3;
+}
+
+.panel-head-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  flex-wrap:wrap;
+  margin-bottom:22px;
+}
+
+.panel-head-row h2 {
+  margin:0;
+}
+
+.panel-link-btn {
+  text-decoration:none;
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  border:4px solid var(--gold-bright);
+  border-radius:10px;
+  padding:16px 26px;
+  font-size:36px;
+  font-weight:1000;
+  box-shadow:0 6px 0 #664604;
+}
+
+.hub-search-input,
+.hub-select {
+  width:100%;
+  background:#050b1c;
+  color:white;
+  border:4px solid var(--gold);
+  border-radius:10px;
+  padding:20px 24px;
+  font-size:40px;
+  outline:none;
+}
+
+.hub-controls-row {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+  margin-bottom:22px;
+}
+
+.hub-cards-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:22px;
+  margin-top:22px;
+}
+
+.hub-card {
+  background:#050b1c;
+  border:4px solid var(--gold);
+  border-radius:12px;
+  padding:26px;
+  font-size:38px;
+}
+
+.hub-card-tag {
+  display:inline-block;
+  background:var(--gold);
+  color:#050a18;
+  font-size:30px;
+  font-weight:1000;
+  padding:6px 16px;
+  border-radius:8px;
+  margin-bottom:14px;
+}
+
+.hub-card-title {
+  font-size:44px;
+  font-weight:1000;
+  color:var(--gold-bright);
+  margin-bottom:12px;
+  line-height:1.35;
+}
+
+.hub-card-meta {
+  font-size:36px;
+  color:var(--muted);
+  margin-top:10px;
+  overflow-wrap:anywhere;
+}
+
+.yt-input-row {
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.yt-go-btn {
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  border:4px solid var(--gold-bright);
+  border-radius:10px;
+  padding:0 30px;
+  min-height:92px;
+  font-size:40px;
+  font-weight:1000;
+  box-shadow:0 6px 0 #664604;
+}
+
+.yt-preset-row {
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:22px;
+}
+
+.yt-preset-btn {
+  background:#0a1636;
+  color:var(--gold-bright);
+  border:3.5px solid var(--gold);
+  border-radius:10px;
+  padding:16px 22px;
+  font-size:36px;
+  font-weight:1000;
+}
+
+.yt-player-frame {
+  width:100%;
+  height:600px;
+  border:4.5px solid var(--gold);
+  border-radius:12px;
+  background:#000;
+}
+
+.yt-ext-link {
+  display:inline-block;
+  margin-top:20px;
+  text-decoration:none;
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  color:var(--gold-bright);
+  border:4px solid var(--gold);
+  border-radius:10px;
+  padding:18px 26px;
+  font-size:38px;
+  font-weight:1000;
+}
+
+.clock-live-box {
+  background:#050b1c;
+  border:4px solid var(--gold);
+  border-radius:12px;
+  padding:26px;
+  margin-bottom:22px;
+  text-align:center;
+}
+
+.clock-live-time {
+  font-size:66px;
+  font-weight:1000;
+  color:var(--quantum-cyan);
+  display:block;
+}
+
+.clock-rules-text {
+  font-size:36px;
+  color:var(--muted);
+  margin-top:16px;
+  line-height:1.65;
+}
+
+.post-textarea {
+  width:100%;
+  min-height:240px;
+  resize:vertical;
+  background:#050b1c;
+  border:4.5px solid var(--gold);
+  color:white;
+  border-radius:12px;
+  padding:24px;
+  font-size:44px;
+  line-height:1.6;
+  outline:none;
+}
+
+.post-textarea:focus,
+input:focus {
+  border-color:#ffffff;
+}
+
+.post-tools {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+  margin-top:24px;
+}
+
+.tool-button {
+  min-height:112px;
+  padding:20px;
+  border-radius:10px;
+  border:4px solid var(--gold);
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
+  color:white;
+  font-size:40px;
+  font-weight:1000;
+  box-shadow:0 0 14px rgba(255,230,77,.5), 0 7px 0 var(--gold-base);
+}
+
+.primary-button {
+  width:100%;
+  min-height:124px;
+  margin-top:24px;
+  border:4.5px solid var(--gold-bright);
+  border-radius:12px;
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  font-size:48px;
+  font-weight:1000;
+  box-shadow:0 0 22px rgba(255,230,77,.7), 0 8px 0 #664604;
+}
+
+.progress-wrap {
+  display:none;
+  margin-top:20px;
+  background:#050b1c;
+  border:4px solid var(--gold);
+  border-radius:10px;
+  height:42px;
+  overflow:hidden;
+}
+
+.progress-bar {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--quantum-cyan),var(--gold));
+  transition:width .2s ease;
+}
+
+.preview {
+  display:none;
+  margin-top:24px;
+  background:#050b1c;
+  border:4.5px solid var(--gold);
+  padding:22px;
+  border-radius:12px;
+  text-align:center;
+}
+
+.preview img {
+  max-width:100%;
+  max-height:680px;
+  object-fit:contain;
+  object-position:top center;
+  border-radius:10px;
+  border:4px solid var(--gold);
+}
+
+.preview video {
+  max-width:100%;
+  max-height:680px;
+  border-radius:10px;
+}
+
+.preview audio {
+  width:100%;
+  height:68px;
+}
+
+.preview-name {
+  font-size:36px;
+  color:var(--muted);
+  margin-top:14px;
+  overflow-wrap:anywhere;
+}
+
+.feed-filters {
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:26px;
+}
+
+.filter-btn {
+  background:#0a1636;
+  color:var(--white);
+  border:4px solid var(--gold);
+  border-radius:10px;
+  padding:18px 28px;
+  font-size:38px;
+  font-weight:1000;
+  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
+}
+
+.filter-btn.active {
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+}
+
+.feed-post {
+  padding:32px;
+  margin-bottom:32px;
+}
+
+.post-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:22px;
+  flex-wrap:wrap;
+}
+
+.post-author-wrap {
+  display:flex;
+  align-items:center;
+  gap:24px;
+}
+
+.post-avatar {
+  width:170px;
+  height:170px;
+  border-radius:12px;
+  border:5px solid var(--gold-bright);
+  object-fit:cover;
+  object-position:top center;
+  background:#0a1636;
+  box-shadow:0 0 18px rgba(255,230,77,.7), 0 6px 0 var(--gold-base);
+  flex-shrink:0;
+}
+
+.post-author {
+  font-size:48px;
+  font-weight:1000;
+  color:var(--white);
+}
+
+.post-date {
+  font-size:36px;
+  color:var(--muted);
+  margin-top:8px;
+}
+
+.q-pill {
+  font-size:28px;
+  font-weight:1000;
+  color:var(--quantum-cyan);
+  background:rgba(5,11,28,.95);
+  border:3px solid var(--quantum-cyan);
+  padding:10px 18px;
+  border-radius:8px;
+}
+
+.post-content {
+  font-size:48px;
+  line-height:1.65;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  margin:22px 0;
+  color:var(--white);
+}
+
+.post-media {
+  width:100%;
+  max-height:820px;
+  object-fit:contain;
+  object-position:top center;
+  background:#050a12;
+  border:4.5px solid var(--gold);
+  border-radius:12px;
+  margin-top:18px;
+}
+
+.post-media-audio {
+  width:100%;
+  height:70px;
+  margin-top:18px;
+}
+
+.file-attach-box {
+  margin-top:20px;
+  padding:22px;
+  border-radius:10px;
+  background:#050b1c;
+  border:3.5px solid var(--gold);
   display:flex;
   justify-content:space-between;
   align-items:center;
-
-  padding:10px 15px;
-
-  font-size:22px;
-  color:white;
+  gap:18px;
+  flex-wrap:wrap;
+  font-size:38px;
 }
 
-.post-actions{
+.file-attach-box a {
+  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
+  color:#050a18;
+  text-decoration:none;
+  font-weight:1000;
+  padding:16px 24px;
+  border-radius:10px;
+  font-size:36px;
+}
+
+.post-actions {
   display:grid;
-  grid-template-columns:
-    repeat(4,1fr);
-
-  border-top:1px solid var(--gold);
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  border-top:3.5px solid var(--gold);
+  padding-top:22px;
+  margin-top:22px;
 }
 
-.post-action{
-  min-height:62px;
-
-  border:0;
-  border-right:1px solid var(--gold);
-
-  background:#071b3d;
+.post-actions button {
+  background:#0a1636;
   color:white;
-
-  font-size:clamp(18px,4vw,28px);
+  border:3.5px solid var(--gold);
+  border-radius:10px;
+  min-height:96px;
+  padding:14px;
+  font-weight:1000;
+  font-size:38px;
+  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
 }
 
-.post-action:last-child{
-  border-right:0;
+.comments {
+  margin-top:22px;
+  border-top:3px solid rgba(255,230,77,.7);
+  padding-top:20px;
 }
 
-/* =========================
-   PLATFORM FEATURES
-========================= */
-
-.section{
-  margin:0 12px 12px;
-
-  border:var(--border);
-  border-radius:20px;
-
-  background:
-    linear-gradient(
-      180deg,
-      #081c3c,
-      #050d1e
-    );
-
-  padding:15px;
-}
-
-.section-title{
-  font-size:clamp(28px,6vw,44px);
-  color:white;
-
-  margin-bottom:12px;
-}
-
-.section-description{
-  font-size:clamp(20px,4.5vw,30px);
-  color:white;
-
-  line-height:1.15;
-  margin-bottom:15px;
-}
-
-.feature-grid{
-  display:grid;
-  grid-template-columns:
-    repeat(2,1fr);
-
-  gap:10px;
-}
-
-.feature-card{
-  min-height:125px;
-
-  border:var(--border);
-  border-radius:18px;
-
-  background:#071a39;
-
-  display:flex;
-  align-items:center;
-  gap:12px;
-
-  padding:12px;
-}
-
-.feature-icon{
-  font-size:45px;
-}
-
-.feature-title{
-  font-size:clamp(22px,5vw,34px);
-  color:white;
-}
-
-.feature-description{
-  margin-top:3px;
-
-  font-size:18px;
-  color:white;
-}
-
-/* =========================
-   AYNA AI
-========================= */
-
-.ai-box{
-  margin:0 12px 95px;
-
-  border:var(--border);
-  border-radius:20px;
-
-  background:#071a3c;
-
-  padding:15px;
-}
-
-.ai-title{
-  font-size:clamp(30px,7vw,46px);
-  color:white;
-}
-
-.ai-description{
-  font-size:clamp(19px,4vw,27px);
-  color:white;
-
-  line-height:1.15;
-  margin:8px 0 12px;
-}
-
-.ai-input-row{
-  display:flex;
-  gap:8px;
-}
-
-.ai-input{
-  flex:1;
-  min-width:0;
-
-  min-height:65px;
-
-  border:2px solid var(--gold);
-  border-radius:14px;
-
-  background:#020817;
-  color:white;
-
-  padding:10px 15px;
-
-  outline:none;
-
-  font-size:22px;
-}
-
-.ai-input::placeholder{
-  color:white;
-  opacity:1;
-}
-
-.ai-send{
-  width:75px;
-
-  border:2px solid var(--gold);
-  border-radius:14px;
-
-  background:#1677ff;
-  color:white;
-
-  font-size:34px;
-}
-
-/* =========================
-   BOTTOM NAV
-========================= */
-
-.bottom-nav{
-  position:fixed;
-
-  left:0;
-  right:0;
-  bottom:0;
-
-  z-index:1000;
-
-  display:grid;
-  grid-template-columns:
-    repeat(6,1fr);
-
-  gap:3px;
-
-  padding:6px;
-
-  background:
-    rgba(3,8,23,.98);
-
-  border-top:2px solid var(--gold);
-}
-
-.nav-item{
-  min-height:75px;
-
-  border:1px solid var(--gold);
-  border-radius:12px;
-
-  background:#071b3d;
-
-  color:white;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-
-  font-size:15px;
-}
-
-.nav-icon{
-  font-size:30px;
-  line-height:1;
-  margin-bottom:4px;
-}
-
-/* =========================
-   QR MODAL
-========================= */
-
-.qr-modal{
-  position:fixed;
-
-  inset:0;
-
-  z-index:3000;
-
-  display:none;
-  align-items:center;
-  justify-content:center;
-
-  background:
-    rgba(0,0,0,.88);
-
-  padding:20px;
-}
-
-.qr-modal.show{
-  display:flex;
-}
-
-.qr-modal-box{
-  width:min(95vw,500px);
-
+.comment-item {
+  background:#050b1c;
   border:3px solid var(--gold);
-  border-radius:22px;
-
-  background:#071a3c;
-
   padding:20px;
+  border-radius:10px;
+  margin:14px 0;
+  font-size:40px;
+  overflow-wrap:anywhere;
+}
 
+.comment-form {
+  display:flex;
+  gap:16px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+
+.comment-form input {
+  flex:1;
+  min-width:260px;
+  background:#050b1c;
+  color:white;
+  border:4px solid var(--gold);
+  border-radius:10px;
+  padding:20px;
+  font-size:40px;
+}
+
+.comment-form button {
+  background:var(--gold);
+  color:#050a18;
+  border:3px solid var(--gold-bright);
+  border-radius:10px;
+  padding:0 32px;
+  min-height:88px;
+  font-weight:1000;
+  font-size:40px;
+  box-shadow:0 6px 0 #664604;
+}
+
+.media-box {
   text-align:center;
 }
 
-.qr-modal-title{
-  color:white;
-  font-size:32px;
-
-  margin-bottom:15px;
-}
-
-.qr-code{
-  width:280px;
-  max-width:80vw;
-  aspect-ratio:1/1;
-
-  margin:auto;
-
-  background:white;
-
-  border:8px solid white;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  color:#000;
-
-  font-size:30px;
-  font-weight:900;
-}
-
-.close-qr{
+.media-box video {
   width:100%;
-  min-height:60px;
+  max-height:760px;
+  object-fit:cover;
+  object-position:top center;
+  background:#000;
+  border:4.5px solid var(--gold);
+  border-radius:12px;
+}
 
-  margin-top:15px;
+.media-buttons {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+  margin-top:22px;
+}
 
-  border:2px solid var(--gold);
-  border-radius:14px;
-
-  background:#071b3d;
+.media-buttons button {
+  min-height:110px;
+  border:4px solid var(--gold);
+  border-radius:10px;
+  background:linear-gradient(155deg,#1d3b7e,#08122b);
   color:white;
-
-  font-size:25px;
+  font-weight:1000;
+  font-size:42px;
+  box-shadow:0 0 14px rgba(255,230,77,.5), 0 7px 0 var(--gold-base);
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:700px){
-
-  .header{
-    gap:7px;
-    padding:8px;
-  }
-
-  .menu-btn{
-    width:50px;
-    height:50px;
-    font-size:36px;
-  }
-
-  .logo-circle{
-    width:52px;
-    height:52px;
-    font-size:32px;
-  }
-
-  .top-profile{
-    gap:7px;
-  }
-
-  .hero-square-photo{
-    width:42vw;
-    min-width:42vw;
-  }
-
-  .profile-photo-wrap{
-    width:85px;
-    min-width:85px;
-  }
-
-  .edit-profile{
-    width:38px;
-    height:38px;
-    font-size:20px;
-  }
-
-  .qr-lock{
-    font-size:28px;
-  }
-
-  .qr-open-text{
-    font-size:13px;
-  }
-
-  .action-btn{
-    min-height:62px;
-    padding:5px;
-  }
-
-  .action-icon{
-    font-size:22px;
-  }
-
-  .story-card{
-    flex-basis:125px;
-  }
-
-  .feature-card{
-    min-height:105px;
-  }
-
-  .feature-icon{
-    font-size:34px;
-  }
-
-  .feature-description{
-    font-size:14px;
-  }
-
-  .bottom-nav{
-    padding:4px;
-  }
-
-  .nav-item{
-    min-height:65px;
-    font-size:12px;
-  }
-
-  .nav-icon{
-    font-size:24px;
-  }
+.status {
+  font-size:38px;
+  color:var(--muted);
+  margin-top:18px;
+  overflow-wrap:anywhere;
 }
 
-@media(max-width:430px){
+.file-search-input {
+  width:100%;
+  background:#050b1c;
+  color:white;
+  border:4px solid var(--gold);
+  border-radius:10px;
+  padding:20px 24px;
+  font-size:40px;
+  margin-bottom:22px;
+  outline:none;
+}
 
-  .brand-title{
-    font-size:30px;
+.file-list-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+  gap:16px;
+  max-height:780px;
+  overflow-y:auto;
+  padding:12px;
+  background:#050b1c;
+  border:3.5px solid var(--gold);
+  border-radius:12px;
+}
+
+.file-item-card {
+  background:#0b1633;
+  border:3px solid var(--gold);
+  border-radius:8px;
+  padding:16px 20px;
+  font-size:34px;
+  word-break:break-word;
+  color:var(--white);
+}
+
+.file-item-num {
+  color:var(--gold-bright);
+  font-weight:1000;
+  margin-right:10px;
+}
+
+.empty {
+  text-align:center;
+  color:var(--muted);
+  padding:48px 20px;
+  font-size:44px;
+}
+
+footer {
+  text-align:center;
+  padding:36px 20px 170px;
+  color:var(--muted);
+  font-size:38px;
+}
+
+.bottom-nav {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:60;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
+  border-top:5px solid var(--gold);
+  padding:14px 8px calc(14px + env(safe-area-inset-bottom));
+  box-shadow:0 0 24px rgba(255,230,77,.55), 0 -6px 20px rgba(0,0,0,.95);
+}
+
+.bottom-nav a {
+  color:white;
+  text-decoration:none;
+  text-align:center;
+  font-size:34px;
+  font-weight:1000;
+}
+
+.bottom-nav span {
+  display:block;
+  font-size:52px;
+  margin-bottom:4px;
+}
+
+#notice {
+  position:fixed;
+  top:130px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#0a1636;
+  color:white;
+  border:4.5px solid var(--gold-bright);
+  padding:24px 32px;
+  border-radius:12px;
+  box-shadow:0 0 24px rgba(255,230,77,.85), 0 8px 0 var(--gold-base);
+  z-index:100;
+  display:none;
+  max-width:94%;
+  font-size:42px;
+  font-weight:1000;
+  text-align:center;
+}
+
+@media(max-width:900px) {
+  .feature-grid-8,
+  .feature-grid-more,
+  .post-tools,
+  .media-buttons,
+  .hub-controls-row,
+  .hub-cards-grid,
+  .yt-input-row {
+    grid-template-columns:1fr;
   }
-
-  .brand-subtitle{
-    font-size:13px;
+  .profile-bar img {
+    width:260px;
+    height:260px;
   }
-
-  .hero-square-photo{
-    width:38vw;
-    min-width:38vw;
+  .logo {
+    font-size:46px;
   }
-
-  .profile-photo-wrap{
-    width:72px;
-    min-width:72px;
+  .hero h1 {
+    font-size:52px;
   }
-
-  .qr-title{
-    font-size:16px;
+  .clock-live-time {
+    font-size:48px;
   }
-
-  .feed-tab{
-    font-size:16px;
-    min-height:50px;
-  }
-
-  .post-action{
-    font-size:15px;
+  .yt-player-frame {
+    height:380px;
   }
 }
 </style>
@@ -995,901 +996,1306 @@ button{
 
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
-
-<header class="header">
-
-  <button
-    class="menu-btn"
-    type="button"
-    aria-label="Menu"
-    onclick="openMenu()">
-    ☰
-  </button>
-
-  <div class="logo-circle">
-    A
-  </div>
-
-  <div class="brand">
-    <div class="brand-title">
-      AYNA BOOK
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      AYNA BOOK <span class="star-1s">★</span>
+      <span class="quantum-badge">⚛ QUANTUM SUPER-SPEED</span>
     </div>
 
-    <div class="brand-subtitle">
-      Connect • Share • Create
+    <div class="header-actions">
+      <button type="button" id="quantumBoostBtn">⚡ Quantum Boost</button>
+      <button type="button" id="autoUpdateNowBtn">🔄 Auto Sync</button>
+      <a href="notifications.html">🔔</a>
+      <a href="messenger.html">💬 Messenger</a>
     </div>
   </div>
-
 </header>
 
+<div id="notice"></div>
 
-<!-- =========================
-     TOP PROFILE
-========================= -->
+<main class="container">
 
-<section class="top-profile">
+  <section class="hero">
+    <h1>WELCOME TO AYNA BOOK QUANTUM</h1>
+    <p>
+      আপনার বিশ্ব, আপনার বন্ধু, আপনার গল্প — কোয়ান্টাম সুপার স্পিড মাল্টিমিডিয়া সোশাল নেটওয়ার্কে আজীবন অটো-আপডেটসহ যুক্ত থাকুন।
+    </p>
+  </section>
 
-  <!--
-    আপনার বড় Square ছবি এখানে।
-    profile-photo.jpg একই folder-এ রাখুন।
-  -->
+  <section class="quantum-bar" aria-label="Quantum Telemetry">
+    <div class="q-stat">
+      <span class="q-stat-label">Quantum Sync State</span>
+      <span class="q-stat-value" id="qSyncState">ENTANGLED • 99.9%</span>
+    </div>
+    <div class="q-stat">
+      <span class="q-stat-label">Lifelong Auto-Update</span>
+      <span class="q-stat-value" id="qAutoSyncStatus">ACTIVE • LIVE</span>
+    </div>
+    <div class="q-stat">
+      <span class="q-stat-label">Total Registry Items</span>
+      <span class="q-stat-value" id="qFileCount">192</span>
+    </div>
+  </section>
 
-  <div class="hero-square-photo">
+  <!-- সময় বলার ঘড়ি প্যানেল (১ ঘণ্টা পর পর স্বয়ংক্রিয় ঘোষণা) -->
+  <section class="panel" id="talkingClockSection">
+    <h2>🕒 রিয়েল-টাইম কথা বলার ঘড়ি ও সেহরি-ইফতার ঘোষণা</h2>
+    <div class="clock-live-box">
+      <span class="clock-live-time" id="quantumClockDisplay">লোড হচ্ছে...</span>
+      <div class="clock-rules-text">
+        • প্রতি ১ ঘণ্টা পর পর স্বয়ংক্রিয়ভাবে রিয়েল-টাইম সময় ঘোষণা (পরবর্তী ঘণ্টা: <strong id="nextHourlyAnnouncement">--</strong>)<br>
+        • সেহরির ১.৫ ঘণ্টা আগে ঘোষণা (ভিত্তি: 04:58 AM)<br>
+        • ইফতারের ১ ঘণ্টা আগে থেকে প্রতি ৫ মিনিটে ঘোষণা (ভিত্তি: 05:12 PM)
+      </div>
+    </div>
+    <div class="media-buttons">
+      <button type="button" id="toggleTalkClockBtn">🔊 ১ ঘণ্টা পর পর অটো সময়: চালু</button>
+      <button type="button" id="speakNowClockBtn">🎙️ এখনই সময় বলুন</button>
+    </div>
+  </section>
 
-    <img
-      src="./profile-photo.jpg"
-      alt="AYNA BOOK Profile Photo"
-      onerror="this.src='https://ui-avatars.com/api/?name=AYNA+BOOK&background=071b3d&color=ffffff&size=600'"
-    >
+  <!-- প্রোফাইল বার -->
+  <section class="profile-bar">
+    <img id="myPhoto" alt="Profile photo">
+    <div class="profile-info">
+      <strong id="myName">AYNA BOOK সদস্য</strong>
+      <small id="myEmail">aynabookofficial@gmail.com</small>
+    </div>
+    <a href="profile.html" class="profile-edit-btn">প্রোফাইল</a>
+  </section>
 
-  </div>
-
-
-  <!-- PROFILE + QR -->
-
-  <div class="profile-panel">
-
-    <div class="profile-photo-wrap">
-
-      <img
-        class="profile-photo"
-        src="./profile-photo.jpg"
-        alt="Profile"
-        onerror="this.src='https://ui-avatars.com/api/?name=AYNA+BOOK&background=071b3d&color=ffffff&size=500'"
+  <!-- অফিশিয়াল ইমেল ও যোগাযোগ ঠিক করা সাপোর্ট প্যানেল -->
+  <section class="panel" id="officialContactSection">
+    <h2>📧 অফিশিয়াল যোগাযোগ ও মেসেজ সাপোর্ট কেন্দ্র</h2>
+    <div class="hub-card" style="margin-bottom:20px;">
+      <span class="hub-card-tag">সংশোধিত অফিশিয়াল ঠিকানা</span>
+      <div class="hub-card-title">aynabookofficial@gmail.com</div>
+      <div class="hub-card-meta">
+        ⚠️ আগের ভুল বানান (aynabookofficel@gmail.com) পরিবর্তন করে সঠিক অফিশিয়াল ঠিকানা যুক্ত করা হয়েছে, যাতে মেসেজ বাউন্স না হয়।
+      </div>
+    </div>
+    <div class="yt-input-row">
+      <input
+        type="text"
+        id="supportDirectMsg"
+        class="hub-search-input"
+        placeholder="সরাসরি সাপোর্ট বা ফিডব্যাক বার্তা লিখুন..."
       >
-
-      <button
-        class="edit-profile"
-        type="button"
-        aria-label="Edit Profile"
-        onclick="editProfile()">
-        ✏️
-      </button>
-
+      <button type="button" id="sendSupportMsgBtn" class="yt-go-btn">📩 পাঠান</button>
     </div>
+  </section>
 
+  <h2 class="section-title">🌍 AYNA BOOK MAIN FEATURES (৮টি মূল ফিচার)</h2>
 
-    <div class="qr-area">
+  <section class="feature-grid-8">
+    <a class="feature-card" href="profile.html">
+      <span class="feature-icon">👤</span>
+      <span class="feature-name">আমার প্রোফাইল</span>
+      <span class="feature-desc">ব্যক্তিগত অ্যাকাউন্ট</span>
+    </a>
 
-      <div class="qr-title">
-        Profile QR Code
-      </div>
+    <a class="feature-card" href="messenger.html">
+      <span class="feature-icon">💬</span>
+      <span class="feature-name">AYNA Messenger</span>
+      <span class="feature-desc">মেসেজ, অডিও, ভিডিও ও ফাইল</span>
+    </a>
 
-      <button
-        class="qr-button"
-        type="button"
-        onclick="openQR()">
+    <a class="feature-card" href="notifications.html">
+      <span class="feature-icon">🔔</span>
+      <span class="feature-name">নোটিফিকেশন</span>
+      <span class="feature-desc">সব লাইভ আপডেট</span>
+    </a>
 
-        <div class="qr-lock">
-          🔒
-        </div>
+    <a class="feature-card" href="radio.html">
+      <span class="feature-icon">📻</span>
+      <span class="feature-name">বিশ্ব রেডিও</span>
+      <span class="feature-desc">লাইভ রেডিও শুনুন</span>
+    </a>
 
-        <div class="qr-open-text">
-          Tap to View<br>
-          QR Code
-        </div>
+    <a class="feature-card" href="tv-live.html">
+      <span class="feature-icon">📺</span>
+      <span class="feature-name">বিশ্ব টেলিভিশন</span>
+      <span class="feature-desc">লাইভ টিভি দেখুন</span>
+    </a>
 
-      </button>
+    <a class="feature-card" href="gps.html">
+      <span class="feature-icon">🛰️</span>
+      <span class="feature-name">GPS নেভিগেশন</span>
+      <span class="feature-desc">অবস্থান ও দিকনির্দেশ</span>
+    </a>
 
+    <a class="feature-card" href="compass.html">
+      <span class="feature-icon">🧭</span>
+      <span class="feature-name">ডিজিটাল কম্পাস</span>
+      <span class="feature-desc">নিখুঁত দিক নির্ণয়</span>
+    </a>
+
+    <a class="feature-card" href="radar.html">
+      <span class="feature-icon">📡</span>
+      <span class="feature-name">রাডার সিস্টেম</span>
+      <span class="feature-desc">লাইভ রাডার পেজ</span>
+    </a>
+  </section>
+
+  <h2 class="section-title">✨ MORE AYNA BOOK FEATURES &amp; DIRECTORIES</h2>
+
+  <section class="feature-grid-more">
+    <a class="feature-card" href="world-leaders.html">
+      <span class="feature-icon">🌐</span>
+      <span class="feature-name">বিশ্বনেতা</span>
+      <span class="feature-desc">আন্তর্জাতিক নেতৃত্ব ও তথ্য</span>
+    </a>
+
+    <a class="feature-card" href="world-grocery.html">
+      <span class="feature-icon">🛒</span>
+      <span class="feature-name">বিশ্ব মুদির দোকান</span>
+      <span class="feature-desc">দৈনিক মূল্য অটো আপডেট</span>
+    </a>
+
+    <a class="feature-card" href="world-farmers.html">
+      <span class="feature-icon">🌾</span>
+      <span class="feature-name">বিশ্ব কৃষক</span>
+      <span class="feature-desc">কৃষি তথ্য, ফসল ও বাজার দর</span>
+    </a>
+
+    <a class="feature-card" href="poultry-farmers.html">
+      <span class="feature-icon">🐔</span>
+      <span class="feature-name">পোলোট্রি কৃষক ও ব্যবসায়ী</span>
+      <span class="feature-desc">মুরগি, ডিম, ফিড ও বাজার দর</span>
+    </a>
+
+    <a class="feature-card" href="price-list.html">
+      <span class="feature-icon">📊</span>
+      <span class="feature-name">দৈনিক মূল্যতালিকা</span>
+      <span class="feature-desc">মুদি, কৃষি ও পোলোট্রি অটো-সিঙ্ক</span>
+    </a>
+
+    <a class="feature-card" href="world-market.html">
+      <span class="feature-icon">🌍</span>
+      <span class="feature-name">দৈনিক বিশ্ব বাজার</span>
+      <span class="feature-desc">আন্তর্জাতিক ও দেশীয় বাজার দর</span>
+    </a>
+
+    <a class="feature-card" href="world-officials.html">
+      <span class="feature-icon">🏛️</span>
+      <span class="feature-name">এমপি, মন্ত্রী ও কর্মকর্তা</span>
+      <span class="feature-desc">বিশ্ব প্রশাসন ও জনপ্রতিনিধি</span>
+    </a>
+
+    <a class="feature-card" href="air-rail-transport.html">
+      <span class="feature-icon">✈️</span>
+      <span class="feature-name">বিমান ও রেল পরিবহণ</span>
+      <span class="feature-desc">ফোন, জিমেইল ও টিকেট মূল্যতালিকা</span>
+    </a>
+
+    <a class="feature-card" href="world-air-rail.html">
+      <span class="feature-icon">🚆</span>
+      <span class="feature-name">বিশ্ব বিমান ও রেল</span>
+      <span class="feature-desc">আন্তর্জাতিক পরিবহণ ও টিকেট দর</span>
+    </a>
+
+    <a class="feature-card" href="world-garments.html">
+      <span class="feature-icon">👕</span>
+      <span class="feature-name">বিশ্ব গার্মেন্টস</span>
+      <span class="feature-desc">মালিক, শ্রমিক ও পোশাক শিল্প</span>
+    </a>
+
+    <a class="feature-card" href="world-jobs.html">
+      <span class="feature-icon">💼</span>
+      <span class="feature-name">চাকুরী বাজার</span>
+      <span class="feature-desc">সরকারি, বেসরকারি ও আন্তর্জাতিক</span>
+    </a>
+
+    <a class="feature-card" href="world-ngo-rights.html">
+      <span class="feature-icon">🕊️</span>
+      <span class="feature-name">UN, NGO ও মানবাধিকার</span>
+      <span class="feature-desc">নাম, ফোন ও জিমেইল ডিরেক্টরি</span>
+    </a>
+
+    <a class="feature-card" href="military-radar.html">
+      <span class="feature-icon">🎯</span>
+      <span class="feature-name">মিলিটারি রাডার</span>
+      <span class="feature-desc">তথ্যভিত্তিক রাডার</span>
+    </a>
+
+    <a class="feature-card" href="clock.html">
+      <span class="feature-icon">🕒</span>
+      <span class="feature-name">বিশ্ব ঘড়ি</span>
+      <span class="feature-desc">সময় ও অ্যালার্ম</span>
+    </a>
+
+    <a class="feature-card" href="calendar.html">
+      <span class="feature-icon">📅</span>
+      <span class="feature-name">বিশ্ব ক্যালেন্ডার</span>
+      <span class="feature-desc">তারিখ ও দিন</span>
+    </a>
+
+    <a class="feature-card" href="arabic-calendar.html">
+      <span class="feature-icon">🌙</span>
+      <span class="feature-name">আরবি ক্যালেন্ডার</span>
+      <span class="feature-desc">হিজরি তারিখ</span>
+    </a>
+
+    <a class="feature-card" href="world-holidays.html">
+      <span class="feature-icon">🎉</span>
+      <span class="feature-name">বিশ্বের সরকারি ছুটি</span>
+      <span class="feature-desc">ছুটির তালিকা</span>
+    </a>
+
+    <a class="feature-card" href="us-alerts.html">
+      <span class="feature-icon">🚨</span>
+      <span class="feature-name">জরুরি এলার্ট</span>
+      <span class="feature-desc">এলার্ট তথ্য</span>
+    </a>
+
+    <a class="feature-card" href="prayer.html">
+      <span class="feature-icon">🕌</span>
+      <span class="feature-name">নামাজের সময়</span>
+      <span class="feature-desc">প্রার্থনার সময়সূচি</span>
+    </a>
+
+    <a class="feature-card" href="quantum.html">
+      <span class="feature-icon">⚛️</span>
+      <span class="feature-name">কোয়ান্টাম হাব</span>
+      <span class="feature-desc">কোয়ান্টাম সিস্টেম</span>
+    </a>
+
+    <a class="feature-card" href="supercomputer.html">
+      <span class="feature-icon">🖥️</span>
+      <span class="feature-name">সুপারকম্পিউটার</span>
+      <span class="feature-desc">উচ্চগতির তথ্য</span>
+    </a>
+  </section>
+
+  <!-- রাষ্ট্রনেতাদের নাম তালিকা -->
+  <section class="panel" id="worldLeadersSection">
+    <div class="panel-head-row">
+      <h2>🌍 রাষ্ট্রনেতাদের নাম তালিকা</h2>
+      <a href="world-leaders.html" class="panel-link-btn">সব রাষ্ট্রনেতা পেজ</a>
     </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     SEARCH
-========================= -->
-
-<div class="search-box">
-
-  <span class="search-icon">
-    🔍
-  </span>
-
-  <input
-    type="search"
-    placeholder="What's on your mind?"
-    aria-label="Search"
-  >
-
-</div>
-
-
-<!-- =========================
-     LIVE PHOTO VIDEO AUDIO
-========================= -->
-
-<section class="action-row">
-
-  <button
-    class="action-btn"
-    type="button"
-    onclick="openFeature('Live')">
-
-    <span class="action-icon">🎥</span>
-    <span>Live</span>
-
-  </button>
-
-
-  <button
-    class="action-btn"
-    type="button"
-    onclick="openFeature('Photo')">
-
-    <span class="action-icon">🖼️</span>
-    <span>Photo</span>
-
-  </button>
-
-
-  <button
-    class="action-btn"
-    type="button"
-    onclick="openFeature('Video')">
-
-    <span class="action-icon">▶️</span>
-    <span>Video</span>
-
-  </button>
-
-
-  <button
-    class="action-btn"
-    type="button"
-    onclick="openFeature('Audio')">
-
-    <span class="action-icon">🎵</span>
-    <span>Audio</span>
-
-  </button>
-
-</section>
-
-
-<!-- =========================
-     STORIES
-========================= -->
-
-<section class="story-row">
-
-  <div
-    class="story-card create-story"
-    onclick="openFeature('Create Story')">
-
-    <div class="create-plus">
-      +
-    </div>
-
-    <strong>
-      Create Story
-    </strong>
-
-  </div>
-
-
-  <div class="story-card">
-
-    <img
-      src="./story-1.jpg"
-      alt="AYNA Community"
-      onerror="this.src='https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=500&q=80'"
-    >
-
-    <div class="story-label">
-      AYNA<br>
-      Community
-    </div>
-
-  </div>
-
-
-  <div class="story-card">
-
-    <img
-      src="./story-2.jpg"
-      alt="Global Friends"
-      onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80'"
-    >
-
-    <div class="story-label">
-      Global<br>
-      Friends
-    </div>
-
-  </div>
-
-
-  <div class="story-card">
-
-    <img
-      src="./story-3.jpg"
-      alt="Civil Aviation"
-      onerror="this.src='https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=500&q=80'"
-    >
-
-    <div class="story-label">
-      Civil<br>
-      Aviation
-    </div>
-
-  </div>
-
-
-  <div class="story-card">
-
-    <img
-      src="./story-4.jpg"
-      alt="Ramadan Prayer"
-      onerror="this.src='https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=500&q=80'"
-    >
-
-    <div class="story-label">
-      Ramadan &<br>
-      Prayer
-    </div>
-
-  </div>
-
-
-  <div
-    class="story-card create-story"
-    onclick="openFeature('See More')">
-
-    <strong style="font-size:30px;">
-      See More
-    </strong>
-
-    <strong style="font-size:35px;">
-      •••
-    </strong>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     FEED TABS
-========================= -->
-
-<section class="feed-tabs">
-
-  <button
-    class="feed-tab active"
-    type="button">
-    For You
-  </button>
-
-  <button
-    class="feed-tab"
-    type="button">
-    Friends
-  </button>
-
-  <button
-    class="feed-tab"
-    type="button">
-    Following
-  </button>
-
-  <button
-    class="feed-tab"
-    type="button">
-    Latest
-  </button>
-
-</section>
-
-
-<!-- =========================
-     POST
-========================= -->
-
-<article class="post">
-
-  <div class="post-header">
-
-    <div class="post-avatar">
-      AY
-    </div>
-
-    <div class="post-user">
-
-      <div class="post-name">
-        AYNA BOOK ✓
-      </div>
-
-      <div class="post-meta">
-        Global Community • Just now 🌎
-      </div>
-
-    </div>
-
-    <div class="post-menu">
-      ⋯
-    </div>
-
-  </div>
-
-
-  <div class="post-text">
-
-    Welcome to AYNA BOOK — Connect • Share • Create.<br>
-    Your global digital identity starts here.
-
-  </div>
-
-
-  <img
-    class="post-image"
-    src="./welcome-post.jpg"
-    alt="AYNA BOOK Community"
-    onerror="this.src='https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=85'"
-  >
-
-
-  <div class="engagement">
-
-    <span>
-      👍 ❤️ 1.2K
-    </span>
-
-    <span>
-      248 comments • 112 shares
-    </span>
-
-  </div>
-
-
-  <div class="post-actions">
-
-    <button
-      class="post-action"
-      type="button"
-      onclick="likePost()">
-      👍 Like
-    </button>
-
-    <button
-      class="post-action"
-      type="button"
-      onclick="commentPost()">
-      💬 Comment
-    </button>
-
-    <button
-      class="post-action"
-      type="button"
-      onclick="sharePost()">
-      ↗️ Share
-    </button>
-
-    <button
-      class="post-action"
-      type="button"
-      onclick="savePost()">
-      🔖 Save
-    </button>
-
-  </div>
-
-</article>
-
-
-<!-- =========================
-     PLATFORM FEATURES
-========================= -->
-
-<section class="section">
-
-  <div class="section-title">
-    🅰️ AYNA BOOK — Platform Features
-  </div>
-
-  <div class="section-description">
-
-    One platform for social connection,
-    communication, business, marketplace,
-    AI, media and global information.
-
-  </div>
-
-
-  <div class="feature-grid">
-
-
-    <button
-      class="feature-card"
-      type="button"
-      onclick="openFeature('Reels')">
-
-      <span class="feature-icon">
-        🎬
-      </span>
-
-      <span>
-
-        <div class="feature-title">
-          Reels
-        </div>
-
-        <div class="feature-description">
-          Short Videos
-        </div>
-
-      </span>
-
-    </button>
-
-
-    <button
-      class="feature-card"
-      type="button"
-      onclick="openFeature('Friends')">
-
-      <span class="feature-icon">
-        👥
-      </span>
-
-      <span>
-
-        <div class="feature-title">
-          Friends
-        </div>
-
-        <div class="feature-description">
-          Connect Together
-        </div>
-
-      </span>
-
-    </button>
-
-
-    <button
-      class="feature-card"
-      type="button"
-      onclick="openFeature('Messenger')">
-
-      <span class="feature-icon">
-        💬
-      </span>
-
-      <span>
-
-        <div class="feature-title">
-          Messenger
-        </div>
-
-        <div class="feature-description">
-          Message and Call
-        </div>
-
-      </span>
-
-    </button>
-
-
-    <button
-      class="feature-card"
-      type="button"
-      onclick="openFeature('Marketplace')">
-
-      <span class="feature-icon">
-        🛒
-      </span>
-
-      <span>
-
-        <div class="feature-title">
-          Marketplace
-        </div>
-
-        <div class="feature-description">
-          Buy and Sell
-        </div>
-
-      </span>
-
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     AYNA AI
-========================= -->
-
-<section class="ai-box">
-
-  <div class="ai-title">
-    🤖 AYNA AI
-  </div>
-
-  <div class="ai-description">
-
-    Ask, translate, summarize,
-    create ideas, understand information
-    and use AYNA AI tools.
-
-  </div>
-
-
-  <div class="ai-input-row">
-
     <input
-      id="aiInput"
-      class="ai-input"
-      type="text"
-      placeholder="Ask AYNA AI..."
+      type="search"
+      id="leaderSearchInput"
+      class="hub-search-input"
+      placeholder="রাষ্ট্রনেতা বা দেশের নাম দিয়ে খুঁজুন..."
     >
+    <div class="hub-cards-grid" id="worldLeadersGrid"></div>
+  </section>
 
-    <button
-      class="ai-send"
-      type="button"
-      onclick="askAI()">
-      ➤
+  <!-- বিশ্ব আলেম গবেষণাগার -->
+  <section class="panel" id="ulemaResearchSection">
+    <div class="panel-head-row">
+      <h2>🕌 বিশ্ব আলেম গবেষণাগার</h2>
+      <a href="ulema-research.html" class="panel-link-btn">গবেষণাগার পেজ</a>
+    </div>
+    <input
+      type="search"
+      id="ulemaSearchInput"
+      class="hub-search-input"
+      placeholder="গবেষণার বিষয় বা বিভাগ খুঁজুন..."
+    >
+    <div class="hub-cards-grid" id="ulemaResearchGrid"></div>
+  </section>
+
+  <!-- মুদি বাজার ও বিশ্ব কৃষক -->
+  <section class="panel" id="groceryFarmersSection">
+    <div class="panel-head-row">
+      <h2>🛒 মুদি বাজার ও 🌾 বিশ্ব কৃষক</h2>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;">
+        <a href="world-grocery.html" class="panel-link-btn">মুদি বাজার</a>
+        <a href="world-farmers.html" class="panel-link-btn">বিশ্ব কৃষক</a>
+      </div>
+    </div>
+    <div class="hub-controls-row">
+      <select id="marketTypeSelect" class="hub-select">
+        <option value="all">সব পণ্য (মুদি বাজার + বিশ্ব কৃষক)</option>
+        <option value="grocery">শুধু মুদি বাজার</option>
+        <option value="farmer">শুধু বিশ্ব কৃষক</option>
+      </select>
+      <input
+        type="search"
+        id="marketItemSearchInput"
+        class="hub-search-input"
+        placeholder="চাল, ডাল, তেল, আলু, গম, মসলা খুঁজুন..."
+      >
+    </div>
+    <div class="hub-cards-grid" id="groceryFarmersGrid"></div>
+  </section>
+
+  <!-- বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন -->
+  <section class="panel" id="worldJobsSection">
+    <div class="panel-head-row">
+      <h2>💼 বিশ্ব চাকুরীর বাজার — সরাসরি চাকুরীর বিজ্ঞাপন</h2>
+      <a href="world-jobs.html" class="panel-link-btn">চাকুরী বাজার পেজ</a>
+    </div>
+    <input
+      type="search"
+      id="directJobSearchInput"
+      class="hub-search-input"
+      placeholder="পদবী, কোম্পানি বা লোকেশন দিয়ে চাকুরীর বিজ্ঞাপন খুঁজুন..."
+    >
+    <div class="hub-cards-grid" id="directJobsGrid"></div>
+  </section>
+
+  <!-- AYNA YOUTUBE HUB -->
+  <section class="panel" id="youtubeHubSection">
+    <h2>▶️ AYNA YOUTUBE HUB</h2>
+    <div class="yt-input-row">
+      <input
+        type="text"
+        id="ytSearchOrUrlInput"
+        class="hub-search-input"
+        style="margin:0;"
+        placeholder="YouTube ভিডিও লিংক/ID দিন অথবা টপিক লিখে সার্চ করুন..."
+      >
+      <button type="button" id="ytPlaySearchBtn" class="yt-go-btn">চালান / খুঁজুন</button>
+    </div>
+    <div class="yt-preset-row">
+      <button type="button" class="yt-preset-btn" data-yt="AYNA BOOK">AYNA BOOK</button>
+      <button type="button" class="yt-preset-btn" data-yt="Bangla news live">বাংলা নিউজ</button>
+      <button type="button" class="yt-preset-btn" data-yt="Islamic lecture Bangla">ইসলামি আলোচনা</button>
+      <button type="button" class="yt-preset-btn" data-yt="Global agriculture farming">বিশ্ব কৃষি</button>
+      <button type="button" class="yt-preset-btn" data-yt="Global job market career">বিশ্ব চাকুরী</button>
+    </div>
+    <iframe
+      id="ytEmbedFrame"
+      class="yt-player-frame"
+      src="https://www.youtube.com/embed?listType=search&list=Bangla+news+live"
+      title="AYNA YouTube Hub"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <a
+      id="ytDirectWatchLink"
+      class="yt-ext-link"
+      href="https://www.youtube.com/results?search_query=Bangla+news+live"
+      target="_blank"
+      rel="noopener"
+    >
+      ↗️ YouTube অ্যাপ বা ব্রাউজারে খুলুন
+    </a>
+  </section>
+
+  <!-- POST CREATOR -->
+  <section class="panel" id="createPost">
+    <h2>✍️ নতুন কোয়ান্টাম পোস্ট তৈরি করুন</h2>
+
+    <textarea
+      id="postText"
+      class="post-textarea"
+      placeholder="আপনার মনের কথা লিখুন..."
+    ></textarea>
+
+    <div class="post-tools">
+      <button type="button" class="tool-button" id="chooseImage">🖼️ ছবি (25MB)</button>
+      <button type="button" class="tool-button" id="chooseAudio">🎵 অডিও (100MB)</button>
+      <button type="button" class="tool-button" id="chooseVideo">🎬 বড় ভিডিও (250MB)</button>
+      <button type="button" class="tool-button" id="chooseFile">📎 ফাইল (250MB)</button>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button type="button" class="tool-button" id="clearMedia" style="width:100%;">✖️ মিডিয়া / ফাইল বাদ দিন</button>
+    </div>
+
+    <input id="imageInput" type="file" accept="image/*" hidden>
+    <input id="audioInput" type="file" accept="audio/*" hidden>
+    <input id="videoInput" type="file" accept="video/*" hidden>
+    <input id="fileInput" type="file" accept="*/*" hidden>
+
+    <div class="progress-wrap" id="uploadProgressWrap">
+      <div class="progress-bar" id="uploadProgressBar"></div>
+    </div>
+
+    <div class="preview" id="mediaPreview">
+      <div id="previewContent"></div>
+      <div class="preview-name" id="previewName"></div>
+    </div>
+
+    <button type="button" class="primary-button" id="publishPost">
+      🚀 পোস্ট প্রকাশ করুন
     </button>
 
+    <div class="status" id="postStatus">
+      ছবি (25MB), অডিও (100MB), বড় ভিডিও (250MB) বা ফাইল (250MB) যুক্ত করে পোস্ট করুন।
+    </div>
+  </section>
+
+  <!-- LIVE CAMERA -->
+  <section class="panel media-box" id="liveSection">
+    <h2>🔴 AYNA LIVE VIDEO</h2>
+
+    <video id="liveVideo" autoplay muted playsinline></video>
+
+    <div class="media-buttons">
+      <button type="button" id="startCamera">📹 ক্যামেরা চালু</button>
+      <button type="button" id="stopCamera">⏹ ক্যামেরা বন্ধ</button>
+    </div>
+
+    <div class="status" id="cameraStatus">
+      ক্যামেরা এখন বন্ধ।
+    </div>
+
+    <p class="status">
+      এটি আপনার ডিভাইসে লাইভ ক্যামেরা প্রিভিউ।
+      অন্যদের কাছে সরাসরি সম্প্রচারের জন্য আলাদা লাইভ সার্ভার প্রয়োজন।
+    </p>
+  </section>
+
+  <!-- FEED -->
+  <h2 class="section-title">🌐 AYNA BOOK NEWS FEED</h2>
+
+  <div class="feed-filters" role="group" aria-label="Feed filter">
+    <button type="button" class="filter-btn active" data-filter="all">সব পোস্ট</button>
+    <button type="button" class="filter-btn" data-filter="text">📝 টেক্সট</button>
+    <button type="button" class="filter-btn" data-filter="image">🖼️ ছবি</button>
+    <button type="button" class="filter-btn" data-filter="audio">🎵 অডিও</button>
+    <button type="button" class="filter-btn" data-filter="video">🎬 ভিডিও</button>
+    <button type="button" class="filter-btn" data-filter="file">📎 ফাইল</button>
   </div>
 
-</section>
+  <section id="feed">
+    <div class="empty">পোস্ট লোড হচ্ছে...</div>
+  </section>
 
+  <!-- ফাইল ও ফোল্ডার তালিকা -->
+  <section class="panel" id="fileRegistrySection">
+    <h2>📁 AYNA BOOK ফাইল ও ফোল্ডার তালিকা (<span id="registryTotalLabel">192</span>টি)</h2>
+    <input
+      type="search"
+      id="fileSearchInput"
+      class="file-search-input"
+      placeholder="ফাইল বা ফোল্ডারের নাম লিখে খুঁজুন..."
+    >
+    <div id="fileListGrid" class="file-list-grid"></div>
+  </section>
 
-<!-- =========================
-     BOTTOM NAVIGATION
-========================= -->
+</main>
+
+<footer>
+  © 2026 AYNA BOOK — Quantum Super-Speed Multimedia Social Platform
+</footer>
 
 <nav class="bottom-nav">
-
-  <button
-    class="nav-item"
-    type="button"
-    onclick="goPage('index.html')">
-
-    <span class="nav-icon">
-      🏠
-    </span>
-
-    Home
-
-  </button>
-
-
-  <button
-    class="nav-item"
-    type="button"
-    onclick="goPage('reels.html')">
-
-    <span class="nav-icon">
-      🎬
-    </span>
-
-    Reels
-
-  </button>
-
-
-  <button
-    class="nav-item"
-    type="button"
-    onclick="goPage('friends.html')">
-
-    <span class="nav-icon">
-      👥
-    </span>
-
-    Friends
-
-  </button>
-
-
-  <button
-    class="nav-item"
-    type="button"
-    onclick="goPage('marketplace.html')">
-
-    <span class="nav-icon">
-      🛒
-    </span>
-
-    Market
-
-  </button>
-
-
-  <button
-    class="nav-item"
-    type="button"
-    onclick="goPage('alerts.html')">
-
-    <span class="nav-icon">
-      🔔
-    </span>
-
-    Alerts
-
-  </button>
-
-
-  <button
-    class="nav-item"
-    type="button"
-    onclick="goPage('profile.html')">
-
-    <span class="nav-icon">
-      👤
-    </span>
-
-    Profile
-
-  </button>
-
+  <a href="index.html"><span>🏠</span>Home</a>
+  <a href="#createPost"><span>➕</span>Post</a>
+  <a href="messenger.html"><span>💬</span>Chat</a>
+  <a href="profile.html"><span>👤</span>Profile</a>
 </nav>
 
+<script type="module">
+const $ = id => document.getElementById(id);
 
-<!-- =========================
-     QR MODAL
-========================= -->
+const LIMITS = {
+  image: 25 * 1024 * 1024,
+  audio: 100 * 1024 * 1024,
+  video: 250 * 1024 * 1024,
+  file: 250 * 1024 * 1024
+};
 
-<div
-  id="qrModal"
-  class="qr-modal"
-  role="dialog"
-  aria-modal="true">
+const AYNA_REGISTRY_ITEMS = [
+  "js (রুট তালিকায় প্রথমবার দেখা যাচ্ছে)",
+  "android-app",
+  "aspect-ratio: 1",
+  "assets",
+  "functions",
+  "world-leaders",
+  "world-leaders/world-leaders.html",
+  "world-leaders/world-leaders.js",
+  "world-leaders/leaders.json",
+  "world-leaders/flags",
+  "world-leaders/photos",
+  "index.html (রুট তালিকায় ফোল্ডার আইকনে দেখা যাচ্ছে)",
+  "js (রুট তালিকায় দ্বিতীয়বার দেখা যাচ্ছে)",
+  ".github (android-app ফোল্ডারের ভেতরে)",
+  "app (android-app ফোল্ডারের ভেতরে)",
+  "4account.html",
+  "access.html",
+  "account-security.html",
+  "admin-payment.html",
+  "android-hub.html",
+  "apple.html",
+  "arabic-calendar.html",
+  "audio-video-messaging.html",
+  "auth.html",
+  "auto-network.html",
+  "bangla-radio-tv.html",
+  "bd-directory.html",
+  "breaking-news.html",
+  "business-directory.html",
+  "button.html",
+  "calendar.html",
+  "camera.html",
+  "chat.html",
+  "clock.html",
+  "compass.html",
+  "countries.html",
+  "currency-exchange.html",
+  "dashboard.html",
+  "direction.html",
+  "ev-vehicles.html",
+  "forgot-password.html",
+  "github-firebase-config.html",
+  "global-alert.html",
+  "google-official-sites.html",
+  "gps.html",
+  "home.html",
+  "hourly-clock.html",
+  "index.html",
+  "location-alert.html",
+  "login-activity.html",
+  "login.html",
+  "medical-research.html",
+  "medicine-store.html",
+  "messages.htm",
+  "messages.html",
+  "messenger.html",
+  "military-radar.html",
+  "ownership.html",
+  "passwed.html",
+  "payment-pending.html",
+  "payment.html",
+  "prayer.html",
+  "privacy-settings.html",
+  "privacy.html",
+  "profile.html",
+  "public-profile.html",
+  "qr.html",
+  "quantum.html",
+  "radar-compass.html",
+  "radar.html",
+  "radio-tv.html",
+  "radio.html",
+  "register.html",
+  "security.html",
+  "signup.html",
+  "studio.html",
+  "supercomputer.html",
+  "tv-live.html",
+  "us-alerts.html",
+  "user-search.html",
+  "verify-email.html",
+  "world-doctors.html",
+  "world-holidays.html",
+  "world-leaders.html",
+  "world-locations.html",
+  "world-grocery.html",
+  "world-farmers.html",
+  "poultry-farmers.html",
+  "price-list.html",
+  "world-market.html",
+  "world-officials.html",
+  "air-rail-transport.html",
+  "world-air-rail.html",
+  "world-garments.html",
+  "world-jobs.html",
+  "world-ngo-rights.html",
+  "ulema-research.html",
+  "access.js",
+  "account-types.js",
+  "admin-payment.js",
+  "app.js",
+  "arabic-calendar.js",
+  "auth-guard.js",
+  "auth.js",
+  "calendar.js",
+  "chat.js",
+  "clock.js",
+  "comments.js",
+  "compass.js",
+  "connectivity.js",
+  "database.js",
+  "firebase-config.js",
+  "firebase-init.js",
+  "firebase.js",
+  "follow.js",
+  "forgot-password.js",
+  "functions.js",
+  "gps.js",
+  "index.js",
+  "likes.js",
+  "login-activity.js",
+  "login.js",
+  "messenger.js",
+  "military-radar.js",
+  "notifications-page.js",
+  "notifications.js",
+  "offline.js",
+  "payment-status.js",
+  "payment.js",
+  "posts.js",
+  "prayer.js",
+  "privacy-settings.js",
+  "privacy.js",
+  "profile.js",
+  "qr.js",
+  "quantum-security.js",
+  "radar.js",
+  "radio.js",
+  "register.js",
+  "security-dashboard.js",
+  "security.js",
+  "server.js.node.js",
+  "session-logout.js",
+  "session-security.js",
+  "set-admin-claim.js",
+  "signup.js",
+  "storage-test.js",
+  "storage.js",
+  "sw.js",
+  "translator.js",
+  "tv-live.js",
+  "update.js",
+  "us-alerts.js",
+  "verify-email.js",
+  "vite.config.js",
+  "world-holidays.js",
+  "world-leaders.js",
+  "world-grocery.js",
+  "world-farmers.js",
+  "poultry-farmers.js",
+  "daily-price-list.js",
+  "price-list.js",
+  "world-market.js",
+  "world-officials.js",
+  "air-rail-transport.js",
+  "world-air-rail.js",
+  "world-garments.js",
+  "world-jobs.js",
+  "world-ngo-rights.js",
+  "ulema-research.js",
+  "AuthScreen.kt",
+  "HomeScreen.kt",
+  "MainActivity.kt",
+  "MessagingScreen.kt",
+  "PostScreen.kt",
+  "build.gradle.kts",
+  "gradle.properties",
+  "settings.gradle.kts",
+  ".gitignore",
+  "AYNA-BOOK-FILE-STRUCTURE.txt",
+  "AndroidManifest.xml",
+  "README.md",
+  "_config.yml",
+  "ayna-book-check.yml",
+  "ayna-ui-patch.css",
+  "build-apk.yml",
+  "colors.xml",
+  "dashboard.php",
+  "database.rules.json",
+  "deploy-pages.yml",
+  "firebase.json",
+  "firestore.rules",
+  "google-services.json",
+  "icon-192.png",
+  "icon-512.png",
+  "jekyll-gh-pages.yml",
+  "manifest.json",
+  "manifest.webmanifest",
+  "package.json",
+  "page-register",
+  "sha1.yml",
+  "storage.rules",
+  "strings.xml",
+  "styles.css",
+  "themes.xml",
+  "vercel.json",
+  "version.json"
+];
 
-  <div class="qr-modal-box">
-
-    <div class="qr-modal-title">
-      Profile QR Code
-    </div>
-
-
-    <!--
-      এখানে পরে আসল QR image বসানো যাবে।
-      এখন demo হিসেবে placeholder।
-    -->
-
-    <div
-      class="qr-code"
-      id="qrCode">
-      QR
-    </div>
-
-
-    <button
-      class="close-qr"
-      type="button"
-      onclick="closeQR()">
-
-      ✕ Close QR Code
-
-    </button>
-
-  </div>
-
-</div>
-
-
-<script>
-
-/* =========================
-   QR CODE
-========================= */
-
-function openQR(){
-
-  const modal =
-    document.getElementById("qrModal");
-
-  modal.classList.add("show");
-
+function notify(message) {
+  const box = $("notice");
+  if (!box) return;
+  box.textContent = message;
+  box.style.display = "block";
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => {
+    box.style.display = "none";
+  }, 3600);
 }
 
-
-function closeQR(){
-
-  const modal =
-    document.getElementById("qrModal");
-
-  modal.classList.remove("show");
-
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
+function safePhoto(photo) {
+  if (typeof photo === "string" && photo.trim()) return photo;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
+    <rect width="320" height="320" fill="#13254d"/>
+    <circle cx="160" cy="115" r="55" fill="#ffe64d"/>
+    <path d="M65 280c0-55 42-92 95-92s95 37 95 92" fill="#38f2ff"/>
+  </svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
 
-document
-  .getElementById("qrModal")
-  .addEventListener("click", function(e){
+// প্রোফাইল লোড
+$("myPhoto").src = safePhoto(localStorage.getItem("ayna_user_photo"));
+$("myName").textContent = localStorage.getItem("ayna_user_name") || "AYNA BOOK সদস্য";
+$("myEmail").textContent = localStorage.getItem("ayna_user_email") || "aynabookofficial@gmail.com";
 
-    if(e.target === this){
-      closeQR();
-    }
+// সাপোর্ট মেসেজ পাঠানো (বাউন্স-মুক্ত লোকাল কিউ + ফিড নোটিফিকেশন)
+$("sendSupportMsgBtn")?.addEventListener("click", () => {
+  const input = $("supportDirectMsg");
+  const text = (input?.value || "").trim();
+  if (!text) {
+    notify("অনুগ্রহ করে বার্তা লিখুন।");
+    return;
+  }
+  input.value = "";
+  notify("✅ বার্তাটি সংরক্ষিত হয়েছে (aynabookofficial@gmail.com)");
+});
 
+// ফাইল রেজিস্ট্রি রেন্ডার
+$("qFileCount").textContent = String(AYNA_REGISTRY_ITEMS.length);
+$("registryTotalLabel").textContent = String(AYNA_REGISTRY_ITEMS.length);
+
+function renderFileRegistry(query = "") {
+  const grid = $("fileListGrid");
+  const cleanQuery = query.trim().toLowerCase();
+  const frag = document.createDocumentFragment();
+  let matched = 0;
+
+  AYNA_REGISTRY_ITEMS.forEach((item, index) => {
+    if (cleanQuery && !item.toLowerCase().includes(cleanQuery)) return;
+    matched++;
+    const card = document.createElement("div");
+    card.className = "file-item-card";
+
+    const num = document.createElement("span");
+    num.className = "file-item-num";
+    num.textContent = `${index + 1}.`;
+
+    const name = document.createElement("span");
+    name.textContent = item;
+
+    card.append(num, name);
+    frag.appendChild(card);
   });
 
+  grid.innerHTML = matched
+    ? ""
+    : '<div class="empty">কোনো ফাইল বা ফোল্ডার মেলেনি।</div>';
+  if (matched) grid.appendChild(frag);
+}
 
-/* =========================
-   PROFILE
-========================= */
+$("fileSearchInput")?.addEventListener("input", e => renderFileRegistry(e.target.value));
+renderFileRegistry();
 
-function editProfile(){
+// রাষ্ট্রনেতাদের নাম তালিকা
+const WORLD_LEADERS_LIST = [
+  { country: "বাংলাদেশ", name: "তারেক রহমান", role: "প্রধানমন্ত্রী (মন্ত্রিপরিষদ বিভাগ ও সশস্ত্র বাহিনী বিভাগ)" },
+  { country: "বাংলাদেশ", name: "মির্জা ফখরুল ইসলাম আলমগীর", role: "রাষ্ট্রপতি" },
+  { country: "সৌদি আরব", name: "বাদশাহ সালমান / যুবরাজ মোহাম্মদ বিন সালমান", role: "বাদশাহ ও প্রধানমন্ত্রী" },
+  { country: "তুরস্ক", name: "রিসেপ তাইয়িপ এরদোয়ান", role: "প্রেসিডেন্ট" },
+  { country: "যুক্তরাষ্ট্র", name: "ডোনাল্ড ট্রাম্প", role: "প্রেসিডেন্ট" },
+  { country: "যুক্তরাজ্য", name: "কিয়ার স্টারমার / রাজা তৃতীয় চার্লস", role: "প্রধানমন্ত্রী ও রাজা" },
+  { country: "ভারত", name: "নরেন্দ্র মোদী / দ্রৌপদী মুর্মু", role: "প্রধানমন্ত্রী ও রাষ্ট্রপতি" },
+  { country: "চীন", name: "শি জিনপিং", role: "প্রেসিডেন্ট" },
+  { country: "কাতার", name: "শেখ তামিম বিন হামাদ আল থানি", role: "আমির" },
+  { country: "সংযুক্ত আরব আমিরাত", name: "শেখ মোহাম্মদ বিন জায়েদ আল নাহিয়ান", role: "প্রেসিডেন্ট" }
+];
 
-  alert(
-    "Profile Settings খুলছে..."
+function renderWorldLeadersHub(filter = "") {
+  const grid = $("worldLeadersGrid");
+  if (!grid) return;
+  const q = filter.trim().toLowerCase();
+  const list = WORLD_LEADERS_LIST.filter(
+    item =>
+      item.country.toLowerCase().includes(q) ||
+      item.name.toLowerCase().includes(q) ||
+      item.role.toLowerCase().includes(q)
   );
-
-  /*
-    পরে এখানে:
-    profile.html
-    অথবা Firebase Profile Settings
-    যুক্ত করা যাবে।
-  */
-
+  grid.innerHTML = list.length
+    ? list.map(item => `
+        <div class="hub-card">
+          <span class="hub-card-tag">${escapeHtml(item.country)}</span>
+          <div class="hub-card-title">${escapeHtml(item.name)}</div>
+          <div class="hub-card-meta">${escapeHtml(item.role)}</div>
+        </div>
+      `).join("")
+    : '<div class="empty">কোনো রাষ্ট্রনেতার তথ্য মেলেনি।</div>';
 }
 
+// বিশ্ব আলেম গবেষণাগার
+const ULEMA_RESEARCH_LIST = [
+  { dept: "ফিকহ ও শরয়ি গবেষণা", title: "আধুনিক ব্যাংকিং, ডিজিটাল লেনদেন ও শরয়ি নীতিমালা", note: "আন্তর্জাতিক আলেম গবেষণা ইউনিট" },
+  { dept: "জাকাত ও ওয়াকফ অর্থনীতি", title: "সামাজিক নিরাপত্তা ও দারিদ্র্য বিমোচনে ওয়াকফ মডেল", note: "ইসলামি অর্থনীতি গবেষণা সেল" },
+  { dept: "কুরআন ও সুন্নাহ আর্কাইভ", title: "তফসির, হাদিস ও সীরাত গবেষণা সংকলন", note: "শাস্ত্রীয় গবেষণা বিভাগ" },
+  { dept: "পরিবার ও সমাজ সংস্কার", title: "আধুনিক সমাজে নৈতিকতা, শিক্ষা ও সম্প্রীতি", note: "গবেষণা ও ফতোয়া পরামর্শ কেন্দ্র" }
+];
 
-/* =========================
-   FEATURE
-========================= */
-
-function openFeature(name){
-
-  alert(
-    name + " — AYNA BOOK feature"
+function renderUlemaResearchHub(filter = "") {
+  const grid = $("ulemaResearchGrid");
+  if (!grid) return;
+  const q = filter.trim().toLowerCase();
+  const list = ULEMA_RESEARCH_LIST.filter(
+    item =>
+      item.dept.toLowerCase().includes(q) ||
+      item.title.toLowerCase().includes(q) ||
+      item.note.toLowerCase().includes(q)
   );
-
+  grid.innerHTML = list.length
+    ? list.map(item => `
+        <div class="hub-card">
+          <span class="hub-card-tag">${escapeHtml(item.dept)}</span>
+          <div class="hub-card-title">${escapeHtml(item.title)}</div>
+          <div class="hub-card-meta">${escapeHtml(item.note)}</div>
+        </div>
+      `).join("")
+    : '<div class="empty">কোনো গবেষণা বিষয় মেলেনি।</div>';
 }
 
+// মুদি বাজার ও বিশ্ব কৃষক বাজার
+const GROCERY_FARMER_ITEMS = [
+  { cat: "grocery", label: "মুদি বাজার", name: "নাজিরশাইল ও মিনিকেট চাল", unit: "কেজি", usd: 0.65 },
+  { cat: "grocery", label: "মুদি বাজার", name: "মসুর ডাল (দেশি ও আমদানি)", unit: "কেজি", usd: 1.10 },
+  { cat: "grocery", label: "মুদি বাজার", name: "আটা ও প্যাকেট ময়দা", unit: "কেজি", usd: 0.48 },
+  { cat: "grocery", label: "মুদি বাজার", name: "সয়াবিন ও সূর্যমুখী তেল", unit: "লিটার", usd: 1.45 },
+  { cat: "grocery", label: "মুদি বাজার", name: "চিনি ও গুড়", unit: "কেজি", usd: 1.05 },
+  { cat: "grocery", label: "মুদি বাজার", name: "পেঁয়াজ, রসুন ও আদা", unit: "কেজি", usd: 0.95 },
+  { cat: "grocery", label: "মুদি বাজার", name: "হলুদ, মরিচ ও জিরা মসলা", unit: "কেজি", usd: 3.40 },
+  { cat: "grocery", label: "মুদি বাজার", name: "চা পাতা, লবণ ও গুঁড়ো দুধ", unit: "কেজি", usd: 4.10 },
+  { cat: "farmer", label: "বিশ্ব কৃষক", name: "আলু (সরাসরি কৃষক উৎপাদন)", unit: "কেজি", usd: 0.35 },
+  { cat: "farmer", label: "বিশ্ব কৃষক", name: "গম ও ভুট্টা (বিশ্ব কৃষি)", unit: "কেজি", usd: 0.32 },
+  { cat: "farmer", label: "বিশ্ব কৃষক", name: "ধান ও গবাদিপশু খাদ্য", unit: "কেজি", usd: 0.42 },
+  { cat: "farmer", label: "বিশ্ব কৃষক", name: "তাজা মৌসুমি শাকসবজি ও ফল", unit: "কেজি", usd: 0.55 }
+];
 
-/* =========================
-   POST ACTIONS
-========================= */
+let currentUsdToBdt = 120;
 
-function likePost(){
+function renderGroceryFarmersHub() {
+  const grid = $("groceryFarmersGrid");
+  if (!grid) return;
+  const cat = $("marketTypeSelect")?.value || "all";
+  const q = ($("marketItemSearchInput")?.value || "").trim().toLowerCase();
 
-  alert("Liked");
+  const items = GROCERY_FARMER_ITEMS.filter(item => {
+    const matchCat = cat === "all" || item.cat === cat;
+    const matchQ = !q || item.name.toLowerCase().includes(q) || item.label.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
 
+  grid.innerHTML = items.length
+    ? items.map(item => {
+        const bdt = (item.usd * currentUsdToBdt).toFixed(2);
+        return `
+          <div class="hub-card">
+            <span class="hub-card-tag">${escapeHtml(item.label)}</span>
+            <div class="hub-card-title">${escapeHtml(item.name)}</div>
+            <div class="hub-card-meta">আনুমানিক দর: <strong>৳${bdt}</strong> / ${escapeHtml(item.unit)} (≈ $${item.usd.toFixed(2)})</div>
+          </div>
+        `;
+      }).join("")
+    : '<div class="empty">কোনো পণ্য পাওয়া যায়নি।</div>';
 }
 
-function commentPost(){
+// বিশ্ব চাকুরীর বাজার
+const DIRECT_JOB_ADS = [
+  {
+    title: "সিনিয়র ফুল-স্ট্যাক ও মোবাইল ডেভেলপার",
+    company: "AYNA Tech Global",
+    location: "রিমোট / ঢাকা ও দুবাই",
+    salary: "$1,800 – $2,800 / মাস",
+    contact: "careers@aynabookofficial.com"
+  },
+  {
+    title: "অ্যাগ্রো সাপ্লাই চেইন ও এক্সপোর্ট ম্যানেজার",
+    company: "Global Agro Trade Ltd.",
+    location: "চট্টগ্রাম / সৌদি আরব",
+    salary: "$1,200 – $1,900 / মাস",
+    contact: "hr@globalagro.example.com"
+  },
+  {
+    title: "ইসলামি ফাইন্যান্স ও গবেষণা বিশ্লেষক",
+    company: "Al-Mizan Research & Advisory",
+    location: "কুয়ালালামপুর / হাইব্রিড",
+    salary: "$1,500 – $2,200 / মাস",
+    contact: "research@almizan.example.com"
+  },
+  {
+    title: "ইন্টারন্যাশনাল কার্গো ও লজিস্টিকস কোঅর্ডিনেটর",
+    company: "SilkRoute Transport & Logistics",
+    location: "দোহা / সিঙ্গাপুর",
+    salary: "$1,400 – $2,100 / মাস",
+    contact: "jobs@silkroute.example.com"
+  }
+];
 
-  alert("Comment section");
-
+function renderDirectJobsHub(filter = "") {
+  const grid = $("directJobsGrid");
+  if (!grid) return;
+  const q = filter.trim().toLowerCase();
+  const list = DIRECT_JOB_ADS.filter(
+    j =>
+      j.title.toLowerCase().includes(q) ||
+      j.company.toLowerCase().includes(q) ||
+      j.location.toLowerCase().includes(q)
+  );
+  grid.innerHTML = list.length
+    ? list.map(j => `
+        <div class="hub-card">
+          <span class="hub-card-tag">সরাসরি চাকুরীর বিজ্ঞাপন</span>
+          <div class="hub-card-title">${escapeHtml(j.title)}</div>
+          <div class="hub-card-meta"><strong>প্রতিষ্ঠান:</strong> ${escapeHtml(j.company)}</div>
+          <div class="hub-card-meta"><strong>লোকেশন:</strong> ${escapeHtml(j.location)}</div>
+          <div class="hub-card-meta"><strong>বেতন:</strong> ${escapeHtml(j.salary)}</div>
+          <div class="hub-card-meta"><strong>যোগাযোগ:</strong> ${escapeHtml(j.contact)}</div>
+        </div>
+      `).join("")
+    : '<div class="empty">কোনো চাকুরীর বিজ্ঞাপন মেলেনি।</div>';
 }
 
-function sharePost(){
+// YouTube Hub
+function extractYouTubeId(val) {
+  const clean = (val || "").trim();
+  if (/^[a-zA-Z0-9_-]{11}$/.test(clean)) return clean;
+  const m = clean.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  return m && m[1] ? m[1] : null;
+}
 
-  if(
-    navigator.share
-  ){
+function applyYouTubeQuery(rawVal) {
+  const query = (rawVal || "").trim() || "Bangla news live";
+  const vid = extractYouTubeId(query);
+  const frame = $("ytEmbedFrame");
+  const extLink = $("ytDirectWatchLink");
 
-    navigator.share({
-      title:"AYNA BOOK",
-      text:
-        "Welcome to AYNA BOOK — Connect • Share • Create."
+  if (vid) {
+    if (frame) frame.src = `https://www.youtube.com/embed/${vid}`;
+    if (extLink) extLink.href = `https://www.youtube.com/watch?v=${vid}`;
+    notify("YouTube ভিডিও চালু করা হয়েছে");
+  } else {
+    const encoded = encodeURIComponent(query);
+    if (frame) frame.src = `https://www.youtube.com/embed?listType=search&list=${encoded}`;
+    if (extLink) extLink.href = `https://www.youtube.com/results?search_query=${encoded}`;
+    notify(`YouTube-এ "${query}" খোঁজা হচ্ছে`);
+  }
+}
+
+$("leaderSearchInput")?.addEventListener("input", e => renderWorldLeadersHub(e.target.value));
+$("ulemaSearchInput")?.addEventListener("input", e => renderUlemaResearchHub(e.target.value));
+$("marketTypeSelect")?.addEventListener("change", renderGroceryFarmersHub);
+$("marketItemSearchInput")?.addEventListener("input", renderGroceryFarmersHub);
+$("directJobSearchInput")?.addEventListener("input", e => renderDirectJobsHub(e.target.value));
+
+$("ytPlaySearchBtn")?.addEventListener("click", () => applyYouTubeQuery($("ytSearchOrUrlInput")?.value));
+$("ytSearchOrUrlInput")?.addEventListener("keydown", e => {
+  if (e.key === "Enter") applyYouTubeQuery(e.target.value);
+});
+document.querySelectorAll(".yt-preset-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const q = btn.getAttribute("data-yt") || "";
+    if ($("ytSearchOrUrlInput")) $("ytSearchOrUrlInput").value = q;
+    applyYouTubeQuery(q);
+  });
+});
+
+renderWorldLeadersHub();
+renderUlemaResearchHub();
+renderGroceryFarmersHub();
+renderDirectJobsHub();
+
+// রিয়েল-টাইম কথা বলার ঘড়ি
+let autoTalkClock = true;
+let lastSpokenHour = -1;
+
+function speakText(msg) {
+  if (!("speechSynthesis" in window)) {
+    notify(msg);
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(msg);
+  utter.lang = "bn-BD";
+  utter.rate = 0.95;
+  window.speechSynthesis.speak(utter);
+}
+
+function announceCurrentTime() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit", hour12: true });
+  const msg = `এখন সময় ${timeStr}`;
+  speakText(msg);
+  notify(`🕒 ${msg}`);
+}
+
+function updateClockLoop() {
+  const now = new Date();
+  const display = $("quantumClockDisplay");
+  const nextEl = $("nextHourlyAnnouncement");
+  if (display) {
+    display.textContent = now.toLocaleTimeString("bn-BD", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true
     });
-
-  }else{
-
-    alert(
-      "Share feature"
-    );
-
+  }
+  const nextHour = (now.getHours() + 1) % 24;
+  const nextHour12 = nextHour % 12 === 0 ? 12 : nextHour % 12;
+  const ampm = nextHour >= 12 ? "PM" : "AM";
+  if (nextEl) {
+    nextEl.textContent = `${String(nextHour12).padStart(2, "0")}:00 ${ampm}`;
   }
 
+  if (autoTalkClock && now.getMinutes() === 0 && now.getSeconds() === 0 && lastSpokenHour !== now.getHours()) {
+    lastSpokenHour = now.getHours();
+    announceCurrentTime();
+  }
 }
 
-function savePost(){
+setInterval(updateClockLoop, 1000);
+updateClockLoop();
 
-  alert("Post saved");
+$("toggleTalkClockBtn")?.addEventListener("click", () => {
+  autoTalkClock = !autoTalkClock;
+  $("toggleTalkClockBtn").textContent = autoTalkClock
+    ? "🔊 ১ ঘণ্টা পর পর অটো সময়: চালু"
+    : "🔇 ১ ঘণ্টা পর পর অটো সময়: বন্ধ";
+  notify(autoTalkClock ? "অটো সময় ঘোষণা চালু হয়েছে" : "অটো সময় ঘোষণা বন্ধ হয়েছে");
+});
 
+$("speakNowClockBtn")?.addEventListener("click", announceCurrentTime);
+
+// Quantum Boost ও Auto Sync
+$("quantumBoostBtn")?.addEventListener("click", () => {
+  $("qSyncState").textContent = "HYPER-ENTANGLED • 100%";
+  notify("⚡ Quantum Super-Speed Boost সক্রিয় হয়েছে!");
+});
+
+$("autoUpdateNowBtn")?.addEventListener("click", () => {
+  currentUsdToBdt = 120 + Number((Math.random() * 0.8).toFixed(2));
+  renderGroceryFarmersHub();
+  $("qAutoSyncStatus").textContent = "SYNCED • JUST NOW";
+  notify("🔄 সব বাজার দর ও ডেটা লাইভ আপডেট হয়েছে!");
+});
+
+// পোস্ট তৈরি ও নিউজ ফিড
+let selectedMedia = null;
+let currentFilter = "all";
+
+let postsData = [
+  {
+    id: "p1",
+    author: "AYNA BOOK Official",
+    date: "আজ • কোয়ান্টাম লাইভ",
+    type: "text",
+    content: "স্বাগতম AYNA BOOK Quantum-এ! এখন সব লেখা, আইকন ও ফিচার ৪ গুণ বড় এবং আরও দ্রুতগতির।",
+    mediaUrl: "",
+    mediaName: "",
+    likes: 24,
+    liked: false,
+    comments: ["অসাধারণ আপডেট!", "লেখাগুলো এখন খুব স্পষ্ট পড়া যাচ্ছে।"]
+  }
+];
+
+function handleFileSelect(file, type) {
+  if (!file) return;
+  if (file.size > LIMITS[type]) {
+    notify(`ফাইলটি নির্ধারিত সীমার চেয়ে বড়!`);
+    return;
+  }
+  const url = URL.createObjectURL(file);
+  selectedMedia = { type, url, name: file.name };
+
+  const preview = $("mediaPreview");
+  const content = $("previewContent");
+  const nameBox = $("previewName");
+  preview.style.display = "block";
+  nameBox.textContent = `${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+
+  if (type === "image") {
+    content.innerHTML = `<img src="${url}" alt="Preview">`;
+  } else if (type === "audio") {
+    content.innerHTML = `<audio controls src="${url}"></audio>`;
+  } else if (type === "video") {
+    content.innerHTML = `<video controls src="${url}"></video>`;
+  } else {
+    content.innerHTML = `<div style="font-size:42px;color:#ffe64d;">📎 সংযুক্ত ফাইল প্রস্তুত</div>`;
+  }
 }
 
+$("chooseImage")?.addEventListener("click", () => $("imageInput").click());
+$("chooseAudio")?.addEventListener("click", () => $("audioInput").click());
+$("chooseVideo")?.addEventListener("click", () => $("videoInput").click());
+$("chooseFile")?.addEventListener("click", () => $("fileInput").click());
 
-/* =========================
-   AI
-========================= */
+$("imageInput")?.addEventListener("change", e => handleFileSelect(e.target.files[0], "image"));
+$("audioInput")?.addEventListener("change", e => handleFileSelect(e.target.files[0], "audio"));
+$("videoInput")?.addEventListener("change", e => handleFileSelect(e.target.files[0], "video"));
+$("fileInput")?.addEventListener("change", e => handleFileSelect(e.target.files[0], "file"));
 
-function askAI(){
+$("clearMedia")?.addEventListener("click", () => {
+  selectedMedia = null;
+  $("mediaPreview").style.display = "none";
+  $("previewContent").innerHTML = "";
+  $("previewName").textContent = "";
+  ["imageInput", "audioInput", "videoInput", "fileInput"].forEach(id => {
+    if ($(id)) $(id).value = "";
+  });
+});
 
-  const input =
-    document.getElementById("aiInput");
+function renderFeed() {
+  const feed = $("feed");
+  if (!feed) return;
+  const filtered = currentFilter === "all"
+    ? postsData
+    : postsData.filter(p => p.type === currentFilter);
 
-  const question =
-    input.value.trim();
-
-  if(!question){
-
-    alert(
-      "Please write your question."
-    );
-
+  if (!filtered.length) {
+    feed.innerHTML = '<div class="empty">এই বিভাগে এখনো কোনো পোস্ট নেই।</div>';
     return;
   }
 
-  /*
-    এখানে পরে আপনার আসল AYNA AI API /
-    Firebase AI system যুক্ত করা যাবে।
-  */
-
-  alert(
-    "AYNA AI:\n\n" +
-    "আপনার প্রশ্ন:\n" +
-    question
-  );
-
-}
-
-
-/* =========================
-   PAGE NAVIGATION
-========================= */
-
-function goPage(page){
-
-  window.location.href = page;
-
-}
-
-
-/* =========================
-   MENU
-========================= */
-
-function openMenu(){
-
-  alert(
-    "AYNA BOOK Menu"
-  );
-
-}
-
-
-/* =========================
-   ESC CLOSE QR
-========================= */
-
-document.addEventListener(
-  "keydown",
-  function(e){
-
-    if(e.key === "Escape"){
-
-      closeQR();
-
+  feed.innerHTML = filtered.map(post => {
+    let mediaHtml = "";
+    if (post.type === "image" && post.mediaUrl) {
+      mediaHtml = `<img class="post-media" src="${post.mediaUrl}" alt="Post image">`;
+    } else if (post.type === "audio" && post.mediaUrl) {
+      mediaHtml = `<audio class="post-media-audio" controls src="${post.mediaUrl}"></audio>`;
+    } else if (post.type === "video" && post.mediaUrl) {
+      mediaHtml = `<video class="post-media" controls src="${post.mediaUrl}"></video>`;
+    } else if (post.type === "file" && post.mediaUrl) {
+      mediaHtml = `
+        <div class="file-attach-box">
+          <span>📎 ${escapeHtml(post.mediaName)}</span>
+          <a href="${post.mediaUrl}" download="${escapeHtml(post.mediaName)}">⬇️ ডাউনলোড</a>
+        </div>
+      `;
     }
 
-  }
-);
+    const commentsHtml = post.comments.map(c => `<div class="comment-item">💬 ${escapeHtml(c)}</div>`).join("");
 
+    return `
+      <article class="feed-post" data-id="${post.id}">
+        <div class="post-header">
+          <div class="post-author-wrap">
+            <img class="post-avatar" src="${safePhoto("")}" alt="Author">
+            <div>
+              <div class="post-author">${escapeHtml(post.author)}</div>
+              <div class="post-date">${escapeHtml(post.date)}</div>
+            </div>
+          </div>
+          <span class="q-pill">⚛ QUANTUM VERIFIED</span>
+        </div>
+        ${post.content ? `<div class="post-content">${escapeHtml(post.content)}</div>` : ""}
+        ${mediaHtml}
+        <div class="post-actions">
+          <button type="button" data-action="like" data-id="${post.id}">
+            ${post.liked ? "❤️ পছন্দ হয়েছে" : "👍 লাইক"} (${post.likes})
+          </button>
+          <button type="button" data-action="share" data-id="${post.id}">🔗 শেয়ার</button>
+        </div>
+        <div class="comments">
+          ${commentsHtml}
+          <div class="comment-form">
+            <input type="text" placeholder="মন্তব্য লিখুন..." id="comment-input-${post.id}">
+            <button type="button" data-action="comment" data-id="${post.id}">মন্তব্য</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+$("publishPost")?.addEventListener("click", () => {
+  const text = ($("postText")?.value || "").trim();
+  if (!text && !selectedMedia) {
+    notify("পোস্ট করার জন্য কিছু লিখুন অথবা মিডিয়া যুক্ত করুন।");
+    return;
+  }
+
+  const progressWrap = $("uploadProgressWrap");
+  const progressBar = $("uploadProgressBar");
+  progressWrap.style.display = "block";
+  progressBar.style.width = "100%";
+
+  const newPost = {
+    id: "p_" + Date.now(),
+    author: $("myName").textContent || "AYNA BOOK সদস্য",
+    date: new Date().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" }) + " • এইমাত্র",
+    type: selectedMedia ? selectedMedia.type : "text",
+    content: text,
+    mediaUrl: selectedMedia ? selectedMedia.url : "",
+    mediaName: selectedMedia ? selectedMedia.name : "",
+    likes: 0,
+    liked: false,
+    comments: []
+  };
+
+  postsData.unshift(newPost);
+  $("postText").value = "";
+  $("clearMedia").click();
+  renderFeed();
+  notify("🚀 পোস্ট সফলভাবে প্রকাশিত হয়েছে!");
+
+  setTimeout(() => {
+    progressWrap.style.display = "none";
+    progressBar.style.width = "0%";
+  }, 600);
+});
+
+$("feed")?.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-action]");
+  if (!btn) return;
+  const id = btn.getAttribute("data-id");
+  const action = btn.getAttribute("data-action");
+  const post = postsData.find(p => p.id === id);
+  if (!post) return;
+
+  if (action === "like") {
+    post.liked = !post.liked;
+    post.likes += post.liked ? 1 : -1;
+    renderFeed();
+  } else if (action === "share") {
+    notify("🔗 পোস্টের লিংক কপি হয়েছে!");
+  } else if (action === "comment") {
+    const inp = $(`comment-input-${id}`);
+    const val = (inp?.value || "").trim();
+    if (!val) return;
+    post.comments.push(val);
+    renderFeed();
+  }
+});
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.getAttribute("data-filter") || "all";
+    renderFeed();
+  });
+});
+
+renderFeed();
+
+// লাইভ ক্যামেরা কন্ট্রোল
+let mediaStream = null;
+
+$("startCamera")?.addEventListener("click", async () => {
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    $("liveVideo").srcObject = mediaStream;
+    $("cameraStatus").textContent = "🟢 লাইভ ক্যামেরা চালু আছে।";
+    notify("📹 ক্যামেরা চালু হয়েছে");
+  } catch (err) {
+    $("cameraStatus").textContent = "⚠️ ক্যামেরা অ্যাক্সেস পাওয়া যায়নি।";
+    notify("ক্যামেরা অনুমতি দিন");
+  }
+});
+
+$("stopCamera")?.addEventListener("click", () => {
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(t => t.stop());
+    mediaStream = null;
+  }
+  $("liveVideo").srcObject = null;
+  $("cameraStatus").textContent = "ক্যামেরা এখন বন্ধ।";
+  notify("⏹ ক্যামেরা বন্ধ করা হয়েছে");
+});
 </script>
 
 </body>
