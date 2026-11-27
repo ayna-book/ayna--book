@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK — Stories</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#050914;color:#fff;
+ font-family:Arial,sans-serif;padding-bottom:90px
+}
+header{
+ height:72px;padding:0 14px;
+ display:flex;align-items:center;
+ justify-content:space-between;
+ background:#071b49;border-bottom:2px solid #d4af37
+}
+.logo{font-size:27px;font-weight:900;color:#ffd700}
+button{
+ background:#102b62;color:#fff;
+ border:1px solid #d4af37;border-radius:12px;
+ padding:13px 18px;font-size:19px;font-weight:900
+}
+.hero{
+ padding:25px 16px;
+ background:linear-gradient(135deg,#123d82,#07142e)
+}
+h1{font-size:34px;color:#ffd700;margin:0 0 8px}
+.sub{font-size:19px;color:#c6d0e2}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;padding:12px
+}
+.story{
+ position:relative;
+ aspect-ratio:1/1.35;
+ overflow:hidden;
+ border-radius:16px;
+ border:2px solid #263c65;
+ background:#101f3d
+}
+.story img,.story video{
+ width:100%;height:100%;
+ object-fit:cover
+}
+.story-name{
+ position:absolute;
+ left:10px;right:10px;bottom:10px;
+ padding:9px;
+ border-radius:10px;
+ background:#0009;
+ font-size:18px;
+ font-weight:900
+}
+.empty{
+ grid-column:1/-1;
+ padding:55px 15px;
+ text-align:center;
+ color:#b4bfd3;
+ font-size:22px;font-weight:800
+}
+.bottom{
+ position:fixed;bottom:0;left:0;right:0;
+ height:78px;display:grid;
+ grid-template-columns:repeat(3,1fr);
+ background:#071b49;border-top:2px solid #d4af37
+}
+.bottom div{
+ display:flex;align-items:center;
+ justify-content:center;
+ font-size:19px;font-weight:900
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">AYNA BOOK</div>
+ <button onclick="location.href='profile.html'">← Profile</button>
+</header>
+
+<section class="hero">
+ <h1>⭕ Stories</h1>
+ <div class="sub">24-hour stories</div>
+</section>
+
+<main id="stories" class="grid">
+ <div class="empty">Loading stories...</div>
+</main>
+
+<nav class="bottom">
+ <div onclick="location.href='home.html'">🏠 Home</div>
+ <div onclick="location.href='profile.html'">👤 Profile</div>
+ <div onclick="location.href='messenger.html'">💬 Messenger</div>
+</nav>
+
+<script type="module">
+import {auth,database} from "./firebase-init.js";
+
+import {onAuthStateChanged}
+from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {ref,get}
+from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+const root=document.getElementById("stories");
+
+onAuthStateChanged(auth,async user=>{
+
+ if(!user){
+  location.replace("login.html");
+  return;
+ }
+
+ const params=new URLSearchParams(location.search);
+ const uid=params.get("uid")||user.uid;
+
+ try{
+
+  const snap=await get(
+   ref(database,"stories")
+  );
+
+  root.innerHTML="";
+
+  const stories=[];
+
+  if(snap.exists()){
+
+   snap.forEach(item=>{
+
+    const s=item.val()||{};
+
+    const owner=
+     s.uid||s.userId||s.authorUid;
+
+    if(owner!==uid)return;
+
+    stories.push(s);
+
+   });
+
+  }
+
+  if(!stories.length){
+
+   root.innerHTML=
+    `<div class="empty">
+      ⭕ No active stories.
+     </div>`;
+
+   return;
+  }
+
+
+  stories.forEach(s=>{
+
+   const card=document.createElement("div");
+   card.className="story";
+
+
+   const url=
+    s.imageUrl||
+    s.photoURL||
+    s.videoUrl||
+    s.mediaUrl||
+    "";
+
+
+   if(
+    s.videoUrl||
+    s.mediaType==="video"
+   ){
+
+    const video=document.createElement("video");
+
+    video.src=url;
+    video.controls=true;
+    video.playsInline=true;
+
+    card.appendChild(video);
+
+   }else{
+
+    const img=document.createElement("img");
+
+    img.src=url;
+    img.alt="AYNA BOOK Story";
+
+    card.appendChild(img);
+
+   }
+
+
+   const name=document.createElement("div");
+
+   name.className="story-name";
+
+   name.textContent=
+    s.authorName||
+    s.fullName||
+    "AYNA BOOK";
+
+   card.appendChild(name);
+
+   root.appendChild(card);
+
+  });
+
+
+ }catch(error){
+
+  console.error(error);
+
+  root.innerHTML=
+   `<div class="empty">
+     ⚠️ Stories could not be loaded.
+    </div>`;
+
+ }
+
+});
+</script>
+
+</body>
+</html>
+
+৬. "memories.html"
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b49">
+<title>AYNA BOOK — Memories</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#050914;color:#fff;
+ font-family:Arial,sans-serif;padding-bottom:90px
+}
+header{
+ height:72px;padding:0 14px;
+ display:flex;align-items:center;
+ justify-content:space-between;
+ background:#071b49;border-bottom:2px solid #d4af37
+}
+.logo{font-size:27px;font-weight:900;color:#ffd700}
+button{
+ background:#102b62;color:#fff;
+ border:1px solid #d4af37;border-radius:12px;
+ padding:13px 18px;font-size:19px;font-weight:900
+}
+.hero{
+ padding:25px 16px;
+ background:linear-gradient(135deg,#123d82,#07142e)
+}
+h1{font-size:34px;color:#ffd700;margin:0 0 8px}
+.sub{font-size:19px;color:#c6d0e2}
+.card{
+ margin:12px;
+ padding:20px;
+ border-radius:16px;
+ background:#0e1e3c;
+ border:1px solid #263c65
+}
+.date{
+ color:#ffd700;
+ font-size:24px;
+ font-weight:900;
+ margin-bottom:10px
+}
+.text{
+ font-size:21px;
+ line-height:1.45
+}
+.media{
+ width:100%;
+ aspect-ratio:1/1;
+ object-fit:cover;
+ border-radius:13px;
+ margin-top:14px;
+ background:#000
+}
+.empty{
+ padding:55px 15px;
+ text-align:center;
+ color:#b4bfd3;
+ font-size:22px;font-weight:800
+}
+.bottom{
+ position:fixed;bottom:0;left:0;right:0;
+ height:78px;display:grid;
+ grid-template-columns:repeat(3,1fr);
+ background:#071b49;border-top:2px solid #d4af37
+}
+.bottom div{
+ display:flex;align-items:center;
+ justify-content:center;
+ font-size:19px;font-weight:900
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">AYNA BOOK</div>
+ <button onclick="location.href='profile.html'">← Profile</button>
+</header>
+
+<section class="hero">
+ <h1>🕘 Memories</h1>
+ <div class="sub">Your previous moments and memories</div>
+</section>
+
+<main id="memories">
+ <div class="empty">Loading memories...</div>
+</main>
+
+<nav class="bottom">
+ <div onclick="location.href='home.html'">🏠 Home</div>
+ <div onclick="location.href='profile.html'">👤 Profile</div>
+ <div onclick="location.href='home.html'">📰 Feed</div>
+</nav>
+
+<script type="module">
+
+import {auth,database}
+from "./firebase-init.js";
+
+import {onAuthStateChanged}
+from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {ref,get}
+from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+const root=document.getElementById("memories");
+
+onAuthStateChanged(auth,async user=>{
+
+ if(!user){
+  location.replace("login.html");
+  return;
+ }
+
+ const params=new URLSearchParams(location.search);
+ const uid=params.get("uid")||user.uid;
+
+ try{
+
+  const snap=await get(
+   ref(database,"posts")
+  );
+
+  const memories=[];
+
+  if(snap.exists()){
+
+   snap.forEach(item=>{
+
+    const p=item.val()||{};
+
+    const owner=
+     p.uid||p.userId||p.authorUid;
+
+    if(owner!==uid)return;
+
+    memories.push({
+     id:item.key,
+     ...p
+    });
+
+   });
+
+  }
+
+
+  memories.sort(
+   (a,b)=>
+    Number(b.createdAt||0)-
+    Number(a.createdAt||0)
+  );
+
+
+  root.innerHTML="";
+
+
+  if(!memories.length){
+
+   root.innerHTML=
+    `<div class="empty">
+      🕘 No memories available yet.
+     </div>`;
+
+   return;
+  }
+
+
+  memories.slice(0,50).forEach(p=>{
+
+   const card=document.createElement("article");
+
+   card.className="card";
+
+
+   const date=document.createElement("div");
+
+   date.className="date";
+
+   date.textContent=
+    p.createdAt
+    ? new Date(
+       Number(p.createdAt)
+      ).toLocaleString()
+    : "AYNA BOOK Memory";
+
+
+   const text=document.createElement("div");
+
+   text.className="text";
+
+   text.textContent=
+    p.text||
+    p.caption||
+    p.message||
+    "AYNA BOOK memory";
+
+
+   card.appendChild(date);
+   card.appendChild(text);
+
+
+   const image=
+    p.imageUrl||
+    p.photoURL||
+    p.image;
+
+
+   if(image){
+
+    const img=document.createElement("img");
+
+    img.className="media";
+    img.src=image;
+    img.alt="Memory";
+
+    card.appendChild(img);
+
+   }
+
+
+   root.appendChild(card);
+
+  });
+
+
+ }catch(error){
+
+  console.error(error);
+
+  root.innerHTML=
+   `<div class="empty">
+     ⚠️ Memories could not be loaded.
+    </div>`;
+
+ }
+
+});
+
+</script>
+
+</body>
+</html>
