@@ -1,0 +1,1695 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=yes">
+<meta name="theme-color" content="#050914">
+<title>AYNA BOOK — Reels</title>
+
+<style>
+:root{
+  --bg:#050914;
+  --navy:#071b49;
+  --navy2:#0b255b;
+  --gold:#ffd700;
+  --gold2:#d4af37;
+  --white:#fff;
+  --muted:#b8c2d8;
+  --line:#33476f;
+  --red:#ff3655;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,
+body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+body{
+  background:#000;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+/* TOP BAR */
+
+.topbar{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  height:78px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:10px 14px;
+
+  background:linear-gradient(
+    180deg,
+    rgba(4,12,30,.98),
+    rgba(4,12,30,.70),
+    transparent
+  );
+}
+
+.brand{
+  color:var(--gold);
+  font-size:30px;
+  font-weight:900;
+  text-shadow:0 2px 10px #000;
+}
+
+.top-actions{
+  display:flex;
+  gap:8px;
+}
+
+.top-btn{
+  min-width:56px;
+  min-height:56px;
+
+  border:2px solid var(--gold2);
+  border-radius:15px;
+
+  background:rgba(7,27,73,.88);
+  color:#fff;
+
+  font-size:28px;
+  font-weight:900;
+}
+
+/* REELS */
+
+#reelsContainer{
+  width:100%;
+  height:100vh;
+  overflow-y:auto;
+
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+
+  scrollbar-width:none;
+}
+
+#reelsContainer::-webkit-scrollbar{
+  display:none;
+}
+
+.reel{
+  position:relative;
+
+  width:100%;
+  height:100vh;
+
+  overflow:hidden;
+
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #17294c 0%,
+      #07101f 50%,
+      #000 100%
+    );
+}
+
+.reel video{
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+
+  background:#000;
+}
+
+.reel::after{
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,.35),
+      transparent 25%,
+      transparent 55%,
+      rgba(0,0,0,.85)
+    );
+}
+
+/* INFO */
+
+.reel-info{
+  position:absolute;
+
+  left:18px;
+  right:95px;
+  bottom:92px;
+
+  z-index:10;
+}
+
+.author-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.author-avatar{
+  width:58px;
+  height:58px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+  border:3px solid var(--gold);
+}
+
+.author-name{
+  font-size:25px;
+  font-weight:900;
+
+  text-shadow:0 2px 8px #000;
+}
+
+.follow-btn{
+  margin-left:8px;
+
+  min-height:48px;
+
+  padding:8px 15px;
+
+  border:2px solid var(--gold);
+  border-radius:13px;
+
+  background:#071b49;
+  color:#fff;
+
+  font-size:19px;
+  font-weight:900;
+}
+
+.reel-caption{
+  margin-top:12px;
+
+  font-size:23px;
+  font-weight:700;
+
+  line-height:1.35;
+
+  text-shadow:0 2px 8px #000;
+
+  word-break:break-word;
+}
+
+.reel-music{
+  margin-top:10px;
+
+  font-size:18px;
+  color:#e8edf7;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* ACTIONS */
+
+.reel-actions{
+  position:absolute;
+
+  right:12px;
+  bottom:85px;
+
+  z-index:20;
+
+  width:76px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  gap:14px;
+}
+
+.action{
+  border:0;
+  background:transparent;
+  color:#fff;
+
+  width:72px;
+  min-height:70px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  font-size:17px;
+  font-weight:900;
+
+  text-shadow:0 2px 8px #000;
+}
+
+.action-icon{
+  width:60px;
+  height:60px;
+
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:rgba(4,12,30,.68);
+  border:2px solid rgba(255,255,255,.45);
+
+  font-size:31px;
+
+  margin-bottom:4px;
+}
+
+.action.active .action-icon{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+
+.action.like.active .action-icon{
+  color:var(--red);
+  border-color:var(--red);
+}
+
+.action-count{
+  font-size:17px;
+}
+
+/* CONTROLS */
+
+.video-controls{
+  position:absolute;
+
+  left:16px;
+  right:16px;
+  bottom:18px;
+
+  z-index:30;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.control-btn{
+  width:58px;
+  height:58px;
+
+  border-radius:50%;
+
+  border:2px solid rgba(255,255,255,.65);
+
+  background:rgba(0,0,0,.55);
+
+  color:white;
+
+  font-size:27px;
+}
+
+/* LOADING */
+
+#loading{
+  position:fixed;
+
+  inset:0;
+
+  z-index:200;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#050914;
+
+  color:#fff;
+
+  text-align:center;
+
+  font-size:28px;
+  font-weight:900;
+}
+
+.spinner{
+  width:55px;
+  height:55px;
+
+  border:5px solid #31466e;
+  border-top-color:var(--gold);
+
+  border-radius:50%;
+
+  animation:spin 1s linear infinite;
+
+  margin:0 auto 18px;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* EMPTY */
+
+#empty{
+  position:fixed;
+
+  inset:0;
+
+  z-index:150;
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+
+  background:#050914;
+
+  padding:30px;
+}
+
+.empty-box{
+  max-width:600px;
+}
+
+.empty-icon{
+  font-size:80px;
+  margin-bottom:20px;
+}
+
+.empty-title{
+  color:var(--gold);
+
+  font-size:34px;
+  font-weight:900;
+
+  margin-bottom:12px;
+}
+
+.empty-text{
+  color:var(--muted);
+
+  font-size:22px;
+  line-height:1.5;
+}
+
+/* COMMENTS */
+
+#commentPanel{
+  position:fixed;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  z-index:500;
+
+  height:min(70vh,650px);
+
+  background:#07142d;
+
+  border-top:2px solid var(--gold);
+
+  border-radius:25px 25px 0 0;
+
+  transform:translateY(105%);
+
+  transition:.3s ease;
+
+  display:flex;
+  flex-direction:column;
+}
+
+#commentPanel.open{
+  transform:translateY(0);
+}
+
+.comment-head{
+  min-height:70px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:12px 18px;
+
+  border-bottom:1px solid var(--line);
+}
+
+.comment-title{
+  color:var(--gold);
+  font-size:25px;
+  font-weight:900;
+}
+
+.close-comments{
+  width:52px;
+  height:52px;
+
+  border:1px solid var(--gold2);
+  border-radius:14px;
+
+  background:#0b255b;
+  color:#fff;
+
+  font-size:28px;
+}
+
+#commentsList{
+  flex:1;
+
+  overflow-y:auto;
+
+  padding:15px;
+}
+
+.comment-item{
+  padding:14px;
+
+  margin-bottom:10px;
+
+  border:1px solid var(--line);
+  border-radius:15px;
+
+  background:#0b1b38;
+}
+
+.comment-user{
+  color:var(--gold);
+  font-weight:900;
+  font-size:19px;
+}
+
+.comment-text{
+  margin-top:5px;
+  font-size:19px;
+  line-height:1.4;
+}
+
+.comment-form{
+  display:flex;
+  gap:8px;
+
+  padding:12px;
+
+  border-top:1px solid var(--line);
+}
+
+.comment-form input{
+  flex:1;
+
+  min-width:0;
+  min-height:58px;
+
+  border:1px solid var(--line);
+  border-radius:14px;
+
+  background:#020812;
+  color:#fff;
+
+  padding:10px 14px;
+
+  font-size:19px;
+}
+
+.comment-form button{
+  min-width:105px;
+
+  border:1px solid var(--gold2);
+  border-radius:14px;
+
+  background:#ffd700;
+  color:#050914;
+
+  font-size:19px;
+  font-weight:900;
+}
+
+/* TOAST */
+
+#toast{
+  position:fixed;
+
+  left:50%;
+  bottom:95px;
+
+  z-index:800;
+
+  transform:translate(-50%,20px);
+
+  max-width:90%;
+
+  padding:14px 20px;
+
+  background:#101f3d;
+
+  border:2px solid var(--gold2);
+
+  border-radius:15px;
+
+  color:#fff;
+
+  font-size:19px;
+  font-weight:700;
+
+  text-align:center;
+
+  opacity:0;
+  pointer-events:none;
+
+  transition:.25s;
+}
+
+#toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+  .brand{
+    font-size:26px;
+  }
+
+  .top-btn{
+    min-width:52px;
+    min-height:52px;
+  }
+
+  .reel-info{
+    left:13px;
+    right:82px;
+    bottom:82px;
+  }
+
+  .author-name{
+    font-size:22px;
+  }
+
+  .reel-caption{
+    font-size:21px;
+  }
+
+  .reel-actions{
+    right:5px;
+    width:70px;
+    bottom:78px;
+    gap:10px;
+  }
+
+  .action{
+    width:66px;
+    min-height:65px;
+  }
+
+  .action-icon{
+    width:54px;
+    height:54px;
+    font-size:27px;
+  }
+
+  .action-count{
+    font-size:15px;
+  }
+}
+
+@media(max-width:380px){
+
+  .reel-info{
+    right:75px;
+  }
+
+  .author-avatar{
+    width:50px;
+    height:50px;
+  }
+
+  .follow-btn{
+    font-size:16px;
+    padding:6px 10px;
+  }
+
+  .reel-caption{
+    font-size:19px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <div class="brand">
+    AYNA BOOK
+  </div>
+
+  <div class="top-actions">
+
+    <button
+      class="top-btn"
+      id="homeBtn"
+      aria-label="Home">
+      ⌂
+    </button>
+
+    <button
+      class="top-btn"
+      id="createBtn"
+      aria-label="Create Reel">
+      ＋
+    </button>
+
+  </div>
+
+</header>
+
+
+<div id="loading">
+
+  <div>
+
+    <div class="spinner"></div>
+
+    <div>
+      Reels Loading...
+    </div>
+
+  </div>
+
+</div>
+
+
+<div id="empty">
+
+  <div class="empty-box">
+
+    <div class="empty-icon">
+      🎬
+    </div>
+
+    <div class="empty-title">
+      No Reels Yet
+    </div>
+
+    <div class="empty-text">
+      AYNA BOOK Reels will appear here.
+      Create your first short video from the
+      ＋ button.
+    </div>
+
+  </div>
+
+</div>
+
+
+<main id="reelsContainer"></main>
+
+
+<section id="commentPanel">
+
+  <div class="comment-head">
+
+    <div class="comment-title">
+      💬 Comments
+    </div>
+
+    <button
+      class="close-comments"
+      id="closeComments">
+      ×
+    </button>
+
+  </div>
+
+  <div id="commentsList"></div>
+
+  <form
+    class="comment-form"
+    id="commentForm">
+
+    <input
+      id="commentInput"
+      type="text"
+      maxlength="500"
+      placeholder="Write a comment...">
+
+    <button type="submit">
+      Send
+    </button>
+
+  </form>
+
+</section>
+
+
+<div id="toast"></div>
+
+
+<script type="module" src="./firebase-init.js"></script>
+<script type="module" src="./auth-guard.js"></script>
+
+<script type="module">
+
+import { auth, database } from "./firebase-init.js";
+
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {
+  ref,
+  query,
+  orderByChild,
+  limitToLast,
+  onValue,
+  push,
+  set,
+  get
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+
+let currentUser = null;
+let reels = [];
+let activeReelId = null;
+let observer = null;
+
+
+const $ = id => document.getElementById(id);
+
+
+function toast(message){
+
+  const box = $("toast");
+
+  box.textContent = message;
+  box.classList.add("show");
+
+  clearTimeout(window.__reelToast);
+
+  window.__reelToast = setTimeout(() => {
+    box.classList.remove("show");
+  },2800);
+}
+
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function avatar(name){
+
+  return "https://ui-avatars.com/api/?" +
+    "name=" + encodeURIComponent(name || "AYNA User") +
+    "&background=071b49&color=FFD700&size=300";
+}
+
+
+function formatCount(number){
+
+  const n = Number(number || 0);
+
+  if(n >= 1000000){
+    return (n / 1000000).toFixed(1) + "M";
+  }
+
+  if(n >= 1000){
+    return (n / 1000).toFixed(1) + "K";
+  }
+
+  return String(n);
+}
+
+
+onAuthStateChanged(
+  auth,
+  user => {
+
+    if(!user){
+      window.location.replace("./login.html");
+      return;
+    }
+
+    currentUser = user;
+    loadReels();
+  }
+);
+
+
+function loadReels(){
+
+  const reelsQuery = query(
+    ref(database,"reels"),
+    orderByChild("createdAt"),
+    limitToLast(50)
+  );
+
+  onValue(
+    reelsQuery,
+    snapshot => {
+
+      reels = [];
+
+      snapshot.forEach(child => {
+
+        const data = child.val() || {};
+
+        reels.push({
+          id:child.key,
+          ...data
+        });
+
+      });
+
+      reels.reverse();
+
+      renderReels();
+
+      $("loading").style.display = "none";
+
+    },
+    error => {
+
+      console.error("AYNA REELS LOAD ERROR:",error);
+
+      $("loading").style.display = "none";
+
+      showEmpty("Reels could not be loaded.");
+    }
+  );
+}
+
+
+function renderReels(){
+
+  const container = $("reelsContainer");
+
+  container.innerHTML = "";
+
+  if(!reels.length){
+
+    showEmpty();
+
+    return;
+  }
+
+  $("empty").style.display = "none";
+
+  reels.forEach(reel => {
+    container.appendChild(createReelElement(reel));
+  });
+
+  setupVideoObserver();
+}
+
+
+function showEmpty(message){
+
+  $("empty").style.display = "flex";
+
+  if(message){
+
+    const text =
+      $("empty").querySelector(".empty-text");
+
+    if(text){
+      text.textContent = message;
+    }
+  }
+}
+
+
+function createReelElement(reel){
+
+  const article = document.createElement("article");
+
+  article.className = "reel";
+  article.dataset.reelId = reel.id;
+
+  const authorName =
+    reel.authorName ||
+    reel.fullName ||
+    "AYNA User";
+
+  const authorAvatar =
+    reel.authorPhoto ||
+    reel.photoURL ||
+    avatar(authorName);
+
+  const caption =
+    reel.caption ||
+    reel.text ||
+    "";
+
+  const videoUrl =
+    reel.videoUrl ||
+    reel.mediaUrl ||
+    reel.url ||
+    "";
+
+  const likes =
+    Number(reel.likesCount || reel.likes || 0);
+
+  const comments =
+    Number(reel.commentsCount || reel.comments || 0);
+
+  const shares =
+    Number(reel.sharesCount || reel.shares || 0);
+
+  const music =
+    reel.music ||
+    "AYNA BOOK Original Audio";
+
+
+  article.innerHTML = `
+
+    <video
+      class="reel-video"
+      src="${escapeHtml(videoUrl)}"
+      playsinline
+      loop
+      preload="metadata"
+      muted>
+    </video>
+
+    <div class="reel-info">
+
+      <div class="author-row">
+
+        <img
+          class="author-avatar"
+          src="${escapeHtml(authorAvatar)}"
+          alt="">
+
+        <div>
+
+          <div class="author-name">
+            ${escapeHtml(authorName)}
+          </div>
+
+        </div>
+
+        <button
+          class="follow-btn"
+          data-action="follow">
+          Follow
+        </button>
+
+      </div>
+
+      ${
+        caption
+          ? `
+            <div class="reel-caption">
+              ${escapeHtml(caption)}
+            </div>
+          `
+          : ""
+      }
+
+      <div class="reel-music">
+        🎵 ${escapeHtml(music)}
+      </div>
+
+    </div>
+
+
+    <div class="reel-actions">
+
+      <button
+        class="action like"
+        data-action="like">
+
+        <span class="action-icon">♥</span>
+
+        <span class="action-count">
+          ${formatCount(likes)}
+        </span>
+
+      </button>
+
+
+      <button
+        class="action"
+        data-action="comment">
+
+        <span class="action-icon">💬</span>
+
+        <span class="action-count">
+          ${formatCount(comments)}
+        </span>
+
+      </button>
+
+
+      <button
+        class="action"
+        data-action="share">
+
+        <span class="action-icon">↗</span>
+
+        <span class="action-count">
+          ${formatCount(shares)}
+        </span>
+
+      </button>
+
+
+      <button
+        class="action"
+        data-action="save">
+
+        <span class="action-icon">🔖</span>
+
+        <span class="action-count">
+          Save
+        </span>
+
+      </button>
+
+
+      <button
+        class="action"
+        data-action="sound">
+
+        <span class="action-icon">🔇</span>
+
+        <span class="action-count">
+          Sound
+        </span>
+
+      </button>
+
+    </div>
+
+
+    <div class="video-controls">
+
+      <button
+        class="control-btn"
+        data-action="play">
+        ▶
+      </button>
+
+      <button
+        class="control-btn"
+        data-action="fullscreen">
+        ⛶
+      </button>
+
+    </div>
+  `;
+
+
+  article
+    .querySelector('[data-action="like"]')
+    .addEventListener("click",() => {
+
+      toggleLike(reel,article);
+
+    });
+
+
+  article
+    .querySelector('[data-action="comment"]')
+    .addEventListener("click",() => {
+
+      openComments(reel.id);
+
+    });
+
+
+  article
+    .querySelector('[data-action="share"]')
+    .addEventListener("click",() => {
+
+      shareReel(reel);
+
+    });
+
+
+  article
+    .querySelector('[data-action="save"]')
+    .addEventListener("click",event => {
+
+      event.currentTarget.classList.toggle("active");
+
+      toast("Reel saved.");
+
+    });
+
+
+  article
+    .querySelector('[data-action="sound"]')
+    .addEventListener("click",event => {
+
+      const video =
+        article.querySelector("video");
+
+      video.muted = !video.muted;
+
+      event.currentTarget
+        .querySelector(".action-icon")
+        .textContent =
+          video.muted ? "🔇" : "🔊";
+
+    });
+
+
+  article
+    .querySelector('[data-action="play"]')
+    .addEventListener("click",() => {
+
+      toggleVideo(
+        article.querySelector("video")
+      );
+
+    });
+
+
+  article
+    .querySelector('[data-action="fullscreen"]')
+    .addEventListener("click",() => {
+
+      const video =
+        article.querySelector("video");
+
+      if(video.requestFullscreen){
+        video.requestFullscreen();
+      }else if(video.webkitEnterFullscreen){
+        video.webkitEnterFullscreen();
+      }
+
+    });
+
+
+  article
+    .querySelector('[data-action="follow"]')
+    .addEventListener("click",event => {
+
+      const button = event.currentTarget;
+
+      if(button.textContent.trim() === "Follow"){
+
+        button.textContent = "Following";
+        toast("Following user.");
+
+      }else{
+
+        button.textContent = "Follow";
+        toast("Unfollowed.");
+
+      }
+
+    });
+
+
+  let lastTap = 0;
+
+  article.addEventListener("click",event => {
+
+    if(event.target.closest("button")){
+      return;
+    }
+
+    const now = Date.now();
+
+    if(now - lastTap < 350){
+      toggleLike(reel,article);
+    }
+
+    lastTap = now;
+
+  });
+
+
+  return article;
+}
+
+
+async function toggleVideo(video){
+
+  if(video.paused){
+
+    try{
+
+      await video.play();
+
+    }catch(error){
+
+      console.warn(error);
+
+      toast("Tap the video again to play.");
+
+    }
+
+  }else{
+
+    video.pause();
+
+  }
+}
+
+
+function setupVideoObserver(){
+
+  if(observer){
+    observer.disconnect();
+  }
+
+  observer =
+    new IntersectionObserver(
+      entries => {
+
+        entries.forEach(entry => {
+
+          const video =
+            entry.target.querySelector("video");
+
+          if(!video) return;
+
+          if(entry.isIntersecting){
+
+            pauseAllExcept(video);
+
+            video.muted = true;
+
+            video.play().catch(() => {});
+
+          }else{
+
+            video.pause();
+
+          }
+
+        });
+
+      },
+      {
+        threshold:.75
+      }
+    );
+
+
+  document
+    .querySelectorAll(".reel")
+    .forEach(reel => observer.observe(reel));
+}
+
+
+function pauseAllExcept(activeVideo){
+
+  document
+    .querySelectorAll(".reel-video")
+    .forEach(video => {
+
+      if(video !== activeVideo){
+        video.pause();
+      }
+
+    });
+}
+
+
+async function toggleLike(reel,article){
+
+  if(!currentUser) return;
+
+  const button =
+    article.querySelector('[data-action="like"]');
+
+  const count =
+    button.querySelector(".action-count");
+
+  const liked =
+    button.classList.contains("active");
+
+  let newCount =
+    Number(
+      count.dataset.raw ||
+      reel.likesCount ||
+      reel.likes ||
+      0
+    );
+
+  if(liked){
+    newCount = Math.max(0,newCount - 1);
+  }else{
+    newCount += 1;
+  }
+
+  count.dataset.raw = newCount;
+
+  count.textContent =
+    formatCount(newCount);
+
+  button.classList.toggle(
+    "active",
+    !liked
+  );
+
+
+  try{
+
+    await set(
+      ref(
+        database,
+        `reels/${reel.id}/likesCount`
+      ),
+      newCount
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast("Like could not be saved.");
+
+  }
+}
+
+
+function openComments(reelId){
+
+  activeReelId = reelId;
+
+  $("commentPanel")
+    .classList.add("open");
+
+  loadComments(reelId);
+}
+
+
+function closeComments(){
+
+  $("commentPanel")
+    .classList.remove("open");
+
+  activeReelId = null;
+}
+
+
+async function loadComments(reelId){
+
+  const list =
+    $("commentsList");
+
+  list.innerHTML = `
+    <div style="
+      padding:20px;
+      text-align:center;
+      color:#b8c2d8;
+      font-size:20px;">
+      Comments loading...
+    </div>
+  `;
+
+
+  try{
+
+    const snapshot =
+      await get(
+        ref(
+          database,
+          `reelComments/${reelId}`
+        )
+      );
+
+
+    list.innerHTML = "";
+
+
+    if(!snapshot.exists()){
+
+      list.innerHTML = `
+        <div style="
+          padding:30px;
+          text-align:center;
+          color:#b8c2d8;
+          font-size:20px;">
+          No comments yet.<br>
+          Be the first to comment.
+        </div>
+      `;
+
+      return;
+    }
+
+
+    snapshot.forEach(child => {
+
+      const comment =
+        child.val() || {};
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "comment-item";
+
+      div.innerHTML = `
+
+        <div class="comment-user">
+          ${escapeHtml(
+            comment.userName ||
+            "AYNA User"
+          )}
+        </div>
+
+        <div class="comment-text">
+          ${escapeHtml(
+            comment.text || ""
+          )}
+        </div>
+
+      `;
+
+      list.appendChild(div);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+    list.innerHTML = `
+      <div style="
+        padding:30px;
+        text-align:center;
+        color:#b8c2d8;">
+        Comments could not be loaded.
+      </div>
+    `;
+  }
+}
+
+
+$("commentForm").addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+    if(!currentUser || !activeReelId){
+      return;
+    }
+
+    const input =
+      $("commentInput");
+
+    const text =
+      input.value.trim();
+
+    if(!text){
+      return;
+    }
+
+
+    try{
+
+      const commentRef =
+        push(
+          ref(
+            database,
+            `reelComments/${activeReelId}`
+          )
+        );
+
+
+      await set(
+        commentRef,
+        {
+          uid:currentUser.uid,
+
+          userName:
+            currentUser.displayName ||
+            currentUser.email ||
+            "AYNA User",
+
+          text:text,
+
+          createdAt:Date.now()
+        }
+      );
+
+
+      input.value = "";
+
+      toast("Comment added.");
+
+      loadComments(activeReelId);
+
+    }catch(error){
+
+      console.error(error);
+
+      toast("Comment could not be saved.");
+
+    }
+
+  }
+);
+
+
+async function shareReel(reel){
+
+  const url =
+    `${window.location.origin}${window.location.pathname}#${encodeURIComponent(reel.id)}`;
+
+  const text =
+    reel.caption ||
+    "Watch this Reel on AYNA BOOK.";
+
+
+  try{
+
+    if(navigator.share){
+
+      await navigator.share({
+        title:"AYNA BOOK Reel",
+        text:text,
+        url:url
+      });
+
+    }else{
+
+      await navigator.clipboard.writeText(url);
+
+      toast("Reel link copied.");
+
+    }
+
+  }catch(error){
+
+    console.log(
+      "Share cancelled:",
+      error
+    );
+
+  }
+}
+
+
+$("homeBtn").addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "./home.html";
+
+  }
+);
+
+
+$("createBtn").addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "./media.html";
+
+  }
+);
+
+
+$("closeComments").addEventListener(
+  "click",
+  closeComments
+);
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(event.key === "Escape"){
+      closeComments();
+    }
+
+  }
+);
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    const container =
+      $("reelsContainer");
+
+    if(event.key === "ArrowDown"){
+
+      container.scrollBy({
+        top:window.innerHeight,
+        behavior:"smooth"
+      });
+
+    }
+
+    if(event.key === "ArrowUp"){
+
+      container.scrollBy({
+        top:-window.innerHeight,
+        behavior:"sm
+</body>
+</html>
