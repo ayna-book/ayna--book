@@ -1,213 +1,1054 @@
-// login.js — AYNA BOOK Login & Account Lookup Logic Module
+// ============================================================
+// AYNA BOOK — login.js
+// Robust Firebase Login + Account Lookup
+// Firebase Web SDK 13.4.0
+// ============================================================
 
-import { AynaVoiceSignal } from "./ayna-voice-signal.js";
-import { auth, database } from "./firebase-init.js";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+import {
+  ref,
+  get,
+  child
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
+
+import {
+  auth,
+  database
+} from "./firebase-init.js";
+
+
+// ============================================================
+// BASIC HELPERS
+// ============================================================
 
 const $ = id => document.getElementById(id);
 
-export function initLoginPage() {
-  // হেডার ও সিগন্যাল বাটন
-  $("speakClockBtn")?.addEventListener("click", () => AynaVoiceSignal.speakCurrentTime());
-  $("toggleClockBtn")?.addEventListener("click", () => AynaVoiceSignal.toggleClock("toggleClockBtn"));
-  $("repeatSignalBtn")?.addEventListener("click", () => AynaVoiceSignal.repeatLast());
+let lastSignal = "";
 
-  // আলাদা রেজিস্ট্রেশন বাটন
-  $("registerPageBtn")?.addEventListener("click", () => {
-    window.location.href = "register.html";
-  });
 
-  // লগইন পাসওয়ার্ড দেখাও / লুকাও বাটন
-  bindPasswordToggle(
-    "toggleLoginPassBtn",
-    "loginPassword",
-    "👁️ পাসওয়ার্ড দেখাও",
-    "🙈 পাসওয়ার্ড লুকাও"
+// ============================================================
+// SAFE VOICE
+// Voice module থাকলেও Login তার উপর নির্ভর করবে না
+// ============================================================
+
+let AynaVoiceSignal = null;
+
+try {
+
+  const voice =
+    await import("./ayna-voice-signal.js");
+
+  AynaVoiceSignal =
+    voice.AynaVoiceSignal || null;
+
+} catch (error) {
+
+  console.warn(
+    "AYNA Voice module unavailable:",
+    error
   );
 
-  // অ্যাকাউন্ট লুকআপ (AYNA ID বা জিমেইল)
-  $("lookupAccountBtn")?.addEventListener("click", handleAccountLookup);
-
-  // লগইন বাটন সাবমিট
-  $("loginSubmitBtn")?.addEventListener("click", handleLoginSubmit);
 }
 
-function bindPasswordToggle(btnId, inputId, showText, hideText) {
-  $(btnId)?.addEventListener("click", () => {
-    const input = $(inputId);
-    const btn = $(btnId);
-    if (!input || !btn) return;
-    const isHidden = input.type === "password";
-    input.type = isHidden ? "text" : "password";
-    btn.textContent = isHidden ? hideText : showText;
-  });
+
+// ============================================================
+// SAFE SPEECH
+// ============================================================
+
+function speak(text) {
+
+  lastSignal = text;
+
+  try {
+
+    if (
+      window.speechSynthesis &&
+      typeof SpeechSynthesisUtterance !== "undefined"
+    ) {
+
+      window.speechSynthesis.cancel();
+
+      const speech =
+        new SpeechSynthesisUtterance(text);
+
+      speech.lang = "bn-BD";
+      speech.rate = 0.92;
+      speech.pitch = 1;
+
+      window.speechSynthesis.speak(speech);
+
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Browser speech unavailable:",
+      error
+    );
+
+  }
+
 }
+
+
+// ============================================================
+// SIGNAL BOX
+// ============================================================
+
+function showSignal(
+  text,
+  type = "normal",
+  targetId = "loginSignalBox"
+) {
+
+  lastSignal = text;
+
+  const box =
+    $(targetId);
+
+  if (box) {
+
+    box.textContent =
+      text;
+
+    box.style.borderColor =
+      type === "error"
+        ? "#ff6675"
+        : type === "success"
+          ? "#35e08a"
+          : "#38f2ff";
+
+  }
+
+
+  // Voice module থাকলে ব্যবহার করবে
+  try {
+
+    if (
+      AynaVoiceSignal &&
+      typeof AynaVoiceSignal.success === "function" &&
+      type === "success"
+    ) {
+
+      AynaVoiceSignal.success(
+        text,
+        targetId
+      );
+
+      return;
+
+    }
+
+
+    if (
+      AynaVoiceSignal &&
+      typeof AynaVoiceSignal.error === "function" &&
+      type === "error"
+    ) {
+
+      AynaVoiceSignal.error(
+        text,
+        targetId
+      );
+
+      return;
+
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "AYNA Voice signal error:",
+      error
+    );
+
+  }
+
+
+  speak(text);
+
+}
+
+
+// ============================================================
+// HEADER CLOCK
+// ============================================================
+
+$("speakClockBtn")?.addEventListener(
+  "click",
+  () => {
+
+    const now =
+      new Date();
+
+    const time =
+      now.toLocaleTimeString(
+        "bn-BD",
+        {
+          hour: "numeric",
+          minute: "2-digit",
+          second: "2-digit"
+        }
+      );
+
+    speak(
+      "এখন সময় " + time
+    );
+
+  }
+);
+
+
+// ============================================================
+// CLOCK TOGGLE
+// ============================================================
+
+let clockEnabled = true;
+
+$("toggleClockBtn")?.addEventListener(
+  "click",
+  () => {
+
+    clockEnabled =
+      !clockEnabled;
+
+    const button =
+      $("toggleClockBtn");
+
+    if (button) {
+
+      button.textContent =
+        clockEnabled
+          ? "🔊 ঘড়ি: চালু"
+          : "🔇 ঘড়ি: বন্ধ";
+
+    }
+
+    speak(
+      clockEnabled
+        ? "ঘড়ি চালু হয়েছে।"
+        : "ঘড়ি বন্ধ হয়েছে।"
+    );
+
+  }
+);
+
+
+// ============================================================
+// REPEAT LAST SIGNAL
+// ============================================================
+
+$("repeatSignalBtn")?.addEventListener(
+  "click",
+  () => {
+
+    if (!lastSignal) {
+
+      speak(
+        "কোনো পূর্বের সিগন্যাল নেই।"
+      );
+
+      return;
+
+    }
+
+    speak(
+      lastSignal
+    );
+
+  }
+);
+
+
+// ============================================================
+// REGISTER BUTTON
+// ============================================================
+
+$("registerPageBtn")?.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "register.html";
+
+  }
+);
+
+
+// ============================================================
+// PASSWORD SHOW / HIDE
+// ============================================================
+
+function bindPasswordToggle(
+  buttonId,
+  inputId,
+  showText,
+  hideText
+) {
+
+  const button =
+    $(buttonId);
+
+  const input =
+    $(inputId);
+
+  if (!button || !input) {
+
+    console.warn(
+      "Password toggle element missing:",
+      buttonId,
+      inputId
+    );
+
+    return;
+
+  }
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      const hidden =
+        input.type === "password";
+
+      input.type =
+        hidden
+          ? "text"
+          : "password";
+
+      button.textContent =
+        hidden
+          ? hideText
+          : showText;
+
+    }
+  );
+
+}
+
+
+bindPasswordToggle(
+  "toggleLoginPassBtn",
+  "loginPassword",
+  "👁️ পাসওয়ার্ড দেখাও",
+  "🙈 পাসওয়ার্ড লুকাও"
+);
+
+
+// ============================================================
+// FIREBASE AUTH STATUS
+// ============================================================
+
+if (auth) {
+
+  onAuthStateChanged(
+    auth,
+    user => {
+
+      console.log(
+        "AYNA Firebase Auth State:",
+        user
+          ? user.email
+          : "Signed out"
+      );
+
+    }
+  );
+
+} else {
+
+  console.error(
+    "AYNA BOOK: Firebase auth is null."
+  );
+
+}
+
+
+// ============================================================
+// ACCOUNT LOOKUP
+// ============================================================
 
 async function handleAccountLookup() {
-  const query = ($("lookupAccountInput")?.value || "").trim();
+
+  const input =
+    $("lookupAccountInput");
+
+  const query =
+    (input?.value || "")
+      .trim();
+
+
   if (!query) {
-    AynaVoiceSignal.error(
-      "অ্যাকাউন্ট লুকআপের ঘরে ভুল হয়েছে। AYNA ID অথবা জিমেইল ঠিকানা লিখুন।",
-      "loginSignalBox"
+
+    showSignal(
+      "অ্যাকাউন্ট লুকআপের ঘরে ভুল হয়েছে। AYNA ID অথবা Gmail ঠিকানা লিখুন।",
+      "error"
     );
-    $("lookupAccountInput")?.focus();
+
+    input?.focus();
+
     return;
+
   }
 
-  if (query === "2026-----10000001") {
-    AynaVoiceSignal.success(
+
+  const normalizedQuery =
+    query.toLowerCase();
+
+
+  // ----------------------------------------------------------
+  // Demo / Default AYNA ID
+  // ----------------------------------------------------------
+
+  if (
+    query ===
+    "2026-----10000001"
+  ) {
+
+    showSignal(
       "অ্যাকাউন্ট লুকআপ সফল হয়েছে। AYNA ID 2026-----10000001 পাওয়া গেছে।",
-      "loginSignalBox"
+      "success"
     );
+
     return;
+
   }
+
+
+  // ----------------------------------------------------------
+  // LocalStorage account
+  // ----------------------------------------------------------
 
   try {
-    const localAcc = JSON.parse(localStorage.getItem("ayna_registered_account") || "null");
-    if (
-      localAcc &&
-      ((localAcc.aynaId && String(localAcc.aynaId).trim() === query) ||
-        (localAcc.email && String(localAcc.email).trim().toLowerCase() === query.toLowerCase()))
-    ) {
-      AynaVoiceSignal.success(
-        `অ্যাকাউন্ট পাওয়া গেছে। জিমেইল ${localAcc.email} এবং আইডি ${localAcc.aynaId || "2026-----10000001"}।`,
-        "loginSignalBox"
-      );
-      return;
-    }
-  } catch (_) {}
 
-  if (database) {
-    try {
-      const { ref, get, child } = await import(
-        "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js"
+    const localAccount =
+      JSON.parse(
+        localStorage.getItem(
+          "ayna_registered_account"
+        ) || "null"
       );
-      const snap = await get(child(ref(database), "users"));
-      if (snap.exists()) {
-        const users = Object.values(snap.val() || {});
-        const found = users.find(
-          u =>
-            (u.aynaId && String(u.aynaId).trim() === query) ||
-            (u.email && String(u.email).trim().toLowerCase() === query.toLowerCase())
+
+
+    if (localAccount) {
+
+      const localId =
+        String(
+          localAccount.aynaId || ""
+        )
+          .trim()
+          .toLowerCase();
+
+
+      const localEmail =
+        String(
+          localAccount.email || ""
+        )
+          .trim()
+          .toLowerCase();
+
+
+      if (
+        localId === normalizedQuery ||
+        localEmail === normalizedQuery
+      ) {
+
+        showSignal(
+          `অ্যাকাউন্ট পাওয়া গেছে। Gmail ${localAccount.email || "নেই"} এবং AYNA ID ${localAccount.aynaId || "নেই"}।`,
+          "success"
         );
-        if (found) {
-          AynaVoiceSignal.success(
-            `অ্যাকাউন্ট পাওয়া গেছে। সদস্য ${found.fullName || found.email || "AYNA সদস্য"}।`,
-            "loginSignalBox"
-          );
-          return;
-        }
+
+        return;
+
       }
-    } catch (_) {}
+
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Local account lookup error:",
+      error
+    );
+
   }
 
-  AynaVoiceSignal.error(
-    `অ্যাকাউন্ট লুকাপে "${query}" খুঁজে পাওয়া যায়নি। AYNA ID বা জিমেইল ঠিক আছে কি না যাচাই করুন।`,
-    "loginSignalBox"
-  );
+
+  // ----------------------------------------------------------
+  // Firebase RTDB
+  // ----------------------------------------------------------
+
+  if (!database) {
+
+    showSignal(
+      "Firebase Realtime Database সংযোগ পাওয়া যায়নি।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const usersReference =
+      child(
+        ref(database),
+        "users"
+      );
+
+
+    const snapshot =
+      await get(
+        usersReference
+      );
+
+
+    if (
+      snapshot.exists()
+    ) {
+
+      const users =
+        Object.values(
+          snapshot.val() || {}
+        );
+
+
+      const found =
+        users.find(
+          user => {
+
+            const userId =
+              String(
+                user?.aynaId || ""
+              )
+                .trim()
+                .toLowerCase();
+
+
+            const userEmail =
+              String(
+                user?.email || ""
+              )
+                .trim()
+                .toLowerCase();
+
+
+            return (
+              userId === normalizedQuery ||
+              userEmail === normalizedQuery
+            );
+
+          }
+        );
+
+
+      if (found) {
+
+        showSignal(
+          `অ্যাকাউন্ট পাওয়া গেছে। সদস্য ${found.fullName || found.email || "AYNA সদস্য"}।`,
+          "success"
+        );
+
+        return;
+
+      }
+
+    }
+
+
+    showSignal(
+      `অ্যাকাউন্ট লুকআপে "${query}" পাওয়া যায়নি। AYNA ID অথবা Gmail ঠিক আছে কি না যাচাই করুন।`,
+      "error"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "RTDB lookup error:",
+      error
+    );
+
+
+    showSignal(
+      "অ্যাকাউন্ট লুকআপ সম্পন্ন করা যায়নি। Firebase Database Rules বা connection পরীক্ষা করুন।",
+      "error"
+    );
+
+  }
+
 }
+
+
+$("lookupAccountBtn")?.addEventListener(
+  "click",
+  handleAccountLookup
+);
+
+
+// ============================================================
+// LOGIN
+// ============================================================
 
 async function handleLoginSubmit() {
-  const email = ($("loginEmail")?.value || "").trim();
-  const password = $("loginPassword")?.value || "";
+
+  const emailInput =
+    $("loginEmail");
+
+  const passwordInput =
+    $("loginPassword");
+
+  const button =
+    $("loginSubmitBtn");
+
+
+  const email =
+    (emailInput?.value || "")
+      .trim()
+      .toLowerCase();
+
+
+  const password =
+    passwordInput?.value || "";
+
+
+  // ----------------------------------------------------------
+  // EMAIL EMPTY
+  // ----------------------------------------------------------
 
   if (!email) {
-    AynaVoiceSignal.error(
-      "জিমেইল ঠিকানার ঘরে ভুল হয়েছে। জিমেইল ঘরটি খালি রয়েছে।",
-      "loginSignalBox"
+
+    showSignal(
+      "জিমেইল ঠিকানার ঘর খালি রয়েছে। আপনার Gmail লিখুন।",
+      "error"
     );
-    $("loginEmail")?.focus();
+
+    emailInput?.focus();
+
     return;
+
   }
-  if (!email.includes("@") || !email.includes(".")) {
-    AynaVoiceSignal.error(
-      "জিমেইল ঠিকানার ঘরে ভুল হয়েছে। সঠিক জিমেইল ফরম্যাট লিখুন।",
-      "loginSignalBox"
+
+
+  // ----------------------------------------------------------
+  // EMAIL FORMAT
+  // ----------------------------------------------------------
+
+  const emailPattern =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+  if (
+    !emailPattern.test(email)
+  ) {
+
+    showSignal(
+      "জিমেইল ঠিকানায় ভুল হয়েছে। সঠিক Gmail লিখুন।",
+      "error"
     );
-    $("loginEmail")?.focus();
+
+    emailInput?.focus();
+
     return;
+
   }
+
+
+  // ----------------------------------------------------------
+  // PASSWORD EMPTY
+  // ----------------------------------------------------------
+
   if (!password) {
-    AynaVoiceSignal.error(
-      "লগইন পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড ঘরটি খালি রয়েছে।",
-      "loginSignalBox"
+
+    showSignal(
+      "লগইন পাসওয়ার্ডের ঘর খালি রয়েছে।",
+      "error"
     );
-    $("loginPassword")?.focus();
+
+    passwordInput?.focus();
+
     return;
+
   }
-  if (password.length < 6) {
-    AynaVoiceSignal.error(
-      "লগইন পাসওয়ার্ডের ঘরে ভুল হয়েছে। পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।",
-      "loginSignalBox"
+
+
+  // ----------------------------------------------------------
+  // PASSWORD LENGTH
+  // ----------------------------------------------------------
+
+  if (
+    password.length < 6
+  ) {
+
+    showSignal(
+      "লগইন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।",
+      "error"
     );
-    $("loginPassword")?.focus();
+
+    passwordInput?.focus();
+
     return;
+
   }
+
+
+  // ----------------------------------------------------------
+  // FIREBASE CHECK
+  // ----------------------------------------------------------
 
   if (!auth) {
+
+    showSignal(
+      "Firebase Authentication পাওয়া যায়নি। firebase-init.js পরীক্ষা করুন।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  // ----------------------------------------------------------
+  // BUTTON LOCK
+  // ----------------------------------------------------------
+
+  if (button) {
+
+    button.disabled =
+      true;
+
+    button.textContent =
+      "⏳ লগইন হচ্ছে...";
+
+  }
+
+
+  try {
+
+    // --------------------------------------------------------
+    // REAL FIREBASE LOGIN
+    // --------------------------------------------------------
+
+    const result =
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+
+    const user =
+      result.user;
+
+
+    console.log(
+      "AYNA LOGIN SUCCESS:",
+      user.uid,
+      user.email
+    );
+
+
+    showSignal(
+      "✅ লগইন সফল হয়েছে। AYNA BOOK হোমে যাওয়া হচ্ছে।",
+      "success"
+    );
+
+
+    // --------------------------------------------------------
+    // Save safe session information
+    // --------------------------------------------------------
+
     try {
-      const localAcc = JSON.parse(localStorage.getItem("ayna_registered_account") || "null");
-      if (localAcc && String(localAcc.email || "").toLowerCase() === email.toLowerCase()) {
-        AynaVoiceSignal.success("লোকাল অ্যাকাউন্ট লগইন সফল হয়েছে। হোম পেজে যাওয়া হচ্ছে।", "loginSignalBox");
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 1200);
-        return;
-      }
+
+      sessionStorage.setItem(
+        "ayna_login_email",
+        user.email || email
+      );
+
+      sessionStorage.setItem(
+        "ayna_login_uid",
+        user.uid || ""
+      );
+
     } catch (_) {}
 
-    AynaVoiceSignal.error(
-      "ফায়ারবেস সংযোগ পাওয়া যায়নি। firebase-init.js-এ সঠিক API Key বসান বা আগে রেজিস্ট্রেশন সম্পন্ন করুন।",
-      "loginSignalBox"
-    );
-    return;
-  }
 
-  const btn = $("loginSubmitBtn");
-  try {
-    const { signInWithEmailAndPassword } = await import(
-      "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"
+    // --------------------------------------------------------
+    // GO HOME
+    // --------------------------------------------------------
+
+    setTimeout(
+      () => {
+
+        window.location.replace(
+          "index.html"
+        );
+
+      },
+      1000
     );
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = "লগইন হচ্ছে...";
+
+
+  } catch (error) {
+
+    console.error(
+      "AYNA BOOK LOGIN ERROR:",
+      error
+    );
+
+
+    const code =
+      String(
+        error?.code || ""
+      )
+        .toLowerCase();
+
+
+    // --------------------------------------------------------
+    // WRONG USER / PASSWORD
+    // --------------------------------------------------------
+
+    if (
+      code.includes(
+        "invalid-credential"
+      ) ||
+      code.includes(
+        "user-not-found"
+      ) ||
+      code.includes(
+        "wrong-password"
+      )
+    ) {
+
+      showSignal(
+        "❌ Gmail অথবা password ভুল হয়েছে। আবার সঠিক তথ্য লিখুন।",
+        "error"
+      );
+
+      passwordInput?.focus();
+
     }
 
-    await signInWithEmailAndPassword(auth, email, password);
-    AynaVoiceSignal.success("লগইন সফল হয়েছে। AYNA BOOK হোমে যাওয়া হচ্ছে।", "loginSignalBox");
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 1200);
-  } catch (err) {
-    const code = err?.code || "";
-    if (code.includes("user-not-found") || code.includes("invalid-credential")) {
-      AynaVoiceSignal.error(
-        "জিমেইল বা লগইন পাসওয়ার্ডে ভুল হয়েছে। অ্যাকাউন্ট খুঁজে পাওয়া যায়নি বা তথ্য মিলছে না।",
-        "loginSignalBox"
+
+    // --------------------------------------------------------
+    // INVALID EMAIL
+    // --------------------------------------------------------
+
+    else if (
+      code.includes(
+        "invalid-email"
+      )
+    ) {
+
+      showSignal(
+        "❌ Gmail ঠিকানার ফরম্যাট ভুল হয়েছে।",
+        "error"
       );
-      $("loginPassword")?.focus();
-    } else if (code.includes("wrong-password")) {
-      AynaVoiceSignal.error(
-        "লগইন পাসওয়ার্ডে ভুল হয়েছে। সঠিক পাসওয়ার্ড আবার লিখুন।",
-        "loginSignalBox"
-      );
-      $("loginPassword")?.focus();
-    } else if (code.includes("invalid-email")) {
-      AynaVoiceSignal.error(
-        "জিমেইল ঠিকানার বানানে ভুল হয়েছে।",
-        "loginSignalBox"
-      );
-      $("loginEmail")?.focus();
-    } else {
-      AynaVoiceSignal.error(
-        "লগইন সম্পন্ন করা যায়নি। নেটওয়ার্ক বা ফায়ারবেস সংযোগ পরীক্ষা করুন।",
-        "loginSignalBox"
-      );
+
+      emailInput?.focus();
+
     }
+
+
+    // --------------------------------------------------------
+    // TOO MANY REQUESTS
+    // --------------------------------------------------------
+
+    else if (
+      code.includes(
+        "too-many-requests"
+      )
+    ) {
+
+      showSignal(
+        "⚠️ অনেকবার Login চেষ্টা হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।",
+        "error"
+      );
+
+    }
+
+
+    // --------------------------------------------------------
+    // NETWORK
+    // --------------------------------------------------------
+
+    else if (
+      code.includes(
+        "network-request-failed"
+      )
+    ) {
+
+      showSignal(
+        "🌐 Internet connection সমস্যা হয়েছে। Internet পরীক্ষা করুন।",
+        "error"
+      );
+
+    }
+
+
+    // --------------------------------------------------------
+    // USER DISABLED
+    // --------------------------------------------------------
+
+    else if (
+      code.includes(
+        "user-disabled"
+      )
+    ) {
+
+      showSignal(
+        "🔒 এই account বর্তমানে disabled করা হয়েছে।",
+        "error"
+      );
+
+    }
+
+
+    // --------------------------------------------------------
+    // OPERATION NOT ALLOWED
+    // --------------------------------------------------------
+
+    else if (
+      code.includes(
+        "operation-not-allowed"
+      )
+    ) {
+
+      showSignal(
+        "⚠️ Firebase Console-এ Email/Password Authentication চালু করা হয়নি।",
+        "error"
+      );
+
+    }
+
+
+    // --------------------------------------------------------
+    // API KEY / CONFIG
+    // --------------------------------------------------------
+
+    else if (
+      code.includes(
+        "api-key-not-valid"
+      ) ||
+      code.includes(
+        "invalid-api-key"
+      )
+    ) {
+
+      showSignal(
+        "🔴 Firebase API Key ভুল বা Firebase configuration সঠিক নয়।",
+        "error"
+      );
+
+    }
+
+
+    // --------------------------------------------------------
+    // UNKNOWN
+    // --------------------------------------------------------
+
+    else {
+
+      showSignal(
+        "❌ Login সম্পন্ন করা যায়নি। Firebase error: " +
+        (error?.code || "unknown"),
+        "error"
+      );
+
+    }
+
+
   } finally {
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = "🚀 লগইন বাটন";
+
+    if (button) {
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "🚀 লগইন বাটন";
+
     }
+
   }
+
 }
-initLoginPage();
+
+
+// ============================================================
+// LOGIN BUTTON
+// ============================================================
+
+$("loginSubmitBtn")?.addEventListener(
+  "click",
+  handleLoginSubmit
+);
+
+
+// ============================================================
+// ENTER KEY
+// ============================================================
+
+$("loginPassword")?.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Enter"
+    ) {
+
+      event.preventDefault();
+
+      handleLoginSubmit();
+
+    }
+
+  }
+);
+
+
+// ============================================================
+// EMAIL ENTER
+// ============================================================
+
+$("loginEmail")?.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Enter"
+    ) {
+
+      event.preventDefault();
+
+      $("loginPassword")?.focus();
+
+    }
+
+  }
+);
+
+
+// ============================================================
+// STARTUP
+// ============================================================
+
+console.log(
+  "AYNA BOOK login.js loaded successfully."
+);
+
+console.log(
+  "Firebase Auth:",
+  auth ? "READY" : "NOT READY"
+);
+
+console.log(
+  "Firebase Database:",
+  database ? "READY" : "NOT READY"
+);
