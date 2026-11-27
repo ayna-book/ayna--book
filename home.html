@@ -1,595 +1,278 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="bn">
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>AYNA BOOK — Home</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AYNA BOOK — Card Hub</title>
   <style>
-
-    * {
-      box-sizing: border-box;
+    :root {
+      --bg: #050a18;
+      --navy-top: #1a3575;
+      --navy-bottom: #08122b;
+      --gold: #ffe64d;
+      --gold-bright: #fff6b3;
+      --gold-base: #8a6105;
+      --cyan: #38f2ff;
+      --font-scale: 1;
     }
-
-    html,
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 0;
-      min-height: 100%;
-    }
-
-    body {
-      background: #000;
+      background: var(--bg);
       color: #fff;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Arial, "Noto Sans Bengali", sans-serif;
+      font-size: calc(20px * var(--font-scale));
     }
-
-    .header {
-      min-height: 70px;
-      padding: 15px 20px;
-
+    .topbar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-
-      border-bottom: 1px solid #2d2d2d;
-
-      background: #050505;
-    }
-
-    .brand {
-      color: #d4af37;
-      font-size: 22px;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-
-    #logoutButton {
-      padding: 10px 18px;
-
-      border: 1px solid #d4af37;
-      border-radius: 6px;
-
-      background: transparent;
-      color: #d4af37;
-
-      font-size: 14px;
-      font-weight: bold;
-
-      cursor: pointer;
-    }
-
-    #logoutButton:hover {
-      background: #d4af37;
-      color: #000;
-    }
-
-    #logoutButton:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 700px;
-
-      margin: 0 auto;
-
-      padding: 40px 20px;
-    }
-
-    .welcome-card {
-      padding: 30px 20px;
-
-      border: 1px solid #292929;
-      border-radius: 12px;
-
-      background: #0a0a0a;
-
-      text-align: center;
-
-      box-shadow:
-        0 0 25px rgba(212, 175, 55, 0.08);
-    }
-
-    .avatar {
-      width: 80px;
-      height: 80px;
-
-      margin: 0 auto 20px;
-
-      display: flex;
       align-items: center;
-      justify-content: center;
-
-      border: 2px solid #d4af37;
-      border-radius: 50%;
-
-      background: #111;
-
-      color: #d4af37;
-
-      font-size: 28px;
-      font-weight: bold;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 3px solid var(--gold);
+      background: #08122b;
     }
-
-    h1 {
-      margin: 0 0 10px;
-
-      color: #d4af37;
-
-      font-size: 28px;
+    .grid-wrap {
+      max-width: 1280px;
+      margin: 20px auto;
+      padding: 0 16px 90px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
     }
-
-    .subtitle {
-      margin: 0 0 25px;
-
-      color: #aaa;
-
-      font-size: 14px;
+    .feature-box {
+      background: linear-gradient(155deg, var(--navy-top), var(--navy-bottom));
+      border: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 7px 0 var(--gold-base), 0 0 16px rgba(255, 230, 77, 0.35);
     }
-
-    .user-info {
-      padding: 18px;
-
-      border-top: 1px solid #222;
-
-      border-bottom: 1px solid #222;
-
-      text-align: left;
+    .box-label {
+      font-size: 0.9em;
+      font-weight: 800;
+      color: var(--gold-bright);
+      border-bottom: 2px solid rgba(255, 230, 77, 0.4);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
     }
-
-    .info-row {
-      margin: 10px 0;
-
-      color: #ccc;
-
-      font-size: 14px;
-      word-break: break-word;
+    .btn {
+      background: linear-gradient(180deg, #ffe64d, #c99314);
+      color: #050a18;
+      border: 2px solid var(--gold-bright);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-weight: 800;
+      cursor: pointer;
+      margin: 4px 2px;
     }
-
-    .label {
-      color: #d4af37;
-      font-weight: bold;
+    .btn-dark {
+      background: #050b1c;
+      color: #fff;
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 4px 2px;
     }
-
-    .message {
-      display: none;
-
-      margin-top: 20px;
-      padding: 12px;
-
-      border-radius: 6px;
-
-      font-size: 14px;
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 8px;
+      border: 2px solid var(--gold);
+      background: #050b1c;
+      color: #fff;
     }
-
-    .message.show {
-      display: block;
-    }
-
-    .error {
-      background: #180000;
-      border: 1px solid #8b0000;
-      color: #ff6b6b;
-    }
-
-    .success {
-      background: #071807;
-      border: 1px solid #2e7d32;
-      color: #7cff7c;
-    }
-
-    .loading {
-      color: #aaa;
-      text-align: center;
-      padding: 40px;
-    }
-
+    .qr-hidden { display: none; }
+    .profile-row { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
   </style>
-
 </head>
-
-
 <body>
-
-
-  <!-- ===================================================
-       HEADER
-  ==================================================== -->
-
-  <header class="header">
-
-    <div class="brand">
-      AYNA BOOK
+  <header class="topbar">
+    <div><strong>AYNA BOOK</strong> <span id="authUserBadge">যাচাই হচ্ছে...</span></div>
+    <div>
+      <button type="button" class="btn-dark" id="fontScaleBtn">🔤 ফন্ট স্কেল: 1x</button>
+      <button type="button" class="btn-dark" id="logoutButton">Sign Out</button>
     </div>
-
-    <button
-      id="logoutButton"
-      type="button">
-      Sign Out
-    </button>
-
   </header>
 
+  <main class="grid-wrap" id="swipeContainer">
+    <!-- রেজিস্ট্রেশন ও লগিং বক্স -->
+    <section class="feature-box" id="authBox">
+      <div class="box-label">🔐 রেজিস্ট্রেশন ও লগিং</div>
+      <button type="button" class="btn" id="openRegisterBtn">নতুন অ্যাকাউন্ট তৈরি</button>
+      <button type="button" class="btn-dark" id="openLoginBtn">লগিং</button>
 
-  <!-- ===================================================
-       MAIN
-  ==================================================== -->
+      <div id="registerPanel">
+        <input type="file" id="regPhoto" accept="image/*">
+        <input type="email" id="regEmail" placeholder="জিমেইল">
+        <input type="tel" id="regPhone" placeholder="ফোন">
+        <input type="text" id="regBio" placeholder="পরিচিতি">
+        <input type="password" id="regPass" placeholder="পাসওয়ার্ড">
+        <button type="button" class="btn-dark" data-toggle-pass="regPass">পাসওয়ার্ড দেখা/লুকানো</button>
+        <input type="password" id="regRePass" placeholder="রি-পাসওয়ার্ড">
+        <button type="button" class="btn-dark" data-toggle-pass="regRePass">রি-পাসওয়ার্ড দেখা/লুকানো</button>
+      </div>
 
-  <main class="container">
-
-    <section
-      id="loading"
-      class="loading">
-
-      Loading AYNA BOOK...
-
+      <div id="loginPanel" style="display:none;">
+        <input type="email" id="loginEmail" placeholder="জিমেইল">
+        <input type="password" id="loginPass" placeholder="পাসওয়ার্ড">
+        <button type="button" class="btn-dark" data-toggle-pass="loginPass">পাসওয়ার্ড দেখা/লুকানো</button>
+        <button type="button" class="btn-dark" id="toggleForgotBtn">ফরগেট পাসওয়ার্ড দেখা/লুকানো</button>
+        <div id="forgotBox" style="display:none;">
+          <input type="email" id="forgotEmail" placeholder="রিসেটের জন্য জিমেইল দিন">
+        </div>
+      </div>
     </section>
 
-
-    <section
-      id="homeContent"
-      class="welcome-card"
-      style="display:none;">
-
-      <div
-        id="avatar"
-        class="avatar">
-        AB
-      </div>
-
-
-      <h1 id="welcomeName">
-        Welcome to AYNA BOOK
-      </h1>
-
-
-      <p class="subtitle">
-        Your account is successfully verified.
-      </p>
-
-
-      <div class="user-info">
-
-        <div class="info-row">
-
-          <span class="label">
-            Name:
-          </span>
-
-          <span id="userName">
-            -
-          </span>
-
+    <!-- প্রোফাইল ও QR বক্স -->
+    <section class="feature-box" id="profileBox">
+      <div class="box-label">👤 প্রোফাইল ও QR</div>
+      <div class="profile-row">
+        <div>
+          <div id="displayName">ব্যবহারকারীর নাম</div>
+          <small id="identityCooldownNote">নাম ও জিমেইল স্থায়ী; বাকি পরিচিতি ৯০ দিন পর পরিবর্তনযোগ্য</small>
         </div>
-
-
-        <div class="info-row">
-
-          <span class="label">
-            Email:
-          </span>
-
-          <span id="userEmail">
-            -
-          </span>
-
+        <div>
+          <div class="box-label" style="margin-bottom:4px;">QR</div>
+          <button type="button" class="btn" id="toggleQrBtn">QR দেখুন/লুকান</button>
+          <div id="qrBox" class="qr-hidden">[QR কোড বক্স]</div>
         </div>
-
-
-        <div class="info-row">
-
-          <span class="label">
-            Email Status:
-          </span>
-
-          <span id="emailStatus">
-            Verified
-          </span>
-
-        </div>
-
       </div>
-
-
-      <div
-        id="message"
-        class="message">
-      </div>
-
     </section>
 
+    <!-- পোস্ট ও ভিডিও মাইক বক্স -->
+    <section class="feature-box" id="postMediaBox">
+      <div class="box-label">📝 পোস্ট ও ভিডিও মাইক</div>
+      <textarea id="postComposer" placeholder="পোস্ট লিখুন..."></textarea>
+      <div>
+        <button type="button" class="btn-dark" id="audioPostBtn">🎵 অডিও পোস্ট</button>
+        <button type="button" class="btn-dark" id="videoPostBtn">🎬 ভিডিও পোস্ট</button>
+        <button type="button" class="btn-dark" id="liveVideoBtn">🔴 লাইভ ভিডিও চালু</button>
+        <button type="button" class="btn" id="publishBtn">পোস্ট</button>
+      </div>
+      <div style="margin-top:10px;">
+        <video id="singleVideoPlayer" controls playsinline style="width:100%;max-height:220px;"></video>
+        <button type="button" class="btn" id="toggleVideoMicBtn">🎙️ মাইক চালু/বন্ধ</button>
+      </div>
+    </section>
+
+    <!-- রাডার, কম্পাস, ঘড়ি ও ১৫০ এলার্ট বক্স -->
+    <section class="feature-box" id="radarClockBox">
+      <div class="box-label">📡 রাডার, কম্পাস, ঘড়ি ও ১৫০ এলার্ট</div>
+      <div id="radarStatus">আবহাওয়া রাডার • বিমান রাডার • কম্পাস সক্রিয়</div>
+      <div id="clockReadout">সময় লোড হচ্ছে...</div>
+      <button type="button" class="btn-dark" id="speakTimeBtn">🕒 এখনই সময় বলুন</button>
+      <button type="button" class="btn" id="alert150Btn">🚨 ১৫০ এলার্ট</button>
+      <div id="alert150Log">১৫০ এলার্ট কাউন্ট: 0</div>
+    </section>
+
+    <!-- বাজার, কৃষক, মূল্যতালিকা ও পেমেন্ট বক্স -->
+    <section class="feature-box" id="marketPayBox">
+      <div class="box-label">🛒 বিশ্ব বাজার, কৃষক, মূল্যতালিকা ও পেমেন্ট</div>
+      <select id="categoryFilter">
+        <option value="all">সব তালিকা (মুদি, কৃষক, মূল্যতালিকা)</option>
+        <option value="grocery">বিশ্ব মুদির দোকান</option>
+        <option value="farmer">বিশ্ব কৃষক</option>
+        <option value="price">দৈনিক মূল্যতালিকা</option>
+      </select>
+      <div id="directoryList">চাল, ডাল, তেল, গম, আলু, ডিম, মুরগি — অটো আপডেট সক্রিয়</div>
+      <div style="margin-top:8px;">
+        <small>Personal: Free | Business: $15/yr | VIP: $15/yr | VVIP: $20/yr | 01400751906 (বিকাশ/নগদ/কার্ড/PayPal/Payoneer)</small>
+      </div>
+    </section>
   </main>
 
-
-  <!-- ===================================================
-       AUTH SCRIPT
-  ==================================================== -->
-
   <script type="module">
+    import { getCurrentUser, observeAuthState, logoutUser } from "./auth.js";
 
-    import {
-      getCurrentUser,
-      observeAuthState,
-      logoutUser
-    } from "./auth.js";
+    const scales = [1, 1.5, 2, 3, 4];
+    let scaleIdx = 0;
+    document.getElementById("fontScaleBtn")?.addEventListener("click", () => {
+      scaleIdx = (scaleIdx + 1) % scales.length;
+      const s = scales[scaleIdx];
+      document.documentElement.style.setProperty("--font-scale", String(s));
+      document.getElementById("fontScaleBtn").textContent = `🔤 ফন্ট স্কেল: ${s}x`;
+    });
 
+    document.getElementById("openRegisterBtn")?.addEventListener("click", () => {
+      document.getElementById("registerPanel").style.display = "block";
+      document.getElementById("loginPanel").style.display = "none";
+    });
+    document.getElementById("openLoginBtn")?.addEventListener("click", () => {
+      document.getElementById("loginPanel").style.display = "block";
+      document.getElementById("registerPanel").style.display = "none";
+    });
+    document.querySelectorAll("[data-toggle-pass]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const input = document.getElementById(btn.dataset.togglePass);
+        if (input) input.type = input.type === "password" ? "text" : "password";
+      });
+    });
+    document.getElementById("toggleForgotBtn")?.addEventListener("click", () => {
+      const box = document.getElementById("forgotBox");
+      box.style.display = box.style.display === "none" ? "block" : "none";
+    });
+    document.getElementById("toggleQrBtn")?.addEventListener("click", () => {
+      document.getElementById("qrBox").classList.toggle("qr-hidden");
+    });
 
-    const loading =
-      document.getElementById("loading");
+    let micMuted = false;
+    document.getElementById("toggleVideoMicBtn")?.addEventListener("click", () => {
+      micMuted = !micMuted;
+      const vid = document.getElementById("singleVideoPlayer");
+      if (vid) vid.muted = micMuted;
+    });
 
-    const homeContent =
-      document.getElementById("homeContent");
+    let alertCount = 0;
+    document.getElementById("alert150Btn")?.addEventListener("click", () => {
+      alertCount += 1;
+      document.getElementById("alert150Log").textContent = `১৫০ এলার্ট কাউন্ট: ${alertCount}`;
+    });
 
-    const welcomeName =
-      document.getElementById("welcomeName");
-
-    const userName =
-      document.getElementById("userName");
-
-    const userEmail =
-      document.getElementById("userEmail");
-
-    const emailStatus =
-      document.getElementById("emailStatus");
-
-    const avatar =
-      document.getElementById("avatar");
-
-    const message =
-      document.getElementById("message");
-
-    const logoutButton =
-      document.getElementById("logoutButton");
-
-
-    let pageReady = false;
-
-
-    // ===================================================
-    // SHOW MESSAGE
-    // ===================================================
-
-    function showMessage(
-      text,
-      type = "error"
-    ) {
-
-      message.textContent = text;
-
-      message.className =
-        "message show " + type;
+    function speakNow() {
+      const nowText = new Date().toLocaleTimeString("bn-BD");
+      document.getElementById("clockReadout").textContent = `বর্তমান সময়: ${nowText}`;
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(`এখন সময় ${nowText}`));
+      }
     }
+    document.getElementById("speakTimeBtn")?.addEventListener("click", speakNow);
+    setInterval(() => {
+      document.getElementById("clockReadout").textContent = `বর্তমান সময়: ${new Date().toLocaleTimeString("bn-BD")}`;
+    }, 1000);
 
-
-    // ===================================================
-    // GET INITIALS
-    // ===================================================
-
-    function getInitials(
-      name,
-      email
-    ) {
-
-      const value =
-        name ||
-        email ||
-        "AB";
-
-      const parts =
-        value
-          .trim()
-          .split(/\s+/)
-          .filter(Boolean);
-
-      if (parts.length >= 2) {
-
-        return (
-          parts[0][0] +
-          parts[1][0]
-        ).toUpperCase();
-
+    // Swipe right-to-left check
+    let touchStartX = 0;
+    document.getElementById("swipeContainer")?.addEventListener("touchstart", e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    document.getElementById("swipeContainer")?.addEventListener("touchend", e => {
+      const dx = touchStartX - e.changedTouches[0].screenX;
+      if (dx > 60) {
+        window.scrollBy({ left: 300, behavior: "smooth" });
       }
+    }, { passive: true });
 
-      return value
-        .substring(0, 2)
-        .toUpperCase();
-    }
-
-
-    // ===================================================
-    // DISPLAY USER
-    // ===================================================
-
-    function displayUser(user) {
-
-      if (!user) {
-        return;
+    observeAuthState(user => {
+      const badge = document.getElementById("authUserBadge");
+      const nameEl = document.getElementById("displayName");
+      if (user) {
+        badge.textContent = user.emailVerified ? "Verified" : "Unverified";
+        nameEl.textContent = user.displayName || user.email || "AYNA BOOK User";
+      } else {
+        badge.textContent = "Guest / Offline Preview";
       }
+    });
 
-
-      const name =
-        user.displayName ||
-        "AYNA BOOK User";
-
-      const email =
-        user.email ||
-        "";
-
-
-      welcomeName.textContent =
-        "Welcome, " + name;
-
-
-      userName.textContent =
-        name;
-
-
-      userEmail.textContent =
-        email;
-
-
-      emailStatus.textContent =
-        user.emailVerified
-          ? "Verified"
-          : "Not Verified";
-
-
-      avatar.textContent =
-        getInitials(
-          user.displayName,
-          user.email
-        );
-
-
-      loading.style.display =
-        "none";
-
-
-      homeContent.style.display =
-        "block";
-
-
-      pageReady = true;
-    }
-
-
-    // ===================================================
-    // AUTH STATE
-    // ===================================================
-
-    observeAuthState(
-      async function (user) {
-
-        if (!user) {
-
-          window.location.replace(
-            "login.html"
-          );
-
-          return;
-        }
-
-
-        try {
-
-          await user.reload();
-
-        } catch (error) {
-
-          console.error(
-            "User reload error:",
-            error
-          );
-
-        }
-
-
-        const currentUser =
-          getCurrentUser();
-
-
-        if (!currentUser) {
-
-          window.location.replace(
-            "login.html"
-          );
-
-          return;
-        }
-
-
-        if (!currentUser.emailVerified) {
-
-          window.location.replace(
-            "verify-email.html"
-          );
-
-          return;
-        }
-
-
-        displayUser(
-          currentUser
-        );
-
+    document.getElementById("logoutButton")?.addEventListener("click", async () => {
+      if (typeof logoutUser === "function") {
+        await logoutUser();
       }
-    );
-
-
-    // ===================================================
-    // LOGOUT
-    // ===================================================
-
-    logoutButton.addEventListener(
-      "click",
-      async function () {
-
-        logoutButton.disabled = true;
-
-        logoutButton.textContent =
-          "Signing Out...";
-
-
-        try {
-
-          const result =
-            await logoutUser();
-
-
-          if (result.success) {
-
-            window.location.replace(
-              "login.html"
-            );
-
-            return;
-          }
-
-
-          showMessage(
-            result.message ||
-            "Unable to sign out.",
-            "error"
-          );
-
-
-        } catch (error) {
-
-          console.error(
-            "AYNA BOOK Logout Error:",
-            error
-          );
-
-
-          showMessage(
-            "Unable to sign out. Please try again.",
-            "error"
-          );
-
-
-        } finally {
-
-          logoutButton.disabled = false;
-
-          logoutButton.textContent =
-            "Sign Out";
-
-        }
-
-      }
-    );
-
+    });
   </script>
-
 </body>
-
 </html>
