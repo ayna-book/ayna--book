@@ -5,20 +5,11 @@
 // Firebase SDK: 13.4.0
 // ============================================================
 
-// ------------------------------------------------------------
-// Firebase App
-// ------------------------------------------------------------
-
 import {
   initializeApp,
-  getApp,
-  getApps
+  getApps,
+  getApp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-
-
-// ------------------------------------------------------------
-// Firebase Authentication
-// ------------------------------------------------------------
 
 import {
   getAuth,
@@ -26,78 +17,34 @@ import {
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-
-// ------------------------------------------------------------
-// Firebase Realtime Database
-// ------------------------------------------------------------
-
 import {
   getDatabase
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
 
 // ============================================================
-// FIREBASE CONFIGURATION
-// ============================================================
-// আপনার AYNA BOOK Firebase Console-এর Web App config এখানে
-// ব্যবহার করতে হবে। API Key-এর জায়গায় আপনার আসল Web API Key
-// বসানো থাকতে হবে।
+// FIREBASE CONFIG
 // ============================================================
 
 const firebaseConfig = {
-
-  apiKey: "YOUR_FIREBASE_WEB_API_KEY",
-
-  authDomain:
-    "ayna-book.firebaseapp.com",
-
-  databaseURL:
-    "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-  projectId:
-    "ayna-book",
-
-  storageBucket:
-    "ayna-book.firebasestorage.app",
-
-  messagingSenderId:
-    "805601138500",
-
-  appId:
-    "YOUR_FIREBASE_WEB_APP_ID",
-
-  measurementId:
-    "YOUR_FIREBASE_MEASUREMENT_ID"
+  apiKey: "আপনার আসল Firebase Web API Key",
+  authDomain: "ayna-book.firebaseapp.com",
+  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ayna-book",
+  storageBucket: "ayna-book.firebasestorage.app",
+  messagingSenderId: "805601138500",
+  appId: "আপনার আসল Firebase Web App ID",
+  measurementId: "আপনার আসল Measurement ID"
 };
 
 
 // ============================================================
-// INITIALIZE FIREBASE APP
+// FIREBASE APP
 // ============================================================
 
-let app;
-
-try {
-
-  if (getApps().length > 0) {
-
-    app = getApp();
-
-  } else {
-
-    app = initializeApp(firebaseConfig);
-
-  }
-
-} catch (error) {
-
-  console.error(
-    "AYNA BOOK Firebase initialization failed:",
-    error
-  );
-
-  throw error;
-}
+const app = getApps().length
+  ? getApp()
+  : initializeApp(firebaseConfig);
 
 
 // ============================================================
@@ -117,31 +64,23 @@ const database = getDatabase(app);
 // ============================================================
 // AUTH PERSISTENCE
 // ============================================================
-// Browser বন্ধ করলেও login session রাখার চেষ্টা করবে।
-// ============================================================
 
 const authReady = setPersistence(
   auth,
   browserLocalPersistence
 ).catch((error) => {
 
-  console.warn(
-    "Firebase Auth persistence could not be enabled:",
+  console.error(
+    "AYNA BOOK Auth Persistence Error:",
     error
   );
 
-  /*
-    Persistence ব্যর্থ হলেও Authentication ব্যবহার
-    করা যাবে। তাই এখানে throw করছি না।
-  */
-
   return null;
-
 });
 
 
 // ============================================================
-// EXPORTS
+// EXPORT
 // ============================================================
 
 export {
