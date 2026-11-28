@@ -1,317 +1,1419 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — বিশ্ব মুদির দোকান</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071b49">
 
-<style>
-:root {
-  --bg: #050a18;
-  --navy-top: #172e63;
-  --navy-bottom: #08122b;
-  --gold: #ffd700;
-  --gold-base: #755206;
-  --white: #ffffff;
-  --muted: #dce6fa;
-}
+  <title>AYNA BOOK — World Grocery</title>
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+  <style>
+    :root{
+      --bg:#050a18;
+      --navy:#071b49;
+      --navy2:#0b2d6b;
+      --gold:#ffd700;
+      --gold2:#ffe66d;
+      --white:#ffffff;
+      --muted:#b9c7df;
+      --card:#0b1428;
+      --card2:#101d36;
+      --green:#19d37a;
+      --red:#ff5b67;
+      --blue:#38a8ff;
+      --border:rgba(255,215,0,.55);
+    }
 
-body {
-  background: var(--bg);
-  color: var(--white);
-  font-family: Arial, "Noto Sans Bengali", sans-serif;
-  font-size: 20px;
-  padding-bottom: 70px;
-}
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
 
-.gold-3d {
-  background: linear-gradient(155deg, var(--navy-top) 0%, var(--navy-bottom) 100%);
-  border: 2.5px solid var(--gold);
-  border-radius: 6px;
-  box-shadow:
-    0 7px 0 var(--gold-base),
-    0 12px 22px rgba(0, 0, 0, 0.8),
-    inset 0 2px 3px rgba(255, 242, 166, 0.5);
-}
+    body{
+      background:
+        radial-gradient(circle at top,#12316c 0,#07152f 35%,#050a18 75%);
+      color:var(--white);
+      font-family:Arial,Helvetica,sans-serif;
+      min-height:100vh;
+      font-size:18px;
+    }
 
-header {
-  background: linear-gradient(180deg, #0f1f47 0%, #060d21 100%);
-  border-bottom: 2.5px solid var(--gold);
-  padding: 14px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
+    button,
+    input,
+    select{
+      font:inherit;
+    }
 
-.brand {
-  color: var(--gold);
-  font-size: 24px;
-  font-weight: 1000;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
+    header{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:linear-gradient(135deg,#123875,#06132e);
+      border-bottom:2px solid var(--gold);
+      padding:16px;
+      box-shadow:0 5px 25px rgba(0,0,0,.45);
+    }
 
-.star-1s {
-  color: #ffffff;
-  font-size: 26px;
-  display: inline-block;
-  animation: starFlash1s 1s infinite alternate ease-in-out;
-}
+    .header-row{
+      max-width:1400px;
+      margin:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
 
-@keyframes starFlash1s {
-  0% { transform: scale(0.95); text-shadow: 0 0 6px #ffd700; }
-  100% { transform: scale(1.35); text-shadow: 0 0 14px #ffffff, 0 0 32px #ffd700; }
-}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
 
-.back-btn {
-  text-decoration: none;
-  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
-  color: #050a18;
-  font-weight: 1000;
-  font-size: 17px;
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1.5px solid #fff2a6;
-  box-shadow: 0 4px 0 #664604;
-}
+    .brand-icon{
+      width:58px;
+      height:58px;
+      border:2px solid var(--gold);
+      border-radius:15px;
+      display:grid;
+      place-items:center;
+      font-size:30px;
+      background:#06152e;
+    }
 
-.container {
-  max-width: 1050px;
-  margin: 18px auto;
-  padding: 0 14px;
-}
+    .brand h1{
+      font-size:clamp(25px,5vw,42px);
+      color:var(--gold);
+    }
 
-.page-title {
-  font-size: 28px;
-  font-weight: 1000;
-  color: var(--gold);
-  margin-bottom: 14px;
-}
+    .brand p{
+      color:#dce8ff;
+      font-size:15px;
+      margin-top:3px;
+    }
 
-.box-pad {
-  padding: 18px;
-  margin-bottom: 18px;
-}
+    .cart-button{
+      border:2px solid var(--gold);
+      background:#07172f;
+      color:white;
+      border-radius:15px;
+      padding:13px 18px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:18px;
+    }
 
-.box-pad h2 {
-  color: var(--gold);
-  font-size: 23px;
-  margin-bottom: 12px;
-}
+    .cart-count{
+      color:var(--gold);
+      margin-left:5px;
+    }
 
-.status-banner {
-  background: #050b1c;
-  border: 1.5px solid var(--gold);
-  border-radius: 6px;
-  padding: 12px;
-  color: var(--gold);
-  font-size: 17px;
-  font-weight: bold;
-  margin-bottom: 14px;
-  text-align: center;
-}
+    main{
+      width:min(1450px,96%);
+      margin:auto;
+      padding:20px 0 50px;
+    }
 
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 12px;
-}
+    .hero{
+      border:2px solid var(--border);
+      border-radius:25px;
+      padding:25px;
+      background:
+        linear-gradient(135deg,rgba(20,58,120,.95),rgba(4,14,32,.96));
+      margin-bottom:20px;
+      box-shadow:0 10px 35px rgba(0,0,0,.35);
+    }
 
-@media(min-width: 650px) {
-  .grid-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
+    .hero h2{
+      font-size:clamp(30px,6vw,52px);
+      color:var(--gold);
+      margin-bottom:10px;
+    }
 
-input, select {
-  width: 100%;
-  background: #050b1c;
-  color: var(--white);
-  border: 2px solid var(--gold);
-  border-radius: 6px;
-  padding: 12px 14px;
-  font-size: 19px;
-  margin-bottom: 12px;
-}
+    .hero p{
+      font-size:clamp(17px,3vw,24px);
+      color:#e5edff;
+      line-height:1.55;
+    }
 
-.btn-gold-3d {
-  width: 100%;
-  min-height: 54px;
-  background: linear-gradient(180deg, #ffd700 0%, #c99314 100%);
-  color: #050a18;
-  font-size: 20px;
-  font-weight: 1000;
-  border: 2px solid #fff2a6;
-  border-radius: 6px;
-  box-shadow: 0 5px 0 #664604;
-  cursor: pointer;
-}
+    .shop-strip{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:14px;
+      margin-top:20px;
+    }
 
-.btn-gold-3d:active {
-  transform: translateY(4px);
-  box-shadow: 0 2px 0 #664604;
-}
+    .shop{
+      background:#07152d;
+      border:1px solid rgba(255,215,0,.4);
+      border-radius:18px;
+      padding:17px;
+    }
 
-.grocery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
+    .shop strong{
+      color:var(--gold);
+      font-size:20px;
+    }
 
-@media(min-width: 750px) {
-  .grocery-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
+    .shop span{
+      display:block;
+      margin-top:7px;
+      color:var(--muted);
+      font-size:15px;
+    }
 
-.grocery-card {
-  padding: 16px 12px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+    .search-box{
+      display:grid;
+      grid-template-columns:1fr 230px;
+      gap:12px;
+      margin:20px 0;
+    }
 
-.item-emoji {
-  font-size: 44px;
-  margin-bottom: 8px;
-}
+    .search-box input,
+    .search-box select{
+      width:100%;
+      background:#08152c;
+      color:white;
+      border:2px solid rgba(255,215,0,.45);
+      border-radius:15px;
+      padding:17px;
+      outline:none;
+    }
 
-.item-cat {
-  font-size: 14px;
-  color: var(--gold);
-  font-weight: bold;
-  margin-bottom: 4px;
-}
+    .search-box input:focus,
+    .search-box select:focus{
+      border-color:var(--gold);
+    }
 
-.item-name {
-  font-size: 21px;
-  font-weight: 1000;
-  color: var(--white);
-  margin-bottom: 6px;
-}
+    .section-title{
+      font-size:clamp(27px,5vw,40px);
+      color:var(--gold);
+      margin:25px 0 14px;
+    }
 
-.item-unit {
-  font-size: 15px;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
+    .categories{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      padding:5px 2px 14px;
+      scrollbar-width:thin;
+    }
 
-.item-price {
-  background: #050b1c;
-  border: 1.5px solid var(--gold);
-  border-radius: 6px;
-  padding: 8px;
-  font-size: 22px;
-  font-weight: 1000;
-  color: var(--gold);
-}
+    .cat-btn{
+      flex:0 0 auto;
+      background:#0a1932;
+      color:white;
+      border:1px solid rgba(255,215,0,.45);
+      border-radius:14px;
+      padding:13px 17px;
+      cursor:pointer;
+      font-weight:700;
+    }
 
-.item-trend {
-  font-size: 14px;
-  margin-top: 8px;
-  font-weight: bold;
-}
+    .cat-btn.active,
+    .cat-btn:hover{
+      background:var(--gold);
+      color:#07101e;
+      border-color:var(--gold);
+    }
 
-#notice {
-  position: fixed;
-  top: 76px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #0a1636;
-  color: #ffffff;
-  border: 2px solid var(--gold);
-  padding: 12px 18px;
-  border-radius: 6px;
-  z-index: 100;
-  display: none;
-  font-size: 18px;
-  text-align: center;
-}
-</style>
+    .products{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:16px;
+    }
+
+    .product{
+      background:linear-gradient(145deg,#101e38,#071326);
+      border:1px solid rgba(255,215,0,.35);
+      border-radius:20px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+      box-shadow:0 8px 22px rgba(0,0,0,.25);
+    }
+
+    .product-image{
+      height:185px;
+      background:
+        linear-gradient(135deg,#173b76,#07152c);
+      display:grid;
+      place-items:center;
+      font-size:78px;
+      border-bottom:1px solid rgba(255,215,0,.25);
+    }
+
+    .product-body{
+      padding:15px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      flex:1;
+    }
+
+    .product-name{
+      font-size:22px;
+      font-weight:900;
+      line-height:1.2;
+    }
+
+    .product-category{
+      color:#9fb4d8;
+      font-size:14px;
+    }
+
+    .product-shop{
+      color:#7fd2ff;
+      font-size:14px;
+    }
+
+    .price{
+      color:var(--gold);
+      font-size:24px;
+      font-weight:900;
+      margin-top:auto;
+    }
+
+    .unit{
+      color:#aebbd0;
+      font-size:14px;
+      font-weight:normal;
+    }
+
+    .product-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:8px;
+    }
+
+    .btn{
+      border:0;
+      border-radius:12px;
+      padding:12px 8px;
+      cursor:pointer;
+      font-weight:900;
+    }
+
+    .btn-details{
+      background:#162b50;
+      color:white;
+      border:1px solid rgba(255,255,255,.2);
+    }
+
+    .btn-cart{
+      background:var(--gold);
+      color:#06101f;
+    }
+
+    .empty{
+      text-align:center;
+      padding:50px 15px;
+      border:1px dashed rgba(255,215,0,.5);
+      border-radius:20px;
+      color:var(--muted);
+    }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      z-index:2000;
+      background:rgba(0,0,0,.78);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:15px;
+    }
+
+    .overlay.show{
+      display:flex;
+    }
+
+    .modal{
+      width:min(700px,100%);
+      max-height:90vh;
+      overflow:auto;
+      background:#07152c;
+      border:2px solid var(--gold);
+      border-radius:24px;
+      padding:22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.65);
+    }
+
+    .modal-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+
+    .modal h3{
+      color:var(--gold);
+      font-size:30px;
+    }
+
+    .close{
+      width:45px;
+      height:45px;
+      border-radius:50%;
+      border:1px solid var(--gold);
+      background:#101f3b;
+      color:white;
+      cursor:pointer;
+      font-size:25px;
+    }
+
+    .modal-product-icon{
+      font-size:110px;
+      text-align:center;
+      padding:20px;
+    }
+
+    .detail-line{
+      padding:12px 0;
+      border-bottom:1px solid rgba(255,255,255,.1);
+      line-height:1.5;
+    }
+
+    .detail-line b{
+      color:var(--gold);
+    }
+
+    .cart-item{
+      display:grid;
+      grid-template-columns:60px 1fr auto;
+      gap:12px;
+      align-items:center;
+      padding:12px 0;
+      border-bottom:1px solid rgba(255,255,255,.1);
+    }
+
+    .cart-icon{
+      width:55px;
+      height:55px;
+      display:grid;
+      place-items:center;
+      background:#10264a;
+      border-radius:12px;
+      font-size:30px;
+    }
+
+    .qty{
+      color:#b9c7df;
+      font-size:14px;
+    }
+
+    .remove{
+      background:#35131a;
+      color:#ff9ba4;
+      border:1px solid #8e3340;
+      border-radius:9px;
+      padding:8px;
+      cursor:pointer;
+    }
+
+    .cart-total{
+      margin-top:18px;
+      padding:17px;
+      border:1px solid rgba(255,215,0,.45);
+      border-radius:15px;
+      display:flex;
+      justify-content:space-between;
+      font-size:24px;
+      font-weight:900;
+    }
+
+    footer{
+      text-align:center;
+      color:#8799b7;
+      padding:25px 10px;
+      border-top:1px solid rgba(255,215,0,.2);
+      margin-top:30px;
+    }
+
+    @media(max-width:700px){
+      body{
+        font-size:17px;
+      }
+
+      .search-box{
+        grid-template-columns:1fr;
+      }
+
+      .products{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px;
+      }
+
+      .product-image{
+        height:135px;
+        font-size:58px;
+      }
+
+      .product-name{
+        font-size:18px;
+      }
+
+      .price{
+        font-size:20px;
+      }
+
+      .product-actions{
+        grid-template-columns:1fr;
+      }
+
+      .hero{
+        padding:18px;
+      }
+    }
+
+    @media(max-width:420px){
+      .products{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
 <header>
-  <a href="index.html" class="brand">AYNA BOOK <span class="star-1s">★</span></a>
-  <a href="index.html" class="back-btn">🏠 হোম</a>
+  <div class="header-row">
+
+    <div class="brand">
+      <div class="brand-icon">🛒</div>
+
+      <div>
+        <h1>World Grocery</h1>
+        <p>AYNA BOOK • Global Grocery Marketplace</p>
+      </div>
+    </div>
+
+    <button class="cart-button" onclick="openCart()">
+      🛍️ Cart
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+
+  </div>
 </header>
 
-<div id="notice"></div>
+<main>
 
-<main class="container">
-  <h1 class="page-title">🛒 বিশ্ব মুদির দোকান — দৈনিক বাজার দর</h1>
+  <section class="hero">
 
-  <section class="gold-3d box-pad">
-    <div id="autoUpdateBanner" class="status-banner">
-      🔄 দৈনিক মূল্য ও লাইভ মুদ্রা হার লোড হচ্ছে...
-    </div>
+    <h2>🌍 World Grocery</h2>
 
-    <div class="grid-2">
-      <div>
-        <select id="groceryCountrySelect">
-          <option value="BDT">🇧🇩 বাংলাদেশ (টাকা ৳)</option>
-          <option value="SAR">🇸🇦 সৌদি আরব (রিয়াল ﷼)</option>
-          <option value="AED">🇦🇪 সংযুক্ত আরব আমিরাত (দিরহাম د.إ)</option>
-          <option value="GBP">🇬🇧 যুক্তরাজ্য (পাউন্ড £)</option>
-          <option value="USD">🇺🇸 যুক্তরাষ্ট্র (ডলার $)</option>
-          <option value="INR">🇮🇳 ভারত (রুপি ₹)</option>
-        </select>
+    <p>
+      আপনার প্রয়োজনীয় মুদি, খাবার, Fresh Food,
+      Household, Baby Care, Personal Care এবং
+      দৈনন্দিন প্রয়োজনীয় পণ্য এক জায়গায়।
+    </p>
+
+    <div class="shop-strip">
+
+      <div class="shop">
+        <strong>🏪 Local Grocery</strong>
+        <span>স্থানীয় মুদি দোকানের পণ্য</span>
       </div>
 
-      <div>
-        <select id="groceryCategoryFilter">
-          <option value="ALL">📦 সব ক্যাটাগরি</option>
-          <option value="চাল ও আটা">চাল ও আটা</option>
-          <option value="ডাল ও ছোলা">ডাল ও ছোলা</option>
-          <option value="তেল ও চিনি">তেল ও চিনি</option>
-          <option value="পেঁয়াজ ও মসলা">পেঁয়াজ ও মসলা</option>
-          <option value="ডিম, দুধ ও চা">ডিম, দুধ ও চা</option>
-        </select>
+      <div class="shop">
+        <strong>🛒 Supermarket</strong>
+        <span>বড় supermarket collection</span>
       </div>
+
+      <div class="shop">
+        <strong>🌾 Farmer Market</strong>
+        <span>Fresh কৃষিপণ্য</span>
+      </div>
+
+      <div class="shop">
+        <strong>🌍 International</strong>
+        <span>বিশ্বের বিভিন্ন দেশের পণ্য</span>
+      </div>
+
     </div>
 
-    <input id="grocerySearch" type="text" placeholder="পণ্যের নাম লিখে খুঁজুন (যেমন: চাল, তেল, চিনি, পেঁয়াজ)...">
-    <button id="refreshRatesBtn" class="btn-gold-3d">🔄 আজকের মূল্য অটো আপডেট করুন</button>
   </section>
 
-  <!-- লাইভ মূল্য আপডেট বা নতুন পণ্য যোগ (অ্যাডমিন / বিক্রেতা) -->
-  <section class="gold-3d box-pad">
-    <h2>✍️ দৈনিক মূল্য আপডেট বা নতুন মুদি পণ্য যোগ</h2>
-    <div class="grid-2">
-      <select id="newGroceryCat">
-        <option value="চাল ও আটা">চাল ও আটা</option>
-        <option value="ডাল ও ছোলা">ডাল ও ছোলা</option>
-        <option value="তেল ও চিনি">তেল ও চিনি</option>
-        <option value="পেঁয়াজ ও মসলা">পেঁয়াজ ও মসলা</option>
-        <option value="ডিম, দুধ ও চা">ডিম, দুধ ও চা</option>
-      </select>
-      <input id="newGroceryEmoji" type="text" placeholder="আইকন ইমোজি (যেমন: 🍚, 🛢️, 🧅)" value="🛒">
-    </div>
-    <div class="grid-2">
-      <input id="newGroceryName" type="text" placeholder="পণ্যের নাম (যেমন: মিনিকেট চাল)">
-      <input id="newGroceryUnit" type="text" placeholder="পরিমাণ (যেমন: প্রতি কেজি / প্রতি লিটার)">
-    </div>
-    <input id="newGroceryBdtPrice" type="number" step="0.01" placeholder="বাংলাদেশী টাকায় (BDT) আজকের দাম লিখুন...">
-    <button id="saveGroceryPriceBtn" class="btn-gold-3d">📌 দৈনিক মূল্য সেভ ও অটো-সিঙ্ক করুন</button>
+  <section class="search-box">
+
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="🔎 পণ্যের নাম লিখুন..."
+      oninput="renderProducts()"
+    >
+
+    <select id="categorySelect" onchange="selectCategory(this.value)">
+      <option value="all">সব বিভাগ</option>
+    </select>
+
   </section>
 
-  <!-- মুদি পণ্যের গ্রিড -->
-  <section id="groceryGrid" class="grocery-grid"></section>
+  <h2 class="section-title">📦 Product Categories</h2>
+
+  <div class="categories" id="categories"></div>
+
+  <h2 class="section-title">
+    🛒 Products
+    <span id="productCount" style="font-size:.55em;color:#9fb4d8;"></span>
+  </h2>
+
+  <div class="products" id="products"></div>
+
 </main>
 
-<script type="module" src="./world-grocery.js"></script>
+<footer>
+  AYNA BOOK • World Grocery<br>
+  Connect • Share • Create
+</footer>
+
+
+<!-- PRODUCT MODAL -->
+
+<div class="overlay" id="productOverlay">
+
+  <div class="modal">
+
+    <div class="modal-top">
+
+      <h3 id="modalTitle">Product</h3>
+
+      <button class="close" onclick="closeModal('productOverlay')">
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-product-icon" id="modalIcon">🛒</div>
+
+    <div class="detail-line">
+      <b>Category:</b>
+      <span id="modalCategory"></span>
+    </div>
+
+    <div class="detail-line">
+      <b>Shop:</b>
+      <span id="modalShop"></span>
+    </div>
+
+    <div class="detail-line">
+      <b>Price:</b>
+      <span id="modalPrice"></span>
+    </div>
+
+    <div class="detail-line">
+      <b>Description:</b>
+      <span id="modalDescription"></span>
+    </div>
+
+    <button
+      class="btn btn-cart"
+      style="width:100%;margin-top:18px;font-size:20px;"
+      id="modalCartButton"
+    >
+      🛍️ Add to Cart
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- CART MODAL -->
+
+<div class="overlay" id="cartOverlay">
+
+  <div class="modal">
+
+    <div class="modal-top">
+
+      <h3>🛍️ Shopping Cart</h3>
+
+      <button class="close" onclick="closeModal('cartOverlay')">
+        ×
+      </button>
+
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">৳0</span>
+    </div>
+
+    <button
+      class="btn btn-cart"
+      style="width:100%;margin-top:15px;font-size:20px;"
+      onclick="checkout()"
+    >
+      ✅ Checkout
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+"use strict";
+
+/* =========================================================
+   WORLD GROCERY — PRODUCT DATABASE
+   ========================================================= */
+
+const products = [
+
+  /* Rice & Grains */
+
+  {id:1,name:"মিনিকেট চাল",category:"চাল ও শস্য",icon:"🍚",price:85,unit:"kg",shop:"Local Grocery",desc:"দৈনন্দিন রান্নার জন্য চাল।"},
+  {id:2,name:"বাসমতি চাল",category:"চাল ও শস্য",icon:"🍚",price:180,unit:"kg",shop:"International Grocery",desc:"সুগন্ধি বাসমতি চাল।"},
+  {id:3,name:"আটা",category:"চাল ও শস্য",icon:"🌾",price:65,unit:"kg",shop:"Supermarket",desc:"গমের আটা।"},
+  {id:4,name:"ময়দা",category:"চাল ও শস্য",icon:"🌾",price:70,unit:"kg",shop:"Supermarket",desc:"বেকিং ও রান্নার জন্য ময়দা।"},
+  {id:5,name:"সুজি",category:"চাল ও শস্য",icon:"🥣",price:80,unit:"kg",shop:"Local Grocery",desc:"সুজি।"},
+  {id:6,name:"চিড়া",category:"চাল ও শস্য",icon:"🌾",price:90,unit:"kg",shop:"Local Grocery",desc:"চিড়া।"},
+  {id:7,name:"মুড়ি",category:"চাল ও শস্য",icon:"🍚",price:70,unit:"kg",shop:"Local Grocery",desc:"মুড়ি।"},
+  {id:8,name:"কর্নফ্লেক্স",category:"চাল ও শস্য",icon:"🥣",price:350,unit:"pack",shop:"International Grocery",desc:"Breakfast cereal।"},
+  {id:9,name:"ওটস",category:"চাল ও শস্য",icon:"🥣",price:280,unit:"pack",shop:"Supermarket",desc:"Healthy oats।"},
+
+  /* Pulses */
+
+  {id:10,name:"মসুর ডাল",category:"ডাল",icon:"🫘",price:140,unit:"kg",shop:"Local Grocery",desc:"মসুর ডাল।"},
+  {id:11,name:"মুগ ডাল",category:"ডাল",icon:"🫘",price:170,unit:"kg",shop:"Local Grocery",desc:"মুগ ডাল।"},
+  {id:12,name:"ছোলা",category:"ডাল",icon:"🫘",price:120,unit:"kg",shop:"Supermarket",desc:"ছোলা।"},
+  {id:13,name:"রাজমা",category:"ডাল",icon:"🫘",price:240,unit:"kg",shop:"International Grocery",desc:"Kidney beans।"},
+  {id:14,name:"মটর ডাল",category:"ডাল",icon:"🫛",price:130,unit:"kg",shop:"Local Grocery",desc:"মটর ডাল।"},
+
+  /* Oil */
+
+  {id:15,name:"সয়াবিন তেল",category:"তেল ও ঘি",icon:"🫙",price:190,unit:"liter",shop:"Supermarket",desc:"সয়াবিন রান্নার তেল।"},
+  {id:16,name:"সরিষার তেল",category:"তেল ও ঘি",icon:"🫙",price:210,unit:"liter",shop:"Local Grocery",desc:"খাঁটি সরিষার তেল।"},
+  {id:17,name:"অলিভ অয়েল",category:"তেল ও ঘি",icon:"🫒",price:650,unit:"liter",shop:"International Grocery",desc:"Olive oil।"},
+  {id:18,name:"ঘি",category:"তেল ও ঘি",icon:"🧈",price:900,unit:"kg",shop:"Supermarket",desc:"ঘি।"},
+
+  /* Spices */
+
+  {id:19,name:"লবণ",category:"মসলা",icon:"🧂",price:40,unit:"kg",shop:"Local Grocery",desc:"আয়োডিনযুক্ত লবণ।"},
+  {id:20,name:"চিনি",category:"মসলা",icon:"🍚",price:130,unit:"kg",shop:"Supermarket",desc:"চিনি।"},
+  {id:21,name:"হলুদ গুঁড়া",category:"মসলা",icon:"🌿",price:180,unit:"500g",shop:"Local Grocery",desc:"হলুদ গুঁড়া।"},
+  {id:22,name:"মরিচ গুঁড়া",category:"মসলা",icon:"🌶️",price:220,unit:"500g",shop:"Local Grocery",desc:"মরিচ গুঁড়া।"},
+  {id:23,name:"জিরা",category:"মসলা",icon:"🌿",price:450,unit:"500g",shop:"Supermarket",desc:"জিরা।"},
+  {id:24,name:"ধনে",category:"মসলা",icon:"🌿",price:180,unit:"500g",shop:"Local Grocery",desc:"ধনে।"},
+  {id:25,name:"গরম মসলা",category:"মসলা",icon:"🌿",price:300,unit:"pack",shop:"Supermarket",desc:"গরম মসলা।"},
+
+  /* Snacks */
+
+  {id:26,name:"বিস্কুট",category:"Snacks",icon:"🍪",price:60,unit:"pack",shop:"Local Grocery",desc:"বিভিন্ন ধরনের বিস্কুট।"},
+  {id:27,name:"চিপস",category:"Snacks",icon:"🥔",price:50,unit:"pack",shop:"Supermarket",desc:"Potato chips।"},
+  {id:28,name:"চানাচুর",category:"Snacks",icon:"🥜",price:80,unit:"pack",shop:"Local Grocery",desc:"চানাচুর।"},
+  {id:29,name:"চকলেট",category:"Snacks",icon:"🍫",price:120,unit:"pack",shop:"International Grocery",desc:"Chocolate।"},
+  {id:30,name:"ক্যান্ডি",category:"Snacks",icon:"🍬",price:80,unit:"pack",shop:"Supermarket",desc:"Candy।"},
+
+  /* Dairy */
+
+  {id:31,name:"দুধ",category:"Dairy",icon:"🥛",price:100,unit:"liter",shop:"Supermarket",desc:"Fresh milk।"},
+  {id:32,name:"দই",category:"Dairy",icon:"🥛",price:100,unit:"500g",shop:"Supermarket",desc:"দই।"},
+  {id:33,name:"পনির",category:"Dairy",icon:"🧀",price:350,unit:"500g",shop:"Supermarket",desc:"পনির।"},
+  {id:34,name:"চিজ",category:"Dairy",icon:"🧀",price:450,unit:"pack",shop:"International Grocery",desc:"Cheese।"},
+  {id:35,name:"মাখন",category:"Dairy",icon:"🧈",price:400,unit:"pack",shop:"Supermarket",desc:"Butter।"},
+
+  /* Beverages */
+
+  {id:36,name:"চা",category:"Beverages",icon:"☕",price:180,unit:"pack",shop:"Local Grocery",desc:"চা পাতা।"},
+  {id:37,name:"কফি",category:"Beverages",icon:"☕",price:550,unit:"pack",shop:"International Grocery",desc:"Coffee।"},
+  {id:38,name:"ফলের জুস",category:"Beverages",icon:"🧃",price:160,unit:"liter",shop:"Supermarket",desc:"Fruit juice।"},
+  {id:39,name:"মিনারেল ওয়াটার",category:"Beverages",icon:"💧",price:30,unit:"liter",shop:"Local Grocery",desc:"Drinking water।"},
+  {id:40,name:"সফট ড্রিংক",category:"Beverages",icon:"🥤",price:70,unit:"bottle",shop:"Supermarket",desc:"Soft drink।"},
+
+  /* Fresh */
+
+  {id:41,name:"আলু",category:"Fresh Food",icon:"🥔",price:55,unit:"kg",shop:"Farmer Market",desc:"Fresh potato।"},
+  {id:42,name:"পেঁয়াজ",category:"Fresh Food",icon:"🧅",price:100,unit:"kg",shop:"Farmer Market",desc:"Fresh onion।"},
+  {id:43,name:"রসুন",category:"Fresh Food",icon:"🧄",price:180,unit:"kg",shop:"Farmer Market",desc:"Fresh garlic।"},
+  {id:44,name:"আদা",category:"Fresh Food",icon:"🫚",price:250,unit:"kg",shop:"Farmer Market",desc:"Fresh ginger।"},
+  {id:45,name:"টমেটো",category:"Fresh Food",icon:"🍅",price:100,unit:"kg",shop:"Farmer Market",desc:"Fresh tomato।"},
+  {id:46,name:"গাজর",category:"Fresh Food",icon:"🥕",price:100,unit:"kg",shop:"Farmer Market",desc:"Fresh carrot।"},
+  {id:47,name:"শসা",category:"Fresh Food",icon:"🥒",price:80,unit:"kg",shop:"Farmer Market",desc:"Fresh cucumber।"},
+  {id:48,name:"বেগুন",category:"Fresh Food",icon:"🍆",price:90,unit:"kg",shop:"Farmer Market",desc:"Fresh eggplant।"},
+  {id:49,name:"ফুলকপি",category:"Fresh Food",icon:"🥦",price:70,unit:"piece",shop:"Farmer Market",desc:"Fresh cauliflower।"},
+
+  /* Fruits */
+
+  {id:50,name:"আপেল",category:"Fruits",icon:"🍎",price:350,unit:"kg",shop:"Fruit Market",desc:"Fresh apple।"},
+  {id:51,name:"কলা",category:"Fruits",icon:"🍌",price:100,unit:"dozen",shop:"Fruit Market",desc:"Fresh banana।"},
+  {id:52,name:"কমলা",category:"Fruits",icon:"🍊",price:280,unit:"kg",shop:"Fruit Market",desc:"Fresh orange।"},
+  {id:53,name:"আঙুর",category:"Fruits",icon:"🍇",price:450,unit:"kg",shop:"Fruit Market",desc:"Fresh grapes।"},
+  {id:54,name:"আম",category:"Fruits",icon:"🥭",price:220,unit:"kg",shop:"Farmer Market",desc:"Seasonal mango।"},
+  {id:55,name:"তরমুজ",category:"Fruits",icon:"🍉",price:80,unit:"kg",shop:"Farmer Market",desc:"Fresh watermelon।"},
+  {id:56,name:"আনারস",category:"Fruits",icon:"🍍",price:120,unit:"piece",shop:"Fruit Market",desc:"Fresh pineapple।"},
+
+  /* Fish */
+
+  {id:57,name:"ইলিশ মাছ",category:"Fish",icon:"🐟",price:1400,unit:"kg",shop:"Fish Market",desc:"Fresh Hilsa fish।"},
+  {id:58,name:"রুই মাছ",category:"Fish",icon:"🐟",price:450,unit:"kg",shop:"Fish Market",desc:"Fresh Rui fish।"},
+  {id:59,name:"কাতলা মাছ",category:"Fish",icon:"🐟",price:480,unit:"kg",shop:"Fish Market",desc:"Fresh Katla fish।"},
+  {id:60,name:"চিংড়ি",category:"Fish",icon:"🦐",price:800,unit:"kg",shop:"Fish Market",desc:"Fresh shrimp।"},
+  {id:61,name:"কাঁকড়া",category:"Fish",icon:"🦀",price:900,unit:"kg",shop:"Fish Market",desc:"Fresh crab।"},
+
+  /* Meat */
+
+  {id:62,name:"ব্রয়লার মুরগি",category:"Meat",icon:"🐔",price:220,unit:"kg",shop:"Meat Market",desc:"Fresh chicken।"},
+  {id:63,name:"গরুর মাংস",category:"Meat",icon:"🥩",price:750,unit:"kg",shop:"Meat Market",desc:"Fresh beef।"},
+  {id:64,name:"খাসির মাংস",category:"Meat",icon:"🥩",price:950,unit:"kg",shop:"Meat Market",desc:"Fresh mutton।"},
+  {id:65,name:"ডিম",category:"Meat",icon:"🥚",price:150,unit:"dozen",shop:"Local Grocery",desc:"Fresh eggs।"},
+
+  /* Bakery */
+
+  {id:66,name:"ব্রেড",category:"Bakery",icon:"🍞",price:80,unit:"pack",shop:"Bakery",desc:"Fresh bread।"},
+  {id:67,name:"বার্গার বান",category:"Bakery",icon:"🍔",price:100,unit:"pack",shop:"Bakery",desc:"Burger buns।"},
+  {id:68,name:"কেক",category:"Bakery",icon:"🍰",price:450,unit:"piece",shop:"Bakery",desc:"Fresh cake।"},
+  {id:69,name:"ক্রিম বিস্কুট",category:"Bakery",icon:"🍪",price:100,unit:"pack",shop:"Bakery",desc:"Cream biscuits।"},
+
+  /* Sauces */
+
+  {id:70,name:"টমেটো সস",category:"Sauces & Pickles",icon:"🥫",price:180,unit:"bottle",shop:"Supermarket",desc:"Tomato ketchup।"},
+  {id:71,name:"চিলি সস",category:"Sauces & Pickles",icon:"🌶️",price:200,unit:"bottle",shop:"Supermarket",desc:"Chili sauce।"},
+  {id:72,name:"আচার",category:"Sauces & Pickles",icon:"🥒",price:180,unit:"jar",shop:"Local Grocery",desc:"Mixed pickle।"},
+  {id:73,name:"জ্যাম",category:"Sauces & Pickles",icon:"🍓",price:250,unit:"jar",shop:"Supermarket",desc:"Fruit jam।"},
+
+  /* Household */
+
+  {id:74,name:"ডিটারজেন্ট",category:"Household",icon:"🧺",price:180,unit:"pack",shop:"Supermarket",desc:"Laundry detergent।"},
+  {id:75,name:"ডিশওয়াশ",category:"Household",icon:"🧴",price:150,unit:"bottle",shop:"Supermarket",desc:"Dishwashing liquid।"},
+  {id:76,name:"ফ্লোর ক্লিনার",category:"Household",icon:"🧹",price:220,unit:"bottle",shop:"Supermarket",desc:"Floor cleaner।"},
+  {id:77,name:"টিস্যু",category:"Household",icon:"🧻",price:120,unit:"box",shop:"Supermarket",desc:"Tissue paper।"},
+  {id:78,name:"গারবেজ ব্যাগ",category:"Household",icon:"🗑️",price:150,unit:"pack",shop:"Supermarket",desc:"Garbage bags।"},
+  {id:79,name:"স্পঞ্জ",category:"Household",icon:"🧽",price:80,unit:"pack",shop:"Local Grocery",desc:"Cleaning sponge।"},
+  {id:80,name:"ঝাড়ু",category:"Household",icon:"🧹",price:180,unit:"piece",shop:"Local Grocery",desc:"House broom।"},
+
+  /* Personal Care */
+
+  {id:81,name:"শ্যাম্পু",category:"Personal Care",icon:"🧴",price:250,unit:"bottle",shop:"Supermarket",desc:"Hair shampoo।"},
+  {id:82,name:"সাবান",category:"Personal Care",icon:"🧼",price:70,unit:"piece",shop:"Local Grocery",desc:"Bath soap।"},
+  {id:83,name:"টুথপেস্ট",category:"Personal Care",icon:"🪥",price:180,unit:"tube",shop:"Supermarket",desc:"Toothpaste।"},
+  {id:84,name:"টুথব্রাশ",category:"Personal Care",icon:"🪥",price:100,unit:"piece",shop:"Supermarket",desc:"Toothbrush।"},
+  {id:85,name:"বডি লোশন",category:"Personal Care",icon:"🧴",price:300,unit:"bottle",shop:"Supermarket",desc:"Body lotion।"},
+  {id:86,name:"হেয়ার অয়েল",category:"Personal Care",icon:"🧴",price:180,unit:"bottle",shop:"Local Grocery",desc:"Hair oil।"},
+  {id:87,name:"পারফিউম",category:"Personal Care",icon:"🌸",price:650,unit:"bottle",shop:"International Grocery",desc:"Fragrance।"},
+
+  /* Baby */
+
+  {id:88,name:"Baby Diaper",category:"Baby Care",icon:"👶",price:850,unit:"pack",shop:"Supermarket",desc:"Baby diaper।"},
+  {id:89,name:"Baby Wipes",category:"Baby Care",icon:"🧻",price:300,unit:"pack",shop:"Supermarket",desc:"Baby wipes।"},
+  {id:90,name:"Baby Shampoo",category:"Baby Care",icon:"🧴",price:350,unit:"bottle",shop:"Supermarket",desc:"Baby shampoo।"},
+  {id:91,name:"Baby Soap",category:"Baby Care",icon:"🧼",price:150,unit:"piece",shop:"Supermarket",desc:"Baby soap।"},
+  {id:92,name:"Baby Food",category:"Baby Care",icon:"🥣",price:550,unit:"pack",shop:"International Grocery",desc:"Baby food।"},
+
+  /* Kitchen */
+
+  {id:93,name:"ফ্রাইং প্যান",category:"Kitchen",icon:"🍳",price:850,unit:"piece",shop:"Household Store",desc:"Non-stick frying pan।"},
+  {id:94,name:"রান্নার হাঁড়ি",category:"Kitchen",icon:"🍲",price:1200,unit:"piece",shop:"Household Store",desc:"Cooking pot।"},
+  {id:95,name:"কিচেন নাইফ",category:"Kitchen",icon:"🔪",price:350,unit:"piece",shop:"Household Store",desc:"Kitchen knife।"},
+  {id:96,name:"চামচ সেট",category:"Kitchen",icon:"🥄",price:250,unit:"set",shop:"Household Store",desc:"Spoon set।"},
+  {id:97,name:"ফুড কন্টেইনার",category:"Kitchen",icon:"🫙",price:450,unit:"set",shop:"Household Store",desc:"Food storage container।"},
+  {id:98,name:"পানির বোতল",category:"Kitchen",icon:"💧",price:300,unit:"piece",shop:"Household Store",desc:"Reusable water bottle।"},
+
+  /* Dry Food */
+
+  {id:99,name:"কাজু বাদাম",category:"Dry Food",icon:"🥜",price:950,unit:"kg",shop:"International Grocery",desc:"Cashew nuts।"},
+  {id:100,name:"কাঠবাদাম",category:"Dry Food",icon:"🥜",price:1000,unit:"kg",shop:"International Grocery",desc:"Almonds।"},
+  {id:101,name:"কিশমিশ",category:"Dry Food",icon:"🍇",price:550,unit:"kg",shop:"International Grocery",desc:"Raisins।"},
+  {id:102,name:"খেজুর",category:"Dry Food",icon:"🌴",price:500,unit:"kg",shop:"Middle East Grocery",desc:"Dates।"},
+  {id:103,name:"মধু",category:"Dry Food",icon:"🍯",price:700,unit:"kg",shop:"Organic Market",desc:"Natural honey।"},
+
+  /* Frozen */
+
+  {id:104,name:"Frozen Nuggets",category:"Frozen Food",icon:"🍗",price:450,unit:"pack",shop:"Frozen Market",desc:"Frozen chicken nuggets।"},
+  {id:105,name:"Frozen Paratha",category:"Frozen Food",icon:"🥞",price:220,unit:"pack",shop:"Frozen Market",desc:"Frozen paratha।"},
+  {id:106,name:"Frozen Vegetables",category:"Frozen Food",icon:"🥦",price:300,unit:"pack",shop:"Frozen Market",desc:"Frozen vegetables।"},
+
+  /* Organic */
+
+  {id:107,name:"Organic Rice",category:"Organic",icon:"🌾",price:220,unit:"kg",shop:"Organic Market",desc:"Organic rice।"},
+  {id:108,name:"Organic Honey",category:"Organic",icon:"🍯",price:900,unit:"kg",shop:"Organic Market",desc:"Organic honey।"},
+  {id:109,name:"Organic Vegetables",category:"Organic",icon:"🥬",price:180,unit:"kg",shop:"Organic Market",desc:"Organic vegetables।"},
+  {id:110,name:"Organic Tea",category:"Organic",icon:"🍵",price:500,unit:"pack",shop:"Organic Market",desc:"Organic tea।"}
+
+];
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let activeCategory = "all";
+
+let cart = JSON.parse(
+  localStorage.getItem("aynaWorldGroceryCart") || "[]"
+);
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function money(value){
+  return "৳" + Number(value).toLocaleString("en-BD");
+}
+
+
+function saveCart(){
+  localStorage.setItem(
+    "aynaWorldGroceryCart",
+    JSON.stringify(cart)
+  );
+}
+
+
+function getCategories(){
+
+  const set = new Set(
+    products.map(product => product.category)
+  );
+
+  return [...set].sort();
+}
+
+
+/* =========================================================
+   CATEGORY UI
+   ========================================================= */
+
+function renderCategories(){
+
+  const categories =
+    ["all", ...getCategories()];
+
+  const container =
+    document.getElementById("categories");
+
+  const select =
+    document.getElementById("categorySelect");
+
+  container.innerHTML = "";
+
+  select.innerHTML = `
+    <option value="all">সব বিভাগ</option>
+  `;
+
+  categories
+    .filter(category => category !== "all")
+    .forEach(category => {
+
+      const button =
+        document.createElement("button");
+
+      button.className =
+        "cat-btn" +
+        (activeCategory === category ? " active" : "");
+
+      button.textContent =
+        category;
+
+      button.onclick = () =>
+        selectCategory(category);
+
+      container.appendChild(button);
+
+      const option =
+        document.createElement("option");
+
+      option.value = category;
+      option.textContent = category;
+
+      select.appendChild(option);
+    });
+
+  select.value = activeCategory;
+}
+
+
+/* =========================================================
+   CATEGORY SELECT
+   ========================================================= */
+
+function selectCategory(category){
+
+  activeCategory = category;
+
+  renderCategories();
+  renderProducts();
+}
+
+
+/* =========================================================
+   PRODUCT RENDER
+   ========================================================= */
+
+function renderProducts(){
+
+  const search =
+    document.getElementById("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const container =
+    document.getElementById("products");
+
+  let list =
+    products.filter(product => {
+
+      const categoryMatch =
+        activeCategory === "all" ||
+        product.category === activeCategory;
+
+      const searchMatch =
+        !search ||
+        product.name.toLowerCase().includes(search) ||
+        product.category.toLowerCase().includes(search) ||
+        product.shop.toLowerCase().includes(search);
+
+      return categoryMatch && searchMatch;
+    });
+
+  document.getElementById("productCount")
+    .textContent =
+    `(${list.length}টি)`;
+
+
+  if(!list.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        <div style="font-size:60px;">🔎</div>
+        <h3 style="font-size:26px;margin:10px 0;">
+          কোনো পণ্য পাওয়া যায়নি
+        </h3>
+        <p>অন্য নামে Search করুন অথবা বিভাগ পরিবর্তন করুন।</p>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    list.map(product => `
+
+      <article class="product">
+
+        <div class="product-image">
+          ${product.icon}
+        </div>
+
+        <div class="product-body">
+
+          <div class="product-name">
+            ${escapeHTML(product.name)}
+          </div>
+
+          <div class="product-category">
+            ${escapeHTML(product.category)}
+          </div>
+
+          <div class="product-shop">
+            🏪 ${escapeHTML(product.shop)}
+          </div>
+
+          <div class="price">
+            ${money(product.price)}
+            <span class="unit">
+              / ${escapeHTML(product.unit)}
+            </span>
+          </div>
+
+          <div class="product-actions">
+
+            <button
+              class="btn btn-details"
+              onclick="showProduct(${product.id})"
+            >
+              👁️ Details
+            </button>
+
+            <button
+              class="btn btn-cart"
+              onclick="addToCart(${product.id})"
+            >
+              🛍️ Add
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    `).join("");
+}
+
+
+/* =========================================================
+   PRODUCT DETAILS
+   ========================================================= */
+
+function showProduct(id){
+
+  const product =
+    products.find(item => item.id === id);
+
+  if(!product) return;
+
+  document.getElementById("modalTitle")
+    .textContent = product.name;
+
+  document.getElementById("modalIcon")
+    .textContent = product.icon;
+
+  document.getElementById("modalCategory")
+    .textContent = product.category;
+
+  document.getElementById("modalShop")
+    .textContent = product.shop;
+
+  document.getElementById("modalPrice")
+    .textContent =
+    money(product.price) +
+    " / " +
+    product.unit;
+
+  document.getElementById("modalDescription")
+    .textContent = product.desc;
+
+  document.getElementById("modalCartButton")
+    .onclick = () => {
+
+      addToCart(product.id);
+
+      closeModal("productOverlay");
+    };
+
+  document
+    .getElementById("productOverlay")
+    .classList.add("show");
+}
+
+
+/* =========================================================
+   CART
+   ========================================================= */
+
+function addToCart(id){
+
+  const product =
+    products.find(item => item.id === id);
+
+  if(!product) return;
+
+  const existing =
+    cart.find(item => item.id === id);
+
+  if(existing){
+
+    existing.qty++;
+
+  }else{
+
+    cart.push({
+      id: product.id,
+      qty: 1
+    });
+  }
+
+  saveCart();
+  updateCartCount();
+
+  showToast(
+    "✅ " +
+    product.name +
+    " কার্টে যোগ হয়েছে"
+  );
+}
+
+
+function removeFromCart(id){
+
+  cart =
+    cart.filter(item => item.id !== id);
+
+  saveCart();
+
+  renderCart();
+  updateCartCount();
+}
+
+
+function changeQty(id, amount){
+
+  const item =
+    cart.find(item => item.id === id);
+
+  if(!item) return;
+
+  item.qty += amount;
+
+  if(item.qty <= 0){
+
+    cart =
+      cart.filter(x => x.id !== id);
+  }
+
+  saveCart();
+
+  renderCart();
+  updateCartCount();
+}
+
+
+function updateCartCount(){
+
+  const total =
+    cart.reduce(
+      (sum,item) => sum + item.qty,
+      0
+    );
+
+  document.getElementById("cartCount")
+    .textContent = total;
+}
+
+
+/* =========================================================
+   CART MODAL
+   ========================================================= */
+
+function openCart(){
+
+  renderCart();
+
+  document
+    .getElementById("cartOverlay")
+    .classList.add("show");
+}
+
+
+function renderCart(){
+
+  const container =
+    document.getElementById("cartItems");
+
+  if(!cart.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        🛍️<br><br>
+        আপনার Cart এখনো খালি।
+      </div>
+    `;
+
+    document.getElementById("cartTotal")
+      .textContent = "৳0";
+
+    return;
+  }
+
+
+  let total = 0;
+
+
+  container.innerHTML =
+    cart.map(item => {
+
+      const product =
+        products.find(p => p.id === item.id);
+
+      if(!product) return "";
+
+      const itemTotal =
+        product.price * item.qty;
+
+      total += itemTotal;
+
+      return `
+
+        <div class="cart-item">
+
+          <div class="cart-icon">
+            ${product.icon}
+          </div>
+
+          <div>
+
+            <strong>
+              ${escapeHTML(product.name)}
+            </strong>
+
+            <div class="qty">
+              ${money(product.price)}
+              × ${item.qty}
+            </div>
+
+            <div style="margin-top:7px;">
+
+              <button
+                class="btn-details"
+                style="padding:6px 10px;"
+                onclick="changeQty(${product.id},-1)"
+              >
+                −
+              </button>
+
+              <button
+                class="btn-details"
+                style="padding:6px 10px;"
+                onclick="changeQty(${product.id},1)"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+          <div style="text-align:right;">
+
+            <strong style="color:#ffd700;">
+              ${money(itemTotal)}
+            </strong>
+
+            <br>
+
+            <button
+              class="remove"
+              onclick="removeFromCart(${product.id})"
+            >
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  document.getElementById("cartTotal")
+    .textContent = money(total);
+}
+
+
+/* =========================================================
+   CHECKOUT
+   ========================================================= */
+
+function checkout(){
+
+  if(!cart.length){
+
+    showToast("🛍️ Cart খালি");
+
+    return;
+  }
+
+  alert(
+    "AYNA BOOK World Grocery\n\n" +
+    "Checkout system প্রস্তুত।\n\n" +
+    "পরবর্তী ধাপে Firebase দিয়ে " +
+    "Order + Delivery + Payment যুক্ত করা যাবে।"
+  );
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+function closeModal(id){
+
+  document
+    .getElementById(id)
+    .classList.remove("show");
+}
+
+
+document
+  .querySelectorAll(".overlay")
+  .forEach(overlay => {
+
+    overlay.addEventListener("click", event => {
+
+      if(event.target === overlay){
+
+        overlay.classList.remove("show");
+      }
+
+    });
+
+  });
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function showToast(message){
+
+  const toast =
+    document.createElement("div");
+
+  toast.textContent = message;
+
+  Object.assign(toast.style,{
+    position:"fixed",
+    left:"50%",
+    bottom:"25px",
+    transform:"translateX(-50%)",
+    zIndex:"5000",
+    background:"#ffd700",
+    color:"#06101f",
+    padding:"14px 20px",
+    borderRadius:"14px",
+    fontWeight:"900",
+    boxShadow:"0 10px 30px rgba(0,0,0,.5)",
+    maxWidth:"90%",
+    textAlign:"center"
+  });
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+
+    toast.remove();
+
+  },2200);
+}
+
+
+/* =========================================================
+   SECURITY / HTML ESCAPE
+   ========================================================= */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+renderCategories();
+renderProducts();
+updateCartCount();
+
+</script>
+
 </body>
 </html>
