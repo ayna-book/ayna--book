@@ -1,407 +1,223 @@
+
 // =========================================================
-// AYNA BOOK
-// EMAIL VERIFICATION CONTROLLER
-// File: verify-email.js
+// AYNA BOOK — EMAIL VERIFICATION
+// Firebase Authentication + Realtime Database
+// Firebase SDK 13.4.0
 // =========================================================
 
 import {
-  checkEmailVerification,
-  resendVerificationEmail,
-  logoutUser,
-  getCurrentUser
-} from "./auth.js";
+  onAuthStateChanged,
+  reload,
+  sendEmailVerification,
+  signOut
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
+import {
+  ref,
+  update
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
-// =========================================================
-// ELEMENTS
-// =========================================================
+import { auth, database } from "./firebase-init.js";
 
-const emailBox =
-  document.getElementById("emailBox");
+const $ = id => document.getElementById(id);
 
-const checkButton =
-  document.getElementById("checkButton");
+let currentUser = null;
+let checking = false;
+let sending = false;
 
-const resendButton =
-  document.getElementById("resendButton");
+function showMessage(message, type = "info") {
+  const box = $("message");
+  if (!box) return;
 
-const logoutButton =
-  document.getElementById("logoutButton");
-
-const messageBox =
-  document.getElementById("message");
-
-
-// =========================================================
-// AYNA BOOK OFFICIAL EMAIL
-// =========================================================
-
-const expectedEmail =
-  "aynabookofficeal@gmail.com";
-
-
-// =========================================================
-// MESSAGE
-// =========================================================
-
-function showMessage(text, type = "error") {
-
-  if (!messageBox) return;
-
-  messageBox.textContent = text;
-
-  messageBox.className =
-    "message show " + type;
+  box.textContent = message;
+  box.className = `message show ${type}`;
 }
 
+function displayEmail(user) {
+  const emailBox = $("emailBox");
 
-// =========================================================
-// GET CURRENT USER
-// =========================================================
-
-function getUser() {
-
-  return getCurrentUser();
-
-}
-
-
-// =========================================================
-// DISPLAY EMAIL
-// =========================================================
-
-function displayUserEmail() {
-
-  const user = getUser();
-
-  if (!user) {
-
+  if (emailBox) {
     emailBox.textContent =
-      expectedEmail;
+      user?.email ||
+      "আপনার ইমেইল দিয়ে Login করুন";
+  }
+}
 
-    return null;
+function updateButtons() {
+  if ($("checkButton")) {
+    $("checkButton").disabled = !currentUser || checking;
   }
 
-  const userEmail =
-    (user.email || "").trim().toLowerCase();
+  if ($("resendButton")) {
+    $("resendButton").disabled = !currentUser || sending;
+  }
 
-  emailBox.textContent =
-    user.email || expectedEmail;
-
-  return user;
+  if ($("logoutButton")) {
+    $("logoutButton").disabled = !currentUser;
+  }
 }
 
 
 // =========================================================
-// INITIAL CHECK
+// AUTH STATE
 // =========================================================
 
-const currentUser =
-  displayUserEmail();
+onAuthStateChanged(auth, user => {
+  currentUser = user || null;
+
+  displayEmail(user);
+  updateButtons();
+
+  if (!user) {
+    showMessage(
+      "এই পেজে যাচাই করতে আগে আপনার নিবন্ধিত অ্যাকাউন্ট দিয়ে Login করুন।",
+      "info"
+    );
+  } else if (user.emailVerified) {
+    showMessage(
+      "আপনার ইমেইল ইতিমধ্যে যাচাই করা হয়েছে।",
+      "success"
+    );
+  } else {
+    showMessage(
+      "আপনার ইমেইল এখনো যাচাই হয়নি। Gmail খুলে Verification Link-এ চাপ দিন।",
+      "info"
+    );
+  }
+});
 
 
-if (!currentUser) {
+// =========================================================
+// CHECK EMAIL VERIFICATION
+// =========================================================
 
-  showMessage(
-    "No signed-in account was found. Please sign in first.",
-    "error"
-  );
+$("checkButton")?.addEventListener("click", async () => {
+  if (!currentUser || checking) {
+    showMessage("আগে আপনার অ্যাকাউন্ট দিয়ে Login করুন।", "error");
+    return;
+  }
 
-  setTimeout(function () {
+  checking = true;
+  updateButtons();
 
-    window.location.replace(
-      "login.html"
+  try {
+    await reload(currentUser);
+
+    if (!currentUser.emailVerified) {
+      showMessage(
+        "এখনো Email Verification পাওয়া যায়নি। Gmail-এর Verification Link খুলে আবার চেষ্টা করুন।",
+        "error"
+      );
+      return;
+    }
+
+    // Update local Firebase user state
+    const uid = currentUser.uid;
+
+    // Update verified status in Realtime Database
+    await update(ref(database, `users/${uid}`), {
+      emailVerified: true,
+      emailVerifiedAt: Date.now()
+    });
+
+    showMessage(
+      "অভিনন্দন! আপনার Email সফলভাবে যাচাই হয়েছে। AYNA BOOK খুলছে...",
+      "success"
     );
 
-  }, 1500);
-}
+    $("checkButton").textContent = "✅ যাচাই সম্পন্ন";
 
+    setTimeout(() => {
+      window.location.href = "profile.html";
+    }, 1500);
 
-// =========================================================
-// CHECK VERIFICATION
-// =========================================================
+  } catch (error) {
+    console.error("Verification check error:", error);
 
-if (checkButton) {
+    showMessage(
+      "যাচাই সম্পন্ন করা যায়নি। ইন্টারনেট ও Firebase Database Rules পরীক্ষা করুন।",
+      "error"
+    );
 
-  checkButton.addEventListener(
-    "click",
-    async function () {
-
-      checkButton.disabled = true;
-
-      checkButton.textContent =
-        "Checking...";
-
-      try {
-
-        const result =
-          await checkEmailVerification();
-
-
-        if (!result.success) {
-
-          showMessage(
-            result.message ||
-            "Unable to check email verification.",
-            "error"
-          );
-
-          return;
-        }
-
-
-        // -------------------------------------------------
-        // VERIFIED
-        // -------------------------------------------------
-
-        if (result.verified) {
-
-          showMessage(
-            "Email verified successfully. Opening AYNA BOOK...",
-            "success"
-          );
-
-
-          setTimeout(function () {
-
-            window.location.replace(
-              "home.html"
-            );
-
-          }, 1000);
-
-          return;
-        }
-
-
-        // -------------------------------------------------
-        // NOT VERIFIED
-        // -------------------------------------------------
-
-        showMessage(
-          "Your email is not verified yet. Please open the verification email and click the verification link.",
-          "error"
-        );
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK Verification Check Error:",
-          error
-        );
-
-        showMessage(
-          "An error occurred while checking verification.",
-          "error"
-        );
-
-      } finally {
-
-        checkButton.disabled = false;
-
-        checkButton.textContent =
-          "I've Verified My Email";
-
-      }
-
-    }
-  );
-
-}
+  } finally {
+    checking = false;
+    updateButtons();
+  }
+});
 
 
 // =========================================================
 // RESEND VERIFICATION EMAIL
 // =========================================================
 
-if (resendButton) {
+$("resendButton")?.addEventListener("click", async () => {
+  if (!currentUser || sending) {
+    showMessage("আগে আপনার অ্যাকাউন্ট দিয়ে Login করুন।", "error");
+    return;
+  }
 
-  resendButton.addEventListener(
-    "click",
-    async function () {
+  sending = true;
+  updateButtons();
 
-      resendButton.disabled = true;
+  try {
+    await reload(currentUser);
 
-      resendButton.textContent =
-        "Sending...";
-
-
-      try {
-
-        const user =
-          getUser();
-
-
-        if (!user) {
-
-          showMessage(
-            "No signed-in account was found.",
-            "error"
-          );
-
-          return;
-        }
-
-
-        const result =
-          await resendVerificationEmail();
-
-
-        if (result.success) {
-
-          showMessage(
-            "Verification email sent successfully. Please check your inbox and Spam/Junk folder.",
-            "success"
-          );
-
-        } else {
-
-          showMessage(
-            result.message ||
-            "Unable to send verification email.",
-            "error"
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK Resend Verification Error:",
-          error
-        );
-
-        showMessage(
-          "Unable to send the verification email. Please try again.",
-          "error"
-        );
-
-      } finally {
-
-        resendButton.disabled = false;
-
-        resendButton.textContent =
-          "Resend Verification Email";
-
-      }
-
+    if (currentUser.emailVerified) {
+      showMessage(
+        "আপনার ইমেইল ইতিমধ্যে যাচাই করা হয়েছে।",
+        "success"
+      );
+      return;
     }
-  );
 
-}
+    await sendEmailVerification(currentUser);
+
+    showMessage(
+      `নতুন Verification Email পাঠানো হয়েছে: ${currentUser.email}। Inbox ও Spam ফোল্ডার দেখুন।`,
+      "success"
+    );
+
+  } catch (error) {
+    console.error("Resend verification error:", error);
+
+    if (error.code === "auth/too-many-requests") {
+      showMessage(
+        "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ অপেক্ষা করে আবার চেষ্টা করুন।",
+        "error"
+      );
+    } else {
+      showMessage(
+        "Verification Email পাঠানো যায়নি। Login session ও ইন্টারনেট পরীক্ষা করুন।",
+        "error"
+      );
+    }
+
+  } finally {
+    sending = false;
+    updateButtons();
+  }
+});
 
 
 // =========================================================
 // SIGN OUT
 // =========================================================
 
-if (logoutButton) {
-
-  logoutButton.addEventListener(
-    "click",
-    async function () {
-
-      logoutButton.disabled = true;
-
-      logoutButton.textContent =
-        "Signing Out...";
-
-
-      try {
-
-        const result =
-          await logoutUser();
-
-
-        if (result.success) {
-
-          sessionStorage.removeItem(
-            "verificationEmail"
-          );
-
-          window.location.replace(
-            "login.html"
-          );
-
-          return;
-        }
-
-
-        showMessage(
-          result.message ||
-          "Unable to sign out.",
-          "error"
-        );
-
-      } catch (error) {
-
-        console.error(
-          "AYNA BOOK Logout Error:",
-          error
-        );
-
-        showMessage(
-          "Unable to sign out. Please try again.",
-          "error"
-        );
-
-      } finally {
-
-        logoutButton.disabled = false;
-
-        logoutButton.textContent =
-          "Sign Out";
-
-      }
-
-    }
-  );
-
-}
-
-
-// =========================================================
-// AUTO-CHECK AFTER PAGE LOAD
-// =========================================================
-
-setTimeout(async function () {
-
-  const user =
-    getUser();
-
-  if (!user) return;
-
+$("logoutButton")?.addEventListener("click", async () => {
   try {
+    await signOut(auth);
 
-    const result =
-      await checkEmailVerification();
-
-
-    if (result.success && result.verified) {
-
-      showMessage(
-        "Email already verified. Opening AYNA BOOK...",
-        "success"
-      );
-
-
-      setTimeout(function () {
-
-        window.location.replace(
-          "home.html"
-        );
-
-      }, 700);
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "AYNA BOOK Auto Verification Error:",
-      error
+    showMessage(
+      "আপনি Sign Out করেছেন। এখন Login পেজে যেতে পারেন।",
+      "success"
     );
 
-  }
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1000);
 
-}, 1000);
+  } catch (error) {
+    console.error("Sign out error:", error);
+    showMessage("Sign Out করা যায়নি। আবার চেষ্টা করুন।", "error");
+  }
+});
