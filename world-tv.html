@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#050914"
+  >
+
+  <title>AYNA BOOK ★ World Free Live TV</title>
+
+  <link rel="stylesheet" href="./style.css">
+
+  <style>
+    /* =========================================================
+       AYNA BOOK — WORLD FREE LIVE TV
+       File: world-tv.html
+       ========================================================= */
+
+    :root {
+      --tv-bg: #050914;
+      --tv-panel: #0a1222;
+      --tv-panel-2: #0d1830;
+      --tv-border: #d4af37;
+      --tv-gold: #ffd84d;
+      --tv-white: #ffffff;
+      --tv-muted: #aeb9cc;
+      --tv-live: #ff3030;
+      --tv-green: #22c55e;
+      --tv-blue: #1d4ed8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: var(--tv-bg);
+      color: var(--tv-white);
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================================================
+       APP
+       ========================================================= */
+
+    ._tv_app {
+      width: 100%;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(25, 61, 125, 0.35),
+          transparent 42%
+        ),
+        var(--tv-bg);
+    }
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+
+    ._tv_header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+
+      width: 100%;
+      min-height: 74px;
+      padding: 12px 16px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #132b5e,
+          #071125
+        );
+
+      border-bottom: 2px solid var(--tv-border);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    ._tv_brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: clamp(22px, 5vw, 34px);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    ._tv_brand_prefix {
+      color: var(--tv-gold);
+    }
+
+    ._tv_brand_live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 6px 10px;
+
+      border: 1px solid var(--tv-live);
+      border-radius: 999px;
+
+      color: #fff;
+      background: rgba(255, 48, 48, 0.12);
+
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    ._tv_header_actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    ._tv_header_button {
+      min-width: 48px;
+      min-height: 44px;
+
+      padding: 8px 12px;
+
+      border: 1px solid var(--tv-border);
+      border-radius: 10px;
+
+      background: #08152e;
+      color: #fff;
+
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    ._tv_header_button:hover {
+      background: #15346d;
+    }
+
+    /* =========================================================
+       MAIN
+       ========================================================= */
+
+    ._tv_main {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+
+    ._tv_hero {
+      padding: 24px 18px;
+      margin-bottom: 18px;
+
+      border: 1px solid var(--tv-border);
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(22, 54, 112, 0.92),
+          rgba(5, 13, 29, 0.96)
+        );
+
+      text-align: center;
+    }
+
+    ._tv_hero h1 {
+      margin: 0 0 10px;
+
+      font-size: clamp(30px, 7vw, 58px);
+      line-height: 1.05;
+    }
+
+    ._tv_hero h1 span {
+      color: var(--tv-gold);
+    }
+
+    ._tv_hero p {
+      margin: 0 auto;
+
+      max-width: 900px;
+
+      color: var(--tv-muted);
+
+      font-size: clamp(17px, 3.8vw, 24px);
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       LIVE STATUS
+       ========================================================= */
+
+    ._tv_status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      margin: 18px 0;
+
+      color: #fff;
+
+      font-size: clamp(18px, 4vw, 26px);
+      font-weight: 900;
+    }
+
+    ._tv_live_dot {
+      width: 13px;
+      height: 13px;
+
+      border-radius: 50%;
+      background: var(--tv-live);
+
+      box-shadow:
+        0 0 0 5px rgba(255, 48, 48, 0.12),
+        0 0 18px rgba(255, 48, 48, 0.9);
+
+      animation: tvPulse 1.4s infinite;
+    }
+
+    @keyframes tvPulse {
+      50% {
+        opacity: 0.35;
+        transform: scale(0.8);
+      }
+    }
+
+    /* =========================================================
+       SEARCH
+       ========================================================= */
+
+    ._tv_search_box {
+      display: flex;
+      gap: 10px;
+
+      margin-bottom: 16px;
+    }
+
+    ._tv_search_box input {
+      flex: 1;
+
+      width: 100%;
+      min-height: 58px;
+
+      padding: 12px 16px;
+
+      border: 1px solid var(--tv-border);
+      border-radius: 14px;
+
+      outline: none;
+
+      background: #070f20;
+      color: #fff;
+
+      font-size: 20px;
+    }
+
+    ._tv_search_box input::placeholder {
+      color: #8d9ab0;
+    }
+
+    ._tv_search_box input:focus {
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.16);
+    }
+
+    /* =========================================================
+       FILTER BAR
+       ========================================================= */
+
+    ._tv_filters {
+      display: flex;
+      gap: 9px;
+
+      margin-bottom: 18px;
+
+      overflow-x: auto;
+      padding-bottom: 6px;
+
+      scrollbar-width: thin;
+    }
+
+    ._tv_filter {
+      flex: 0 0 auto;
+
+      min-height: 46px;
+      padding: 9px 15px;
+
+      border: 1px solid #45618e;
+      border-radius: 999px;
+
+      background: #09152b;
+      color: #fff;
+
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    ._tv_filter.active,
+    ._tv_filter:hover {
+      border-color: var(--tv-gold);
+      background: #18386f;
+      color: var(--tv-gold);
+    }
+
+    /* =========================================================
+       COUNTRY SELECT
+       ========================================================= */
+
+    ._tv_country_box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+
+      margin-bottom: 20px;
+    }
+
+    ._tv_select {
+      width: 100%;
+      min-height: 56px;
+
+      padding: 10px 14px;
+
+      border: 1px solid var(--tv-border);
+      border-radius: 12px;
+
+      background: #08142a;
+      color: #fff;
+
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* =========================================================
+       PLAYER
+       ========================================================= */
+
+    ._tv_player_box {
+      position: relative;
+
+      width: 100%;
+
+      margin-bottom: 22px;
+
+      border: 2px solid var(--tv-border);
+      border-radius: 18px;
+
+      overflow: hidden;
+
+      background: #000;
+
+      box-shadow:
+        0 15px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    ._tv_player_header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      min-height: 58px;
+      padding: 10px 14px;
+
+      background: #08142a;
+      border-bottom: 1px solid #344b73;
+    }
+
+    ._tv_now_title {
+      min-width: 0;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      font-size: clamp(18px, 4vw, 28px);
+      font-weight: 900;
+    }
+
+    ._tv_now_title span {
+      color: var(--tv-gold);
+    }
+
+    ._tv_player_actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    ._tv_player_button {
+      min-width: 48px;
+      min-height: 44px;
+
+      border: 1px solid var(--tv-border);
+      border-radius: 9px;
+
+      background: #102653;
+      color: #fff;
+
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    ._tv_video_wrap {
+      position: relative;
+
+      width: 100%;
+      aspect-ratio: 16 / 9;
+
+      background: #000;
+    }
+
+    #tvVideo {
+      display: block;
+
+      width: 100%;
+      height: 100%;
+
+      background: #000;
+      object-fit: contain;
+    }
+
+    ._tv_player_message {
+      position: absolute;
+      inset: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(22, 54, 112, 0.5),
+          rgba(0, 0, 0, 0.94)
+        );
+
+      text-align: center;
+
+      pointer-events: none;
+    }
+
+    ._tv_player_message_content {
+      max-width: 700px;
+    }
+
+    ._tv_player_message h2 {
+      margin: 0 0 10px;
+
+      font-size: clamp(22px, 5vw, 38px);
+    }
+
+    ._tv_player_message p {
+      margin: 0;
+
+      color: var(--tv-muted);
+
+      font-size: clamp(15px, 3.5vw, 20px);
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       SECTION
+       ========================================================= */
+
+    ._tv_section {
+      margin-bottom: 22px;
+
+      padding: 16px;
+
+      border: 1px solid var(--tv-border);
+      border-radius: 18px;
+
+      background: rgba(8, 18, 38, 0.88);
+    }
+
+    ._tv_section_title {
+      margin: 0 0 15px;
+
+      font-size: clamp(23px, 5vw, 34px);
+      font-weight: 900;
+    }
+
+    ._tv_section_title::before {
+      content: "_";
+      color: var(--tv-gold);
+      margin-right: 4px;
+    }
+
+    /* =========================================================
+       CHANNEL GRID
+       ========================================================= */
+
+    ._tv_channels {
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fill,
+          minmax(230px, 1fr)
+        );
+
+      gap: 13px;
+    }
+
+    ._tv_channel {
+      position: relative;
+
+      display: flex;
+      flex-direction: column;
+
+      min-height: 185px;
+
+      padding: 15px;
+
+      border: 1px solid #38557f;
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #0d1d3b,
+          #071126
+        );
+
+      transition:
+        transform 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    ._tv_channel:hover {
+      transform: translateY(-2px);
+      border-color: var(--tv-gold);
+    }
+
+    ._tv_channel_top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    ._tv_channel_flag {
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    ._tv_channel_live {
+      padding: 5px 8px;
+
+      border: 1px solid var(--tv-live);
+      border-radius: 999px;
+
+      color: #fff;
+      background: rgba(255, 48, 48, 0.14);
+
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+    }
+
+    ._tv_channel_name {
+      margin-top: 12px;
+
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    ._tv_channel_country {
+      margin-top: 6px;
+
+      color: var(--tv-muted);
+
+      font-size: 15px;
+    }
+
+    ._tv_channel_category {
+      margin-top: 4px;
+
+      color: var(--tv-gold);
+
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    ._tv_channel_buttons {
+      display: grid;
+      grid-template-columns: 1fr 48px;
+
+      gap: 8px;
+
+      margin-top: auto;
+      padding-top: 14px;
+    }
+
+    ._tv_watch {
+      min-height: 48px;
+
+      border: 1px solid var(--tv-gold);
+      border-radius: 10px;
+
+      background: #17356d;
+      color: #fff;
+
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    ._tv_watch:hover {
+      background: #214b94;
+    }
+
+    ._tv_favorite {
+      min-height: 48px;
+
+      border: 1px solid #60708a;
+      border-radius: 10px;
+
+      background: #08142a;
+      color: #fff;
+
+      font-size: 21px;
+    }
+
+    ._tv_favorite.active {
+      border-color: var(--tv-gold);
+      color: var(--tv-gold);
+    }
+
+    /* =========================================================
+       EMPTY
+       ========================================================= */
+
+    ._tv_empty {
+      padding: 35px 18px;
+
+      border: 1px dashed #516581;
+      border-radius: 14px;
+
+      color: var(--tv-muted);
+
+      text-align: center;
+
+      font-size: 20px;
+    }
+
+    /* =========================================================
+       INFO
+       ========================================================= */
+
+    ._tv_info {
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(220px, 1fr)
+        );
+
+      gap: 12px;
+    }
+
+    ._tv_info_card {
+      padding: 17px;
+
+      border: 1px solid #3b557a;
+      border-radius: 14px;
+
+      background: #08142a;
+    }
+
+    ._tv_info_card strong {
+      display: block;
+
+      margin-bottom: 7px;
+
+      color: var(--tv-gold);
+
+      font-size: 19px;
+    }
+
+    ._tv_info_card p {
+      margin: 0;
+
+      color: var(--tv-muted);
+
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       LOADING
+       ========================================================= */
+
+    ._tv_loading {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(0, 0, 0, 0.82);
+
+      backdrop-filter: blur(5px);
+    }
+
+    ._tv_loading.show {
+      display: flex;
+    }
+
+    ._tv_loading_box {
+      width: min(420px, calc(100% - 30px));
+
+      padding: 25px;
+
+      border: 1px solid var(--tv-gold);
+      border-radius: 16px;
+
+      background: #09152b;
+
+      text-align: center;
+    }
+
+    ._tv_loading_dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+
+      margin-top: 15px;
+    }
+
+    ._tv_loading_dots span {
+      width: 10px;
+      height: 10px;
+
+      border-radius: 50%;
+
+      background: var(--tv-gold);
+
+      animation: tvDots 1.2s infinite;
+    }
+
+    ._tv_loading_dots span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    ._tv_loading_dots span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes tvDots {
+      0%,
+      80%,
+      100% {
+        opacity: 0.25;
+        transform: translateY(0);
+      }
+
+      40% {
+        opacity: 1;
+        transform: translateY(-5px);
+      }
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
+    ._tv_footer {
+      padding: 25px 16px 40px;
+
+      border-top: 1px solid #304666;
+
+      color: var(--tv-muted);
+
+      text-align: center;
+
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    ._tv_footer strong {
+      color: var(--tv-gold);
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 700px) {
+
+      ._tv_header {
+        padding: 10px;
+      }
+
+      ._tv_brand {
+        font-size: 21px;
+      }
+
+      ._tv_brand_live {
+        display: none;
+      }
+
+      ._tv_header_button {
+        min-width: 44px;
+        padding: 7px;
+      }
+
+      ._tv_main {
+        padding: 10px;
+      }
+
+      ._tv_hero {
+        padding: 20px 13px;
+        border-radius: 14px;
+      }
+
+      ._tv_country_box {
+        grid-template-columns: 1fr;
+      }
+
+      ._tv_channels {
+        grid-template-columns: 1fr;
+      }
+
+      ._tv_section {
+        padding: 12px;
+      }
+
+      ._tv_player_header {
+        padding: 8px 10px;
+      }
+
+      ._tv_now_title {
+        font-size: 17px;
+      }
+
+      ._tv_player_button {
+        min-width: 43px;
+        min-height: 40px;
+      }
+    }
+
+    @media (min-width: 701px) {
+
+      ._tv_channels {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0, 1fr)
+          );
+      }
+    }
+
+    @media (min-width: 1100px) {
+
+      ._tv_channels {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+    }
+
+    /* =========================================================
+       ACCESSIBILITY
+       ========================================================= */
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="_tv_app">
+
+    <!-- =======================================================
+         HEADER
+         ======================================================= -->
+
+    <header class="_tv_header">
+
+      <div class="_tv_brand">
+        <span class="_tv_brand_prefix">AYNA BOOK ★</span>
+
+        <span class="_tv_brand_live">
+          🔴 LIVE TV
+        </span>
+      </div>
+
+      <div class="_tv_header_actions">
+
+        <button
+          type="button"
+          class="_tv_header_button"
+          id="tvHomeButton"
+          title="Home"
+          aria-label="Home"
+        >
+          🏠
+        </button>
+
+        <button
+          type="button"
+          class="_tv_header_button"
+          id="tvBackButton"
+          title="Back"
+          aria-label="Back"
+        >
+          ←
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- =======================================================
+         MAIN
+         ======================================================= -->
+
+    <main class="_tv_main">
+
+
+      <!-- HERO -->
+
+      <section class="_tv_hero">
+
+        <h1>
+          🌍 <span>World Free Live TV</span>
+        </h1>
+
+        <p>
+          বিশ্বের বিভিন্ন দেশের বিনামূল্যের ও
+          অফিসিয়াল Live TV stream এক জায়গায় খুঁজুন,
+          দেখুন এবং Full Screen করুন।
+        </p>
+
+      </section>
+
+
+      <!-- LIVE STATUS -->
+
+      <div class="_tv_status">
+
+        <span class="_tv_live_dot"></span>
+
+        <span>
+          LIVE TV WORLDWIDE
+        </span>
+
+      </div>
+
+
+      <!-- SEARCH -->
+
+      <section class="_tv_search_box">
+
+        <input
+          id="tvSearch"
+          type="search"
+          autocomplete="off"
+          placeholder="🔎 Channel, Country বা Category খুঁজুন..."
+          aria-label="Search TV channels"
+        >
+
+      </section>
+
+
+      <!-- FILTER -->
+
+      <nav
+        class="_tv_filters"
+        id="tvCategoryFilters"
+        aria-label="TV Categories"
+      >
+
+        <button
+          type="button"
+          class="_tv_filter active"
+          data-category="all"
+        >
+          🌍 All
+        </button>
+
+        <button
+          type="button"
+          class="_tv_filter"
+          data-category="news"
+        >
+          📰 News
+        </button>
+
+        <button
+          type="button"
+          class="_tv_filter"
+          data-category="sports"
+        >
+          ⚽ Sports
+        </button>
+
+        <button
+          type="button"
+          class="_tv_filter"
+          data-category="entertainment"
+        >
+          🎬 Entertainment
+        </button>
+
+        <button
+          type="button"
+          class="_tv_filter"
+          data-category="music"
+        >
+          🎵 Music
+        </button>
+
+        <button
+          type="button"
+          class="_tv_filter"
+          data-category="kids"
+        >
+          🧒 Kids
+        </button>
+
+        <button
+          type="button"
+          class="_tv_filter"
+          data-category="business"
+        >
+          💼 Business
+        </button>
+
+        <button
+          type="button"
+          class="_tv_filter"
+          data-category="government"
+        >
+          🏛️ Government
+        </button>
+
+      </nav>
+
+
+      <!-- COUNTRY -->
+
+      <section class="_tv_country_box">
+
+        <select
+          id="tvCountrySelect"
+          class="_tv_select"
+          aria-label="Select country"
+        >
+          <option value="all">
+            🌍 All Countries
+          </option>
+        </select>
+
+        <select
+          id="tvLanguageSelect"
+          class="_tv_select"
+          aria-label="Select language"
+        >
+          <option value="all">
+            🗣️ All Languages
+          </option>
+        </select>
+
+      </section>
+
+
+      <!-- =====================================================
+           PLAYER
+           ===================================================== -->
+
+      <section class="_tv_player_box">
+
+        <div class="_tv_player_header">
+
+          <div
+            class="_tv_now_title"
+            id="tvNowTitle"
+          >
+            <span>AYNA BOOK</span>
+            — Select a Live Channel
+          </div>
+
+          <div class="_tv_player_actions">
+
+            <button
+              type="button"
+              class="_tv_player_button"
+              id="tvMuteButton"
+              title="Mute / Unmute"
+              aria-label="Mute / Unmute"
+            >
+              🔊
+            </button>
+
+            <button
+              type="button"
+              class="_tv_player_button"
+              id="tvFullscreenButton"
+              title="Full Screen"
+              aria-label="Full Screen"
+            >
+              ⛶
+            </button>
+
+          </div>
+
+        </div>
+
+        <div
+          class="_tv_video_wrap"
+          id="tvVideoWrap"
+        >
+
+          <video
+            id="tvVideo"
+            controls
+            playsinline
+            preload="metadata"
+          ></video>
+
+          <div
+            class="_tv_player_message"
+            id="tvPlayerMessage"
+          >
+
+            <div class="_tv_player_message_content">
+
+              <h2>
+                🌍 World Live TV
+              </h2>
+
+              <p>
+                নিচের তালিকা থেকে একটি
+                available official Live TV channel
+                নির্বাচন করুন।
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           FAVORITES
+           ===================================================== -->
+
+      <section
+        class="_tv_section"
+        id="tvFavoritesSection"
+      >
+
+        <h2 class="_tv_section_title">
+          ⭐ My Favorite Channels
+        </h2>
+
+        <div
+          class="_tv_channels"
+          id="tvFavorites"
+        ></div>
+
+      </section>
+
+
+      <!-- =====================================================
+           ALL CHANNELS
+           ===================================================== -->
+
+      <section class="_tv_section">
+
+        <h2 class="_tv_section_title">
+          🌍 World Channels
+        </h2>
+
+        <div
+          class="_tv_channels"
+          id="tvChannels"
+        ></div>
+
+        <div
+          class="_tv_empty"
+          id="tvEmpty"
+          hidden
+        >
+          কোনো matching channel পাওয়া যায়নি।
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           INFORMATION
+           ===================================================== -->
+
+      <section class="_tv_section">
+
+        <h2 class="_tv_section_title">
+          📺 AYNA BOOK Live TV
+        </h2>
+
+        <div class="_tv_info">
+
+          <article class="_tv_info_card">
+
+            <strong>
+              🌍 Worldwide
+            </strong>
+
+            <p>
+              দেশভিত্তিকভাবে বিশ্বের বিভিন্ন
+              অঞ্চলের available live channels
+              খুঁজে দেখা যাবে।
+            </p>
+
+          </article>
+
+
+          <article class="_tv_info_card">
+
+            <strong>
+              🔴 Direct Live
+            </strong>
+
+            <p>
+              যেসব channel official/public
+              live stream প্রদান করে সেগুলো
+              player-এ চালানো হবে।
+            </p>
+
+          </article>
+
+
+          <article class="_tv_info_card">
+
+            <strong>
+              💰 Free
+            </strong>
+
+            <p>
+              AYNA BOOK নিজে কোনো TV
+              subscription বা payment
+              system দাবি করবে না।
+            </p>
+
+          </article>
+
+
+          <article class="_tv_info_card">
+
+            <strong>
+              ⛶ Full Screen
+            </strong>
+
+            <p>
+              Android মোবাইলসহ বড় screen-এ
+              Full Screen viewing-এর জন্য
+              interface তৈরি করা হয়েছে।
+            </p>
+
+          </article>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <!-- =======================================================
+         FOOTER
+         ======================================================= -->
+
+    <footer class="_tv_footer">
+
+      <strong>
+        AYNA BOOK ★
+      </strong>
+
+      <br>
+
+      World Free Live TV
+
+      <br>
+
+      Connect • Share • Create
+
+      <br><br>
+
+      Live streams are provided only when
+      publicly available and officially permitted
+      by their respective broadcasters.
+
+    </footer>
+
+  </div>
+
+
+  <!-- =========================================================
+       LOADING
+       ========================================================= -->
+
+  <div
+    class="_tv_loading"
+    id="tvLoading"
+    aria-hidden="true"
+  >
+
+    <div class="_tv_loading_box">
+
+      <h2>
+        AYNA BOOK ★
+      </h2>
+
+      <p id="tvLoadingText">
+        Live TV loading...
+      </p>
+
+      <div class="_tv_loading_dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       JAVASCRIPT
+       ========================================================= -->
+
+  <script
+    type="module"
+    src="./world-tv.js"
+  ></script>
+
+</body>
+</html>
