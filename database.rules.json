@@ -38,13 +38,10 @@
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 2048)"
         },
         "accountType": {
-          ".validate": "!newData.exists() || newData.isString()"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 30)"
         },
         "plan": {
-          ".validate": "!newData.exists() || newData.isString()"
-        },
-        "$other": {
-          ".validate": true
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 30)"
         }
       }
     },
@@ -52,24 +49,26 @@
     "posts": {
       ".read": "auth != null",
       ".indexOn": ["uid", "createdAt"],
+
       "$postId": {
-        ".write": "auth != null && ((newData.exists() && newData.child('uid').val() === auth.uid) || (!newData.exists() && data.child('uid').val() === auth.uid))",
+        ".write": "auth != null && ((!data.exists() && newData.child('uid').val() === auth.uid) || (data.exists() && data.child('uid').val() === auth.uid && newData.child('uid').val() === data.child('uid').val()) || (!newData.exists() && data.child('uid').val() === auth.uid))",
+
         ".validate": "!newData.exists() || newData.hasChildren(['uid', 'createdAt'])",
 
         "postId": {
-          ".validate": "!newData.exists() || newData.isString()"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val() === $postId)"
         },
         "uid": {
-          ".validate": "newData.isString() && newData.val() === auth.uid"
+          ".validate": "newData.isString() && newData.val() === auth.uid && (!data.exists() || newData.val() === data.val())"
         },
         "aynaId": {
-          ".validate": "!newData.exists() || newData.isString()"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 100)"
         },
         "fullName": {
-          ".validate": "!newData.exists() || newData.isString()"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 100)"
         },
         "photoURL": {
-          ".validate": "!newData.exists() || newData.isString()"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 2048)"
         },
         "text": {
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 10000)"
@@ -78,55 +77,30 @@
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 4096)"
         },
         "imagePath": {
-          ".validate": "!newData.exists() || newData.isString()"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 2048)"
+        },
+        "videoURL": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 4096)"
+        },
+        "videoPath": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 2048)"
+        },
+        "type": {
+          ".validate": "!newData.exists() || (newData.isString() && (newData.val() === 'text' || newData.val() === 'image' || newData.val() === 'video'))"
         },
         "createdAt": {
-          ".validate": "newData.isNumber()"
+          ".validate": "newData.isNumber() && (!data.exists() || newData.val() === data.val())"
         },
         "updatedAt": {
           ".validate": "!newData.exists() || newData.isNumber()"
-        },
-        "$other": {
-          ".validate": true
         }
       }
     },
 
     "messenger_rooms": {
       "$room": {
-        ".read": "auth != null",
-        "$messageId": {
-          ".write": "auth != null && ((newData.exists() && newData.child('uid').val() === auth.uid) || (!newData.exists() && data.child('uid').val() === auth.uid))",
-          ".validate": "!newData.exists() || newData.hasChildren(['uid', 'createdAt'])",
-
-          "uid": {
-            ".validate": "newData.isString() && newData.val() === auth.uid"
-          },
-          "sender": {
-            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 200)"
-          },
-          "text": {
-            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 10000)"
-          },
-          "fileName": {
-            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 255)"
-          },
-          "fileSize": {
-            ".validate": "!newData.exists() || (newData.isNumber() && newData.val() >= 0)"
-          },
-          "mimeType": {
-            ".validate": "!newData.exists() || newData.isString()"
-          },
-          "fileUrl": {
-            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 4096)"
-          },
-          "createdAt": {
-            ".validate": "newData.isNumber()"
-          },
-          "$other": {
-            ".validate": true
-          }
-        }
+        ".read": false,
+        ".write": false
       }
     },
 
@@ -141,9 +115,6 @@
         },
         "lastChanged": {
           ".validate": "!newData.exists() || newData.isNumber()"
-        },
-        "$other": {
-          ".validate": true
         }
       }
     }
