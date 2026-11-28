@@ -1,404 +1,1091 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#060d21">
-<title>AYNA BOOK — অ্যাকাউন্ট লগইন ও লুকআপ</title>
+  <meta charset="UTF-8">
 
-<style>
-:root {
-  --bg:#050a18;
-  --navy-top:#1a3575;
-  --navy-bottom:#08122b;
-  --gold:#ffe64d;
-  --gold-bright:#fff6b3;
-  --gold-base:#8a6105;
-  --quantum-cyan:#38f2ff;
-  --white:#ffffff;
-  --muted:#e6eeff;
-}
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
 
-* {
-  box-sizing:border-box;
-}
+  <meta name="theme-color" content="#070b16">
 
-html, body {
-  max-width:100%;
-  overflow-x:hidden;
-  scroll-behavior:smooth;
-}
+  <title>AYNA BOOK — Create Account</title>
 
-body {
-  margin:0;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(56,242,255,.09), transparent 35%),
-    radial-gradient(circle at 85% 20%, rgba(255,230,77,.10), transparent 40%),
-    var(--bg);
-  color:var(--white);
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  font-size:34px;
-  line-height:1.5;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-button,input {
-  font:inherit;
-}
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #050810;
+      color: #ffffff;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
 
-button {
-  cursor:pointer;
-}
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
 
-.gold-3d-box,
-.hero,
-.panel {
-  background:linear-gradient(155deg,var(--navy-top) 0%,var(--navy-bottom) 100%) !important;
-  border:4px solid var(--gold) !important;
-  border-radius:10px !important;
-  box-shadow:
-    0 0 18px rgba(255,230,77,.65),
-    0 9px 0 var(--gold-base),
-    0 16px 26px rgba(0,0,0,.85),
-    inset 0 2px 5px var(--gold-bright) !important;
-}
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding:
+        max(18px, env(safe-area-inset-top))
+        14px
+        max(24px, env(safe-area-inset-bottom));
 
-.primary-button:active,
-.tool-button:active,
-.header-actions a:active,
-.header-actions button:active {
-  transform:translateY(4px) !important;
-  box-shadow:
-    0 0 12px rgba(255,230,77,.55),
-    0 3px 0 var(--gold-base),
-    0 6px 12px rgba(0,0,0,.85),
-    inset 0 2px 4px var(--gold-bright) !important;
-}
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
 
-header {
-  background:linear-gradient(180deg,#122659 0%,#060d21 100%);
-  border-bottom:4px solid var(--gold);
-  padding:20px;
-  position:sticky;
-  top:0;
-  z-index:50;
-  box-shadow:0 0 20px rgba(255,230,77,.45), 0 6px 18px rgba(0,0,0,.9);
-}
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(26, 54, 120, 0.38),
+          transparent 45%
+        ),
+        linear-gradient(
+          180deg,
+          #0b1224 0%,
+          #050810 60%,
+          #02040a 100%
+        );
+    }
 
-.header-inner {
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-}
+    .container {
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+    }
 
-.logo {
-  color:var(--gold-bright);
-  font-size:44px;
-  font-weight:1000;
-  letter-spacing:1px;
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  text-decoration:none;
-  text-shadow:0 0 14px rgba(255,230,77,.85), 0 3px 8px rgba(0,0,0,.95);
-}
+    /* ========================================================
+       HEADER
+       ======================================================== */
 
-.star-1s {
-  color:#ffffff;
-  font-size:44px;
-  display:inline-block;
-  animation:starFlash1s 1s infinite alternate ease-in-out;
-}
+    .brand {
+      text-align: center;
+      margin: 8px 0 22px;
+    }
 
-@keyframes starFlash1s {
-  0% {
-    transform:scale(0.95) rotate(0deg);
-    color:#fff099;
-    text-shadow:0 0 8px #ffd700;
-  }
-  100% {
-    transform:scale(1.35) rotate(18deg);
-    color:#ffffff;
-    text-shadow:
-      0 0 14px #ffffff,
-      0 0 26px #ffffff,
-      0 0 42px #ffe64d,
-      0 0 60px #ff9900;
-  }
-}
+    .brand-title {
+      margin: 0;
+      font-size: clamp(34px, 10vw, 58px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-shadow:
+        0 0 12px rgba(255, 215, 0, 0.18);
+    }
 
-.header-actions {
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
+    .star {
+      color: #ffd700;
+    }
 
-.header-actions a,
-.header-actions button {
-  text-decoration:none;
-  color:white;
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  border:3px solid var(--gold);
-  padding:12px 18px;
-  border-radius:8px;
-  font-weight:bold;
-  font-size:25px;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 5px 0 var(--gold-base);
-}
+    .brand-subtitle {
+      margin-top: 12px;
+      font-size: clamp(20px, 5vw, 30px);
+      line-height: 1.25;
+      font-weight: 800;
+      color: #ffd700;
+    }
 
-.container {
-  max-width:1100px;
-  margin:auto;
-  padding:22px;
-}
+    /* ========================================================
+       CARD
+       ======================================================== */
 
-.hero {
-  padding:28px 22px;
-  margin-bottom:24px;
-  text-align:center;
-}
+    .card {
+      width: 100%;
+      padding: 20px 16px 24px;
 
-.hero h1 {
-  font-size:48px;
-  margin:0 0 10px;
-  color:var(--gold-bright);
-  font-weight:1000;
-}
+      background:
+        linear-gradient(
+          180deg,
+          rgba(13, 23, 46, 0.98),
+          rgba(5, 9, 18, 0.98)
+        );
 
-.hero p {
-  font-size:30px;
-  margin:0;
-  color:var(--white);
-}
+      border: 1px solid #d4af37;
+      border-radius: 22px;
 
-.panel {
-  padding:26px;
-  margin-bottom:24px;
-}
+      box-shadow:
+        0 0 0 1px rgba(212, 175, 55, 0.08),
+        0 18px 50px rgba(0, 0, 0, 0.45);
+    }
 
-.panel h2 {
-  margin:0 0 18px;
-  font-size:38px;
-  font-weight:1000;
-  color:var(--gold-bright);
-}
+    .section-title {
+      margin: 0 0 18px;
+      text-align: center;
 
-.field-group {
-  margin-bottom:20px;
-}
+      font-size: clamp(25px, 6vw, 38px);
+      font-weight: 900;
+      color: #ffffff;
+    }
 
-.field-label {
-  display:block;
-  font-size:28px;
-  font-weight:bold;
-  color:var(--gold-bright);
-  margin-bottom:8px;
-}
+    .required-note {
+      margin: -8px 0 18px;
+      text-align: center;
 
-.hub-input {
-  width:100%;
-  background:#050b1c;
-  color:white;
-  border:3.5px solid var(--gold);
-  border-radius:8px;
-  padding:16px 20px;
-  font-size:30px;
-  outline:none;
-}
+      font-size: 17px;
+      line-height: 1.5;
+      color: #cdd5e7;
+    }
 
-.hub-input:focus {
-  border-color:#ffffff;
-}
+    /* ========================================================
+       PROFILE PHOTO
+       ======================================================== */
 
-.pass-row {
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:12px;
-  align-items:center;
-}
+    .photo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 24px;
+    }
 
-.eye-button {
-  min-height:74px;
-  padding:0 20px;
-  border-radius:8px;
-  border:3px solid var(--gold);
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  color:var(--gold-bright);
-  font-size:26px;
-  font-weight:bold;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 5px 0 var(--gold-base);
-}
+    .photo-preview {
+      width: 150px;
+      height: 150px;
 
-.action-grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-  margin-top:12px;
-}
+      border-radius: 50%;
+      overflow: hidden;
 
-.primary-button {
-  width:100%;
-  min-height:88px;
-  border:3.5px solid var(--gold-bright);
-  border-radius:8px;
-  background:linear-gradient(180deg,#ffe64d 0%,#c99314 100%);
-  color:#050a18;
-  font-size:30px;
-  font-weight:1000;
-  box-shadow:0 0 18px rgba(255,230,77,.65), 0 7px 0 #664604;
-}
+      border: 3px solid #ffd700;
 
-.action-row {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-  margin-top:14px;
-}
+      background:
+        linear-gradient(
+          135deg,
+          #14244c,
+          #060a14
+        );
 
-.tool-button {
-  width:100%;
-  min-height:78px;
-  padding:14px;
-  border-radius:8px;
-  border:3px solid var(--gold);
-  background:linear-gradient(155deg,#1d3b7e,#08122b);
-  color:white;
-  font-size:27px;
-  font-weight:bold;
-  box-shadow:0 0 12px rgba(255,230,77,.45), 0 6px 0 var(--gold-base);
-}
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-.signal-box {
-  margin-top:18px;
-  background:#050b1c;
-  border:3px solid var(--quantum-cyan);
-  border-radius:8px;
-  padding:18px;
-  font-size:28px;
-  color:var(--gold-bright);
-  white-space:pre-line;
-  overflow-wrap:anywhere;
-}
+      box-shadow:
+        0 0 22px rgba(255, 215, 0, 0.14);
+    }
 
-.link-row {
-  margin-top:20px;
-  display:flex;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-  font-size:28px;
-}
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
 
-.link-row a {
-  color:var(--gold-bright);
-  font-weight:bold;
-  text-decoration:none;
-}
+    .photo-placeholder {
+      text-align: center;
+      padding: 12px;
 
-#notice {
-  position:fixed;
-  top:104px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#0a1636;
-  color:white;
-  border:3.5px solid var(--gold-bright);
-  padding:16px 24px;
-  border-radius:8px;
-  box-shadow:0 0 20px rgba(255,230,77,.8), 0 7px 0 var(--gold-base);
-  z-index:100;
-  display:none;
-  max-width:92%;
-  font-size:28px;
-  text-align:center;
-}
+      font-size: 18px;
+      line-height: 1.3;
+      font-weight: 800;
+      color: #dfe6f5;
+    }
 
-@media(max-width:600px) {
-  .pass-row,
-  .action-grid,
-  .action-row {
-    grid-template-columns:1fr;
-  }
-  .logo {
-    font-size:34px;
-  }
-  .hero h1 {
-    font-size:36px;
-  }
-}
-</style>
+    .photo-label {
+      margin-top: 14px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 56px;
+      padding: 12px 20px;
+
+      border: 1px solid #ffd700;
+      border-radius: 14px;
+
+      background: #101a34;
+      color: #ffd700;
+
+      font-size: 20px;
+      font-weight: 900;
+
+      cursor: pointer;
+    }
+
+    .photo-label:active {
+      transform: scale(0.98);
+    }
+
+    #profilePhoto {
+      display: none;
+    }
+
+    .photo-info {
+      margin-top: 10px;
+      text-align: center;
+
+      font-size: 15px;
+      line-height: 1.45;
+      color: #aeb8ce;
+    }
+
+    /* ========================================================
+       FORM
+       ======================================================== */
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+
+      font-size: clamp(19px, 4.8vw, 25px);
+      line-height: 1.3;
+      font-weight: 900;
+
+      color: #ffffff;
+    }
+
+    .required {
+      color: #ffd700;
+    }
+
+    .input-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 58px;
+
+      padding:
+        14px 15px;
+
+      border-radius: 14px;
+      border: 1px solid #586681;
+
+      background: #080d1b;
+      color: #ffffff;
+
+      outline: none;
+
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    input::placeholder {
+      color: #8792aa;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #ffd700;
+
+      box-shadow:
+        0 0 0 2px rgba(255, 215, 0, 0.10);
+    }
+
+    input[readonly] {
+      color: #d7deec;
+      background: #0b1120;
+    }
+
+    .password-input {
+      padding-right: 58px;
+    }
+
+    .toggle-password {
+      position: absolute;
+
+      right: 7px;
+      top: 7px;
+
+      width: 46px;
+      height: 44px;
+
+      border: 0;
+      border-radius: 11px;
+
+      background: #18233e;
+      color: #ffffff;
+
+      font-size: 21px;
+      font-weight: 900;
+
+      cursor: pointer;
+    }
+
+    .toggle-password:active {
+      transform: scale(0.95);
+    }
+
+    .field-note {
+      margin-top: 7px;
+
+      font-size: 14px;
+      line-height: 1.45;
+
+      color: #9da9c0;
+    }
+
+    /* ========================================================
+       GMAIL NOTE
+       ======================================================== */
+
+    .gmail-note {
+      margin-top: 8px;
+      padding: 12px 13px;
+
+      border: 1px solid #34466d;
+      border-radius: 12px;
+
+      background: rgba(20, 35, 70, 0.55);
+
+      color: #dce4f5;
+
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .gmail-note strong {
+      color: #ffd700;
+    }
+
+    /* ========================================================
+       TERMS
+       ======================================================== */
+
+    .terms-box {
+      margin-top: 8px;
+      margin-bottom: 20px;
+
+      padding: 15px;
+
+      border: 1px solid #34466d;
+      border-radius: 14px;
+
+      background: #080d1a;
+    }
+
+    .terms-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+
+      cursor: pointer;
+    }
+
+    .terms-row input[type="checkbox"] {
+      flex: 0 0 auto;
+
+      width: 25px;
+      height: 25px;
+
+      min-height: 25px;
+
+      margin: 2px 0 0;
+
+      accent-color: #ffd700;
+    }
+
+    .terms-text {
+      font-size: 17px;
+      line-height: 1.5;
+      color: #e9edf6;
+    }
+
+    .terms-text strong {
+      color: #ffd700;
+    }
+
+    /* ========================================================
+       MESSAGE
+       ======================================================== */
+
+    .message {
+      min-height: 30px;
+
+      margin: 8px 0 14px;
+
+      text-align: center;
+
+      font-size: 17px;
+      line-height: 1.5;
+      font-weight: 800;
+    }
+
+    /* ========================================================
+       CREATE BUTTON
+       ======================================================== */
+
+    #registerButton {
+      width: 100%;
+      min-height: 64px;
+
+      border: 1px solid #ffd700;
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #d4af37,
+          #9e7c16
+        );
+
+      color: #050810;
+
+      font-size: clamp(21px, 5vw, 27px);
+      font-weight: 900;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 8px 22px rgba(212, 175, 55, 0.15);
+    }
+
+    #registerButton:active {
+      transform: scale(0.98);
+    }
+
+    #registerButton:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    /* ========================================================
+       LINKS
+       ======================================================== */
+
+    .bottom-links {
+      margin-top: 22px;
+
+      display: grid;
+      gap: 12px;
+    }
+
+    .link-button {
+      width: 100%;
+      min-height: 56px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 1px solid #425476;
+      border-radius: 14px;
+
+      background: #0c1428;
+      color: #ffffff;
+
+      text-decoration: none;
+
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    .link-button.gold {
+      border-color: #ffd700;
+      color: #ffd700;
+    }
+
+    .link-button:active {
+      transform: scale(0.98);
+    }
+
+    /* ========================================================
+       SECURITY
+       ======================================================== */
+
+    .security-box {
+      margin-top: 22px;
+      padding: 14px;
+
+      border: 1px solid #243654;
+      border-radius: 14px;
+
+      background: rgba(8, 14, 28, 0.8);
+
+      text-align: center;
+
+      color: #aeb9ce;
+
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .security-box strong {
+      color: #ffffff;
+    }
+
+    /* ========================================================
+       LOADING OVERLAY
+       ======================================================== */
+
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+
+      display: none;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      background: rgba(2, 4, 10, 0.94);
+      backdrop-filter: blur(7px);
+    }
+
+    .loading-box {
+      width: min(420px, 92vw);
+
+      padding: 28px 20px;
+
+      text-align: center;
+
+      border: 1px solid #ffd700;
+      border-radius: 20px;
+
+      background: #080d1a;
+    }
+
+    .loading-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .loading-text {
+      margin-top: 9px;
+
+      font-size: 17px;
+      line-height: 1.5;
+      color: #c4ccdc;
+    }
+
+    .dots {
+      margin-top: 20px;
+
+      display: flex;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .dots span {
+      width: 12px;
+      height: 12px;
+
+      border-radius: 50%;
+
+      background: #ffd700;
+
+      animation: dotPulse 1.1s infinite ease-in-out;
+    }
+
+    .dots span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .dots span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes dotPulse {
+      0%,
+      80%,
+      100% {
+        opacity: 0.25;
+        transform: scale(0.75);
+      }
+
+      40% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* ========================================================
+       SMALL SCREEN
+       ======================================================== */
+
+    @media (max-width: 380px) {
+
+      .card {
+        padding: 17px 12px 20px;
+      }
+
+      .photo-preview {
+        width: 130px;
+        height: 130px;
+      }
+
+      input,
+      select {
+        min-height: 54px;
+        font-size: 17px;
+      }
+
+      #registerButton {
+        min-height: 60px;
+      }
+
+      .terms-text {
+        font-size: 15px;
+      }
+    }
+
+    /* ========================================================
+       LARGE SCREEN
+       ======================================================== */
+
+    @media (min-width: 700px) {
+
+      .page {
+        padding-top: 35px;
+        padding-bottom: 45px;
+      }
+
+      .card {
+        padding: 28px;
+      }
+
+      .photo-preview {
+        width: 180px;
+        height: 180px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
-  <div class="header-inner">
-    <a class="logo" href="index.html">
-      AYNA BOOK <span class="star-1s">★</span>
-    </a>
-    <div class="header-actions">
-      <button type="button" id="speakClockBtn">🕒 সময় বলুন</button>
-      <button type="button" id="toggleClockBtn">🔊 ঘড়ি: চালু</button>
-      <a href="index.html">🏠 হোম</a>
-      <a href="register.html">📝 রেজিস্ট্রেশন</a>
+  <main class="page">
+
+    <div class="container">
+
+      <!-- ====================================================
+           BRAND
+      ===================================================== -->
+
+      <header class="brand">
+
+        <h1 class="brand-title">
+          AYNA BOOK <span class="star">★</span>
+        </h1>
+
+        <div class="brand-subtitle">
+          Create Your Global Digital Identity
+        </div>
+
+      </header>
+
+
+      <!-- ====================================================
+           REGISTER CARD
+      ===================================================== -->
+
+      <section class="card">
+
+        <h2 class="section-title">
+          নতুন অ্যাকাউন্ট তৈরি করুন
+        </h2>
+
+        <p class="required-note">
+          আপনার সঠিক তথ্য দিয়ে অ্যাকাউন্ট তৈরি করুন
+        </p>
+
+
+        <!-- ==================================================
+             PROFILE PHOTO
+        =================================================== -->
+
+        <div class="photo-section">
+
+          <div
+            class="photo-preview"
+            id="photoPreview"
+          >
+
+            <img
+              id="previewImage"
+              alt="Profile photo preview"
+            >
+
+            <div
+              class="photo-placeholder"
+              id="photoPlaceholder"
+            >
+              👤<br>
+              Profile Photo
+            </div>
+
+          </div>
+
+          <label
+            class="photo-label"
+            for="profilePhoto"
+          >
+            📷 Profile Photo নির্বাচন করুন
+          </label>
+
+          <input
+            type="file"
+            id="profilePhoto"
+            name="profilePhoto"
+            accept="image/jpeg,image/png,image/webp"
+          >
+
+          <div class="photo-info">
+            JPG / PNG / WebP • সর্বোচ্চ 5 MB<br>
+            Square photo ব্যবহার করুন
+          </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             FORM
+        =================================================== -->
+
+        <form id="registerForm" novalidate>
+
+
+          <!-- FULL NAME -->
+
+          <div class="form-group">
+
+            <label
+              class="form-label"
+              for="regFullName"
+            >
+              Full Name <span class="required">*</span>
+            </label>
+
+            <input
+              id="regFullName"
+              name="fullName"
+              type="text"
+              autocomplete="name"
+              placeholder="আপনার পূর্ণ নাম"
+              maxlength="100"
+              required
+            >
+
+            <div class="field-note">
+              অ্যাকাউন্ট তৈরি করার পর নাম পরিবর্তন সীমিত থাকবে।
+            </div>
+
+          </div>
+
+
+          <!-- EMAIL -->
+
+          <div class="form-group">
+
+            <label
+              class="form-label"
+              for="regEmail"
+            >
+              Gmail <span class="required">*</span>
+            </label>
+
+            <input
+              id="regEmail"
+              name="email"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              placeholder="example@gmail.com"
+              maxlength="150"
+              required
+            >
+
+            <div class="gmail-note">
+              <strong>📩 গুরুত্বপূর্ণ:</strong>
+              এই Gmail-এ AYNA BOOK Verification Email পাঠানো হবে।
+              Registration-এর পর Gmail খুলে Verification Link চাপতে হবে।
+            </div>
+
+          </div>
+
+
+          <!-- COUNTRY -->
+
+          <div class="form-group">
+
+            <label
+              class="form-label"
+              for="regCountry"
+            >
+              Country <span class="required">*</span>
+            </label>
+
+            <input
+              id="regCountry"
+              name="country"
+              type="text"
+              autocomplete="country-name"
+              placeholder="Bangladesh"
+              maxlength="80"
+              value="Bangladesh"
+              required
+            >
+
+          </div>
+
+
+          <!-- PHONE -->
+
+          <div class="form-group">
+
+            <label
+              class="form-label"
+              for="regPhone"
+            >
+              Phone Number <span class="required">*</span>
+            </label>
+
+            <input
+              id="regPhone"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              placeholder="+8801XXXXXXXXX"
+              maxlength="25"
+              required
+            >
+
+            <div class="field-note">
+              Country code সহ সঠিক মোবাইল নম্বর দিন।
+            </div>
+
+          </div>
+
+
+          <!-- PASSWORD -->
+
+          <div class="form-group">
+
+            <label
+              class="form-label"
+              for="regPassword"
+            >
+              Password <span class="required">*</span>
+            </label>
+
+            <div class="input-wrap">
+
+              <input
+                id="regPassword"
+                name="password"
+                class="password-input"
+                type="password"
+                autocomplete="new-password"
+                placeholder="কমপক্ষে 8 অক্ষর"
+                minlength="8"
+                maxlength="50"
+                required
+              >
+
+              <button
+                type="button"
+                class="toggle-password"
+                id="toggleRegPassword"
+                aria-label="Show password"
+              >
+                👁
+              </button>
+
+            </div>
+
+            <div class="field-note">
+              Password 8–50 অক্ষরের মধ্যে রাখুন।
+            </div>
+
+          </div>
+
+
+          <!-- CONFIRM PASSWORD -->
+
+          <div class="form-group">
+
+            <label
+              class="form-label"
+              for="regConfirmPassword"
+            >
+              Confirm Password <span class="required">*</span>
+            </label>
+
+            <div class="input-wrap">
+
+              <input
+                id="regConfirmPassword"
+                name="confirmPassword"
+                class="password-input"
+                type="password"
+                autocomplete="new-password"
+                placeholder="Password আবার লিখুন"
+                minlength="8"
+                maxlength="50"
+                required
+              >
+
+              <button
+                type="button"
+                class="toggle-password"
+                id="toggleRegConfirmPassword"
+                aria-label="Show password"
+              >
+                👁
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- TERMS -->
+
+          <div class="terms-box">
+
+            <label class="terms-row">
+
+              <input
+                id="termsCheckbox"
+                name="terms"
+                type="checkbox"
+                required
+              >
+
+              <span class="terms-text">
+                আমি AYNA BOOK-এর
+                <strong>Terms</strong>,
+                <strong>Privacy</strong> এবং
+                নিরাপত্তা নীতিমালা মেনে অ্যাকাউন্ট তৈরি করতে সম্মত।
+              </span>
+
+            </label>
+
+          </div>
+
+
+          <!-- MESSAGE -->
+
+          <div
+            id="registerMessage"
+            class="message"
+            role="status"
+            aria-live="polite"
+          ></div>
+
+
+          <!-- REGISTER -->
+
+          <button
+            type="submit"
+            id="registerButton"
+          >
+            🚀 Create AYNA BOOK Account
+          </button>
+
+
+        </form>
+
+
+        <!-- ==================================================
+             LINKS
+        =================================================== -->
+
+        <div class="bottom-links">
+
+          <a
+            class="link-button gold"
+            href="./login.html"
+          >
+            🔐 Already have an account? Login
+          </a>
+
+          <a
+            class="link-button"
+            href="./index.html"
+          >
+            🏠 AYNA BOOK Home
+          </a>
+
+        </div>
+
+
+        <!-- ==================================================
+             SECURITY
+        =================================================== -->
+
+        <div class="security-box">
+
+          <strong>🔒 AYNA BOOK Security</strong><br>
+
+          আপনার Password সরাসরি AYNA BOOK database-এ
+          সংরক্ষণ করা হবে না। Firebase Authentication
+          নিরাপদভাবে account authentication পরিচালনা করবে।
+          Email verification সম্পন্ন করার পর Profile access
+          দেওয়া হবে।
+
+        </div>
+
+      </section>
+
     </div>
-  </div>
-</header>
 
-<div id="notice"></div>
+  </main>
 
-<main class="container">
-  <section class="hero">
-    <h1>AYNA BOOK — অ্যাকাউন্ট লগইন</h1>
-    <p>লগইন বা অ্যাকাউন্ট লুকআপে ভুল করলে AI সিগন্যাল বাজবে এবং কণ্ঠের মাধ্যমে কোথায় ভুল হয়েছে তা বলে দেবে।</p>
-  </section>
 
-  <section class="panel">
-    <h2>🔐 অ্যাকাউন্টে লগইন করুন</h2>
+  <!-- ======================================================
+       LOADING OVERLAY
+  ======================================================= -->
 
-    <div class="field-group">
-      <label class="field-label" for="loginEmail">জিমেইল ঠিকানা</label>
-      <input type="email" id="loginEmail" class="hub-input" placeholder="আপনার জিমেইল লিখুন (যেমন: name@gmail.com)">
-    </div>
+  <div
+    id="loadingOverlay"
+    class="loading-overlay"
+    aria-hidden="true"
+  >
 
-    <div class="field-group">
-      <label class="field-label" for="loginPassword">লগইন পাসওয়ার্ড</label>
-      <div class="pass-row">
-        <input type="password" id="loginPassword" class="hub-input" placeholder="লগইন পাসওয়ার্ড লিখুন">
-        <button type="button" class="eye-button" id="toggleLoginPassBtn">👁️ পাসওয়ার্ড দেখাও</button>
+    <div class="loading-box">
+
+      <div class="loading-title">
+        AYNA BOOK Account তৈরি হচ্ছে
       </div>
+
+      <div class="loading-text">
+        অনুগ্রহ করে অপেক্ষা করুন...
+      </div>
+
+      <div class="dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
     </div>
 
-    <div class="action-grid">
-      <button type="button" id="loginSubmitBtn" class="primary-button">🚀 লগইন বাটন</button>
-      <button type="button" id="registerPageBtn" class="tool-button">📝 রেজিস্ট্রেশন বাটন</button>
-    </div>
+  </div>
 
-    <div class="field-group" style="margin-top:24px;">
-      <label class="field-label" for="lookupAccountInput">অ্যাকাউন্ট লুকআপ (AYNA ID বা জিমেইল)</label>
-      <input type="text" id="lookupAccountInput" class="hub-input" placeholder="যেমন: 2026-----10000001 অথবা জিমেইল">
-    </div>
 
-    <div class="action-row">
-      <button type="button" id="lookupAccountBtn" class="tool-button">🔍 অ্যাকাউন্ট লুকআপ ও কণ্ঠ সিগন্যাল</button>
-      <button type="button" id="repeatSignalBtn" class="tool-button">🔊 শেষ সিগন্যাল আবার শুনুন</button>
-    </div>
+  <!-- ======================================================
+       JAVASCRIPT
+  ======================================================= -->
 
-    <div class="signal-box" id="loginSignalBox">
-      প্রস্তুত: জিমেইল বা লগইন পাসওয়ার্ডে ভুল হলে অথবা অ্যাকাউন্ট লুকআপে না পেলে কণ্ঠের মাধ্যমে ভুলের জায়গা বলে দেওয়া হবে।
-    </div>
-
-    <div class="link-row">
-      <a href="register.html">➕ নতুন অ্যাকাউন্ট রেজিস্ট্রেশন</a>
-      <a href="forgot-password.html">🔑 পাসওয়ার্ড ভুলে গেছেন?</a>
-    </div>
-  </section>
-</main>
-
-<script type="module" src="./login.js"></script>
+  <script type="module" src="./register.js"></script>
 
 </body>
 </html>
