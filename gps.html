@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=5.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#07152f"
+  >
+
+  <title>AYNA BOOK — GPS Location</title>
+
+  <style>
+    :root {
+      --bg: #050a18;
+      --navy: #07152f;
+      --navy2: #102a58;
+      --gold: #d4af37;
+      --gold2: #ffe64d;
+      --white: #ffffff;
+      --muted: #b8c4d9;
+      --green: #31d48c;
+      --red: #ff5d6c;
+      --cyan: #35d7ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--white);
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* ================= HEADER ================= */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      background:
+        linear-gradient(
+          135deg,
+          #163a78,
+          #07152f
+        );
+
+      border-bottom: 3px solid var(--gold);
+
+      padding:
+        18px
+        20px;
+
+      box-shadow:
+        0 8px 30px
+        rgba(0, 0, 0, .45);
+    }
+
+    .topbar-inner {
+      max-width: 1400px;
+      margin: auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .brand {
+      font-size: clamp(26px, 5vw, 42px);
+      font-weight: 1000;
+      letter-spacing: .5px;
+    }
+
+    .brand span {
+      color: var(--gold2);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .small-btn {
+      min-height: 54px;
+
+      padding:
+        10px
+        18px;
+
+      border:
+        2px solid
+        var(--gold);
+
+      border-radius: 16px;
+
+      background:
+        rgba(0, 0, 0, .35);
+
+      color: white;
+
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    .small-btn:hover {
+      background: var(--gold);
+      color: #000;
+    }
+
+    /* ================= PAGE ================= */
+
+    .page {
+      width: min(
+        1400px,
+        calc(100% - 24px)
+      );
+
+      margin:
+        20px
+        auto
+        60px;
+    }
+
+    .hero {
+      padding:
+        30px
+        22px;
+
+      border:
+        3px solid
+        var(--gold);
+
+      border-radius: 28px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #132f63,
+          #07152f 65%,
+          #050a18
+        );
+
+      box-shadow:
+        0 18px 50px
+        rgba(0, 0, 0, .35);
+
+      text-align: center;
+    }
+
+    .hero-icon {
+      font-size: 80px;
+      line-height: 1;
+    }
+
+    .hero h1 {
+      margin:
+        18px
+        0
+        10px;
+
+      font-size:
+        clamp(
+          34px,
+          7vw,
+          62px
+        );
+
+      color: var(--gold2);
+    }
+
+    .hero p {
+      margin: 0 auto;
+
+      max-width: 1000px;
+
+      color: var(--muted);
+
+      font-size:
+        clamp(
+          19px,
+          3vw,
+          27px
+        );
+
+      line-height: 1.5;
+
+      font-weight: 700;
+    }
+
+    /* ================= STATUS ================= */
+
+    .status {
+      margin-top: 18px;
+
+      padding:
+        18px
+        20px;
+
+      border:
+        2px solid
+        rgba(212, 175, 55, .7);
+
+      border-radius: 18px;
+
+      background:
+        rgba(255, 255, 255, .04);
+
+      text-align: center;
+
+      font-size:
+        clamp(20px, 3vw, 28px);
+
+      font-weight: 900;
+    }
+
+    .status.searching {
+      color: var(--gold2);
+    }
+
+    .status.success {
+      color: var(--green);
+    }
+
+    .status.error {
+      color: var(--red);
+    }
+
+    /* ================= CONTROL BUTTONS ================= */
+
+    .controls {
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(220px, 1fr)
+        );
+
+      gap: 16px;
+
+      margin-top: 20px;
+    }
+
+    .big-btn {
+      min-height: 90px;
+
+      border:
+        3px solid
+        var(--gold);
+
+      border-radius: 22px;
+
+      padding:
+        18px
+        16px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #173a78,
+          #091a39
+        );
+
+      color: white;
+
+      font-size:
+        clamp(21px, 3vw, 30px);
+
+      font-weight: 1000;
+
+      box-shadow:
+        0 10px 25px
+        rgba(0, 0, 0, .3);
+
+      transition:
+        transform .15s ease,
+        background .15s ease;
+    }
+
+    .big-btn:hover {
+      transform: translateY(-2px);
+
+      background:
+        linear-gradient(
+          145deg,
+          #d4af37,
+          #8c6d14
+        );
+
+      color: #000;
+    }
+
+    .big-btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ================= DATA ================= */
+
+    .data-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(250px, 1fr)
+        );
+
+      gap: 18px;
+
+      margin-top: 20px;
+    }
+
+    .data-card {
+      min-height: 170px;
+
+      padding: 25px;
+
+      border:
+        2px solid
+        rgba(212, 175, 55, .75);
+
+      border-radius: 24px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #0e2348,
+          #071225
+        );
+
+      box-shadow:
+        0 12px 35px
+        rgba(0, 0, 0, .28);
+    }
+
+    .data-icon {
+      font-size: 46px;
+      margin-bottom: 10px;
+    }
+
+    .data-label {
+      color: var(--muted);
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .data-value {
+      margin-top: 10px;
+
+      color: white;
+
+      font-size:
+        clamp(25px, 4vw, 36px);
+
+      font-weight: 1000;
+
+      overflow-wrap: anywhere;
+    }
+
+    /* ================= MAP ================= */
+
+    .map-box {
+      margin-top: 20px;
+
+      min-height: 380px;
+
+      padding: 25px;
+
+      border:
+        3px solid
+        var(--gold);
+
+      border-radius: 25px;
+
+      background:
+        #071225;
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: center;
+
+      align-items: center;
+
+      text-align: center;
+    }
+
+    .map-placeholder-icon {
+      font-size: 80px;
+    }
+
+    .map-box h2 {
+      font-size:
+        clamp(28px, 5vw, 42px);
+
+      margin:
+        15px
+        0;
+    }
+
+    .map-box p {
+      color: var(--muted);
+
+      font-size: 20px;
+
+      max-width: 850px;
+
+      line-height: 1.5;
+    }
+
+    .map-link {
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      min-height: 70px;
+
+      padding:
+        14px
+        25px;
+
+      margin-top: 10px;
+
+      border:
+        2px solid
+        var(--cyan);
+
+      border-radius: 18px;
+
+      background:
+        rgba(53, 215, 255, .08);
+
+      color: white;
+
+      text-decoration: none;
+
+      font-size: 22px;
+
+      font-weight: 1000;
+    }
+
+    .map-link:hover {
+      background: var(--cyan);
+      color: #000;
+    }
+
+    /* ================= INSTRUCTIONS ================= */
+
+    .instructions {
+      margin-top: 20px;
+
+      padding:
+        25px;
+
+      border:
+        2px solid
+        rgba(53, 215, 255, .6);
+
+      border-radius: 24px;
+
+      background:
+        rgba(53, 215, 255, .05);
+    }
+
+    .instructions h2 {
+      margin-top: 0;
+
+      font-size:
+        clamp(27px, 5vw, 40px);
+
+      color: var(--cyan);
+    }
+
+    .instructions ol {
+      margin: 0;
+      padding-left: 30px;
+    }
+
+    .instructions li {
+      margin:
+        14px
+        0;
+
+      font-size:
+        clamp(18px, 3vw, 24px);
+
+      line-height: 1.5;
+
+      font-weight: 700;
+    }
+
+    /* ================= WARNING ================= */
+
+    .warning {
+      margin-top: 20px;
+
+      padding: 22px;
+
+      border:
+        2px solid
+        #ff9f43;
+
+      border-radius: 20px;
+
+      background:
+        rgba(255, 159, 67, .08);
+
+      color: #ffd9ad;
+
+      font-size: 19px;
+
+      line-height: 1.6;
+
+      font-weight: 700;
+    }
+
+    /* ================= FOOTER ================= */
+
+    footer {
+      margin-top: 35px;
+
+      padding:
+        25px
+        15px;
+
+      border-top:
+        2px solid
+        rgba(212, 175, 55, .5);
+
+      text-align: center;
+
+      color: var(--muted);
+
+      font-size: 17px;
+    }
+
+    /* ================= FULL SCREEN ================= */
+
+    body.fullscreen-mode {
+      background: #000;
+    }
+
+    body.fullscreen-mode .topbar {
+      display: none;
+    }
+
+    body.fullscreen-mode .page {
+      width: 100%;
+      margin: 0;
+    }
+
+    body.fullscreen-mode .hero {
+      border-radius: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    body.fullscreen-mode .data-grid,
+    body.fullscreen-mode .instructions,
+    body.fullscreen-mode .warning,
+    body.fullscreen-mode footer {
+      display: none;
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media (max-width: 700px) {
+
+      .topbar {
+        padding: 13px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .header-actions {
+        width: 100%;
+      }
+
+      .small-btn {
+        flex: 1;
+        min-width: 130px;
+      }
+
+      .page {
+        width: min(
+          100% - 14px,
+          1400px
+        );
+
+        margin-top: 10px;
+      }
+
+      .hero {
+        padding: 25px 15px;
+      }
+
+      .hero-icon {
+        font-size: 65px;
+      }
+
+      .big-btn {
+        min-height: 85px;
+      }
+
+      .data-card {
+        min-height: 145px;
+      }
+
+      .map-box {
+        min-height: 300px;
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+
+  <header class="topbar">
+
+    <div class="topbar-inner">
+
+      <div class="brand">
+        AYNA BOOK <span>★</span>
+      </div>
+
+      <div class="header-actions">
+
+        <button
+          class="small-btn"
+          id="homeBtn"
+          type="button"
+        >
+          🏠 HOME
+        </button>
+
+        <button
+          class="small-btn"
+          id="fullscreenBtn"
+          type="button"
+        >
+          ⛶ FULL SCREEN
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- ================= MAIN ================= -->
+
+  <main class="page">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <div class="hero-icon">
+        📍
+      </div>
+
+      <h1>
+        AYNA BOOK GPS
+      </h1>
+
+      <p>
+        আপনার ফোনের GPS/Location ব্যবহার করে
+        বর্তমান অবস্থান, Latitude, Longitude,
+        Accuracy, Speed এবং Heading দেখুন।
+      </p>
+
+    </section>
+
+
+    <!-- STATUS -->
+
+    <div
+      id="gpsStatus"
+      class="status searching"
+    >
+      📡 GPS চালু করার জন্য প্রস্তুত...
+    </div>
+
+
+    <!-- CONTROLS -->
+
+    <section class="controls">
+
+      <button
+        id="locateBtn"
+        class="big-btn"
+        type="button"
+      >
+        📍 আমার অবস্থান
+      </button>
+
+      <button
+        id="refreshBtn"
+        class="big-btn"
+        type="button"
+      >
+        🔄 UPDATE GPS
+      </button>
+
+      <button
+        id="watchBtn"
+        class="big-btn"
+        type="button"
+      >
+        🛰️ LIVE GPS
+      </button>
+
+      <button
+        id="stopWatchBtn"
+        class="big-btn"
+        type="button"
+      >
+        ⏹️ STOP GPS
+      </button>
+
+    </section>
+
+
+    <!-- GPS DATA -->
+
+    <section class="data-grid">
+
+      <article class="data-card">
+
+        <div class="data-icon">
+          🌐
+        </div>
+
+        <div class="data-label">
+          Latitude
+        </div>
+
+        <div
+          id="latitude"
+          class="data-value"
+        >
+          —
+        </div>
+
+      </article>
+
+
+      <article class="data-card">
+
+        <div class="data-icon">
+          🌐
+        </div>
+
+        <div class="data-label">
+          Longitude
+        </div>
+
+        <div
+          id="longitude"
+          class="data-value"
+        >
+          —
+        </div>
+
+      </article>
+
+
+      <article class="data-card">
+
+        <div class="data-icon">
+          🎯
+        </div>
+
+        <div class="data-label">
+          Accuracy
+        </div>
+
+        <div
+          id="accuracy"
+          class="data-value"
+        >
+          —
+        </div>
+
+      </article>
+
+
+      <article class="data-card">
+
+        <div class="data-icon">
+          🚀
+        </div>
+
+        <div class="data-label">
+          Speed
+        </div>
+
+        <div
+          id="speed"
+          class="data-value"
+        >
+          —
+        </div>
+
+      </article>
+
+
+      <article class="data-card">
+
+        <div class="data-icon">
+          🧭
+        </div>
+
+        <div class="data-label">
+          Heading
+        </div>
+
+        <div
+          id="heading"
+          class="data-value"
+        >
+          —
+        </div>
+
+      </article>
+
+
+      <article class="data-card">
+
+        <div class="data-icon">
+          🕒
+        </div>
+
+        <div class="data-label">
+          Last Update
+        </div>
+
+        <div
+          id="lastUpdate"
+          class="data-value"
+        >
+          —
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- MAP -->
+
+    <section class="map-box">
+
+      <div class="map-placeholder-icon">
+        🗺️
+      </div>
+
+      <h2>
+        GPS Location Map
+      </h2>
+
+      <p id="mapMessage">
+        প্রথমে
+        <strong>
+          “আমার অবস্থান”
+        </strong>
+        বাটনে চাপুন।
+      </p>
+
+      <a
+        id="mapLink"
+        class="map-link"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="display:none;"
+      >
+        🗺️ MAP-এ অবস্থান দেখুন
+      </a>
+
+    </section>
+
+
+    <!-- INSTRUCTIONS -->
+
+    <section class="instructions">
+
+      <h2>
+        📖 GPS চালানোর নিয়ম
+      </h2>
+
+      <ol>
+
+        <li>
+          <strong>📍 আমার অবস্থান</strong>
+          বাটনে চাপুন।
+        </li>
+
+        <li>
+          Browser যদি Location Permission চায়,
+          <strong>Allow</strong> নির্বাচন করুন।
+        </li>
+
+        <li>
+          ফোনের
+          <strong>Location/GPS</strong>
+          চালু রাখুন।
+        </li>
+
+        <li>
+          বাইরে বা জানালার কাছে থাকলে
+          GPS Accuracy সাধারণত ভালো হতে পারে।
+        </li>
+
+        <li>
+          চলন্ত অবস্থায় অবস্থান আপডেট দেখতে
+          <strong>🛰️ LIVE GPS</strong>
+          ব্যবহার করুন।
+        </li>
+
+        <li>
+          GPS বন্ধ করতে
+          <strong>⏹️ STOP GPS</strong>
+          চাপুন।
+        </li>
+
+      </ol>
+
+    </section>
+
+
+    <!-- WARNING -->
+
+    <section class="warning">
+
+      ⚠️ <strong>গুরুত্বপূর্ণ:</strong>
+      GPS Location ব্যবহারের জন্য আপনার Browser-কে
+      Location permission দিতে হবে। Internet/GPS signal,
+      ফোনের Location setting এবং Browser permission-এর ওপর
+      Accuracy নির্ভর করতে পারে।
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+      AYNA BOOK ★ GPS & Location
+
+      <br>
+
+      Connect • Share • Create
+
+    </footer>
+
+  </main>
+
+
+  <!-- ================= JAVASCRIPT ================= -->
+
+  <script src="./gps.js"></script>
+
+</body>
+</html>
