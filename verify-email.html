@@ -1,232 +1,646 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090a0f">
 
-  <title>AYNA BOOK — Email Verification</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#071126">
+
+  <title>AYNA BOOK ★ — Verify Email</title>
 
   <style>
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
+      padding: 0;
+      width: 100%;
       min-height: 100%;
+      background: #050912;
+      color: #ffffff;
       font-family: Arial, Helvetica, sans-serif;
-      background: #05070d;
-      color: #fff;
     }
 
     body {
       min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 18px;
+      align-items: flex-start;
+
+      padding:
+        max(20px, env(safe-area-inset-top))
+        14px
+        max(28px, env(safe-area-inset-bottom));
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(35, 70, 135, 0.38),
+          transparent 45%
+        ),
+        linear-gradient(
+          180deg,
+          #071126 0%,
+          #050a18 55%,
+          #03060d 100%
+        );
     }
 
     .container {
       width: 100%;
-      max-width: 460px;
+      max-width: 720px;
     }
 
-    .card {
-      background: #0b1020;
-      border: 1px solid #d4af37;
-      border-radius: 20px;
-      padding: 28px 22px;
+    /* =====================================================
+       BRAND
+    ===================================================== */
+
+    .brand {
       text-align: center;
-      box-shadow: 0 0 30px rgba(212, 175, 55, .12);
+      padding: 12px 6px 24px;
     }
 
-    .logo {
-      width: 82px;
-      height: 82px;
-      margin: 0 auto 18px;
-      border-radius: 50%;
-      border: 2px solid #d4af37;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #d4af37;
-      font-size: 28px;
+    .brand-title {
+      margin: 0;
+      color: #ffd84a;
+      font-size: clamp(34px, 9vw, 54px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: 1px;
+    }
+
+    .brand-subtitle {
+      margin-top: 10px;
+      color: #ffffff;
+      font-size: clamp(22px, 5.5vw, 32px);
       font-weight: 900;
     }
 
+    /* =====================================================
+       CARD
+    ===================================================== */
+
+    .card {
+      width: 100%;
+      padding: 24px 18px;
+
+      border: 1px solid #d4af37;
+      border-radius: 22px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(13, 24, 48, 0.98),
+          rgba(5, 10, 24, 0.98)
+        );
+
+      box-shadow:
+        0 0 28px rgba(212, 175, 55, 0.12),
+        0 18px 50px rgba(0, 0, 0, 0.48);
+    }
+
     .icon {
-      font-size: 46px;
-      margin-bottom: 12px;
+      width: 86px;
+      height: 86px;
+
+      margin: 0 auto 18px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 1px solid #d4af37;
+      border-radius: 50%;
+
+      background: #0b1428;
+
+      font-size: 42px;
     }
 
-    h1 {
+    .title {
       margin: 0;
-      color: #ffe64d;
-      font-size: clamp(25px, 6vw, 32px);
+
+      color: #ffffff;
+      text-align: center;
+
+      font-size: clamp(28px, 7vw, 40px);
+      font-weight: 900;
+      line-height: 1.25;
     }
 
-    .subtitle {
-      margin: 14px 0 22px;
-      color: #c4c9d5;
-      font-size: 16px;
-      line-height: 1.7;
+    .description {
+      margin: 14px 0 24px;
+
+      color: #d7deed;
+      text-align: center;
+
+      font-size: clamp(17px, 4.7vw, 22px);
+      line-height: 1.65;
+    }
+
+    /* =====================================================
+       EMAIL BOX
+    ===================================================== */
+
+    .email-box {
+      padding: 18px;
+
+      border: 1px solid #3c4e70;
+      border-radius: 16px;
+
+      background: #080f20;
+
+      text-align: center;
     }
 
     .email-label {
-      color: #aaa;
-      font-size: 14px;
-      margin-bottom: 8px;
+      margin-bottom: 9px;
+
+      color: #ffd84a;
+
+      font-size: clamp(17px, 4.5vw, 22px);
+      font-weight: 900;
     }
 
-    .email-box {
-      padding: 15px;
-      margin-bottom: 20px;
-      background: #151d32;
-      border: 1px solid #43506a;
-      border-radius: 12px;
-      color: #ffe64d;
-      font-size: 16px;
-      font-weight: bold;
+    .email-value {
+      min-height: 30px;
+
+      color: #ffffff;
+
+      font-size: clamp(17px, 4.7vw, 22px);
+      font-weight: 700;
+
+      line-height: 1.5;
+
       word-break: break-word;
     }
 
-    button {
-      width: 100%;
-      min-height: 54px;
-      padding: 14px;
-      margin-top: 12px;
-      border-radius: 12px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #checkButton {
-      background: #d4af37;
-      color: #080808;
-      border: 0;
-    }
-
-    #resendButton {
-      background: #172440;
-      color: #ffe64d;
-      border: 1px solid #d4af37;
-    }
-
-    #logoutButton {
-      background: transparent;
-      color: #ddd;
-      border: 1px solid #50576a;
-    }
-
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
+    /* =====================================================
+       MESSAGE
+    ===================================================== */
 
     .message {
       display: none;
+
       margin-top: 18px;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 15px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
+      padding: 15px;
+
+      border: 1px solid #59677f;
+      border-radius: 14px;
+
+      background: #0a1222;
+
+      color: #ffffff;
+
+      font-size: 17px;
+      line-height: 1.55;
+
+      text-align: center;
+
+      white-space: pre-line;
     }
 
     .message.show {
       display: block;
     }
 
-    .message.error {
-      color: #ffc1c1;
-      background: rgba(180, 0, 0, .15);
-      border: 1px solid rgba(255, 80, 80, .35);
+    .message.success {
+      border-color: #57d68d;
+      background: rgba(20, 130, 70, 0.15);
+      color: #c8ffe0;
     }
 
-    .message.success {
-      color: #b9f6c5;
-      background: rgba(0, 150, 50, .12);
-      border: 1px solid rgba(80, 220, 110, .3);
+    .message.error {
+      border-color: #ff6666;
+      background: rgba(150, 20, 20, 0.16);
+      color: #ffd2d2;
     }
 
     .message.info {
-      color: #d8e5ff;
-      background: rgba(40, 100, 200, .15);
-      border: 1px solid rgba(100, 150, 255, .3);
+      border-color: #d4af37;
+      color: #ffe99a;
     }
 
-    .info {
-      margin-top: 22px;
-      color: #a5adbd;
-      font-size: 14px;
-      line-height: 1.7;
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    .button {
+      width: 100%;
+      min-height: 64px;
+
+      margin-top: 18px;
+
+      border: 1px solid #d4af37;
+      border-radius: 15px;
+
+      background: #101a30;
+      color: #ffd84a;
+
+      font-size: clamp(19px, 5vw, 24px);
+      font-weight: 900;
+
+      padding: 12px 14px;
     }
 
-    .login-link {
-      display: block;
-      margin-top: 22px;
-      color: #ffe64d;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: bold;
+    .button-primary {
+      background:
+        linear-gradient(
+          180deg,
+          #d4af37,
+          #a78317
+        );
+
+      color: #050912;
     }
 
-    .login-link:hover {
-      text-decoration: underline;
+    .button-danger {
+      border-color: #76545a;
+      background: #15101a;
+      color: #ffb7b7;
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .button:active {
+      transform: scale(0.985);
+    }
+
+    /* =====================================================
+       INSTRUCTIONS
+    ===================================================== */
+
+    .instructions {
+      margin-top: 25px;
+      padding-top: 22px;
+
+      border-top: 1px solid #293752;
+    }
+
+    .instructions-title {
+      margin: 0 0 13px;
+
+      color: #ffffff;
+
+      font-size: clamp(20px, 5vw, 27px);
+      font-weight: 900;
+    }
+
+    .instructions-list {
+      margin: 0;
+      padding-left: 25px;
+
+      color: #c5cede;
+
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .instructions-list li {
+      margin-bottom: 7px;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .footer {
+      padding: 22px 10px 5px;
+
+      color: #9da8bb;
+
+      text-align: center;
+
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .footer strong {
+      color: #ffd84a;
+    }
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    .loading {
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 6px;
+
+      margin-left: 8px;
+    }
+
+    .loading span {
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: currentColor;
+
+      animation: loadingDot 1s infinite ease-in-out;
+    }
+
+    .loading span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .loading span:nth-child(3) {
+      animation-delay: 0.30s;
+    }
+
+    @keyframes loadingDot {
+      0%,
+      80%,
+      100% {
+        opacity: 0.25;
+        transform: scale(0.8);
+      }
+
+      40% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 380px) {
+
+      .page {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .card {
+        padding: 20px 13px;
+        border-radius: 18px;
+      }
+
+      .icon {
+        width: 76px;
+        height: 76px;
+        font-size: 36px;
+      }
+
+      .button {
+        min-height: 60px;
+      }
+    }
+
+    /* =====================================================
+       TABLET / DESKTOP
+    ===================================================== */
+
+    @media (min-width: 700px) {
+
+      .page {
+        padding-top: 35px;
+        padding-bottom: 45px;
+      }
+
+      .card {
+        padding: 32px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <main class="container">
-    <section class="card">
 
-      <div class="logo">AB</div>
-      <div class="icon">✉️</div>
+  <main class="page">
 
-      <h1>ইমেইল যাচাই করুন</h1>
+    <div class="container">
 
-      <p class="subtitle">
-        আপনার ইমেইলে পাঠানো Verification Link খুলুন।
-        তারপর নিচের বাটনে চাপ দিয়ে যাচাই সম্পন্ন করুন।
-      </p>
+      <!-- =================================================
+           BRAND
+      ================================================== -->
 
-      <div class="email-label">আপনার নিবন্ধিত ইমেইল</div>
+      <header class="brand">
 
-      <div id="emailBox" class="email-box">
-        ইমেইল লোড হচ্ছে...
-      </div>
+        <h1 class="brand-title">
+          AYNA BOOK ★
+        </h1>
 
-      <button id="checkButton" type="button">
-        ✅ আমি ইমেইল যাচাই করেছি
-      </button>
+        <div class="brand-subtitle">
+          ইমেইল যাচাই করুন
+        </div>
 
-      <button id="resendButton" type="button">
-        📩 Verification Email আবার পাঠান
-      </button>
+      </header>
 
-      <button id="logoutButton" type="button">
-        Sign Out
-      </button>
 
-      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <!-- =================================================
+           MAIN CARD
+      ================================================== -->
 
-      <div class="info">
-        ইমেইল না পেলে Spam/Junk ফোল্ডার দেখুন।
-        যাচাই করার পর এই পেজে ফিরে এসে যাচাই বাটনে চাপ দিন।
-      </div>
+      <section class="card">
 
-      <a href="login.html" class="login-link">
-        Login পেজে ফিরে যান
-      </a>
+        <div class="icon">
+          ✉️
+        </div>
 
-    </section>
+
+        <h2 class="title">
+          আপনার ইমেইল যাচাই করুন
+        </h2>
+
+
+        <p class="description">
+          আপনার ইমেইলে পাঠানো Verification Link খুলুন।
+          তারপর নিচের বাটনে চাপ দিয়ে যাচাই সম্পন্ন করুন।
+        </p>
+
+
+        <!-- =================================================
+             REGISTERED EMAIL
+        ================================================== -->
+
+        <div class="email-box">
+
+          <div class="email-label">
+            আপনার নিবন্ধিত ইমেইল
+          </div>
+
+          <div
+            id="emailBox"
+            class="email-value"
+          >
+            ইমেইল লোড হচ্ছে...
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MESSAGE
+        ================================================== -->
+
+        <div
+          id="message"
+          class="message"
+          role="alert"
+          aria-live="polite"
+        ></div>
+
+
+        <!-- =================================================
+             VERIFY BUTTON
+        ================================================== -->
+
+        <button
+          type="button"
+          id="checkButton"
+          class="button button-primary"
+        >
+          ✅ আমি ইমেইল যাচাই করেছি
+        </button>
+
+
+        <!-- =================================================
+             RESEND
+        ================================================== -->
+
+        <button
+          type="button"
+          id="resendButton"
+          class="button"
+        >
+          📩 Verification Email আবার পাঠান
+        </button>
+
+
+        <!-- =================================================
+             SIGN OUT
+        ================================================== -->
+
+        <button
+          type="button"
+          id="logoutButton"
+          class="button button-danger"
+        >
+          Sign Out
+        </button>
+
+
+        <!-- =================================================
+             INSTRUCTIONS
+        ================================================== -->
+
+        <section class="instructions">
+
+          <h3 class="instructions-title">
+            📌 কীভাবে যাচাই করবেন?
+          </h3>
+
+          <ol class="instructions-list">
+
+            <li>
+              আপনার Gmail Inbox খুলুন।
+            </li>
+
+            <li>
+              AYNA BOOK-এর Verification Email খুঁজুন।
+            </li>
+
+            <li>
+              Email-এর Verification Link-এ চাপ দিন।
+            </li>
+
+            <li>
+              Verification সম্পন্ন হলে এই পেজে ফিরে আসুন।
+            </li>
+
+            <li>
+              তারপর
+              <strong>“আমি ইমেইল যাচাই করেছি”</strong>
+              বাটনে চাপ দিন।
+            </li>
+
+          </ol>
+
+        </section>
+
+
+        <!-- =================================================
+             BACK TO LOGIN
+        ================================================== -->
+
+        <a
+          id="loginLink"
+          href="./login.html"
+          class="button"
+          style="
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+            margin-top:25px;
+          "
+        >
+          Login পেজে ফিরে যান
+        </a>
+
+      </section>
+
+
+      <!-- =================================================
+           FOOTER
+      ================================================== -->
+
+      <footer class="footer">
+
+        <strong>AYNA BOOK ★</strong>
+
+        <br>
+
+        Connect • Share • Create
+
+      </footer>
+
+    </div>
+
   </main>
 
-  <script type="module" src="./verify-email.js"></script>
+
+  <!-- =====================================================
+       VERIFY EMAIL JAVASCRIPT
+  ====================================================== -->
+
+  <script
+    type="module"
+    src="./verify-email.js"
+  ></script>
+
 </body>
 </html>
