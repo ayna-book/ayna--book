@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07152e">
+<title>AYNA BOOK — World Fish Market</title>
+
+<style>
+:root {
+  --bg:#050b18;
+  --navy:#102b55;
+  --panel:#0c1b35;
+  --gold:#e8c65a;
+  --white:#ffffff;
+  --muted:#b8c5d9;
+  --border:#9b7b32;
+  --green:#35d68a;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,sans-serif;
+  font-size:20px;
+}
+
+button,input,select {
+  font:inherit;
+}
+
+header {
+  background:linear-gradient(135deg,#183b75,#07152e);
+  padding:18px;
+  border-bottom:3px solid var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+header h1 {
+  font-size:clamp(25px,5vw,38px);
+  margin:0;
+  color:var(--gold);
+}
+
+button {
+  background:#173c72;
+  color:white;
+  border:2px solid var(--gold);
+  border-radius:12px;
+  padding:13px 17px;
+  font-weight:bold;
+  cursor:pointer;
+  min-height:52px;
+}
+
+button:active {
+  transform:scale(.97);
+}
+
+.container {
+  max-width:1200px;
+  margin:auto;
+  padding:16px;
+}
+
+.hero {
+  background:linear-gradient(135deg,#123c70,#0a1932);
+  border:2px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+  margin:15px 0;
+  text-align:center;
+}
+
+.hero h2 {
+  color:var(--gold);
+  font-size:clamp(28px,6vw,42px);
+  margin:5px 0 12px;
+}
+
+.hero p {
+  line-height:1.6;
+  color:#e3eafa;
+}
+
+.status {
+  display:inline-block;
+  background:#153b31;
+  color:#75ffc1;
+  padding:10px 15px;
+  border-radius:30px;
+  font-size:17px;
+  margin-top:8px;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin:18px 0;
+}
+
+.stat {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 10px;
+  text-align:center;
+}
+
+.stat strong {
+  display:block;
+  font-size:30px;
+  color:var(--gold);
+  margin-bottom:7px;
+}
+
+.stat span {
+  font-size:16px;
+  color:var(--muted);
+}
+
+.section {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin:18px 0;
+}
+
+.section h2 {
+  color:var(--gold);
+  font-size:26px;
+  margin-top:0;
+}
+
+.filters {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+input,select {
+  width:100%;
+  min-height:55px;
+  background:#071226;
+  color:white;
+  border:2px solid #536b91;
+  border-radius:10px;
+  padding:12px;
+}
+
+input::placeholder {
+  color:#aebbd0;
+}
+
+.actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:12px;
+}
+
+.actions button {
+  flex:1 1 140px;
+}
+
+.categories {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.categories button {
+  min-height:65px;
+  font-size:17px;
+}
+
+.product-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:15px;
+}
+
+.product-card {
+  background:#102442;
+  border:1px solid #8d7338;
+  border-radius:15px;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.fish-icon {
+  background:#183e69;
+  border-radius:12px;
+  min-height:115px;
+  display:grid;
+  place-items:center;
+  font-size:65px;
+}
+
+.product-card h3 {
+  color:var(--gold);
+  font-size:23px;
+  margin:5px 0;
+}
+
+.product-card p {
+  color:#d6e0f1;
+  line-height:1.5;
+  margin:3px 0;
+  font-size:17px;
+}
+
+.price {
+  color:#70ffc0;
+  font-size:23px;
+  font-weight:bold;
+}
+
+.product-card button {
+  width:100%;
+  margin-top:auto;
+}
+
+.ai-box {
+  background:#101f3d;
+  border:2px solid #3e8dc0;
+  border-radius:15px;
+  padding:18px;
+}
+
+.ai-box h2 {
+  color:#7bd8ff;
+}
+
+.ai-answer {
+  background:#071226;
+  border-radius:10px;
+  padding:15px;
+  min-height:65px;
+  line-height:1.6;
+  margin-top:12px;
+  color:#e3edff;
+}
+
+.notice {
+  color:#ffd98a;
+  font-size:16px;
+  line-height:1.6;
+}
+
+footer {
+  text-align:center;
+  padding:25px;
+  color:#b8c5d9;
+  font-size:15px;
+}
+
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:#000d;
+  padding:18px;
+  overflow:auto;
+}
+
+.modal-content {
+  max-width:600px;
+  margin:35px auto;
+  background:#102442;
+  border:2px solid var(--gold);
+  border-radius:16px;
+  padding:20px;
+}
+
+.modal-content h2 {
+  color:var(--gold);
+}
+
+.close-row {
+  display:flex;
+  justify-content:flex-end;
+}
+
+@media(min-width:700px) {
+  .stats {
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .filters {
+    grid-template-columns:2fr 1fr 1fr;
+  }
+
+  .categories {
+    grid-template-columns:repeat(4,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🐟 AYNA BOOK</h1>
+  <div class="actions">
+    <button id="homeBtn">⌂ Home</button>
+    <button id="fullScreenBtn">⛶ Full Screen</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <h2>🌍 World Fish Market</h2>
+    <p>
+      বিশ্বের মাছের বাজার — সামুদ্রিক মাছ, মিঠাপানির মাছ,
+      তাজা মাছ, হিমায়িত মাছ এবং মাছের আন্তর্জাতিক বাজারদর।
+    </p>
+    <div class="status" id="marketStatus">
+      বাজারের তথ্য প্রস্তুত হচ্ছে...
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <strong id="totalProducts">0</strong>
+      <span>মাছ ও পণ্য</span>
+    </div>
+
+    <div class="stat">
+      <strong id="countryCount">0</strong>
+      <span>দেশ</span>
+    </div>
+
+    <div class="stat">
+      <strong id="resultCount">0</strong>
+      <span>সার্চ ফলাফল</span>
+    </div>
+
+    <div class="stat">
+      <strong id="categoryCount">0</strong>
+      <span>ক্যাটাগরি</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>🔎 মাছ ও বাজার অনুসন্ধান</h2>
+
+    <div class="filters">
+      <input
+        id="marketSearch"
+        type="search"
+        placeholder="মাছের নাম লিখুন..."
+      >
+
+      <select id="categoryFilter">
+        <option value="all">সব ক্যাটাগরি</option>
+        <option value="freshwater">মিঠাপানির মাছ</option>
+        <option value="seafood">সামুদ্রিক মাছ</option>
+        <option value="frozen">হিমায়িত মাছ</option>
+        <option value="premium">প্রিমিয়াম মাছ</option>
+        <option value="shellfish">চিংড়ি ও শেলফিশ</option>
+        <option value="dried">শুঁটকি মাছ</option>
+      </select>
+
+      <select id="countryFilter">
+        <option value="all">সব দেশ</option>
+        <option value="Bangladesh">বাংলাদেশ</option>
+        <option value="India">ভারত</option>
+        <option value="Japan">জাপান</option>
+        <option value="Norway">নরওয়ে</option>
+        <option value="USA">যুক্তরাষ্ট্র</option>
+        <option value="Australia">অস্ট্রেলিয়া</option>
+        <option value="Thailand">থাইল্যান্ড</option>
+        <option value="Vietnam">ভিয়েতনাম</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button id="searchBtn">🔎 Search</button>
+      <button id="resetBtn">↻ Reset</button>
+      <button id="refreshMarketBtn">⟳ Refresh</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>🐠 মাছের ক্যাটাগরি</h2>
+
+    <div class="categories">
+      <button data-market-category="freshwater">🐟 মিঠাপানির মাছ</button>
+      <button data-market-category="seafood">🌊 সামুদ্রিক মাছ</button>
+      <button data-market-category="frozen">❄️ হিমায়িত মাছ</button>
+      <button data-market-category="premium">⭐ প্রিমিয়াম মাছ</button>
+      <button data-market-category="shellfish">🦐 চিংড়ি ও শেলফিশ</button>
+      <button data-market-category="dried">☀️ শুঁটকি মাছ</button>
+      <button data-market-category="all">🌍 সব পণ্য</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>🌍 আন্তর্জাতিক মাছের বাজার</h2>
+    <p>মোট ফলাফল: <strong id="resultCountTop">0</strong></p>
+
+    <div id="productsContainer" class="product-grid">
+      <p>মাছের বাজারের তথ্য লোড হচ্ছে...</p>
+    </div>
+  </section>
+
+  <section class="section ai-box">
+    <h2>🤖 AYNA AI Fish Market Assistant</h2>
+
+    <p>
+      মাছের বাজার, মাছের ধরন, সংরক্ষণ এবং বাজারদর সম্পর্কে
+      প্রশ্ন লিখুন।
+    </p>
+
+    <input
+      id="aiMarketQuestion"
+      type="text"
+      placeholder="যেমন: বাংলাদেশে কোন মাছ পাওয়া যায়?"
+    >
+
+    <div class="actions">
+      <button id="aiAnalyzeBtn">🤖 AI Analysis</button>
+    </div>
+
+    <div class="ai-answer" id="aiMarketAnswer">
+      আপনার প্রশ্নের উত্তর এখানে দেখা যাবে।
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>🔐 বাজার তথ্য ও নিরাপত্তা</h2>
+    <p class="notice">
+      মাছের দাম দেশ, শহর, বাজার, মান, ওজন এবং সরবরাহ অনুযায়ী
+      পরিবর্তিত হয়। কেনাবেচার আগে স্থানীয় বাজার বা বিক্রেতার
+      কাছ থেকে দাম যাচাই করুন।
+    </p>
+    <p class="notice">
+      প্রাথমিক সংস্করণে নমুনা তথ্য দেখানো হতে পারে।
+      যাচাইকৃত লাইভ বাজারদর পেতে নির্ভরযোগ্য ডেটা API
+      অথবা বাজার কর্তৃপক্ষের তথ্য সংযুক্ত করতে হবে।
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  AYNA BOOK ★ Connect • Share • Create
+  <br>
+  World Fish Market
+</footer>
+
+<!-- Product Details Modal -->
+<div class="modal" id="productModal">
+  <div class="modal-content">
+    <div class="close-row">
+      <button id="closeModalBtn">✕ Close</button>
+    </div>
+
+    <h2 id="modalProductName">মাছের বিবরণ</h2>
+    <div id="modalProductBody"></div>
+  </div>
+</div>
+
+<script type="module" src="./fish-market.js"></script>
+
+</body>
+</html>
