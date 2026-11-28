@@ -38,10 +38,10 @@
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 650000)"
         },
         "accountType": {
-          ".validate": "!newData.exists() || (newData.isString() && (newData.val() === 'personal' || newData.val() === 'business' || newData.val() === 'vip' || newData.val() === 'vvip'))"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val() === 'personal' && (!data.exists() || newData.val() === data.val()))"
         },
         "plan": {
-          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 30)"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val() === 'free' && (!data.exists() || newData.val() === data.val()))"
         },
         "emailVerified": {
           ".validate": "!newData.exists() || newData.isBoolean()"
@@ -61,7 +61,6 @@
 
       "$postId": {
         ".write": "auth != null && ((!data.exists() && newData.child('uid').val() === auth.uid) || (data.exists() && data.child('uid').val() === auth.uid && newData.child('uid').val() === data.child('uid').val()) || (!newData.exists() && data.child('uid').val() === auth.uid))",
-
         ".validate": "!newData.exists() || newData.hasChildren(['uid', 'createdAt'])",
 
         "postId": {
@@ -109,6 +108,45 @@
       }
     },
 
+    "messenger_rooms": {
+      "$room": {
+        ".read": "auth != null",
+
+        "$messageId": {
+          ".write": "auth != null && !data.exists() && newData.child('uid').val() === auth.uid",
+          ".validate": "newData.hasChildren(['uid', 'sender', 'createdAt']) && ((newData.child('text').isString() && newData.child('text').val().length > 0) || (newData.child('fileUrl').isString() && newData.child('fileUrl').val().length > 0))",
+
+          "uid": {
+            ".validate": "newData.isString() && newData.val() === auth.uid"
+          },
+          "sender": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 150"
+          },
+          "text": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 10000)"
+          },
+          "fileName": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 255)"
+          },
+          "fileSize": {
+            ".validate": "!newData.exists() || (newData.isNumber() && newData.val() >= 0 && newData.val() <= 262144000)"
+          },
+          "mimeType": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 150)"
+          },
+          "fileUrl": {
+            ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 4096)"
+          },
+          "createdAt": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+
     "presence": {
       "$uid": {
         ".read": "auth != null",
@@ -125,11 +163,6 @@
           ".validate": false
         }
       }
-    },
-
-    "messenger_rooms": {
-      ".read": false,
-      ".write": false
     },
 
     "chats": {
