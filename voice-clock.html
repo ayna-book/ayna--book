@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#050a18">
+
+  <title>AYNA BOOK — Voice Clock</title>
+
+  <style>
+    :root{
+      --bg:#050a18;
+      --navy:#0a1633;
+      --navy2:#102657;
+      --gold:#ffd700;
+      --gold2:#d4af37;
+      --white:#ffffff;
+      --muted:#c8d1e8;
+      --green:#25d366;
+      --red:#ff5b5b;
+      --cyan:#00e5ff;
+      --card:#0b1734;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    html,body{
+      width:100%;
+      min-height:100%;
+      background:var(--bg);
+      color:var(--white);
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Noto Sans Bengali",
+        "Noto Sans",
+        Arial,
+        sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    button,
+    select{
+      font:inherit;
+    }
+
+    button{
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .app{
+      width:100%;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 50% 0%, #18377c 0%, #0a1633 35%, #050a18 75%);
+    }
+
+    /* HEADER */
+    .header{
+      position:sticky;
+      top:0;
+      z-index:100;
+      width:100%;
+      padding:14px;
+      background:
+        linear-gradient(180deg,#18377c,#09152f);
+      border-bottom:2px solid var(--gold2);
+      box-shadow:0 4px 20px rgba(0,0,0,.5);
+    }
+
+    .header-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      max-width:1200px;
+      margin:auto;
+    }
+
+    .brand{
+      font-size:clamp(24px,5vw,40px);
+      font-weight:900;
+      letter-spacing:.5px;
+      color:#fff;
+    }
+
+    .brand span{
+      color:var(--gold);
+    }
+
+    .header-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .top-btn{
+      min-height:54px;
+      padding:10px 16px;
+      border:2px solid var(--gold);
+      border-radius:14px;
+      background:#071126;
+      color:#fff;
+      font-size:clamp(18px,4vw,25px);
+      font-weight:800;
+    }
+
+    .top-btn:hover{
+      background:#172d62;
+    }
+
+    /* MAIN */
+    main{
+      width:100%;
+      max-width:1200px;
+      margin:auto;
+      padding:20px 14px 50px;
+    }
+
+    .hero{
+      text-align:center;
+      padding:20px 10px 15px;
+    }
+
+    .hero h1{
+      font-size:clamp(32px,8vw,64px);
+      line-height:1.08;
+      color:var(--gold);
+      font-weight:950;
+      text-shadow:0 0 18px rgba(255,215,0,.2);
+    }
+
+    .hero p{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:clamp(18px,4vw,28px);
+      line-height:1.5;
+    }
+
+    /* CLOCK */
+    .clock-card{
+      margin:18px auto;
+      padding:25px 14px;
+      border:2px solid var(--gold2);
+      border-radius:26px;
+      background:
+        linear-gradient(145deg,rgba(17,43,94,.95),rgba(5,12,29,.98));
+      box-shadow:
+        0 0 35px rgba(0,0,0,.5),
+        inset 0 0 30px rgba(255,215,0,.03);
+      text-align:center;
+    }
+
+    .clock-label{
+      font-size:clamp(20px,4vw,30px);
+      color:var(--cyan);
+      font-weight:900;
+      margin-bottom:12px;
+    }
+
+    #digitalClock{
+      font-family:
+        "Courier New",
+        monospace;
+      font-size:clamp(48px,15vw,125px);
+      line-height:1;
+      font-weight:900;
+      color:#fff;
+      letter-spacing:2px;
+      text-shadow:
+        0 0 12px rgba(255,255,255,.15),
+        0 0 35px rgba(0,229,255,.08);
+      word-break:break-word;
+    }
+
+    #ampm{
+      display:block;
+      margin-top:12px;
+      font-size:clamp(25px,6vw,45px);
+      color:var(--gold);
+      font-weight:900;
+    }
+
+    #dateText{
+      margin-top:18px;
+      font-size:clamp(20px,5vw,34px);
+      color:#fff;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    #timezoneText{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:clamp(17px,4vw,25px);
+    }
+
+    /* STATUS */
+    .status-box{
+      margin:18px auto;
+      padding:16px;
+      border:2px solid #314a7b;
+      border-radius:18px;
+      background:#071126;
+      text-align:center;
+    }
+
+    #voiceStatus{
+      font-size:clamp(20px,4.5vw,30px);
+      font-weight:900;
+      color:var(--green);
+    }
+
+    #nextHourText{
+      margin-top:8px;
+      font-size:clamp(17px,4vw,24px);
+      color:var(--muted);
+    }
+
+    /* CONTROLS */
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:20px;
+    }
+
+    .control-btn{
+      min-height:76px;
+      padding:14px;
+      border:2px solid var(--gold);
+      border-radius:18px;
+      background:
+        linear-gradient(145deg,#112b5f,#071126);
+      color:#fff;
+      font-size:clamp(20px,4.5vw,30px);
+      font-weight:900;
+      line-height:1.2;
+      box-shadow:0 5px 16px rgba(0,0,0,.35);
+    }
+
+    .control-btn:hover{
+      transform:translateY(-1px);
+      background:#18376f;
+    }
+
+    .control-btn:active{
+      transform:scale(.98);
+    }
+
+    .control-btn.voice-on{
+      border-color:var(--green);
+      color:#8dffb0;
+    }
+
+    .control-btn.voice-off{
+      border-color:var(--red);
+      color:#ffaaaa;
+    }
+
+    .wide{
+      grid-column:1 / -1;
+    }
+
+    /* SETTINGS */
+    .settings{
+      margin-top:24px;
+      padding:20px;
+      border:2px solid #304b80;
+      border-radius:22px;
+      background:rgba(8,20,47,.95);
+    }
+
+    .section-title{
+      color:var(--gold);
+      font-size:clamp(25px,5vw,38px);
+      font-weight:950;
+      margin-bottom:16px;
+    }
+
+    .setting-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .setting{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .setting label{
+      color:#fff;
+      font-size:clamp(18px,4vw,26px);
+      font-weight:800;
+    }
+
+    select{
+      width:100%;
+      min-height:60px;
+      padding:10px 14px;
+      border:2px solid var(--gold2);
+      border-radius:14px;
+      background:#050d20;
+      color:#fff;
+      font-size:clamp(18px,4vw,25px);
+      font-weight:700;
+      outline:none;
+    }
+
+    /* HOURLY */
+    .hourly{
+      margin-top:24px;
+      padding:20px;
+      border:2px solid #304b80;
+      border-radius:22px;
+      background:rgba(8,20,47,.95);
+    }
+
+    .hourly-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+    }
+
+    .hourly-text{
+      font-size:clamp(19px,4vw,27px);
+      line-height:1.45;
+      font-weight:800;
+    }
+
+    .switch{
+      position:relative;
+      flex:0 0 auto;
+      width:82px;
+      height:46px;
+    }
+
+    .switch input{
+      display:none;
+    }
+
+    .slider{
+      position:absolute;
+      inset:0;
+      border-radius:30px;
+      background:#333b4c;
+      border:2px solid #69758e;
+      transition:.25s;
+    }
+
+    .slider:before{
+      content:"";
+      position:absolute;
+      width:34px;
+      height:34px;
+      left:4px;
+      top:4px;
+      border-radius:50%;
+      background:#fff;
+      transition:.25s;
+    }
+
+    .switch input:checked + .slider{
+      background:#126b38;
+      border-color:var(--green);
+    }
+
+    .switch input:checked + .slider:before{
+      transform:translateX(36px);
+    }
+
+    /* AI */
+    .ai-box{
+      margin-top:24px;
+      padding:20px;
+      border:2px solid var(--cyan);
+      border-radius:22px;
+      background:
+        linear-gradient(145deg,#071a34,#071126);
+    }
+
+    .ai-title{
+      font-size:clamp(24px,5vw,38px);
+      font-weight:950;
+      color:var(--cyan);
+    }
+
+    .ai-text{
+      margin-top:10px;
+      color:#dce7ff;
+      font-size:clamp(17px,4vw,24px);
+      line-height:1.55;
+    }
+
+    /* INFO */
+    .info{
+      margin-top:24px;
+      padding:20px;
+      border:2px solid #304b80;
+      border-radius:22px;
+      background:#071126;
+    }
+
+    .info ul{
+      padding-left:28px;
+    }
+
+    .info li{
+      margin:10px 0;
+      color:#e3e9f7;
+      font-size:clamp(17px,4vw,23px);
+      line-height:1.45;
+    }
+
+    .footer{
+      padding:25px 15px 45px;
+      text-align:center;
+      color:#8794b1;
+      font-size:clamp(15px,3.5vw,20px);
+    }
+
+    /* FULLSCREEN */
+    :fullscreen .app{
+      overflow:auto;
+    }
+
+    /* MOBILE */
+    @media(max-width:650px){
+
+      .header-row{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .header-actions{
+        width:100%;
+        justify-content:stretch;
+      }
+
+      .top-btn{
+        flex:1;
+      }
+
+      .controls{
+        grid-template-columns:1fr;
+      }
+
+      .wide{
+        grid-column:auto;
+      }
+
+      .setting-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hourly-row{
+        align-items:flex-start;
+      }
+    }
+
+    @media(min-width:900px){
+      .controls{
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
+
+      .wide{
+        grid-column:auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app" id="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-row">
+
+      <div class="brand">
+        AYNA BOOK <span>★</span>
+      </div>
+
+      <div class="header-actions">
+        <button
+          class="top-btn"
+          id="homeBtn"
+          type="button">
+          🏠 Home
+        </button>
+
+        <button
+          class="top-btn"
+          id="fullScreenBtn"
+          type="button">
+          ⛶ Full Screen
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <h1>🕐 Voice Clock</h1>
+
+      <p>
+        বাংলা ও ইংরেজি কণ্ঠে সময় শুনুন।
+        প্রতি ঘণ্টায় স্বয়ংক্রিয় সময় ঘোষণা চালু করতে পারবেন।
+      </p>
+    </section>
+
+
+    <!-- CLOCK -->
+    <section class="clock-card">
+
+      <div class="clock-label">
+        বর্তমান সময় / Current Time
+      </div>
+
+      <div id="digitalClock">
+        00:00:00
+      </div>
+
+      <span id="ampm">
+        --
+      </span>
+
+      <div id="dateText">
+        তারিখ লোড হচ্ছে...
+      </div>
+
+      <div id="timezoneText">
+        Time Zone: Asia/Dhaka
+      </div>
+
+    </section>
+
+
+    <!-- STATUS -->
+    <section class="status-box">
+
+      <div id="voiceStatus">
+        🔇 Voice Off
+      </div>
+
+      <div id="nextHourText">
+        প্রতি ঘণ্টার ঘোষণা বন্ধ আছে
+      </div>
+
+    </section>
+
+
+    <!-- CONTROLS -->
+    <section class="controls">
+
+      <button
+        class="control-btn voice-on"
+        id="enableVoiceBtn"
+        type="button">
+        🔊 Voice On
+      </button>
+
+      <button
+        class="control-btn voice-off"
+        id="disableVoiceBtn"
+        type="button">
+        🔇 Voice Off
+      </button>
+
+      <button
+        class="control-btn"
+        id="speakNowBtn"
+        type="button">
+        🗣️ এখনই সময় বলুন
+      </button>
+
+      <button
+        class="control-btn"
+        id="testVoiceBtn"
+        type="button">
+        🔊 Voice Test
+      </button>
+
+      <button
+        class="control-btn"
+        id="formatBtn"
+        type="button">
+        🕐 12 / 24 Hour
+      </button>
+
+      <button
+        class="control-btn"
+        id="stopSpeechBtn"
+        type="button">
+        ⏹ Stop Voice
+      </button>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+    <section class="settings">
+
+      <div class="section-title">
+        ⚙️ Voice Settings
+      </div>
+
+      <div class="setting-grid">
+
+        <div class="setting">
+
+          <label for="languageSelect">
+            🌐 Voice Language
+          </label>
+
+          <select id="languageSelect">
+
+            <option value="bn-BD">
+              বাংলা — Bangla
+            </option>
+
+            <option value="en-US">
+              English — United States
+            </option>
+
+            <option value="en-GB">
+              English — United Kingdom
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="setting">
+
+          <label for="speedSelect">
+            🗣️ Speech Speed
+          </label>
+
+          <select id="speedSelect">
+
+            <option value="0.75">
+              Slow
+            </option>
+
+            <option value="0.9" selected>
+              Normal
+            </option>
+
+            <option value="1">
+              Fast
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="setting">
+
+          <label for="hourFormatSelect">
+            🕐 Clock Format
+          </label>
+
+          <select id="hourFormatSelect">
+
+            <option value="12">
+              12 Hour
+            </option>
+
+            <option value="24">
+              24 Hour
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="setting">
+
+          <label for="timezoneSelect">
+            🌍 Time Zone
+          </label>
+
+          <select id="timezoneSelect">
+
+            <option value="Asia/Dhaka">
+              Bangladesh — Dhaka
+            </option>
+
+            <option value="Asia/Kolkata">
+              India — Kolkata
+            </option>
+
+            <option value="Asia/Dubai">
+              UAE — Dubai
+            </option>
+
+            <option value="Asia/Riyadh">
+              Saudi Arabia — Riyadh
+            </option>
+
+            <option value="Europe/London">
+              United Kingdom — London
+            </option>
+
+            <option value="Europe/Paris">
+              France — Paris
+            </option>
+
+            <option value="America/New_York">
+              USA — New York
+            </option>
+
+            <option value="America/Los_Angeles">
+              USA — Los Angeles
+            </option>
+
+            <option value="Asia/Tokyo">
+              Japan — Tokyo
+            </option>
+
+            <option value="Australia/Sydney">
+              Australia — Sydney
+            </option>
+
+            <option value="UTC">
+              UTC
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- HOURLY ANNOUNCEMENT -->
+    <section class="hourly">
+
+      <div class="hourly-row">
+
+        <div class="hourly-text">
+
+          🔔 প্রতি ঘণ্টায় সময় ঘোষণা<br>
+
+          <span style="color:#b7c4df;font-weight:600;">
+            Every hour announce the current time
+          </span>
+
+        </div>
+
+        <label class="switch">
+
+          <input
+            type="checkbox"
+            id="hourlyToggle">
+
+          <span class="slider"></span>
+
+        </label>
+
+      </div>
+
+    </section>
+
+
+    <!-- AI READY -->
+    <section class="ai-box">
+
+      <div class="ai-title">
+        ⚛️ AYNA AI Voice Assistant Ready
+      </div>
+
+      <div class="ai-text">
+
+        এই Voice Clock ভবিষ্যতে AYNA BOOK-এর
+        AI Assistant-এর সঙ্গে যুক্ত করে সময়,
+        আবহাওয়া, নামাজের সময়, অ্যালার্ট এবং
+        অন্যান্য তথ্য কণ্ঠে শোনানোর জন্য প্রস্তুত।
+
+        <br><br>
+
+        বর্তমানে এটি নিরাপদ browser-based
+        Web Speech প্রযুক্তি ব্যবহার করে।
+
+      </div>
+
+    </section>
+
+
+    <!-- INFORMATION -->
+    <section class="info">
+
+      <div class="section-title">
+        ℹ️ ব্যবহার নির্দেশনা
+      </div>
+
+      <ul>
+
+        <li>
+          প্রথমবার <strong>🔊 Voice On</strong> চাপুন।
+        </li>
+
+        <li>
+          তারপর <strong>🗣️ এখনই সময় বলুন</strong>
+          চাপলে বর্তমান সময় কণ্ঠে শুনতে পারবেন।
+        </li>
+
+        <li>
+          <strong>🔔 প্রতি ঘণ্টায় সময় ঘোষণা</strong>
+          চালু করলে প্রতি ঘণ্টার শুরুতে সময় ঘোষণা করবে।
+        </li>
+
+        <li>
+          বাংলা বা English Voice নির্বাচন করা যাবে।
+        </li>
+
+        <li>
+          12 Hour অথবা 24 Hour clock নির্বাচন করা যাবে।
+        </li>
+
+        <li>
+          বিভিন্ন দেশের Time Zone নির্বাচন করা যাবে।
+        </li>
+
+        <li>
+          Android Chrome-এ প্রথমবার Voice চালু করতে
+          অবশ্যই একটি বোতাম চাপতে হতে পারে।
+        </li>
+
+      </ul>
+
+    </section>
+
+  </main>
+
+
+  <footer class="footer">
+    AYNA BOOK ★ Voice Clock • Connect • Share • Create
+  </footer>
+
+</div>
+
+
+<!-- VOICE CLOCK JS -->
+<script type="module" src="./voice-clock.js"></script>
+
+</body>
+</html>
