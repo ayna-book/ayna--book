@@ -1,12 +1,13 @@
+
 // =========================================================
 // AYNA BOOK
 // POST SYSTEM CONTROLLER
 // File: posts.js
 // Firebase SDK: 13.4.0
+// Database: Realtime Database
 // =========================================================
 
 import {
-  getDatabase,
   ref,
   push,
   set,
@@ -15,16 +16,16 @@ import {
   remove,
   query,
   orderByChild,
-  equalTo
+  equalTo,
+  limitToLast
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
 import {
   app,
-  auth
+  auth,
+  database,
+  authReady
 } from "./app.js";
-
-const database = getDatabase(app);
-
 
 // =========================================================
 // CURRENT USER
@@ -40,49 +41,46 @@ function getUser() {
   return user;
 }
 
-
 // =========================================================
 // CREATE POST
 // =========================================================
 
-export async function createPost(postData) {
-
+export async function createPost(postData = {}) {
   try {
+    await authReady;
 
     const user = getUser();
 
+    const text = String(postData.text || "").trim();
+    const imageURL = String(postData.imageURL || "").trim();
+    const videoURL = String(postData.videoURL || "").trim();
+
+    if (!text && !imageURL && !videoURL) {
+      throw new Error("Write something or select a photo/video.");
+    }
+
     const postRef = push(ref(database, "posts"));
+    const now = Date.now();
 
     const post = {
-
       postId: postRef.key,
-
       uid: user.uid,
 
-      aynaId: postData.aynaId,
+      aynaId: String(postData.aynaId || ""),
+      fullName: String(postData.fullName || user.displayName || ""),
+      photoURL: String(postData.photoURL || user.photoURL || ""),
 
-      fullName: postData.fullName,
+      text,
+      imageURL,
+      imagePath: String(postData.imagePath || ""),
+      videoURL,
+      videoPath: String(postData.videoPath || ""),
 
-      photoURL: postData.photoURL || "",
+      type: videoURL ? "video" : imageURL ? "image" : "text",
 
-      text: postData.text || "",
-
-      imageURL: postData.imageURL || "",
-
-      imagePath: postData.imagePath || "",
-
-      createdAt: Date.now(),
-
-      updatedAt: Date.now()
-
+      createdAt: now,
+      updatedAt: now
     };
-
-    if (!post.text.trim() && !post.imageURL) {
-      return {
-        success: false,
-        message: "Write something or select a photo."
-      };
-    }
 
     await set(postRef, post);
 
@@ -93,51 +91,46 @@ export async function createPost(postData) {
     };
 
   } catch (error) {
-
     console.error("Create Post Error:", error);
 
     return {
       success: false,
       message: error.message
     };
-
   }
-
 }
-
 
 // =========================================================
 // GET ALL POSTS
 // =========================================================
 
-export async function getAllPosts() {
-
+export async function getAllPosts(maxPosts = 100) {
   try {
+    await authReady;
+    getUser();
 
-    const user = getUser();
+    const safeLimit = Math.min(
+      Math.max(Number(maxPosts) || 100, 1),
+      200
+    );
 
-    const postsRef = ref(database, "posts");
+    const postsQuery = query(
+      ref(database, "posts"),
+      orderByChild("createdAt"),
+      limitToLast(safeLimit)
+    );
 
-    const snapshot = await get(postsRef);
-
-    if (!snapshot.exists()) {
-      return {
-        success: true,
-        posts: []
-      };
-    }
+    const snapshot = await get(postsQuery);
 
     const posts = [];
 
-    snapshot.forEach((child) => {
+    if (snapshot.exists()) {
+      snapshot.forEach((child) => {
+        posts.push(child.val());
+      });
+    }
 
-      const post = child.val();
-
-      posts.push(post);
-
-    });
-
-    posts.sort((a, b) => b.createdAt - a.createdAt);
+    posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
     return {
       success: true,
@@ -145,7 +138,6 @@ export async function getAllPosts() {
     };
 
   } catch (error) {
-
     console.error("Get Posts Error:", error);
 
     return {
@@ -153,41 +145,35 @@ export async function getAllPosts() {
       posts: [],
       message: error.message
     };
-
   }
-
 }
-
 
 // =========================================================
 // GET MY POSTS
 // =========================================================
 
 export async function getMyPosts() {
-
   try {
+    await authReady;
 
     const user = getUser();
 
-    const postsRef = query(
+    const postsQuery = query(
       ref(database, "posts"),
       orderByChild("uid"),
       equalTo(user.uid)
     );
 
-    const snapshot = await get(postsRef);
-
+    const snapshot = await get(postsQuery);
     const posts = [];
 
     if (snapshot.exists()) {
-
       snapshot.forEach((child) => {
         posts.push(child.val());
       });
-
     }
 
-    posts.sort((a, b) => b.createdAt - a.createdAt);
+    posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
     return {
       success: true,
@@ -195,7 +181,6 @@ export async function getMyPosts() {
     };
 
   } catch (error) {
-
     console.error("Get My Posts Error:", error);
 
     return {
@@ -203,19 +188,16 @@ export async function getMyPosts() {
       posts: [],
       message: error.message
     };
-
   }
-
 }
-
 
 // =========================================================
 // UPDATE POST
 // =========================================================
 
-export async function updatePost(postId, updates) {
-
+export async function updatePost(postId, updates = {}) {
   try {
+    await authReady;
 
     const user = getUser();
 
@@ -224,7 +206,6 @@ export async function updatePost(postId, updates) {
     }
 
     const postRef = ref(database, `posts/${postId}`);
-
     const snapshot = await get(postRef);
 
     if (!snapshot.exists()) {
@@ -244,15 +225,40 @@ export async function updatePost(postId, updates) {
     }
 
     if (typeof updates.imageURL === "string") {
-      allowedUpdates.imageURL = updates.imageURL;
+      allowedUpdates.imageURL = updates.imageURL.trim();
     }
 
     if (typeof updates.imagePath === "string") {
       allowedUpdates.imagePath = updates.imagePath;
     }
 
-    if (!allowedUpdates.text && !allowedUpdates.imageURL) {
+    if (typeof updates.videoURL === "string") {
+      allowedUpdates.videoURL = updates.videoURL.trim();
+    }
+
+    if (typeof updates.videoPath === "string") {
+      allowedUpdates.videoPath = updates.videoPath;
+    }
+
+    const finalText =
+      allowedUpdates.text ?? post.text ?? "";
+
+    const finalImage =
+      allowedUpdates.imageURL ?? post.imageURL ?? "";
+
+    const finalVideo =
+      allowedUpdates.videoURL ?? post.videoURL ?? "";
+
+    if (!finalText && !finalImage && !finalVideo) {
       throw new Error("Post cannot be empty.");
+    }
+
+    if (finalVideo) {
+      allowedUpdates.type = "video";
+    } else if (finalImage) {
+      allowedUpdates.type = "image";
+    } else {
+      allowedUpdates.type = "text";
     }
 
     allowedUpdates.updatedAt = Date.now();
@@ -265,26 +271,22 @@ export async function updatePost(postId, updates) {
     };
 
   } catch (error) {
-
     console.error("Update Post Error:", error);
 
     return {
       success: false,
       message: error.message
     };
-
   }
-
 }
-
 
 // =========================================================
 // DELETE POST
 // =========================================================
 
 export async function deletePost(postId) {
-
   try {
+    await authReady;
 
     const user = getUser();
 
@@ -293,7 +295,6 @@ export async function deletePost(postId) {
     }
 
     const postRef = ref(database, `posts/${postId}`);
-
     const snapshot = await get(postRef);
 
     if (!snapshot.exists()) {
@@ -314,21 +315,17 @@ export async function deletePost(postId) {
     };
 
   } catch (error) {
-
     console.error("Delete Post Error:", error);
 
     return {
       success: false,
       message: error.message
     };
-
   }
-
 }
-
 
 // =========================================================
 // EXPORT
 // =========================================================
 
-export { database };
+export { app, auth, database };
