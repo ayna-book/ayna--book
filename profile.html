@@ -1,2137 +1,313 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="theme-color" content="#071b49">
-
 <title>AYNA BOOK — Profile</title>
 
 <style>
-:root{
+:root {
   --bg:#050914;
   --panel:#09152d;
   --card:#101f3d;
-  --card2:#12254a;
   --navy:#071b49;
-  --navy2:#0d2c67;
   --gold:#ffd700;
   --gold2:#d4af37;
-  --white:#ffffff;
+  --white:#fff;
   --muted:#aeb9ce;
-  --line:rgba(255,215,0,.28);
-  --blue:#168cff;
   --green:#20e080;
 }
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body {
+  margin:0; padding:0; width:100%; min-height:100%;
+  background:var(--bg); color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
 }
+body { padding-bottom:100px; }
+button { cursor:pointer; font-family:inherit; }
 
-html,
-body{
-  margin:0;
-  padding:0;
-  width:100%;
-  min-height:100%;
-  background:var(--bg);
-  color:var(--white);
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-}
-
-body{
-  padding-bottom:100px;
-}
-
-/* =========================================================
-   TOP BAR
-========================================================= */
-
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:1000;
-
-  height:72px;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
+.topbar {
+  position:sticky; top:0; z-index:1000; height:70px;
+  display:flex; align-items:center; justify-content:space-between;
   padding:0 14px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #0a2861,
-      #071b49 55%,
-      #050914
-    );
-
+  background:linear-gradient(135deg,#0a2861,#071b49 55%,#050914);
   border-bottom:2px solid var(--gold2);
 }
-
-.brand{
-  color:var(--gold);
-  font-size:26px;
-  font-weight:900;
-  letter-spacing:.5px;
+.brand { color:var(--gold); font-size:25px; font-weight:900; }
+.top-actions { display:flex; gap:8px; }
+.top-btn {
+  width:48px; height:48px; border-radius:13px;
+  border:1px solid var(--gold2); background:#0c2450;
+  color:white; font-size:24px; font-weight:900;
 }
 
-.top-actions{
-  display:flex;
-  gap:8px;
-}
-
-.top-btn{
-  width:50px;
-  height:50px;
-
-  border-radius:13px;
-
-  border:1px solid var(--gold2);
-
-  background:#0c2450;
-
-  color:#fff;
-
-  font-size:25px;
-  font-weight:900;
-
-  cursor:pointer;
-}
-
-/* =========================================================
-   COVER
-========================================================= */
-
-.cover{
-  position:relative;
-
-  width:100%;
-  height:230px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #174b9d,
-      #09204d 55%,
-      #050914
-    );
-
+.cover {
+  height:210px; position:relative;
+  background:linear-gradient(135deg,#174b9d,#09204d 55%,#050914);
   border-bottom:1px solid rgba(255,215,0,.2);
 }
-
-.cover::after{
-  content:"AYNA BOOK";
-
-  position:absolute;
-
-  right:15px;
-  bottom:22px;
-
-  color:rgba(255,215,0,.15);
-
-  font-size:34px;
-  font-weight:900;
-
-  letter-spacing:1px;
+.cover:after {
+  content:"AYNA BOOK"; position:absolute; right:15px; bottom:20px;
+  color:rgba(255,215,0,.15); font-size:32px; font-weight:900;
 }
-
-/* =========================================================
-   PROFILE HEADER
-========================================================= */
-
-.profile-head{
+.profile-head {
   padding:0 14px 18px;
-
-  background:
-    linear-gradient(
-      180deg,
-      #071022,
-      #050914
-    );
+  background:linear-gradient(180deg,#071022,#050914);
 }
-
-/* =========================================================
-   PROFILE + QR
-========================================================= */
-
-.identity-row{
-  display:grid;
-
-  grid-template-columns:
-    minmax(0,1fr)
-    170px;
-
-  gap:14px;
-
-  align-items:start;
-
-  margin-top:-65px;
-
-  position:relative;
-
-  z-index:5;
+.identity-row {
+  display:grid; grid-template-columns:minmax(0,1fr) 155px;
+  gap:10px; align-items:start; margin-top:-65px;
+  position:relative; z-index:5;
 }
-
-.identity-left{
-  min-width:0;
+.identity-left { min-width:0; position:relative; }
+.profile-photo-wrap {
+  width:140px; height:140px; border-radius:50%; padding:5px;
+  background:linear-gradient(135deg,#fff200,#ffd000,#d4af37);
+  box-shadow:0 0 0 3px #061027,0 5px 30px rgba(0,0,0,.55);
 }
-
-.profile-photo-wrap{
-  width:150px;
-  height:150px;
-
-  border-radius:50%;
-
-  padding:5px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #fff200,
-      #ffd000,
-      #d4af37
-    );
-
-  box-shadow:
-    0 0 0 3px #061027,
-    0 5px 30px rgba(0,0,0,.55);
+.profile-photo {
+  display:block; width:100%; height:100%; border-radius:50%;
+  object-fit:cover; object-position:center;
+  background:#162746; border:4px solid #071022;
 }
-
-.profile-photo{
-  display:block;
-
-  width:100%;
-  height:100%;
-
-  border-radius:50%;
-
-  object-fit:cover;
-
-  object-position:center;
-
-  background:#162746;
-
-  border:4px solid #071022;
+.online-dot {
+  position:absolute; left:120px; top:105px;
+  width:26px; height:26px; border-radius:50%;
+  background:var(--green); border:4px solid #071022;
 }
-
-.online-dot{
-  position:absolute;
-
-  left:132px;
-  top:110px;
-
-  width:28px;
-  height:28px;
-
-  border-radius:50%;
-
-  background:var(--green);
-
-  border:4px solid #071022;
+.profile-name {
+  margin:14px 0 5px; font-size:30px; line-height:1.12;
+  font-weight:950; overflow-wrap:anywhere;
 }
-
-/* =========================================================
-   ACCOUNT QR
-========================================================= */
-
-.qr-card{
-  width:170px;
-
-  padding:12px;
-
-  margin-top:8px;
-
-  border:2px solid var(--gold2);
-
-  border-radius:16px;
-
-  background:
-    linear-gradient(
-      145deg,
-      #101f3d,
-      #07152f
-    );
-
-  text-align:center;
-
-  box-shadow:
-    0 8px 25px rgba(0,0,0,.35);
+.profile-email {
+  color:#b9c3d8; font-size:17px; line-height:1.35;
+  overflow-wrap:anywhere;
 }
-
-.qr-title{
-  margin-bottom:8px;
-
-  color:var(--gold);
-
-  font-size:20px;
-  font-weight:900;
-
-  text-transform:uppercase;
-
-  letter-spacing:.5px;
+.profile-bio {
+  margin-top:12px; color:#e5e9f1; font-size:18px; line-height:1.4;
 }
-
-.qr-box{
-  width:140px;
-  height:140px;
-
-  margin:auto;
-
-  padding:7px;
-
-  background:#fff;
-
-  border-radius:8px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.qr-card {
+  width:155px; padding:10px; margin-top:8px;
+  border:2px solid var(--gold2); border-radius:16px;
+  background:linear-gradient(145deg,#101f3d,#07152f);
+  text-align:center; box-shadow:0 8px 25px rgba(0,0,0,.35);
 }
-
-#accountQR{
-  width:126px;
-  height:126px;
+.qr-title { margin-bottom:8px; color:var(--gold); font-size:17px; font-weight:900; }
+.qr-box {
+  width:130px; height:130px; margin:auto; padding:5px;
+  background:#fff; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
 }
+#accountQR { width:120px; height:120px; }
+.qr-subtitle { margin-top:8px; color:#d7deed; font-size:12px; font-weight:700; }
 
-.qr-subtitle{
-  margin-top:8px;
-
-  color:#d7deed;
-
-  font-size:14px;
-  line-height:1.25;
-  font-weight:700;
+.stats {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:7px; margin-top:18px;
 }
-
-/* =========================================================
-   PROFILE TEXT
-========================================================= */
-
-.profile-name{
-  margin:14px 0 5px;
-
-  font-size:34px;
-
-  line-height:1.12;
-
-  font-weight:950;
-
-  word-break:break-word;
-}
-
-.profile-email{
-  color:#b9c3d8;
-
-  font-size:20px;
-
-  line-height:1.35;
-
-  word-break:break-all;
-}
-
-.profile-bio{
-  margin-top:12px;
-
-  color:#e5e9f1;
-
-  font-size:21px;
-
-  line-height:1.4;
-}
-
-/* =========================================================
-   STATS
-========================================================= */
-
-.stats{
-  display:grid;
-
-  grid-template-columns:
-    repeat(4,1fr);
-
-  gap:8px;
-
-  margin-top:18px;
-}
-
-.stat{
-  min-height:95px;
-
-  display:flex;
-  flex-direction:column;
-
-  align-items:center;
-  justify-content:center;
-
+.stat {
+  min-height:82px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
   border:1px solid rgba(255,215,0,.2);
-
-  border-radius:14px;
-
-  background:#0e1d3a;
+  border-radius:14px; background:#0e1d3a;
 }
+.stat-number { color:var(--gold); font-size:25px; font-weight:950; }
+.stat-label { margin-top:5px; color:#bdc7da; font-size:13px; font-weight:700; }
 
-.stat-number{
-  color:var(--gold);
-
-  font-size:30px;
-  font-weight:950;
+.main-buttons {
+  display:grid; grid-template-columns:2fr 1fr 1fr;
+  gap:8px; margin-top:14px;
 }
-
-.stat-label{
-  margin-top:5px;
-
-  color:#bdc7da;
-
-  font-size:17px;
-  font-weight:700;
+.main-btn {
+  min-height:58px; border-radius:13px;
+  border:1px solid var(--gold2); background:#102b62;
+  color:#fff; font-size:16px; font-weight:900;
 }
-
-/* =========================================================
-   MAIN BUTTONS
-========================================================= */
-
-.main-buttons{
-  display:grid;
-
-  grid-template-columns:
-    2fr 1fr 1fr;
-
-  gap:8px;
-
-  margin-top:14px;
-}
-
-.main-btn{
-  min-height:60px;
-
-  border-radius:13px;
-
-  border:1px solid var(--gold2);
-
-  background:#102b62;
-
-  color:#fff;
-
-  font-size:20px;
-  font-weight:900;
-
-  cursor:pointer;
-}
-
-.main-btn.primary{
-  background:
-    linear-gradient(
-      90deg,
-      #ffe600,
-      #d6a900
-    );
-
+.main-btn.primary {
+  background:linear-gradient(90deg,#ffe600,#d6a900);
   color:#050914;
 }
 
-/* =========================================================
-   SECTION
-========================================================= */
-
-.section{
-  margin:12px 8px 0;
-
-  border:1px solid rgba(255,215,0,.18);
-
-  border-radius:16px;
-
-  overflow:hidden;
-
-  background:#081329;
-
-  box-shadow:
-    0 5px 18px rgba(0,0,0,.25);
+.section {
+  margin:12px 8px 0; border:1px solid rgba(255,215,0,.18);
+  border-radius:16px; overflow:hidden; background:#081329;
+  box-shadow:0 5px 18px rgba(0,0,0,.25);
 }
-
-.section-title{
-  min-height:62px;
-
-  display:flex;
-
-  align-items:center;
-
-  padding:0 17px;
-
-  border-bottom:1px solid rgba(255,215,0,.18);
-
-  color:var(--gold);
-
-  font-size:27px;
-  font-weight:950;
+.section-title {
+  min-height:60px; display:flex; align-items:center;
+  padding:0 15px; border-bottom:1px solid rgba(255,215,0,.18);
+  color:var(--gold); font-size:23px; font-weight:950;
 }
-
-.feature-grid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-  gap:10px;
-
-  padding:10px;
+.feature-grid {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px; padding:10px;
 }
-
-.feature-card{
-  min-height:150px;
-
-  padding:18px 15px;
-
-  border-radius:14px;
-
-  border:1px solid rgba(255,255,255,.08);
-
-  background:
-    linear-gradient(
-      145deg,
-      #12264a,
-      #0d1d3b
-    );
-
+.feature-card {
+  min-height:135px; padding:16px 13px;
+  border-radius:14px; border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(145deg,#12264a,#0d1d3b);
   cursor:pointer;
-
-  transition:
-    transform .15s ease,
-    border-color .15s ease;
 }
+.feature-card:active { transform:scale(.97); }
+.feature-icon { display:block; font-size:34px; margin-bottom:8px; }
+.feature-title { color:#fff; font-size:21px; line-height:1.15; font-weight:950; }
+.feature-desc { margin-top:7px; color:#aebbd1; font-size:14px; line-height:1.3; }
 
-.feature-card:active{
-  transform:scale(.97);
-}
-
-.feature-icon{
-  display:block;
-
-  font-size:38px;
-
-  margin-bottom:8px;
-}
-
-.feature-title{
-  color:#fff;
-
-  font-size:24px;
-
-  line-height:1.15;
-
-  font-weight:950;
-}
-
-.feature-desc{
-  margin-top:7px;
-
-  color:#aebbd1;
-
-  font-size:16px;
-
-  line-height:1.3;
-}
-
-/* =========================================================
-   POSTS
-========================================================= */
-
-.posts-box{
-  padding:10px;
-}
-
-.post{
-  margin-bottom:10px;
-
-  padding:17px;
-
+.posts-box { padding:10px; }
+.post {
+  margin-bottom:10px; padding:15px;
   border:1px solid rgba(255,255,255,.08);
-
-  border-radius:14px;
-
-  background:#0e1e3c;
+  border-radius:14px; background:#0e1e3c;
 }
-
-.post-head{
-  display:flex;
-  align-items:center;
-
-  gap:10px;
+.post-head { display:flex; align-items:center; gap:10px; }
+.post-avatar {
+  width:50px; height:50px; border-radius:50%;
+  object-fit:cover; border:2px solid var(--gold);
 }
+.post-name { font-size:19px; font-weight:900; }
+.post-date { color:#9da9bf; font-size:13px; }
+.post-text { margin-top:13px; font-size:18px; line-height:1.45; overflow-wrap:anywhere; }
+.post-media { display:block; max-width:100%; max-height:400px; margin-top:12px; border-radius:10px; }
+.empty { padding:30px 15px; text-align:center; color:#aab5ca; font-size:18px; }
 
-.post-avatar{
-  width:55px;
-  height:55px;
-
-  border-radius:50%;
-
-  object-fit:cover;
-
-  border:2px solid var(--gold);
-}
-
-.post-name{
-  font-size:21px;
-  font-weight:900;
-}
-
-.post-date{
-  color:#9da9bf;
-  font-size:15px;
-}
-
-.post-text{
-  margin-top:13px;
-
-  font-size:20px;
-
-  line-height:1.45;
-}
-
-.empty{
-  padding:35px 15px;
-
-  text-align:center;
-
-  color:#aab5ca;
-
-  font-size:20px;
-}
-
-/* =========================================================
-   BOTTOM NAV
-========================================================= */
-
-.bottom-nav{
-  position:fixed;
-
-  left:0;
-  right:0;
-  bottom:0;
-
-  height:82px;
-
-  z-index:2000;
-
-  display:grid;
-
-  grid-template-columns:
-    repeat(5,1fr);
-
+.bottom-nav {
+  position:fixed; left:0; right:0; bottom:0; height:78px; z-index:2000;
+  display:grid; grid-template-columns:repeat(5,1fr);
   border-top:2px solid var(--gold2);
-
-  background:
-    linear-gradient(
-      180deg,
-      #0b214d,
-      #061127
-    );
+  background:linear-gradient(180deg,#0b214d,#061127);
 }
-
-.nav-item{
-  display:flex;
-
-  flex-direction:column;
-
-  align-items:center;
-  justify-content:center;
-
-  gap:4px;
-
-  color:#fff;
-
-  font-size:15px;
-  font-weight:900;
-
-  cursor:pointer;
+.nav-item {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:4px; color:#fff;
+  font-size:13px; font-weight:900; cursor:pointer;
 }
+.nav-icon { font-size:27px; }
+.nav-item.active { color:var(--gold); }
 
-.nav-icon{
-  font-size:30px;
+#loading {
+  position:fixed; inset:0; z-index:5000;
+  display:flex; align-items:center; justify-content:center;
+  background:#050914; color:var(--gold);
+  font-size:22px; font-weight:900; text-align:center;
+  padding:20px;
 }
-
-.nav-item.active{
-  color:var(--gold);
+.toast {
+  position:fixed; left:50%; bottom:95px;
+  transform:translateX(-50%) translateY(20px);
+  opacity:0; z-index:6000; max-width:90%;
+  padding:14px 18px; border:1px solid var(--gold);
+  border-radius:12px; background:#101f3d;
+  color:#fff; font-size:16px; font-weight:800;
+  pointer-events:none; transition:.25s;
 }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-/* =========================================================
-   LOADING / TOAST
-========================================================= */
-
-#loading{
-  position:fixed;
-
-  inset:0;
-
-  z-index:5000;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  background:#050914;
-
-  color:var(--gold);
-
-  font-size:24px;
-  font-weight:900;
-}
-
-.toast{
-  position:fixed;
-
-  left:50%;
-  bottom:100px;
-
-  transform:
-    translateX(-50%)
-    translateY(20px);
-
-  opacity:0;
-
-  z-index:6000;
-
-  max-width:90%;
-
-  padding:15px 20px;
-
-  border:1px solid var(--gold);
-
-  border-radius:12px;
-
-  background:#101f3d;
-
-  color:#fff;
-
-  font-size:18px;
-  font-weight:800;
-
-  pointer-events:none;
-
-  transition:.25s;
-}
-
-.toast.show{
-  opacity:1;
-
-  transform:
-    translateX(-50%)
-    translateY(0);
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media(max-width:600px){
-
-  .topbar{
-    height:68px;
-  }
-
-  .brand{
-    font-size:24px;
-  }
-
-  .identity-row{
-    grid-template-columns:
-      minmax(0,1fr)
-      145px;
-
-    gap:8px;
-  }
-
-  .profile-photo-wrap{
-    width:135px;
-    height:135px;
-  }
-
-  .online-dot{
-    left:118px;
-    top:100px;
-  }
-
-  .qr-card{
-    width:145px;
-  }
-
-  .qr-box{
-    width:120px;
-    height:120px;
-  }
-
-  #accountQR{
-    width:108px;
-    height:108px;
-  }
-
-  .qr-title{
-    font-size:18px;
-  }
-
-  .qr-subtitle{
-    font-size:12px;
-  }
-
-  .profile-name{
-    font-size:29px;
-  }
-
-  .profile-email{
-    font-size:17px;
-  }
-
-  .profile-bio{
-    font-size:18px;
-  }
-
-  .stat{
-    min-height:82px;
-  }
-
-  .stat-number{
-    font-size:25px;
-  }
-
-  .stat-label{
-    font-size:14px;
-  }
-
-  .main-btn{
-    min-height:58px;
-
-    font-size:17px;
-  }
-
-  .section-title{
-    font-size:24px;
-  }
-
-  .feature-card{
-    min-height:142px;
-  }
-
-  .feature-title{
-    font-size:22px;
-  }
-
-  .feature-desc{
-    font-size:15px;
-  }
-}
-
-@media(max-width:390px){
-
-  .identity-row{
-    grid-template-columns:
-      minmax(0,1fr)
-      128px;
-  }
-
-  .qr-card{
-    width:128px;
-    padding:8px;
-  }
-
-  .qr-box{
-    width:108px;
-    height:108px;
-  }
-
-  #accountQR{
-    width:96px;
-    height:96px;
-  }
-
-  .profile-name{
-    font-size:26px;
-  }
-
-  .feature-title{
-    font-size:20px;
-  }
-
-  .feature-desc{
-    font-size:14px;
-  }
+@media(max-width:390px) {
+  .identity-row { grid-template-columns:minmax(0,1fr) 125px; gap:7px; }
+  .profile-photo-wrap { width:125px; height:125px; }
+  .online-dot { left:106px; top:93px; }
+  .qr-card { width:125px; padding:7px; }
+  .qr-box { width:108px; height:108px; }
+  #accountQR { width:98px; height:98px; }
+  .profile-name { font-size:25px; }
+  .feature-title { font-size:19px; }
+  .feature-desc { font-size:13px; }
+  .main-btn { font-size:14px; }
 }
 </style>
 </head>
 
 <body>
 
-<div id="loading">
-  AYNA BOOK — Loading Profile...
-</div>
-
-<!-- =======================================================
-     TOP BAR
-======================================================= -->
+<div id="loading">AYNA BOOK — Loading Profile...</div>
 
 <header class="topbar">
-
-  <div class="brand">
-    AYNA BOOK
-  </div>
-
+  <div class="brand">AYNA BOOK</div>
   <div class="top-actions">
-
-    <button
-      class="top-btn"
-      id="homeBtn"
-      aria-label="Home">
-      ⌂
-    </button>
-
-    <button
-      class="top-btn"
-      id="logoutBtn"
-      aria-label="Logout">
-      ↪
-    </button>
-
+    <button class="top-btn" id="homeBtn" aria-label="Home">⌂</button>
+    <button class="top-btn" id="logoutBtn" aria-label="Logout">↪</button>
   </div>
-
 </header>
-
-
-<!-- =======================================================
-     COVER
-======================================================= -->
 
 <section class="cover"></section>
 
-
-<!-- =======================================================
-     PROFILE HEADER
-======================================================= -->
-
 <section class="profile-head">
-
   <div class="identity-row">
-
-    <!-- LEFT -->
-
     <div class="identity-left">
-
       <div class="profile-photo-wrap">
-
-        <img
-          id="profilePhoto"
-          class="profile-photo"
-          src=""
-          alt="Profile Photo">
-
+        <img id="profilePhoto" class="profile-photo" alt="Profile Photo">
       </div>
-
       <div class="online-dot"></div>
-
-      <h1
-        id="profileName"
-        class="profile-name">
-        Loading...
-      </h1>
-
-      <div
-        id="profileEmail"
-        class="profile-email">
-        ...
-      </div>
-
-      <div
-        id="profileBio"
-        class="profile-bio">
-        AYNA BOOK — Connect • Share • Create
-      </div>
-
+      <h1 id="profileName" class="profile-name">Loading...</h1>
+      <div id="profileEmail" class="profile-email">...</div>
+      <div id="profileBio" class="profile-bio">AYNA BOOK — Connect • Share • Create</div>
     </div>
-
-
-    <!-- RIGHT ACCOUNT QR -->
 
     <aside class="qr-card">
-
-      <div class="qr-title">
-        ACCOUNT QR
-      </div>
-
-      <div class="qr-box">
-        <div id="accountQR"></div>
-      </div>
-
-      <div class="qr-subtitle">
-        Scan to view profile
-      </div>
-
+      <div class="qr-title">ACCOUNT QR</div>
+      <div class="qr-box"><div id="accountQR"></div></div>
+      <div class="qr-subtitle">Scan to view profile</div>
     </aside>
-
   </div>
-
-
-  <!-- STATS -->
 
   <div class="stats">
-
-    <div class="stat">
-      <div
-        id="postsCount"
-        class="stat-number">
-        0
-      </div>
-
-      <div class="stat-label">
-        Posts
-      </div>
-    </div>
-
-    <div class="stat">
-      <div
-        id="friendsCount"
-        class="stat-number">
-        0
-      </div>
-
-      <div class="stat-label">
-        Friends
-      </div>
-    </div>
-
-    <div class="stat">
-      <div
-        id="followersCount"
-        class="stat-number">
-        0
-      </div>
-
-      <div class="stat-label">
-        Followers
-      </div>
-    </div>
-
-    <div class="stat">
-      <div
-        id="followingCount"
-        class="stat-number">
-        0
-      </div>
-
-      <div class="stat-label">
-        Following
-      </div>
-    </div>
-
+    <div class="stat"><div id="postsCount" class="stat-number">0</div><div class="stat-label">Posts</div></div>
+    <div class="stat"><div id="friendsCount" class="stat-number">0</div><div class="stat-label">Friends</div></div>
+    <div class="stat"><div id="followersCount" class="stat-number">0</div><div class="stat-label">Followers</div></div>
+    <div class="stat"><div id="followingCount" class="stat-number">0</div><div class="stat-label">Following</div></div>
   </div>
-
-
-  <!-- MAIN BUTTONS -->
 
   <div class="main-buttons">
-
-    <button
-      class="main-btn primary"
-      id="editProfileBtn">
-      ✏️ Edit Profile
-    </button>
-
-    <button
-      class="main-btn"
-      id="shareProfileBtn">
-      ↗ Share
-    </button>
-
-    <button
-      class="main-btn"
-      id="qrButton">
-      ▣ QR
-    </button>
-
+    <button class="main-btn primary" id="editProfileBtn">✏️ Edit Profile</button>
+    <button class="main-btn" id="shareProfileBtn">↗ Share</button>
+    <button class="main-btn" id="qrButton">▣ QR</button>
   </div>
-
 </section>
 
-
-<!-- =======================================================
-     PROFILE FEATURES
-======================================================= -->
-
 <section class="section">
-
-  <div class="section-title">
-    👤 Profile
-  </div>
-
+  <div class="section-title">👤 Profile</div>
   <div class="feature-grid">
-
-    <div
-      class="feature-card"
-      data-page="about.html">
-
-      <span class="feature-icon">ℹ️</span>
-
-      <div class="feature-title">
-        About
-      </div>
-
-      <div class="feature-desc">
-        Personal information
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="photos.html">
-
-      <span class="feature-icon">🖼️</span>
-
-      <div class="feature-title">
-        Photos
-      </div>
-
-      <div class="feature-desc">
-        Your photo collection
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="videos.html">
-
-      <span class="feature-icon">🎬</span>
-
-      <div class="feature-title">
-        Videos
-      </div>
-
-      <div class="feature-desc">
-        Your video posts
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="reels.html">
-
-      <span class="feature-icon">📱</span>
-
-      <div class="feature-title">
-        Reels
-      </div>
-
-      <div class="feature-desc">
-        Short videos
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="stories.html">
-
-      <span class="feature-icon">⭕</span>
-
-      <div class="feature-title">
-        Stories
-      </div>
-
-      <div class="feature-desc">
-        24-hour stories
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="memories.html">
-
-      <span class="feature-icon">🕘</span>
-
-      <div class="feature-title">
-        Memories
-      </div>
-
-      <div class="feature-desc">
-        Your memories
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="friends.html">
-
-      <span class="feature-icon">👥</span>
-
-      <div class="feature-title">
-        Friends
-      </div>
-
-      <div class="feature-desc">
-        Friends and requests
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="followers.html">
-
-      <span class="feature-icon">🌐</span>
-
-      <div class="feature-title">
-        Followers
-      </div>
-
-      <div class="feature-desc">
-        People following you
-      </div>
-
-    </div>
-
+    <div class="feature-card" data-page="about.html"><span class="feature-icon">ℹ️</span><div class="feature-title">About</div><div class="feature-desc">Personal information</div></div>
+    <div class="feature-card" data-page="photos.html"><span class="feature-icon">🖼️</span><div class="feature-title">Photos</div><div class="feature-desc">Your photo collection</div></div>
+    <div class="feature-card" data-page="videos.html"><span class="feature-icon">🎬</span><div class="feature-title">Videos</div><div class="feature-desc">Your video posts</div></div>
+    <div class="feature-card" data-page="reels.html"><span class="feature-icon">📱</span><div class="feature-title">Reels</div><div class="feature-desc">Short videos</div></div>
+    <div class="feature-card" data-page="stories.html"><span class="feature-icon">⭕</span><div class="feature-title">Stories</div><div class="feature-desc">24-hour stories</div></div>
+    <div class="feature-card" data-page="memories.html"><span class="feature-icon">🕘</span><div class="feature-title">Memories</div><div class="feature-desc">Your memories</div></div>
+    <div class="feature-card" data-page="friends.html"><span class="feature-icon">👥</span><div class="feature-title">Friends</div><div class="feature-desc">Friends and requests</div></div>
+    <div class="feature-card" data-page="followers.html"><span class="feature-icon">🌐</span><div class="feature-title">Followers</div><div class="feature-desc">People following you</div></div>
   </div>
-
 </section>
 
-
-<!-- =======================================================
-     ACCOUNT & SECURITY
-======================================================= -->
-
 <section class="section">
-
-  <div class="section-title">
-    ⚙️ Account & Security
-  </div>
-
+  <div class="section-title">⚙️ Account & Security</div>
   <div class="feature-grid">
-
-    <div
-      class="feature-card"
-      data-page="security.html">
-
-      <span class="feature-icon">🔐</span>
-
-      <div class="feature-title">
-        Security
-      </div>
-
-      <div class="feature-desc">
-        Password and login activity
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="settings.html">
-
-      <span class="feature-icon">⚙️</span>
-
-      <div class="feature-title">
-        Settings
-      </div>
-
-      <div class="feature-desc">
-        Account preferences
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="privacy.html">
-
-      <span class="feature-icon">🛡️</span>
-
-      <div class="feature-title">
-        Privacy
-      </div>
-
-      <div class="feature-desc">
-        Control your privacy
-      </div>
-
-    </div>
-
-
-    <div
-      class="feature-card"
-      data-page="notifications.html">
-
-      <span class="feature-icon">🔔</span>
-
-      <div class="feature-title">
-        Notifications
-      </div>
-
-      <div class="feature-desc">
-        Notification settings
-      </div>
-
-    </div>
-
+    <div class="feature-card" data-page="security.html"><span class="feature-icon">🔐</span><div class="feature-title">Security</div><div class="feature-desc">Password and login activity</div></div>
+    <div class="feature-card" data-page="settings.html"><span class="feature-icon">⚙️</span><div class="feature-title">Settings</div><div class="feature-desc">Account preferences</div></div>
+    <div class="feature-card" data-page="privacy.html"><span class="feature-icon">🛡️</span><div class="feature-title">Privacy</div><div class="feature-desc">Control your privacy</div></div>
+    <div class="feature-card" data-page="notifications.html"><span class="feature-icon">🔔</span><div class="feature-title">Notifications</div><div class="feature-desc">Notification settings</div></div>
   </div>
-
 </section>
-
-
-<!-- =======================================================
-     MY POSTS
-======================================================= -->
 
 <section class="section">
-
-  <div class="section-title">
-    📝 My Posts
-  </div>
-
-  <div
-    id="postsBox"
-    class="posts-box">
-
-    <div class="empty">
-      Loading your posts...
-    </div>
-
-  </div>
-
+  <div class="section-title">📝 My Posts</div>
+  <div id="postsBox" class="posts-box"><div class="empty">Loading your posts...</div></div>
 </section>
-
-
-<!-- =======================================================
-     BOTTOM NAV
-======================================================= -->
 
 <nav class="bottom-nav">
-
-  <div
-    class="nav-item"
-    data-nav="home.html">
-
-    <div class="nav-icon">⌂</div>
-    <div>Home</div>
-
-  </div>
-
-
-  <div
-    class="nav-item"
-    data-nav="friends.html">
-
-    <div class="nav-icon">👥</div>
-    <div>Friends</div>
-
-  </div>
-
-
-  <div
-    class="nav-item"
-    data-nav="messenger.html">
-
-    <div class="nav-icon">💬</div>
-    <div>Messenger</div>
-
-  </div>
-
-
-  <div
-    class="nav-item"
-    data-nav="reels.html">
-
-    <div class="nav-icon">▶</div>
-    <div>Reels</div>
-
-  </div>
-
-
-  <div
-    class="nav-item active"
-    data-nav="settings.html">
-
-    <div class="nav-icon">⚙</div>
-    <div>Settings</div>
-
-  </div>
-
+  <div class="nav-item" data-nav="index.html"><div class="nav-icon">⌂</div><div>Home</div></div>
+  <div class="nav-item" data-nav="friends.html"><div class="nav-icon">👥</div><div>Friends</div></div>
+  <div class="nav-item" data-nav="messenger.html"><div class="nav-icon">💬</div><div>Messenger</div></div>
+  <div class="nav-item" data-nav="reels.html"><div class="nav-icon">▶</div><div>Reels</div></div>
+  <div class="nav-item active" data-nav="settings.html"><div class="nav-icon">⚙</div><div>Settings</div></div>
 </nav>
 
+<div id="toast" class="toast"></div>
 
-<div
-  id="toast"
-  class="toast">
-</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-
-<!-- =======================================================
-     QR CODE LIBRARY
-======================================================= -->
-
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
-</script>
-
-
-<!-- =======================================================
-     FIREBASE
-======================================================= -->
-
-<script type="module" src="./firebase-init.js"></script>
-
-<script type="module" src="./auth-guard.js"></script>
-
-
-<!-- =======================================================
-     PROFILE JAVASCRIPT
-======================================================= -->
-
-<script type="module">
-
-import {
-  auth,
-  database
-} from "./firebase-init.js";
-
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
-import {
-  ref,
-  get,
-  query,
-  orderByChild
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
-
-
-const $ = id => document.getElementById(id);
-
-
-let currentUser = null;
-let currentProfile = null;
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-function toast(message){
-
-  const box = $("toast");
-
-  box.textContent = message;
-
-  box.classList.add("show");
-
-  setTimeout(()=>{
-    box.classList.remove("show");
-  },2600);
-}
-
-
-/* =========================================================
-   DEFAULT PHOTO
-========================================================= */
-
-const DEFAULT_PHOTO =
-  "https://ui-avatars.com/api/?name=AYNA+BOOK&background=071b49&color=ffd700&size=512";
-
-
-/* =========================================================
-   PROFILE URL
-========================================================= */
-
-function getProfileUrl(uid){
-
-  const url =
-    new URL(
-      "./profile.html?uid=" +
-      encodeURIComponent(uid),
-      window.location.href
-    );
-
-  return url.href;
-}
-
-
-/* =========================================================
-   QR
-========================================================= */
-
-function createQR(uid){
-
-  const box = $("accountQR");
-
-  if(!box){
-    return;
-  }
-
-  box.innerHTML = "";
-
-  if(typeof QRCode === "undefined"){
-
-    box.textContent = "QR";
-
-    return;
-  }
-
-  new QRCode(box,{
-
-    text:getProfileUrl(uid),
-
-    width:126,
-    height:126,
-
-    colorDark:"#000000",
-    colorLight:"#ffffff",
-
-    correctLevel:QRCode.CorrectLevel.H
-
-  });
-}
-
-
-/* =========================================================
-   LOAD USER
-========================================================= */
-
-async function loadProfile(user){
-
-  currentUser = user;
-
-  let uid = user.uid;
-
-  /*
-    নিজের profile:
-    profile.html
-
-    অন্য user's profile:
-    profile.html?uid=USER_UID
-  */
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-  const requestedUid =
-    params.get("uid");
-
-  if(requestedUid){
-    uid = requestedUid;
-  }
-
-
-  const snap =
-    await get(
-      ref(database,"users/"+uid)
-    );
-
-
-  if(!snap.exists()){
-
-    $("profileName").textContent =
-      "AYNA BOOK User";
-
-    $("profileEmail").textContent =
-      user.email || "";
-
-    $("profilePhoto").src =
-      DEFAULT_PHOTO;
-
-    $("profileBio").textContent =
-      "AYNA BOOK — Connect • Share • Create";
-
-    createQR(uid);
-
-    return;
-  }
-
-
-  currentProfile =
-    snap.val() || {};
-
-
-  const data =
-    currentProfile;
-
-
-  const name =
-    data.fullName ||
-    data.displayName ||
-    data.name ||
-    user.displayName ||
-    "AYNA BOOK User";
-
-
-  const email =
-    data.email ||
-    user.email ||
-    "";
-
-
-  const photo =
-    data.photoURL ||
-    data.photo ||
-    user.photoURL ||
-    DEFAULT_PHOTO;
-
-
-  const bio =
-    data.bio ||
-    "AYNA BOOK — Connect • Share • Create";
-
-
-  $("profileName").textContent =
-    name;
-
-
-  $("profileEmail").textContent =
-    email;
-
-
-  $("profilePhoto").src =
-    photo;
-
-
-  $("profilePhoto").onerror = ()=>{
-    $("profilePhoto").src =
-      DEFAULT_PHOTO;
-  };
-
-
-  $("profileBio").textContent =
-    bio;
-
-
-  /* COUNTS */
-
-  const friends =
-    data.friends
-      ? Object.keys(data.friends).length
-      : Number(data.friendsCount || 0);
-
-
-  const followers =
-    data.followers
-      ? Object.keys(data.followers).length
-      : Number(data.followersCount || 0);
-
-
-  const following =
-    data.following
-      ? Object.keys(data.following).length
-      : Number(data.followingCount || 0);
-
-
-  $("friendsCount").textContent =
-    friends;
-
-
-  $("followersCount").textContent =
-    followers;
-
-
-  $("followingCount").textContent =
-    following;
-
-
-  createQR(uid);
-
-  await loadPosts(uid);
-
-}
-
-
-/* =========================================================
-   LOAD POSTS
-========================================================= */
-
-async function loadPosts(uid){
-
-  const box =
-    $("postsBox");
-
-  try{
-
-    const postsSnap =
-      await get(
-        query(
-          ref(database,"posts"),
-          orderByChild("uid")
-        )
-      );
-
-
-    if(!postsSnap.exists()){
-
-      box.innerHTML =
-        `<div class="empty">
-          📝 No posts yet.
-        </div>`;
-
-      $("postsCount").textContent = "0";
-
-      return;
-    }
-
-
-    const posts = [];
-
-    postsSnap.forEach(child=>{
-
-      const post =
-        child.val() || {};
-
-      const postUid =
-        post.uid ||
-        post.userId ||
-        post.authorUid;
-
-
-      if(postUid === uid){
-
-        posts.push({
-
-          id:child.key,
-
-          ...post
-
-        });
-
-      }
-
-    });
-
-
-    posts.sort(
-      (a,b)=>
-        Number(b.createdAt || 0) -
-        Number(a.createdAt || 0)
-    );
-
-
-    $("postsCount").textContent =
-      posts.length;
-
-
-    if(!posts.length){
-
-      box.innerHTML =
-        `<div class="empty">
-          📝 No posts yet.
-        </div>`;
-
-      return;
-    }
-
-
-    box.innerHTML =
-      posts
-        .slice(0,20)
-        .map(post=>{
-
-          const text =
-            post.text ||
-            post.caption ||
-            post.message ||
-            "";
-
-
-          const date =
-            post.createdAt
-              ? new Date(
-                  Number(post.createdAt)
-                ).toLocaleString()
-              : "";
-
-
-          return `
-
-            <article class="post">
-
-              <div class="post-head">
-
-                <img
-                  class="post-avatar"
-                  src="${escapeHtml(
-                    $("profilePhoto").src
-                  )}"
-                  alt="">
-
-                <div>
-
-                  <div class="post-name">
-                    ${escapeHtml(
-                      $("profileName").textContent
-                    )}
-                  </div>
-
-                  <div class="post-date">
-                    ${escapeHtml(date)}
-                  </div>
-
-                </div>
-
-              </div>
-
-
-              ${
-                text
-                ? `
-                  <div class="post-text">
-                    ${escapeHtml(text)}
-                  </div>
-                `
-                : ""
-              }
-
-            </article>
-
-          `;
-
-        })
-        .join("");
-
-
-  }catch(error){
-
-    console.error(
-      "AYNA BOOK posts error:",
-      error
-    );
-
-    box.innerHTML =
-      `<div class="empty">
-        ⚠️ Posts could not be loaded.
-      </div>`;
-
-  }
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
-
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function go(page){
-
-  window.location.href =
-    "./" + page;
-
-}
-
-
-/* =========================================================
-   FEATURE CARDS
-========================================================= */
-
-document
-  .querySelectorAll(".feature-card")
-  .forEach(card=>{
-
-    card.addEventListener(
-      "click",
-      ()=>{
-
-        const page =
-          card.dataset.page;
-
-        if(!page){
-          return;
-        }
-
-        go(page);
-
-      }
-    );
-
-  });
-
-
-/* =========================================================
-   BOTTOM NAV
-========================================================= */
-
-document
-  .querySelectorAll(".nav-item")
-  .forEach(item=>{
-
-    item.addEventListener(
-      "click",
-      ()=>{
-
-        const page =
-          item.dataset.nav;
-
-        if(page){
-          go(page);
-        }
-
-      }
-    );
-
-  });
-
-
-/* =========================================================
-   HOME
-========================================================= */
-
-$("homeBtn")
-  .addEventListener(
-    "click",
-    ()=>{
-      go("home.html");
-    }
-  );
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-$("logoutBtn")
-  .addEventListener(
-    "click",
-    async ()=>{
-
-      try{
-
-        await signOut(auth);
-
-        window.location.replace(
-          "./login.html"
-        );
-
-      }catch(error){
-
-        console.error(error);
-
-        toast(
-          "Logout failed."
-        );
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   EDIT PROFILE
-========================================================= */
-
-$("editProfileBtn")
-  .addEventListener(
-    "click",
-    ()=>{
-
-      /*
-        এখানে পরবর্তীতে
-        সম্পূর্ণ edit-profile.html
-        যুক্ত করা যাবে।
-      */
-
-      go("settings.html");
-
-    }
-  );
-
-
-/* =========================================================
-   SHARE
-========================================================= */
-
-$("shareProfileBtn")
-  .addEventListener(
-    "click",
-    async ()=>{
-
-      const url =
-        getProfileUrl(
-          currentUser.uid
-        );
-
-
-      try{
-
-        if(
-          navigator.share
-        ){
-
-          await navigator.share({
-
-            title:
-              "AYNA BOOK Profile",
-
-            text:
-              $("profileName").textContent,
-
-            url
-
-          });
-
-        }else{
-
-          await navigator.clipboard.writeText(
-            url
-          );
-
-          toast(
-            "Profile link copied."
-          );
-
-        }
-
-      }catch(error){
-
-        console.log(
-          "Share cancelled."
-        );
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   QR BUTTON
-========================================================= */
-
-$("qrButton")
-  .addEventListener(
-    "click",
-    ()=>{
-
-      const qr =
-        document.querySelector(
-          ".qr-card"
-        );
-
-      qr.scrollIntoView({
-
-        behavior:"smooth",
-
-        block:"center"
-
-      });
-
-      toast(
-        "ACCOUNT QR is ready."
-      );
-
-    }
-  );
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-onAuthStateChanged(
-  auth,
-  async user=>{
-
-    if(!user){
-
-      window.location.replace(
-        "./login.html"
-      );
-
-      return;
-    }
-
-
-    try{
-
-      await loadProfile(user);
-
-    }catch(error){
-
-      console.error(
-        "AYNA BOOK profile error:",
-        error
-      );
-
-      toast(
-        "Profile loading error."
-      );
-
-    }finally{
-
-      $("loading").style.display =
-        "none";
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   GLOBAL API
-========================================================= */
-
-window.AYNA_PROFILE = {
-
-  reload:()=>{
-
-    if(currentUser){
-
-      return loadProfile(
-        currentUser
-      );
-
-    }
-
-  },
-
-  getUser:()=>currentProfile,
-
-  getCurrentUser:()=>currentUser
-
-};
-
-</script>
+<script type="module" src="./profile.js"></script>
 
 </body>
 </html>
