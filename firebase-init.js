@@ -2,7 +2,7 @@
 // AYNA BOOK ★
 // FIREBASE INITIALIZATION
 // File: firebase-init.js
-// Firebase SDK: 13.4.0
+// Firebase JS SDK: 13.4.0
 // ============================================================
 
 import {
@@ -23,18 +23,18 @@ import {
 
 
 // ============================================================
-// FIREBASE CONFIG
+// FIREBASE CONFIGURATION
 // ============================================================
 
 const firebaseConfig = {
-  apiKey: "আপনার আসল Firebase Web API Key",
+  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
   authDomain: "ayna-book.firebaseapp.com",
   databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "ayna-book",
   storageBucket: "ayna-book.firebasestorage.app",
   messagingSenderId: "805601138500",
-  appId: "আপনার আসল Firebase Web App ID",
-  measurementId: "আপনার আসল Measurement ID"
+  appId: "1:805601138500:web:47acdc90cb0cb521626911",
+  measurementId: "G-RKHHSKNB4B"
 };
 
 
@@ -42,20 +42,40 @@ const firebaseConfig = {
 // FIREBASE APP
 // ============================================================
 
-const app = getApps().length
-  ? getApp()
-  : initializeApp(firebaseConfig);
+let app;
+
+try {
+
+  if (getApps().length > 0) {
+
+    app = getApp();
+
+  } else {
+
+    app = initializeApp(firebaseConfig);
+
+  }
+
+} catch (error) {
+
+  console.error(
+    "AYNA BOOK Firebase initialization error:",
+    error
+  );
+
+  throw error;
+}
 
 
 // ============================================================
-// AUTH
+// FIREBASE AUTH
 // ============================================================
 
 const auth = getAuth(app);
 
 
 // ============================================================
-// REALTIME DATABASE
+// FIREBASE REALTIME DATABASE
 // ============================================================
 
 const database = getDatabase(app);
@@ -70,8 +90,8 @@ const authReady = setPersistence(
   browserLocalPersistence
 ).catch((error) => {
 
-  console.error(
-    "AYNA BOOK Auth Persistence Error:",
+  console.warn(
+    "AYNA BOOK Auth Persistence warning:",
     error
   );
 
