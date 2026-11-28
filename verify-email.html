@@ -1,27 +1,23 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090a0f">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>AYNA BOOK — Verify Email</title>
+  <title>AYNA BOOK — Email Verification</title>
 
   <style>
     * {
       box-sizing: border-box;
     }
 
-    html,
-    body {
+    html, body {
       margin: 0;
-      padding: 0;
       min-height: 100%;
       font-family: Arial, Helvetica, sans-serif;
-      background: #000;
+      background: #05070d;
       color: #fff;
     }
 
@@ -30,26 +26,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 18px;
     }
 
     .container {
       width: 100%;
-      max-width: 430px;
+      max-width: 460px;
     }
 
     .card {
-      background: #0b0b0b;
-      border: 1px solid #292929;
-      border-radius: 18px;
-      padding: 30px 24px;
+      background: #0b1020;
+      border: 1px solid #d4af37;
+      border-radius: 20px;
+      padding: 28px 22px;
       text-align: center;
-      box-shadow: 0 0 30px rgba(212, 175, 55, 0.08);
+      box-shadow: 0 0 30px rgba(212, 175, 55, .12);
     }
 
     .logo {
-      width: 76px;
-      height: 76px;
+      width: 82px;
+      height: 82px;
       margin: 0 auto 18px;
       border-radius: 50%;
       border: 2px solid #d4af37;
@@ -57,79 +53,88 @@
       align-items: center;
       justify-content: center;
       color: #d4af37;
-      font-size: 25px;
-      font-weight: bold;
+      font-size: 28px;
+      font-weight: 900;
     }
 
     .icon {
-      font-size: 42px;
+      font-size: 46px;
       margin-bottom: 12px;
     }
 
     h1 {
       margin: 0;
-      color: #d4af37;
-      font-size: 27px;
+      color: #ffe64d;
+      font-size: clamp(25px, 6vw, 32px);
     }
 
     .subtitle {
-      margin: 10px 0 24px;
+      margin: 14px 0 22px;
+      color: #c4c9d5;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .email-label {
       color: #aaa;
       font-size: 14px;
-      line-height: 1.6;
+      margin-bottom: 8px;
     }
 
     .email-box {
-      padding: 13px;
+      padding: 15px;
       margin-bottom: 20px;
-      background: #151515;
-      border: 1px solid #333;
-      border-radius: 10px;
-      color: #d4af37;
-      font-size: 14px;
+      background: #151d32;
+      border: 1px solid #43506a;
+      border-radius: 12px;
+      color: #ffe64d;
+      font-size: 16px;
+      font-weight: bold;
       word-break: break-word;
     }
 
     button {
       width: 100%;
+      min-height: 54px;
       padding: 14px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
+      margin-top: 12px;
+      border-radius: 12px;
+      font-size: 17px;
       font-weight: bold;
       cursor: pointer;
     }
 
     #checkButton {
       background: #d4af37;
-      color: #000;
+      color: #080808;
+      border: 0;
     }
 
     #resendButton {
-      background: #1b1b1b;
-      color: #d4af37;
-      border: 1px solid #444;
+      background: #172440;
+      color: #ffe64d;
+      border: 1px solid #d4af37;
     }
 
     #logoutButton {
       background: transparent;
-      color: #aaa;
-      border: 1px solid #333;
+      color: #ddd;
+      border: 1px solid #50576a;
     }
 
     button:disabled {
-      opacity: 0.55;
+      opacity: .5;
       cursor: not-allowed;
     }
 
     .message {
       display: none;
       margin-top: 18px;
-      padding: 12px;
-      border-radius: 9px;
-      font-size: 14px;
-      line-height: 1.5;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
     .message.show {
@@ -137,30 +142,37 @@
     }
 
     .message.error {
-      color: #ffb4b4;
-      background: rgba(180, 0, 0, 0.15);
-      border: 1px solid rgba(255, 80, 80, 0.25);
+      color: #ffc1c1;
+      background: rgba(180, 0, 0, .15);
+      border: 1px solid rgba(255, 80, 80, .35);
     }
 
     .message.success {
       color: #b9f6c5;
-      background: rgba(0, 150, 50, 0.12);
-      border: 1px solid rgba(80, 220, 110, 0.25);
+      background: rgba(0, 150, 50, .12);
+      border: 1px solid rgba(80, 220, 110, .3);
+    }
+
+    .message.info {
+      color: #d8e5ff;
+      background: rgba(40, 100, 200, .15);
+      border: 1px solid rgba(100, 150, 255, .3);
     }
 
     .info {
-      margin-top: 20px;
-      color: #777;
-      font-size: 12px;
-      line-height: 1.6;
+      margin-top: 22px;
+      color: #a5adbd;
+      font-size: 14px;
+      line-height: 1.7;
     }
 
     .login-link {
       display: block;
-      margin-top: 20px;
-      color: #d4af37;
+      margin-top: 22px;
+      color: #ffe64d;
       text-decoration: none;
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: bold;
     }
 
     .login-link:hover {
@@ -170,82 +182,51 @@
 </head>
 
 <body>
+  <main class="container">
+    <section class="card">
 
-  <div class="container">
+      <div class="logo">AB</div>
+      <div class="icon">✉️</div>
 
-    <div class="card">
+      <h1>ইমেইল যাচাই করুন</h1>
 
-      <div class="logo">
-        AB
+      <p class="subtitle">
+        আপনার ইমেইলে পাঠানো Verification Link খুলুন।
+        তারপর নিচের বাটনে চাপ দিয়ে যাচাই সম্পন্ন করুন।
+      </p>
+
+      <div class="email-label">আপনার নিবন্ধিত ইমেইল</div>
+
+      <div id="emailBox" class="email-box">
+        ইমেইল লোড হচ্ছে...
       </div>
 
-      <div class="icon">
-        ✉
-      </div>
-
-      <h1>Verify Your Email</h1>
-
-      <div class="subtitle">
-        We sent a verification link to your email address.
-        Please open your email and click the verification link.
-      </div>
-
-      <!-- DEFAULT / EXPECTED EMAIL -->
-      <div
-        id="emailBox"
-        class="email-box"
-      >
-        aynabookofficeal@gmail.com
-      </div>
-
-      <button
-        id="checkButton"
-        type="button"
-      >
-        I've Verified My Email
+      <button id="checkButton" type="button">
+        ✅ আমি ইমেইল যাচাই করেছি
       </button>
 
-      <button
-        id="resendButton"
-        type="button"
-      >
-        Resend Verification Email
+      <button id="resendButton" type="button">
+        📩 Verification Email আবার পাঠান
       </button>
 
-      <button
-        id="logoutButton"
-        type="button"
-      >
+      <button id="logoutButton" type="button">
         Sign Out
       </button>
 
-      <div
-        id="message"
-        class="message"
-        role="alert"
-      ></div>
+      <div id="message" class="message" role="status" aria-live="polite"></div>
 
       <div class="info">
-        Didn't receive the email?
-        Check your Spam/Junk folder and make sure
-        the email address is correct.
+        ইমেইল না পেলে Spam/Junk ফোল্ডার দেখুন।
+        যাচাই করার পর এই পেজে ফিরে এসে যাচাই বাটনে চাপ দিন।
       </div>
 
-      <a
-        href="login.html"
-        class="login-link"
-      >
-        Back to Sign In
+      <a href="login.html" class="login-link">
+        Login পেজে ফিরে যান
       </a>
 
-    </div>
+    </section>
+  </main>
 
-  </div>
-
-  <script
-    type="module"
-    src="./verify-email.js"
-  ></script>
-
+  <script type="module" src="./verify-email.js"></script>
 </body>
 </html>
