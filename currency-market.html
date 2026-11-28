@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07152e">
+<title>AYNA BOOK — World Currency Market</title>
+
+<style>
+:root{
+  --bg:#050b18;
+  --panel:#0d1b35;
+  --panel2:#122746;
+  --gold:#ffd700;
+  --white:#ffffff;
+  --muted:#b9c7dc;
+  --green:#32d296;
+  --red:#ff7777;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  font-size:20px;
+}
+header{
+  background:linear-gradient(120deg,#1a3575,#07152e);
+  padding:22px 15px;
+  border-bottom:3px solid var(--gold);
+  text-align:center;
+}
+header h1{
+  color:var(--gold);
+  font-size:clamp(27px,6vw,40px);
+  margin:5px 0 12px;
+}
+header p{margin:5px;font-size:19px}
+button,input,select{
+  font:inherit;
+}
+button{
+  background:var(--gold);
+  color:#101010;
+  border:0;
+  border-radius:12px;
+  padding:14px 18px;
+  font-weight:bold;
+  cursor:pointer;
+  min-height:52px;
+}
+button.secondary{
+  background:#18345e;
+  color:white;
+  border:1px solid var(--gold);
+}
+button:active{transform:scale(.98)}
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:16px;
+}
+.panel{
+  background:var(--panel);
+  border:1px solid #28466e;
+  border-radius:17px;
+  padding:18px;
+  margin:17px 0;
+}
+h2{
+  color:var(--gold);
+  font-size:26px;
+  margin:5px 0 17px;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.stat{
+  background:var(--panel2);
+  border:1px solid #38577e;
+  border-radius:13px;
+  padding:17px 10px;
+  text-align:center;
+}
+.stat strong{
+  display:block;
+  color:var(--gold);
+  font-size:27px;
+  margin-top:8px;
+}
+.controls{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+input,select{
+  width:100%;
+  min-height:55px;
+  padding:13px;
+  color:white;
+  background:#07152b;
+  border:1px solid #54749b;
+  border-radius:11px;
+  outline:none;
+}
+input::placeholder{color:#aabbd0}
+.button-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.button-row button{flex:1}
+.currency-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:13px;
+}
+.currency-card{
+  background:var(--panel2);
+  border:1px solid #38577e;
+  border-radius:15px;
+  padding:17px;
+}
+.currency-card h3{
+  color:var(--gold);
+  font-size:23px;
+  margin:5px 0 12px;
+}
+.currency-code{
+  font-size:30px;
+  font-weight:bold;
+  color:white;
+}
+.currency-card p{
+  color:var(--muted);
+  line-height:1.5;
+  margin:8px 0;
+}
+.convert-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+.result{
+  background:#07152b;
+  border:1px solid var(--gold);
+  border-radius:13px;
+  padding:18px;
+  margin-top:14px;
+  overflow-wrap:anywhere;
+}
+.result strong{
+  color:var(--gold);
+  font-size:28px;
+}
+.notice{
+  color:var(--muted);
+  line-height:1.6;
+  font-size:16px;
+}
+.status{color:var(--green);font-weight:bold}
+.error{color:var(--red)}
+footer{
+  text-align:center;
+  padding:25px 10px;
+  color:var(--muted);
+  font-size:15px;
+}
+.hidden{display:none}
+@media(min-width:700px){
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .controls{grid-template-columns:2fr 1fr}
+  .convert-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌍 AYNA BOOK</h1>
+  <h2 style="margin:8px;color:white">💱 World Currency Market</h2>
+  <p>বিশ্ব মুদ্রা বাজার • Exchange Rate • Currency Converter</p>
+  <div class="button-row" style="justify-content:center;margin-top:15px">
+    <button class="secondary" id="homeBtn">🏠 Home</button>
+    <button class="secondary" id="fullScreenBtn">⛶ Full Screen</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="panel">
+    <h2>📊 Currency Market Overview</h2>
+    <div class="stats">
+      <div class="stat">
+        মোট মুদ্রা
+        <strong id="totalCurrencies">0</strong>
+      </div>
+      <div class="stat">
+        মুদ্রার দেশ
+        <strong id="totalCountries">0</strong>
+      </div>
+      <div class="stat">
+        প্রদর্শিত ফলাফল
+        <strong id="resultCount">0</strong>
+      </div>
+      <div class="stat">
+        API Status
+        <strong id="apiStatus" style="font-size:19px">ডেমো</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>🔍 Currency Search</h2>
+    <div class="controls">
+      <input id="currencySearch" type="search"
+        placeholder="দেশ, মুদ্রা বা কোড লিখুন...">
+      <select id="currencyFilter">
+        <option value="">সব মুদ্রা</option>
+        <option value="Asia">এশিয়া</option>
+        <option value="Europe">ইউরোপ</option>
+        <option value="America">আমেরিকা</option>
+        <option value="Middle East">মধ্যপ্রাচ্য</option>
+        <option value="Africa">আফ্রিকা</option>
+        <option value="Oceania">ওশেনিয়া</option>
+      </select>
+    </div>
+    <div class="button-row" style="margin-top:12px">
+      <button id="searchBtn">🔍 Search</button>
+      <button class="secondary" id="resetBtn">Reset</button>
+      <button class="secondary" id="refreshBtn">↻ Refresh</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>💱 Currency Converter</h2>
+    <p class="notice">
+      পরিমাণ লিখে From ও To মুদ্রা নির্বাচন করুন।
+      লাইভ API চালু না থাকলে ফলাফলকে নমুনা হিসাব হিসেবে দেখানো হবে।
+    </p>
+
+    <div class="convert-grid">
+      <div>
+        <label for="amount">পরিমাণ (Amount)</label>
+        <input id="amount" type="number" min="0" step="any"
+          value="1" placeholder="পরিমাণ লিখুন">
+      </div>
+      <div>
+        <label for="fromCurrency">From Currency</label>
+        <select id="fromCurrency"></select>
+      </div>
+      <div>
+        <label for="toCurrency">To Currency</label>
+        <select id="toCurrency"></select>
+      </div>
+      <div>
+        <label> </label>
+        <button id="convertBtn" style="width:100%">Convert Currency</button>
+      </div>
+    </div>
+
+    <div class="result" id="conversionResult" aria-live="polite">
+      <p>রূপান্তরের ফলাফল এখানে দেখানো হবে।</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>🌐 World Currencies</h2>
+    <p class="notice" id="marketMessage">
+      মুদ্রার তালিকা লোড হচ্ছে...
+    </p>
+    <div id="currencyList" class="currency-grid"></div>
+  </section>
+
+  <section class="panel">
+    <h2>🤖 AI Currency Assistant</h2>
+    <p class="notice">
+      মুদ্রা, রূপান্তর ও বিনিময় হার সম্পর্কে প্রশ্ন করুন।
+      এই সংস্করণের Assistant নিয়মভিত্তিক; এটি প্রকৃত AI API নয়।
+    </p>
+    <input id="aiQuestion"
+      placeholder="যেমন: 100 USD কত BDT?">
+    <button id="aiAskBtn" style="width:100%;margin-top:12px">
+      Ask AYNA AI
+    </button>
+    <div class="result" id="aiAnswer" aria-live="polite">
+      আপনার প্রশ্নের উত্তর এখানে দেখানো হবে।
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>ℹ️ Market Information</h2>
+    <p class="notice">
+      • মুদ্রার কোড আন্তর্জাতিক ISO 4217 কোডের ভিত্তিতে দেওয়া হয়েছে।<br>
+      • লাইভ বিনিময় হার পেতে একটি নির্ভরযোগ্য Exchange Rate API প্রয়োজন।<br>
+      • API সংযুক্ত না থাকলে এই পৃষ্ঠায় কোনো নমুনা রেটকে লাইভ বলা হবে না।<br>
+      • ব্যাংক, মানি এক্সচেঞ্জ ও কার্ডের রেট আলাদা হতে পারে।<br>
+      • এই তথ্য আর্থিক পরামর্শ নয়।
+    </p>
+    <p id="lastUpdated" class="notice">সর্বশেষ আপডেট: এখনো নেই</p>
+  </section>
+
+</main>
+
+<footer>
+  AYNA BOOK ★ Connect • Share • Create<br>
+  World Currency Market
+</footer>
+
+<script type="module" src="./currency-market.js"></script>
+
+</body>
+</html>
