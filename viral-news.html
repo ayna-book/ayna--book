@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#06142f">
+
+<title>AYNA BOOK — Viral News Video</title>
+
+<style>
+:root{
+  --bg:#030812;
+  --navy:#071a3a;
+  --navy2:#0c2855;
+  --panel:#0a1934;
+  --gold:#ffd84d;
+  --gold2:#d4af37;
+  --white:#fff;
+  --muted:#b9c8df;
+  --cyan:#55eaff;
+  --green:#55e890;
+  --red:#ff5964;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(
+      circle at top,
+      #153b78 0,
+      #071a3a 32%,
+      #030812 75%
+    );
+  color:var(--white);
+  font-family:
+    Arial,
+    "Noto Sans Bengali",
+    sans-serif;
+  font-size:20px;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+
+  background:
+    linear-gradient(
+      180deg,
+      #12356f,
+      #06142f
+    );
+
+  border-bottom:2px solid var(--gold);
+
+  box-shadow:
+    0 5px 25px rgba(0,0,0,.55);
+}
+
+.header-inner{
+  width:min(1500px,96%);
+  min-height:90px;
+
+  margin:auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+
+  padding:14px 8px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.logo{
+  width:58px;
+  height:58px;
+
+  display:grid;
+  place-items:center;
+
+  border:2px solid var(--gold);
+  border-radius:16px;
+
+  background:#020712;
+
+  color:var(--gold);
+  font-size:31px;
+  font-weight:900;
+}
+
+.brand-name{
+  font-size:clamp(25px,4vw,40px);
+  font-weight:900;
+}
+
+.brand-sub{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.header-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.header-btn{
+  min-height:48px;
+
+  padding:9px 15px;
+
+  border:1px solid var(--gold);
+  border-radius:12px;
+
+  background:#09204a;
+  color:#fff;
+
+  font-weight:900;
+  font-size:16px;
+}
+
+.header-btn:hover{
+  background:#173d78;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+  width:min(1500px,96%);
+  margin:auto;
+}
+
+.hero{
+  padding:35px 0 20px;
+  text-align:center;
+}
+
+.hero h1{
+  color:var(--gold);
+
+  font-size:
+    clamp(34px,6vw,64px);
+
+  line-height:1.1;
+}
+
+.hero p{
+  max-width:1000px;
+
+  margin:13px auto 0;
+
+  color:var(--muted);
+
+  font-size:
+    clamp(17px,3vw,24px);
+}
+
+/* =========================
+   STATUS BAR
+========================= */
+
+.status-bar{
+  margin:15px 0;
+
+  display:flex;
+  flex-wrap:wrap;
+
+  align-items:center;
+  justify-content:space-between;
+
+  gap:10px;
+
+  padding:13px 16px;
+
+  border:1px solid rgba(255,216,77,.35);
+  border-radius:14px;
+
+  background:#071630;
+}
+
+.status-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.status-dot{
+  width:12px;
+  height:12px;
+
+  border-radius:50%;
+
+  background:var(--green);
+
+  box-shadow:
+    0 0 12px rgba(85,232,144,.8);
+}
+
+.status-text{
+  color:#d8e6fa;
+  font-size:15px;
+}
+
+.updated{
+  color:var(--cyan);
+  font-size:14px;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-panel{
+  margin:18px 0;
+
+  display:grid;
+  grid-template-columns:
+    minmax(0,1fr)
+    220px
+    150px;
+
+  gap:10px;
+}
+
+.search-input,
+.category-select{
+  width:100%;
+
+  min-height:56px;
+
+  border:1px solid rgba(255,216,77,.55);
+  border-radius:13px;
+
+  outline:none;
+
+  background:#06152e;
+  color:white;
+
+  padding:12px 15px;
+
+  font-size:18px;
+}
+
+.search-input::placeholder{
+  color:#8fa2c0;
+}
+
+.refresh-btn{
+  min-height:56px;
+
+  border:1px solid var(--gold);
+  border-radius:13px;
+
+  background:#0d2a58;
+  color:white;
+
+  font-size:18px;
+  font-weight:900;
+}
+
+/* =========================
+   VIDEO PLAYER
+========================= */
+
+.player-box{
+  margin-top:20px;
+
+  border:2px solid var(--gold);
+  border-radius:22px;
+
+  overflow:hidden;
+
+  background:#020611;
+
+  box-shadow:
+    0 0 35px rgba(255,216,77,.10);
+}
+
+.video-wrapper{
+  width:100%;
+
+  aspect-ratio:16/9;
+
+  background:#01040a;
+
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+#newsVideo{
+  width:100%;
+  height:100%;
+
+  display:none;
+
+  background:#000;
+
+  object-fit:contain;
+}
+
+.video-placeholder{
+  width:100%;
+  height:100%;
+
+  min-height:300px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+
+  padding:30px;
+
+  background:
+    radial-gradient(
+      circle,
+      #173c79,
+      #020712 72%
+    );
+}
+
+.play-circle{
+  width:105px;
+  height:105px;
+
+  display:grid;
+  place-items:center;
+
+  border:3px solid var(--gold);
+  border-radius:50%;
+
+  color:var(--gold);
+
+  font-size:50px;
+
+  background:rgba(0,0,0,.5);
+}
+
+.video-placeholder h2{
+  margin-top:20px;
+
+  font-size:
+    clamp(24px,4vw,38px);
+}
+
+.video-placeholder p{
+  margin-top:8px;
+
+  color:var(--muted);
+}
+
+.video-caption{
+  padding:20px;
+
+  border-top:1px solid rgba(255,255,255,.12);
+}
+
+.video-title{
+  color:white;
+
+  font-size:
+    clamp(24px,4vw,38px);
+
+  font-weight:900;
+}
+
+.video-description{
+  margin-top:8px;
+
+  color:var(--muted);
+
+  font-size:17px;
+}
+
+.video-meta{
+  margin-top:12px;
+
+  display:flex;
+  flex-wrap:wrap;
+
+  gap:10px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+
+  min-height:34px;
+
+  padding:6px 11px;
+
+  border:1px solid rgba(255,216,77,.5);
+  border-radius:30px;
+
+  background:#071a37;
+
+  color:#dce9ff;
+
+  font-size:13px;
+  font-weight:800;
+}
+
+.badge.category{
+  color:var(--cyan);
+}
+
+.badge.source{
+  color:var(--gold);
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+.player-controls{
+  display:grid;
+
+  grid-template-columns:
+    1fr
+    1.4fr
+    1fr;
+
+  gap:10px;
+
+  padding:15px 20px 20px;
+}
+
+.control-btn{
+  min-height:60px;
+
+  border:1px solid var(--gold);
+  border-radius:14px;
+
+  background:#09204a;
+  color:white;
+
+  font-size:19px;
+  font-weight:900;
+}
+
+.control-btn:hover{
+  background:#173d78;
+}
+
+.control-btn.primary{
+  background:
+    linear-gradient(
+      135deg,
+      #173d78,
+      #0a2148
+    );
+}
+
+/* =========================
+   NEWS GRID
+========================= */
+
+.section-title{
+  margin:35px 0 15px;
+
+  color:var(--gold);
+
+  font-size:
+    clamp(28px,4vw,42px);
+}
+
+.news-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:18px;
+}
+
+.news-card{
+  min-height:260px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  padding:20px;
+
+  border:1px solid rgba(255,216,77,.35);
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #0d2853,
+      #06132b
+    );
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease;
+}
+
+.news-card:hover{
+  transform:translateY(-4px);
+
+  border-color:var(--gold);
+}
+
+.card-video{
+  min-height:125px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:14px;
+
+  background:
+    radial-gradient(
+      circle,
+      #214b8d,
+      #020713
+    );
+
+  border:1px solid rgba(255,255,255,.1);
+
+  font-size:46px;
+}
+
+.card-title{
+  margin-top:14px;
+
+  font-size:22px;
+  font-weight:900;
+}
+
+.card-meta{
+  margin-top:7px;
+
+  color:var(--muted);
+
+  font-size:14px;
+}
+
+.card-button{
+  margin-top:15px;
+
+  min-height:48px;
+
+  border:1px solid var(--gold);
+  border-radius:11px;
+
+  background:#0a2148;
+  color:white;
+
+  font-weight:900;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+  grid-column:1/-1;
+
+  padding:45px 20px;
+
+  border:1px dashed rgba(255,216,77,.5);
+  border-radius:18px;
+
+  text-align:center;
+
+  color:var(--muted);
+}
+
+/* =========================
+   SOURCE NOTICE
+========================= */
+
+.notice{
+  margin:35px 0;
+
+  padding:22px;
+
+  border-left:4px solid var(--gold);
+  border-radius:12px;
+
+  background:#071630;
+}
+
+.notice h3{
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.notice p{
+  color:var(--muted);
+  font-size:16px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+  margin-top:50px;
+
+  padding:35px 15px;
+
+  border-top:1px solid rgba(255,216,77,.3);
+
+  text-align:center;
+
+  background:#020611;
+}
+
+.footer-brand{
+  color:var(--gold);
+
+  font-size:27px;
+  font-weight:900;
+}
+
+.footer-text{
+  margin-top:7px;
+
+  color:var(--muted);
+
+  font-size:14px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:1000px){
+
+  .news-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:700px){
+
+  .header-inner{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .header-actions{
+    width:100%;
+  }
+
+  .header-btn{
+    flex:1;
+  }
+
+  .search-panel{
+    grid-template-columns:1fr;
+  }
+
+  .player-controls{
+    grid-template-columns:1fr;
+  }
+
+  .news-grid{
+    grid-template-columns:1fr;
+  }
+
+  .video-placeholder{
+    min-height:250px;
+  }
+
+  .play-circle{
+    width:82px;
+    height:82px;
+    font-size:38px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="header-inner">
+
+    <a
+      href="./index.html"
+      class="brand">
+
+      <div class="logo">
+        ★
+      </div>
+
+      <div>
+
+        <div class="brand-name">
+          AYNA BOOK
+        </div>
+
+        <div class="brand-sub">
+          Connect • Share • Create
+        </div>
+
+      </div>
+
+    </a>
+
+    <div class="header-actions">
+
+      <button
+        class="header-btn"
+        type="button"
+        id="homeBtn">
+        🏠 HOME
+      </button>
+
+      <button
+        class="header-btn"
+        type="button"
+        id="refreshBtnTop">
+        ↻ REFRESH
+      </button>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+<main class="container">
+
+  <section class="hero">
+
+    <h1>
+      🔥 VIRAL NEWS
+    </h1>
+
+    <p>
+      বিশ্বের আলোচিত ভিডিও সংবাদ ও গুরুত্বপূর্ণ
+      সর্বশেষ আপডেট এক জায়গায়।
+    </p>
+
+  </section>
+
+
+  <!-- STATUS -->
+
+  <div class="status-bar">
+
+    <div class="status-left">
+
+      <span class="status-dot"></span>
+
+      <span class="status-text">
+        News system ready
+      </span>
+
+    </div>
+
+    <span
+      class="updated"
+      id="lastUpdated">
+      Updating...
+    </span>
+
+  </div>
+
+
+  <!-- SEARCH -->
+
+  <div class="search-panel">
+
+    <input
+      id="searchInput"
+      class="search-input"
+      type="search"
+      placeholder="🔎 খবর খুঁজুন...">
+
+    <select
+      id="categoryFilter"
+      class="category-select">
+
+      <option value="all">
+        সব Category
+      </option>
+
+      <option value="world">
+        🌍 World
+      </option>
+
+      <option value="technology">
+        🤖 Technology
+      </option>
+
+      <option value="science">
+        🔬 Science
+      </option>
+
+      <option value="education">
+        🎓 Education
+      </option>
+
+      <option value="health">
+        💊 Health
+      </option>
+
+      <option value="business">
+        💰 Business
+      </option>
+
+      <option value="sports">
+        ⚽ Sports
+      </option>
+
+    </select>
+
+    <button
+      id="refreshBtn"
+      class="refresh-btn"
+      type="button">
+      ↻ UPDATE
+    </button>
+
+  </div>
+
+
+  <!-- MAIN VIDEO -->
+
+  <section class="player-box">
+
+    <div class="video-wrapper">
+
+      <video
+        id="newsVideo"
+        controls
+        playsinline
+        preload="metadata">
+      </video>
+
+      <div
+        id="videoPlaceholder"
+        class="video-placeholder">
+
+        <div class="play-circle">
+          ▶
+        </div>
+
+        <h2>
+          Viral News Video
+        </h2>
+
+        <p>
+          একটি verified video নির্বাচন করুন
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="video-caption">
+
+      <div
+        id="videoTitle"
+        class="video-title">
+        Today's Viral News
+      </div>
+
+      <div
+        id="videoDescription"
+        class="video-description">
+        খবর নির্বাচন করলে এখানে বিস্তারিত তথ্য দেখা যাবে।
+      </div>
+
+      <div class="video-meta">
+
+        <span
+          id="videoCategory"
+          class="badge category">
+          CATEGORY
+        </span>
+
+        <span
+          id="videoSource"
+          class="badge source">
+          SOURCE
+        </span>
+
+        <span
+          id="videoDate"
+          class="badge">
+          DATE
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="player-controls">
+
+      <button
+        id="previousBtn"
+        class="control-btn"
+        type="button">
+        ◀ PREVIOUS
+      </button>
+
+      <button
+        id="openVideoBtn"
+        class="control-btn primary"
+        type="button">
+        ▶ PLAY VIDEO
+      </button>
+
+      <button
+        id="nextBtn"
+        class="control-btn"
+        type="button">
+        NEXT ▶
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- NEWS -->
+
+  <h2 class="section-title">
+    🔥 Today's News Videos
+  </h2>
+
+  <div
+    id="newsGrid"
+    class="news-grid">
+  </div>
+
+
+  <!-- NOTICE -->
+
+  <section class="notice">
+
+    <h3>
+      ℹ️ AYNA BOOK News Information
+    </h3>
+
+    <p>
+      Viral বা গুরুত্বপূর্ণ সংবাদকে সত্য হিসেবে
+      দেখানোর আগে নির্ভরযোগ্য উৎস যাচাই করা উচিত।
+      এই পেজে source, date এবং category দেখানোর
+      ব্যবস্থা রাখা হয়েছে।
+    </p>
+
+    <br>
+
+    <p>
+      ভিডিও URL না থাকলে AYNA BOOK নিজে থেকে
+      কোনো ভিডিও বা সংবাদ বানিয়ে দেখাবে না।
+      বাস্তব সংবাদ দেখানোর জন্য verified source/API
+      সংযুক্ত করতে হবে।
+    </p>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <div class="footer-brand">
+    AYNA BOOK ★
+  </div>
+
+  <div class="footer-text">
+    Viral News • World News • Technology • Science
+  </div>
+
+  <div class="footer-text">
+    Connect • Share • Create
+  </div>
+
+</footer>
+
+
+<script src="./viral-news.js"></script>
+
+</body>
+</html>
