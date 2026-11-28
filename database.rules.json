@@ -23,10 +23,10 @@
           ".validate": "newData.isNumber() && (!data.exists() || newData.val() === data.val())"
         },
         "fullName": {
-          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 2 && newData.val().length <= 100)"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 2 && newData.val().length <= 100 && (!data.exists() || newData.val() === data.val()))"
         },
         "phone": {
-          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 8 && newData.val().length <= 20)"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 8 && newData.val().length <= 20 && (!data.exists() || newData.val() === data.val()))"
         },
         "country": {
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 100)"
@@ -35,13 +35,22 @@
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 300)"
         },
         "photoURL": {
-          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 2048)"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 650000)"
         },
         "accountType": {
-          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 30)"
+          ".validate": "!newData.exists() || (newData.isString() && (newData.val() === 'personal' || newData.val() === 'business' || newData.val() === 'vip' || newData.val() === 'vvip'))"
         },
         "plan": {
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 30)"
+        },
+        "emailVerified": {
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        },
+        "emailVerifiedAt": {
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
         }
       }
     },
@@ -68,7 +77,7 @@
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 100)"
         },
         "photoURL": {
-          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 2048)"
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 650000)"
         },
         "text": {
           ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 10000)"
@@ -93,14 +102,10 @@
         },
         "updatedAt": {
           ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
         }
-      }
-    },
-
-    "messenger_rooms": {
-      "$room": {
-        ".read": false,
-        ".write": false
       }
     },
 
@@ -115,8 +120,29 @@
         },
         "lastChanged": {
           ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
         }
       }
+    },
+
+    "messenger_rooms": {
+      ".read": false,
+      ".write": false
+    },
+
+    "chats": {
+      ".read": false,
+      ".write": false
+    },
+    "messages": {
+      ".read": false,
+      ".write": false
+    },
+    "typing": {
+      ".read": false,
+      ".write": false
     }
   }
 }
