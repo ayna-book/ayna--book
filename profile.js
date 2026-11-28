@@ -1,486 +1,97 @@
-// ============================================================
-// AYNA BOOK — PROFILE PAGE
-// profile.js
-// Firebase Auth + Realtime Database
-// ============================================================
 
-import { auth, database } from "./firebase-init.js";
+/* =========================================================
+   AYNA BOOK
+   PROFILE SYSTEM
+   File: profile.js
+   Firebase SDK: 13.4.0
+========================================================= */
+
+import {
+  auth,
+  database,
+  authReady
+} from "./firebase-init.js";
 
 import {
   onAuthStateChanged,
+  reload,
   signOut
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
   ref,
   get,
-  set,
-  update,
   query,
-  orderByChild,
-  limitToLast,
-  onValue
+  orderByChild
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
 
-// ============================================================
-// GLOBAL
-// ============================================================
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const $ = id => document.getElementById(id);
 
 let currentUser = null;
 let currentProfile = null;
+let profileUid = null;
+let isRedirecting = false;
 
-const $ = (id) => document.getElementById(id);
+const DEFAULT_PHOTO =
+  "https://ui-avatars.com/api/?name=AYNA+BOOK&background=071b49&color=ffd700&size=512";
 
 
-// ============================================================
-// TOAST
-// ============================================================
+/* =========================================================
+   TOAST
+========================================================= */
 
 function toast(message) {
 
   const box = $("toast");
 
-  if (!box) return;
+  if (!box) {
+    alert(message);
+    return;
+  }
 
   box.textContent = message;
   box.classList.add("show");
 
-  clearTimeout(window.__aynaToastTimer);
-
-  window.__aynaToastTimer = setTimeout(() => {
+  setTimeout(() => {
     box.classList.remove("show");
-  }, 2800);
+  }, 2600);
 }
 
 
-// ============================================================
-// NAVIGATION
-// ============================================================
+/* =========================================================
+   LOADING
+========================================================= */
 
-function go(page) {
-  window.location.href = `./${page}`;
+function hideLoading() {
+
+  const loading = $("loading");
+
+  if (loading) {
+    loading.style.display = "none";
+  }
+
+}
+
+function showLoading(message = "AYNA BOOK — Loading Profile...") {
+
+  const loading = $("loading");
+
+  if (loading) {
+    loading.textContent = message;
+    loading.style.display = "flex";
+  }
+
 }
 
 
-// ============================================================
-// DEFAULT AVATAR
-// ============================================================
-
-function defaultAvatar(name = "AYNA BOOK") {
-
-  return (
-    "https://ui-avatars.com/api/" +
-    "?name=" +
-    encodeURIComponent(name) +
-    "&background=071b49" +
-    "&color=FFD700" +
-    "&size=500"
-  );
-}
-
-
-// ============================================================
-// LOAD PROFILE
-// ============================================================
-
-async function loadProfile(user) {
-
-  currentUser = user;
-
-  const profileRef = ref(database, `users/${user.uid}`);
-
-  try {
-
-    const snapshot = await get(profileRef);
-
-    let profile = {};
-
-    if (snapshot.exists()) {
-      profile = snapshot.val() || {};
-    }
-
-    currentProfile = profile;
-
-    renderProfile(profile);
-
-    await ensureBasicProfile(user, profile);
-
-  } catch (error) {
-
-    console.error("AYNA PROFILE LOAD ERROR:", error);
-
-    // Auth information can still be shown even if RTDB is temporarily unavailable.
-
-    currentProfile = {};
-
-    renderProfile({
-      fullName: user.displayName || "AYNA User",
-      email: user.email || "",
-      photoURL: user.photoURL || ""
-    });
-
-    toast("Profile database loading failed.");
-  }
-}
-
-
-// ============================================================
-// ENSURE BASIC PROFILE
-// ============================================================
-
-async function ensureBasicProfile(user, profile) {
-
-  const updates = {};
-
-  if (!profile.uid) {
-    updates.uid = user.uid;
-  }
-
-  if (!profile.email && user.email) {
-    updates.email = user.email;
-  }
-
-  if (!profile.fullName && user.displayName) {
-    updates.fullName = user.displayName;
-  }
-
-  if (!profile.createdAt) {
-    updates.createdAt = Date.now();
-  }
-
-  if (Object.keys(updates).length === 0) {
-    return;
-  }
-
-  try {
-
-    await update(
-      ref(database, `users/${user.uid}`),
-      updates
-    );
-
-  } catch (error) {
-
-    console.warn(
-      "AYNA PROFILE: Could not complete profile defaults:",
-      error
-    );
-  }
-}
-
-
-// ============================================================
-// RENDER PROFILE
-// ============================================================
-
-function renderProfile(profile) {
-
-  const name =
-    profile.fullName ||
-    profile.name ||
-    currentUser?.displayName ||
-    "AYNA User";
-
-  const email =
-    profile.email ||
-    currentUser?.email ||
-    "";
-
-  const photo =
-    profile.photoURL ||
-    profile.photoUrl ||
-    profile.photo ||
-    currentUser?.photoURL ||
-    defaultAvatar(name);
-
-  const bio =
-    profile.bio ||
-    "AYNA BOOK — Connect • Share • Create";
-
-  const posts =
-    Number(profile.postCount || profile.postsCount || 0);
-
-  const friends =
-    Number(profile.friendCount || profile.friendsCount || 0);
-
-  const followers =
-    Number(profile.followerCount || profile.followersCount || 0);
-
-  const following =
-    Number(profile.followingCount || profile.followingCount || 0);
-
-  $("profileName").textContent = name;
-
-  $("profileEmail").textContent = email;
-
-  $("profileBio").textContent = bio;
-
-  $("profileAvatar").src = photo;
-
-  $("profileAvatar").onerror = () => {
-    $("profileAvatar").src = defaultAvatar(name);
-  };
-
-  $("postCount").textContent = posts;
-
-  $("friendCount").textContent = friends;
-
-  $("followerCount").textContent = followers;
-
-  $("followingCount").textContent = following;
-
-  // Verification
-
-  const verified =
-    profile.verified === true ||
-    profile.isVerified === true ||
-    profile.accountType === "business" && profile.businessVerified === true;
-
-  $("verifiedBadge").style.display =
-    verified ? "inline-flex" : "none";
-}
-
-
-// ============================================================
-// LOAD POSTS
-// ============================================================
-
-function loadMyPosts(uid) {
-
-  const postsRef = query(
-    ref(database, "posts"),
-    orderByChild("uid"),
-    limitToLast(50)
-  );
-
-  onValue(
-    postsRef,
-    (snapshot) => {
-
-      const container = $("postsContainer");
-
-      if (!container) return;
-
-      const posts = [];
-
-      snapshot.forEach((child) => {
-
-        const post = child.val() || {};
-
-        if (
-          post.uid === uid ||
-          post.userId === uid ||
-          post.authorUid === uid
-        ) {
-
-          posts.push({
-            id: child.key,
-            ...post
-          });
-        }
-
-      });
-
-      posts.reverse();
-
-      renderPosts(posts);
-
-      // Update visible count.
-
-      $("postCount").textContent = posts.length;
-    },
-    (error) => {
-
-      console.error(
-        "AYNA PROFILE POSTS ERROR:",
-        error
-      );
-
-      $("postsContainer").innerHTML = `
-        <div class="empty">
-          Posts could not be loaded.
-        </div>
-      `;
-    }
-  );
-}
-
-
-// ============================================================
-// RENDER POSTS
-// ============================================================
-
-function renderPosts(posts) {
-
-  const container = $("postsContainer");
-
-  if (!container) return;
-
-  if (!posts.length) {
-
-    container.innerHTML = `
-      <div class="empty">
-        <div style="font-size:50px;">📝</div>
-        <div style="margin-top:10px;">
-          You have not created any posts yet.
-        </div>
-      </div>
-    `;
-
-    return;
-  }
-
-  container.innerHTML = "";
-
-  posts.forEach((post) => {
-
-    const article = document.createElement("article");
-
-    article.className = "post";
-
-    const text =
-      post.text ||
-      post.caption ||
-      post.content ||
-      "";
-
-    const created =
-      post.createdAt ||
-      post.timestamp ||
-      Date.now();
-
-    const time = formatDate(created);
-
-    article.innerHTML = `
-      <div class="post-head">
-
-        <img
-          class="post-avatar"
-          src="${escapeHtml(
-            currentProfile?.photoURL ||
-            currentProfile?.photoUrl ||
-            currentUser?.photoURL ||
-            defaultAvatar(
-              currentProfile?.fullName ||
-              currentUser?.displayName ||
-              "AYNA User"
-            )
-          )}"
-          alt=""
-        >
-
-        <div>
-          <div class="post-author">
-            ${escapeHtml(
-              currentProfile?.fullName ||
-              currentUser?.displayName ||
-              "AYNA User"
-            )}
-          </div>
-
-          <span class="post-time">
-            ${escapeHtml(time)}
-          </span>
-        </div>
-
-      </div>
-
-      ${
-        text
-          ? `
-            <div class="post-text">
-              ${escapeHtml(text)}
-            </div>
-          `
-          : ""
-      }
-
-      <div class="post-actions">
-
-        <button data-action="like">
-          👍 Like
-        </button>
-
-        <button data-action="comment">
-          💬 Comment
-        </button>
-
-        <button data-action="share">
-          ↗ Share
-        </button>
-
-      </div>
-    `;
-
-    article
-      .querySelector('[data-action="like"]')
-      ?.addEventListener("click", () => {
-
-        toast("Like feature is connected to the post system.");
-      });
-
-    article
-      .querySelector('[data-action="comment"]')
-      ?.addEventListener("click", () => {
-
-        toast("Comment page will open from the post system.");
-      });
-
-    article
-      .querySelector('[data-action="share"]')
-      ?.addEventListener("click", async () => {
-
-        const shareText =
-          text ||
-          "Check this post on AYNA BOOK.";
-
-        await shareContent(
-          "AYNA BOOK",
-          shareText,
-          window.location.href
-        );
-      });
-
-    container.appendChild(article);
-  });
-}
-
-
-// ============================================================
-// DATE
-// ============================================================
-
-function formatDate(value) {
-
-  let date;
-
-  if (typeof value === "number") {
-    date = new Date(value);
-  } else {
-    date = new Date(value);
-  }
-
-  if (Number.isNaN(date.getTime())) {
-    return "";
-  }
-
-  return date.toLocaleString(
-    undefined,
-    {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    }
-  );
-}
-
-
-// ============================================================
-// HTML ESCAPE
-// ============================================================
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
 
 function escapeHtml(value) {
 
@@ -490,219 +101,524 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+
 }
 
 
-// ============================================================
-// SHARE
-// ============================================================
+/* =========================================================
+   PROFILE URL
+========================================================= */
 
-async function shareContent(title, text, url) {
+function getProfileUrl(uid) {
+
+  const url = new URL(
+    "./profile.html",
+    window.location.href
+  );
+
+  url.searchParams.set("uid", uid);
+
+  return url.href;
+
+}
+
+
+/* =========================================================
+   QR CODE
+========================================================= */
+
+function createQR(uid) {
+
+  const box = $("accountQR");
+
+  if (!box) return;
+
+  box.innerHTML = "";
+
+  if (!uid) {
+    box.textContent = "QR unavailable";
+    return;
+  }
+
+  if (typeof QRCode === "undefined") {
+    box.textContent = "QR library unavailable";
+    return;
+  }
 
   try {
 
-    if (navigator.share) {
+    new QRCode(box, {
+      text: getProfileUrl(uid),
+      width: 120,
+      height: 120,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
 
-      await navigator.share({
-        title,
-        text,
-        url
-      });
+  } catch (error) {
 
-      return;
+    console.error("QR error:", error);
+    box.textContent = "QR error";
+
+  }
+
+}
+
+
+/* =========================================================
+   SAFE PHOTO
+========================================================= */
+
+function setProfilePhoto(photo) {
+
+  const img = $("profilePhoto");
+
+  if (!img) return;
+
+  img.onerror = () => {
+    img.onerror = null;
+    img.src = DEFAULT_PHOTO;
+  };
+
+  img.src = photo || DEFAULT_PHOTO;
+
+}
+
+
+/* =========================================================
+   LOAD PROFILE
+========================================================= */
+
+async function loadProfile(user) {
+
+  if (!user || !user.uid) {
+    throw new Error("Authenticated user is missing.");
+  }
+
+  currentUser = user;
+
+  const params = new URLSearchParams(
+    window.location.search
+  );
+
+  const requestedUid = params.get("uid");
+
+  profileUid = requestedUid || user.uid;
+
+  const isOwnProfile = profileUid === user.uid;
+
+  const profileRef = ref(
+    database,
+    "users/" + profileUid
+  );
+
+  const snapshot = await get(profileRef);
+
+  if (!snapshot.exists()) {
+
+    if (isOwnProfile) {
+      throw new Error("Your profile data was not found.");
     }
 
-    await navigator.clipboard.writeText(url);
+    $("profileName").textContent = "AYNA BOOK User";
+    $("profileEmail").textContent = "";
+    $("profileBio").textContent = "AYNA BOOK — Connect • Share • Create";
 
-    toast("Profile link copied.");
-  } catch (error) {
+    setProfilePhoto(DEFAULT_PHOTO);
+    createQR(profileUid);
 
-    console.log("Share cancelled:", error);
-  }
-}
+    $("postsBox").innerHTML =
+      '<div class="empty">Profile information is unavailable.</div>';
 
-
-// ============================================================
-// EDIT PROFILE
-// ============================================================
-
-function editProfile() {
-
-  const currentName =
-    currentProfile?.fullName ||
-    currentUser?.displayName ||
-    "";
-
-  const currentBio =
-    currentProfile?.bio ||
-    "";
-
-  const name = prompt(
-    "Full Name",
-    currentName
-  );
-
-  if (name === null) return;
-
-  const bio = prompt(
-    "Bio",
-    currentBio
-  );
-
-  if (bio === null) return;
-
-  const cleanName = name.trim();
-
-  const cleanBio = bio.trim();
-
-  if (!cleanName) {
-
-    toast("Name cannot be empty.");
+    $("postsCount").textContent = "0";
 
     return;
+
   }
 
-  saveProfileChanges(
-    cleanName,
-    cleanBio
-  );
+  currentProfile = snapshot.val() || {};
+
+  const data = currentProfile;
+
+  const name =
+    data.fullName ||
+    data.displayName ||
+    data.name ||
+    user.displayName ||
+    "AYNA BOOK User";
+
+  /*
+    অন্য ব্যক্তির private email প্রকাশ না করার জন্য
+    শুধু নিজের প্রোফাইলে email দেখানো হচ্ছে।
+  */
+
+  const email = isOwnProfile
+    ? (data.email || user.email || "")
+    : "";
+
+  const photo =
+    data.photoURL ||
+    data.photo ||
+    (isOwnProfile ? user.photoURL : "") ||
+    DEFAULT_PHOTO;
+
+  const bio =
+    data.bio ||
+    "AYNA BOOK — Connect • Share • Create";
+
+  $("profileName").textContent = name;
+  $("profileEmail").textContent = email;
+  $("profileBio").textContent = bio;
+
+  setProfilePhoto(photo);
+
+  createQR(profileUid);
+
+  /*
+    Private relationship counts may not be readable
+    under your current RTDB rules. If so, they remain 0.
+  */
+
+  const friends = countEntries(data.friends, data.friendsCount);
+  const followers = countEntries(data.followers, data.followersCount);
+  const following = countEntries(data.following, data.followingCount);
+
+  $("friendsCount").textContent = friends;
+  $("followersCount").textContent = followers;
+  $("followingCount").textContent = following;
+
+  await loadPosts(profileUid);
+
 }
 
 
-// ============================================================
-// SAVE PROFILE
-// ============================================================
+/* =========================================================
+   COUNT HELPER
+========================================================= */
 
-async function saveProfileChanges(name, bio) {
+function countEntries(collection, fallback) {
 
-  if (!currentUser) return;
+  if (
+    collection &&
+    typeof collection === "object"
+  ) {
+    return Object.keys(collection).length;
+  }
+
+  const number = Number(fallback || 0);
+
+  return Number.isFinite(number) ? number : 0;
+
+}
+
+
+/* =========================================================
+   LOAD POSTS
+========================================================= */
+
+async function loadPosts(uid) {
+
+  const box = $("postsBox");
+
+  if (!box) return;
+
+  box.innerHTML =
+    '<div class="empty">Loading your posts...</div>';
 
   try {
 
-    await update(
-      ref(database, `users/${currentUser.uid}`),
-      {
-        fullName: name,
-        bio: bio,
-        updatedAt: Date.now()
-      }
+    const postsQuery = query(
+      ref(database, "posts"),
+      orderByChild("uid")
     );
 
-    currentProfile.fullName = name;
+    const snapshot = await get(postsQuery);
 
-    currentProfile.bio = bio;
+    if (!snapshot.exists()) {
 
-    renderProfile(currentProfile);
+      box.innerHTML =
+        '<div class="empty">📝 No posts yet.</div>';
 
-    toast("Profile updated successfully.");
+      $("postsCount").textContent = "0";
+
+      return;
+
+    }
+
+    const posts = [];
+
+    snapshot.forEach(child => {
+
+      const post = child.val() || {};
+
+      const postUid =
+        post.uid ||
+        post.userId ||
+        post.authorUid;
+
+      if (postUid === uid) {
+
+        posts.push({
+          id: child.key,
+          ...post
+        });
+
+      }
+
+    });
+
+    posts.sort((a, b) => {
+
+      return Number(b.createdAt || 0) -
+             Number(a.createdAt || 0);
+
+    });
+
+    $("postsCount").textContent = posts.length;
+
+    if (!posts.length) {
+
+      box.innerHTML =
+        '<div class="empty">📝 No posts yet.</div>';
+
+      return;
+
+    }
+
+    const profileName =
+      $("profileName").textContent || "AYNA BOOK User";
+
+    const profilePhoto =
+      $("profilePhoto").src || DEFAULT_PHOTO;
+
+    box.innerHTML = posts
+      .slice(0, 20)
+      .map(post => renderPost(post, profileName, profilePhoto))
+      .join("");
 
   } catch (error) {
 
-    console.error(
-      "AYNA PROFILE UPDATE ERROR:",
-      error
-    );
+    console.error("AYNA BOOK posts error:", error);
 
-    toast(
-      "Profile update failed: " +
-      (error.message || "Unknown error")
-    );
+    box.innerHTML =
+      '<div class="empty">⚠️ Posts could not be loaded. Check database rules.</div>';
+
   }
+
 }
 
 
-// ============================================================
-// QR
-// ============================================================
+/* =========================================================
+   RENDER POST
+========================================================= */
 
-function openQR() {
+function renderPost(post, name, photo) {
 
-  const uid = currentUser?.uid;
+  const text =
+    post.text ||
+    post.caption ||
+    post.message ||
+    "";
 
-  if (!uid) return;
+  const date = post.createdAt
+    ? new Date(Number(post.createdAt)).toLocaleString()
+    : "";
 
-  const qrData =
-    `${window.location.origin}${window.location.pathname}?uid=${encodeURIComponent(uid)}`;
+  /*
+    Only allow HTTP/HTTPS media URLs.
+    Base64 content and unsupported URLs are not rendered.
+  */
 
-  const qrWindow = window.open(
-    "",
-    "_blank",
-    "width=420,height=620"
-  );
+  const mediaUrl =
+    safeHttpUrl(
+      post.mediaURL ||
+      post.imageURL ||
+      post.videoURL ||
+      post.mediaUrl ||
+      ""
+    );
 
-  if (!qrWindow) {
+  const isVideo =
+    Boolean(post.videoURL) ||
+    post.type === "video";
 
-    toast("Please allow popup windows.");
+  let mediaHTML = "";
 
-    return;
+  if (mediaUrl && isVideo) {
+
+    mediaHTML = `
+      <video
+        class="post-media"
+        src="${escapeHtml(mediaUrl)}"
+        controls
+        playsinline
+        preload="metadata">
+      </video>
+    `;
+
+  } else if (mediaUrl) {
+
+    mediaHTML = `
+      <img
+        class="post-media"
+        src="${escapeHtml(mediaUrl)}"
+        alt="Post media"
+        loading="lazy">
+    `;
+
   }
 
-  qrWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>AYNA BOOK QR</title>
-      <style>
-        body{
-          margin:0;
-          min-height:100vh;
-          background:#050914;
-          color:white;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          font-family:Arial;
-          text-align:center;
-        }
-        .box{
-          padding:25px;
-        }
-        h1{
-          color:#ffd700;
-        }
-        #qr{
-          background:white;
-          padding:15px;
-          border-radius:15px;
-          margin-top:20px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="box">
-        <h1>AYNA BOOK</h1>
-        <p>My Profile QR</p>
-        <div id="qr"></div>
-        <p>${escapeHtml(qrData)}</p>
+  return `
+    <article class="post">
+
+      <div class="post-head">
+
+        <img
+          class="post-avatar"
+          src="${escapeHtml(photo)}"
+          alt="Profile">
+
+        <div>
+
+          <div class="post-name">
+            ${escapeHtml(name)}
+          </div>
+
+          <div class="post-date">
+            ${escapeHtml(date)}
+          </div>
+
+        </div>
+
       </div>
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+      ${
+        text
+        ? `
+          <div class="post-text">
+            ${escapeHtml(text).replaceAll("\n", "<br>")}
+          </div>
+        `
+        : ""
+      }
 
-      <script>
-        new QRCode(
-          document.getElementById("qr"),
-          {
-            text:${JSON.stringify(qrData)},
-            width:260,
-            height:260
-          }
-        );
-      <\/script>
-    </body>
-    </html>
-  `);
+      ${mediaHTML}
 
-  qrWindow.document.close();
+    </article>
+  `;
+
 }
 
 
-// ============================================================
-// LOGOUT
-// ============================================================
+/* =========================================================
+   SAFE HTTP URL
+========================================================= */
 
-async function logout() {
+function safeHttpUrl(value) {
+
+  if (!value) return "";
 
   try {
+
+    const url = new URL(String(value));
+
+    if (
+      url.protocol === "https:" ||
+      url.protocol === "http:"
+    ) {
+      return url.href;
+    }
+
+  } catch (error) {
+
+    return "";
+
+  }
+
+  return "";
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function go(page) {
+
+  if (!page) return;
+
+  window.location.href = "./" + page;
+
+}
+
+
+/* =========================================================
+   FEATURE CARDS
+========================================================= */
+
+document.querySelectorAll(".feature-card").forEach(card => {
+
+  card.addEventListener("click", () => {
+
+    const page = card.dataset.page;
+
+    if (page) {
+      go(page);
+    }
+
+  });
+
+});
+
+
+/* =========================================================
+   BOTTOM NAVIGATION
+========================================================= */
+
+document.querySelectorAll(".nav-item").forEach(item => {
+
+  item.addEventListener("click", () => {
+
+    const page = item.dataset.nav;
+
+    if (page) {
+      go(page);
+    }
+
+  });
+
+});
+
+
+/* =========================================================
+   HOME BUTTON
+========================================================= */
+
+$("homeBtn")?.addEventListener("click", () => {
+
+  go("index.html");
+
+});
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+$("logoutBtn")?.addEventListener("click", async () => {
+
+  try {
+
+    if (currentUser) {
+
+      /*
+        Optional: write offline presence here
+        if your project has a presence helper.
+      */
+
+    }
 
     await signOut(auth);
 
@@ -710,214 +626,210 @@ async function logout() {
 
   } catch (error) {
 
-    console.error(
-      "AYNA LOGOUT ERROR:",
-      error
-    );
+    console.error("Logout error:", error);
 
-    toast("Logout failed.");
+    toast("Logout failed. Please try again.");
+
   }
-}
+
+});
 
 
-// ============================================================
-// BUTTONS
-// ============================================================
+/* =========================================================
+   EDIT PROFILE
+========================================================= */
 
-function setupButtons() {
+$("editProfileBtn")?.addEventListener("click", () => {
 
-  $("homeBtn")?.addEventListener(
-    "click",
-    () => go("home.html")
-  );
+  go("settings.html");
 
-  $("logoutBtn")?.addEventListener(
-    "click",
-    logout
-  );
+});
 
-  $("editProfileBtn")?.addEventListener(
-    "click",
-    editProfile
-  );
 
-  $("shareProfileBtn")?.addEventListener(
-    "click",
-    () => {
+/* =========================================================
+   SHARE PROFILE
+========================================================= */
 
-      const uid = currentUser?.uid;
+$("shareProfileBtn")?.addEventListener("click", async () => {
 
-      const url =
-        `${window.location.origin}${window.location.pathname}?uid=${encodeURIComponent(uid || "")}`;
+  if (!profileUid) {
+    toast("Profile is still loading.");
+    return;
+  }
 
-      shareContent(
-        "AYNA BOOK Profile",
-        "View my AYNA BOOK profile.",
+  const url = getProfileUrl(profileUid);
+
+  const title =
+    $("profileName").textContent || "AYNA BOOK Profile";
+
+  try {
+
+    if (navigator.share) {
+
+      await navigator.share({
+        title: "AYNA BOOK Profile",
+        text: title,
         url
-      );
+      });
+
+    } else if (navigator.clipboard?.writeText) {
+
+      await navigator.clipboard.writeText(url);
+
+      toast("Profile link copied.");
+
+    } else {
+
+      toast("Sharing is not supported on this browser.");
+
     }
-  );
 
-  $("qrBtn")?.addEventListener(
-    "click",
-    openQR
-  );
+  } catch (error) {
 
+    if (error.name !== "AbortError") {
 
-  // Profile sections
+      console.error("Share error:", error);
 
-  $("aboutBtn")?.addEventListener(
-    "click",
-    () => toast("About section is ready.")
-  );
+      toast("Could not share profile.");
 
-  $("photosBtn")?.addEventListener(
-    "click",
-    () => go("media.html")
-  );
+    }
 
-  $("videosBtn")?.addEventListener(
-    "click",
-    () => go("media.html")
-  );
+  }
 
-  $("reelsBtn")?.addEventListener(
-    "click",
-    () => go("reels.html")
-  );
-
-  $("storiesBtn")?.addEventListener(
-    "click",
-    () => toast("Stories page will be connected.")
-  );
-
-  $("memoriesBtn")?.addEventListener(
-    "click",
-    () => toast("Memories section is ready.")
-  );
-
-  $("friendsBtn")?.addEventListener(
-    "click",
-    () => go("friends.html")
-  );
-
-  $("followersBtn")?.addEventListener(
-    "click",
-    () => toast("Followers section is ready.")
-  );
+});
 
 
-  // Account
+/* =========================================================
+   QR BUTTON
+========================================================= */
 
-  $("securityBtn")?.addEventListener(
-    "click",
-    () => go("security.html")
-  );
+$("qrButton")?.addEventListener("click", () => {
 
-  $("settingsBtn")?.addEventListener(
-    "click",
-    () => go("settings.html")
-  );
+  const qr = document.querySelector(".qr-card");
 
-  $("privacyBtn")?.addEventListener(
-    "click",
-    () => go("settings.html")
-  );
+  qr?.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
 
-  $("notificationsBtn")?.addEventListener(
-    "click",
-    () => go("notifications.html")
-  );
+  toast("ACCOUNT QR is ready.");
+
+});
 
 
-  // Bottom navigation
+/* =========================================================
+   AUTHENTICATION + EMAIL VERIFICATION
+========================================================= */
 
-  $("bottomHome")?.addEventListener(
-    "click",
-    () => go("home.html")
-  );
+async function startProfile() {
 
-  $("bottomFriends")?.addEventListener(
-    "click",
-    () => go("friends.html")
-  );
+  try {
 
-  $("bottomMessenger")?.addEventListener(
-    "click",
-    () => go("messenger.html")
-  );
+    if (authReady) {
+      await authReady;
+    }
 
-  $("bottomReels")?.addEventListener(
-    "click",
-    () => go("reels.html")
-  );
+    if (!auth) {
+      throw new Error("Firebase Authentication is unavailable.");
+    }
 
-  $("bottomSettings")?.addEventListener(
-    "click",
-    () => go("settings.html")
-  );
+    onAuthStateChanged(auth, async user => {
+
+      if (isRedirecting) return;
+
+      if (!user) {
+
+        isRedirecting = true;
+
+        window.location.replace("./login.html");
+
+        return;
+
+      }
+
+      try {
+
+        await reload(user);
+
+        if (!user.emailVerified) {
+
+          isRedirecting = true;
+
+          window.location.replace("./verify-email.html");
+
+          return;
+
+        }
+
+        currentUser = user;
+
+        await loadProfile(user);
+
+        hideLoading();
+
+      } catch (error) {
+
+        console.error("Profile loading error:", error);
+
+        toast(
+          error.message || "Profile loading error."
+        );
+
+        hideLoading();
+
+      }
+
+    });
+
+  } catch (error) {
+
+    console.error("AYNA BOOK initialization error:", error);
+
+    toast("Firebase connection error.");
+
+    hideLoading();
+
+  }
+
 }
 
 
-// ============================================================
-// AUTH
-// ============================================================
-
-onAuthStateChanged(
-  auth,
-  async (user) => {
-
-    if (!user) {
-
-      window.location.replace("./login.html");
-
-      return;
-    }
-
-    currentUser = user;
-
-    await loadProfile(user);
-
-    loadMyPosts(user.uid);
-  },
-  (error) => {
-
-    console.error(
-      "AYNA AUTH STATE ERROR:",
-      error
-    );
-
-    window.location.replace("./login.html");
-  }
-);
-
-
-// ============================================================
-// START
-// ============================================================
-
-setupButtons();
-
-
-// ============================================================
-// PUBLIC API
-// ============================================================
+/* =========================================================
+   GLOBAL PROFILE API
+========================================================= */
 
 window.AYNA_PROFILE = {
 
-  getUser: () => currentUser,
-
-  getProfile: () => currentProfile,
-
   reload: async () => {
 
-    if (currentUser) {
-      await loadProfile(currentUser);
+    if (!currentUser) {
+      throw new Error("No signed-in user.");
     }
-  }
+
+    await reload(currentUser);
+
+    if (!currentUser.emailVerified) {
+      window.location.replace("./verify-email.html");
+      return;
+    }
+
+    return loadProfile(currentUser);
+
+  },
+
+  getUser: () => currentProfile,
+
+  getCurrentUser: () => currentUser,
+
+  getProfileUid: () => profileUid
 
 };
 
-console.log(
-  "AYNA BOOK PROFILE: Ready."
-);
+
+/* =========================================================
+   START
+========================================================= */
+
+showLoading();
+
+startProfile();
