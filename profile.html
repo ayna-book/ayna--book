@@ -1,313 +1,495 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#071b49">
-<title>AYNA BOOK — Profile</title>
+  <meta charset="UTF-8">
 
-<style>
-:root {
-  --bg:#050914;
-  --panel:#09152d;
-  --card:#101f3d;
-  --navy:#071b49;
-  --gold:#ffd700;
-  --gold2:#d4af37;
-  --white:#fff;
-  --muted:#aeb9ce;
-  --green:#20e080;
-}
-* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html,body {
-  margin:0; padding:0; width:100%; min-height:100%;
-  background:var(--bg); color:var(--white);
-  font-family:Arial,Helvetica,sans-serif;
-}
-body { padding-bottom:100px; }
-button { cursor:pointer; font-family:inherit; }
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
 
-.topbar {
-  position:sticky; top:0; z-index:1000; height:70px;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 14px;
-  background:linear-gradient(135deg,#0a2861,#071b49 55%,#050914);
-  border-bottom:2px solid var(--gold2);
-}
-.brand { color:var(--gold); font-size:25px; font-weight:900; }
-.top-actions { display:flex; gap:8px; }
-.top-btn {
-  width:48px; height:48px; border-radius:13px;
-  border:1px solid var(--gold2); background:#0c2450;
-  color:white; font-size:24px; font-weight:900;
-}
+  <meta name="theme-color" content="#050912">
 
-.cover {
-  height:210px; position:relative;
-  background:linear-gradient(135deg,#174b9d,#09204d 55%,#050914);
-  border-bottom:1px solid rgba(255,215,0,.2);
-}
-.cover:after {
-  content:"AYNA BOOK"; position:absolute; right:15px; bottom:20px;
-  color:rgba(255,215,0,.15); font-size:32px; font-weight:900;
-}
-.profile-head {
-  padding:0 14px 18px;
-  background:linear-gradient(180deg,#071022,#050914);
-}
-.identity-row {
-  display:grid; grid-template-columns:minmax(0,1fr) 155px;
-  gap:10px; align-items:start; margin-top:-65px;
-  position:relative; z-index:5;
-}
-.identity-left { min-width:0; position:relative; }
-.profile-photo-wrap {
-  width:140px; height:140px; border-radius:50%; padding:5px;
-  background:linear-gradient(135deg,#fff200,#ffd000,#d4af37);
-  box-shadow:0 0 0 3px #061027,0 5px 30px rgba(0,0,0,.55);
-}
-.profile-photo {
-  display:block; width:100%; height:100%; border-radius:50%;
-  object-fit:cover; object-position:center;
-  background:#162746; border:4px solid #071022;
-}
-.online-dot {
-  position:absolute; left:120px; top:105px;
-  width:26px; height:26px; border-radius:50%;
-  background:var(--green); border:4px solid #071022;
-}
-.profile-name {
-  margin:14px 0 5px; font-size:30px; line-height:1.12;
-  font-weight:950; overflow-wrap:anywhere;
-}
-.profile-email {
-  color:#b9c3d8; font-size:17px; line-height:1.35;
-  overflow-wrap:anywhere;
-}
-.profile-bio {
-  margin-top:12px; color:#e5e9f1; font-size:18px; line-height:1.4;
-}
-.qr-card {
-  width:155px; padding:10px; margin-top:8px;
-  border:2px solid var(--gold2); border-radius:16px;
-  background:linear-gradient(145deg,#101f3d,#07152f);
-  text-align:center; box-shadow:0 8px 25px rgba(0,0,0,.35);
-}
-.qr-title { margin-bottom:8px; color:var(--gold); font-size:17px; font-weight:900; }
-.qr-box {
-  width:130px; height:130px; margin:auto; padding:5px;
-  background:#fff; border-radius:8px;
-  display:flex; align-items:center; justify-content:center;
-}
-#accountQR { width:120px; height:120px; }
-.qr-subtitle { margin-top:8px; color:#d7deed; font-size:12px; font-weight:700; }
+  <title>AYNA BOOK — My Profile</title>
 
-.stats {
-  display:grid; grid-template-columns:repeat(4,1fr);
-  gap:7px; margin-top:18px;
-}
-.stat {
-  min-height:82px; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  border:1px solid rgba(255,215,0,.2);
-  border-radius:14px; background:#0e1d3a;
-}
-.stat-number { color:var(--gold); font-size:25px; font-weight:950; }
-.stat-label { margin-top:5px; color:#bdc7da; font-size:13px; font-weight:700; }
-
-.main-buttons {
-  display:grid; grid-template-columns:2fr 1fr 1fr;
-  gap:8px; margin-top:14px;
-}
-.main-btn {
-  min-height:58px; border-radius:13px;
-  border:1px solid var(--gold2); background:#102b62;
-  color:#fff; font-size:16px; font-weight:900;
-}
-.main-btn.primary {
-  background:linear-gradient(90deg,#ffe600,#d6a900);
-  color:#050914;
-}
-
-.section {
-  margin:12px 8px 0; border:1px solid rgba(255,215,0,.18);
-  border-radius:16px; overflow:hidden; background:#081329;
-  box-shadow:0 5px 18px rgba(0,0,0,.25);
-}
-.section-title {
-  min-height:60px; display:flex; align-items:center;
-  padding:0 15px; border-bottom:1px solid rgba(255,215,0,.18);
-  color:var(--gold); font-size:23px; font-weight:950;
-}
-.feature-grid {
-  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px; padding:10px;
-}
-.feature-card {
-  min-height:135px; padding:16px 13px;
-  border-radius:14px; border:1px solid rgba(255,255,255,.08);
-  background:linear-gradient(145deg,#12264a,#0d1d3b);
-  cursor:pointer;
-}
-.feature-card:active { transform:scale(.97); }
-.feature-icon { display:block; font-size:34px; margin-bottom:8px; }
-.feature-title { color:#fff; font-size:21px; line-height:1.15; font-weight:950; }
-.feature-desc { margin-top:7px; color:#aebbd1; font-size:14px; line-height:1.3; }
-
-.posts-box { padding:10px; }
-.post {
-  margin-bottom:10px; padding:15px;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px; background:#0e1e3c;
-}
-.post-head { display:flex; align-items:center; gap:10px; }
-.post-avatar {
-  width:50px; height:50px; border-radius:50%;
-  object-fit:cover; border:2px solid var(--gold);
-}
-.post-name { font-size:19px; font-weight:900; }
-.post-date { color:#9da9bf; font-size:13px; }
-.post-text { margin-top:13px; font-size:18px; line-height:1.45; overflow-wrap:anywhere; }
-.post-media { display:block; max-width:100%; max-height:400px; margin-top:12px; border-radius:10px; }
-.empty { padding:30px 15px; text-align:center; color:#aab5ca; font-size:18px; }
-
-.bottom-nav {
-  position:fixed; left:0; right:0; bottom:0; height:78px; z-index:2000;
-  display:grid; grid-template-columns:repeat(5,1fr);
-  border-top:2px solid var(--gold2);
-  background:linear-gradient(180deg,#0b214d,#061127);
-}
-.nav-item {
-  display:flex; flex-direction:column; align-items:center;
-  justify-content:center; gap:4px; color:#fff;
-  font-size:13px; font-weight:900; cursor:pointer;
-}
-.nav-icon { font-size:27px; }
-.nav-item.active { color:var(--gold); }
-
-#loading {
-  position:fixed; inset:0; z-index:5000;
-  display:flex; align-items:center; justify-content:center;
-  background:#050914; color:var(--gold);
-  font-size:22px; font-weight:900; text-align:center;
-  padding:20px;
-}
-.toast {
-  position:fixed; left:50%; bottom:95px;
-  transform:translateX(-50%) translateY(20px);
-  opacity:0; z-index:6000; max-width:90%;
-  padding:14px 18px; border:1px solid var(--gold);
-  border-radius:12px; background:#101f3d;
-  color:#fff; font-size:16px; font-weight:800;
-  pointer-events:none; transition:.25s;
-}
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-@media(max-width:390px) {
-  .identity-row { grid-template-columns:minmax(0,1fr) 125px; gap:7px; }
-  .profile-photo-wrap { width:125px; height:125px; }
-  .online-dot { left:106px; top:93px; }
-  .qr-card { width:125px; padding:7px; }
-  .qr-box { width:108px; height:108px; }
-  #accountQR { width:98px; height:98px; }
-  .profile-name { font-size:25px; }
-  .feature-title { font-size:19px; }
-  .feature-desc { font-size:13px; }
-  .main-btn { font-size:14px; }
-}
-</style>
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
-<div id="loading">AYNA BOOK — Loading Profile...</div>
+  <main class="ayna-app">
 
-<header class="topbar">
-  <div class="brand">AYNA BOOK</div>
-  <div class="top-actions">
-    <button class="top-btn" id="homeBtn" aria-label="Home">⌂</button>
-    <button class="top-btn" id="logoutBtn" aria-label="Logout">↪</button>
-  </div>
-</header>
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
-<section class="cover"></section>
+    <header class="ayna-header">
 
-<section class="profile-head">
-  <div class="identity-row">
-    <div class="identity-left">
-      <div class="profile-photo-wrap">
-        <img id="profilePhoto" class="profile-photo" alt="Profile Photo">
+      <div class="ayna-brand">
+        <span class="ayna-brand-prefix">_</span>
+        <span>AYNA BOOK ★</span>
       </div>
-      <div class="online-dot"></div>
-      <h1 id="profileName" class="profile-name">Loading...</h1>
-      <div id="profileEmail" class="profile-email">...</div>
-      <div id="profileBio" class="profile-bio">AYNA BOOK — Connect • Share • Create</div>
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          id="homeButton"
+          class="header-button"
+        >
+          Home
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         PROFILE HEADER
+         ===================================================== -->
+
+    <section class="ayna-box">
+
+      <span class="box-prefix">_</span>
+
+      <div class="box-content">
+
+        <div class="profile-header">
+
+          <div class="profile-photo">
+
+            <img
+              id="profilePhoto"
+              src=""
+              alt="AYNA BOOK Profile Photo"
+            >
+
+          </div>
+
+          <h1
+            id="profileName"
+            class="profile-name"
+          >
+            Profile loading...
+          </h1>
+
+          <div
+            id="profileEmail"
+            class="profile-email"
+          >
+            Email loading...
+          </div>
+
+          <div
+            id="verificationStatus"
+            style="margin-top:12px;"
+          >
+            Loading...
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MESSAGE
+         ===================================================== -->
+
+    <div
+      id="profileMessage"
+      class="message hidden"
+      role="alert"
+      aria-live="polite"
+    ></div>
+
+
+    <!-- =====================================================
+         PERSONAL INFORMATION
+         ===================================================== -->
+
+    <section class="ayna-box">
+
+      <span class="box-prefix">_</span>
+
+      <div class="box-content">
+
+        <h2 class="section-title">
+          Personal Information
+        </h2>
+
+        <div class="profile-info">
+
+          <!-- Full Name -->
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Full Name
+            </div>
+
+            <div
+              id="infoFullName"
+              class="info-value"
+            >
+              Loading...
+            </div>
+
+          </div>
+
+
+          <!-- Gmail -->
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Gmail
+            </div>
+
+            <div
+              id="infoEmail"
+              class="info-value"
+            >
+              Loading...
+            </div>
+
+          </div>
+
+
+          <!-- Phone -->
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Phone
+            </div>
+
+            <div
+              id="infoPhone"
+              class="info-value"
+            >
+              Loading...
+            </div>
+
+          </div>
+
+
+          <!-- Country -->
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Country
+            </div>
+
+            <div
+              id="infoCountry"
+              class="info-value"
+            >
+              Loading...
+            </div>
+
+          </div>
+
+
+          <!-- AYNA ID -->
+
+          <div class="info-item">
+
+            <div class="info-label">
+              AYNA ID
+            </div>
+
+            <div
+              id="infoAynaId"
+              class="info-value"
+            >
+              Loading...
+            </div>
+
+          </div>
+
+
+          <!-- Account Type -->
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Account Type
+            </div>
+
+            <div
+              id="infoAccountType"
+              class="info-value"
+            >
+              Loading...
+            </div>
+
+          </div>
+
+
+          <!-- Plan -->
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Plan
+            </div>
+
+            <div
+              id="infoPlan"
+              class="info-value"
+            >
+              Loading...
+            </div>
+
+          </div>
+
+
+          <!-- Status -->
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Account Status
+            </div>
+
+            <div
+              id="infoStatus"
+              class="info-value"
+            >
+              Loading...
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACCOUNT SECURITY
+         ===================================================== -->
+
+    <section class="ayna-box">
+
+      <span class="box-prefix">_</span>
+
+      <div class="box-content">
+
+        <h2 class="section-title">
+          Account Security
+        </h2>
+
+
+        <div class="info-item">
+
+          <div class="info-label">
+            Email Verification
+          </div>
+
+          <div
+            id="securityVerification"
+            class="info-value"
+          >
+            Checking...
+          </div>
+
+        </div>
+
+
+        <div style="height:10px;"></div>
+
+
+        <div class="info-item">
+
+          <div class="info-label">
+            Profile Protection
+          </div>
+
+          <div
+            id="profileProtection"
+            class="info-value"
+          >
+            Protected
+          </div>
+
+        </div>
+
+
+        <div style="height:10px;"></div>
+
+
+        <div class="info-item">
+
+          <div class="info-label">
+            Name / Gmail / Phone
+          </div>
+
+          <div class="info-value">
+            Locked after account creation
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACTIONS
+         ===================================================== -->
+
+    <section class="ayna-box">
+
+      <span class="box-prefix">_</span>
+
+      <div class="box-content">
+
+        <h2 class="section-title">
+          Account Actions
+        </h2>
+
+
+        <div class="button-grid">
+
+          <button
+            type="button"
+            id="verifyButton"
+            class="btn-secondary"
+          >
+            📩 Verify Email
+          </button>
+
+
+          <button
+            type="button"
+            id="refreshButton"
+            class="btn-secondary"
+          >
+            🔄 Refresh Profile
+          </button>
+
+
+          <button
+            type="button"
+            id="homeButton2"
+            class="btn-secondary"
+          >
+            🏠 Home
+          </button>
+
+
+          <button
+            type="button"
+            id="logoutButton"
+            class="btn-danger"
+          >
+            🚪 Sign Out
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         AYNA BOOK INFORMATION
+         ===================================================== -->
+
+    <section class="ayna-box">
+
+      <span class="box-prefix">_</span>
+
+      <div class="box-content">
+
+        <div class="ai-box">
+
+          <div class="ai-title">
+            🤖 AYNA BOOK AI
+          </div>
+
+          <div class="ai-text">
+            আপনার Global Digital Identity নিরাপদ রাখুন।
+            Email Verification সম্পূর্ণ করার পর আপনার
+            AYNA BOOK-এর পরবর্তী সামাজিক ও AI সুবিধাগুলো
+            ব্যবহার করতে পারবেন।
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="ayna-footer">
+
+      <strong>AYNA BOOK ★</strong>
+
+      <br>
+
+      Global Digital Identity
+
+      <br>
+
+      Connect • Share • Create
+
+    </footer>
+
+  </main>
+
+
+  <!-- =======================================================
+       LOADING OVERLAY
+       ======================================================= -->
+
+  <div
+    id="loadingOverlay"
+    class="loading-overlay"
+    aria-hidden="true"
+  >
+
+    <div class="loading-box">
+
+      <div class="loading-title">
+        AYNA BOOK Profile Loading...
+      </div>
+
+      <div class="loading-dots">
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+      </div>
+
     </div>
 
-    <aside class="qr-card">
-      <div class="qr-title">ACCOUNT QR</div>
-      <div class="qr-box"><div id="accountQR"></div></div>
-      <div class="qr-subtitle">Scan to view profile</div>
-    </aside>
   </div>
 
-  <div class="stats">
-    <div class="stat"><div id="postsCount" class="stat-number">0</div><div class="stat-label">Posts</div></div>
-    <div class="stat"><div id="friendsCount" class="stat-number">0</div><div class="stat-label">Friends</div></div>
-    <div class="stat"><div id="followersCount" class="stat-number">0</div><div class="stat-label">Followers</div></div>
-    <div class="stat"><div id="followingCount" class="stat-number">0</div><div class="stat-label">Following</div></div>
-  </div>
 
-  <div class="main-buttons">
-    <button class="main-btn primary" id="editProfileBtn">✏️ Edit Profile</button>
-    <button class="main-btn" id="shareProfileBtn">↗ Share</button>
-    <button class="main-btn" id="qrButton">▣ QR</button>
-  </div>
-</section>
+  <!-- =======================================================
+       JAVASCRIPT
+       ======================================================= -->
 
-<section class="section">
-  <div class="section-title">👤 Profile</div>
-  <div class="feature-grid">
-    <div class="feature-card" data-page="about.html"><span class="feature-icon">ℹ️</span><div class="feature-title">About</div><div class="feature-desc">Personal information</div></div>
-    <div class="feature-card" data-page="photos.html"><span class="feature-icon">🖼️</span><div class="feature-title">Photos</div><div class="feature-desc">Your photo collection</div></div>
-    <div class="feature-card" data-page="videos.html"><span class="feature-icon">🎬</span><div class="feature-title">Videos</div><div class="feature-desc">Your video posts</div></div>
-    <div class="feature-card" data-page="reels.html"><span class="feature-icon">📱</span><div class="feature-title">Reels</div><div class="feature-desc">Short videos</div></div>
-    <div class="feature-card" data-page="stories.html"><span class="feature-icon">⭕</span><div class="feature-title">Stories</div><div class="feature-desc">24-hour stories</div></div>
-    <div class="feature-card" data-page="memories.html"><span class="feature-icon">🕘</span><div class="feature-title">Memories</div><div class="feature-desc">Your memories</div></div>
-    <div class="feature-card" data-page="friends.html"><span class="feature-icon">👥</span><div class="feature-title">Friends</div><div class="feature-desc">Friends and requests</div></div>
-    <div class="feature-card" data-page="followers.html"><span class="feature-icon">🌐</span><div class="feature-title">Followers</div><div class="feature-desc">People following you</div></div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-title">⚙️ Account & Security</div>
-  <div class="feature-grid">
-    <div class="feature-card" data-page="security.html"><span class="feature-icon">🔐</span><div class="feature-title">Security</div><div class="feature-desc">Password and login activity</div></div>
-    <div class="feature-card" data-page="settings.html"><span class="feature-icon">⚙️</span><div class="feature-title">Settings</div><div class="feature-desc">Account preferences</div></div>
-    <div class="feature-card" data-page="privacy.html"><span class="feature-icon">🛡️</span><div class="feature-title">Privacy</div><div class="feature-desc">Control your privacy</div></div>
-    <div class="feature-card" data-page="notifications.html"><span class="feature-icon">🔔</span><div class="feature-title">Notifications</div><div class="feature-desc">Notification settings</div></div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-title">📝 My Posts</div>
-  <div id="postsBox" class="posts-box"><div class="empty">Loading your posts...</div></div>
-</section>
-
-<nav class="bottom-nav">
-  <div class="nav-item" data-nav="index.html"><div class="nav-icon">⌂</div><div>Home</div></div>
-  <div class="nav-item" data-nav="friends.html"><div class="nav-icon">👥</div><div>Friends</div></div>
-  <div class="nav-item" data-nav="messenger.html"><div class="nav-icon">💬</div><div>Messenger</div></div>
-  <div class="nav-item" data-nav="reels.html"><div class="nav-icon">▶</div><div>Reels</div></div>
-  <div class="nav-item active" data-nav="settings.html"><div class="nav-icon">⚙</div><div>Settings</div></div>
-</nav>
-
-<div id="toast" class="toast"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<script type="module" src="./profile.js"></script>
+  <script
+    type="module"
+    src="./profile.js"
+  ></script>
 
 </body>
 </html>
