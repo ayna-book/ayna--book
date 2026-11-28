@@ -1,323 +1,748 @@
-
-// =========================================================
-// AYNA BOOK — LOGIN MODULE
-// Firebase Authentication 13.4.0
-// Email Verification Required
-// =========================================================
+// ============================================================
+// AYNA BOOK ★
+// LOGIN SYSTEM
+// File: login.js
+// Firebase SDK: 13.4.0
+// ============================================================
 
 import {
   signInWithEmailAndPassword,
-  onAuthStateChanged,
   sendPasswordResetEmail,
+  onAuthStateChanged,
   reload
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
 import {
   auth,
   authReady
-} from "./app.js";
+} from "./firebase-init.js";
 
-const $ = id => document.getElementById(id);
+
+// ============================================================
+// DOM
+// ============================================================
+
+const $ = (id) => document.getElementById(id);
 
 const loginForm = $("loginForm");
-const loginBtn = $("loginBtn");
-const loginStatus = $("loginStatus");
+const loginEmail = $("loginEmail");
+const loginPassword = $("loginPassword");
+const loginButton = $("loginButton");
+const loginMessage = $("loginMessage");
 
-let loginInProgress = false;
-let redirecting = false;
+const resetEmail = $("resetEmail");
+const resetPasswordButton = $("resetPasswordButton");
+const resetMessage = $("resetMessage");
 
 
-// =========================================================
-// STATUS MESSAGE
-// =========================================================
+// ============================================================
+// MESSAGE
+// ============================================================
 
-function showStatus(element, message, error = false) {
+function showMessage(element, message, type = "info") {
+
   if (!element) return;
 
   element.textContent = message;
-  element.style.color = error ? "#ff8888" : "#e4bd45";
+
+  element.className = "message show " + type;
 }
 
 
-// =========================================================
-// FIREBASE INITIALIZATION
-// =========================================================
+// ============================================================
+// CLEAR MESSAGE
+// ============================================================
 
-await authReady;
+function clearMessage(element) {
 
-if (!auth) {
-  showStatus(
-    loginStatus,
-    "Firebase সংযোগ পাওয়া যায়নি। firebase-init.js পরীক্ষা করুন।",
-    true
-  );
+  if (!element) return;
 
-  if (loginBtn) loginBtn.disabled = true;
-
-  throw new Error("Firebase Authentication is not initialized.");
+  element.textContent = "";
+  element.className = "message";
 }
 
 
-// =========================================================
-// AUTH STATE CHECK
-// Already logged-in users are redirected safely
-// =========================================================
+// ============================================================
+// BUTTON LOADING
+// ============================================================
 
-onAuthStateChanged(auth, async user => {
-  if (!user || redirecting) return;
+function setLoginLoading(loading) {
+
+  if (!loginButton) return;
+
+  loginButton.disabled = loading;
+
+  if (loading) {
+
+    loginButton.innerHTML = `
+      লগইন হচ্ছে
+      <span class="loading-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    `;
+
+  } else {
+
+    loginButton.textContent = "লগইন";
+
+  }
+}
+
+
+// ============================================================
+// RESET BUTTON LOADING
+// ============================================================
+
+function setResetLoading(loading) {
+
+  if (!resetPasswordButton) return;
+
+  resetPasswordButton.disabled = loading;
+
+  resetPasswordButton.textContent =
+    loading
+      ? "রিসেট লিংক পাঠানো হচ্ছে..."
+      : "পাসওয়ার্ড রিসেট লিংক পাঠান";
+}
+
+
+// ============================================================
+// EMAIL VALIDATION
+// ============================================================
+
+function isValidEmail(email) {
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+}
+
+
+// ============================================================
+// FIREBASE ERROR → BANGLA MESSAGE
+// ============================================================
+
+function getFirebaseErrorMessage(error) {
+
+  const code = error?.code || "";
+
+  switch (code) {
+
+    case "auth/invalid-email":
+      return "ইমেইল ঠিকানাটি সঠিক নয়।";
+
+    case "auth/user-not-found":
+      return "এই ইমেইল দিয়ে কোনো AYNA BOOK অ্যাকাউন্ট পাওয়া যায়নি।";
+
+    case "auth/wrong-password":
+      return "পাসওয়ার্ড সঠিক নয়।";
+
+    case "auth/invalid-credential":
+      return "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।";
+
+    case "auth/invalid-api-key":
+      return "Firebase API Key সঠিক নয়। firebase-init.js পরীক্ষা করুন।";
+
+    case "auth/api-key-not-valid":
+      return "Firebase API Key সঠিক নয়। Firebase Configuration পরীক্ষা করুন।";
+
+    case "auth/network-request-failed":
+      return "ইন্টারনেট সংযোগ পরীক্ষা করুন এবং আবার চেষ্টা করুন।";
+
+    case "auth/too-many-requests":
+      return "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+
+    case "auth/user-disabled":
+      return "এই অ্যাকাউন্টটি বর্তমানে নিষ্ক্রিয় করা হয়েছে।";
+
+    case "auth/operation-not-allowed":
+      return "Firebase Console-এ Email/Password Authentication চালু নেই।";
+
+    case "auth/unauthorized-domain":
+      return "এই Website Domain Firebase Authentication-এ অনুমোদিত নয়।";
+
+    case "auth/requires-recent-login":
+      return "নিরাপত্তার জন্য আবার Login করুন।";
+
+    default:
+      return (
+        "Login করা যায়নি। আবার চেষ্টা করুন।" +
+        (code ? `\nError: ${code}` : "")
+      );
+  }
+}
+
+
+// ============================================================
+// AUTH READY
+// ============================================================
+
+async function waitForFirebase() {
 
   try {
-    await reload(user);
 
-    if (redirecting) return;
-
-    redirecting = true;
-
-    if (user.emailVerified) {
-      window.location.replace("./profile.html");
-    } else {
-      window.location.replace("./verify-email.html");
+    if (authReady) {
+      await authReady;
     }
 
+    return true;
+
   } catch (error) {
-    console.error("Auth state check error:", error);
-    redirecting = false;
-  }
-});
 
-
-// =========================================================
-// PASSWORD SHOW / HIDE
-// =========================================================
-
-$("togglePassword")?.addEventListener("click", () => {
-  const password = $("password");
-  const button = $("togglePassword");
-
-  if (!password || !button) return;
-
-  const visible = password.type === "password";
-
-  password.type = visible ? "text" : "password";
-  button.textContent = visible ? "লুকান" : "দেখুন";
-});
-
-
-// =========================================================
-// FIREBASE EMAIL / PASSWORD LOGIN
-// =========================================================
-
-loginForm?.addEventListener("submit", async event => {
-  event.preventDefault();
-
-  if (loginInProgress || redirecting) return;
-
-  const email = ($("email")?.value || "").trim().toLowerCase();
-  const password = $("password")?.value || "";
-
-  if (!email || !password) {
-    showStatus(loginStatus, "ইমেইল ও পাসওয়ার্ড লিখুন।", true);
-    return;
-  }
-
-  loginInProgress = true;
-
-  if (loginBtn) {
-    loginBtn.disabled = true;
-    loginBtn.textContent = "লগইন হচ্ছে...";
-  }
-
-  try {
-    const credential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
+    console.error(
+      "Firebase Auth initialization error:",
+      error
     );
 
-    const user = credential.user;
+    showMessage(
+      loginMessage,
+      "Firebase Authentication চালু করা যায়নি।\n" +
+      "firebase-init.js পরীক্ষা করুন।",
+      "error"
+    );
 
-    // Firebase user-এর সর্বশেষ verification status আনুন
+    return false;
+  }
+}
+
+
+// ============================================================
+// CHECK EXISTING LOGIN
+// ============================================================
+
+async function checkExistingUser() {
+
+  const ready = await waitForFirebase();
+
+  if (!ready || !auth) return;
+
+  const user = auth.currentUser;
+
+  if (!user) return;
+
+  try {
+
     await reload(user);
 
-    if (!user.emailVerified) {
-      showStatus(
-        loginStatus,
-        "আপনার ইমেইল এখনো যাচাই হয়নি। Verification পেজে নেওয়া হচ্ছে...",
-        true
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) return;
+
+    /*
+      যদি Gmail verification না হয়ে থাকে,
+      verify-email.html-এ পাঠানো হবে।
+    */
+
+    if (!currentUser.emailVerified) {
+
+      window.location.replace(
+        "./verify-email.html"
       );
-
-      // Sign Out করা হচ্ছে না।
-      // verify-email.js-এর জন্য Login session প্রয়োজন।
-
-      redirecting = true;
-
-      setTimeout(() => {
-        window.location.replace("./verify-email.html");
-      }, 800);
 
       return;
     }
 
-    showStatus(
-      loginStatus,
-      "লগইন সফল! আপনার প্রোফাইল খুলছে..."
+    /*
+      Already verified হলে profile page।
+    */
+
+    window.location.replace(
+      "./profile.html"
     );
-
-    redirecting = true;
-
-    window.location.replace("./profile.html");
 
   } catch (error) {
-    console.error("AYNA Login Error:", error);
 
-    const messages = {
-      "auth/invalid-email":
-        "সঠিক Email ঠিকানা লিখুন।",
-
-      "auth/invalid-credential":
-        "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।",
-
-      "auth/user-not-found":
-        "এই Email দিয়ে অ্যাকাউন্ট পাওয়া যায়নি।",
-
-      "auth/wrong-password":
-        "পাসওয়ার্ড সঠিক নয়।",
-
-      "auth/user-disabled":
-        "এই অ্যাকাউন্টটি নিষ্ক্রিয়।",
-
-      "auth/too-many-requests":
-        "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
-
-      "auth/network-request-failed":
-        "ইন্টারনেট সংযোগ পরীক্ষা করুন।",
-
-      "auth/operation-not-allowed":
-        "Firebase Console-এ Email/Password Login চালু করুন।"
-    };
-
-    showStatus(
-      loginStatus,
-      messages[error.code] ||
-        "লগইন ব্যর্থ হয়েছে। Firebase সেটিংস পরীক্ষা করুন।",
-      true
+    console.warn(
+      "Existing user check failed:",
+      error
     );
 
-  } finally {
-    loginInProgress = false;
-
-    if (loginBtn && !redirecting) {
-      loginBtn.disabled = false;
-      loginBtn.textContent = "লগইন";
-    }
   }
-});
+}
 
 
-// =========================================================
-// FORGOT PASSWORD / ACCOUNT LOOKUP
-// =========================================================
+// ============================================================
+// LOGIN
+// ============================================================
 
-$("lookupBtn")?.addEventListener("click", async () => {
-  const email = ($("lookupEmail")?.value || "")
-    .trim()
-    .toLowerCase();
+async function handleLogin(event) {
 
-  const button = $("lookupBtn");
-  const status = $("lookupStatus");
+  event.preventDefault();
+
+  clearMessage(loginMessage);
+
+  const email =
+    loginEmail?.value.trim().toLowerCase() || "";
+
+  const password =
+    loginPassword?.value || "";
+
+
+  // ----------------------------------------------------------
+  // Validation
+  // ----------------------------------------------------------
 
   if (!email) {
-    showStatus(status, "আপনার Email ঠিকানা লিখুন।", true);
-    $("lookupEmail")?.focus();
+
+    showMessage(
+      loginMessage,
+      "আপনার Gmail ঠিকানা লিখুন।",
+      "error"
+    );
+
+    loginEmail?.focus();
+
     return;
   }
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!emailPattern.test(email)) {
-    showStatus(status, "সঠিক Email ঠিকানা লিখুন।", true);
+  if (!isValidEmail(email)) {
+
+    showMessage(
+      loginMessage,
+      "সঠিক ইমেইল ঠিকানা লিখুন।",
+      "error"
+    );
+
+    loginEmail?.focus();
+
     return;
   }
 
-  if (button) {
-    button.disabled = true;
-    button.textContent = "পাঠানো হচ্ছে...";
+
+  if (!password) {
+
+    showMessage(
+      loginMessage,
+      "আপনার লগইন পাসওয়ার্ড লিখুন।",
+      "error"
+    );
+
+    loginPassword?.focus();
+
+    return;
   }
+
+
+  // ----------------------------------------------------------
+  // Firebase Ready
+  // ----------------------------------------------------------
+
+  const ready = await waitForFirebase();
+
+  if (!ready || !auth) {
+
+    showMessage(
+      loginMessage,
+      "Firebase Authentication প্রস্তুত নয়।\n" +
+      "কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+      "error"
+    );
+
+    return;
+  }
+
+
+  // ----------------------------------------------------------
+  // Loading
+  // ----------------------------------------------------------
+
+  setLoginLoading(true);
+
 
   try {
-    await sendPasswordResetEmail(auth, email);
 
-    showStatus(
-      status,
-      "যদি এই Email দিয়ে অ্যাকাউন্ট থাকে, তাহলে পাসওয়ার্ড রিসেটের নির্দেশ পাঠানো হয়েছে। Inbox ও Spam ফোল্ডার দেখুন।"
+    // --------------------------------------------------------
+    // Firebase Login
+    // --------------------------------------------------------
+
+    const credential =
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+
+    let user = credential.user;
+
+
+    // --------------------------------------------------------
+    // Refresh user information
+    // --------------------------------------------------------
+
+    try {
+      await reload(user);
+      user = auth.currentUser || user;
+    } catch (reloadError) {
+      console.warn(
+        "User reload warning:",
+        reloadError
+      );
+    }
+
+
+    // --------------------------------------------------------
+    // Gmail Verification
+    // --------------------------------------------------------
+
+    if (!user.emailVerified) {
+
+      showMessage(
+        loginMessage,
+        "Login সফল হয়েছে।\n" +
+        "আপনার Gmail এখনো Verify করা হয়নি।\n" +
+        "Verification সম্পন্ন করুন।",
+        "info"
+      );
+
+
+      setTimeout(() => {
+
+        window.location.replace(
+          "./verify-email.html"
+        );
+
+      }, 900);
+
+      return;
+    }
+
+
+    // --------------------------------------------------------
+    // SUCCESS
+    // --------------------------------------------------------
+
+    showMessage(
+      loginMessage,
+      "Login সফল হয়েছে। AYNA BOOK খুলছে...",
+      "success"
     );
+
+
+    setTimeout(() => {
+
+      window.location.replace(
+        "./profile.html"
+      );
+
+    }, 500);
+
 
   } catch (error) {
-    console.error("Password Reset Error:", error);
 
-    if (error.code === "auth/too-many-requests") {
-      showStatus(
-        status,
-        "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
-        true
-      );
-    } else {
-      showStatus(
-        status,
-        "পাসওয়ার্ড রিসেট অনুরোধ পাঠানো যায়নি। ইন্টারনেট ও Firebase সেটিংস পরীক্ষা করুন।",
-        true
-      );
-    }
+    console.error(
+      "AYNA LOGIN ERROR:",
+      error
+    );
+
+    showMessage(
+      loginMessage,
+      getFirebaseErrorMessage(error),
+      "error"
+    );
 
   } finally {
-    if (button) {
-      button.disabled = false;
-      button.textContent = "অ্যাকাউন্ট খুঁজুন";
-    }
+
+    setLoginLoading(false);
+
   }
-});
+}
 
 
-// =========================================================
-// AYNA VOICE ASSISTANT
-// =========================================================
+// ============================================================
+// PASSWORD RESET
+// ============================================================
 
-$("speakBtn")?.addEventListener("click", () => {
-  if (!("speechSynthesis" in window)) {
-    showStatus(
-      loginStatus,
-      "এই ব্রাউজারে Voice সুবিধা নেই।",
-      true
+async function handlePasswordReset() {
+
+  clearMessage(resetMessage);
+
+  const email =
+    resetEmail?.value.trim().toLowerCase() || "";
+
+
+  if (!email) {
+
+    showMessage(
+      resetMessage,
+      "Password Reset-এর জন্য আপনার ইমেইল লিখুন।",
+      "error"
     );
+
+    resetEmail?.focus();
+
     return;
   }
 
-  window.speechSynthesis.cancel();
 
-  const message = new SpeechSynthesisUtterance(
-    "প্রিয় স্যার, AYNA BOOK-এ আপনাকে স্বাগতম। আপনার ইমেইল এবং পাসওয়ার্ড দিয়ে নিরাপদে লগইন করুন।"
+  if (!isValidEmail(email)) {
+
+    showMessage(
+      resetMessage,
+      "সঠিক ইমেইল ঠিকানা লিখুন।",
+      "error"
+    );
+
+    resetEmail?.focus();
+
+    return;
+  }
+
+
+  const ready = await waitForFirebase();
+
+  if (!ready || !auth) {
+
+    showMessage(
+      resetMessage,
+      "Firebase Authentication প্রস্তুত নয়।",
+      "error"
+    );
+
+    return;
+  }
+
+
+  setResetLoading(true);
+
+
+  try {
+
+    await sendPasswordResetEmail(
+      auth,
+      email
+    );
+
+
+    showMessage(
+      resetMessage,
+      "Password Reset Link আপনার ইমেইলে পাঠানো হয়েছে।\n" +
+      "Gmail Inbox এবং Spam/Junk folder পরীক্ষা করুন।",
+      "success"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "PASSWORD RESET ERROR:",
+      error
+    );
+
+    showMessage(
+      resetMessage,
+      getFirebaseErrorMessage(error),
+      "error"
+    );
+
+  } finally {
+
+    setResetLoading(false);
+
+  }
+}
+
+
+// ============================================================
+// REGISTER LINK
+// ============================================================
+
+function setupRegisterLinks() {
+
+  const links = [
+    $("registerLink"),
+    $("createAccountButton")
+  ];
+
+  links.forEach((link) => {
+
+    if (!link) return;
+
+    link.addEventListener("click", () => {
+
+      /*
+        register.html অবশ্যই GitHub repository-তে
+        একই folder-এ থাকতে হবে।
+      */
+
+      console.log(
+        "Opening AYNA BOOK registration..."
+      );
+
+    });
+
+  });
+
+}
+
+
+// ============================================================
+// EMAIL ENTER KEY
+// ============================================================
+
+function setupKeyboard() {
+
+  if (resetEmail) {
+
+    resetEmail.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (event.key === "Enter") {
+
+          event.preventDefault();
+
+          handlePasswordReset();
+
+        }
+
+      }
+    );
+
+  }
+
+}
+
+
+// ============================================================
+// AUTH STATE OBSERVER
+// ============================================================
+
+function setupAuthObserver() {
+
+  if (!auth) return;
+
+  onAuthStateChanged(
+    auth,
+    async (user) => {
+
+      /*
+        Login page-এ user থাকলে শুধু যাচাই করছি।
+        এখানে সরাসরি redirect করার আগে Firebase
+        initialization সম্পূর্ণ হওয়া জরুরি।
+      */
+
+      if (!user) return;
+
+      try {
+
+        await reload(user);
+
+        const currentUser =
+          auth.currentUser;
+
+        if (!currentUser) return;
+
+        /*
+          Verified user login page-এ এলে profile-এ পাঠানো হবে।
+        */
+
+        if (currentUser.emailVerified) {
+
+          /*
+            Form submit চলার সময় redirect-এর সাথে
+            conflict এড়াতে সামান্য delay।
+          */
+
+          if (
+            document.visibilityState === "visible" &&
+            !loginButton?.disabled
+          ) {
+
+            window.location.replace(
+              "./profile.html"
+            );
+
+          }
+
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "Auth observer warning:",
+          error
+        );
+
+      }
+
+    }
   );
 
-  message.lang = "bn-BD";
-  message.rate = 0.9;
-
-  window.speechSynthesis.speak(message);
-});
+}
 
 
-// =========================================================
-// MORE INFORMATION
-// =========================================================
+// ============================================================
+// START
+// ============================================================
 
-$("moreBtn")?.addEventListener("click", () => {
-  const message = $("assistantMessage");
+async function startLoginPage() {
 
-  if (message) {
-    message.textContent =
-      "আপনার অ্যাকাউন্ট নিরাপদ রাখতে পাসওয়ার্ড কাউকে দেবেন না। " +
-      "লগইন সমস্যায় Forgot Password ব্যবহার করুন। " +
-      "ইমেইল যাচাই না হলে Verification পেজে যান।";
+  console.log(
+    "AYNA BOOK Login System starting..."
+  );
+
+
+  // Firebase initialization অপেক্ষা
+
+  await waitForFirebase();
+
+
+  // Existing session check
+
+  await checkExistingUser();
+
+
+  // Login form
+
+  if (loginForm) {
+
+    loginForm.addEventListener(
+      "submit",
+      handleLogin
+    );
+
   }
-});
 
-console.log("AYNA BOOK Login Module Ready.");
+
+  // Password reset
+
+  if (resetPasswordButton) {
+
+    resetPasswordButton.addEventListener(
+      "click",
+      handlePasswordReset
+    );
+
+  }
+
+
+  // Register links
+
+  setupRegisterLinks();
+
+
+  // Keyboard
+
+  setupKeyboard();
+
+
+  // Auth observer
+
+  setupAuthObserver();
+
+
+  console.log(
+    "AYNA BOOK Login System ready."
+  );
+
+}
+
+
+// ============================================================
+// RUN
+// ============================================================
+
+startLoginPage();
