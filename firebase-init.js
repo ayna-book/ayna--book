@@ -1,11 +1,15 @@
-// ============================================================
-// AYNA BOOK — Firebase Initialization
-// File: firebase-init.js
-// Firebase Web SDK — CDN / ES Modules
-// ============================================================
 
-import { initializeApp, getApps, getApp }
-  from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+/* ============================================================
+   AYNA BOOK — Firebase Initialization
+   File: firebase-init.js
+   Firebase Web SDK 13.4.0 — CDN / ES Modules
+   ============================================================ */
+
+import {
+  initializeApp,
+  getApps,
+  getApp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
 import {
   getAuth,
@@ -22,98 +26,112 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
-// ------------------------------------------------------------
-// AYNA BOOK Firebase Configuration
-// ------------------------------------------------------------
+/* ============================================================
+   1. FIREBASE CONFIGURATION
+   IMPORTANT: Replace every YOUR_... value with real values
+   from Firebase Console > Project settings > Your apps.
+   ============================================================ */
 
 const firebaseConfig = {
   apiKey: "YOUR_FIREBASE_API_KEY",
-
   authDomain: "ayna-book.firebaseapp.com",
-
-  databaseURL: "https://YOUR_DATABASE_URL",
-
+  databaseURL: "YOUR_DATABASE_URL",
   projectId: "ayna-book",
-
   storageBucket: "ayna-book.firebasestorage.app",
-
   messagingSenderId: "805601138500",
-
   appId: "YOUR_FIREBASE_APP_ID",
-
   measurementId: "YOUR_MEASUREMENT_ID"
 };
 
-// ------------------------------------------------------------
-// Firebase App
-// ------------------------------------------------------------
+/* ============================================================
+   2. CONFIGURATION VALIDATION
+   ============================================================ */
 
-const app = getApps().length
+const requiredConfig = [
+  "apiKey",
+  "databaseURL",
+  "appId"
+];
+
+const missingConfig = requiredConfig.filter((key) => {
+  const value = firebaseConfig[key];
+
+  return (
+    !value ||
+    value.startsWith("YOUR_") ||
+    value.includes("YOUR_DATABASE_URL")
+  );
+});
+
+if (missingConfig.length > 0) {
+  throw new Error(
+    "AYNA BOOK Firebase configuration missing: " +
+    missingConfig.join(", ") +
+    ". Please update firebase-init.js."
+  );
+}
+
+/* ============================================================
+   3. FIREBASE APP
+   ============================================================ */
+
+const app = getApps().length > 0
   ? getApp()
   : initializeApp(firebaseConfig);
 
-// ------------------------------------------------------------
-// Firebase Authentication
-// ------------------------------------------------------------
+/* ============================================================
+   4. AUTHENTICATION
+   ============================================================ */
 
 const auth = getAuth(app);
 
-// Keep login session on the device/browser.
-setPersistence(auth, browserLocalPersistence)
-  .catch((error) => {
-    console.error(
-      "AYNA BOOK Firebase Auth Persistence Error:",
-      error
-    );
-  });
+export const authReady = setPersistence(
+  auth,
+  browserLocalPersistence
+).catch((error) => {
+  console.error(
+    "AYNA BOOK Auth Persistence Error:",
+    error
+  );
 
-// ------------------------------------------------------------
-// Firebase Realtime Database
-// ------------------------------------------------------------
+  throw error;
+});
+
+/* ============================================================
+   5. REALTIME DATABASE
+   ============================================================ */
 
 const database = getDatabase(app);
 
-// ------------------------------------------------------------
-// Connection Monitor
-// ------------------------------------------------------------
+/* ============================================================
+   6. CONNECTION MONITOR
+   ============================================================ */
 
 const connectedRef = ref(database, ".info/connected");
 
 onValue(
   connectedRef,
   (snapshot) => {
+    const connected = snapshot.val() === true;
 
-    if (snapshot.val() === true) {
+    console.log(
+      connected
+        ? "AYNA BOOK Firebase CONNECTED"
+        : "AYNA BOOK Firebase DISCONNECTED"
+    );
 
-      console.log(
-        "🟢 AYNA BOOK Firebase: CONNECTED"
-      );
-
-      window.dispatchEvent(
-        new CustomEvent("ayna-firebase-connected", {
-          detail: {
-            connected: true
-          }
-        })
-      );
-
-    } else {
-
-      console.warn(
-        "🔴 AYNA BOOK Firebase: DISCONNECTED"
-      );
-
-      window.dispatchEvent(
-        new CustomEvent("ayna-firebase-disconnected", {
-          detail: {
-            connected: false
-          }
-        })
-      );
-    }
+    window.dispatchEvent(
+      new CustomEvent(
+        connected
+          ? "ayna-firebase-connected"
+          : "ayna-firebase-disconnected",
+        {
+          detail: { connected }
+        }
+      )
+    );
   },
   (error) => {
-
     console.error(
       "AYNA BOOK Firebase Connection Error:",
       error
@@ -121,32 +139,31 @@ onValue(
 
     window.dispatchEvent(
       new CustomEvent("ayna-firebase-error", {
-        detail: {
-          error: error
-        }
+        detail: { error }
       })
     );
   }
 );
 
-// ------------------------------------------------------------
-// Helper: Check Firebase Connection
-// ------------------------------------------------------------
+/* ============================================================
+   7. WATCH FIREBASE CONNECTION
+   ============================================================ */
 
 export function watchFirebaseConnection(callback) {
+  if (typeof callback !== "function") {
+    throw new TypeError(
+      "Connection callback must be a function."
+    );
+  }
 
   return onValue(
     connectedRef,
     (snapshot) => {
-
-      const connected = snapshot.val() === true;
-
-      callback(connected);
+      callback(snapshot.val() === true);
     },
     (error) => {
-
       console.error(
-        "Firebase connection watcher error:",
+        "Firebase Connection Watch Error:",
         error
       );
 
@@ -155,89 +172,105 @@ export function watchFirebaseConnection(callback) {
   );
 }
 
-// ------------------------------------------------------------
-// Helper: Set User Presence
-// ------------------------------------------------------------
+/* ============================================================
+   8. SET USER PRESENCE ONLINE
+   ============================================================ */
 
 export async function setUserPresence(uid) {
-
   if (!uid) {
-    console.warn(
-      "AYNA BOOK Presence: UID missing"
-    );
-    return;
+    throw new Error("User UID is required.");
   }
 
+  if (!auth.currentUser || auth.currentUser.uid !== uid) {
+    throw new Error(
+      "Presence can only be updated for the signed-in user."
+    );
+  }
+
+  const presenceRef = ref(
+    database,
+    `presence/${uid}`
+  );
+
   try {
+    // Register offline operation BEFORE setting online.
+    await onDisconnect(presenceRef).set({
+      online: false,
+      lastChanged: serverTimestamp()
+    });
 
-    const presenceRef =
-      ref(database, `presence/${uid}`);
-
-    const onlineData = {
+    // Now mark the user online.
+    await set(presenceRef, {
       online: true,
       lastChanged: serverTimestamp()
-    };
-
-    await set(
-      presenceRef,
-      onlineData
-    );
-
-    onDisconnect(presenceRef)
-      .set({
-        online: false,
-        lastChanged: serverTimestamp()
-      });
+    });
 
     console.log(
-      "🟢 AYNA BOOK Presence: ONLINE",
+      "AYNA BOOK Presence ONLINE:",
       uid
     );
 
-  } catch (error) {
+    return true;
 
+  } catch (error) {
     console.error(
       "AYNA BOOK Presence Error:",
       error
     );
+
+    throw error;
   }
 }
 
-// ------------------------------------------------------------
-// Helper: Set User Offline
-// ------------------------------------------------------------
+/* ============================================================
+   9. SET USER OFFLINE
+   ============================================================ */
 
 export async function setUserOffline(uid) {
-
   if (!uid) {
-    return;
+    return false;
   }
 
+  if (!auth.currentUser || auth.currentUser.uid !== uid) {
+    throw new Error(
+      "Cannot change another user's presence."
+    );
+  }
+
+  const presenceRef = ref(
+    database,
+    `presence/${uid}`
+  );
+
   try {
+    // Remove pending disconnect operation.
+    await onDisconnect(presenceRef).cancel();
 
-    const presenceRef =
-      ref(database, `presence/${uid}`);
+    await set(presenceRef, {
+      online: false,
+      lastChanged: serverTimestamp()
+    });
 
-    await set(
-      presenceRef,
-      {
-        online: false,
-        lastChanged: serverTimestamp()
-      }
+    console.log(
+      "AYNA BOOK Presence OFFLINE:",
+      uid
     );
 
-  } catch (error) {
+    return true;
 
+  } catch (error) {
     console.error(
       "AYNA BOOK Offline Error:",
       error
     );
+
+    throw error;
   }
 }
 
-// ------------------------------------------------------------
-// Export
-// ------------------------------------------------------------
+/* ============================================================
+   10. FIREBASE EXPORTS
+   ============================================================ */
 
 export {
   app,
@@ -246,21 +279,25 @@ export {
   firebaseConfig
 };
 
-// ------------------------------------------------------------
-// Global AYNA BOOK Firebase Object
-// ------------------------------------------------------------
+/* ============================================================
+   11. GLOBAL AYNA FIREBASE OBJECT
+   ============================================================ */
 
 window.AYNA_FIREBASE = {
   app,
   auth,
   database,
   firebaseConfig,
-
+  authReady,
   watchFirebaseConnection,
   setUserPresence,
   setUserOffline
 };
 
+// Backward-compatible auth reference for index.js.
+window.AYNA_AUTH = auth;
+window.AYNA_DATABASE = database;
+
 console.log(
-  "🚀 AYNA BOOK Firebase initialized"
+  "AYNA BOOK Firebase Initialization Loaded"
 );
