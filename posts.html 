@@ -1,0 +1,723 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08142d">
+
+<title>AYNA BOOK — Posts</title>
+
+<style>
+:root {
+  --bg:#050b19;
+  --navy:#102957;
+  --panel:#101d35;
+  --gold:#e4bd45;
+  --white:#ffffff;
+  --muted:#bdc8dc;
+  --border:#354765;
+  --danger:#ff6464;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,sans-serif;
+  font-size:19px;
+}
+
+button,input,textarea {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+header {
+  background:linear-gradient(120deg,#173b7a,#07142e);
+  border-bottom:2px solid var(--gold);
+  padding:18px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.logo {
+  color:var(--gold);
+  font-size:25px;
+  font-weight:900;
+}
+
+.header-btn {
+  background:transparent;
+  color:white;
+  border:1px solid var(--gold);
+  border-radius:12px;
+  padding:12px 15px;
+  font-size:17px;
+  font-weight:bold;
+}
+
+main {
+  width:100%;
+  max-width:850px;
+  margin:auto;
+  padding:18px 12px 45px;
+}
+
+.page-title {
+  font-size:30px;
+  color:var(--gold);
+  text-align:center;
+  margin:15px 0 8px;
+}
+
+.subtitle {
+  text-align:center;
+  color:var(--muted);
+  margin-bottom:22px;
+}
+
+.panel {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:22px;
+}
+
+.section-title {
+  color:var(--gold);
+  font-size:23px;
+  font-weight:bold;
+  margin:0 0 17px;
+}
+
+.profile-row {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:15px;
+}
+
+.avatar {
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#263b5b;
+  border:2px solid var(--gold);
+}
+
+.profile-name {
+  font-size:20px;
+  font-weight:bold;
+}
+
+.small-text {
+  color:var(--muted);
+  font-size:15px;
+  margin-top:5px;
+}
+
+textarea,
+input {
+  width:100%;
+  background:#071226;
+  color:white;
+  border:1px solid #526784;
+  border-radius:12px;
+  padding:15px;
+  outline:none;
+  margin:8px 0;
+}
+
+textarea {
+  min-height:145px;
+  resize:vertical;
+  font-size:20px;
+}
+
+input {
+  min-height:55px;
+  font-size:17px;
+}
+
+textarea:focus,
+input:focus {
+  border-color:var(--gold);
+}
+
+.field-label {
+  display:block;
+  color:var(--gold);
+  font-weight:bold;
+  margin-top:13px;
+  font-size:17px;
+}
+
+.action-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:12px;
+}
+
+.action-btn {
+  flex:1;
+  min-width:130px;
+  min-height:55px;
+  border:1px solid var(--gold);
+  border-radius:12px;
+  background:#172d50;
+  color:white;
+  font-weight:bold;
+  padding:12px;
+}
+
+.publish-btn {
+  width:100%;
+  min-height:65px;
+  margin-top:15px;
+  background:linear-gradient(120deg,#e4bd45,#a77a17);
+  color:#101010;
+  border:0;
+  border-radius:13px;
+  font-size:22px;
+  font-weight:900;
+}
+
+.action-btn:disabled,
+.publish-btn:disabled {
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.status {
+  color:var(--muted);
+  font-size:16px;
+  margin-top:12px;
+  white-space:pre-wrap;
+}
+
+.feed-post {
+  background:#101d35;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:17px;
+  margin-bottom:18px;
+}
+
+.post-header {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.post-user {
+  font-size:19px;
+  font-weight:bold;
+}
+
+.post-date {
+  font-size:14px;
+  color:var(--muted);
+  margin-top:5px;
+}
+
+.post-text {
+  font-size:19px;
+  line-height:1.6;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  margin:17px 0;
+}
+
+.post-media {
+  width:100%;
+  max-height:550px;
+  object-fit:contain;
+  background:#020711;
+  border-radius:12px;
+  margin:8px 0;
+}
+
+.post-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:15px;
+  border-top:1px solid var(--border);
+  padding-top:13px;
+}
+
+.post-actions button {
+  flex:1;
+  min-width:100px;
+  min-height:48px;
+  border:1px solid var(--border);
+  background:#172d50;
+  color:white;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.post-actions .delete-btn {
+  border-color:#a94444;
+  color:#ff8b8b;
+}
+
+.empty {
+  text-align:center;
+  padding:30px 12px;
+  color:var(--muted);
+}
+
+#loading {
+  text-align:center;
+  padding:20px;
+  color:var(--gold);
+}
+
+footer {
+  text-align:center;
+  padding:20px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+@media(max-width:480px) {
+  body {
+    font-size:18px;
+  }
+
+  header {
+    padding:13px 10px;
+  }
+
+  .logo {
+    font-size:20px;
+  }
+
+  .header-btn {
+    padding:10px;
+    font-size:14px;
+  }
+
+  .page-title {
+    font-size:26px;
+  }
+
+  .panel {
+    padding:14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">AYNA BOOK ★</div>
+
+  <div class="action-row" style="margin:0">
+    <button class="header-btn" id="homeBtn">⌂ Home</button>
+    <button class="header-btn" id="fullScreenBtn">⛶ Full Screen</button>
+  </div>
+</header>
+
+<main>
+
+  <h1 class="page-title">🌍 AYNA BOOK POSTS</h1>
+  <div class="subtitle">Connect • Share • Create</div>
+
+  <section class="panel">
+
+    <h2 class="section-title">✍️ Create a Post</h2>
+
+    <div class="profile-row">
+      <img
+        id="myPhoto"
+        class="avatar"
+        src="https://ui-avatars.com/api/?name=AYNA+BOOK&background=102957&color=ffffff"
+        alt="Profile photo"
+      >
+
+      <div>
+        <div class="profile-name" id="myName">AYNA BOOK Member</div>
+        <div class="small-text">Share your thoughts with the world</div>
+      </div>
+    </div>
+
+    <label class="field-label" for="postText">আপনার পোস্ট লিখুন</label>
+
+    <textarea
+      id="postText"
+      maxlength="5000"
+      placeholder="আপনার মনের কথা লিখুন..."
+    ></textarea>
+
+    <label class="field-label" for="imageURL">🖼️ Image URL (ঐচ্ছিক)</label>
+    <input
+      id="imageURL"
+      type="url"
+      placeholder="https://example.com/photo.jpg"
+    >
+
+    <label class="field-label" for="videoURL">🎬 Video URL (ঐচ্ছিক)</label>
+    <input
+      id="videoURL"
+      type="url"
+      placeholder="https://example.com/video.mp4"
+    >
+
+    <div class="small-text">
+      ছবি বা ভিডিওর সরাসরি HTTPS URL দিন। YouTube পেজের লিংক সরাসরি ভিডিও ফাইল নয়।
+    </div>
+
+    <button id="publishBtn" class="publish-btn">
+      🚀 PUBLISH POST
+    </button>
+
+    <div id="publishStatus" class="status" role="status"></div>
+
+  </section>
+
+  <section>
+    <h2 class="section-title">🌐 World News Feed</h2>
+
+    <div id="loading">পোস্ট লোড হচ্ছে...</div>
+
+    <div id="postsFeed" aria-live="polite"></div>
+  </section>
+
+</main>
+
+<footer>
+  AYNA BOOK ★ Connect • Share • Create
+</footer>
+
+<script type="module">
+
+import {
+  createPost,
+  getAllPosts,
+  updatePost,
+  deletePost
+} from "./posts.js";
+
+import {
+  auth,
+  authReady
+} from "./app.js";
+
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+const $ = (id) => document.getElementById(id);
+
+let currentUser = null;
+let editingPostId = null;
+let loadedPosts = [];
+
+const defaultAvatar =
+  "https://ui-avatars.com/api/?name=AYNA+BOOK&background=102957&color=ffffff";
+
+function safeURL(value) {
+  try {
+    const url = new URL(value);
+    if (url.protocol === "https:" || url.protocol === "http:") {
+      return url.href;
+    }
+  } catch (error) {}
+  return "";
+}
+
+function showStatus(message, isError = false) {
+  $("publishStatus").textContent = message;
+  $("publishStatus").style.color =
+    isError ? "#ff8888" : "#e4bd45";
+}
+
+function formatDate(timestamp) {
+  if (!timestamp) return "তারিখ পাওয়া যায়নি";
+
+  return new Date(timestamp).toLocaleString("bn-BD", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
+function clearComposer() {
+  $("postText").value = "";
+  $("imageURL").value = "";
+  $("videoURL").value = "";
+  editingPostId = null;
+  $("publishBtn").textContent = "🚀 PUBLISH POST";
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function renderPost(post) {
+  const postId = String(post.postId || "");
+  const owner = post.uid === currentUser.uid;
+
+  const photo = safeURL(post.photoURL) || defaultAvatar;
+  const image = safeURL(post.imageURL);
+  const video = safeURL(post.videoURL);
+
+  const card = document.createElement("article");
+  card.className = "feed-post";
+
+  const header = document.createElement("div");
+  header.className = "post-header";
+
+  const avatar = document.createElement("img");
+  avatar.className = "avatar";
+  avatar.alt = "Profile photo";
+  avatar.src = photo;
+
+  const identity = document.createElement("div");
+
+  const name = document.createElement("div");
+  name.className = "post-user";
+  name.textContent = post.fullName || "AYNA BOOK Member";
+
+  const date = document.createElement("div");
+  date.className = "post-date";
+  date.textContent = formatDate(post.createdAt);
+
+  identity.append(name, date);
+  header.append(avatar, identity);
+  card.append(header);
+
+  if (post.text) {
+    const paragraph = document.createElement("div");
+    paragraph.className = "post-text";
+    paragraph.textContent = post.text;
+    card.append(paragraph);
+  }
+
+  if (image) {
+    const img = document.createElement("img");
+    img.className = "post-media";
+    img.src = image;
+    img.alt = "Post image";
+    img.loading = "lazy";
+    card.append(img);
+  }
+
+  if (video) {
+    const player = document.createElement("video");
+    player.className = "post-media";
+    player.src = video;
+    player.controls = true;
+    player.preload = "metadata";
+    player.playsInline = true;
+    card.append(player);
+  }
+
+  if (owner) {
+    const actions = document.createElement("div");
+    actions.className = "post-actions";
+
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "✏️ Edit";
+    editBtn.addEventListener("click", () => {
+      $("postText").value = post.text || "";
+      $("imageURL").value = post.imageURL || "";
+      $("videoURL").value = post.videoURL || "";
+
+      editingPostId = postId;
+      $("publishBtn").textContent = "💾 SAVE CHANGES";
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.textContent = "🗑️ Delete";
+
+    deleteBtn.addEventListener("click", async () => {
+      if (!confirm("আপনি কি এই পোস্টটি মুছে ফেলতে চান?")) return;
+
+      deleteBtn.disabled = true;
+
+      const result = await deletePost(postId);
+
+      if (!result.success) {
+        alert(result.message || "পোস্ট মুছতে সমস্যা হয়েছে।");
+        deleteBtn.disabled = false;
+        return;
+      }
+
+      await loadPosts();
+    });
+
+    actions.append(editBtn, deleteBtn);
+    card.append(actions);
+  }
+
+  return card;
+}
+
+async function loadPosts() {
+  $("loading").textContent = "পোস্ট লোড হচ্ছে...";
+  $("loading").style.display = "block";
+  $("postsFeed").replaceChildren();
+
+  const result = await getAllPosts();
+
+  $("loading").style.display = "none";
+
+  if (!result.success) {
+    $("postsFeed").textContent =
+      "পোস্ট লোড করা যায়নি: " + (result.message || "Unknown error");
+    return;
+  }
+
+  loadedPosts = result.posts || [];
+
+  if (!loadedPosts.length) {
+    const empty = document.createElement("div");
+    empty.className = "panel empty";
+    empty.textContent = "এখনও কোনো পোস্ট নেই। প্রথম পোস্টটি আপনিই করুন!";
+    $("postsFeed").append(empty);
+    return;
+  }
+
+  loadedPosts.forEach((post) => {
+    $("postsFeed").append(renderPost(post));
+  });
+}
+
+$("publishBtn").addEventListener("click", async () => {
+  try {
+    if (!currentUser) {
+      showStatus("পোস্ট করতে আগে লগইন করুন।", true);
+      return;
+    }
+
+    const text = $("postText").value.trim();
+    const imageURL = safeURL($("imageURL").value.trim());
+    const videoURL = safeURL($("videoURL").value.trim());
+
+    if ($("imageURL").value.trim() && !imageURL) {
+      showStatus("সঠিক HTTP/HTTPS ছবি URL দিন।", true);
+      return;
+    }
+
+    if ($("videoURL").value.trim() && !videoURL) {
+      showStatus("সঠিক HTTP/HTTPS ভিডিও URL দিন।", true);
+      return;
+    }
+
+    if (!text && !imageURL && !videoURL) {
+      showStatus("লেখা, ছবি বা ভিডিও যোগ করুন।", true);
+      return;
+    }
+
+    $("publishBtn").disabled = true;
+    showStatus(editingPostId ? "পোস্ট আপডেট হচ্ছে..." : "পোস্ট প্রকাশ হচ্ছে...");
+
+    const postData = {
+      text,
+      imageURL,
+      videoURL,
+      fullName: currentUser.displayName || "AYNA BOOK Member",
+      photoURL: currentUser.photoURL || "",
+      aynaId: ""
+    };
+
+    let result;
+
+    if (editingPostId) {
+      result = await updatePost(editingPostId, postData);
+    } else {
+      result = await createPost(postData);
+    }
+
+    if (!result.success) {
+      showStatus(result.message || "পোস্ট প্রকাশ করা যায়নি।", true);
+      return;
+    }
+
+    clearComposer();
+    showStatus(result.message || "সফল হয়েছে।");
+
+    await loadPosts();
+
+  } catch (error) {
+    showStatus(error.message, true);
+  } finally {
+    $("publishBtn").disabled = false;
+  }
+});
+
+$("homeBtn").addEventListener("click", () => {
+  window.location.href = "./index.html";
+});
+
+$("fullScreenBtn").addEventListener("click", async () => {
+  try {
+    if (!document.fullscreenElement) {
+      await document.documentElement.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  } catch (error) {
+    alert("এই ডিভাইসে Full Screen চালু করা যায়নি।");
+  }
+});
+
+await authReady;
+
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+
+  if (!user) {
+    $("myName").textContent = "Login Required";
+    $("myPhoto").src = defaultAvatar;
+    $("publishBtn").disabled = true;
+    showStatus("পোস্ট করতে লগইন করুন।");
+
+    $("loading").textContent = "লগইন করলে পোস্ট দেখতে পারবেন।";
+    $("postsFeed").replaceChildren();
+    return;
+  }
+
+  $("myName").textContent =
+    user.displayName || user.email || "AYNA BOOK Member";
+
+  $("myPhoto").src = safeURL(user.photoURL) || defaultAvatar;
+
+  $("publishBtn").disabled = false;
+
+  await loadPosts();
+});
+
+</script>
+
+</body>
+</html>
