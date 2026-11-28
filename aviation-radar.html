@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+  <meta name="theme-color" content="#06132e">
+
+  <title>AYNA BOOK — Civil Aviation Radar</title>
+
+  <style>
+    :root{
+      --bg:#050a18;
+      --navy:#071b49;
+      --navy2:#0c2d63;
+      --gold:#ffd700;
+      --gold2:#d4af37;
+      --white:#ffffff;
+      --cyan:#00e5ff;
+      --green:#19e68c;
+      --red:#ff4d5e;
+      --orange:#ff9d2e;
+      --panel:#08152d;
+      --border:#31598e;
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      background:var(--bg);
+      color:#fff;
+      font-family:
+        Arial,
+        "Noto Sans Bengali",
+        "Noto Sans",
+        sans-serif;
+    }
+
+    body{
+      font-size:clamp(20px,4vw,30px);
+      overflow-x:hidden;
+    }
+
+    button,
+    input{
+      font:inherit;
+    }
+
+    button{
+      cursor:pointer;
+    }
+
+    .app{
+      min-height:100vh;
+
+      background:
+        radial-gradient(
+          circle at top right,
+          #12447f 0%,
+          transparent 32%
+        ),
+        linear-gradient(
+          180deg,
+          #071b49 0%,
+          #050a18 48%,
+          #030712 100%
+        );
+    }
+
+    /* ================= HEADER ================= */
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:9999;
+
+      min-height:78px;
+
+      padding:14px 16px;
+
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #123c7a,
+          #071b49 65%,
+          #050a18
+        );
+
+      border-bottom:2px solid var(--gold);
+
+      box-shadow:
+        0 5px 25px rgba(0,0,0,.45);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-icon{
+      width:55px;
+      height:55px;
+      flex:0 0 55px;
+
+      display:grid;
+      place-items:center;
+
+      border:2px solid var(--gold);
+      border-radius:14px;
+
+      background:#06132e;
+
+      font-size:30px;
+    }
+
+    .brand-title{
+      color:#fff;
+
+      font-size:
+        clamp(25px,5vw,38px);
+
+      font-weight:1000;
+
+      line-height:1.05;
+
+      white-space:nowrap;
+    }
+
+    .brand-sub{
+      margin-top:5px;
+
+      color:#b9d5ff;
+
+      font-size:
+        clamp(15px,3vw,20px);
+    }
+
+    .header-actions{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px;
+    }
+
+    .header-btn{
+      border:2px solid var(--gold);
+      border-radius:12px;
+
+      padding:11px 16px;
+
+      color:#fff;
+      background:#06132e;
+
+      font-weight:900;
+
+      font-size:
+        clamp(16px,3vw,22px);
+    }
+
+    /* ================= MAIN ================= */
+
+    .container{
+      width:min(1500px,96%);
+      margin:auto;
+
+      padding:
+        20px 0 50px;
+    }
+
+    .hero{
+      margin-bottom:18px;
+
+      padding:25px;
+
+      border:2px solid var(--gold);
+      border-radius:22px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(18,61,122,.92),
+          rgba(5,10,24,.96)
+        );
+    }
+
+    .hero-title{
+      font-size:
+        clamp(34px,7vw,64px);
+
+      font-weight:1000;
+      line-height:1.05;
+    }
+
+    .hero-title span{
+      color:var(--gold);
+    }
+
+    .hero-text{
+      margin-top:14px;
+
+      color:#dbe9ff;
+
+      font-size:
+        clamp(19px,4vw,28px);
+
+      line-height:1.45;
+    }
+
+    /* ================= STATUS ================= */
+
+    .status{
+      margin:15px 0;
+
+      padding:16px 18px;
+
+      border:2px solid #345b91;
+      border-radius:16px;
+
+      background:#08152d;
+
+      color:#e8f2ff;
+
+      font-size:
+        clamp(18px,4vw,25px);
+
+      font-weight:800;
+    }
+
+    .status.success{
+      border-color:var(--green);
+      color:#aaffd5;
+    }
+
+    .status.warning{
+      border-color:var(--gold);
+      color:#ffe88a;
+    }
+
+    .status.error{
+      border-color:var(--red);
+      color:#ffb3bb;
+    }
+
+    /* ================= CONTROLS ================= */
+
+    .controls{
+      display:grid;
+
+      grid-template-columns:
+        repeat(auto-fit,minmax(210px,1fr));
+
+      gap:12px;
+
+      margin:18px 0;
+    }
+
+    .control-btn{
+      min-height:70px;
+
+      padding:14px 18px;
+
+      border:2px solid var(--gold);
+      border-radius:16px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #0d316b,
+          #07152f
+        );
+
+      color:#fff;
+
+      font-size:
+        clamp(20px,4vw,28px);
+
+      font-weight:900;
+    }
+
+    .control-btn.ai{
+      border-color:var(--cyan);
+
+      background:
+        linear-gradient(
+          135deg,
+          #063e56,
+          #061b32
+        );
+
+      color:#aef7ff;
+    }
+
+    /* ================= SEARCH ================= */
+
+    .search-panel{
+      margin:18px 0;
+
+      padding:20px;
+
+      border:2px solid var(--gold2);
+      border-radius:20px;
+
+      background:#08152d;
+    }
+
+    .search-title{
+      margin-bottom:12px;
+
+      color:var(--gold);
+
+      font-size:
+        clamp(24px,5vw,34px);
+
+      font-weight:1000;
+    }
+
+    .search-row{
+      display:grid;
+
+      grid-template-columns:
+        1fr auto;
+
+      gap:10px;
+    }
+
+    .search-input{
+      width:100%;
+
+      min-height:64px;
+
+      padding:12px 16px;
+
+      border:2px solid #466b9e;
+      border-radius:14px;
+
+      outline:none;
+
+      background:#030b1a;
+      color:#fff;
+
+      font-size:
+        clamp(19px,4vw,26px);
+    }
+
+    .search-input:focus{
+      border-color:var(--gold);
+    }
+
+    .search-btn{
+      min-height:64px;
+
+      padding:12px 20px;
+
+      border:2px solid var(--gold);
+      border-radius:14px;
+
+      background:#102f61;
+
+      color:#fff;
+
+      font-weight:900;
+    }
+
+    /* ================= MAP ================= */
+
+    .map-card{
+      overflow:hidden;
+
+      border:3px solid var(--gold);
+      border-radius:22px;
+
+      background:#020712;
+
+      box-shadow:
+        0 12px 45px rgba(0,0,0,.5);
+    }
+
+    .map-header{
+      padding:16px 18px;
+
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+
+      background:#071b49;
+
+      border-bottom:2px solid var(--gold);
+    }
+
+    .map-title{
+      font-size:
+        clamp(25px,5vw,38px);
+
+      font-weight:1000;
+    }
+
+    .live-badge{
+      padding:8px 14px;
+
+      border:2px solid var(--green);
+      border-radius:999px;
+
+      color:#9dffd0;
+      background:#05251a;
+
+      font-size:
+        clamp(14px,3vw,20px);
+
+      font-weight:900;
+
+      white-space:nowrap;
+    }
+
+    #aviationMap{
+      width:100%;
+
+      height:min(72vh,760px);
+
+      min-height:430px;
+
+      background:#08111f;
+    }
+
+    /* ================= AIRCRAFT LIST ================= */
+
+    .aircraft-section{
+      margin-top:20px;
+
+      padding:20px;
+
+      border:2px solid #31598e;
+      border-radius:20px;
+
+      background:#07142a;
+    }
+
+    .aircraft-title{
+      color:var(--gold);
+
+      font-size:
+        clamp(26px,5vw,38px);
+
+      font-weight:1000;
+    }
+
+    .aircraft-count{
+      margin-top:7px;
+
+      color:#9fb9dc;
+
+      font-size:
+        clamp(16px,3vw,21px);
+    }
+
+    .aircraft-list{
+      display:grid;
+
+      grid-template-columns:
+        repeat(auto-fit,minmax(280px,1fr));
+
+      gap:12px;
+
+      margin-top:16px;
+    }
+
+    .aircraft-card{
+      padding:18px;
+
+      border:2px solid #31598e;
+      border-radius:18px;
+
+      background:#091a34;
+    }
+
+    .aircraft-card h3{
+      margin:
+        0 0 10px;
+
+      color:#fff;
+
+      font-size:
+        clamp(21px,4vw,28px);
+    }
+
+    .aircraft-card p{
+      margin:6px 0;
+
+      color:#bdd0ec;
+
+      font-size:
+        clamp(16px,3vw,21px);
+    }
+
+    .aircraft-empty{
+      padding:20px;
+
+      color:#9eb3d1;
+
+      text-align:center;
+
+      font-size:
+        clamp(18px,4vw,24px);
+    }
+
+    /* ================= INFO ================= */
+
+    .info-grid{
+      display:grid;
+
+      grid-template-columns:
+        repeat(auto-fit,minmax(210px,1fr));
+
+      gap:12px;
+
+      margin-top:20px;
+    }
+
+    .info-box{
+      padding:18px;
+
+      border:2px solid #31598e;
+      border-radius:18px;
+
+      background:#08152d;
+    }
+
+    .info-label{
+      color:#9ebde8;
+
+      font-size:
+        clamp(16px,3vw,21px);
+    }
+
+    .info-value{
+      margin-top:8px;
+
+      color:#fff;
+
+      font-size:
+        clamp(22px,5vw,34px);
+
+      font-weight:1000;
+    }
+
+    /* ================= AI ================= */
+
+    .ai-panel{
+      margin-top:20px;
+
+      padding:22px;
+
+      border:3px solid var(--cyan);
+      border-radius:22px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(0,75,100,.48),
+          rgba(4,15,31,.96)
+        );
+    }
+
+    .ai-title{
+      color:#aef7ff;
+
+      font-size:
+        clamp(27px,5vw,40px);
+
+      font-weight:1000;
+    }
+
+    .ai-status{
+      margin-top:8px;
+
+      color:#91aeca;
+
+      font-size:
+        clamp(16px,3vw,21px);
+    }
+
+    .ai-answer{
+      margin-top:16px;
+
+      min-height:120px;
+
+      padding:18px;
+
+      border:2px solid #1d6881;
+      border-radius:16px;
+
+      background:#04111f;
+
+      color:#eaffff;
+
+      font-size:
+        clamp(19px,4vw,26px);
+
+      line-height:1.5;
+
+      white-space:pre-wrap;
+    }
+
+    /* ================= INSTRUCTIONS ================= */
+
+    .instructions{
+      margin-top:20px;
+
+      padding:22px;
+
+      border:2px solid var(--gold);
+      border-radius:20px;
+
+      background:#08152d;
+    }
+
+    .instructions h2{
+      margin-top:0;
+
+      color:var(--gold);
+
+      font-size:
+        clamp(27px,5vw,38px);
+    }
+
+    .instructions li{
+      margin:13px 0;
+
+      color:#e5efff;
+
+      font-size:
+        clamp(18px,4vw,25px);
+
+      line-height:1.45;
+    }
+
+    /* ================= NOTICE ================= */
+
+    .notice{
+      margin-top:20px;
+
+      padding:18px;
+
+      border:2px solid #9b7b20;
+      border-radius:18px;
+
+      background:#211b08;
+
+      color:#ffeaa0;
+
+      font-size:
+        clamp(17px,3vw,22px);
+
+      line-height:1.5;
+    }
+
+    footer{
+      margin-top:35px;
+
+      padding:25px 15px;
+
+      text-align:center;
+
+      border-top:2px solid #263b62;
+
+      color:#91a9cc;
+
+      font-size:
+        clamp(15px,3vw,20px);
+    }
+
+    @media(max-width:700px){
+
+      .topbar{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .header-actions{
+        width:100%;
+      }
+
+      .header-btn{
+        flex:1;
+      }
+
+      .controls{
+        grid-template-columns:1fr;
+      }
+
+      .control-btn{
+        min-height:78px;
+      }
+
+      .search-row{
+        grid-template-columns:1fr;
+      }
+
+      #aviationMap{
+        height:65vh;
+        min-height:400px;
+      }
+
+    }
+
+  </style>
+
+  <!-- Leaflet -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- ================= HEADER ================= -->
+
+  <header class="topbar">
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        ✈️
+      </div>
+
+      <div>
+
+        <div class="brand-title">
+          AYNA BOOK
+        </div>
+
+        <div class="brand-sub">
+          Civil Aviation Radar • AI Aviation Intelligence
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="header-btn"
+        id="homeBtn">
+
+        🏠 HOME
+
+      </button>
+
+      <button
+        type="button"
+        class="header-btn"
+        id="fullScreenBtn">
+
+        ⛶ FULL SCREEN
+
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <main class="container">
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+      <div class="hero-title">
+        ✈️ <span>Civil Aviation Radar</span>
+      </div>
+
+      <div class="hero-text">
+        বিশ্বজুড়ে আকাশপথের aircraft অবস্থান,
+        flight movement, আপনার GPS location
+        এবং aviation information এক জায়গায়
+        দেখার জন্য AYNA BOOK Aviation Radar।
+      </div>
+
+    </section>
+
+
+    <!-- ================= STATUS ================= -->
+
+    <div
+      id="aviationStatus"
+      class="status warning">
+
+      ⏳ Aviation Radar প্রস্তুত হচ্ছে...
+
+    </div>
+
+
+    <!-- ================= CONTROLS ================= -->
+
+    <section class="controls">
+
+      <button
+        type="button"
+        id="locateBtn"
+        class="control-btn">
+
+        📍 আমার অবস্থান
+
+      </button>
+
+      <button
+        type="button"
+        id="refreshBtn"
+        class="control-btn">
+
+        🔄 Aircraft Refresh
+
+      </button>
+
+      <button
+        type="button"
+        id="bangladeshBtn"
+        class="control-btn">
+
+        🇧🇩 বাংলাদেশ
+
+      </button>
+
+      <button
+        type="button"
+        id="fullScreenMapBtn"
+        class="control-btn">
+
+        🗺️ Map Full Screen
+
+      </button>
+
+      <button
+        type="button"
+        id="aiAnalyzeBtn"
+        class="control-btn ai">
+
+        🤖 AI Aviation Analysis
+
+      </button>
+
+    </section>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <section class="search-panel">
+
+      <div class="search-title">
+        🔎 Aircraft Search
+      </div>
+
+      <div class="search-row">
+
+        <input
+          id="aircraftSearch"
+          class="search-input"
+          type="search"
+          placeholder="Callsign / ICAO24 / Registration লিখুন...">
+
+        <button
+          id="searchBtn"
+          type="button"
+          class="search-btn">
+
+          SEARCH
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= MAP ================= -->
+
+    <section
+      id="aviationCard"
+      class="map-card">
+
+      <div class="map-header">
+
+        <div class="map-title">
+          ✈️ Aircraft Radar Map
+        </div>
+
+        <div
+          id="liveBadge"
+          class="live-badge">
+
+          RADAR READY
+
+        </div>
+
+      </div>
+
+      <div id="aviationMap"></div>
+
+    </section>
+
+
+    <!-- ================= INFO ================= -->
+
+    <section class="info-grid">
+
+      <div class="info-box">
+
+        <div class="info-label">
+          ✈️ Aircraft Found
+        </div>
+
+        <div
+          id="aircraftCount"
+          class="info-value">
+
+          0
+
+        </div>
+
+      </div>
+
+
+      <div class="info-box">
+
+        <div class="info-label">
+          📍 Latitude
+        </div>
+
+        <div
+          id="latitude"
+          class="info-value">
+
+          —
+
+        </div>
+
+      </div>
+
+
+      <div class="info-box">
+
+        <div class="info-label">
+          📍 Longitude
+        </div>
+
+        <div
+          id="longitude"
+          class="info-value">
+
+          —
+
+        </div>
+
+      </div>
+
+
+      <div class="info-box">
+
+        <div class="info-label">
+          🕒 Last Update
+        </div>
+
+        <div
+          id="lastUpdate"
+          class="info-value">
+
+          —
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= AIRCRAFT LIST ================= -->
+
+    <section class="aircraft-section">
+
+      <div class="aircraft-title">
+        ✈️ Aircraft Information
+      </div>
+
+      <div
+        id="aircraftCountText"
+        class="aircraft-count">
+
+        Aircraft data loading...
+
+      </div>
+
+      <div
+        id="aircraftList"
+        class="aircraft-list">
+
+        <div class="aircraft-empty">
+
+          🛰️ Aircraft information এখানে দেখা যাবে।
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= AI ================= -->
+
+    <section class="ai-panel">
+
+      <div class="ai-title">
+        🤖 AYNA AI Aviation Intelligence
+      </div>
+
+      <div
+        id="aiStatus"
+        class="ai-status">
+
+        AI Aviation Analysis প্রস্তুত।
+
+      </div>
+
+      <div
+        id="aiAnswer"
+        class="ai-answer">
+
+        “🤖 AI Aviation Analysis” চাপুন।
+
+        AI বাস্তব aircraft data পাওয়া গেলে
+        aircraft count, position, altitude,
+        speed এবং flight information
+        ব্যাখ্যা করতে পারবে।
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= INSTRUCTIONS ================= -->
+
+    <section class="instructions">
+
+      <h2>
+        📖 কীভাবে ব্যবহার করবেন
+      </h2>
+
+      <ol>
+
+        <li>
+          <strong>📍 আমার অবস্থান</strong>
+          চাপলে আপনার GPS location map-এ
+          দেখানো হবে।
+        </li>
+
+        <li>
+          <strong>🇧🇩 বাংলাদেশ</strong>
+          চাপলে map বাংলাদেশ অঞ্চলে
+          কেন্দ্রীভূত হবে।
+        </li>
+
+        <li>
+          <strong>🔄 Aircraft Refresh</strong>
+          চাপলে aircraft data আবার
+          সংগ্রহের চেষ্টা করবে।
+        </li>
+
+        <li>
+          Aircraft-এর marker-এ চাপলে
+          উপলব্ধ flight information দেখা যাবে।
+        </li>
+
+        <li>
+          Callsign বা ICAO24 দিয়ে
+          aircraft search করা যাবে।
+        </li>
+
+        <li>
+          <strong>🤖 AI Aviation Analysis</strong>
+          ব্যবহার করে উপলব্ধ aircraft
+          information ব্যাখ্যা করা যাবে।
+        </li>
+
+      </ol>
+
+    </section>
+
+
+    <!-- ================= NOTICE ================= -->
+
+    <section class="notice">
+
+      ⚠️ <strong>গুরুত্বপূর্ণ:</strong>
+
+      Aircraft tracking coverage সব জায়গায়
+      একই নয়। ADS-B/Mode-S receiver coverage,
+      data provider এবং Internet availability-এর
+      ওপর aircraft information নির্ভর করে।
+
+      এই radar কোনো aircraft navigation,
+      collision avoidance বা official
+      air-traffic-control system নয়।
+
+    </section>
+
+
+    <footer>
+
+      AYNA BOOK ★ Civil Aviation Radar
+
+      <br>
+
+      Aircraft Tracking • GPS • Aviation Data • AI-ready
+
+    </footer>
+
+  </main>
+
+</div>
+
+
+<!-- Leaflet -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<!-- AYNA BOOK Aviation Radar -->
+<script
+  src="./aviation-radar.js">
+</script>
+
+</body>
+</html>
