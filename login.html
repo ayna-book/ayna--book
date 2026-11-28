@@ -1,164 +1,1011 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#08142d">
-<title>AYNA BOOK — Login</title>
+  <meta charset="UTF-8">
 
-<style>
-*{box-sizing:border-box}
-body{
- margin:0;background:#050b19;color:#fff;
- font-family:Arial,sans-serif;font-size:19px;
-}
-header{
- background:linear-gradient(120deg,#173b7a,#07142e);
- border-bottom:2px solid #e4bd45;
- text-align:center;padding:23px 12px;
-}
-.logo{font-size:32px;color:#e4bd45;font-weight:900}
-header h1{font-size:27px;margin:12px 0 5px}
-header p{margin:0;color:#d7e1f1}
-main{max-width:560px;margin:auto;padding:18px 13px 35px}
-.panel{
- background:#101d35;border:1px solid #354765;
- border-radius:18px;padding:20px;margin-bottom:18px;
-}
-h2{color:#e4bd45;font-size:23px;margin:0 0 17px}
-label{display:block;font-weight:bold;margin:14px 0 7px}
-input{
- width:100%;padding:16px;border-radius:11px;
- border:1px solid #526784;background:#071226;
- color:white;font-size:18px;min-height:56px;
-}
-input:focus{outline:2px solid #e4bd45}
-button{
- width:100%;min-height:58px;padding:13px;
- margin-top:13px;border-radius:12px;
- border:1px solid #e4bd45;background:#173b7a;
- color:white;font-size:19px;font-weight:bold;
- cursor:pointer;
-}
-.primary{background:linear-gradient(120deg,#e4bd45,#a77a17);color:#101010}
-.secondary{background:#101d35}
-.status{margin-top:13px;white-space:pre-wrap;font-size:16px;color:#e4bd45}
-.links{text-align:center;line-height:2;margin-top:12px}
-a{color:#f1cc58;text-decoration:none;font-weight:bold}
-.helper{color:#c2cee0;line-height:1.6;font-size:16px}
-.assistant{
- background:#102957;border:1px solid #e4bd45;
- border-radius:15px;padding:16px;margin-top:12px;
-}
-footer{text-align:center;color:#bdc8dc;padding:20px;font-size:14px}
-.password-row{display:flex;gap:8px;align-items:center}
-.password-row input{flex:1;min-width:0}
-.password-row button{width:auto;min-width:75px;margin:8px 0;font-size:15px}
-</style>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#071126">
+
+  <title>AYNA BOOK ★ — Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #050912;
+      color: #ffffff;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =====================================================
+       PAGE
+    ===================================================== */
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      padding:
+        max(18px, env(safe-area-inset-top))
+        14px
+        max(24px, env(safe-area-inset-bottom));
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(31, 66, 130, 0.35),
+          transparent 42%
+        ),
+        linear-gradient(
+          180deg,
+          #071126 0%,
+          #050a18 50%,
+          #03060d 100%
+        );
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    .brand {
+      text-align: center;
+      padding: 12px 8px 22px;
+    }
+
+    .brand-title {
+      margin: 0;
+      color: #ffd84a;
+      font-size: clamp(30px, 8vw, 52px);
+      font-weight: 900;
+      letter-spacing: 1px;
+      line-height: 1.1;
+      text-shadow:
+        0 0 14px rgba(255, 216, 74, 0.18);
+    }
+
+    .brand-subtitle {
+      margin-top: 9px;
+      color: #ffffff;
+      font-size: clamp(19px, 5vw, 29px);
+      font-weight: 700;
+    }
+
+    /* =====================================================
+       MAIN CARD
+    ===================================================== */
+
+    .card {
+      width: 100%;
+      border: 1px solid #d4af37;
+      border-radius: 22px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(13, 24, 48, 0.98),
+          rgba(5, 10, 24, 0.98)
+        );
+      box-shadow:
+        0 0 25px rgba(212, 175, 55, 0.10),
+        0 15px 45px rgba(0, 0, 0, 0.45);
+      padding: 22px 18px;
+    }
+
+    .section-title {
+      margin: 0;
+      text-align: center;
+      color: #ffffff;
+      font-size: clamp(25px, 6vw, 38px);
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .section-description {
+      margin: 10px 0 22px;
+      text-align: center;
+      color: #d7deed;
+      font-size: clamp(17px, 4.5vw, 22px);
+      line-height: 1.55;
+    }
+
+    .firebase-label {
+      display: block;
+      margin-bottom: 15px;
+      padding: 13px 14px;
+      border: 1px solid rgba(212, 175, 55, 0.55);
+      border-radius: 13px;
+      background: rgba(212, 175, 55, 0.07);
+      color: #ffd84a;
+      text-align: center;
+      font-size: clamp(17px, 4.4vw, 22px);
+      font-weight: 800;
+    }
+
+    /* =====================================================
+       FORM
+    ===================================================== */
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 9px;
+      color: #ffffff;
+      font-size: clamp(18px, 4.8vw, 23px);
+      font-weight: 800;
+    }
+
+    input {
+      width: 100%;
+      min-height: 58px;
+      padding: 14px 16px;
+      border: 1px solid #52617e;
+      border-radius: 14px;
+      outline: none;
+      background: #080f20;
+      color: #ffffff;
+      font-size: clamp(17px, 4.7vw, 21px);
+    }
+
+    input::placeholder {
+      color: #8d99ad;
+      opacity: 1;
+    }
+
+    input:focus {
+      border-color: #ffd84a;
+      box-shadow:
+        0 0 0 3px rgba(255, 216, 74, 0.12);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 90px;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 7px;
+      top: 7px;
+      bottom: 7px;
+      min-width: 76px;
+      border: 1px solid #d4af37;
+      border-radius: 10px;
+      background: #101b34;
+      color: #ffd84a;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .show-password:active {
+      transform: scale(0.97);
+    }
+
+    /* =====================================================
+       BUTTON
+    ===================================================== */
+
+    .primary-button {
+      width: 100%;
+      min-height: 62px;
+      margin-top: 4px;
+      border: 1px solid #ffd84a;
+      border-radius: 15px;
+      background:
+        linear-gradient(
+          180deg,
+          #d4af37,
+          #a78317
+        );
+      color: #050912;
+      font-size: clamp(21px, 5.5vw, 27px);
+      font-weight: 900;
+      box-shadow:
+        0 7px 20px rgba(212, 175, 55, 0.16);
+    }
+
+    .primary-button:active {
+      transform: translateY(1px);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    /* =====================================================
+       LINKS
+    ===================================================== */
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .action-link {
+      width: 100%;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #394a68;
+      border-radius: 13px;
+      background: #0a1328;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: clamp(17px, 4.5vw, 21px);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .action-link.gold {
+      border-color: #d4af37;
+      color: #ffd84a;
+    }
+
+    .action-link:active {
+      transform: scale(0.985);
+    }
+
+    /* =====================================================
+       MESSAGE
+    ===================================================== */
+
+    .message {
+      display: none;
+      margin: 18px 0 0;
+      padding: 14px;
+      border-radius: 13px;
+      border: 1px solid #59677f;
+      background: #0a1222;
+      color: #ffffff;
+      font-size: 17px;
+      line-height: 1.5;
+      text-align: center;
+      white-space: pre-line;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      border-color: #ff6666;
+      color: #ffd2d2;
+      background: rgba(150, 20, 20, 0.16);
+    }
+
+    .message.success {
+      border-color: #57d68d;
+      color: #c8ffe0;
+      background: rgba(20, 130, 70, 0.14);
+    }
+
+    .message.info {
+      border-color: #d4af37;
+      color: #ffe99a;
+    }
+
+    /* =====================================================
+       PASSWORD RESET
+    ===================================================== */
+
+    .reset-box {
+      margin-top: 25px;
+      padding-top: 22px;
+      border-top: 1px solid #293752;
+    }
+
+    .reset-title {
+      margin: 0 0 8px;
+      color: #ffd84a;
+      font-size: clamp(21px, 5.2vw, 27px);
+      font-weight: 900;
+    }
+
+    .reset-description {
+      margin: 0 0 17px;
+      color: #c5cede;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .secondary-button {
+      width: 100%;
+      min-height: 58px;
+      border: 1px solid #d4af37;
+      border-radius: 14px;
+      background: #101a30;
+      color: #ffd84a;
+      font-size: clamp(18px, 4.8vw, 22px);
+      font-weight: 900;
+    }
+
+    .secondary-button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    /* =====================================================
+       AI / HELP
+    ===================================================== */
+
+    .help-box {
+      margin-top: 25px;
+      padding-top: 22px;
+      border-top: 1px solid #293752;
+    }
+
+    .help-title {
+      margin: 0 0 10px;
+      color: #ffffff;
+      font-size: clamp(21px, 5vw, 27px);
+      font-weight: 900;
+    }
+
+    .help-text {
+      margin: 0;
+      color: #c5cede;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .ai-box {
+      margin-top: 16px;
+      padding: 17px;
+      border: 1px solid #31598b;
+      border-radius: 15px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(20, 51, 100, 0.45),
+          rgba(6, 14, 31, 0.9)
+        );
+    }
+
+    .ai-title {
+      color: #70d7ff;
+      font-size: clamp(19px, 4.8vw, 24px);
+      font-weight: 900;
+      margin-bottom: 9px;
+    }
+
+    .ai-text {
+      color: #ffffff;
+      font-size: 17px;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    .ai-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .ai-button {
+      flex: 1;
+      min-height: 52px;
+      border: 1px solid #52617e;
+      border-radius: 12px;
+      background: #0a1429;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    /* =====================================================
+       REGISTER
+    ===================================================== */
+
+    .register-box {
+      margin-top: 25px;
+      padding: 20px 0 0;
+      border-top: 1px solid #293752;
+      text-align: center;
+    }
+
+    .register-title {
+      margin: 0 0 8px;
+      color: #ffd84a;
+      font-size: clamp(21px, 5vw, 27px);
+      font-weight: 900;
+    }
+
+    .register-description {
+      margin: 0 0 16px;
+      color: #c5cede;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .footer {
+      padding: 22px 10px 5px;
+      text-align: center;
+      color: #9da8bb;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .footer strong {
+      color: #ffd84a;
+    }
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    .loading-dots {
+      display: inline-flex;
+      gap: 5px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 7px;
+    }
+
+    .loading-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: dot 1s infinite ease-in-out;
+    }
+
+    .loading-dots span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .loading-dots span:nth-child(3) {
+      animation-delay: 0.30s;
+    }
+
+    @keyframes dot {
+      0%,
+      80%,
+      100% {
+        opacity: 0.25;
+        transform: scale(0.8);
+      }
+
+      40% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* =====================================================
+       SMALL SCREEN
+    ===================================================== */
+
+    @media (max-width: 380px) {
+      .page {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .card {
+        padding: 18px 13px;
+        border-radius: 18px;
+      }
+
+      .brand {
+        padding-bottom: 17px;
+      }
+
+      input {
+        min-height: 55px;
+      }
+
+      .primary-button {
+        min-height: 58px;
+      }
+    }
+
+    /* =====================================================
+       TABLET / DESKTOP
+    ===================================================== */
+
+    @media (min-width: 700px) {
+      .page {
+        padding-top: 35px;
+        padding-bottom: 40px;
+      }
+
+      .card {
+        padding: 30px;
+      }
+
+      .links {
+        flex-direction: row;
+      }
+
+      .links .action-link {
+        flex: 1;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
- <div class="logo">AYNA BOOK ★</div>
- <h1>অ্যাকাউন্ট লগইন</h1>
- <p>আপনার অ্যাকাউন্টে লগইন করুন</p>
-</header>
+  <main class="page">
 
-<main>
+    <div class="container">
 
-<section class="panel">
- <h2>🔐 Firebase Authentication Login</h2>
+      <!-- =================================================
+           BRAND
+      ================================================== -->
 
- <form id="loginForm">
+      <header class="brand">
 
-  <label for="email">আপনার জিমেইল ঠিকানা</label>
-  <input
-   type="email"
-   id="email"
-   placeholder="আপনার Gmail লিখুন"
-   autocomplete="username"
-   required
-  >
+        <h1 class="brand-title">
+          AYNA BOOK ★
+        </h1>
 
-  <label for="password">আপনার লগইন পাসওয়ার্ড</label>
+        <div class="brand-subtitle">
+          অ্যাকাউন্ট লগইন
+        </div>
 
-  <div class="password-row">
-   <input
-    type="password"
-    id="password"
-    placeholder="লগইন পাসওয়ার্ড লিখুন"
-    autocomplete="current-password"
-    required
-   >
-   <button type="button" id="togglePassword" class="secondary">
-    দেখুন
-   </button>
-  </div>
+      </header>
 
-  <button type="submit" id="loginBtn" class="primary">
-   লগইন
-  </button>
 
-  <div id="loginStatus" class="status" role="status"></div>
- </form>
+      <!-- =================================================
+           LOGIN CARD
+      ================================================== -->
 
- <div class="links">
-  <a href="./forgot-password.html">পাসওয়ার্ড ভুলে গেছেন?</a><br>
-  এখনও রেজিস্ট্রেশন করেননি?
-  <a href="./register.html">রেজিস্ট্রেশন</a>
- </div>
-</section>
+      <section class="card">
 
-<section class="panel">
- <h2>🔎 অ্যাকাউন্ট লুকআপ</h2>
- <p class="helper">
-  আপনার অ্যাকাউন্টের পাসওয়ার্ড ভুলে গেলে নিরাপদ Password Reset ব্যবহার করুন।
- </p>
+        <h2 class="section-title">
+          আপনার অ্যাকাউন্টে লগইন করুন
+        </h2>
 
- <label for="lookupEmail">আপনার ইমেইল ঠিকানা</label>
- <input
-  type="email"
-  id="lookupEmail"
-  placeholder="ইমেইল ঠিকানা লিখুন"
- >
+        <p class="section-description">
+          আপনার AYNA BOOK অ্যাকাউন্টে নিরাপদে প্রবেশ করুন।
+        </p>
 
- <button id="lookupBtn" class="secondary">
-  পাসওয়ার্ড রিসেট লিংক পাঠান
- </button>
+        <div class="firebase-label">
+          🔐 Firebase Authentication Login
+        </div>
 
- <div id="lookupStatus" class="status" role="status"></div>
-</section>
 
-<section class="panel">
- <h2>💬 সহায়ক বার্তা</h2>
- <p class="helper">
-  প্রিয় গ্রাহক, আমরা সর্বদা চেষ্টা করি আপনাদের সেবা দিতে।
- </p>
+        <!-- =================================================
+             LOGIN FORM
+        ================================================== -->
 
- <div class="assistant">
-  <h2>🤖 AYNA লগইন AI সহকারী</h2>
-  <p id="assistantMessage" class="helper">
-   প্রিয় স্যার, আপনার জন্য একটি বার্তা আছে... আপনি কি শুনতে চান?
-  </p>
-  <button id="speakBtn" class="secondary">🔊 শুনুন</button>
-  <button id="moreBtn" class="secondary">আরো দেখুন</button>
- </div>
-</section>
+        <form id="loginForm" novalidate>
 
-<section class="panel">
- <h2>🌍 AYNA সদস্য অ্যাকাউন্ট রেজিস্ট্রেশন</h2>
- <p class="helper">নতুন সদস্য হিসেবে AYNA BOOK-এ যোগ দিন।</p>
- <a href="./register.html">
-  <button class="primary" type="button">নতুন অ্যাকাউন্ট তৈরি করুন</button>
- </a>
-</section>
+          <div class="form-group">
 
-</main>
+            <label for="loginEmail">
+              আপনার জিমেইল ঠিকানা
+            </label>
 
-<footer>AYNA BOOK ★ Connect • Share • Create</footer>
+            <input
+              id="loginEmail"
+              name="email"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              placeholder="আপনার Gmail লিখুন"
+              required
+            >
 
-<script type="module" src="./login.js"></script>
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="loginPassword">
+              আপনার লগইন পাসওয়ার্ড
+            </label>
+
+            <div class="password-wrap">
+
+              <input
+                id="loginPassword"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="লগইন পাসওয়ার্ড লিখুন"
+                required
+              >
+
+              <button
+                type="button"
+                id="toggleLoginPassword"
+                class="show-password"
+                aria-label="পাসওয়ার্ড দেখুন"
+              >
+                দেখুন
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="submit"
+            id="loginButton"
+            class="primary-button"
+          >
+            লগইন
+          </button>
+
+        </form>
+
+
+        <!-- LOGIN MESSAGE -->
+
+        <div
+          id="loginMessage"
+          class="message"
+          role="alert"
+          aria-live="polite"
+        ></div>
+
+
+        <!-- =================================================
+             LINKS
+        ================================================== -->
+
+        <div class="links">
+
+          <a
+            href="#reset"
+            id="forgotPasswordLink"
+            class="action-link"
+          >
+            পাসওয়ার্ড ভুলে গেছেন?
+          </a>
+
+          <a
+            href="./register.html"
+            id="registerLink"
+            class="action-link gold"
+          >
+            এখনও রেজিস্ট্রেশন করেননি? রেজিস্ট্রেশন
+          </a>
+
+        </div>
+
+
+        <!-- =================================================
+             PASSWORD RESET
+        ================================================== -->
+
+        <section
+          id="reset"
+          class="reset-box"
+        >
+
+          <h3 class="reset-title">
+            🔍 অ্যাকাউন্ট লুকআপ
+          </h3>
+
+          <p class="reset-description">
+            আপনার অ্যাকাউন্টের পাসওয়ার্ড ভুলে গেলে
+            নিরাপদ Password Reset ব্যবহার করুন।
+          </p>
+
+          <div class="form-group">
+
+            <label for="resetEmail">
+              আপনার ইমেইল ঠিকানা
+            </label>
+
+            <input
+              id="resetEmail"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              placeholder="ইমেইল ঠিকানা লিখুন"
+            >
+
+          </div>
+
+          <button
+            type="button"
+            id="resetPasswordButton"
+            class="secondary-button"
+          >
+            পাসওয়ার্ড রিসেট লিংক পাঠান
+          </button>
+
+          <div
+            id="resetMessage"
+            class="message"
+            role="alert"
+            aria-live="polite"
+          ></div>
+
+        </section>
+
+
+        <!-- =================================================
+             HELP
+        ================================================== -->
+
+        <section class="help-box">
+
+          <h3 class="help-title">
+            💬 সহায়ক বার্তা
+          </h3>
+
+          <p class="help-text">
+            প্রিয় গ্রাহক, আমরা সর্বদা চেষ্টা করি
+            আপনাদের সেবা দিতে।
+          </p>
+
+
+          <div class="ai-box">
+
+            <div class="ai-title">
+              🤖 AYNA লগইন AI সহকারী
+            </div>
+
+            <div
+              id="aiMessage"
+              class="ai-text"
+            >
+              প্রিয় স্যার, আপনার জন্য একটি বার্তা আছে...
+              আপনি কি শুনতে চান?
+            </div>
+
+            <div class="ai-buttons">
+
+              <button
+                type="button"
+                id="aiListenButton"
+                class="ai-button"
+              >
+                🔊 শুনুন
+              </button>
+
+              <button
+                type="button"
+                id="aiMoreButton"
+                class="ai-button"
+              >
+                আরো দেখুন
+              </button>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             REGISTER
+        ================================================== -->
+
+        <section class="register-box">
+
+          <h3 class="register-title">
+            🌍 AYNA সদস্য অ্যাকাউন্ট রেজিস্ট্রেশন
+          </h3>
+
+          <p class="register-description">
+            নতুন সদস্য হিসেবে AYNA BOOK-এ যোগ দিন।
+          </p>
+
+          <a
+            href="./register.html"
+            id="createAccountButton"
+            class="action-link gold"
+          >
+            নতুন অ্যাকাউন্ট তৈরি করুন
+          </a>
+
+        </section>
+
+      </section>
+
+
+      <!-- =================================================
+           FOOTER
+      ================================================== -->
+
+      <footer class="footer">
+        <strong>AYNA BOOK ★</strong>
+        <br>
+        Connect • Share • Create
+      </footer>
+
+    </div>
+
+  </main>
+
+
+  <!-- =====================================================
+       LOGIN JAVASCRIPT
+       IMPORTANT: type="module"
+  ====================================================== -->
+
+  <script type="module" src="./login.js"></script>
+
+
+  <!-- =====================================================
+       SMALL UI FALLBACK
+       Password + AI buttons work even if login.js changes.
+  ====================================================== -->
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      /* Password show/hide */
+
+      const password =
+        document.getElementById("loginPassword");
+
+      const toggle =
+        document.getElementById("toggleLoginPassword");
+
+      if (password && toggle) {
+
+        toggle.addEventListener("click", () => {
+
+          const isPassword =
+            password.type === "password";
+
+          password.type =
+            isPassword ? "text" : "password";
+
+          toggle.textContent =
+            isPassword ? "লুকান" : "দেখুন";
+
+          toggle.setAttribute(
+            "aria-label",
+            isPassword
+              ? "পাসওয়ার্ড লুকান"
+              : "পাসওয়ার্ড দেখুন"
+          );
+
+        });
+
+      }
+
+
+      /* Forgot password scroll */
+
+      const forgot =
+        document.getElementById("forgotPasswordLink");
+
+      const reset =
+        document.getElementById("reset");
+
+      if (forgot && reset) {
+
+        forgot.addEventListener("click", () => {
+
+          setTimeout(() => {
+
+            reset.scrollIntoView({
+              behavior: "smooth",
+              block: "start"
+            });
+
+            const input =
+              document.getElementById("resetEmail");
+
+            if (input) {
+              setTimeout(() => input.focus(), 350);
+            }
+
+          }, 50);
+
+        });
+
+      }
+
+
+      /* AI speech */
+
+      const listen =
+        document.getElementById("aiListenButton");
+
+      const aiMessage =
+        document.getElementById("aiMessage");
+
+      if (listen && aiMessage) {
+
+        listen.addEventListener("click", () => {
+
+          if (!("speechSynthesis" in window)) {
+
+            aiMessage.textContent =
+              "আপনার ডিভাইসে Voice Assistant সমর্থিত নয়।";
+
+            return;
+          }
+
+          window.speechSynthesis.cancel();
+
+          const text =
+            aiMessage.textContent.trim();
+
+          const utterance =
+            new SpeechSynthesisUtterance(text);
+
+          utterance.lang = "bn-BD";
+          utterance.rate = 0.9;
+          utterance.pitch = 1;
+
+          window.speechSynthesis.speak(utterance);
+
+        });
+
+      }
+
+
+      /* More AI */
+
+      const more =
+        document.getElementById("aiMoreButton");
+
+      if (more && aiMessage) {
+
+        more.addEventListener("click", () => {
+
+          aiMessage.textContent =
+            "আপনার Gmail এবং পাসওয়ার্ড সঠিকভাবে দিন। " +
+            "পাসওয়ার্ড ভুলে গেলে নিচের Password Reset ব্যবহার করুন। " +
+            "নতুন সদস্য হলে রেজিস্ট্রেশন করুন।";
+
+        });
+
+      }
+
+    });
+  </script>
+
 </body>
 </html>
