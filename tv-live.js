@@ -1,430 +1,316 @@
-(() => {
-  // বাংলাদেশ ও বিশ্বের লাইভ টিভি প্রেসেট ও ফ্রিকোয়েন্সি স্লট
-  const PRESET_CHANNELS = [
-    // --- বাংলাদেশ ---
-    { name: "BTV National / BD Channel 01", country: "BD", category: "NEWS", freq: "CH-01 (BD)", url: "" },
-    { name: "Bangladesh Parliament TV / BD Channel 02", country: "BD", category: "NEWS", freq: "CH-02 (BD)", url: "" },
-    { name: "Somoy TV Live Relay / BD Channel 03", country: "BD", category: "NEWS", freq: "CH-03 (BD)", url: "" },
-    { name: "Jamuna TV Live Relay / BD Channel 04", country: "BD", category: "NEWS", freq: "CH-04 (BD)", url: "" },
-    { name: "Channel i Live Relay / BD Channel 05", country: "BD", category: "NEWS", freq: "CH-05 (BD)", url: "" },
-    { name: "ATN Bangla Live Relay / BD Channel 06", country: "BD", category: "NEWS", freq: "CH-06 (BD)", url: "" },
-    { name: "NTV Bangladesh Live Relay / BD Channel 07", country: "BD", category: "NEWS", freq: "CH-07 (BD)", url: "" },
-    { name: "Independent TV Live Relay / BD Channel 08", country: "BD", category: "NEWS", freq: "CH-08 (BD)", url: "" },
-
-    // --- বিশ্ব চ্যানেল ---
-    { name: "DW English Live (HLS)", country: "DE", category: "NEWS", freq: "CH-101 (HD)", url: "https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8" },
-    { name: "NASA TV Public (Live HLS)", country: "US", category: "SPORTS", freq: "CH-102 (HD)", url: "https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8" },
-    { name: "France 24 English Live (HLS)", country: "FR", category: "NEWS", freq: "CH-103 (HD)", url: "https://stream.france24.com/hls/live/2037279/F24_EN_LO_HLS/master.m3u8" },
-    { name: "Al Jazeera English Live (HLS)", country: "WORLD", category: "NEWS", freq: "CH-104 (HD)", url: "https://live-hls-web-aje.getaj.net/AJE/index.m3u8" },
-    { name: "NHK World Japan Live (HLS)", country: "WORLD", category: "NEWS", freq: "CH-105 (HD)", url: "https://nhkwlive-ojp.akamaized.net/hls/live/2003459/nhkwlive-ojp-en/index.m3u8" }
-  ];
-
-  const PLAYLIST_URLS = {
-    BD: "https://iptv-org.github.io/iptv/countries/bd.m3u",
-    IN: "https://iptv-org.github.io/iptv/countries/in.m3u",
-    GB: "https://iptv-org.github.io/iptv/countries/gb.m3u",
-    US: "https://iptv-org.github.io/iptv/countries/us.m3u",
-    SA: "https://iptv-org.github.io/iptv/countries/sa.m3u",
-    AE: "https://iptv-org.github.io/iptv/countries/ae.m3u",
-    DE: "https://iptv-org.github.io/iptv/countries/de.m3u",
-    FR: "https://iptv-org.github.io/iptv/countries/fr.m3u",
-    NEWS: "https://iptv-org.github.io/iptv/categories/news.m3u",
-    SPORTS: "https://iptv-org.github.io/iptv/categories/sports.m3u",
-    ALL: "https://iptv-org.github.io/iptv/index.m3u"
-  };
-
-  const video = document.getElementById("tvVideo");
-  const playerBox = document.getElementById("playerBox");
-  const selectEl = document.getElementById("channelSelect");
-  const searchEl = document.getElementById("channelSearch");
-  const countryEl = document.getElementById("countryFilter");
-  const qualityModeEl = document.getElementById("qualityMode");
-  const customUrlEl = document.getElementById("customStreamUrl");
-  const freqSlider = document.getElementById("freqSlider");
-  const freqReadout = document.getElementById("freqReadout");
-  const playBtn = document.getElementById("playBtn");
-  const stopBtn = document.getElementById("stopBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const fullscreenBtn = document.getElementById("fullscreenBtn");
-  const reloadBtn = document.getElementById("reloadBtn");
-  const statusEl = document.getElementById("tvStatus");
-  const streamTagEl = document.getElementById("streamTag");
-  const scopeButtons = document.querySelectorAll(".filter-btn");
-
-  let activeScope = "ALL";
-  let combinedChannels = [...PRESET_CHANNELS];
-  let visibleChannels = [];
-  let hlsInstance = null;
-  let errorRetryTimer = null;
-
-  function setStatus(msg) {
-    if (statusEl) statusEl.textContent = msg;
+const FALLBACK_CHANNELS = [
+  {
+    id: "bd-01",
+    name: "BTV National",
+    country: "BD",
+    scope: ["BD", "ALL"],
+    category: "NEWS",
+    freq: "CH-01",
+    url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+  },
+  {
+    id: "intl-02",
+    name: "DW English Live",
+    country: "DE",
+    scope: ["WORLD", "NEWS", "ALL"],
+    category: "NEWS",
+    freq: "CH-02",
+    url: "https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8"
+  },
+  {
+    id: "intl-03",
+    name: "France 24 English",
+    country: "FR",
+    scope: ["WORLD", "NEWS", "ALL"],
+    category: "NEWS",
+    freq: "CH-03",
+    url: "https://stream.france24.com/hls/live/2037279/F24_EN_HI_HLS/master.m3u8"
+  },
+  {
+    id: "intl-04",
+    name: "Al Jazeera English",
+    country: "SA",
+    scope: ["WORLD", "NEWS", "ALL"],
+    category: "NEWS",
+    freq: "CH-04",
+    url: "https://live-hls-web-aje.getaj.net/AJE/index.m3u8"
+  },
+  {
+    id: "intl-05",
+    name: "Sports & Live Demo",
+    country: "US",
+    scope: ["WORLD", "SPORTS", "ALL"],
+    category: "SPORTS",
+    freq: "CH-05",
+    url: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
   }
+];
 
-  function destroyHls() {
-    clearTimeout(errorRetryTimer);
-    if (hlsInstance) {
-      hlsInstance.destroy();
-      hlsInstance = null;
-    }
-  }
+const videoEl = document.getElementById("tvVideo");
+const channelSelect = document.getElementById("channelSelect");
+const countryFilter = document.getElementById("countryFilter");
+const channelSearch = document.getElementById("channelSearch");
+const qualityMode = document.getElementById("qualityMode");
+const customStreamUrl = document.getElementById("customStreamUrl");
+const freqSlider = document.getElementById("freqSlider");
+const freqReadout = document.getElementById("freqReadout");
+const streamTag = document.getElementById("streamTag");
+const tvStatus = document.getElementById("tvStatus");
 
-  function detectCategory(name = "", group = "") {
-    const text = `${name} ${group}`.toUpperCase();
-    if (/SPORT|FOOTBALL|CRICKET|SOCCER|ESPN|BEIN/.test(text)) return "SPORTS";
-    return "NEWS";
-  }
+const playBtn = document.getElementById("playBtn");
+const stopBtn = document.getElementById("stopBtn");
+const nextBtn = document.getElementById("nextBtn");
+const fullscreenBtn = document.getElementById("fullscreenBtn");
+const reloadBtn = document.getElementById("reloadBtn");
+const filterBtns = document.querySelectorAll(".filter-btn");
 
-  function parseM3U(m3uText, fallbackCountry = "WORLD", fallbackCategory = "NEWS", limit = 180) {
-    const lines = m3uText.split(/\r?\n/);
-    const items = [];
-    let currentTitle = "";
-    let currentGroup = "";
+let allChannels = [...FALLBACK_CHANNELS];
+let filteredChannels = [...FALLBACK_CHANNELS];
+let currentScope = "ALL";
+let hlsInstance = null;
 
-    for (const rawLine of lines) {
-      const line = rawLine.trim();
-      if (!line) continue;
+function setStatus(msg, tagText) {
+  if (tvStatus) tvStatus.textContent = msg;
+  if (streamTag && tagText) streamTag.textContent = tagText;
+}
 
-      if (line.startsWith("#EXTINF:")) {
-        const groupMatch = line.match(/group-title="([^"]*)"/i);
-        currentGroup = groupMatch ? groupMatch[1] : fallbackCategory;
-        const commaIdx = line.lastIndexOf(",");
-        currentTitle = commaIdx !== -1 ? line.slice(commaIdx + 1).trim() : "Live TV Channel";
-      } else if (!line.startsWith("#") && /^https?:\/\//i.test(line)) {
-        const cat = detectCategory(currentTitle, currentGroup || fallbackCategory);
-        items.push({
-          name: currentTitle || "Live TV Channel",
-          country: fallbackCountry,
-          category: cat,
-          freq: `CH-${String(items.length + 1).padStart(2, "0")}`,
-          url: line
-        });
-        currentTitle = "";
-        currentGroup = "";
-        if (items.length >= limit) break;
-      }
-    }
+function parseM3U(m3uText) {
+  const lines = m3uText.split(/\r?\n/);
+  const parsed = [];
+  let pendingMeta = null;
 
-    return items;
-  }
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
 
-  async function fetchPlaylistChannels() {
-    const targets = [];
+    if (line.startsWith("#EXTINF:")) {
+      const titleMatch = line.match(/,(.*)$/);
+      const countryMatch = line.match(/tvg-country="([^"]*)"/i);
+      const groupMatch = line.match(/group-title="([^"]*)"/i);
+      const name = titleMatch ? titleMatch[1].trim() : `Channel ${parsed.length + 1}`;
+      const country = countryMatch && countryMatch[1] ? countryMatch[1].toUpperCase() : "WORLD";
+      const group = groupMatch ? groupMatch[1].toUpperCase() : "";
 
-    if (activeScope === "BD") {
-      targets.push({ url: PLAYLIST_URLS.BD, country: "BD", category: "NEWS", limit: 150 });
-    } else if (activeScope === "NEWS") {
-      targets.push({ url: PLAYLIST_URLS.NEWS, country: "WORLD", category: "NEWS", limit: 180 });
-    } else if (activeScope === "SPORTS") {
-      targets.push({ url: PLAYLIST_URLS.SPORTS, country: "WORLD", category: "SPORTS", limit: 180 });
-    } else if (countryEl.value) {
-      const code = countryEl.value;
-      targets.push({ url: PLAYLIST_URLS[code] || PLAYLIST_URLS.ALL, country: code, category: "NEWS", limit: 180 });
-    } else {
-      targets.push({ url: PLAYLIST_URLS.BD, country: "BD", category: "NEWS", limit: 120 });
-      targets.push({ url: PLAYLIST_URLS.ALL, country: "WORLD", category: "NEWS", limit: 220 });
-    }
+      let category = "GENERAL";
+      if (group.includes("NEWS")) category = "NEWS";
+      else if (group.includes("SPORT")) category = "SPORTS";
 
-    const gathered = [];
+      const scopes = ["ALL"];
+      if (country === "BD") scopes.push("BD");
+      else scopes.push("WORLD");
+      if (category === "NEWS") scopes.push("NEWS");
+      if (category === "SPORTS") scopes.push("SPORTS");
 
-    for (const t of targets) {
-      if (!t.url) continue;
-      try {
-        const res = await fetch(t.url);
-        if (!res.ok) continue;
-        const txt = await res.text();
-        const parsed = parseM3U(txt, t.country, t.category, t.limit);
-        gathered.push(...parsed);
-      } catch (_) {
-        // প্লেলিস্ট লোড না হলে পরবর্তী সোর্স বা প্রেসেট ব্যবহার হবে
-      }
-    }
-
-    return gathered;
-  }
-
-  function applyFiltersAndRender() {
-    const keyword = (searchEl.value || "").trim().toLowerCase();
-    const countryVal = (countryEl.value || "").trim().toUpperCase();
-
-    visibleChannels = combinedChannels.filter(ch => {
-      if (activeScope === "BD" && ch.country !== "BD") return false;
-      if (activeScope === "WORLD" && ch.country === "BD") return false;
-      if (activeScope === "NEWS" && ch.category !== "NEWS") return false;
-      if (activeScope === "SPORTS" && ch.category !== "SPORTS") return false;
-      if (countryVal && activeScope !== "NEWS" && activeScope !== "SPORTS" && ch.country !== countryVal) {
-        return false;
-      }
-      if (keyword) {
-        const hay = `${ch.name} ${ch.freq || ""} ${ch.country} ${ch.category}`.toLowerCase();
-        if (!hay.includes(keyword)) return false;
-      }
-      return true;
-    });
-
-    selectEl.innerHTML = `<option value="">Select TV Channel (${visibleChannels.length}টি চ্যানেল)</option>`;
-
-    visibleChannels.forEach((ch, idx) => {
-      const opt = document.createElement("option");
-      opt.value = String(idx);
-      opt.textContent = `${idx + 1}. [${ch.freq || "LIVE"} • ${ch.country}] ${ch.name}${ch.url ? "" : " [লিংক দিন]"}`;
-      selectEl.appendChild(opt);
-    });
-
-    if (visibleChannels.length > 0) {
-      freqSlider.max = String(visibleChannels.length - 1);
-      const cur = Number(selectEl.value);
-      const activeIdx = Number.isInteger(cur) && cur >= 0 ? cur : 0;
-      freqSlider.value = String(Math.min(activeIdx, visibleChannels.length - 1));
-      const activeCh = visibleChannels[activeIdx];
-      if (activeCh) {
-        freqReadout.textContent = `${activeCh.freq || "LIVE"} • ${activeCh.country}`;
-      }
-    }
-
-    setStatus(`${visibleChannels.length}টি টিভি চ্যানেল প্রস্তুত। একটি চ্যানেল বেছে নিন বা PLAY চাপুন।`);
-  }
-
-  async function refreshChannels() {
-    setStatus("বাংলাদেশ ও বিশ্ব লাইভ টিভি চ্যানেল তালিকা আপডেট হচ্ছে...");
-    const remoteList = await fetchPlaylistChannels();
-
-    const seenUrls = new Set(PRESET_CHANNELS.map(c => c.url).filter(Boolean));
-    const uniqueRemote = remoteList.filter(item => {
-      if (!item.url || seenUrls.has(item.url)) return false;
-      seenUrls.add(item.url);
-      return true;
-    });
-
-    combinedChannels = [...PRESET_CHANNELS, ...uniqueRemote];
-    applyFiltersAndRender();
-  }
-
-  function applyHlsQualityMode(hls) {
-    const mode = qualityModeEl.value;
-    if (!hls || !hls.levels || !hls.levels.length) return;
-
-    if (mode === "high" || mode === "8k") {
-      const highestIndex = hls.levels.length - 1;
-      hls.currentLevel = highestIndex;
-      hls.loadLevel = highestIndex;
-    } else {
-      hls.currentLevel = -1;
-      hls.loadLevel = -1;
-    }
-  }
-
-  function getActiveChannel() {
-    const customUrl = customUrlEl.value.trim();
-    if (customUrl) {
-      return {
-        name: "Custom Live TV Stream",
-        country: "CUSTOM",
-        category: "LIVE",
-        freq: "CUSTOM",
-        url: customUrl
-      };
-    }
-
-    const idx = Number(selectEl.value);
-    if (Number.isInteger(idx) && visibleChannels[idx]) {
-      return visibleChannels[idx];
-    }
-
-    return visibleChannels.find(c => c.url) || null;
-  }
-
-  function loadAndPlay(channel, allowAutoNext = true) {
-    if (!channel) {
-      setStatus("Please select a valid TV channel.");
-      return;
-    }
-
-    if (!channel.url) {
-      setStatus(`"${channel.name}"-এর সরাসরি স্ট্রিম লিংক নেই। কাস্টম লিংক বক্সে .m3u8/.mp4 দিন বা NEXT চাপুন।`);
-      return;
-    }
-
-    destroyHls();
-    video.pause();
-    video.removeAttribute("src");
-    video.load();
-
-    const modeLabel = qualityModeEl.value === "8k"
-      ? "8K ULTRA PROFILE (MAX AVAILABLE)"
-      : qualityModeEl.value === "high"
-        ? "HIGH-SPEED MAX STREAM"
-        : "AUTO ADAPTIVE STREAM";
-
-    freqReadout.textContent = `${channel.freq || "LIVE"} • ${channel.country}`;
-    streamTagEl.textContent = `⚡ ${channel.country} • ${channel.freq || "LIVE"} • ${modeLabel}`;
-    setStatus(`লোড হচ্ছে: ${channel.name}...`);
-
-    const isHls = channel.url.toLowerCase().includes(".m3u8");
-
-    if (isHls && window.Hls && window.Hls.isSupported()) {
-      hlsInstance = new window.Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-        maxBufferLength: 20
+      pendingMeta = { name, country, category, scopes };
+    } else if (!line.startsWith("#") && pendingMeta) {
+      const idx = parsed.length + 1;
+      parsed.push({
+        id: `iptv-${idx}`,
+        name: pendingMeta.name,
+        country: pendingMeta.country,
+        category: pendingMeta.category,
+        scope: pendingMeta.scopes,
+        freq: `CH-${String(idx).padStart(2, "0")}`,
+        url: line
       });
+      pendingMeta = null;
+    }
+  }
+  return parsed;
+}
 
-      hlsInstance.loadSource(channel.url);
-      hlsInstance.attachMedia(video);
-
-      hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, (_, data) => {
-        applyHlsQualityMode(hlsInstance);
-        const topLevel = data.levels && data.levels.length
-          ? data.levels[data.levels.length - 1]
-          : null;
-        const resText = topLevel && topLevel.height
-          ? `${topLevel.width || ""}x${topLevel.height}p`
-          : "Live Stream";
-
-        video.play().then(() => {
-          setStatus(`চলছে: ${channel.name} (${resText})`);
-        }).catch(() => {
-          setStatus(`প্রস্তুত: ${channel.name} (${resText}) — চালু করতে ▶ PLAY চাপুন।`);
-        });
-      });
-
-      hlsInstance.on(window.Hls.Events.ERROR, (_, data) => {
-        if (data.fatal) {
-          destroyHls();
-          setStatus(`"${channel.name}" চালু করা যায়নি (CORS/Geo-block/স্ট্রিম অফলাইন হতে পারে)।`);
-          if (allowAutoNext) {
-            errorRetryTimer = setTimeout(() => playNextChannel(), 1200);
-          }
-        }
-      });
-    } else if (video.canPlayType("application/vnd.apple.mpegurl") || !isHls) {
-      video.src = channel.url;
-      video.play().then(() => {
-        setStatus(`চলছে: ${channel.name}`);
-      }).catch(() => {
-        setStatus(`প্রস্তুত: ${channel.name} — চালু করতে ▶ PLAY চাপুন।`);
-      });
+async function fetchGlobalChannels() {
+  setStatus("বিশ্ব ও বাংলাদেশ চ্যানেলের তালিকা লোড হচ্ছে...", "LOADING GLOBAL STREAMS");
+  try {
+    const res = await fetch("https://iptv-org.github.io/iptv/index.m3u");
+    if (!res.ok) throw new Error("Network response was not ok");
+    const text = await res.text();
+    const remoteChannels = parseM3U(text);
+    if (remoteChannels.length > 0) {
+      allChannels = [...FALLBACK_CHANNELS, ...remoteChannels];
+      setStatus(`মোট ${allChannels.length}টি চ্যানেল প্রস্তুত।`, "LIVE PLAYLIST READY");
     } else {
-      setStatus("এই ব্রাউজারে HLS স্ট্রিম সাপোর্ট করছে না।");
+      allChannels = [...FALLBACK_CHANNELS];
+      setStatus("ব্যাকআপ চ্যানেল তালিকা লোড হয়েছে।", "FALLBACK READY");
     }
+  } catch (err) {
+    allChannels = [...FALLBACK_CHANNELS];
+    setStatus("সরাসরি তালিকা আনা যায়নি; ব্যাকআপ চ্যানেল তালিকা চালু আছে।", "OFFLINE / FALLBACK MODE");
   }
+  applyFilters();
+}
 
-  function stopStream() {
-    destroyHls();
-    video.pause();
-    video.removeAttribute("src");
-    video.load();
-    streamTagEl.textContent = "HIGH-SPEED MULTI-CHANNEL TV ENGINE";
-    setStatus("স্ট্রিম বন্ধ করা হয়েছে।");
-  }
+function applyFilters() {
+  const query = (channelSearch?.value || "").trim().toLowerCase();
+  const countryVal = (countryFilter?.value || "").trim().toUpperCase();
 
-  function playNextChannel() {
-    if (!visibleChannels.length) return;
-    const currentIdx = Number(selectEl.value);
-    const startIdx = Number.isInteger(currentIdx) && currentIdx >= 0 ? currentIdx : -1;
-
-    for (let offset = 1; offset <= visibleChannels.length; offset++) {
-      const nextIdx = (startIdx + offset) % visibleChannels.length;
-      const candidate = visibleChannels[nextIdx];
-      if (candidate && candidate.url) {
-        selectEl.value = String(nextIdx);
-        freqSlider.value = String(nextIdx);
-        customUrlEl.value = "";
-        loadAndPlay(candidate, false);
-        return;
-      }
-    }
-  }
-
-  async function toggleFullscreen() {
-    try {
-      if (!document.fullscreenElement) {
-        if (playerBox.requestFullscreen) {
-          await playerBox.requestFullscreen();
-        } else if (video.webkitEnterFullscreen) {
-          video.webkitEnterFullscreen();
-        }
-      } else {
-        await document.exitFullscreen();
-      }
-    } catch (_) {
-      setStatus("ফুলস্ক্রিন চালু করা যায়নি।");
-    }
-  }
-
-  freqSlider.addEventListener("input", () => {
-    const idx = Number(freqSlider.value);
-    if (!visibleChannels[idx]) return;
-    selectEl.value = String(idx);
-    const ch = visibleChannels[idx];
-    freqReadout.textContent = `${ch.freq || "LIVE"} • ${ch.country}`;
-    setStatus(`টিউন করা হয়েছে: ${ch.name}`);
+  filteredChannels = allChannels.filter(ch => {
+    const matchesScope = currentScope === "ALL" || ch.scope.includes(currentScope);
+    const matchesCountry = !countryVal || ch.country === countryVal;
+    const matchesQuery =
+      !query ||
+      ch.name.toLowerCase().includes(query) ||
+      ch.freq.toLowerCase().includes(query) ||
+      ch.country.toLowerCase().includes(query);
+    return matchesScope && matchesCountry && matchesQuery;
   });
 
-  freqSlider.addEventListener("change", () => {
-    const idx = Number(freqSlider.value);
-    if (!visibleChannels[idx]) return;
-    customUrlEl.value = "";
-    loadAndPlay(visibleChannels[idx], true);
+  if (freqSlider) {
+    freqSlider.max = String(Math.max(0, filteredChannels.length - 1));
+    freqSlider.value = "0";
+  }
+
+  renderChannelSelect();
+}
+
+function renderChannelSelect() {
+  if (!channelSelect) return;
+  channelSelect.innerHTML = "";
+
+  if (filteredChannels.length === 0) {
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "কোনো চ্যানেল পাওয়া যায়নি";
+    channelSelect.appendChild(opt);
+    if (freqReadout) freqReadout.textContent = "NO SIGNAL";
+    return;
+  }
+
+  filteredChannels.forEach((ch, idx) => {
+    const opt = document.createElement("option");
+    opt.value = String(idx);
+    opt.textContent = `${ch.freq} — ${ch.name} (${ch.country})`;
+    channelSelect.appendChild(opt);
   });
 
-  scopeButtons.forEach(btn => {
-    btn.addEventListener("click", async () => {
-      scopeButtons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      activeScope = btn.dataset.scope || "ALL";
+  syncTunerReadout(0);
+}
 
-      if (activeScope === "BD") {
-        countryEl.value = "BD";
-      } else if (activeScope === "ALL" || activeScope === "WORLD") {
-        countryEl.value = "";
-      }
+function syncTunerReadout(index) {
+  const ch = filteredChannels[index];
+  const mode = qualityMode?.value || "high";
+  if (ch && freqReadout) {
+    freqReadout.textContent = `${ch.freq} • ${ch.country} • ${mode.toUpperCase()}`;
+  }
+}
 
-      await refreshChannels();
+function destroyHls() {
+  if (hlsInstance) {
+    hlsInstance.destroy();
+    hlsInstance = null;
+  }
+}
+
+function playStream(url, labelText) {
+  if (!url || !videoEl) {
+    setStatus("চালানোর মতো কোনো স্ট্রিম লিংক পাওয়া যায়নি।", "NO STREAM URL");
+    return;
+  }
+
+  destroyHls();
+
+  const isHls = url.includes(".m3u8");
+  if (isHls && window.Hls && window.Hls.isSupported()) {
+    hlsInstance = new window.Hls({
+      enableWorker: true,
+      lowLatencyMode: qualityMode?.value === "high"
     });
+    hlsInstance.loadSource(url);
+    hlsInstance.attachMedia(videoEl);
+    hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => {
+      videoEl.play().catch(() => {});
+      setStatus(`চালু হচ্ছে: ${labelText}`, "HLS LIVE STREAM");
+    });
+    hlsInstance.on(window.Hls.Events.ERROR, (_, data) => {
+      if (data.fatal) {
+        setStatus(`স্ট্রিম ত্রুটি (${labelText}) — অন্য চ্যানেল বা লিংক চেষ্টা করুন।`, "STREAM ERROR");
+      }
+    });
+  } else {
+    videoEl.src = url;
+    videoEl.play()
+      .then(() => setStatus(`চালু হচ্ছে: ${labelText}`, "DIRECT STREAM"))
+      .catch(() => setStatus(`লিংক লোড হয়েছে: ${labelText} (Play চাপুন)`, "READY"));
+  }
+}
+
+function playSelectedChannel() {
+  const customUrl = (customStreamUrl?.value || "").trim();
+  if (customUrl) {
+    playStream(customUrl, "Custom Stream");
+    return;
+  }
+  const idx = Number(channelSelect?.value || 0);
+  const ch = filteredChannels[idx];
+  if (!ch) {
+    setStatus("আগে একটি চ্যানেল নির্বাচন করুন।", "NO CHANNEL");
+    return;
+  }
+  syncTunerReadout(idx);
+  playStream(ch.url, `${ch.freq} - ${ch.name}`);
+}
+
+function stopStream() {
+  destroyHls();
+  if (videoEl) {
+    videoEl.pause();
+    videoEl.removeAttribute("src");
+    videoEl.load();
+  }
+  setStatus("স্ট্রিম বন্ধ করা হয়েছে।", "STOPPED");
+}
+
+function playNextChannel() {
+  if (filteredChannels.length === 0) return;
+  const currentIdx = Number(channelSelect?.value || 0);
+  const nextIdx = (currentIdx + 1) % filteredChannels.length;
+  channelSelect.value = String(nextIdx);
+  if (freqSlider) freqSlider.value = String(nextIdx);
+  syncTunerReadout(nextIdx);
+  playSelectedChannel();
+}
+
+filterBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterBtns.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentScope = btn.dataset.scope || "ALL";
+    applyFilters();
   });
+});
 
-  countryEl.addEventListener("change", refreshChannels);
-  searchEl.addEventListener("input", applyFiltersAndRender);
-  reloadBtn.addEventListener("click", refreshChannels);
+countryFilter?.addEventListener("change", applyFilters);
+channelSearch?.addEventListener("input", applyFilters);
 
-  selectEl.addEventListener("change", () => {
-    if (selectEl.value === "") {
-      setStatus("Please select a valid TV channel.");
-      return;
-    }
-    const idx = Number(selectEl.value);
-    if (Number.isInteger(idx) && visibleChannels[idx]) {
-      freqSlider.value = String(idx);
-    }
-    customUrlEl.value = "";
-    loadAndPlay(getActiveChannel(), true);
-  });
+channelSelect?.addEventListener("change", () => {
+  const idx = Number(channelSelect.value || 0);
+  if (freqSlider) freqSlider.value = String(idx);
+  syncTunerReadout(idx);
+});
 
-  qualityModeEl.addEventListener("change", () => {
-    if (hlsInstance) {
-      applyHlsQualityMode(hlsInstance);
-      setStatus("কোয়ালিটি মোড আপডেট করা হয়েছে।");
-    }
-  });
+freqSlider?.addEventListener("input", () => {
+  const idx = Number(freqSlider.value || 0);
+  if (channelSelect && filteredChannels[idx]) {
+    channelSelect.value = String(idx);
+  }
+  syncTunerReadout(idx);
+});
 
-  playBtn.addEventListener("click", () => {
-    const active = getActiveChannel();
-    if (!active || !active.url) {
-      setStatus("Please select a valid TV channel.");
-      return;
-    }
-    if (video.src && video.src === active.url && video.paused) {
-      video.play().then(() => setStatus(`চলছে: ${active.name}`)).catch(() => loadAndPlay(active, true));
-    } else {
-      loadAndPlay(active, true);
-    }
-  });
+qualityMode?.addEventListener("change", () => {
+  const idx = Number(channelSelect?.value || 0);
+  syncTunerReadout(idx);
+});
 
-  stopBtn.addEventListener("click", stopStream);
-  nextBtn.addEventListener("click", playNextChannel);
-  fullscreenBtn.addEventListener("click", toggleFullscreen);
+playBtn?.addEventListener("click", playSelectedChannel);
+stopBtn?.addEventListener("click", stopStream);
+nextBtn?.addEventListener("click", playNextChannel);
+reloadBtn?.addEventListener("click", fetchGlobalChannels);
 
-  applyFiltersAndRender();
-  refreshChannels();
-})();
+fullscreenBtn?.addEventListener("click", () => {
+  const box = document.getElementById("playerBox") || videoEl;
+  if (box?.requestFullscreen) {
+    box.requestFullscreen().catch(() => {});
+  }
+});
+
+fetchGlobalChannels();
