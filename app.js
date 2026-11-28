@@ -1,48 +1,39 @@
 // =========================================================
 // AYNA BOOK
-// FIREBASE APP INITIALIZATION
-// File: app.js
+// FIREBASE APP COMPATIBILITY FILE
 // Firebase SDK: 13.4.0
+// Main initialization: firebase-init.js
 // =========================================================
 
 import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-
-import {
-  getAuth
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-
+  app,
+  auth,
+  database,
+  firebaseConfig,
+  authReady,
+  watchFirebaseConnection,
+  setUserPresence,
+  setUserOffline
+} from "./firebase-init.js";
 
 // =========================================================
-// FIREBASE CONFIGURATION
+// GLOBAL ACCESS
 // =========================================================
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAIW4FK9Il2yct-tOSCKuSodso8KN2UsTA",
-  authDomain: "ayna-book.firebaseapp.com",
-  databaseURL: "https://ayna-book-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ayna-book",
-  storageBucket: "ayna-book.firebasestorage.app",
-  messagingSenderId: "805601138500",
-  appId: "1:805601138500:web:47acdc90cb0cb521626911",
-  measurementId: "G-RKHHSKNB4B"
+window.AYNA_APP = {
+  app,
+  auth,
+  database,
+  firebaseConfig,
+  authReady,
+  watchFirebaseConnection,
+  setUserPresence,
+  setUserOffline
 };
 
-
-// =========================================================
-// INITIALIZE FIREBASE
-// =========================================================
-
-const app = initializeApp(firebaseConfig);
-
-
-// =========================================================
-// INITIALIZE AUTH
-// =========================================================
-
-const auth = getAuth(app);
-
+window.AYNA_AUTH = auth;
+window.AYNA_DATABASE = database;
+window.AYNA_FIREBASE = window.AYNA_APP;
 
 // =========================================================
 // EXPORT
@@ -51,5 +42,12 @@ const auth = getAuth(app);
 export {
   app,
   auth,
-  firebaseConfig
+  database,
+  firebaseConfig,
+  authReady,
+  watchFirebaseConnection,
+  setUserPresence,
+  setUserOffline
 };
+
+console.log("AYNA BOOK Firebase connected successfully.");
