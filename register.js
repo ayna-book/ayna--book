@@ -1,474 +1,1320 @@
-
-// =========================================================
-// AYNA BOOK — REGISTRATION MODULE
-// Firebase Authentication + Realtime Database
+// ============================================================
+// AYNA BOOK
+// USER REGISTRATION
+// File: register.js
 // Firebase SDK: 13.4.0
-// Gmail verification required
-// Profile image: compressed square JPEG, maximum 5 MB input
-// =========================================================
+// ============================================================
 
-import { AynaVoiceSignal } from "./ayna-voice-signal.js";
-import { auth, database } from "./firebase-init.js";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  reload
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-const $ = id => document.getElementById(id);
+import {
+  ref,
+  set
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js";
 
-const DEFAULT_FRAME_SVG =
-  "data:image/svg+xml," +
-  encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="#0a1636"/><circle cx="80" cy="56" r="28" fill="#ffe64d"/><path d="M24 160 Q32 104 80 104 Q128 104 136 160" fill="#ffe64d"/></svg>'
-  );
-
-const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
-const MAX_COMPRESSED_PHOTO_SIZE = 450 * 1024;
-
-let photoDataUrl = "";
-let registrationInProgress = false;
+import {
+  auth,
+  database,
+  authReady
+} from "./firebase-init.js";
 
 
-// =========================================================
-// INITIALIZE PAGE
-// =========================================================
+// ============================================================
+// SETTINGS
+// ============================================================
 
-export function initRegisterPage() {
-  const preview = $("regPhotoPreview");
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
-  if (preview && !preview.getAttribute("src")) {
-    preview.src = DEFAULT_FRAME_SVG;
+// RTDB-তে Base64 profile photo রাখার জন্য
+// compressed image সাধারণত এই সীমার নিচে থাকবে।
+const MAX_PHOTO_BASE64_LENGTH = 650000;
+
+const MIN_PASSWORD_LENGTH = 8;
+const MAX_PASSWORD_LENGTH = 50;
+
+
+// ============================================================
+// ELEMENTS
+// ============================================================
+
+const registerForm = document.getElementById("registerForm");
+
+const profilePhotoInput =
+  document.getElementById("profilePhoto");
+
+const previewImage =
+  document.getElementById("previewImage");
+
+const photoPlaceholder =
+  document.getElementById("photoPlaceholder");
+
+const regFullName =
+  document.getElementById("regFullName");
+
+const regEmail =
+  document.getElementById("regEmail");
+
+const regCountry =
+  document.getElementById("regCountry");
+
+const regPhone =
+  document.getElementById("regPhone");
+
+const regPassword =
+  document.getElementById("regPassword");
+
+const regConfirmPassword =
+  document.getElementById("regConfirmPassword");
+
+const termsCheckbox =
+  document.getElementById("termsCheckbox");
+
+const registerButton =
+  document.getElementById("registerButton");
+
+const registerMessage =
+  document.getElementById("registerMessage");
+
+const loadingOverlay =
+  document.getElementById("loadingOverlay");
+
+const toggleRegPassword =
+  document.getElementById("toggleRegPassword");
+
+const toggleRegConfirmPassword =
+  document.getElementById("toggleRegConfirmPassword");
+
+
+// ============================================================
+// STATE
+// ============================================================
+
+let selectedPhotoBase64 = "";
+let selectedPhotoMimeType = "";
+
+let registerBusy = false;
+
+
+// ============================================================
+// MESSAGE
+// ============================================================
+
+function showMessage(text, type = "info") {
+
+  if (!registerMessage) return;
+
+  registerMessage.textContent = text;
+
+  if (type === "success") {
+
+    registerMessage.style.color = "#00ff99";
+
+  } else if (type === "error") {
+
+    registerMessage.style.color = "#ff6b6b";
+
+  } else if (type === "warning") {
+
+    registerMessage.style.color = "#ffd700";
+
+  } else {
+
+    registerMessage.style.color = "#ffffff";
+  }
+}
+
+
+// ============================================================
+// LOADING
+// ============================================================
+
+function setLoading(isLoading) {
+
+  if (registerButton) {
+
+    registerButton.disabled = isLoading;
+
+    registerButton.textContent = isLoading
+      ? "⏳ Account তৈরি হচ্ছে..."
+      : "🚀 Create AYNA BOOK Account";
   }
 
-  $("speakClockBtn")?.addEventListener("click", () => {
-    AynaVoiceSignal.speakCurrentTime();
-  });
+  if (loadingOverlay) {
 
-  $("toggleClockBtn")?.addEventListener("click", () => {
-    AynaVoiceSignal.toggleClock("toggleClockBtn");
-  });
+    loadingOverlay.style.display =
+      isLoading ? "flex" : "none";
 
-  $("repeatSignalBtn")?.addEventListener("click", () => {
-    AynaVoiceSignal.repeatLast();
-  });
+    loadingOverlay.setAttribute(
+      "aria-hidden",
+      isLoading ? "false" : "true"
+    );
+  }
+}
 
-  $("loginPageBtn")?.addEventListener("click", () => {
-    window.location.href = "login.html";
-  });
 
-  bindPasswordToggle(
-    "togglePasswordBtn",
-    "regPassword",
-    "👁️ পাসওয়ার্ড দেখাও",
-    "🙈 পাসওয়ার্ড লুকাও"
-  );
+// ============================================================
+// PASSWORD TOGGLE
+// ============================================================
 
-  bindPasswordToggle(
-    "toggleConfirmPasswordBtn",
-    "regConfirmPassword",
-    "👁️ রি-পাসওয়ার্ড দেখাও",
-    "🙈 রি-পাসওয়ার্ড লুকাও"
-  );
+function setupPasswordToggle(button, input) {
 
-  $("choosePhotoBtn")?.addEventListener("click", () => {
-    $("regPhotoInput")?.click();
-  });
+  if (!button || !input) return;
 
-  $("regPhotoInput")?.addEventListener("change", handlePhotoSelection);
+  button.addEventListener("click", () => {
 
-  $("registerSubmitBtn")?.addEventListener("click", handleRegisterSubmit);
+    const isPassword =
+      input.type === "password";
 
-  // Enter key দিয়ে সাবমিট
-  ["regEmail", "regPhone", "regPassword", "regConfirmPassword"].forEach(id => {
-    $(id)?.addEventListener("keydown", event => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        handleRegisterSubmit();
-      }
-    });
+    input.type =
+      isPassword ? "text" : "password";
+
+    button.textContent =
+      isPassword ? "🙈" : "👁";
+
+    button.setAttribute(
+      "aria-label",
+      isPassword
+        ? "Hide password"
+        : "Show password"
+    );
   });
 }
 
 
-// =========================================================
-// PASSWORD SHOW / HIDE
-// =========================================================
+setupPasswordToggle(
+  toggleRegPassword,
+  regPassword
+);
 
-function bindPasswordToggle(btnId, inputId, showText, hideText) {
-  $(btnId)?.addEventListener("click", () => {
-    const input = $(inputId);
-    const button = $(btnId);
 
-    if (!input || !button) return;
+setupPasswordToggle(
+  toggleRegConfirmPassword,
+  regConfirmPassword
+);
 
-    const isHidden = input.type === "password";
 
-    input.type = isHidden ? "text" : "password";
-    button.textContent = isHidden ? hideText : showText;
-  });
+// ============================================================
+// PHOTO VALIDATION
+// ============================================================
+
+function isAllowedImageType(type) {
+
+  return [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ].includes(type);
 }
 
 
-// =========================================================
-// IMAGE COMPRESSION
-// =========================================================
+// ============================================================
+// READ FILE
+// ============================================================
 
 function readFileAsDataURL(file) {
+
   return new Promise((resolve, reject) => {
+
     const reader = new FileReader();
 
-    reader.onload = () => resolve(String(reader.result || ""));
-    reader.onerror = () => reject(new Error("ছবি পড়া যায়নি।"));
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = () => {
+      reject(
+        new Error("PHOTO_READ_FAILED")
+      );
+    };
 
     reader.readAsDataURL(file);
   });
 }
 
+
+// ============================================================
+// LOAD IMAGE
+// ============================================================
+
 function loadImage(dataURL) {
+
   return new Promise((resolve, reject) => {
+
     const image = new Image();
 
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("ছবিটি খোলা যায়নি।"));
+    image.onload = () => {
+      resolve(image);
+    };
+
+    image.onerror = () => {
+      reject(
+        new Error("PHOTO_INVALID")
+      );
+    };
 
     image.src = dataURL;
   });
 }
 
-async function compressSquarePhoto(file) {
-  if (!file || !file.type.startsWith("image/")) {
-    throw new Error("JPG, PNG অথবা WebP ছবি নির্বাচন করুন।");
+
+// ============================================================
+// COMPRESS PROFILE PHOTO
+// ============================================================
+
+async function compressProfilePhoto(file) {
+
+  if (!file) {
+    throw new Error("PHOTO_REQUIRED");
   }
 
-  if (file.size > MAX_PHOTO_SIZE) {
-    throw new Error("ছবির সাইজ ৫ MB-এর বেশি হতে পারবে না।");
+  if (!isAllowedImageType(file.type)) {
+    throw new Error("PHOTO_TYPE");
   }
 
-  const originalDataURL = await readFileAsDataURL(file);
-  const image = await loadImage(originalDataURL);
-
-  const side = Math.min(image.naturalWidth, image.naturalHeight);
-
-  if (!side) {
-    throw new Error("ছবির সাইজ সঠিক নয়।");
+  if (file.size > MAX_PHOTO_BYTES) {
+    throw new Error("PHOTO_TOO_LARGE");
   }
 
-  const canvas = document.createElement("canvas");
-  const outputSize = Math.min(512, side);
+  const originalDataURL =
+    await readFileAsDataURL(file);
+
+  const image =
+    await loadImage(originalDataURL);
+
+
+  // ----------------------------------------------------------
+  // Square crop
+  // ----------------------------------------------------------
+
+  const sourceWidth = image.naturalWidth;
+  const sourceHeight = image.naturalHeight;
+
+  if (!sourceWidth || !sourceHeight) {
+    throw new Error("PHOTO_INVALID");
+  }
+
+  const squareSize =
+    Math.min(
+      sourceWidth,
+      sourceHeight
+    );
+
+
+  // Center crop.
+  // মাথা সাধারণত কেন্দ্রে রাখার জন্য crop করা হচ্ছে।
+  const sourceX =
+    Math.floor(
+      (sourceWidth - squareSize) / 2
+    );
+
+  const sourceY =
+    Math.floor(
+      (sourceHeight - squareSize) / 2
+    );
+
+
+  // ----------------------------------------------------------
+  // Output size
+  // ----------------------------------------------------------
+
+  const outputSize = 700;
+
+  const canvas =
+    document.createElement("canvas");
 
   canvas.width = outputSize;
   canvas.height = outputSize;
 
-  const context = canvas.getContext("2d");
+  const ctx =
+    canvas.getContext("2d", {
+      alpha: false
+    });
 
-  if (!context) {
-    throw new Error("ছবি প্রস্তুত করা যায়নি।");
+  if (!ctx) {
+    throw new Error("CANVAS_FAILED");
   }
 
-  const sourceX = (image.naturalWidth - side) / 2;
-  const sourceY = (image.naturalHeight - side) / 2;
 
-  context.drawImage(
-    image,
-    sourceX,
-    sourceY,
-    side,
-    side,
+  // ----------------------------------------------------------
+  // Background
+  // ----------------------------------------------------------
+
+  ctx.fillStyle = "#080d1a";
+
+  ctx.fillRect(
     0,
     0,
     outputSize,
     outputSize
   );
 
+
+  // ----------------------------------------------------------
+  // Draw image
+  // ----------------------------------------------------------
+
+  ctx.drawImage(
+    image,
+    sourceX,
+    sourceY,
+    squareSize,
+    squareSize,
+    0,
+    0,
+    outputSize,
+    outputSize
+  );
+
+
+  // ----------------------------------------------------------
+  // JPEG compression
+  // ----------------------------------------------------------
+
   let quality = 0.82;
-  let result = canvas.toDataURL("image/jpeg", quality);
 
+  let dataURL =
+    canvas.toDataURL(
+      "image/jpeg",
+      quality
+    );
+
+
+  // Reduce until RTDB-safe size
   while (
-    result.length > MAX_COMPRESSED_PHOTO_SIZE * 1.4 &&
-    quality > 0.35
+    dataURL.length >
+      MAX_PHOTO_BASE64_LENGTH &&
+    quality > 0.40
   ) {
-    quality -= 0.08;
-    result = canvas.toDataURL("image/jpeg", quality);
+
+    quality -= 0.06;
+
+    dataURL =
+      canvas.toDataURL(
+        "image/jpeg",
+        quality
+      );
   }
 
-  return result;
+
+  if (
+    dataURL.length >
+    MAX_PHOTO_BASE64_LENGTH
+  ) {
+
+    throw new Error(
+      "PHOTO_COMPRESS_FAILED"
+    );
+  }
+
+
+  return {
+    dataURL,
+    mimeType: "image/jpeg",
+    width: outputSize,
+    height: outputSize
+  };
 }
 
 
-// =========================================================
-// PHOTO SELECTION
-// =========================================================
+// ============================================================
+// PHOTO SELECT
+// ============================================================
 
-async function handlePhotoSelection(event) {
-  const file = event.target.files?.[0];
+if (profilePhotoInput) {
 
-  if (!file) return;
+  profilePhotoInput.addEventListener(
+    "change",
+    async () => {
 
-  try {
-    photoDataUrl = await compressSquarePhoto(file);
+      const file =
+        profilePhotoInput.files?.[0];
 
-    if ($("regPhotoPreview")) {
-      $("regPhotoPreview").src = photoDataUrl;
+      if (!file) return;
+
+      showMessage(
+        "⏳ Profile Photo প্রস্তুত করা হচ্ছে..."
+      );
+
+      try {
+
+        const result =
+          await compressProfilePhoto(file);
+
+        selectedPhotoBase64 =
+          result.dataURL;
+
+        selectedPhotoMimeType =
+          result.mimeType;
+
+
+        // Preview
+        if (previewImage) {
+
+          previewImage.src =
+            selectedPhotoBase64;
+
+          previewImage.style.display =
+            "block";
+        }
+
+        if (photoPlaceholder) {
+
+          photoPlaceholder.style.display =
+            "none";
+        }
+
+        showMessage(
+          "✅ Profile Photo প্রস্তুত হয়েছে।",
+          "success"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "AYNA BOOK photo error:",
+          error
+        );
+
+        selectedPhotoBase64 = "";
+        selectedPhotoMimeType = "";
+
+        profilePhotoInput.value = "";
+
+        if (previewImage) {
+
+          previewImage.src = "";
+
+          previewImage.style.display =
+            "none";
+        }
+
+        if (photoPlaceholder) {
+
+          photoPlaceholder.style.display =
+            "block";
+        }
+
+        switch (error.message) {
+
+          case "PHOTO_REQUIRED":
+            showMessage(
+              "Profile Photo নির্বাচন করুন।",
+              "error"
+            );
+            break;
+
+          case "PHOTO_TYPE":
+            showMessage(
+              "শুধু JPG, PNG অথবা WebP ছবি ব্যবহার করুন।",
+              "error"
+            );
+            break;
+
+          case "PHOTO_TOO_LARGE":
+            showMessage(
+              "Profile Photo সর্বোচ্চ 5 MB হতে পারবে।",
+              "error"
+            );
+            break;
+
+          case "PHOTO_COMPRESS_FAILED":
+            showMessage(
+              "ছবিটি ছোট করা যায়নি। অন্য ছবি ব্যবহার করুন।",
+              "error"
+            );
+            break;
+
+          default:
+            showMessage(
+              "Profile Photo পড়া যায়নি। অন্য ছবি ব্যবহার করুন।",
+              "error"
+            );
+        }
+      }
     }
-
-    if ($("regPhotoLabel")) {
-      $("regPhotoLabel").textContent =
-        `নির্বাচিত ছবি: ${file.name}`;
-    }
-
-    AynaVoiceSignal.success("প্রোফাইল ছবি প্রস্তুত হয়েছে।");
-  } catch (error) {
-    photoDataUrl = "";
-
-    if ($("regPhotoPreview")) {
-      $("regPhotoPreview").src = DEFAULT_FRAME_SVG;
-    }
-
-    AynaVoiceSignal.error(error.message || "ছবি নির্বাচন করা যায়নি।");
-    event.target.value = "";
-  }
+  );
 }
 
 
-// =========================================================
-// AYNA ID GENERATOR
-// =========================================================
+// ============================================================
+// NORMALIZE EMAIL
+// ============================================================
+
+function normalizeEmail(value) {
+
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
+
+
+// ============================================================
+// GMAIL VALIDATION
+// ============================================================
+
+function isValidGmail(email) {
+
+  return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail\.com$/i
+    .test(email);
+}
+
+
+// ============================================================
+// PHONE VALIDATION
+// ============================================================
+
+function normalizePhone(phone) {
+
+  return String(phone || "")
+    .trim()
+    .replace(/[()\s-]/g, "");
+}
+
+
+function isValidPhone(phone) {
+
+  const normalized =
+    normalizePhone(phone);
+
+  return /^\+?[0-9]{10,15}$/
+    .test(normalized);
+}
+
+
+// ============================================================
+// PASSWORD VALIDATION
+// ============================================================
+
+function validatePassword(password) {
+
+  if (
+    password.length <
+    MIN_PASSWORD_LENGTH
+  ) {
+
+    return "Password কমপক্ষে 8 অক্ষরের হতে হবে।";
+  }
+
+  if (
+    password.length >
+    MAX_PASSWORD_LENGTH
+  ) {
+
+    return "Password সর্বোচ্চ 50 অক্ষরের হতে পারবে।";
+  }
+
+  return "";
+}
+
+
+// ============================================================
+// NAME VALIDATION
+// ============================================================
+
+function validateName(name) {
+
+  const cleanName =
+    String(name || "").trim();
+
+  if (cleanName.length < 2) {
+
+    return "Full Name কমপক্ষে 2 অক্ষরের হতে হবে।";
+  }
+
+  if (cleanName.length > 100) {
+
+    return "Full Name অনেক বড় হয়ে গেছে।";
+  }
+
+  return "";
+}
+
+
+// ============================================================
+// COUNTRY VALIDATION
+// ============================================================
+
+function validateCountry(country) {
+
+  const value =
+    String(country || "").trim();
+
+  if (!value) {
+
+    return "Country লিখুন।";
+  }
+
+  if (value.length > 80) {
+
+    return "Country-এর নাম সঠিকভাবে লিখুন।";
+  }
+
+  return "";
+}
+
+
+// ============================================================
+// GENERATE AYNA ID
+// ============================================================
 
 function generateAynaId() {
-  const values = new Uint32Array(1);
 
-  if (window.crypto?.getRandomValues) {
-    window.crypto.getRandomValues(values);
-  } else {
-    values[0] = Math.floor(Math.random() * 0xffffffff);
-  }
+  const randomPart =
+    crypto.randomUUID
+      ? crypto.randomUUID()
+      : (
+          Date.now().toString(36) +
+          Math.random()
+            .toString(36)
+            .substring(2, 12)
+        );
 
-  const number = String(values[0] % 90000000 + 10000000);
-
-  return `2026-----${number}`;
+  return (
+    "AYNA-" +
+    randomPart
+      .replace(/-/g, "")
+      .substring(0, 12)
+      .toUpperCase()
+  );
 }
 
 
-// =========================================================
-// REGISTRATION VALIDATION
-// =========================================================
+// ============================================================
+// CREATE USER DATABASE RECORD
+// ============================================================
 
-function validateRegistration() {
+async function createUserRecord(
+  user,
+  profileData
+) {
+
+  const userRef =
+    ref(
+      database,
+      `users/${user.uid}`
+    );
+
+
+  const now = Date.now();
+
+  const userData = {
+
+    uid: user.uid,
+
+    aynaId:
+      profileData.aynaId,
+
+    fullName:
+      profileData.fullName,
+
+    email:
+      user.email,
+
+    phone:
+      profileData.phone,
+
+    country:
+      profileData.country,
+
+    photoURL:
+      selectedPhotoBase64 || "",
+
+    photoMimeType:
+      selectedPhotoMimeType || "",
+
+    accountType:
+      "personal",
+
+    plan:
+      "free",
+
+    emailVerified:
+      false,
+
+    createdAt:
+      now,
+
+    updatedAt:
+      now,
+
+    profileLocked:
+      true,
+
+    status:
+      "active"
+  };
+
+
+  await set(
+    userRef,
+    userData
+  );
+
+
+  return userData;
+}
+
+
+// ============================================================
+// SEND VERIFICATION
+// ============================================================
+
+async function sendVerification(user) {
+
+  if (!user) {
+    throw new Error("USER_NOT_FOUND");
+  }
+
+  await sendEmailVerification(user);
+}
+
+
+// ============================================================
+// FIREBASE ERROR MESSAGE
+// ============================================================
+
+function getFirebaseErrorMessage(error) {
+
+  if (!error) {
+
+    return "Registration ব্যর্থ হয়েছে। আবার চেষ্টা করুন।";
+  }
+
+
+  switch (error.code) {
+
+    case "auth/email-already-in-use":
+
+      return "এই Gmail দিয়ে ইতিমধ্যে একটি AYNA BOOK account আছে। Login করুন।";
+
+
+    case "auth/invalid-email":
+
+      return "Gmail address সঠিক নয়।";
+
+
+    case "auth/weak-password":
+
+      return "Password আরও শক্তিশালী দিন।";
+
+
+    case "auth/network-request-failed":
+
+      return "ইন্টারনেট সংযোগ পরীক্ষা করুন।";
+
+
+    case "auth/operation-not-allowed":
+
+      return "Firebase Console-এ Email/Password Sign-in চালু করা নেই।";
+
+
+    case "auth/api-key-not-valid":
+
+      return "Firebase API Key সঠিক নয়। firebase-init.js পরীক্ষা করুন।";
+
+
+    case "auth/too-many-requests":
+
+      return "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+
+
+    case "auth/quota-exceeded":
+
+      return "Firebase quota সীমা অতিক্রম হয়েছে। পরে আবার চেষ্টা করুন।";
+
+
+    case "PERMISSION_DENIED":
+
+      return "Firebase Realtime Database permission denied। Database Rules পরীক্ষা করুন।";
+
+
+    default:
+
+      return (
+        "Registration ব্যর্থ হয়েছে: " +
+        (
+          error.message ||
+          "Unknown Firebase error"
+        )
+      );
+  }
+}
+
+
+// ============================================================
+// FORM VALIDATION
+// ============================================================
+
+function validateForm() {
+
   const fullName =
-    ($("regFullName")?.value || "").trim();
+    String(
+      regFullName?.value || ""
+    ).trim();
 
   const email =
-    ($("regEmail")?.value || "").trim().toLowerCase();
-
-  const phone =
-    ($("regPhone")?.value || "").trim();
-
-  const password =
-    $("regPassword")?.value || "";
-
-  const confirmPassword =
-    $("regConfirmPassword")?.value || "";
+    normalizeEmail(
+      regEmail?.value
+    );
 
   const country =
-    ($("regCountry")?.value || "").trim();
+    String(
+      regCountry?.value || ""
+    ).trim();
 
-  if (fullName.length < 2) {
-    AynaVoiceSignal.error("সঠিক পূর্ণ নাম লিখুন।");
-    $("regFullName")?.focus();
+  const phone =
+    normalizePhone(
+      regPhone?.value
+    );
+
+  const password =
+    String(
+      regPassword?.value || ""
+    );
+
+  const confirmPassword =
+    String(
+      regConfirmPassword?.value || ""
+    );
+
+
+  // ----------------------------------------------------------
+  // Profile Photo
+  // ----------------------------------------------------------
+
+  if (!selectedPhotoBase64) {
+
+    showMessage(
+      "📷 Profile Photo নির্বাচন করুন।",
+      "error"
+    );
+
+    profilePhotoInput?.focus();
+
     return null;
   }
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!emailPattern.test(email)) {
-    AynaVoiceSignal.error("সঠিক Gmail বা Email ঠিকানা লিখুন।");
-    $("regEmail")?.focus();
+  // ----------------------------------------------------------
+  // Name
+  // ----------------------------------------------------------
+
+  const nameError =
+    validateName(fullName);
+
+  if (nameError) {
+
+    showMessage(
+      nameError,
+      "error"
+    );
+
+    regFullName?.focus();
+
     return null;
   }
 
-  const digits = phone.replace(/\D/g, "");
 
-  if (digits.length < 8 || digits.length > 20) {
-    AynaVoiceSignal.error("সঠিক ফোন নম্বর লিখুন।");
-    $("regPhone")?.focus();
+  // ----------------------------------------------------------
+  // Gmail
+  // ----------------------------------------------------------
+
+  if (!isValidGmail(email)) {
+
+    showMessage(
+      "শুধু একটি বৈধ Gmail address ব্যবহার করুন। যেমন: example@gmail.com",
+      "error"
+    );
+
+    regEmail?.focus();
+
     return null;
   }
 
-  if (password.length < 8 || password.length > 50) {
-    AynaVoiceSignal.error("পাসওয়ার্ড ৮ থেকে ৫০ অক্ষরের মধ্যে দিন।");
-    $("regPassword")?.focus();
+
+  // ----------------------------------------------------------
+  // Country
+  // ----------------------------------------------------------
+
+  const countryError =
+    validateCountry(country);
+
+  if (countryError) {
+
+    showMessage(
+      countryError,
+      "error"
+    );
+
+    regCountry?.focus();
+
     return null;
   }
 
-  if (password !== confirmPassword) {
-    AynaVoiceSignal.error("পাসওয়ার্ড ও রি-পাসওয়ার্ড এক নয়।");
-    $("regConfirmPassword")?.focus();
+
+  // ----------------------------------------------------------
+  // Phone
+  // ----------------------------------------------------------
+
+  if (!isValidPhone(phone)) {
+
+    showMessage(
+      "Phone Number সঠিক নয়। Country code সহ নম্বর দিন।",
+      "error"
+    );
+
+    regPhone?.focus();
+
     return null;
   }
 
-  const terms = $("regTerms");
 
-  if (terms && !terms.checked) {
-    AynaVoiceSignal.error("রেজিস্ট্রেশনের আগে শর্তাবলিতে সম্মতি দিন।");
-    terms.focus();
+  // ----------------------------------------------------------
+  // Password
+  // ----------------------------------------------------------
+
+  const passwordError =
+    validatePassword(password);
+
+  if (passwordError) {
+
+    showMessage(
+      passwordError,
+      "error"
+    );
+
+    regPassword?.focus();
+
     return null;
   }
+
+
+  // ----------------------------------------------------------
+  // Confirm Password
+  // ----------------------------------------------------------
+
+  if (
+    password !==
+    confirmPassword
+  ) {
+
+    showMessage(
+      "Password এবং Confirm Password একই নয়।",
+      "error"
+    );
+
+    regConfirmPassword?.focus();
+
+    return null;
+  }
+
+
+  // ----------------------------------------------------------
+  // Terms
+  // ----------------------------------------------------------
+
+  if (
+    !termsCheckbox?.checked
+  ) {
+
+    showMessage(
+      "Registration করার আগে Terms ও Privacy গ্রহণ করুন।",
+      "error"
+    );
+
+    return null;
+  }
+
 
   return {
     fullName,
     email,
-    phone,
     country,
+    phone,
     password
   };
 }
 
 
-// =========================================================
-// REGISTER ACCOUNT
-// =========================================================
+// ============================================================
+// REGISTER
+// ============================================================
 
-async function handleRegisterSubmit() {
-  if (registrationInProgress) return;
+async function registerUser(event) {
 
-  if (!auth || !database) {
-    AynaVoiceSignal.error(
-      "Firebase সংযোগ পাওয়া যায়নি। firebase-init.js পরীক্ষা করুন।"
-    );
+  event.preventDefault();
+
+  if (registerBusy) return;
+
+  registerBusy = true;
+
+  showMessage("");
+
+  const formData =
+    validateForm();
+
+  if (!formData) {
+
+    registerBusy = false;
+
     return;
   }
 
-  const form = validateRegistration();
 
-  if (!form) return;
+  setLoading(true);
 
-  const btn = $("registerSubmitBtn");
-
-  registrationInProgress = true;
-
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = "রেজিস্ট্রেশন হচ্ছে...";
-  }
-
-  let accountCreated = false;
 
   try {
-    const [
-      { createUserWithEmailAndPassword, sendEmailVerification, signOut },
-      { ref, set }
-    ] = await Promise.all([
-      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js"),
-      import("https://www.gstatic.com/firebasejs/13.4.0/firebase-database.js")
-    ]);
 
-    // ১. Firebase Authentication account
-    const credential = await createUserWithEmailAndPassword(
-      auth,
-      form.email,
-      form.password
-    );
+    // --------------------------------------------------------
+    // Wait for Firebase Auth persistence
+    // --------------------------------------------------------
 
-    accountCreated = true;
-
-    const user = credential.user;
-    const uid = user.uid;
-    const aynaId = generateAynaId();
-    const createdAt = Date.now();
-
-    // ২. Realtime Database profile
-    const profileData = {
-      uid,
-      fullName: form.fullName,
-      email: form.email,
-      phone: form.phone,
-      country: form.country,
-      photoURL: photoDataUrl,
-      aynaId,
-      accountType: "personal",
-      plan: "free",
-      emailVerified: false,
-      createdAt
-    };
-
-    await set(ref(database, `users/${uid}`), profileData);
-
-    // ৩. Gmail verification email পাঠানো
-    await sendEmailVerification(user);
-
-    // ৪. Verification-এর আগে লগইন বন্ধ করা
-    await signOut(auth);
-
-    // ৫. স্থানীয়ভাবে শুধু অস্থায়ী তথ্য রাখা
     try {
-      localStorage.setItem(
-        "ayna_pending_verification",
-        JSON.stringify({
-          email: form.email,
-          aynaId,
-          createdAt
-        })
+
+      await authReady;
+
+    } catch (error) {
+
+      console.warn(
+        "Auth persistence warning:",
+        error
       );
-    } catch (_) {
-      // Local storage unavailable হলেও registration সফল থাকবে
     }
 
-    AynaVoiceSignal.success(
-      `রেজিস্ট্রেশন সফল। ${form.email} ঠিকানায় verification email পাঠানো হয়েছে। আপনার AYNA ID ${aynaId}।`
+
+    // --------------------------------------------------------
+    // Create Firebase Authentication Account
+    // --------------------------------------------------------
+
+    const credential =
+      await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+
+    const user =
+      credential.user;
+
+
+    if (!user) {
+      throw new Error(
+        "USER_CREATION_FAILED"
+      );
+    }
+
+
+    // --------------------------------------------------------
+    // Generate AYNA ID
+    // --------------------------------------------------------
+
+    const aynaId =
+      generateAynaId();
+
+
+    // --------------------------------------------------------
+    // Save profile in RTDB
+    // --------------------------------------------------------
+
+    await createUserRecord(
+      user,
+      {
+        aynaId,
+        fullName:
+          formData.fullName,
+        phone:
+          formData.phone,
+        country:
+          formData.country
+      }
     );
+
+
+    // --------------------------------------------------------
+    // Send Email Verification
+    // --------------------------------------------------------
+
+    await sendVerification(user);
+
+
+    // --------------------------------------------------------
+    // Refresh Firebase user
+    // --------------------------------------------------------
+
+    try {
+
+      await reload(user);
+
+    } catch (reloadError) {
+
+      console.warn(
+        "User reload warning:",
+        reloadError
+      );
+    }
+
+
+    // --------------------------------------------------------
+    // IMPORTANT:
+    // DO NOT SIGN OUT HERE.
+    //
+    // verify-email.js needs auth.currentUser.
+    // --------------------------------------------------------
+
+    showMessage(
+      "✅ Account তৈরি হয়েছে! Verification Email পাঠানো হয়েছে।",
+      "success"
+    );
+
+
+    // --------------------------------------------------------
+    // Clear sensitive password fields
+    // --------------------------------------------------------
+
+    if (regPassword) {
+      regPassword.value = "";
+    }
+
+    if (regConfirmPassword) {
+      regConfirmPassword.value = "";
+    }
+
+
+    // --------------------------------------------------------
+    // Go to verification page
+    // --------------------------------------------------------
 
     setTimeout(() => {
-      window.location.href = "verify-email.html";
-    }, 1800);
+
+      window.location.href =
+        "./verify-email.html";
+
+    }, 1000);
+
 
   } catch (error) {
-    console.error("AYNA Registration Error:", error);
 
-    const code = error?.code || "";
+    console.error(
+      "AYNA BOOK registration error:",
+      error
+    );
 
-    if (code.includes("email-already-in-use")) {
-      AynaVoiceSignal.error(
-        "এই Email দিয়ে আগে থেকেই অ্যাকাউন্ট খোলা আছে। Login করুন।"
-      );
 
-    } else if (code.includes("invalid-email")) {
-      AynaVoiceSignal.error("Email ঠিকানাটি সঠিক নয়।");
+    // --------------------------------------------------------
+    // If Auth account was created but RTDB failed,
+    // user may still exist in Firebase Authentication.
+    // Do not automatically create another account.
+    // --------------------------------------------------------
 
-    } else if (code.includes("weak-password")) {
-      AynaVoiceSignal.error(
-        "পাসওয়ার্ড দুর্বল। অন্তত ৮ অক্ষরের পাসওয়ার্ড দিন।"
-      );
+    showMessage(
+      getFirebaseErrorMessage(error),
+      "error"
+    );
 
-    } else if (code.includes("network-request-failed")) {
-      AynaVoiceSignal.error(
-        "ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।"
-      );
-
-    } else if (code.includes("permission-denied")) {
-      AynaVoiceSignal.error(
-        "Firebase Database Rules অনুমতি দিচ্ছে না। Rules পরীক্ষা করুন।"
-      );
-
-    } else if (accountCreated) {
-      AynaVoiceSignal.error(
-        "Firebase Authentication account তৈরি হয়েছে, কিন্তু পরবর্তী ধাপ সম্পন্ন হয়নি। Login বা Firebase Console পরীক্ষা করুন।"
-      );
-
-    } else {
-      AynaVoiceSignal.error(
-        "রেজিস্ট্রেশন সম্পন্ন হয়নি। Firebase সেটিংস ও নেটওয়ার্ক পরীক্ষা করুন।"
-      );
-    }
 
   } finally {
-    registrationInProgress = false;
 
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = "✅ রেজিস্ট্রেশন বাটন";
-    }
+    registerBusy = false;
+
+    setLoading(false);
   }
 }
 
 
-// =========================================================
-// START
-// =========================================================
+// ============================================================
+// FORM EVENT
+// ============================================================
 
-initRegisterPage();
+if (registerForm) {
+
+  registerForm.addEventListener(
+    "submit",
+    registerUser
+  );
+}
+
+
+// ============================================================
+// PASSWORD LIVE CHECK
+// ============================================================
+
+if (regConfirmPassword) {
+
+  regConfirmPassword.addEventListener(
+    "input",
+    () => {
+
+      const password =
+        regPassword?.value || "";
+
+      const confirm =
+        regConfirmPassword.value || "";
+
+      if (!confirm) return;
+
+      if (password === confirm) {
+
+        regConfirmPassword.style.borderColor =
+          "#00ff99";
+
+      } else {
+
+        regConfirmPassword.style.borderColor =
+          "#ff6b6b";
+      }
+    }
+  );
+}
+
+
+// ============================================================
+// EMAIL NORMALIZATION
+// ============================================================
+
+if (regEmail) {
+
+  regEmail.addEventListener(
+    "blur",
+    () => {
+
+      regEmail.value =
+        normalizeEmail(
+          regEmail.value
+        );
+    }
+  );
+}
+
+
+// ============================================================
+// PHONE NORMALIZATION
+// ============================================================
+
+if (regPhone) {
+
+  regPhone.addEventListener(
+    "blur",
+    () => {
+
+      regPhone.value =
+        normalizePhone(
+          regPhone.value
+        );
+    }
+  );
+}
+
+
+// ============================================================
+// START
+// ============================================================
+
+console.log(
+  "AYNA BOOK register.js loaded successfully."
+);
