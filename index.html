@@ -1,549 +1,1704 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#07152e">
-<meta name="description" content="AYNA BOOK Global Digital Hub - Connect Share Create">
-<title>AYNA BOOK ★ Global Digital Hub</title>
+  <meta charset="UTF-8">
 
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./icon-192.png">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
 
-<style>
-:root{
-  --bg:#050a18;
-  --navy:#0b1d3c;
-  --navy2:#17366c;
-  --panel:#102342;
-  --gold:#ffd700;
-  --white:#fff;
-  --muted:#c4d1e5;
-  --cyan:#35d9ff;
-  --green:#32d296;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--white);
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  font-size:22px;
-}
-a{text-decoration:none;color:inherit}
-button,input{font:inherit}
-button{cursor:pointer}
-header{
-  background:linear-gradient(135deg,#1b3b7a,#07152e);
-  text-align:center;
-  padding:25px 14px;
-  border-bottom:4px solid var(--gold);
-}
-.brand{
-  font-size:clamp(36px,8vw,58px);
-  font-weight:900;
-  color:var(--gold);
-  margin:5px 0;
-}
-.tagline{
-  font-size:22px;
-  color:white;
-  margin:10px 0 20px;
-}
-.header-buttons{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:12px;
-}
-.big-button{
-  display:inline-flex;
-  justify-content:center;
-  align-items:center;
-  min-height:68px;
-  padding:16px 23px;
-  background:var(--gold);
-  color:#101010;
-  border:2px solid #fff0a0;
-  border-radius:15px;
-  font-size:22px;
-  font-weight:900;
-  text-align:center;
-}
-.big-button.secondary{
-  background:#102b53;
-  color:white;
-  border:2px solid var(--gold);
-}
-.big-button:active,.feature:active{
-  transform:scale(.98);
-}
-.container{
-  max-width:1450px;
-  margin:auto;
-  padding:16px;
-}
-.welcome{
-  background:linear-gradient(135deg,#122d57,#0b1830);
-  border:2px solid var(--gold);
-  border-radius:20px;
-  padding:24px;
-  text-align:center;
-  margin:18px 0;
-}
-.welcome h2{
-  color:var(--gold);
-  font-size:clamp(28px,6vw,40px);
-  margin:5px 0 15px;
-}
-.welcome p{
-  font-size:20px;
-  line-height:1.7;
-  color:var(--muted);
-}
-.account-panel{
-  background:#102342;
-  border:1px solid var(--gold);
-  border-radius:15px;
-  padding:17px;
-  margin:18px 0;
-  text-align:center;
-  line-height:1.6;
-}
-.account-panel strong{color:var(--gold)}
-#accountStatus{color:var(--green)}
-.search-box{
-  width:100%;
-  min-height:68px;
-  background:#0c1d37;
-  color:white;
-  border:2px solid var(--gold);
-  border-radius:15px;
-  padding:16px 19px;
-  font-size:22px;
-  margin:10px 0 20px;
-}
-.search-box::placeholder{color:#b8c7dc}
-.section{margin:30px 0}
-.section-title{
-  background:linear-gradient(90deg,#183b75,#0b1c37);
-  color:var(--gold);
-  border-left:7px solid var(--gold);
-  padding:18px;
-  border-radius:12px;
-  font-size:clamp(24px,5vw,30px);
-  margin-bottom:17px;
-}
-.feature-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-}
-.feature{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  min-height:145px;
-  padding:17px 10px;
-  border:2px solid var(--gold);
-  border-radius:17px;
-  background:linear-gradient(145deg,#17345f,#0b1930);
-  font-size:21px;
-  font-weight:900;
-  line-height:1.45;
-  box-shadow:0 4px 12px #0008;
-  overflow-wrap:anywhere;
-}
-.feature .emoji{
-  font-size:39px;
-  margin-bottom:10px;
-}
-.feature small{
-  color:#cbd8ec;
-  font-size:16px;
-  font-weight:normal;
-  margin-top:5px;
-}
-.feature.hidden{display:none}
-#noResults{
-  display:none;
-  color:#ffcf65;
-  padding:15px;
-  text-align:center;
-}
-.action-panel{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:12px;
-  margin:20px 0;
-}
-.info{
-  padding:21px;
-  background:#0e203c;
-  border:1px solid #46628a;
-  border-radius:15px;
-  color:var(--muted);
-  line-height:1.7;
-  font-size:18px;
-}
-.info h2{color:var(--gold)}
-footer{
-  margin-top:35px;
-  padding:28px 12px;
-  text-align:center;
-  background:#08152a;
-  border-top:2px solid var(--gold);
-  color:var(--muted);
-  font-size:17px;
-}
-footer strong{
-  color:var(--gold);
-  font-size:25px;
-}
-@media(min-width:700px){
-  .feature-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .feature{min-height:155px;font-size:23px}
-  .action-panel{grid-template-columns:repeat(3,1fr)}
-}
-@media(min-width:1050px){
-  .feature-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-}
-</style>
+  <meta name="theme-color" content="#050810">
+
+  <meta
+    name="description"
+    content="AYNA BOOK — Connect • Share • Create"
+  >
+
+  <link
+    rel="manifest"
+    href="./manifest.webmanifest"
+  >
+
+  <title>_ AYNA BOOK ★</title>
+
+  <style>
+    /* =====================================================
+       AYNA BOOK
+       GLOBAL BOX UI
+    ===================================================== */
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+
+      width: 100%;
+      min-height: 100%;
+
+      background: #050810;
+      color: #ffffff;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    button,
+    a,
+    input {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+
+    /* =====================================================
+       PAGE
+    ===================================================== */
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+
+      padding:
+        max(10px, env(safe-area-inset-top))
+        10px
+        max(25px, env(safe-area-inset-bottom));
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(30, 67, 145, 0.42),
+          transparent 40%
+        ),
+        linear-gradient(
+          180deg,
+          #081126 0%,
+          #050810 55%,
+          #02040a 100%
+        );
+    }
+
+
+    /* =====================================================
+       MAIN CONTAINER
+    ===================================================== */
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+
+    /* =====================================================
+       UNIVERSAL BOX
+    ===================================================== */
+
+    .ayna-box {
+      width: 100%;
+
+      display: flex;
+      align-items: flex-start;
+
+      gap: 12px;
+
+      margin-bottom: 14px;
+      padding: 15px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(15, 27, 54, 0.98),
+          rgba(6, 11, 23, 0.98)
+        );
+
+      border: 1px solid #d4af37;
+      border-radius: 17px;
+
+      box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.38);
+    }
+
+    .box-prefix {
+      flex: 0 0 auto;
+
+      color: #ffd700;
+
+      font-size: 29px;
+      line-height: 1;
+
+      font-weight: 900;
+
+      animation:
+        prefixBlink 1.2s infinite;
+    }
+
+    @keyframes prefixBlink {
+      0%,
+      45% {
+        opacity: 1;
+      }
+
+      50%,
+      100% {
+        opacity: 0.28;
+      }
+    }
+
+    .box-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      padding: 12px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #132758,
+          #08142f
+        );
+
+      border: 1px solid #d4af37;
+      border-radius: 0 0 18px 18px;
+
+      box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .header-prefix {
+      color: #ffd700;
+
+      font-size: 34px;
+      line-height: 1;
+
+      font-weight: 900;
+
+      animation:
+        prefixBlink 1.2s infinite;
+    }
+
+    .brand {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .brand-title {
+      margin: 0;
+
+      color: #ffffff;
+
+      font-size:
+        clamp(25px, 7vw, 42px);
+
+      line-height: 1;
+
+      font-weight: 900;
+
+      white-space: nowrap;
+    }
+
+    .brand-star {
+      color: #ffd700;
+    }
+
+    .brand-subtitle {
+      margin-top: 6px;
+
+      color: #d7dfef;
+
+      font-size:
+        clamp(13px, 3.5vw, 18px);
+
+      font-weight: 700;
+    }
+
+
+    /* =====================================================
+       HEADER BUTTONS
+    ===================================================== */
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .header-button {
+      min-width: 48px;
+      min-height: 46px;
+
+      padding: 8px;
+
+      border: 1px solid #ffd700;
+      border-radius: 11px;
+
+      background: #0a142c;
+      color: #ffffff;
+
+      font-size: 20px;
+      font-weight: 900;
+
+      cursor: pointer;
+    }
+
+    .header-button:active {
+      transform: scale(0.94);
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+      margin-top: 14px;
+
+      padding: 22px 16px;
+
+      text-align: center;
+
+      background:
+        linear-gradient(
+          135deg,
+          #10265a,
+          #071127
+        );
+
+      border: 1px solid #ffd700;
+      border-radius: 20px;
+
+      box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.42);
+    }
+
+    .hero-prefix {
+      color: #ffd700;
+
+      font-size: 38px;
+      font-weight: 900;
+    }
+
+    .hero h1 {
+      margin: 5px 0 8px;
+
+      color: #ffffff;
+
+      font-size:
+        clamp(31px, 8vw, 52px);
+
+      line-height: 1.08;
+
+      font-weight: 900;
+    }
+
+    .hero p {
+      margin: 0 auto;
+
+      max-width: 800px;
+
+      color: #d9e1f1;
+
+      font-size:
+        clamp(17px, 4.5vw, 23px);
+
+      line-height: 1.5;
+
+      font-weight: 700;
+    }
+
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    .search-box {
+      margin-top: 14px;
+    }
+
+    .search-wrapper {
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+
+      padding: 9px;
+
+      border: 1px solid #49638f;
+      border-radius: 15px;
+
+      background: #050b18;
+    }
+
+    .search-prefix {
+      color: #ffd700;
+
+      font-size: 27px;
+      font-weight: 900;
+    }
+
+    .search-wrapper input {
+      flex: 1;
+
+      width: 100%;
+      min-width: 0;
+
+      min-height: 50px;
+
+      border: 0;
+      outline: 0;
+
+      background: transparent;
+      color: #ffffff;
+
+      font-size: 18px;
+    }
+
+    .search-wrapper input::placeholder {
+      color: #8490a8;
+    }
+
+
+    /* =====================================================
+       SECTION TITLE
+    ===================================================== */
+
+    .section-title {
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+
+      margin: 22px 0 11px;
+
+      color: #ffffff;
+
+      font-size:
+        clamp(24px, 6vw, 34px);
+
+      font-weight: 900;
+    }
+
+    .section-title .prefix {
+      color: #ffd700;
+    }
+
+
+    /* =====================================================
+       FEATURE GRID
+    ===================================================== */
+
+    .feature-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 10px;
+    }
+
+    .feature-card {
+      min-height: 120px;
+
+      padding: 15px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      text-decoration: none;
+
+      background:
+        linear-gradient(
+          145deg,
+          #101d3b,
+          #070d1c
+        );
+
+      border: 1px solid #40557c;
+      border-radius: 16px;
+
+      color: #ffffff;
+
+      transition:
+        transform 0.15s,
+        border-color 0.15s;
+    }
+
+    .feature-card:active {
+      transform: scale(0.97);
+    }
+
+    .feature-card:hover {
+      border-color: #ffd700;
+    }
+
+    .feature-icon {
+      font-size: 31px;
+      line-height: 1;
+    }
+
+    .feature-name {
+      margin-top: 9px;
+
+      font-size:
+        clamp(17px, 4.5vw, 24px);
+
+      line-height: 1.15;
+
+      font-weight: 900;
+    }
+
+    .feature-desc {
+      margin-top: 6px;
+
+      color: #aeb9ce;
+
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+
+    /* =====================================================
+       ACCOUNT BOX
+    ===================================================== */
+
+    .account-box {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 10px;
+    }
+
+    .account-button {
+      min-height: 80px;
+
+      padding: 13px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+
+      border: 1px solid #49638f;
+      border-radius: 15px;
+
+      background: #0a1225;
+      color: #ffffff;
+
+      text-decoration: none;
+
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .account-button.primary {
+      border-color: #ffd700;
+      color: #ffd700;
+    }
+
+
+    /* =====================================================
+       AI BOX
+    ===================================================== */
+
+    .ai-box {
+      margin-top: 20px;
+
+      padding: 17px;
+
+      border: 1px solid #00c8ff;
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(0, 90, 130, 0.30),
+          rgba(5, 13, 30, 0.95)
+        );
+    }
+
+    .ai-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      color: #ffffff;
+
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .ai-title span {
+      color: #00d9ff;
+    }
+
+    .ai-text {
+      margin-top: 10px;
+
+      color: #c8d6e9;
+
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .ai-buttons {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 9px;
+
+      margin-top: 13px;
+    }
+
+    .ai-button {
+      min-height: 55px;
+
+      border: 1px solid #357da0;
+      border-radius: 13px;
+
+      background: #071a2b;
+      color: #ffffff;
+
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+
+    /* =====================================================
+       QUICK ACCESS
+    ===================================================== */
+
+    .quick-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 10px;
+    }
+
+    .quick-card {
+      min-height: 95px;
+
+      padding: 13px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 11px;
+
+      border: 1px solid #354b73;
+      border-radius: 15px;
+
+      background: #090f20;
+
+      color: #ffffff;
+
+      text-decoration: none;
+    }
+
+    .quick-icon {
+      font-size: 29px;
+    }
+
+    .quick-text {
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+      margin-top: 25px;
+
+      padding: 18px;
+
+      text-align: center;
+
+      border: 1px solid #283957;
+      border-radius: 16px;
+
+      background: #060b16;
+
+      color: #8e9bb2;
+
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    footer strong {
+      color: #ffd700;
+    }
+
+
+    /* =====================================================
+       DESKTOP
+    ===================================================== */
+
+    @media (min-width: 700px) {
+
+      .feature-grid {
+        grid-template-columns:
+          repeat(4, minmax(0, 1fr));
+      }
+
+      .account-box {
+        grid-template-columns:
+          repeat(4, minmax(0, 1fr));
+      }
+
+      .quick-grid {
+        grid-template-columns:
+          repeat(4, minmax(0, 1fr));
+      }
+
+      .feature-card {
+        min-height: 155px;
+      }
+
+      .page {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+    }
+
+
+    /* =====================================================
+       VERY SMALL MOBILE
+    ===================================================== */
+
+    @media (max-width: 360px) {
+
+      .page {
+        padding-left: 7px;
+        padding-right: 7px;
+      }
+
+      .header {
+        padding: 9px;
+      }
+
+      .feature-grid,
+      .account-box,
+      .quick-grid {
+        gap: 7px;
+      }
+
+      .feature-card {
+        padding: 11px;
+        min-height: 105px;
+      }
+
+      .feature-name {
+        font-size: 16px;
+      }
+
+      .feature-desc {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
+
 
 <body>
 
-<header>
-  <div class="brand">AYNA BOOK ★</div>
-  <div class="tagline">CONNECT • SHARE • CREATE</div>
+  <div class="page">
 
-  <div class="header-buttons">
-    <a class="big-button" href="./login.html">🔐 Login</a>
-    <a class="big-button" href="./register.html">📝 Register</a>
-    <a class="big-button secondary" href="./profile.html">👤 My Profile</a>
-    <button class="big-button secondary" id="fullScreenBtn" type="button">
-      ⛶ Full Screen
-    </button>
+    <div class="app">
+
+
+      <!-- ==================================================
+           HEADER
+      =================================================== -->
+
+      <header class="header">
+
+        <div class="header-prefix">_</div>
+
+        <div class="brand">
+
+          <h1 class="brand-title">
+            AYNA BOOK <span class="brand-star">★</span>
+          </h1>
+
+          <div class="brand-subtitle">
+            Connect • Share • Create
+          </div>
+
+        </div>
+
+        <div class="header-actions">
+
+          <button
+            class="header-button"
+            id="loginButton"
+            type="button"
+            title="Login"
+          >
+            🔐
+          </button>
+
+          <button
+            class="header-button"
+            id="menuButton"
+            type="button"
+            title="Menu"
+          >
+            ☰
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- ==================================================
+           HERO
+      =================================================== -->
+
+      <section class="hero">
+
+        <div class="hero-prefix">_</div>
+
+        <h1>
+          AYNA BOOK
+        </h1>
+
+        <p>
+          Global Digital Identity
+          <br>
+          Information • Communication • Creation
+        </p>
+
+      </section>
+
+
+      <!-- ==================================================
+           SEARCH
+      =================================================== -->
+
+      <section class="ayna-box search-box">
+
+        <span class="box-prefix">_</span>
+
+        <div class="box-content">
+
+          <div class="search-wrapper">
+
+            <span class="search-prefix">_</span>
+
+            <input
+              id="globalSearch"
+              type="search"
+              placeholder="Search AYNA BOOK..."
+              autocomplete="off"
+            >
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           ACCOUNT
+      =================================================== -->
+
+      <h2 class="section-title">
+        <span class="prefix">_</span>
+        Account
+      </h2>
+
+      <section class="ayna-box">
+
+        <span class="box-prefix">_</span>
+
+        <div class="box-content">
+
+          <div class="account-box">
+
+            <a
+              class="account-button primary"
+              href="./login.html"
+            >
+              🔐
+              <br>
+              Login
+            </a>
+
+            <a
+              class="account-button primary"
+              href="./register.html"
+            >
+              🚀
+              <br>
+              Register
+            </a>
+
+            <a
+              class="account-button"
+              href="./profile.html"
+            >
+              👤
+              <br>
+              My Profile
+            </a>
+
+            <a
+              class="account-button"
+              href="./verify-email.html"
+            >
+              📩
+              <br>
+              Verify Email
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           QUICK ACCESS
+      =================================================== -->
+
+      <h2 class="section-title">
+        <span class="prefix">_</span>
+        Quick Access
+      </h2>
+
+      <section class="ayna-box">
+
+        <span class="box-prefix">_</span>
+
+        <div class="box-content">
+
+          <div class="quick-grid">
+
+            <a
+              class="quick-card"
+              href="./weather-radar.html"
+            >
+              <span class="quick-icon">🌦️</span>
+              <span class="quick-text">
+                Weather Radar
+              </span>
+            </a>
+
+            <a
+              class="quick-card"
+              href="./aviation-radar.html"
+            >
+              <span class="quick-icon">✈️</span>
+              <span class="quick-text">
+                Aviation Radar
+              </span>
+            </a>
+
+            <a
+              class="quick-card"
+              href="./gps.html"
+            >
+              <span class="quick-icon">📍</span>
+              <span class="quick-text">
+                GPS
+              </span>
+            </a>
+
+            <a
+              class="quick-card"
+              href="./compass.html"
+            >
+              <span class="quick-icon">🧭</span>
+              <span class="quick-text">
+                Compass
+              </span>
+            </a>
+
+            <a
+              class="quick-card"
+              href="./messenger.html"
+            >
+              <span class="quick-icon">💬</span>
+              <span class="quick-text">
+                AYNA Messenger
+              </span>
+            </a>
+
+            <a
+              class="quick-card"
+              href="./voice-clock.html"
+            >
+              <span class="quick-icon">🕐</span>
+              <span class="quick-text">
+                Voice Clock
+              </span>
+            </a>
+
+            <a
+              class="quick-card"
+              href="./world-calendar.html"
+            >
+              <span class="quick-icon">🌍</span>
+              <span class="quick-text">
+                World Calendar
+              </span>
+            </a>
+
+            <a
+              class="quick-card"
+              href="./us-alerts.html"
+            >
+              <span class="quick-icon">🚨</span>
+              <span class="quick-text">
+                Government Alerts
+              </span>
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           WORLD INFORMATION
+      =================================================== -->
+
+      <h2 class="section-title">
+        <span class="prefix">_</span>
+        World Information
+      </h2>
+
+      <section class="ayna-box">
+
+        <span class="box-prefix">_</span>
+
+        <div class="box-content">
+
+          <div class="feature-grid">
+
+            <a
+              class="feature-card"
+              href="./world-grocery.html"
+            >
+              <div class="feature-icon">🛒</div>
+
+              <div class="feature-name">
+                World Grocery
+              </div>
+
+              <div class="feature-desc">
+                Global grocery products and markets
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./world-vegetable.html"
+            >
+              <div class="feature-icon">🥬</div>
+
+              <div class="feature-name">
+                World Vegetable
+              </div>
+
+              <div class="feature-desc">
+                Vegetables and market information
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./gold-market.html"
+            >
+              <div class="feature-icon">🥇</div>
+
+              <div class="feature-name">
+                Gold Market
+              </div>
+
+              <div class="feature-desc">
+                Gold price information
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./currency-market.html"
+            >
+              <div class="feature-icon">💱</div>
+
+              <div class="feature-name">
+                Currency
+              </div>
+
+              <div class="feature-desc">
+                World currency information
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./construction-market.html"
+            >
+              <div class="feature-icon">🏗️</div>
+
+              <div class="feature-name">
+                Construction
+              </div>
+
+              <div class="feature-desc">
+                Construction materials market
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./viral-news.html"
+            >
+              <div class="feature-icon">🔥</div>
+
+              <div class="feature-name">
+                Viral News
+              </div>
+
+              <div class="feature-desc">
+                Popular news and videos
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./education.html"
+            >
+              <div class="feature-icon">🎓</div>
+
+              <div class="feature-name">
+                Education
+              </div>
+
+              <div class="feature-desc">
+                Learning and research
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./research.html"
+            >
+              <div class="feature-icon">🔬</div>
+
+              <div class="feature-name">
+                Research
+              </div>
+
+              <div class="feature-desc">
+                Science and technology
+              </div>
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           AYNA BOOK FEATURES
+      =================================================== -->
+
+      <h2 class="section-title">
+        <span class="prefix">_</span>
+        AYNA BOOK Features
+      </h2>
+
+      <section class="ayna-box">
+
+        <span class="box-prefix">_</span>
+
+        <div class="box-content">
+
+          <div class="feature-grid">
+
+            <a
+              class="feature-card"
+              href="./messenger.html"
+            >
+              <div class="feature-icon">💬</div>
+
+              <div class="feature-name">
+                Messenger
+              </div>
+
+              <div class="feature-desc">
+                Connect and communicate
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./posts.html"
+            >
+              <div class="feature-icon">📝</div>
+
+              <div class="feature-name">
+                Posts
+              </div>
+
+              <div class="feature-desc">
+                Share your ideas
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./notifications.html"
+            >
+              <div class="feature-icon">🔔</div>
+
+              <div class="feature-name">
+                Notifications
+              </div>
+
+              <div class="feature-desc">
+                Stay updated
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./qr-profile.html"
+            >
+              <div class="feature-icon">▦</div>
+
+              <div class="feature-name">
+                QR Profile
+              </div>
+
+              <div class="feature-desc">
+                Share your digital identity
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./live.html"
+            >
+              <div class="feature-icon">🔴</div>
+
+              <div class="feature-name">
+                Live
+              </div>
+
+              <div class="feature-desc">
+                Live communication
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./radio-tv.html"
+            >
+              <div class="feature-icon">📻</div>
+
+              <div class="feature-name">
+                Radio & TV
+              </div>
+
+              <div class="feature-desc">
+                Global media
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./prayer.html"
+            >
+              <div class="feature-icon">🌙</div>
+
+              <div class="feature-name">
+                Prayer & Ramadan
+              </div>
+
+              <div class="feature-desc">
+                Prayer and Ramadan tools
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./world-holidays.html"
+            >
+              <div class="feature-icon">📅</div>
+
+              <div class="feature-name">
+                World Holidays
+              </div>
+
+              <div class="feature-desc">
+                Global calendar
+              </div>
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           AI
+      =================================================== -->
+
+      <h2 class="section-title">
+        <span class="prefix">_</span>
+        AI Assistant
+      </h2>
+
+      <section class="ai-box">
+
+        <div class="ai-title">
+          <span>_</span>
+          🤖 AYNA AI
+        </div>
+
+        <div
+          class="ai-text"
+          id="aiText"
+        >
+          আপনার প্রশ্ন লিখুন। AYNA BOOK-এর
+          তথ্য ও ফিচার ব্যবহার করতে AI সহায়তা
+          পেতে পারেন।
+        </div>
+
+        <div class="ai-buttons">
+
+          <button
+            class="ai-button"
+            id="aiListenButton"
+            type="button"
+          >
+            🔊 Listen
+          </button>
+
+          <button
+            class="ai-button"
+            id="aiMoreButton"
+            type="button"
+          >
+            ✨ AI Help
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           SYSTEM BOX
+      =================================================== -->
+
+      <h2 class="section-title">
+        <span class="prefix">_</span>
+        System
+      </h2>
+
+      <section class="ayna-box">
+
+        <span class="box-prefix">_</span>
+
+        <div class="box-content">
+
+          <div class="feature-grid">
+
+            <a
+              class="feature-card"
+              href="./quantum.html"
+            >
+              <div class="feature-icon">⚛️</div>
+
+              <div class="feature-name">
+                Quantum Hub
+              </div>
+
+              <div class="feature-desc">
+                Quantum technology
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./supercomputer.html"
+            >
+              <div class="feature-icon">🖥️</div>
+
+              <div class="feature-name">
+                Supercomputer
+              </div>
+
+              <div class="feature-desc">
+                Computing technology
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./android-hub.html"
+            >
+              <div class="feature-icon">📱</div>
+
+              <div class="feature-name">
+                Android Hub
+              </div>
+
+              <div class="feature-desc">
+                Android technology
+              </div>
+            </a>
+
+
+            <a
+              class="feature-card"
+              href="./notifications.html"
+            >
+              <div class="feature-icon">🔔</div>
+
+              <div class="feature-name">
+                Notifications
+              </div>
+
+              <div class="feature-desc">
+                System updates
+              </div>
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           FOOTER
+      =================================================== -->
+
+      <footer>
+
+        <strong>_ AYNA BOOK ★</strong>
+
+        <br>
+
+        Connect • Share • Create
+
+        <br>
+
+        Global Digital Identity
+
+        <br><br>
+
+        © <span id="year"></span>
+        AYNA BOOK. All rights reserved.
+
+      </footer>
+
+    </div>
+
   </div>
-</header>
-
-<main class="container">
-
-  <section class="welcome">
-    <h2>🌍 All-in-One World Information Hub</h2>
-    <p>
-      Social Network • Messenger • World Market • AI Technology
-      • Weather • Civil Aviation • Education • Research
-    </p>
-    <p style="color:var(--gold);font-weight:bold">
-      YOUR GLOBAL DIGITAL IDENTITY
-    </p>
-    <p>Connect with the World • Discover New Technology</p>
-  </section>
-
-  <section class="account-panel">
-    <div>Account: <strong id="accountName">Guest User</strong></div>
-    <div id="accountStatus">Login Required</div>
-    <div class="header-buttons" style="margin-top:12px">
-      <a class="big-button" href="./login.html">Login Now</a>
-      <a class="big-button secondary" href="./profile.html">My Account</a>
-    </div>
-  </section>
-
-  <input
-    type="search"
-    id="featureSearch"
-    class="search-box"
-    placeholder="🔍 ফিচারের নাম লিখে খুঁজুন..."
-    aria-label="Search AYNA BOOK features"
-  >
-
-  <p id="noResults">কোনো ফিচার পাওয়া যায়নি। অন্য নাম দিয়ে খুঁজুন।</p>
-
-  <!-- SOCIAL NETWORK -->
-  <section class="section">
-    <h2 class="section-title">👥 Social Network & Community</h2>
-    <div class="feature-grid">
-
-      <a class="feature" href="./profile.html" data-search="profile account প্রোফাইল">
-        <span class="emoji">👤</span>My Profile
-        <small>নিজের অ্যাকাউন্ট</small>
-      </a>
-
-      <a class="feature" href="./friends.html" data-search="friends বন্ধু">
-        <span class="emoji">👥</span>Friends
-      </a>
-
-      <a class="feature" href="./messenger.html" data-search="messenger message chat মেসেঞ্জার">
-        <span class="emoji">💬</span>AYNA Messenger
-        <small>চ্যাট ও যোগাযোগ</small>
-      </a>
-
-      <a class="feature" href="./reels.html" data-search="reels video short ভিডিও">
-        <span class="emoji">🎬</span>Reels & Videos
-      </a>
-
-      <a class="feature" href="./memories.html" data-search="memories স্মৃতি">
-        <span class="emoji">📸</span>Memories
-      </a>
-
-      <a class="feature" href="./birthday.html" data-search="birthday জন্মদিন">
-        <span class="emoji">🎂</span>Birthday Wishes
-      </a>
-
-      <a class="feature" href="./posts.html" data-search="posts post পোষ্ট">
-        <span class="emoji">📰</span>Posts & News Feed
-      </a>
-
-      <a class="feature" href="./notifications.html" data-search="notification নোটিফিকেশন">
-        <span class="emoji">🔔</span>Notifications
-      </a>
-
-      <a class="feature" href="./groups.html" data-search="groups গ্রুপ">
-        <span class="emoji">🌐</span>Groups & Community
-      </a>
-
-      <a class="feature" href="./qr-profile.html" data-search="qr barcode account">
-        <span class="emoji">▦</span>Account QR Code
-      </a>
-
-    </div>
-  </section>
-
-  <!-- RADAR GPS -->
-  <section class="section">
-    <h2 class="section-title">📡 Live Radar, Weather & Navigation</h2>
-    <div class="feature-grid">
-
-      <a class="feature" href="./weather-radar.html" data-search="weather radar আবহাওয়া">
-        <span class="emoji">🌧️</span>Weather Radar
-        <small>বৃষ্টির রাডার</small>
-      </a>
-
-      <a class="feature" href="./aviation-radar.html" data-search="aviation aircraft flight বিমান">
-        <span class="emoji">✈️</span>Civil Aviation Radar
-        <small>বিমান পর্যবেক্ষণ</small>
-      </a>
-
-      <a class="feature" href="./gps.html" data-search="gps location map অবস্থান">
-        <span class="emoji">📍</span>GPS & Live Location
-      </a>
-
-      <a class="feature" href="./smart-traffic.html" data-search="traffic road রাস্তা">
-        <span class="emoji">🚦</span>Smart Traffic
-      </a>
-
-      <a class="feature" href="./compass.html" data-search="compass direction দিকনির্দেশ">
-        <span class="emoji">🧭</span>Digital Compass
-      </a>
-
-      <a class="feature" href="./voice-clock.html" data-search="voice clock ঘড়ি">
-        <span class="emoji">🕒</span>Talking Voice Clock
-      </a>
-
-      <a class="feature" href="./world-calendar.html" data-search="calendar ক্যালেন্ডার">
-        <span class="emoji">📅</span>World Calendar
-      </a>
-
-      <a class="feature" href="./prayer.html" data-search="prayer ramadan রমজান নামাজ">
-        <span class="emoji">🕌</span>Prayer & Ramadan
-      </a>
-
-    </div>
-  </section>
-
-  <!-- WORLD MARKET -->
-  <section class="section">
-    <h2 class="section-title">🛒 World Market & Global Trade</h2>
-    <div class="feature-grid">
-
-      <a class="feature" href="./world-grocery.html" data-search="grocery supermarket মুদি বাজার">
-        <span class="emoji">🛒</span>World Grocery
-        <small>বিশ্ব মুদি বাজার</small>
-      </a>
-
-      <a class="feature" href="./world-vegetable.html" data-search="vegetable সবজি">
-        <span class="emoji">🥦</span>World Vegetable Market
-      </a>
-
-      <a class="feature" href="./fish-market.html" data-search="fish মাছ">
-        <span class="emoji">🐟</span>World Fish Market
-      </a>
-
-      <a class="feature" href="./beef-market.html" data-search="beef meat গরুর মাংস">
-        <span class="emoji">🥩</span>World Beef Market
-      </a>
-
-      <a class="feature" href="./gold-market.html" data-search="gold সোনা">
-        <span class="emoji">🥇</span>World Gold Market
-      </a>
-
-      <a class="feature" href="./currency-market.html" data-search="currency exchange মুদ্রা">
-        <span class="emoji">💱</span>World Currency Market
-        <small>Currency Converter</small>
-      </a>
-
-      <a class="feature" href="./construction-market.html" data-search="construction building নির্মাণ">
-        <span class="emoji">🏗️</span>Construction Market
-      </a>
-
-      <a class="feature" href="./world-jobs.html" data-search="jobs চাকরি">
-        <span class="emoji">💼</span>World Jobs
-      </a>
-
-    </div>
-  </section>
-
-  <!-- WORLD NEWS -->
-  <section class="section">
-    <h2 class="section-title">🌍 World News & Daily Updates</h2>
-    <div class="feature-grid">
-
-      <a class="feature" href="./viral-news.html" data-search="viral news trending খবর">
-        <span class="emoji">🔥</span>Viral News & Videos
-        <small>জনপ্রিয় খবর</small>
-      </a>
-
-      <a class="feature" href="./technology-daily.html" data-search="technology tech প্রযুক্তি">
-        <span class="emoji">⚙️</span>Daily Technology
-      </a>
-
-      <a class="feature" href="./medicine-vaccine-news.html" data-search="medicine vaccine ওষুধ টিকা">
-        <span class="emoji">💊</span>Medicine & Vaccine News
-      </a>
-
-      <a class="feature" href="./world-news.html" data-search="world news বিশ্ব সংবাদ">
-        <span class="emoji">🌐</span>World News
-      </a>
-
-      <a class="feature" href="./us-alerts.html" data-search="government alerts সতর্কতা">
-        <span class="emoji">🚨</span>Government Alerts
-      </a>
-
-    </div>
-  </section>
-
-  <!-- EDUCATION RESEARCH -->
-  <section class="section">
-    <h2 class="section-title">🎓 Education, Science & Research</h2>
-    <div class="feature-grid">
-
-      <a class="feature" href="./education-world.html" data-search="education শিক্ষা">
-        <span class="emoji">🎓</span>World Education
-      </a>
-
-      <a class="feature" href="./research-world.html" data-search="research গবেষণা">
-        <span class="emoji">🔬</span>Global Research
-      </a>
-
-      <a class="feature" href="./quantum.html" data-search="quantum কোয়ান্টাম">
-        <span class="emoji">⚛️</span>Quantum Technology
-      </a>
-
-      <a class="feature" href="./supercomputer.html" data-search="supercomputer সুপার কম্পিউটার">
-        <span class="emoji">🖥️</span>Supercomputer Hub
-      </a>
-
-      <a class="feature" href="./android-hub.html" data-search="android mobile অ্যান্ড্রয়েড">
-        <span class="emoji">📱</span>Android Technology Hub
-      </a>
-
-    </div>
-  </section>
-
-  <!-- AI -->
-  <section class="section">
-    <h2 class="section-title">🤖 AI & Smart Technology</h2>
-    <div class="feature-grid">
-
-      <a class="feature" href="./ai-assistant.html" data-search="ai assistant artificial intelligence">
-        <span class="emoji">🤖</span>AI Assistant
-      </a>
-
-      <a class="feature" href="./ai-translation.html" data-search="translation অনুবাদ">
-        <span class="emoji">🌍</span>AI Translation
-      </a>
-
-      <a class="feature" href="./ai-tools.html" data-search="ai tools">
-        <span class="emoji">🧠</span>AI Tools
-      </a>
-
-      <a class="feature" href="./radio-tv.html" data-search="radio television tv">
-        <span class="emoji">📻</span>World Radio & TV
-      </a>
-
-    </div>
-  </section>
-
-  <!-- ACCOUNT -->
-  <section class="section">
-    <h2 class="section-title">🔐 Account & Security</h2>
-    <div class="feature-grid">
-
-      <a class="feature" href="./login.html" data-search="login লগইন">
-        <span class="emoji">🔑</span>Login
-      </a>
-
-      <a class="feature" href="./register.html" data-search="register registration নিবন্ধন">
-        <span class="emoji">📝</span>Create Account
-      </a>
-
-      <a class="feature" href="./forgot-password.html" data-search="password reset পাসওয়ার্ড">
-        <span class="emoji">🔒</span>Reset Password
-      </a>
-
-      <a class="feature" href="./verify-email.html" data-search="email verification ইমেইল">
-        <span class="emoji">✉️</span>Email Verification
-      </a>
-
-    </div>
-  </section>
-
-  <!-- QUICK ACTIONS -->
-  <section class="section">
-    <h2 class="section-title">⚡ Quick Access</h2>
-    <div class="action-panel">
-      <a class="big-button" href="./messenger.html">💬 Open Messenger</a>
-      <a class="big-button" href="./profile.html">👤 Open Profile</a>
-      <a class="big-button" href="./currency-market.html">💱 Currency Market</a>
-    </div>
-  </section>
-
-  <section class="info">
-    <h2>ℹ️ AYNA BOOK Information</h2>
-    <p>
-      AYNA BOOK একটি বহু-ফিচারভিত্তিক ডিজিটাল প্ল্যাটফর্ম।
-      প্রতিটি ফিচার আলাদা HTML পেজে রাখা হয়েছে, যাতে একটি পেজের
-      সমস্যা অন্য পেজকে সরাসরি প্রভাবিত না করে।
-    </p>
-    <p>
-      কোনো লিংকে 404 দেখালে বুঝতে হবে সেই নামের HTML ফাইলটি
-      GitHub repository-তে এখনো তৈরি বা আপলোড করা হয়নি।
-    </p>
-    <p>
-      GPS, Weather, Aviation, Currency ও News-এর মতো ফিচারে
-      বাইরের API বা ব্রাউজারের অনুমতি প্রয়োজন হতে পারে।
-    </p>
-    <p>
-      বাজারের নমুনা মূল্যকে লাইভ মূল্য হিসেবে গণ্য করবেন না।
-      লাইভ ডেটার জন্য নির্ভরযোগ্য API প্রয়োজন।
-    </p>
-  </section>
-
-</main>
-
-<footer>
-  <strong>AYNA BOOK ★</strong>
-  <p>Connect • Share • Create</p>
-  <p>Global Digital Identity & World Information Hub</p>
-  <p>© 2026 AYNA BOOK</p>
-</footer>
-
-<script type="module" src="./index.js"></script>
+
+
+  <!-- ======================================================
+       JAVASCRIPT
+  ======================================================= -->
+
+  <script type="module">
+
+    /* =====================================================
+       YEAR
+    ===================================================== */
+
+    const yearElement =
+      document.getElementById("year");
+
+    if (yearElement) {
+      yearElement.textContent =
+        new Date().getFullYear();
+    }
+
+
+    /* =====================================================
+       LOGIN BUTTON
+    ===================================================== */
+
+    const loginButton =
+      document.getElementById("loginButton");
+
+    if (loginButton) {
+
+      loginButton.addEventListener(
+        "click",
+        () => {
+
+          window.location.href =
+            "./login.html";
+
+        }
+      );
+    }
+
+
+    /* =====================================================
+       MENU BUTTON
+    ===================================================== */
+
+    const menuButton =
+      document.getElementById("menuButton");
+
+    if (menuButton) {
+
+      menuButton.addEventListener(
+        "click",
+        () => {
+
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth"
+          });
+
+        }
+      );
+    }
+
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    const searchInput =
+      document.getElementById(
+        "globalSearch"
+      );
+
+    if (searchInput) {
+
+      searchInput.addEventListener(
+        "keydown",
+        (event) => {
+
+          if (
+            event.key !== "Enter"
+          ) {
+            return;
+          }
+
+          const query =
+            searchInput.value
+              .trim()
+              .toLowerCase();
+
+          if (!query) return;
+
+
+          const cards =
+            document.querySelectorAll(
+              ".feature-card, .quick-card, .account-button"
+            );
+
+
+          let found = false;
+
+
+          for (const card of cards) {
+
+            const text =
+              card.textContent
+                .toLowerCase();
+
+            if (
+              text.includes(query)
+            ) {
+
+              card.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+              });
+
+              found = true;
+
+              break;
+            }
+          }
+
+
+          if (!found) {
+
+            alert(
+              "AYNA BOOK-এ এই ফিচারটি পাওয়া যায়নি।"
+            );
+
+          }
+
+        }
+      );
+    }
+
+
+    /* =====================================================
+       AI LISTEN
+    ===================================================== */
+
+    const aiListenButton =
+      document.getElementById(
+        "aiListenButton"
+      );
+
+    const aiText =
+      document.getElementById(
+        "aiText"
+      );
+
+
+    if (aiListenButton) {
+
+      aiListenButton.addEventListener(
+        "click",
+        () => {
+
+          if (
+            !("speechSynthesis" in window)
+          ) {
+
+            alert(
+              "আপনার Browser Speech Synthesis সমর্থন করে না।"
+            );
+
+            return;
+          }
+
+
+          const text =
+            aiText?.textContent ||
+            "Welcome to AYNA BOOK.";
+
+
+          window.speechSynthesis.cancel();
+
+
+          const speech =
+            new SpeechSynthesisUtterance(
+              text
+            );
+
+          speech.lang = "bn-BD";
+
+          speech.rate = 0.95;
+
+          speech.pitch = 1;
+
+
+          window.speechSynthesis.speak(
+            speech
+          );
+
+        }
+      );
+    }
+
+
+    /* =====================================================
+       AI HELP
+    ===================================================== */
+
+    const aiMoreButton =
+      document.getElementById(
+        "aiMoreButton"
+      );
+
+
+    if (aiMoreButton) {
+
+      aiMoreButton.addEventListener(
+        "click",
+        () => {
+
+          if (aiText) {
+
+            aiText.textContent =
+              "AYNA BOOK-এর Login, Registration, Messenger, Weather Radar, Aviation Radar, GPS, World Market, Education, Research এবং অন্যান্য ফিচার ব্যবহার করতে উপরের Box থেকে একটি ফিচার নির্বাচন করুন।";
+
+          }
+
+        }
+      );
+    }
+
+  </script>
 
 </body>
 </html>
