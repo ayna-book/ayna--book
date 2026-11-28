@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07152e">
+<title>AYNA BOOK — World Gold Market</title>
+
+<style>
+:root {
+  --bg:#050b18;
+  --panel:#10213d;
+  --gold:#f2cf58;
+  --white:#fff;
+  --muted:#c3cde0;
+  --border:#9c7a30;
+  --green:#54e6a1;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,sans-serif;
+  font-size:20px;
+}
+button,input,select {font:inherit}
+header {
+  background:linear-gradient(135deg,#1b4079,#07152e);
+  border-bottom:3px solid var(--gold);
+  padding:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+header h1 {
+  margin:0;
+  color:var(--gold);
+  font-size:30px;
+}
+button {
+  background:#173c72;
+  color:white;
+  border:2px solid var(--gold);
+  border-radius:12px;
+  padding:13px 17px;
+  min-height:52px;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:active {transform:scale(.97)}
+.container {
+  max-width:1200px;
+  margin:auto;
+  padding:16px;
+}
+.hero {
+  background:linear-gradient(135deg,#483812,#10213d);
+  border:2px solid var(--gold);
+  border-radius:18px;
+  padding:24px;
+  text-align:center;
+  margin:16px 0;
+}
+.hero h2 {
+  color:var(--gold);
+  font-size:clamp(28px,6vw,42px);
+}
+.hero p {line-height:1.7}
+.status {
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:30px;
+  background:#173b30;
+  color:#8bffc5;
+  font-size:16px;
+}
+.stats {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin:18px 0;
+}
+.stat {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  text-align:center;
+  padding:18px 8px;
+}
+.stat strong {
+  display:block;
+  color:var(--gold);
+  font-size:30px;
+  margin-bottom:8px;
+}
+.stat span {color:var(--muted);font-size:16px}
+.section {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin:18px 0;
+}
+.section h2 {color:var(--gold);font-size:26px}
+.filters {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+input,select {
+  width:100%;
+  min-height:55px;
+  background:#071226;
+  color:white;
+  border:2px solid #63799b;
+  border-radius:10px;
+  padding:12px;
+}
+input::placeholder {color:#aebbd0}
+.actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:12px;
+}
+.actions button {flex:1 1 140px}
+.gold-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:15px;
+}
+.gold-card {
+  background:#152c4b;
+  border:1px solid var(--gold);
+  border-radius:15px;
+  padding:18px;
+}
+.gold-icon {
+  text-align:center;
+  font-size:65px;
+  padding:12px;
+  background:#283b51;
+  border-radius:12px;
+}
+.gold-card h3 {color:var(--gold);font-size:24px}
+.gold-card p {line-height:1.5;color:#e1e9f7}
+.gold-price {
+  color:var(--green);
+  font-size:24px;
+  font-weight:bold;
+}
+.badge {
+  display:inline-block;
+  padding:7px 10px;
+  border-radius:8px;
+  background:#3b321c;
+  color:#ffe28b;
+  font-size:15px;
+}
+.ai-box {
+  border:2px solid #3e8dc0;
+  background:#10213d;
+  border-radius:15px;
+  padding:18px;
+}
+.ai-box h2 {color:#82dfff}
+.ai-answer {
+  background:#071226;
+  border-radius:10px;
+  padding:15px;
+  margin-top:12px;
+  line-height:1.7;
+  min-height:65px;
+}
+.notice {
+  color:#ffd98a;
+  font-size:16px;
+  line-height:1.7;
+}
+footer {
+  text-align:center;
+  color:#bbc7d9;
+  padding:25px;
+  font-size:15px;
+}
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:#000d;
+  padding:15px;
+  overflow:auto;
+}
+.modal-content {
+  max-width:600px;
+  margin:35px auto;
+  padding:20px;
+  background:#102442;
+  border:2px solid var(--gold);
+  border-radius:16px;
+}
+.modal-content h2 {color:var(--gold)}
+.close-row {text-align:right}
+@media(min-width:700px) {
+  .stats {grid-template-columns:repeat(4,1fr)}
+  .filters {grid-template-columns:2fr 1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🥇 AYNA BOOK</h1>
+  <div class="actions">
+    <button id="goldHomeBtn">⌂ Home</button>
+    <button id="goldFullScreenBtn">⛶ Full Screen</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <h2>🌍 World Gold Market</h2>
+    <p>
+      আন্তর্জাতিক স্বর্ণের বাজার, ক্যারেটভিত্তিক মূল্য,
+      প্রতি গ্রাম ও প্রতি ভরির হিসাব এবং দেশভিত্তিক তুলনা।
+    </p>
+    <div class="status" id="goldMarketStatus">
+      স্বর্ণের নমুনা হিসাব প্রস্তুত হচ্ছে...
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <strong id="totalGoldItems">0</strong>
+      <span>স্বর্ণের তালিকা</span>
+    </div>
+    <div class="stat">
+      <strong id="goldCountryCount">0</strong>
+      <span>দেশ</span>
+    </div>
+    <div class="stat">
+      <strong id="goldResultCount">0</strong>
+      <span>সার্চ ফলাফল</span>
+    </div>
+    <div class="stat">
+      <strong id="goldKaratCount">0</strong>
+      <span>ক্যারেট ধরন</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>🔎 স্বর্ণের বাজার অনুসন্ধান</h2>
+
+    <div class="filters">
+      <input
+        id="goldSearch"
+        type="search"
+        placeholder="দেশ অথবা ক্যারেট লিখুন..."
+      >
+
+      <select id="goldCountryFilter">
+        <option value="all">সব দেশ</option>
+        <option value="Bangladesh">বাংলাদেশ</option>
+        <option value="India">ভারত</option>
+        <option value="USA">যুক্তরাষ্ট্র</option>
+        <option value="UK">যুক্তরাজ্য</option>
+        <option value="Saudi Arabia">সৌদি আরব</option>
+        <option value="UAE">সংযুক্ত আরব আমিরাত</option>
+        <option value="Japan">জাপান</option>
+        <option value="Australia">অস্ট্রেলিয়া</option>
+        <option value="Canada">কানাডা</option>
+        <option value="Singapore">সিঙ্গাপুর</option>
+        <option value="Malaysia">মালয়েশিয়া</option>
+        <option value="Germany">জার্মানি</option>
+        <option value="Switzerland">সুইজারল্যান্ড</option>
+        <option value="China">চীন</option>
+        <option value="Turkey">তুরস্ক</option>
+      </select>
+
+      <select id="goldKaratFilter">
+        <option value="all">সব ক্যারেট</option>
+        <option value="24">২৪ ক্যারেট</option>
+        <option value="22">২২ ক্যারেট</option>
+        <option value="21">২১ ক্যারেট</option>
+        <option value="18">১৮ ক্যারেট</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button id="goldSearchBtn">🔎 Search</button>
+      <button id="goldResetBtn">↻ Reset</button>
+      <button id="goldRefreshBtn">⟳ Refresh</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>🥇 ক্যারেটভিত্তিক স্বর্ণের বাজার</h2>
+    <p>
+      মোট ফলাফল:
+      <strong id="resultCountTop">0</strong>
+    </p>
+
+    <div class="gold-grid" id="goldProductsContainer">
+      <p>স্বর্ণের তথ্য লোড হচ্ছে...</p>
+    </div>
+  </section>
+
+  <section class="section ai-box">
+    <h2>🤖 AYNA AI Gold Market Assistant</h2>
+
+    <p>
+      ক্যারেট, বিশুদ্ধতা, ভরি, গ্রাম ও স্বর্ণের মূল্য
+      সম্পর্কে প্রশ্ন করুন।
+    </p>
+
+    <input
+      id="goldAIQuestion"
+      type="text"
+      placeholder="যেমন: ২২ ক্যারেট স্বর্ণ কতটা বিশুদ্ধ?"
+    >
+
+    <div class="actions">
+      <button id="goldAIButton">🤖 AI Analysis</button>
+    </div>
+
+    <div class="ai-answer" id="goldAIAnswer">
+      আপনার প্রশ্নের উত্তর এখানে দেখা যাবে।
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>📐 স্বর্ণের ওজন ও বিশুদ্ধতা</h2>
+    <p>১ ভরি = ১১.৬৬৩৮ গ্রাম</p>
+    <p>২৪ ক্যারেট = প্রায় ৯৯.৯% বিশুদ্ধ স্বর্ণ</p>
+    <p>২২ ক্যারেট = প্রায় ৯১.৬৭% বিশুদ্ধ স্বর্ণ</p>
+    <p>২১ ক্যারেট = ৮৭.৫০% বিশুদ্ধ স্বর্ণ</p>
+    <p>১৮ ক্যারেট = ৭৫% বিশুদ্ধ স্বর্ণ</p>
+  </section>
+
+  <section class="section">
+    <h2>🔐 গুরুত্বপূর্ণ বাজার সতর্কতা</h2>
+    <p class="notice">
+      এই সংস্করণের মূল্যগুলো পরীক্ষামূলক নমুনা হিসাব।
+      এগুলো আন্তর্জাতিক বা স্থানীয় লাইভ স্বর্ণের দর নয়।
+      প্রকৃত মূল্য জানতে নির্ভরযোগ্য বাজার ডেটা,
+      বিনিময় হার এবং স্থানীয় স্বর্ণ ব্যবসায়ী সমিতির
+      প্রকাশিত মূল্য যাচাই করুন।
+    </p>
+    <p class="notice">
+      গহনার চূড়ান্ত দামে মজুরি, VAT, কর ও অন্যান্য
+      চার্জ যোগ হতে পারে।
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  AYNA BOOK ★ Connect • Share • Create
+  <br>
+  World Gold Market
+</footer>
+
+<div class="modal" id="goldModal">
+  <div class="modal-content">
+    <div class="close-row">
+      <button id="goldModalClose">✕ Close</button>
+    </div>
+
+    <h2 id="goldModalTitle">স্বর্ণের বিস্তারিত</h2>
+    <div id="goldModalBody"></div>
+  </div>
+</div>
+
+<script type="module" src="./gold-market.js"></script>
+
+</body>
+</html>
